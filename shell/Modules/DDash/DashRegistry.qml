@@ -298,7 +298,7 @@ Singleton {
                 "minW": 1,
                 "minH": 1
             },
-            "options": [toggle("temperature", I18n.tr("Show temperature"), true), toneOption()]
+            "options": [toggle("gpu", "GPU-Auslastung zeigen", true), toggle("temperature", I18n.tr("Show temperature"), false), toneOption()]
         },
         {
             "id": "cpu",

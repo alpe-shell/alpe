@@ -1746,6 +1746,9 @@ Singleton {
     }
 
     function getPowerProfileIcon(profile) {
+        // Alpe: ohne Akku keine Akku-Symbole für die Energieprofile.
+        if (!BatteryService.batteryAvailable)
+            return ["eco", "speed", "bolt"][profile] ?? "settings";
         switch (profile) {
         case 0:
             return "battery_saver";

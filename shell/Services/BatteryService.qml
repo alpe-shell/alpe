@@ -139,6 +139,7 @@ Singleton {
     onBatteriesChanged: root.updateFreeBsdBatteryFallback()
 
     onRefCountChanged: {
+        HeadsetService.viewers = root.refCount;
         if (root.refCount === 1)
             root.refreshFreeBsdBattery();
     }
@@ -449,7 +450,7 @@ Singleton {
         if (notificationType === 1) {
             const dbusUrgency = urgency === "critical" ? "critical" : (urgency === "warning" ? "normal" : "low");
 
-            Quickshell.execDetached(["notify-send", "-u", dbusUrgency, "-a", "DMS", "-i", icon, title, message]);
+            Quickshell.execDetached(["notify-send", "-u", dbusUrgency, "-a", Brand.name, "-i", icon, title, message]);
         } else if (urgency === "critical") {
             ToastService.showError(title, message, "", icon);
         } else if (urgency === "warning") {
@@ -770,7 +771,12 @@ Singleton {
 
     readonly property bool suggestPowerSaver: false
 
-    readonly property var peripheralDevices: refCount === 0 ? [] : UPower.devices.values.filter(dev => dev && dev.ready && !dev.isLaptopBattery && peripheralIcon(dev.type) !== "").map(dev => ({
+    // Alpe: Funk-Headsets fehlen in UPower und kommen über HeadsetService dazu. Die Bindung
+    // weckt den Dienst schon beim Start, damit die Warnung bei tiefem Stand ohne offene Anzeige läuft.
+    readonly property bool headsetWatch: HeadsetService.wanted
+    readonly property var peripheralDevices: refCount === 0 ? [] : upowerPeripherals.concat(HeadsetService.gaugeDevices.filter(headset => !upowerPeripherals.some(dev => dev.name === headset.name)))
+
+    readonly property var upowerPeripherals: refCount === 0 ? [] : UPower.devices.values.filter(dev => dev && dev.ready && !dev.isLaptopBattery && peripheralIcon(dev.type) !== "").map(dev => ({
                 "name": dev.model || UPowerDeviceType.toString(dev.type),
                 "percentage": Math.round(dev.percentage * 100),
                 "type": dev.type,

@@ -1259,7 +1259,9 @@ func (s *Server) Serve(printDocs bool) error {
 		}()
 	}
 
-	if err := InitializeWellbeingManager(); err != nil {
+	if alpeOff("wellbeing") {
+		log.Info("Alpe: Wellbeing aus")
+	} else if err := InitializeWellbeingManager(); err != nil {
 		log.Warnf("Wellbeing manager unavailable: %v", err)
 	}
 
@@ -1278,7 +1280,7 @@ func (s *Server) Serve(printDocs bool) error {
 
 	go func() {
 		<-loginctlReady
-		if loginctlManager == nil {
+		if loginctlManager == nil || alpeOff("trayrecovery") {
 			return
 		}
 		if err := InitializeTrayRecoveryManager(); err != nil {
@@ -1289,6 +1291,9 @@ func (s *Server) Serve(printDocs bool) error {
 	}()
 
 	go func() {
+		if alpeOff("location") {
+			return
+		}
 		geoClient := geolocation.NewClient()
 		geoClientInstance = geoClient
 
@@ -1307,6 +1312,9 @@ func (s *Server) Serve(printDocs bool) error {
 	}()
 
 	go func() {
+		if alpeOff("bluetooth") {
+			return
+		}
 		for {
 			err := InitializeBluezManager()
 			if err == nil {
@@ -1358,6 +1366,9 @@ func (s *Server) Serve(printDocs bool) error {
 	}()
 
 	go func() {
+		if alpeOff("evdev") {
+			return
+		}
 		if err := InitializeEvdevManager(); err != nil {
 			log.Debugf("Evdev manager unavailable: %v", err)
 		} else {
@@ -1366,7 +1377,10 @@ func (s *Server) Serve(printDocs bool) error {
 	}()
 
 	go func() {
-		if err := InitializeClipboardManager(); err != nil {
+		// Alpe: Ohne Zwischenablage-Verlauf muss der Wayland-Verteiler trotzdem starten.
+		if alpeOff("clipboard") {
+			log.Info("Alpe: Zwischenablage-Verlauf aus")
+		} else if err := InitializeClipboardManager(); err != nil {
 			log.Warnf("Clipboard manager unavailable: %v", err)
 		}
 		if wlContext != nil {
@@ -1384,6 +1398,9 @@ func (s *Server) Serve(printDocs bool) error {
 	}()
 
 	go func() {
+		if alpeOff("notifyactions") {
+			return
+		}
 		if err := InitializeNotifyActionsManager(); err != nil {
 			log.Warnf("Notification action manager unavailable: %v", err)
 		}

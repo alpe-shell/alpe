@@ -253,14 +253,14 @@ Singleton {
         if (translationsLoaded) {
             const hit = _lookup("app", translations, term, context);
             if (hit)
-                return hit;
+                return Brand.apply(hit);
         }
         if (commonTranslationsLoaded) {
             const hit = _lookup("common", commonTranslations, term, context);
             if (hit)
-                return hit;
+                return Brand.apply(hit);
         }
-        return term;
+        return Brand.apply(term);
     }
 
     function trFor(pluginId, term, context, isRealContext) {

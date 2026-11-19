@@ -162,7 +162,9 @@ Rectangle {
             spacing: Theme.spacingXS
             StyledText {
                 width: parent.width
-                text: root.moon ? I18n.tr("Moonrise", "Weather moonrise time") : I18n.tr("Sunrise")
+                // Alpe: Die Karte heisst schon «Sonne» oder «Mond»; die langen Wörter wurden abgeschnitten.
+                text: "Aufgang"
+                Accessible.name: root.moon ? I18n.tr("Moonrise", "Weather moonrise time") : I18n.tr("Sunrise")
                 color: toneColors.mutedColor
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
@@ -183,7 +185,8 @@ Rectangle {
             spacing: Theme.spacingXS
             StyledText {
                 width: parent.width
-                text: root.moon ? I18n.tr("Moonset", "Weather moonset time") : I18n.tr("Sunset")
+                text: "Untergang"
+                Accessible.name: root.moon ? I18n.tr("Moonset", "Weather moonset time") : I18n.tr("Sunset")
                 color: toneColors.mutedColor
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap

@@ -249,6 +249,11 @@ DDialog {
             nameInput.text = targetWindow.appId;
             appIdInput.text = isMango ? targetWindow.appId : "^" + targetWindow.appId + "$";
         }
+        // Alpe: mit «Fenster wählen» angeklickt, Titel gleich mit übernehmen (wie KDE)
+        if (targetWindow?.alpePicked && targetWindow.title) {
+            const t = String(targetWindow.title).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            titleInput.text = isMango ? targetWindow.title : "^" + t + "$";
+        }
         present();
     }
 

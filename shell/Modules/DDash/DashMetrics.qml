@@ -80,7 +80,36 @@ Singleton {
     function panelColumnsFor(id) {
         if (panelPreview?.id === id)
             return panelPreview.columns;
-        return storedPanelColumns(id) || defaultGridColumns;
+        const base = storedPanelColumns(id) || defaultGridColumns;
+        return Math.max(base, panelWidening[id] ?? 0);
+    }
+
+    // Alpe: Ein Tab darf das Dash vorübergehend breiter machen, etwa Sport für das Spieldetail
+    // neben der Liste. Gespeichert wird nichts; 0 nimmt den Wunsch zurück. Über die Rasterbreite
+    // (maximumGridColumns) hinaus bis widenedGridColumns, begrenzt bleibt es durch den Bildschirm
+    // (widthFor). Die Dash-Fläche zieht die Breite animiert nach wie beim Wechsel der Tabs.
+    readonly property int widenedGridColumns: 11
+    property var panelWidening: ({})
+
+    function widenPanel(id, columns) {
+        const wanted = columns > 0 ? Math.max(minimumGridColumns, Math.min(widenedGridColumns, Math.round(columns))) : 0;
+        if ((panelWidening[id] ?? 0) === wanted)
+            return;
+        const next = Object.assign({}, panelWidening);
+        if (wanted > 0)
+            next[id] = wanted;
+        else
+            delete next[id];
+        panelWidening = next;
+    }
+
+    // Kleinste Spaltenzahl, deren Inhalt mindestens contentWidth breit ist
+    function columnsForContentWidth(contentWidth, weekNumbers) {
+        for (let c = minimumGridColumns; c < widenedGridColumns; c++) {
+            if (contentWidthFor(weekNumbers, c) >= contentWidth)
+                return c;
+        }
+        return widenedGridColumns;
     }
 
     function panelFloorRowsFor(id) {

@@ -67,6 +67,9 @@ p qpa "\${QT_QPA_PLATFORMTHEME:-}"
     }
 
     function runDoctor() {
+        // Alpe: keine Systemprüfung; sie prüft die Umgebung des Ursprungsprojekts.
+        if (!Brand.systemCheck)
+            return;
         if (!doctorProc.running)
             doctorProc.running = true;
     }

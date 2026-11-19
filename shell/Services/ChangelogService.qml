@@ -19,7 +19,8 @@ Singleton {
         const m = v.match(/^\d+\.\d+/);
         return m ? m[0] : "";
     }
-    readonly property bool changelogEnabled: true
+    // Alpe: Die Versionshinweise gehören zum Ursprungsprojekt und erscheinen nicht von selbst.
+    readonly property bool changelogEnabled: Brand.welcome
     // A dotfile in the config dir, not session.json: the Nix home module can make session.json read-only
     readonly property string markerPath: currentVersion !== "" ? Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation)) + "/dms/.changelog-" + currentVersion : ""
     property bool markerChecked: false

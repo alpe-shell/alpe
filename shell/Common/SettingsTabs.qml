@@ -360,7 +360,7 @@ Singleton {
         },
         {
             "id": "power_battery",
-            "text": I18n.tr("Power & battery"),
+            "text": BatteryService.batteryAvailable ? I18n.tr("Power & battery") : I18n.tr("Power"),
             "icon": "power_settings_new",
             "aliases": ["power", "power_security"],
             "children": [
@@ -376,15 +376,24 @@ Singleton {
                     "text": I18n.tr("Battery"),
                     "icon": "battery_charging_full",
                     "tabIndex": 42,
+                    "batteryOnly": true,
                     "hint": I18n.tr("Charge limit, alerts, power profiles")
+                },
+                {
+                    "id": "alpe_peripherals",
+                    "aliases": ["peripherals", "headset"],
+                    "text": "Geräte-Akkus",
+                    "icon": "headset_mic",
+                    "tabIndex": 102,
+                    "hint": "Maus, Headset, Warnung bei tiefem Stand"
                 }
             ]
         },
         {
             "id": "network",
             "text": I18n.tr("Network", "noun, settings page and widget title"),
-            "icon": "wifi",
-            "hint": I18n.tr("Wi-Fi, Ethernet, VPN", "settings sidebar hint for the network page"),
+            "icon": root.wifiShown ? "wifi" : "lan",
+            "hint": root.wifiShown ? I18n.tr("Wi-Fi, Ethernet, VPN", "settings sidebar hint for the network page") : "Ethernet, VPN",
             "dmsOnly": true,
             "children": [
                 {
@@ -392,6 +401,7 @@ Singleton {
                     "text": I18n.tr("Wi-Fi", "wireless network, page and section title"),
                     "icon": "wifi",
                     "tabIndex": 40,
+                    "wifiOnly": true,
                     "hint": I18n.tr("Networks, saved networks, hotspot")
                 },
                 {
@@ -464,7 +474,16 @@ Singleton {
                     "text": I18n.tr("Lock screen"),
                     "icon": "lock",
                     "tabIndex": 11,
-                    "hint": I18n.tr("Layout, authentication, screensaver")
+                    "hint": CompositorService.isKwin ? "Automatische Sperre, Sperre nach der Anmeldung" : I18n.tr("Layout, authentication, screensaver")
+                },
+                {
+                    // Alpe: Texte, Bilder und Passwortfeld des KDE-Sperrbildschirms anordnen.
+                    "id": "lock_design",
+                    "aliases": ["sperrbildschirm gestalten", "lockscreen design", "hyprlock"],
+                    "text": "Sperrbildschirm gestalten",
+                    "icon": "brush",
+                    "tabIndex": 105,
+                    "hint": "Uhr, Datum, Bilder, Passwortfeld – mit Vorschau"
                 },
                 {
                     "id": "greeter",
@@ -549,6 +568,15 @@ Singleton {
                     "hint": I18n.tr("Forecast and conditions")
                 },
                 {
+                    // Alpe: Einstellungen des Sport-Plugins
+                    "id": "alpe_sport",
+                    "aliases": ["sport", "fussball", "eishockey", "nba", "streaming"],
+                    "text": "Sport",
+                    "icon": "sports_soccer",
+                    "tabIndex": 109,
+                    "hint": "Wettbewerbe, Favoriten, Mitteilungen, Streamingdienste"
+                },
+                {
                     "id": "locale",
                     "text": I18n.tr("Locale", "settings page name for language and region"),
                     "icon": "language",
@@ -569,6 +597,63 @@ Singleton {
                     "icon": "system_update_alt",
                     "tabIndex": 20,
                     "hint": I18n.tr("DMS and system updates", "settings sidebar hint for the software updates page")
+                },
+                {
+                    "id": "alpe_desktop",
+                    "aliases": ["kwin", "plasma"],
+                    "text": "KWin & Plasma",
+                    "icon": "desktop_windows",
+                    "tabIndex": 100,
+                    "kwinOnly": true,
+                    "hint": "Fenster ziehen, Kurzbefehle, KDE-Module"
+                },
+                {
+                    "id": "alpe_effects",
+                    "aliases": ["effekte", "ecken", "blur", "animationen", "platzierung"],
+                    "text": "Fenster & Effekte",
+                    "icon": "auto_awesome",
+                    "tabIndex": 106,
+                    "hint": CompositorService.isKwin ? "Abgerundete Ecken, Weichzeichnen, neue Fenster, Animationen" : "Unschärfe: Modus, Feinheiten, was gerade gilt"
+                },
+                {
+                    "id": "alpe_performance",
+                    "aliases": ["leistung", "ram", "speicher", "performance"],
+                    "text": "Leistung",
+                    "icon": "speed",
+                    "tabIndex": 108,
+                    "hint": "Speicher und CPU der Shell, Teile abschalten"
+                },
+                {
+                    "id": "alpe_services",
+                    "aliases": ["dienste", "services", "systemd"],
+                    "text": "Dienste",
+                    "icon": "deployed_code",
+                    "tabIndex": 107,
+                    "hint": "Shell-Dienst, eigene systemd-Dienste, Autostart"
+                },
+                {
+                    "id": "alpe_maintenance",
+                    "aliases": ["maintenance", "wartung"],
+                    "text": "Wartung",
+                    "icon": "build",
+                    "tabIndex": 101,
+                    "hint": "Neustart, Zwischenspeicher, Plugins"
+                },
+                {
+                    "id": "alpe_device",
+                    "aliases": ["device", "geraet"],
+                    "text": "Dieses Gerät",
+                    "icon": "devices",
+                    "tabIndex": 104,
+                    "hint": "Erkanntes Modell und was Alpe daraus ableitet"
+                },
+                {
+                    "id": "alpe_pages",
+                    "aliases": ["pages", "seiten"],
+                    "text": "Seitenauswahl",
+                    "icon": "visibility_off",
+                    "tabIndex": 103,
+                    "hint": "Einstellungsseiten ein- und ausblenden"
                 },
                 {
                     "id": "updater_changelog",
@@ -639,10 +724,67 @@ Singleton {
             "id": "about",
             "text": I18n.tr("About", "settings page name"),
             "icon": "info",
-            "hint": I18n.tr("Version, links, diagnostics"),
+            "hint": "Version, Herkunft, Werkzeuge",
             "tabIndex": 13
         }
     ]
+
+    // Alpe: Seiten, die auf diesem Rechner nichts zu tun haben, fallen weg. Akku und WLAN
+    // richten sich nach der Hardware, alles Weitere nach der Seitenauswahl.
+    readonly property var pinnedPages: ["about", "system", "alpe_pages", "updater"]
+    // Vorgabe je Gerät: Ein Rechner ohne Akku hängt am Kabel und braucht die WLAN-Seite nicht,
+    // ein Laptop schon. Sie gilt, solange in der Liste "auto" steht, also bis zur ersten eigenen Wahl.
+    readonly property bool isLaptop: BatteryService.batteryAvailable
+    readonly property var deviceHiddenPages: isLaptop ? [] : ["network_wifi"]
+    readonly property var hiddenList: {
+        const stored = SettingsData.settingsHiddenPages || [];
+        if (!stored.includes("auto"))
+            return stored;
+        return stored.filter(id => id !== "auto").concat(deviceHiddenPages.filter(id => !stored.includes(id)));
+    }
+    readonly property var hiddenPages: {
+        const out = {};
+        for (const id of hiddenList)
+            out[id] = true;
+        return out;
+    }
+    readonly property bool wifiPresent: (NetworkService.wifiDevices?.length ?? 0) > 0
+    readonly property bool wifiShown: wifiPresent && !hiddenPages["network_wifi"]
+
+    function isPinned(id) {
+        return pinnedPages.includes(id);
+    }
+
+    function isHiddenByUser(id) {
+        return !!hiddenPages[id] && !isPinned(id);
+    }
+
+    function setPageHidden(id, hidden) {
+        if (isPinned(id))
+            return;
+        const list = hiddenList.filter(entry => entry !== id);
+        if (hidden)
+            list.push(id);
+        SettingsData.set("settingsHiddenPages", list);
+    }
+
+    // Für die Suche: die Seite und ihre Gruppe müssen sichtbar sein. Die Sperrbildschirm-Seite
+    // des Ursprungsprojekts ist unter KWin ersetzt, ihre Einträge gelten dort nicht.
+    function isSearchable(id, own) {
+        const entry = page(id);
+        if (!entry || entry.kind === "plugin")
+            return true;
+        if ((id === "lock_screen" || id === "keybinds" || id === "window_rules") && CompositorService.isKwin && !own)
+            return false;
+        if (!isVisible(entry))
+            return false;
+        return !entry.parentId || isVisible(pageMap[entry.parentId]);
+    }
+
+    // Ob eine Seite ohne Rücksicht auf die Seitenauswahl überhaupt in Frage käme.
+    function isAvailable(entry) {
+        return isVisible(entry, true);
+    }
 
     readonly property var pageMap: buildPageMap(structure)
     readonly property var normalizedIds: buildNormalizedIds(pageMap)
@@ -758,20 +900,29 @@ Singleton {
         return tabIndexToPage[tabIndex] ?? "";
     }
 
-    function isVisible(entry) {
+    function isVisible(entry, ignoreUserChoice) {
         if (!entry)
+            return false;
+        if (!ignoreUserChoice && isHiddenByUser(entry.id))
+            return false;
+        if (entry.batteryOnly && !BatteryService.batteryAvailable)
+            return false;
+        if (entry.wifiOnly && !wifiPresent)
+            return false;
+        if (entry.kwinOnly && !CompositorService.isKwin)
             return false;
         if (entry.dmsOnly && !NetworkService.networkAvailable)
             return false;
         if (entry.cupsOnly && !CupsService.cupsAvailable)
             return false;
-        if (entry.shortcutsOnly && !KeybindsService.available)
+        // Alpe: unter KWin gibt es eigene Seiten für Kürzel und Fensterregeln.
+        if (entry.shortcutsOnly && !KeybindsService.available && !CompositorService.isKwin)
             return false;
         if (entry.soundsOnly && MultimediaService.unavailable)
             return false;
         if (entry.hyprlandNiriOnly && !CompositorService.isNiri && !CompositorService.isHyprland && !CompositorService.isMango)
             return false;
-        if (entry.windowRulesCapable && !CompositorService.supportsWindowRules)
+        if (entry.windowRulesCapable && !CompositorService.supportsWindowRules && !CompositorService.isKwin)
             return false;
         if (entry.layoutCapable && !CompositorService.supportsLayoutConfig)
             return false;
@@ -791,16 +942,16 @@ Singleton {
             return false;
         if (entry.cellularOnly && (NetworkService.cellularDevices?.length ?? 0) === 0)
             return false;
-        if (entry.kind === "hub" && !entry.hubHeader && visibleLeaves(entry.id).length === 0)
+        if (entry.kind === "hub" && !entry.hubHeader && visibleLeaves(entry.id, ignoreUserChoice).length === 0)
             return false;
         return true;
     }
 
-    function visibleLeaves(hubId) {
+    function visibleLeaves(hubId, ignoreUserChoice) {
         const hub = pageMap[hubId];
         if (!hub?.children)
             return [];
-        return hub.children.filter(child => isVisible(child));
+        return hub.children.filter(child => isVisible(child, ignoreUserChoice));
     }
 
     readonly property var groupAccents: ["purple", "blue", "green", "orange", "pink", "teal", "yellow", "red"]
@@ -854,10 +1005,18 @@ Singleton {
         if (!id)
             return "";
         const entry = pageMap[id];
+        // Alpe: Eine Seite, die es hier nicht gibt (Akku ohne Akku, ausgeblendetes WLAN), ist auch
+        // über Zahnräder, Suche und Befehle nicht erreichbar; der Aufruf landet in ihrem Bereich.
+        if (entry.kind === "leaf" && entry.parentId && !isVisible(entry))
+            return isVisible(pageMap[entry.parentId]) ? resolveHub(entry.parentId) : "";
         if (entry.kind !== "hub" || entry.hubHeader)
             return id;
+        return resolveHub(id);
+    }
+
+    function resolveHub(id) {
         const leaves = visibleLeaves(id);
-        return leaves.length === 1 ? leaves[0].id : id;
+        return leaves.length === 1 && !pageMap[id].hubHeader ? leaves[0].id : id;
     }
 
     function listPageIds() {

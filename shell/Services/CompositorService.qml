@@ -1663,6 +1663,11 @@ Singleton {
         }
         if (isUmbriel)
             return UmbrielService.action("dpms-off");
+        if (isKwin) {
+            // Alpe: KWin schaltet über sein eigenes DPMS-Protokoll; kscreen-doctor spricht es.
+            Quickshell.execDetached(["kscreen-doctor", "--dpms", "off"]);
+            return;
+        }
         if (outputPowerAvailable) {
             setOutputPower(false);
             return;
@@ -1689,6 +1694,10 @@ Singleton {
         }
         if (isUmbriel)
             return UmbrielService.action("dpms-on");
+        if (isKwin) {
+            Quickshell.execDetached(["kscreen-doctor", "--dpms", "on"]);
+            return;
+        }
         if (outputPowerAvailable) {
             setOutputPower(true);
             return;

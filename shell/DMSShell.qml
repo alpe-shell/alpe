@@ -69,6 +69,12 @@ Item {
         id: lock
     }
 
+    // Alpe: Tastaturbeleuchtung bei Inaktivität und beim Sperren aus
+    Loader {
+        active: SettingsTabs.isLaptop
+        sourceComponent: AlpeKeyboardLight {}
+    }
+
     Variants {
         model: ShellLayout.realScreens
 
@@ -1259,6 +1265,9 @@ Item {
 
         delegate: Toast {}
     }
+
+    // Alpe: Griffleisten am oberen Rand von Fenstern ohne Titelleiste (nur unter KWin).
+    WindowGrips {}
 
     Loader {
         id: osdSurfacesLoader

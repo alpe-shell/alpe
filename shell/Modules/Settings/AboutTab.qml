@@ -89,16 +89,17 @@ Item {
         return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
     }
 
-    function versionText() {
-        const running = SystemUpdateService.shellRunning;
-        if (!SystemUpdateService.sysupdateAvailable || !running)
-            return ShellVersionService.shellVersion ? `dms ${ShellVersionService.shellVersion}` : "dms";
-        if (SystemUpdateService.shellChannel !== "git")
-            return /^\d/.test(running) ? `dms v${running}` : `dms ${running}`;
-        // COPR builds (0.0.git.N.hash) carry no base version; the VERSION file does.
-        const base = running.startsWith("0.0.git") ? ShellVersionService.semverVersion : running.replace(/^v/, "").split("+")[0];
-        const build = SystemUpdateService.shellGitBuild;
-        return build > 0 ? `dms (git) v${base}-${build}` : `dms (git) ${running}`;
+    // Alpe: was ansteht und womit aktualisiert wird.
+    function updateHint() {
+        const via = SystemUpdateService.scriptMode ? " · " + SystemUpdateService.scriptCommand.split(/\s+/)[0] : "";
+        if (SystemUpdateService.scriptRunning)
+            return "Läuft im Terminal";
+        if (!SystemUpdateService.sysupdateAvailable)
+            return via.slice(3);
+        const count = SystemUpdateService.updateCount;
+        if (count === 0)
+            return I18n.tr("Up to date") + via;
+        return (count === 1 ? I18n.tr("%1 update", "singular, %1 is 1, available system update count").arg(count) : I18n.tr("%1 updates", "plural, %1 is a count of available system updates").arg(count)) + via;
     }
 
     component LogoImage: Image {
@@ -110,15 +111,7 @@ Item {
     }
 
     SettingsPage {
-        ReleaseHero {
-            DButton {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: I18n.tr("Support DMS", "about page hero button, opens the Ko-fi donation page")
-                iconName: "favorite"
-                tooltipText: root.host(root.kofiUrl)
-                onClicked: Qt.openUrlExternally(root.kofiUrl)
-            }
-        }
+        ReleaseHero {}
 
         SettingsCard {
             SettingsRow {
@@ -137,32 +130,23 @@ Item {
                     }
                 }
             }
-        }
 
-        SettingsCard {
-            SettingsLinkRow {
-                iconName: "menu_book"
-                title: I18n.tr("Docs")
-                subtitle: root.host(Site.docs)
-                url: Site.docs
+            SettingsRow {
+                iconName: "fork_right"
+                title: "Herkunft"
+                subtitle: `${Brand.name} ${Brand.version} «${Brand.codename}» baut auf ${Brand.upstreamName} ${ShellVersionService.semverVersion} auf (MIT-Lizenz).`
             }
 
             SettingsLinkRow {
-                iconName: "extension"
-                title: I18n.tr("Plugins")
-                subtitle: root.host(Site.plugins)
-                url: Site.plugins
-            }
-
-            SettingsLinkRow {
-                iconName: "code"
-                title: "GitHub"
-                subtitle: root.host(root.githubUrl)
-                url: root.githubUrl
+                title: "Alpe auf GitHub"
+                subtitle: root.host(Brand.url) + " – Anleitung, Neuigkeiten, Fehler melden"
+                url: Brand.url
             }
         }
 
         SettingsCard {
+            // Die Kanäle gehören zum Ursprungsprojekt; Fragen zu Alpe sind dort fehl am Platz.
+            visible: false
             title: I18n.tr("Community", "about page card title, chat and community links")
 
             SettingsLinkRow {
@@ -281,20 +265,30 @@ Item {
             SettingsNavRow {
                 iconName: "system_update_alt"
                 title: I18n.tr("Software updates", "settings page, modal and bar widget title, DMS and system package updates")
-                hint: root.versionText()
+                hint: root.updateHint()
                 onClicked: keyboard => root.parentModal?.navigateTo("updater", keyboard)
             }
 
             SettingsNavRow {
-                iconName: "waving_hand"
-                title: I18n.tr("Show welcome")
-                onClicked: FirstLaunchService.showWelcome()
+                iconName: "build"
+                title: "Wartung"
+                hint: "Neustart, Protokoll, Zwischenspeicher, Plugins"
+                onClicked: keyboard => root.parentModal?.navigateTo("alpe_maintenance", keyboard)
             }
 
             SettingsNavRow {
-                iconName: "vital_signs"
-                title: I18n.tr("System check")
-                onClicked: FirstLaunchService.showDoctor()
+                visible: CompositorService.isKwin
+                iconName: "desktop_windows"
+                title: "KWin & Plasma"
+                hint: "Tastenkürzel, Brücke, KDE-Module"
+                onClicked: keyboard => root.parentModal?.navigateTo("alpe_desktop", keyboard)
+            }
+
+            SettingsNavRow {
+                iconName: "visibility_off"
+                title: "Seitenauswahl"
+                hint: "Einstellungsseiten ein- und ausblenden"
+                onClicked: keyboard => root.parentModal?.navigateTo("alpe_pages", keyboard)
             }
         }
 

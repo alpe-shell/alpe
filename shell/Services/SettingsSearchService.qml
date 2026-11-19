@@ -331,6 +331,10 @@ Singleton {
     }
 
     function checkCondition(item) {
+        // Alpe: Treffer auf ausgeblendeten oder ersetzten Seiten führen ins Leere.
+        const pageId = item.page || (item.tabIndex >= 0 ? SettingsTabs.pageForTabIndex(item.tabIndex) : "");
+        if (pageId && !SettingsTabs.isSearchable(pageId, item.runtimeType === "alpe"))
+            return false;
         if (!item.conditionKey)
             return true;
         const condFn = conditionMap[item.conditionKey];
@@ -427,8 +431,26 @@ Singleton {
         _translatedCache = cache;
     }
 
+    // Alpe: die eigenen Seiten stehen nicht im mitgelieferten Suchindex.
+    function _alpeSearchEntries() {
+        const rows = [["lock_screen", 11, "KDE-Sperrbildschirm", "Sicherheit", ["sperren", "lock", "kde", "sperrbildschirm", "automatisch", "anmeldung", "passwort"]], ["alpe_peripherals", 102, "Geräte-Akkus", "Energie", ["akku", "battery", "headset", "hyperx", "maus", "mouse", "kopfhörer", "headsetcontrol", "warnung"]], ["alpe_desktop", 100, "KWin & Plasma", "System", ["kwin", "plasma", "kde", "kurzbefehle", "shortcuts", "tastenkürzel", "fensterregeln", "nachtfarben", "bildschirm", "fenster", "ziehen", "verschieben", "bewegen", "griffleiste", "titelleiste"]], ["alpe_maintenance", 101, "Wartung", "System", ["wartung", "neustart", "restart", "cache", "zwischenspeicher", "wetter", "radar", "plugins", "protokoll", "journal"]], ["alpe_pages", 103, "Seitenauswahl", "System", ["seiten", "ausblenden", "verbergen", "hide", "pages", "einstellungen"]], ["alpe_device", 104, "Dieses Gerät", "System", ["gerät", "modell", "laptop", "desktop", "macbook", "tastaturbeleuchtung", "erkennung", "hardware"]], ["alpe_sport", 109, "Sport", "Zeit & Wetter", ["sport", "fussball", "eishockey", "nba", "favoriten", "tor", "mitteilung", "stream", "streaming", "mysports", "liga", "wettbewerbe"]]];
+        return rows.map(row => ({
+                    section: "",
+                    label: row[2],
+                    tabIndex: row[1],
+                    page: row[0],
+                    category: row[3],
+                    keywords: row[4],
+                    icon: SettingsTabs.page(row[0])?.icon ?? "settings",
+                    description: SettingsTabs.page(row[0])?.hint ?? "",
+                    conditionKey: "",
+                    runtimeType: "alpe",
+                    runtimeId: row[0]
+                }));
+    }
+
     function _runtimeSearchEntries() {
-        var entries = _barWidgetSearchEntries();
+        var entries = _barWidgetSearchEntries().concat(_alpeSearchEntries());
         for (const entry of DashRegistry.entries) {
             for (const spec of entry.options ?? []) {
                 entries.push({

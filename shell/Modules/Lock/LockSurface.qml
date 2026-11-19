@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Wayland
 import qs.Common
+import "Alpe"
 
 FocusScope {
     id: root
@@ -44,26 +45,53 @@ FocusScope {
         color: "transparent"
     }
 
-    LockScreenContent {
-        id: lockContent
+    // Alpe: Sperrbildschirm im Alpe-Design (wie am PC) oder der des Ursprungsprojekts.
+    readonly property bool alpe: SettingsData.alpeLockStyle !== "dms"
+    readonly property var lockContent: contentLoader.item
 
+    Loader {
+        id: contentLoader
         anchors.fill: parent
-        demoMode: false
-        sessionLock: root.lock
-        pam: root.pam
-        passwordBuffer: root.sharedPasswordBuffer
-        inputRevealed: root.inputRevealed
-        onInputRevealRequested: revealed => root.inputRevealRequested(revealed)
-        screenName: root.screenName
-        enabled: !videoScreensaver.active
-        focus: !videoScreensaver.active
-        opacity: videoScreensaver.active ? 0 : 1
-        onUnlockRequested: root.unlockRequested()
-        onPasswordEdited: text => root.passwordChanged(text)
+        active: !root.alpe
+        focus: !root.alpe
+        sourceComponent: Component {
+            LockScreenContent {
+                anchors.fill: parent
+                demoMode: false
+                sessionLock: root.lock
+                pam: root.pam
+                passwordBuffer: root.sharedPasswordBuffer
+                inputRevealed: root.inputRevealed
+                onInputRevealRequested: revealed => root.inputRevealRequested(revealed)
+                screenName: root.screenName
+                enabled: !videoScreensaver.active
+                focus: !videoScreensaver.active
+                opacity: videoScreensaver.active ? 0 : 1
+                onUnlockRequested: root.unlockRequested()
+                onPasswordEdited: text => root.passwordChanged(text)
 
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 200
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 200
+                    }
+                }
+            }
+        }
+    }
+
+    Loader {
+        id: alpeLoader
+        anchors.fill: parent
+        active: root.alpe
+        focus: root.alpe
+        enabled: !videoScreensaver.active
+        opacity: videoScreensaver.active ? 0 : 1
+        sourceComponent: Component {
+            AlpeLockSurface {
+                pam: root.pam
+                screenName: root.screenName
+                onUnlockRequested: root.unlockRequested()
+                onPasswordEdited: text => root.passwordChanged(text)
             }
         }
     }
@@ -72,7 +100,7 @@ FocusScope {
         id: videoScreensaver
         anchors.fill: parent
         screenName: root.screenName
-        onDismissed: Qt.callLater(() => lockContent.focusPasswordField())
+        onDismissed: Qt.callLater(() => root.alpe ? alpeLoader.item?.reset() : root.lockContent?.focusPasswordField())
     }
 
     Component.onCompleted: forceActiveFocus()
@@ -80,12 +108,14 @@ FocusScope {
     onIsLockedChanged: {
         if (isLocked) {
             forceActiveFocus();
-            lockContent.resetLockState();
+            root.lockContent?.resetLockState();
+            alpeLoader.item?.reset();
             if (SettingsData.lockScreenVideoEnabled) {
                 videoScreensaver.start();
             }
             return;
         }
-        lockContent.unlocking = false;
+        if (root.lockContent)
+            root.lockContent.unlocking = false;
     }
 }

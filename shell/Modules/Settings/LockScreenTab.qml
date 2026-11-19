@@ -302,6 +302,35 @@ Item {
     }
 
     SettingsPage {
+        // Alpe: derselbe Sperrbildschirm wie am PC (Modules/Lock/Alpe), frei gestaltbar.
+        SettingsCard {
+            width: parent.width
+            iconName: "brush"
+            title: "Sperrbildschirm (Alpe)"
+            settingKey: "alpeLockShell"
+            tags: ["alpe", "sperrbildschirm", "lockscreen", "hyprlock", "design"]
+
+            // Alpe: Unter Hyprland bleibt hyprlock die Sperre; Alpe gestaltet dessen hyprlock.conf.
+            SettingsDropdownRow {
+                id: alpeStyle
+                readonly property var values: ["auto", "hyprlock", "alpe", "dms"]
+                readonly property var labels: ["Automatisch (hyprlock, wenn installiert)", "hyprlock, gestaltet in Alpe", "Shell-Sperre im Alpe-Design", "Shell-Sperre im Design des Ursprungsprojekts"]
+                text: "Sperrbildschirm"
+                description: SettingsData.alpeLockStyle === "dms" ? "Die Einstellungen weiter unten gelten für dieses Design." : SettingsData.alpeLockStyle === "alpe" ? "Wie am PC; sperrt über «dms ipc call lock lock». Die Einstellungen weiter unten gelten hier nicht." : "Hyprland sperrt mit hyprlock wie bisher; «Sperrbildschirm gestalten» schreibt dessen hyprlock.conf."
+                options: labels
+                currentValue: labels[Math.max(0, values.indexOf(SettingsData.alpeLockStyle))]
+                onValueChanged: value => SettingsData.set("alpeLockStyle", values[labels.indexOf(value)])
+            }
+
+            SettingsNavRow {
+                visible: SettingsData.alpeLockStyle !== "dms"
+                title: "Sperrbildschirm gestalten"
+                hint: "Vorschau, Texte, Bilder, Passwortfeld, Hintergrund"
+                iconName: "brush"
+                onClicked: keyboard => root.parentModal?.navigateTo("lock_design", keyboard)
+            }
+        }
+
         id: mainColumn
 
         SettingsCard {

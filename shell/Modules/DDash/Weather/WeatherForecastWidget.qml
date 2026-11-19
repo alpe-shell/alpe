@@ -60,7 +60,7 @@ Rectangle {
             StyledText {
                 anchors.verticalCenter: parent.verticalCenter
                 width: Math.max(0, title.width - Theme.iconSize - title.spacing)
-                text: root.daily ? I18n.tr("Daily") : I18n.tr("Hourly")
+                text: (root.daily ? I18n.tr("Daily") : I18n.tr("Hourly")) + (root.daily && WeatherService.weather.source?.name ? " · " + WeatherService.weather.source.name + (WeatherService.weather.source.place ? ", " + WeatherService.weather.source.place : "") : "")
                 font.pixelSize: Theme.fontSizeLarge
                 font.weight: Theme.fontWeightMedium
                 color: Theme.onSurface

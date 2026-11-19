@@ -29,6 +29,8 @@ Item {
     readonly property real columnWidth: slice.length > 0 ? (width - Theme.spacingM * 2) / slice.length : 0
     readonly property real chartTop: Theme.spacingM + header.height + Theme.spacingS
     readonly property real chartBottom: height - Theme.spacingM - footer.height - Theme.spacingS
+    // Alpe: amtliche Regenmenge je Tag, wenn der Wetteranbieter sie liefert.
+    readonly property bool hasAmounts: daily && slice.some(f => WeatherService.formatPrecipRange(f.precipMin, f.precipMax) !== null)
 
     function visualIndex(index) {
         return I18n.isRtl ? slice.length - 1 - index : index;
@@ -164,7 +166,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: Theme.spacingM
-        height: Theme.fontSizeSmall + Theme.spacingXS
+        height: (Theme.fontSizeSmall + Theme.spacingXS) * (root.hasAmounts ? 2 : 1)
 
         Repeater {
             model: root.slice
@@ -178,8 +180,18 @@ Item {
                 width: root.columnWidth
                 height: footer.height
 
+                StyledText {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    visible: root.hasAmounts
+                    text: WeatherService.formatPrecipRange(footerColumn.modelData.precipMin, footerColumn.modelData.precipMax) ?? ""
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: (footerColumn.modelData.precipMax ?? 0) >= 0.5 ? Theme.primary : Theme.outline
+                }
+
                 Row {
-                    anchors.centerIn: parent
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    y: (Theme.fontSizeSmall + Theme.spacingXS - height) / 2
                     spacing: Theme.spacingXXS
 
                     DIcon {

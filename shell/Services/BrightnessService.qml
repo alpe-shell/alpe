@@ -38,6 +38,123 @@ Singleton {
     signal brightnessChanged(bool showOsd)
     signal deviceSwitched
 
+    // Alpe: Unter KWin regelt Plasma die Bildschirmhelligkeit (PowerDevil, extern über DDC/CI).
+    // Der eigene Zugriff des Dienstes greift dort ins Leere oder kommt Plasma in die Quere.
+    // scripts/alpe-brightness.py spricht deshalb Plasmas Schnittstelle an; die so gefundenen
+    // Bildschirme (Klasse "kde") ersetzen die des Dienstes, Tastaturbeleuchtung bleibt.
+    readonly property bool kdeMode: CompositorService.isKwin
+    property var kdeDevices: []
+    property string kdeBackend: ""
+    property var _backendDevices: []
+    property var _kdeWanted: ({})
+    readonly property string _kdeScript: Quickshell.shellDir + "/scripts/alpe-brightness.py"
+
+    function _publishDevices() {
+        const kde = kdeMode ? kdeDevices : [];
+        const backend = kde.length > 0 ? _backendDevices.filter(d => d.class === "leds") : _backendDevices;
+        const next = kde.map(d => ({
+                    "id": d.id,
+                    "name": d.id,
+                    "label": d.label,
+                    "class": "kde",
+                    "current": d.percent,
+                    "percentage": d.percent,
+                    "max": 100,
+                    "backend": kdeBackend,
+                    "displayMax": 100
+                })).concat(backend);
+        devices = next;
+        brightnessAvailable = next.length > 0;
+        if (kde.length > 0) {
+            const values = Object.assign({}, deviceBrightness);
+            for (const d of kde) {
+                if (_kdeWanted[d.id] === undefined && !isDeviceUserControlled(d.id))
+                    values[d.id] = d.percent;
+            }
+            deviceBrightness = values;
+            brightnessVersion++;
+        }
+        if (next.length > 0 && !next.some(d => d.id === currentDevice)) {
+            currentDevice = "";
+            lastIpcDevice = "";
+            setCurrentDevice(getDefaultDevice(), false);
+        }
+    }
+
+    function refreshKde() {
+        if (kdeMode && !kdeLister.running)
+            kdeLister.running = true;
+    }
+
+    // Plasma stellt über DDC langsam; es läuft immer nur ein Aufruf, der jüngste Wunsch gewinnt.
+    function _setKde(device, percent) {
+        const wanted = Object.assign({}, _kdeWanted);
+        wanted[device] = Math.round(percent);
+        _kdeWanted = wanted;
+        _runKdeSetter();
+    }
+
+    function _runKdeSetter() {
+        if (kdeSetter.running)
+            return;
+        const ids = Object.keys(_kdeWanted);
+        if (ids.length === 0)
+            return;
+        const device = ids[0];
+        const wanted = Object.assign({}, _kdeWanted);
+        const percent = wanted[device];
+        delete wanted[device];
+        _kdeWanted = wanted;
+        kdeSetter.command = ["python3", _kdeScript, "set", device, String(percent)];
+        kdeSetter.running = true;
+    }
+
+    onKdeModeChanged: {
+        refreshKde();
+        _publishDevices();
+    }
+
+    Process {
+        id: kdeLister
+        command: ["python3", root._kdeScript, "list"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let data = null;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {}
+                root.kdeBackend = data?.backend ?? "";
+                root.kdeDevices = data?.devices ?? [];
+                root._publishDevices();
+                if (!root.brightnessInitialized && root.kdeDevices.length > 0)
+                    root.brightnessInitialized = true;
+            }
+        }
+    }
+
+    Process {
+        id: kdeSetter
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let data = null;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {}
+                if (data && data.ok === false)
+                    ToastService.showError(I18n.tr("Failed to set brightness"), data.error || "", "", "brightness");
+            }
+        }
+        onExited: root._runKdeSetter()
+    }
+
+    // Tasten am Bildschirm oder Plasmas eigene Regler ändern den Wert an Alpe vorbei.
+    Timer {
+        interval: 60000
+        repeat: true
+        running: root.kdeMode && root.kdeDevices.length > 0
+        onTriggered: root.refreshKde()
+    }
+
     function markDeviceUserControlled(deviceId) {
         const newControlled = Object.assign({}, userControlledDevices);
         newControlled[deviceId] = Date.now();
@@ -72,6 +189,10 @@ Singleton {
 
     function updateSingleDevice(device) {
         if (device.class === "leds") {
+            return;
+        }
+        // Alpe: Unter KWin gelten Plasmas Werte; Meldungen des Dienstes zu Bildschirmen entfallen.
+        if (kdeMode && kdeDevices.length > 0) {
             return;
         }
 
@@ -157,7 +278,7 @@ Singleton {
         }
 
         const newMaxCache = Object.assign({}, deviceMaxCache);
-        devices = state.devices.map(d => {
+        _backendDevices = state.devices.map(d => {
             const cachedMax = deviceMaxCache[d.id];
             let displayMax = cachedMax || (d.class === "ddc" ? d.max : 100);
             if (displayMax > 0 && !cachedMax) {
@@ -175,8 +296,12 @@ Singleton {
             };
         });
         deviceMaxCache = newMaxCache;
+        const kdeValues = {};
+        for (const d of kdeMode ? kdeDevices : [])
+            kdeValues[d.id] = deviceBrightness[d.id] ?? d.percent;
+        _publishDevices();
 
-        const newBrightness = {};
+        const newBrightness = kdeValues;
         let anyDeviceBrightnessChanged = false;
 
         for (const device of state.devices) {
@@ -216,7 +341,7 @@ Singleton {
             }
         }
 
-        const shouldShowOsd = brightnessInitialized && anyDeviceBrightnessChanged && !suppressOsd;
+        const shouldShowOsd = brightnessInitialized && anyDeviceBrightnessChanged && !suppressOsd && !(kdeMode && kdeDevices.length > 0);
 
         if (!brightnessInitialized) {
             brightnessInitialized = true;
@@ -251,6 +376,19 @@ Singleton {
         }
 
         const clampedValue = Math.max(minValue, Math.min(maxValue, percentage));
+
+        // Alpe: Bildschirme unter KWin stellt Plasma.
+        if (deviceInfo?.class === "kde") {
+            markDeviceUserControlled(actualDevice);
+            const values = Object.assign({}, deviceBrightness);
+            values[actualDevice] = clampedValue;
+            deviceBrightness = values;
+            brightnessVersion++;
+            _setKde(actualDevice, clampedValue);
+            if (!suppressOsd)
+                brightnessChanged(true);
+            return;
+        }
 
         if (!DMSService.isConnected) {
             log.warn("Not connected to DMS");
@@ -451,6 +589,7 @@ Singleton {
         switch (deviceInfo.class) {
         case "backlight":
         case "ddc":
+        case "kde":
             return 1;
         default:
             return 0;
@@ -470,6 +609,8 @@ Singleton {
     }
 
     function deviceTitle(device) {
+        if (device?.label)
+            return device.label;
         const name = device?.name || "";
         if (device?.class !== "backlight")
             return name;
@@ -483,6 +624,7 @@ Singleton {
         case "backlight":
         case "ddc":
         case "software":
+        case "kde":
             break;
         default:
             return String(deviceInfo.name ?? "").includes("kbd") ? "keyboard" : "lightbulb";
@@ -548,6 +690,7 @@ Singleton {
         if (DMSService.isConnected) {
             requestBrightnessState();
         }
+        refreshKde();
     }
 
     Timer {
@@ -587,7 +730,7 @@ Singleton {
 
         function onConnectionStateChanged() {
             if (!DMSService.isConnected) {
-                brightnessAvailable = false;
+                brightnessAvailable = root.kdeMode && root.kdeDevices.length > 0;
                 return;
             }
             requestBrightnessState();

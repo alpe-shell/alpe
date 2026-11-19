@@ -18,11 +18,16 @@ Singleton {
 
     readonly property bool isOnBattery: BatteryService.batteryAvailable && !BatteryService.isPluggedIn
     readonly property int monitorTimeout: isOnBattery ? SettingsData.batteryMonitorTimeout : SettingsData.acMonitorTimeout
-    readonly property int lockTimeout: isOnBattery ? SettingsData.batteryLockTimeout : SettingsData.acLockTimeout
+    // Alpe: unter KWin sperrt der KDE-Sperrbildschirm selbst bei Inaktivität (Einstellungen →
+    // Sicherheit). Eine zweite Uhr daneben würde nur für widersprüchliche Zeiten sorgen.
+    readonly property bool lockTimerDelegated: CompositorService.isKwin
+    readonly property int lockTimeout: lockTimerDelegated ? 0 : (isOnBattery ? SettingsData.batteryLockTimeout : SettingsData.acLockTimeout)
     readonly property int suspendTimeout: isOnBattery ? SettingsData.batterySuspendTimeout : SettingsData.acSuspendTimeout
     readonly property int suspendBehavior: isOnBattery ? SettingsData.batterySuspendBehavior : SettingsData.acSuspendBehavior
     readonly property int postLockMonitorTimeout: isOnBattery ? SettingsData.batteryPostLockMonitorTimeout : SettingsData.acPostLockMonitorTimeout
-    readonly property bool postLockMonitorActive: isShellLocked && postLockMonitorTimeout > 0
+    // Alpe: unter KWin sperrt der KDE-Sperrbildschirm; logind kennt dessen Zustand.
+    readonly property bool sessionLocked: isShellLocked || (CompositorService.isKwin && SessionService.lockedHint)
+    readonly property bool postLockMonitorActive: sessionLocked && postLockMonitorTimeout > 0
 
     onEnabledChanged: _applyMonitorEnableds()
     onPostLockMonitorActiveChanged: _applyMonitorEnableds()

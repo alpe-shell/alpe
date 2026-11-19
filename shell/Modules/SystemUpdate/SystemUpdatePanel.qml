@@ -18,7 +18,7 @@ FocusScope {
     LayoutMirroring.enabled: I18n.isRtl
     LayoutMirroring.childrenInherit: true
 
-    readonly property bool upgradeRunsInTerminal: SystemUpdateService.useCustomCommand || (SystemUpdateService.backends || []).some(b => b.runsInTerminal === true)
+    readonly property bool upgradeRunsInTerminal: SystemUpdateService.scriptMode || SystemUpdateService.useCustomCommand || (SystemUpdateService.backends || []).some(b => b.runsInTerminal === true)
     readonly property bool showPackages: !SystemUpdateService.isUpgrading && !SystemUpdateService.isChecking && !SystemUpdateService.hasError && SystemUpdateService.helperAvailable && SystemUpdateService.updateCount > 0
     readonly property var ignoredNames: SettingsData.updaterIgnoredPackages || []
     readonly property bool offerReboot: SystemUpdateService.rebootRecommended && !SystemUpdateService.isUpgrading && !showPackages

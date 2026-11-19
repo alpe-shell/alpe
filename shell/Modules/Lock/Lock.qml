@@ -35,6 +35,41 @@ Scope {
     property bool lockPowerOffArmed: false
     property bool lockWakeAllowed: false
     property bool customLockerSpawned: false
+    // Alpe: KWin kennt ext-session-lock nicht. Gesperrt wird dort über logind, worauf der
+    // KDE-Sperrbildschirm reagiert; die eigene Sperre bleibt aus dem Spiel.
+    readonly property bool kdeLock: CompositorService.isKwin && !(SettingsData.customPowerActionLock?.length > 0)
+    // Alpe: Der KDE-Sperrbildschirm zeigt dasselbe Bild wie der Desktop. Gilt für das Alpe-Design
+    // wie für das von KDE; Farben statt Bildern lässt er aus.
+    readonly property string kdeLockWallpaper: {
+        if (!kdeLock || !SettingsData.lockFollowWallpaper)
+            return "";
+        const first = Quickshell.screens[0]?.name ?? "";
+        // Alpe: Bei einem Video-Hintergrund das Standbild (VideoWallpaperService), KDEs
+        // Bild-Plugin kann kein Video zeigen; bis das Standbild da ist, bleibt der alte Eintrag.
+        const path = String(first !== "" ? SessionData.getMonitorWallpaperImage(first) : VideoWallpaperService.imageFor(SessionData.wallpaperPath));
+        if (VideoWallpaperService.isVideo(path))
+            return "";
+        if (path.startsWith("file://"))
+            return path;
+        return path.startsWith("/") ? "file://" + path : "";
+    }
+    onKdeLockWallpaperChanged: {
+        if (kdeLockWallpaper !== "")
+            Quickshell.execDetached(["sh", "-c", 'command -v kwriteconfig6 >/dev/null || exit 0; kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin org.kde.image; kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "$1"', "sh", kdeLockWallpaper]);
+    }
+    // Alpe: Unter Hyprland mit hyprlock folgt dessen Hintergrund dem Desktop, wenn die
+    // hyprlock.conf das so verlangt (Marke «alpe: hintergrund = desktop», gesetzt vom Gestalter).
+    readonly property string hyprlockWallpaper: {
+        if (!CompositorService.isHyprland)
+            return "";
+        const first = Quickshell.screens[0]?.name ?? "";
+        const path = String(first !== "" ? SessionData.getMonitorWallpaperImage(first) : "").replace(/^file:\/\//, "");
+        return path.startsWith("/") && !VideoWallpaperService.isVideo(path) ? path : "";
+    }
+    onHyprlockWallpaperChanged: {
+        if (hyprlockWallpaper !== "")
+            Quickshell.execDetached(["sh", "-c", 'c="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/hyprlock.conf"; [ -f "$c" ] && grep -q "alpe: hintergrund = desktop" "$c" && python3 -I "$1" wallpaper "$c" "$2" >/dev/null', "sh", Quickshell.shellDir + "/scripts/alpe-hyprlock.py", hyprlockWallpaper]);
+    }
     readonly property bool powerOffOnLock: SettingsData.lockScreenPowerOffMonitorsOnLock || IdleService.lockPowerOffRequested
     property real powerOffFadeTarget: 0
     property bool powerOffFadeInstant: false
@@ -76,9 +111,66 @@ Scope {
         return (Date.now() / 1000 - authTime) < 120;
     }
 
+    function lockWithKde() {
+        IdleService.lockPowerOffRequested = false;
+        Quickshell.execDetached(["loginctl", "lock-session"]);
+        IdleService.dismissFadeToLock();
+    }
+
+    // Einmal je Anmeldung, nicht bei jedem Neustart der Shell: die Marke liegt im
+    // Laufzeitverzeichnis, das mit der Abmeldung verschwindet.
+    //
+    // Alpe: Die Shell startet spät – zuerst erschienen Autostart-Fenster (Proton VPN) und
+    // kurz der Desktop, dann erst die Sperre. Jetzt sperrt KWin selbst gleich beim Start
+    // (kscreenlockerrc [Daemon] LockOnStart, wie Plasma Mobile). Stand der Schlüssel zu Beginn
+    // dieser Sitzung schon auf true, hat KWin gesperrt und die Shell tut nichts mehr – sonst würde
+    // sie nachsperren, wenn man schon entsperrt hat. Nur in der ersten Sitzung nach dem Einschalten
+    // sperrt noch die Shell.
+    // Startet die Shell erst mitten in der Sitzung (Einrichten, «alpe kde ein --jetzt», Design
+    // einspielen), ist das keine Anmeldung: dann nur den Schlüssel setzen, nicht sperren. Massstab
+    // ist, wie lange graphical-session.target schon läuft, ersatzweise wie lange KWin läuft.
+    function lockAtLoginWithKde() {
+        Quickshell.execDetached(["sh", "-c", 'mark="${XDG_RUNTIME_DIR:-/tmp}/alpe-locked-at-login"; [ -e "$mark" ] && exit 0; : > "$mark"; '
+            + 'if command -v kreadconfig6 >/dev/null && [ "$(kreadconfig6 --file kscreenlockerrc --group Daemon --key LockOnStart)" = true ]; then exit 0; fi; '
+            + 'command -v kwriteconfig6 >/dev/null && kwriteconfig6 --file kscreenlockerrc --group Daemon --key LockOnStart true; '
+            + 'since=$(systemctl --user show graphical-session.target -P ActiveEnterTimestamp --timestamp=unix 2>/dev/null); since=${since#@}; '
+            + 'case "$since" in ""|*[!0-9]*) ;; *) [ "$since" -gt 0 ] && [ $(( $(date +%s) - since )) -gt 90 ] && exit 0 ;; esac; '
+            + 'age=$(ps -o etimes= -C kwin_wayland 2>/dev/null | sort -n | tail -1 | tr -d " "); '
+            + 'case "$age" in ""|*[!0-9]*) ;; *) [ "$age" -gt 90 ] && exit 0 ;; esac; '
+            + 'exec loginctl lock-session']);
+    }
+
+    function syncKdeLockOnStart() {
+        if (!kdeLock)
+            return;
+        Quickshell.execDetached(["sh", "-c", 'command -v kwriteconfig6 >/dev/null || exit 0; kwriteconfig6 --file kscreenlockerrc --group Daemon --key LockOnStart "$1"', "sh", SettingsData.lockAtStartup ? "true" : "false"]);
+    }
+
+    Connections {
+        target: SettingsData
+
+        function onLockAtStartupChanged() {
+            root.syncKdeLockOnStart();
+        }
+    }
+
+    // logind meldet die Sperre; der KDE-Sperrbildschirm steht dann schon. Der Dienst wartet
+    // vor dem Standby auf diese Meldung.
+    function confirmKdeLock() {
+        if (SessionService.loginctlAvailable && DMSService.apiVersion >= 2)
+            DMSService.sendRequest("loginctl.lockerReady", null, () => {});
+    }
+
     Component.onCompleted: {
         IdleService.lockComponent = this;
         IdleService.isSessionLockSecure = sessionLock.secure;
+        if (kdeLock) {
+            if (SettingsData.lockAtStartup)
+                lockAtLoginWithKde();
+            else
+                syncKdeLockOnStart();
+            return;
+        }
         if (SettingsData.lockAtStartup && !freshGreeterLogin()) {
             lock();
             return;
@@ -125,6 +217,10 @@ Scope {
     }
 
     function followLoginctlLock() {
+        if (kdeLock) {
+            confirmKdeLock();
+            return;
+        }
         if (shouldLock || pendingLock)
             return;
         if (handleLoginctlCustomLock())
@@ -158,6 +254,10 @@ Scope {
     }
 
     function lock() {
+        if (kdeLock) {
+            lockWithKde();
+            return;
+        }
         if (SettingsData.customPowerActionLock?.length > 0) {
             spawnCustomLocker();
             return;
@@ -180,6 +280,10 @@ Scope {
     }
 
     function lockAndOutputsOff() {
+        if (kdeLock) {
+            lockWithKde();
+            return;
+        }
         IdleService.lockPowerOffRequested = true;
         if (sessionLock.secure) {
             beginPowerOff();
@@ -219,6 +323,12 @@ Scope {
             root.followLoginctlLock();
         }
 
+        // Alpe: Sobald logind die KDE-Sperre meldet, darf ein wartender Standby weiterlaufen.
+        function onLockedHintChanged() {
+            if (root.kdeLock && SessionService.lockedHint)
+                SessionService.onSessionLockSecured();
+        }
+
         function onSessionUnlocked() {
             customLockerSpawned = false;
             if (AdminPolicy.disableLogindUnlock)
@@ -252,6 +362,8 @@ Scope {
         }
 
         function onLoginctlStateChanged() {
+            if (root.kdeLock)
+                return;
             if (SessionService.active && pendingLock) {
                 pendingLock = false;
                 lockInitiatedLocally = true;

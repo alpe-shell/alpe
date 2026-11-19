@@ -10,6 +10,7 @@ Item {
     id: root
 
     property bool onAc: true
+    property var parentModal: null
 
     readonly property var timeoutValues: [0, 15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 3600, 5400, 7200, 10800]
     readonly property var timeoutOptions: timeoutValues.map(seconds => seconds === 0 ? I18n.tr("Never", "timeout option meaning the action never happens") : I18n.duration(seconds))
@@ -67,8 +68,18 @@ Item {
                 }
             }
 
+            // Alpe: unter KWin sperrt der KDE-Sperrbildschirm; die Zeit steht bei «Sicherheit».
+            SettingsNavRow {
+                visible: IdleService.lockTimerDelegated
+                title: I18n.tr("Automatically lock after")
+                hint: "Regelt der KDE-Sperrbildschirm · Sicherheit"
+                iconName: "lock"
+                onClicked: keyboard => root.parentModal?.navigateTo("lock_screen", keyboard)
+            }
+
             SettingsDropdownRow {
                 settingKey: "lockTimeout"
+                visible: !IdleService.lockTimerDelegated
                 tags: ["lock", "timeout", "idle", "automatic", "security"]
                 text: I18n.tr("Automatically lock after")
                 description: SettingsData.isManaged(root.sourceKey("LockTimeout")) ? root.managedNote : ""
@@ -146,6 +157,7 @@ Item {
 
             SettingsToggleRow {
                 settingKey: "fadeToLockEnabled"
+                visible: !IdleService.lockTimerDelegated
                 tags: ["fade", "lock", "screen", "idle", "grace period"]
                 text: I18n.tr("Fade to lock screen")
                 description: SettingsData.isManaged("fadeToLockEnabled") ? root.managedNote : I18n.tr("Fades the screen out first. Input during the fade cancels it", "idle fade toggle description")
@@ -160,7 +172,7 @@ Item {
                 text: I18n.tr("Lock fade grace period")
                 description: SettingsData.isManaged("fadeToLockGracePeriod") ? root.managedNote : ""
                 enabled: !SettingsData.isManaged("fadeToLockGracePeriod")
-                visible: SettingsData.fadeToLockEnabled
+                visible: SettingsData.fadeToLockEnabled && !IdleService.lockTimerDelegated
                 options: root.gracePeriodOptions
                 currentValue: root.gracePeriodText("fadeToLockGracePeriod")
                 onValueChanged: value => root.setGracePeriodFromText("fadeToLockGracePeriod", value)

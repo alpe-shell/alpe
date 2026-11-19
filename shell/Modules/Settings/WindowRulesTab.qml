@@ -283,6 +283,38 @@ Item {
     property bool editorMounted: false
     property var editorRequest: null
 
+    property bool picking: false
+    property string pickStatus: ""
+
+    function pickWindow() {
+        picking = true;
+        pickStatus = "Jetzt das gewünschte Fenster anklicken (Esc bricht ab)";
+        Proc.runCommand("alpe-hypr-pick", ["python3", Quickshell.shellDir + "/scripts/alpe-hypr-pick.py"], (output, exitCode) => {
+            picking = false;
+            let info = null;
+            try {
+                const lines = String(output || "").trim().split("\n");
+                info = JSON.parse(lines[lines.length - 1]);
+            } catch (e) {
+                info = {
+                    error: "Keine Antwort vom Auswahl-Werkzeug"
+                };
+            }
+            if (!info || info.error || exitCode !== 0) {
+                pickStatus = info?.error === "abgebrochen" ? "" : (info?.error || "Auswahl fehlgeschlagen");
+                return;
+            }
+            pickStatus = "";
+            openEditor("new", {
+                appId: info.class,
+                title: info.title,
+                initialClass: info.initialClass,
+                initialTitle: info.initialTitle,
+                alpePicked: true
+            });
+        }, 0, 130000);
+    }
+
     function openRuleModal(window) {
         openEditor("new", window || null);
     }
@@ -385,6 +417,24 @@ Item {
                         root.openRuleModal(window);
                         currentValue = "";
                     }
+                }
+            }
+
+            // Alpe: «Fenster wählen» wie im KDE-Dialog: Fenster anklicken (slurp),
+            // Klasse und Titel landen im Regel-Editor.
+            SettingsRow {
+                id: pickRow
+                visible: CompositorService.isHyprland
+                title: "Fenster wählen"
+                subtitle: root.pickStatus !== "" ? root.pickStatus : "Fenster anklicken – Alpe füllt Klasse und Titel ein"
+
+                DButton {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: root.picking ? "Warte …" : "Fenster anklicken"
+                    iconName: "ads_click"
+                    variant: "tonal"
+                    enabled: !root.picking
+                    onClicked: root.pickWindow()
                 }
             }
         }

@@ -178,6 +178,43 @@ var LOCAL_SPEC = {
         def: 15,
         onChange: "updateCompositorLayout"
     },
+    // Alpe: Feineinstellungen der Unschärfe unter Hyprland (mode: dms | tuned | off)
+    alpeHyprBlurMode: {
+        def: "dms",
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurNoise: {
+        def: 12,
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurContrast: {
+        def: 89,
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurBrightness: {
+        def: 82,
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurVibrancy: {
+        def: 17,
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurIgnoreOpacity: {
+        def: true,
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurNewOptimizations: {
+        def: true,
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurPopups: {
+        def: false,
+        onChange: "updateCompositorLayout"
+    },
+    alpeHyprBlurSpecial: {
+        def: false,
+        onChange: "updateCompositorLayout"
+    },
     hyprlandBlurVariant: {
         def: "kawase",
         onChange: "updateCompositorLayout"
@@ -1372,6 +1409,68 @@ var LOCAL_SPEC = {
     },
     lockAtStartup: {
         def: false
+    },
+    // Alpe
+    // "auto" steht für die Vorgabe des Geräts (siehe SettingsTabs.deviceHiddenPages).
+    settingsHiddenPages: {
+        def: ["auto"]
+    },
+    windowGripEnabled: {
+        def: true
+    },
+    windowGripHeight: {
+        def: 8
+    },
+    windowGripOutside: {
+        def: 12
+    },
+    windowGripSkipDecorated: {
+        def: true
+    },
+    windowGripSnap: {
+        def: true
+    },
+    windowGripCorners: {
+        def: true
+    },
+    windowGripEdges: {
+        def: true
+    },
+    // Alpe: Sperre unter Hyprland: "auto", "hyprlock", "alpe" (Shell, wie am PC) oder "dms"
+    // "auto": hyprlock, wenn installiert, sonst die Shell-Sperre im Alpe-Design
+    alpeLockStyle: {
+        def: "auto"
+    },
+    // Alpe: Tastaturbeleuchtung aus nach Sekunden ohne Eingabe (0 = nie) und beim Sperren
+    alpeKbdIdleOff: {
+        def: 30
+    },
+    alpeKbdOffWhenLocked: {
+        def: true
+    },
+    alpeLockLayout: {
+        def: ""
+    },
+    alpeLockLocale: {
+        def: ""
+    },
+    lockFollowWallpaper: {
+        def: true
+    },
+    windowGripExcluded: {
+        def: []
+    },
+    headsetBatteryEnabled: {
+        def: true
+    },
+    headsetBatteryInterval: {
+        def: 120
+    },
+    headsetBatteryNotifyLow: {
+        def: true
+    },
+    headsetBatteryLowThreshold: {
+        def: 15
     },
     enableFprint: {
         def: false

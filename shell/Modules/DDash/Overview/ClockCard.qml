@@ -21,7 +21,16 @@ Card {
     }
     readonly property string minuteText: String(systemClock.date.getMinutes()).padStart(2, "0")
     readonly property string secondText: String(systemClock.date.getSeconds()).padStart(2, "0")
-    readonly property string dateText: showDate ? systemClock.date.toLocaleDateString(I18n.locale(), SettingsData.getEffectiveDateFormat("ddd, MMM d")) : ""
+    // Alpe: Tag vor Monat, wo die Sprache es so schreibt («Mo., 16. Nov.» statt «Mo., Nov. 16»).
+    readonly property string dateFallback: {
+        const numeric = I18n.locale().dateFormat(Locale.ShortFormat);
+        const day = numeric.indexOf("d");
+        const month = numeric.indexOf("M");
+        if (day < 0 || month < 0 || day > month)
+            return "ddd, MMM d";
+        return numeric.indexOf("d.") >= 0 ? "ddd, d. MMM" : "ddd, d MMM";
+    }
+    readonly property string dateText: showDate ? systemClock.date.toLocaleDateString(I18n.locale(), SettingsData.getEffectiveDateFormat(dateFallback)) : ""
     readonly property color supportingColor: tinted ? contentColor : mutedColor
     readonly property real supportLine: Theme.fontSizeMedium * 1.5
 

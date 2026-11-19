@@ -1,16 +1,14 @@
 import QtQuick
+import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
 
 DHeroCard {
-    brand: "dms"
-    accent: {
-        const semver = ShellVersionService.semverVersion.replace(/^v/, "");
-        const base = semver.match(/^\d+\.\d+/);
-        return base ? base[0] : semver || SystemUpdateService.shellRunning.replace(/^v/, "");
-    }
-    caption: ShellVersionService.shellCodename
-    symbol: "He"
-    atomicNumber: 2
-    atomicMass: "4.0026"
+    // Kachel "Al" plus Rest des Namens ergibt den Schriftzug, die Marke daneben Version und Codename.
+    brand: Brand.version
+    accent: Brand.codename
+    caption: Brand.name
+    symbol: "Al"
+    atomicNumber: 13
+    atomicMass: "26.982"
 }

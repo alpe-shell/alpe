@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import qs.Common
 import qs.Services
 import "RepoMoveNotice.js" as RepoMoveNotice
@@ -32,7 +33,18 @@ Singleton {
     property var availableUpdates: []
     property var _rawUpdates: []
     property bool isChecking: false
-    property bool isUpgrading: false
+    property bool _daemonUpgrading: false
+    readonly property bool isUpgrading: _daemonUpgrading || scriptRunning
+
+    // Alpe: Aktualisiert wird mit dem eigenen Wartungsbefehl in einem Terminal. Der Dienst
+    // prüft weiterhin, was ansteht; er installiert aber nichts mehr.
+    property bool updateCommandAvailable: false
+    readonly property string scriptCommand: useCustomCommand ? SettingsData.updaterCustomCommand.trim() : (updateCommandAvailable ? Brand.updateCommand : "")
+    readonly property bool scriptMode: scriptCommand !== ""
+    // Letzter Lauf: { state: running|done|failed|aborted, command, started, finished, code }
+    property var scriptRun: null
+    property bool _scriptLaunching: false
+    readonly property bool scriptRunning: _scriptLaunching || scriptRun?.state === "running"
     property bool hasError: false
     property string errorMessage: ""
     property string errorHint: ""
@@ -158,6 +170,10 @@ Singleton {
             checkCapabilities();
         }
         Qt.callLater(() => root._maybeStartupCheck());
+        // Alpe: Ein Lauf, der einen Neustart der Shell überdauert hat, wird weiter verfolgt.
+        _readScriptState();
+        if (scriptRunning)
+            scriptPoll.start();
     }
 
     function checkCapabilities() {
@@ -263,15 +279,15 @@ Singleton {
         switch (phase) {
         case "refreshing":
             isChecking = true;
-            isUpgrading = false;
+            _daemonUpgrading = false;
             break;
         case "upgrading":
             isChecking = false;
-            isUpgrading = true;
+            _daemonUpgrading = true;
             break;
         default:
             isChecking = false;
-            isUpgrading = false;
+            _daemonUpgrading = false;
         }
 
         if (data.error) {
@@ -328,6 +344,8 @@ Singleton {
 
     function _filterUpdates(pkgs) {
         return (pkgs || []).filter(p => {
+            if (Brand.heldPackages.includes(p.name))
+                return false;
             if (!SettingsData.updaterAllowAUR && p.repo === "aur")
                 return false;
             if (!SettingsData.updaterIncludeFlatpak && p.repo === "flatpak")
@@ -419,6 +437,10 @@ Singleton {
     }
 
     function runUpdates(opts) {
+        if (scriptMode) {
+            runScript(opts?.terminal ?? "");
+            return;
+        }
         const params = opts || {};
         params.ignored = SettingsData.updaterIgnoredPackages || [];
         if (useCustomCommand) {
@@ -432,7 +454,90 @@ Singleton {
     }
 
     function cancelUpdates() {
+        // Ein Abbruch von aussen könnte den Paketmanager mitten im Schreiben treffen.
+        if (scriptRunning) {
+            ToastService.showInfo("Die Aktualisierung läuft im Terminal und wird dort beendet.");
+            return;
+        }
         DMSService.sysupdateCancel(null);
+    }
+
+    function runScript(terminal) {
+        if (scriptRunning || !scriptMode)
+            return;
+        const extra = (SettingsData.updaterTerminalAdditionalParams || "").trim();
+        const command = ["bash", Quickshell.shellDir + "/scripts/alpe-update.sh", "launch", terminal || SessionData.resolveTerminal(), scriptCommand];
+        Quickshell.execDetached(extra.length > 0 ? command.concat(extra.split(/\s+/)) : command);
+        _scriptLaunchedAt = Math.floor(Date.now() / 1000) - 1;
+        _scriptLaunching = true;
+        scriptLaunchGrace.restart();
+        scriptPoll.restart();
+    }
+
+    function _readScriptState() {
+        scriptState.reload();
+        let run = null;
+        try {
+            run = JSON.parse(scriptState.text());
+        } catch (e) {
+            run = null;
+        }
+        if (!run || typeof run.state !== "string")
+            run = null;
+        // Ein "running", das älter als sechs Stunden ist, stammt von einem abgewürgten Lauf.
+        if (run?.state === "running" && Date.now() / 1000 - (run.started || 0) > 21600)
+            run.state = "aborted";
+        const wasRunning = scriptRunning;
+        // Das Terminal hat sich gemeldet, sobald die Datei einen Lauf ab dem Startzeitpunkt zeigt.
+        if (_scriptLaunching && run && (run.started || 0) >= _scriptLaunchedAt) {
+            _scriptLaunching = false;
+            scriptLaunchGrace.stop();
+        }
+        scriptRun = run;
+        if (scriptRunning)
+            return;
+        scriptPoll.stop();
+        if (wasRunning)
+            checkForUpdates();
+    }
+
+    property real _scriptLaunchedAt: 0
+
+    FileView {
+        id: scriptState
+
+        path: (Quickshell.env("XDG_STATE_HOME") || Quickshell.env("HOME") + "/.local/state") + "/alpe/update.json"
+        blockLoading: true
+        watchChanges: false
+        printErrors: false
+    }
+
+    // Nur während eines Laufs: das Terminal gehört nicht der Shell, sein Stand steht in der Datei.
+    Timer {
+        id: scriptPoll
+
+        interval: 3000
+        repeat: true
+        onTriggered: root._readScriptState()
+    }
+
+    // Frist, bis das Terminal offen ist und seinen Stand geschrieben hat.
+    Timer {
+        id: scriptLaunchGrace
+
+        interval: 15000
+        onTriggered: {
+            root._scriptLaunching = false;
+            root._readScriptState();
+        }
+    }
+
+    Process {
+        running: true
+        // Der Dienst der Shell erbt den Suchpfad der Sitzung, nicht den der Anmeldeshell;
+        // ~/.local/bin fehlt dort oft. alpe-update.sh ergänzt ihn für den Lauf ebenso.
+        command: ["sh", "-c", "PATH=\"$HOME/.local/bin:$PATH\" command -v \"$1\" >/dev/null 2>&1", "sh", Brand.updateCommand]
+        onExited: exitCode => root.updateCommandAvailable = exitCode === 0
     }
 
     function setInterval(seconds) {

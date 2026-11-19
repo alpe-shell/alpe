@@ -830,6 +830,34 @@ Singleton {
     property bool lockScreenShowWeather: Spec.SPEC.lockScreenShowWeather.def
     property bool lockScreenPowerOffMonitorsOnLock: Spec.SPEC.lockScreenPowerOffMonitorsOnLock.def
     property bool lockAtStartup: Spec.SPEC.lockAtStartup.def
+    property var settingsHiddenPages: Spec.SPEC.settingsHiddenPages.def
+    property bool windowGripEnabled: Spec.SPEC.windowGripEnabled.def
+    property int windowGripHeight: Spec.SPEC.windowGripHeight.def
+    property int windowGripOutside: Spec.SPEC.windowGripOutside.def
+    property bool windowGripSkipDecorated: Spec.SPEC.windowGripSkipDecorated.def
+    property bool windowGripSnap: Spec.SPEC.windowGripSnap.def
+    property bool windowGripCorners: Spec.SPEC.windowGripCorners.def
+    property bool windowGripEdges: Spec.SPEC.windowGripEdges.def
+    property string alpeLockStyle: Spec.SPEC.alpeLockStyle.def
+    property string alpeHyprBlurMode: Spec.SPEC.alpeHyprBlurMode.def
+    property int alpeHyprBlurNoise: Spec.SPEC.alpeHyprBlurNoise.def
+    property int alpeHyprBlurContrast: Spec.SPEC.alpeHyprBlurContrast.def
+    property int alpeHyprBlurBrightness: Spec.SPEC.alpeHyprBlurBrightness.def
+    property int alpeHyprBlurVibrancy: Spec.SPEC.alpeHyprBlurVibrancy.def
+    property bool alpeHyprBlurIgnoreOpacity: Spec.SPEC.alpeHyprBlurIgnoreOpacity.def
+    property bool alpeHyprBlurNewOptimizations: Spec.SPEC.alpeHyprBlurNewOptimizations.def
+    property bool alpeHyprBlurPopups: Spec.SPEC.alpeHyprBlurPopups.def
+    property bool alpeHyprBlurSpecial: Spec.SPEC.alpeHyprBlurSpecial.def
+    property string alpeLockLayout: Spec.SPEC.alpeLockLayout.def
+    property int alpeKbdIdleOff: Spec.SPEC.alpeKbdIdleOff.def
+    property bool alpeKbdOffWhenLocked: Spec.SPEC.alpeKbdOffWhenLocked.def
+    property string alpeLockLocale: Spec.SPEC.alpeLockLocale.def
+    property bool lockFollowWallpaper: Spec.SPEC.lockFollowWallpaper.def
+    property var windowGripExcluded: Spec.SPEC.windowGripExcluded.def
+    property bool headsetBatteryEnabled: Spec.SPEC.headsetBatteryEnabled.def
+    property int headsetBatteryInterval: Spec.SPEC.headsetBatteryInterval.def
+    property bool headsetBatteryNotifyLow: Spec.SPEC.headsetBatteryNotifyLow.def
+    property int headsetBatteryLowThreshold: Spec.SPEC.headsetBatteryLowThreshold.def
 
     property bool enableFprint: Spec.SPEC.enableFprint.def
     onEnableFprintChanged: {

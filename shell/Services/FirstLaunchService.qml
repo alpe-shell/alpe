@@ -21,7 +21,8 @@ Singleton {
     property bool greeterDismissed: false
     property int requestedStartPage: 0
 
-    readonly property bool shouldShowGreeter: checkComplete && isFirstLaunch && !greeterDismissed
+    // Alpe: kein Willkommensgruss beim ersten Start (Brand.welcome).
+    readonly property bool shouldShowGreeter: Brand.welcome && checkComplete && isFirstLaunch && !greeterDismissed
 
     signal greeterRequested
     signal greeterCompleted

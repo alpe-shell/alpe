@@ -193,6 +193,8 @@ Item {
                 width: parent.width
                 height: heroRow.implicitHeight + pad * 2
                 restRadius: Theme.cornerRadiusL
+                // Alpe: Ohne Akku gibt es hier nichts zu melden; Profil und Geräte folgen direkt.
+                visible: BatteryService.batteryAvailable
 
                 Row {
                     id: heroRow
@@ -246,7 +248,7 @@ Item {
                         iconName: "settings"
                         Accessible.name: I18n.tr("Settings")
                         onClicked: {
-                            PopoutService.openSettingsWithTab("battery");
+                            PopoutService.openSettingsWithTab(BatteryService.batteryAvailable ? "battery" : "power_sleep");
                             root.dismissRequested();
                         }
                     }

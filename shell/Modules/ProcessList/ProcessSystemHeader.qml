@@ -4,14 +4,9 @@ import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
 
+// Alpe: ohne Logo der Distribution.
 RowLayout {
     spacing: Theme.spacingS
-
-    SystemLogo {
-        Layout.preferredWidth: Theme.iconSize
-        Layout.preferredHeight: Theme.iconSize
-        colorOverride: Theme.primary
-    }
 
     StyledText {
         Layout.fillWidth: true

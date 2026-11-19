@@ -474,6 +474,35 @@ Singleton {
         return includeUnits ? value + " " + unit : value;
     }
 
+    // Alpe: Was ein Wetter-Plugin über die Open-Meteo-Form hinaus weiss (amtliche Regenmenge,
+    // Symboltext, Prognosepunkt), schreibt es in diese Datei, weil der Dienst nur die
+    // bekannten Felder durchreicht. Gelesen wird einmal je Abruf, nichts wird beobachtet.
+    function readExtras(source) {
+        if (typeof source !== "string" || !source.startsWith("plugin_"))
+            return null;
+        extrasFile.reload();
+        let extras = null;
+        try {
+            extras = JSON.parse(extrasFile.text());
+        } catch (e) {
+            return null;
+        }
+        if (!extras || "plugin_" + extras.provider !== source || !extras.days)
+            return null;
+        // Älter als drei Stunden: stammt nicht von diesem Abruf.
+        if (!Number.isFinite(extras.updated) || Math.abs(Date.now() / 1000 - extras.updated) > 10800)
+            return null;
+        return extras;
+    }
+
+    function formatPrecipRange(low, high) {
+        if (!Number.isFinite(low) || !Number.isFinite(high))
+            return null;
+        const from = Math.round(Math.max(0, Math.min(low, high)));
+        const to = Math.round(Math.max(0, low, high));
+        return (from === to ? to : from + "–" + to) + " mm";
+    }
+
     function formatPercent(percent, includeUnits = true) {
         if (percent == null) {
             return null;
@@ -769,12 +798,14 @@ Singleton {
         if (result?.filled?.length)
             log.debug("Weather readings from", result.source, "filled from", result.filled.join(", "));
         try {
-            root.weather = WeatherData.fromOpenMeteo(result?.forecast, {
+            const weather = WeatherData.fromOpenMeteo(result?.forecast, {
                 formatTime: root.formatTime,
                 formatDay: root.formatForecastDay,
                 city: root.location?.city || I18n.tr("Unknown"),
                 country: root.location?.country || I18n.tr("Unknown")
             });
+            WeatherData.applyExtras(weather, root.readExtras(result?.source));
+            root.weather = weather;
         } catch (e) {
             root.handleWeatherFailure(e.message);
             return;
@@ -1032,6 +1063,15 @@ Singleton {
                 root.handleWeatherFailure();
             }
         }
+    }
+
+    FileView {
+        id: extrasFile
+
+        path: Paths.strip(Paths.cache).replace(/\/dms$/, "") + "/alpe/weather-extras.json"
+        blockLoading: true
+        watchChanges: false
+        printErrors: false
     }
 
     Timer {

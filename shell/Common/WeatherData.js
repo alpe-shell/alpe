@@ -109,3 +109,24 @@ function fromOpenMeteo(data, labels) {
         "hourlyForecast": hourlyForecast
     };
 }
+
+// Alpe: extras ist die Zusatzdatei eines Wetter-Plugins, null wenn es keine gibt.
+// days ist nach Datum geordnet: { precip_min, precip_max, text }.
+function applyExtras(weather, extras) {
+    weather.source = null;
+    if (!extras)
+        return;
+    weather.source = {
+        "name": extras.name ?? "",
+        "place": extras.point?.name ?? "",
+        "run": extras.run ?? ""
+    };
+    for (const day of weather.forecast) {
+        const extra = extras.days[day.rawDate];
+        if (!extra)
+            continue;
+        day.precipMin = Number.isFinite(extra.precip_min) ? extra.precip_min : null;
+        day.precipMax = Number.isFinite(extra.precip_max) ? extra.precip_max : null;
+        day.summary = extra.text ?? "";
+    }
+}

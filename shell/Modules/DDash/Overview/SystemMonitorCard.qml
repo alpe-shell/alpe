@@ -11,11 +11,20 @@ Card {
     property bool dgopRefHeld: false
 
     readonly property bool horizontal: width > height
-    readonly property bool showTemperature: options.temperature !== false
-    readonly property var meters: showTemperature ? ["cpu", "temp", "memory"] : ["cpu", "memory"]
+    // Alpe: Auslastung von Prozessor, Grafikkarte und Arbeitsspeicher in Prozent. Die
+    // Temperatur ist abwählbar geblieben, aber nicht mehr Vorgabe.
+    readonly property bool showTemperature: options.temperature === true
+    readonly property bool wantGpu: options.gpu !== false
+    readonly property string gpuId: DgopService.availableGpus?.[0]?.pciId ?? ""
+    readonly property var gpu: gpuId === "" ? null : (DgopService.availableGpus.find(g => g.pciId === gpuId) ?? null)
+    readonly property bool showGpu: wantGpu && gpuId !== ""
+    readonly property var meters: ["cpu"].concat(showGpu ? ["gpu"] : [], showTemperature ? ["temp"] : [], ["memory"])
+    property string heldGpuId: ""
 
     function meterIcon(key) {
         switch (key) {
+        case "gpu":
+            return "auto_awesome_mosaic";
         case "temp":
             return "device_thermostat";
         case "memory":
@@ -26,6 +35,8 @@ Card {
 
     function meterLabel(key) {
         switch (key) {
+        case "gpu":
+            return "GPU-Auslastung" + (gpu?.displayName ? " · " + gpu.displayName : "");
         case "temp":
             return I18n.tr("CPU temperature");
         case "memory":
@@ -36,6 +47,8 @@ Card {
 
     function meterValue(key) {
         switch (key) {
+        case "gpu":
+            return gpu?.usage ?? 0;
         case "temp":
             return DgopService.cpuTemperature || 0;
         case "memory":
@@ -45,6 +58,9 @@ Card {
     }
 
     function meterText(key) {
+        // Schlafende oder noch nicht gelesene Grafikkarte: kein erfundener Wert.
+        if (key === "gpu" && gpu?.usage == null)
+            return "–";
         const value = Math.round(meterValue(key));
         return key === "temp" ? value + "°" : value + "%";
     }
@@ -78,15 +94,40 @@ Card {
             return;
         dgopRefHeld = wanted;
         if (wanted) {
-            DgopService.addRef(["cpu", "memory", "system"]);
+            DgopService.addRef(["cpu", "memory", "system", "gpu"]);
             return;
         }
-        DgopService.removeRef(["cpu", "memory", "system"]);
+        DgopService.removeRef(["cpu", "memory", "system", "gpu"]);
     }
 
-    onLiveChanged: syncDgopRef(live)
-    Component.onCompleted: syncDgopRef(live)
-    Component.onDestruction: syncDgopRef(false)
+    // Der Dienst liest Werte nur für angemeldete Grafikkarten; angemeldet ist sie, solange die Karte sichtbar ist.
+    function syncGpu() {
+        const wanted = live && wantGpu ? gpuId : "";
+        if (wanted === heldGpuId)
+            return;
+        if (heldGpuId !== "")
+            DgopService.removeGpuPciId(heldGpuId);
+        heldGpuId = wanted;
+        if (wanted !== "")
+            DgopService.addGpuPciId(wanted);
+    }
+
+    onLiveChanged: {
+        syncDgopRef(live);
+        syncGpu();
+    }
+    onGpuIdChanged: syncGpu()
+    onWantGpuChanged: syncGpu()
+    Component.onCompleted: {
+        syncDgopRef(live);
+        syncGpu();
+    }
+    Component.onDestruction: {
+        syncDgopRef(false);
+        if (heldGpuId !== "")
+            DgopService.removeGpuPciId(heldGpuId);
+        heldGpuId = "";
+    }
 
     DTooltipHost {
         id: meterTooltip

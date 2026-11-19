@@ -505,7 +505,7 @@ Singleton {
         return {
             "lease": lease,
             "enabled": enabled,
-            "identity": "Dux Shell",
+            "identity": Brand.name,
             "playbackStatus": _mprisPlaybackStatus(player),
             "title": player ? stableTitle : "",
             "artist": player ? stableArtist : "",

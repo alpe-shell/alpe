@@ -644,7 +644,34 @@ hl.layer_rule({
         return lines.length ? [`${name} = {`, ...lines.map(l => "\t" + l), "},"] : [];
     }
 
+    // Alpe: «off» schaltet die Unschärfe von Hyprland ganz ab, «tuned» ergänzt die
+    // Feineinstellungen, die das Ursprungsprojekt nicht anbietet (Rauschen, Kontrast, Helligkeit,
+    // Sättigung, Verhalten bei Deckkraft, Optimierungen, Popups, Spezial-Arbeitsflächen).
+    function alpeBlurLines(s, lines) {
+        if (s.alpeHyprBlurMode === "off")
+            return lines.filter(l => !l.startsWith("enabled")).concat(["enabled = false,"]);
+        if (s.alpeHyprBlurMode !== "tuned")
+            return lines;
+        const add = (option, line) => {
+            if (hyprSupports("decoration:blur:" + option))
+                lines.push(line);
+        };
+        add("noise", `noise = ${(s.alpeHyprBlurNoise / 1000).toFixed(4)},`);
+        add("contrast", `contrast = ${(s.alpeHyprBlurContrast / 100).toFixed(3)},`);
+        add("brightness", `brightness = ${(s.alpeHyprBlurBrightness / 100).toFixed(3)},`);
+        add("vibrancy", `vibrancy = ${(s.alpeHyprBlurVibrancy / 100).toFixed(3)},`);
+        add("ignore_opacity", `ignore_opacity = ${s.alpeHyprBlurIgnoreOpacity},`);
+        add("new_optimizations", `new_optimizations = ${s.alpeHyprBlurNewOptimizations},`);
+        add("popups", `popups = ${s.alpeHyprBlurPopups},`);
+        add("special", `special = ${s.alpeHyprBlurSpecial},`);
+        return lines;
+    }
+
     function blurLines(s) {
+        return alpeBlurLines(s, dmsBlurLines(s));
+    }
+
+    function dmsBlurLines(s) {
         const blur = BlurStrength.hyprlandBlur(s.blurStrength || BlurStrength.HYPRLAND_DEFAULT);
         const lines = [];
         if (blur.size !== 8)

@@ -43,6 +43,115 @@ Singleton {
     property int _cmdSerial: 0
     property int _monitorFailures: 0
 
+    // Alpe: Griffleisten. Wo der obere Rand eines Fensters ohne Titelleiste sichtbar ist, meldet
+    // das Skript eine Leiste; Modules/WindowGrips.qml legt dort eine unsichtbare Fläche ab.
+    readonly property bool gripEnabled: active && SettingsData.windowGripEnabled
+    property var grips: []
+    property bool gripHeld: false
+    // Wohin ein gezogenes Fenster einrasten würde: {output, x, y, w, h, kind} oder null.
+    property var snapPreview: null
+    // Offene Popouts und Dialoge der Shell liegen über den Fenstern; so lange ruhen die Leisten.
+    property bool shellBusy: false
+    // Was tatsächlich als Fläche steht. Nachgeführt wird verzögert und nie, während eine Leiste
+    // gedrückt ist: an der gedrückten Fläche hängt der Mausgriff, sie darf nicht verschwinden.
+    property var visibleGrips: []
+
+    onGripsChanged: gripPublish.restart()
+    onShellBusyChanged: gripPublish.restart()
+    onGripEnabledChanged: gripPublish.restart()
+    onConnectedChanged: gripPublish.restart()
+    onGripHeldChanged: gripPublish.restart()
+
+    function _publishGrips() {
+        if (gripHeld)
+            return;
+        const next = gripEnabled && connected && !shellBusy ? grips : [];
+        if (JSON.stringify(next) !== JSON.stringify(visibleGrips))
+            visibleGrips = next;
+    }
+
+    Timer {
+        id: gripPublish
+        interval: 16
+        onTriggered: root._publishGrips()
+    }
+    readonly property string _bridgeConfig: JSON.stringify({
+        "gripEnabled": gripEnabled,
+        "gripHeight": SettingsData.windowGripHeight,
+        "gripOutside": SettingsData.windowGripOutside,
+        "gripSkipDecorated": SettingsData.windowGripSkipDecorated,
+        "gripSnap": SettingsData.windowGripSnap,
+        "gripCorner": SettingsData.windowGripCorners ? 18 : 0,
+        "gripEdge": SettingsData.windowGripCorners && SettingsData.windowGripEdges ? 8 : 0,
+        "gripExcluded": SettingsData.windowGripExcluded || [],
+        "shellPid": Quickshell.processId
+    })
+    on_BridgeConfigChanged: {
+        if (connected)
+            configReload.restart();
+    }
+
+    function _syncShellBusy() {
+        const open = map => Object.values(map || {}).some(entry => !!entry);
+        shellBusy = open(PopoutManager.currentPopoutsByScreen) || open(ModalManager.currentModalsByScreen);
+    }
+
+    function _gripShortcut(name) {
+        Quickshell.execDetached(["busctl", "--user", "call", "org.kde.kglobalaccel", "/component/kwin", "org.kde.kglobalaccel.Component", "invokeShortcut", "s", name]);
+    }
+
+    function gripBegin() {
+        if (!gripEnabled)
+            return;
+        gripHeld = true;
+        gripRelease.restart();
+        _gripShortcut("alpe-grip-begin");
+    }
+
+    function gripEnd() {
+        gripRelease.stop();
+        snapPreview = null;
+        if (!gripHeld)
+            return;
+        gripHeld = false;
+        _gripShortcut("alpe-grip-end");
+    }
+
+    function _applyGrips(list) {
+        _syncShellBusy();
+        if (!Array.isArray(list))
+            return;
+        if (JSON.stringify(list) !== JSON.stringify(grips))
+            grips = list;
+    }
+
+    Connections {
+        target: PopoutManager
+        function onPopoutChanged() {
+            root._syncShellBusy();
+        }
+    }
+
+    Connections {
+        target: ModalManager
+        function onModalChanged() {
+            root._syncShellBusy();
+        }
+    }
+
+    // Geht das Loslassen verloren (Fläche verschwunden, Shell neu geladen), endet der Griff trotzdem.
+    Timer {
+        id: gripRelease
+        interval: 60000
+        onTriggered: root.gripEnd()
+    }
+
+    Timer {
+        id: configReload
+        interval: 400
+        onTriggered: root.reloadBridge()
+    }
+
     readonly property string _bridgeName: "dms-bridge"
     readonly property string _bridgePath: Quickshell.shellDir + "/Services/kwin/dms-bridge.js"
     readonly property string _scripting: "busctl --user call org.kde.KWin /Scripting org.kde.kwin.Scripting"
@@ -123,6 +232,31 @@ Singleton {
         return typeof token === "string" && /^[A-Za-z0-9{}_-]+$/.test(token);
     }
 
+    // Befehle aus dem Fenstermenü der Griffleisten.
+    function windowInfo(windowId) {
+        return toplevels.find(toplevel => toplevel.kwinId === windowId) ?? null;
+    }
+
+    function windowAction(windowId, action) {
+        switch (action) {
+        case "minimize":
+            _windowCommand(windowId, "w.minimized=true;");
+            break;
+        case "maximize":
+            _windowCommand(windowId, "var m=" + (windowInfo(windowId)?.maximized ? "false" : "true") + ";w.setMaximize(m,m);");
+            break;
+        case "above":
+            _windowCommand(windowId, "w.keepAbove=!w.keepAbove;");
+            break;
+        case "alldesktops":
+            _windowCommand(windowId, "w.onAllDesktops=!w.onAllDesktops;");
+            break;
+        case "close":
+            _windowCommand(windowId, "w.closeWindow();");
+            break;
+        }
+    }
+
     function _windowCommand(windowId, body) {
         if (!_safe(windowId))
             return;
@@ -171,6 +305,10 @@ Singleton {
             return;
         }
         _apply(state);
+        _applyGrips(state.grips);
+        const snap = state.snap ?? null;
+        if (JSON.stringify(snap) !== JSON.stringify(snapPreview))
+            snapPreview = snap;
     }
 
     // Shortcut ids registered by the bridge script, mapped to this shell's IPC
@@ -387,7 +525,8 @@ Singleton {
 
     Process {
         id: bridgeLoader
-        command: ["sh", "-c", root._scripting + ' unloadScript s "$2" >/dev/null 2>&1; ' + 'id=$(' + root._scripting + ' loadScript ss "$1" "$2" | cut -d" " -f2) || exit 1; ' + '[ "$id" -ge 0 ] 2>/dev/null || exit 2; ' + 'busctl --user call org.kde.KWin "/Scripting/Script$id" org.kde.kwin.Script run >/dev/null || exit 3', "sh", root._bridgePath, root._bridgeName]
+        // Alpe: Geladen wird eine Kopie, der die Einstellungen als ALPE_CONFIG voranstehen.
+        command: ["sh", "-c", 'copy="${XDG_RUNTIME_DIR:-/tmp}/alpe-kwin-bridge.js"; { printf "var ALPE_CONFIG = %s;\n" "$3"; cat "$1"; } > "$copy" || exit 4; ' + root._scripting + ' unloadScript s "$2" >/dev/null 2>&1; ' + 'id=$(' + root._scripting + ' loadScript ss "$copy" "$2" | cut -d" " -f2) || exit 1; ' + '[ "$id" -ge 0 ] 2>/dev/null || exit 2; ' + 'busctl --user call org.kde.KWin "/Scripting/Script$id" org.kde.kwin.Script run >/dev/null || exit 3', "sh", root._bridgePath, root._bridgeName, root._bridgeConfig]
         onExited: exitCode => {
             if (exitCode !== 0)
                 root.log.warn("Loading the KWin bridge script failed with code", exitCode, "path:", root._bridgePath);

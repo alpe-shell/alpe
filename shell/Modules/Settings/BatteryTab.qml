@@ -29,10 +29,11 @@ Item {
     Component.onCompleted: BatteryService.addRef()
     Component.onDestruction: BatteryService.removeRef()
 
+    // Alpe: jeder Akku, nicht nur BAT* – am MacBook (Asahi) heisst er macsmc-battery.
     Process {
         id: thresholdProbe
         running: Qt.platform.os === "linux"
-        command: ["sh", "-c", "for bat in /sys/class/power_supply/BAT*; do for file in " + root.thresholdFileList + "; do [ -f \"$bat/$file\" ] && exit 0; done; done; exit 1"]
+        command: ["sh", "-c", "for bat in /sys/class/power_supply/*; do [ \"$(cat \"$bat/type\" 2>/dev/null)\" = Battery ] || continue; for file in " + root.thresholdFileList + "; do [ -f \"$bat/$file\" ] && exit 0; done; done; exit 1"]
         onExited: exitCode => root.chargeLimitSupported = exitCode === 0
     }
 
@@ -40,7 +41,8 @@ Item {
         id: applyLimitProcess
         command: ["pkexec", "sh", "-c", "
 found=0
-for bat in /sys/class/power_supply/BAT*; do
+for bat in /sys/class/power_supply/*; do
+  [ \"$(cat \"$bat/type\" 2>/dev/null)\" = Battery ] || continue
   for file in " + root.thresholdFileList + "; do
     if [ -f \"$bat/$file\" ]; then
       found=1

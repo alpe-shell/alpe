@@ -33,7 +33,8 @@ Rectangle {
                 icon: "air",
                 value: WeatherService.formatSpeed(weather.wind),
                 shape: "arrow",
-                detail: weather.windDirection == null ? "" : I18n.tr("From %1", "Weather wind origin, followed by a cardinal direction").arg(root.windDirection)
+                // Alpe: Die Richtung zeigt der Pfeil; der Zusatz «Aus NO» entfällt (bleibt für Vorleser).
+                spoken: weather.windDirection == null ? "" : I18n.tr("From %1", "Weather wind origin, followed by a cardinal direction").arg(root.windDirection)
             };
         case "precipitation":
             return {
@@ -41,7 +42,8 @@ Rectangle {
                 icon: "rainy",
                 value: WeatherService.formatPercent(weather.precipitationProbability),
                 level: weather.precipitationProbability,
-                detail: I18n.tr("Today")
+                // Alpe: ohne den Zusatz «Heute»; die Karte meint immer den laufenden Tag.
+                spoken: I18n.tr("Today")
             };
         case "pressure":
             return {
@@ -121,7 +123,7 @@ Rectangle {
     border.width: graphics && widgetId === "uv" ? 0 : Theme.layerOutlineWidth
     border.color: Theme.outlineMedium
     Accessible.role: Accessible.StaticText
-    Accessible.name: reading.label + " " + (hasValue ? reading.value : I18n.tr("Not available")) + " " + (reading.detail ?? "")
+    Accessible.name: reading.label + " " + (hasValue ? reading.value : I18n.tr("Not available")) + " " + (reading.spoken ?? "") + " " + (reading.detail ?? "")
     Accessible.description: graphicDescription
 
     DTone {

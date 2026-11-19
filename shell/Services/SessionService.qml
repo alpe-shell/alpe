@@ -293,6 +293,12 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
         };
         restore("NIXPKGS_QT6_QML_IMPORT_PATH", "DMS_ORIG_NIXPKGS_QT6_QML_IMPORT_PATH");
         restore("QT_PLUGIN_PATH", "DMS_ORIG_QT_PLUGIN_PATH");
+        // Alpe: die Begrenzung der Speicher-Arenen gilt nur für die Shell selbst
+        // (Drop-in zz-alpe-name.conf), nicht für Programme, die man aus ihr startet.
+        if (Quickshell.env("ALPE_SHELL_ARENA") === "1") {
+            env["MALLOC_ARENA_MAX"] = null;
+            env["ALPE_SHELL_ARENA"] = null;
+        }
         return env;
     }
 

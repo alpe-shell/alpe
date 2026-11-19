@@ -502,9 +502,10 @@ FocusScope {
             "surface_shadows": "ShadowsTab.qml",
             "time_weather": "TimeWeatherTab.qml",
             "weather": "WeatherSettingsTab.qml",
-            "keybinds": "KeybindsTab.qml",
+            // Alpe: unter KWin eigene Seiten für Tastenkürzel und Fensterregeln.
+            "keybinds": CompositorService.isKwin ? "AlpeShortcutsTab.qml" : "KeybindsTab.qml",
             "dankbar_widgets": "WidgetsTab.qml",
-            "window_rules": "WindowRulesTab.qml",
+            "window_rules": CompositorService.isKwin ? "AlpeWindowRulesTab.qml" : "WindowRulesTab.qml",
             "dankbar_settings": "DBarTab.qml",
             "dankbar_appearance": "DBarAppearanceTab.qml",
             "dankbar_dot": "DDotTab.qml",
@@ -527,7 +528,18 @@ FocusScope {
             "theme": "ThemeColorsTab.qml",
             "theme_apps": "ThemeAppsTab.qml",
             "palette_inject": "PaletteInjectTab.qml",
-            "lock_screen": "LockScreenTab.qml",
+            // Alpe: KWin kennt die eigene Sperre nicht; dort steht die Seite für die KDE-Sperre.
+            "lock_screen": CompositorService.isKwin ? "AlpeLockTab.qml" : "LockScreenTab.qml",
+            "lock_design": "AlpeLockDesignTab.qml",
+            "alpe_effects": "AlpeEffectsTab.qml",
+            "alpe_services": "AlpeServicesTab.qml",
+            "alpe_performance": "AlpePerformanceTab.qml",
+            "alpe_desktop": "AlpeKwinTab.qml",
+            "alpe_maintenance": "AlpeMaintenanceTab.qml",
+            "alpe_peripherals": "AlpePeripheralsTab.qml",
+            "alpe_pages": "AlpePagesTab.qml",
+            "alpe_device": "AlpeDeviceTab.qml",
+            "alpe_sport": "AlpeSportTab.qml",
             "greeter": "GreeterTab.qml",
             "about": "AboutTab.qml",
             "typography": "TypographyMotionTab.qml",
@@ -558,7 +570,7 @@ FocusScope {
             "plugins_manage": "PluginsManageTab.qml"
         })
 
-    readonly property var pagesWithParentModal: ["dankbar_widgets", "window_rules", "notification_rules", "display_config", "users", "time_weather", "weather", "lock_screen", "greeter", "dank_dash", "wallpaper_cycling", "theme_schedule", "surface_shadows", "keybinds", "dankbar_settings", "dankbar_appearance", "bar_widget", "dock_general", "dock_widgets", "dock_appearance", "dock_advanced", "launcher", "theme", "theme_apps", "media_player", "desktop_widgets", "desktop_widget", "autostart", "compositor_layout", "updater", "display_gamma", "about"]
+    readonly property var pagesWithParentModal: ["dankbar_widgets", "window_rules", "notification_rules", "display_config", "users", "time_weather", "weather", "lock_screen", "greeter", "dank_dash", "wallpaper_cycling", "theme_schedule", "surface_shadows", "keybinds", "dankbar_settings", "dankbar_appearance", "bar_widget", "dock_general", "dock_widgets", "dock_appearance", "dock_advanced", "launcher", "theme", "theme_apps", "media_player", "desktop_widgets", "desktop_widget", "autostart", "compositor_layout", "updater", "display_gamma", "about", "alpe_desktop", "alpe_maintenance", "alpe_peripherals", "alpe_pages", "alpe_device", "power_sleep", "lock_design", "alpe_effects", "alpe_services", "alpe_performance"]
 
     // The page scroller stops at the Loader edges; wheel over the header and gutters lands here instead
     WheelHandler {

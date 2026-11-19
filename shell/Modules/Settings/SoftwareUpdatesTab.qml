@@ -57,9 +57,10 @@ Item {
     property int nowUnix: Math.floor(Date.now() / 1000)
 
     readonly property int packageListCap: 60
+    readonly property bool upstreamRows: false
     readonly property int logTailLines: 20
     readonly property real logViewHeight: Theme.listItemHeight * 5
-    readonly property bool upgradeRunsInTerminal: SystemUpdateService.useCustomCommand || (SystemUpdateService.backends || []).some(b => b.runsInTerminal === true)
+    readonly property bool upgradeRunsInTerminal: SystemUpdateService.scriptMode || SystemUpdateService.useCustomCommand || (SystemUpdateService.backends || []).some(b => b.runsInTerminal === true)
     readonly property bool upgradeInWindow: SettingsData.updaterUpgradeInWindow && !upgradeRunsInTerminal
     readonly property int systemCount: SystemUpdateService.systemUpdates.length
     readonly property int flatpakCount: SystemUpdateService.systemUpdates.filter(p => p.repo === "flatpak").length
@@ -196,8 +197,28 @@ Item {
     readonly property bool needsRestart: SystemUpdateService.restartPending || SystemUpdateService.rebootRecommended
     readonly property bool primaryIsCheck: !SystemUpdateService.isUpgrading && !root.anythingToInstall && !root.needsRestart
 
+    // Alpe: Zeitpunkt und Ausgang des letzten Laufs des Wartungsbefehls.
+    function lastRunText() {
+        const run = SystemUpdateService.scriptRun;
+        if (!run || !(run.started > 0))
+            return "Noch nie über Alpe gestartet";
+        const when = new Date((run.finished > 0 ? run.finished : run.started) * 1000).toLocaleString(I18n.locale(), Locale.ShortFormat);
+        switch (run.state) {
+        case "running":
+            return "Läuft seit " + new Date(run.started * 1000).toLocaleTimeString(I18n.locale(), Locale.ShortFormat);
+        case "done":
+            return when + " · ohne Fehler";
+        case "failed":
+            return when + " · mit Fehlern beendet (Code " + run.code + ")";
+        default:
+            return when + " · abgebrochen";
+        }
+    }
+
     function primaryLabel() {
         switch (true) {
+        case SystemUpdateService.scriptRunning:
+            return "Läuft im Terminal";
         case SystemUpdateService.isUpgrading:
             return I18n.tr("Cancel");
         case root.anythingToInstall:
@@ -227,6 +248,8 @@ Item {
 
     function primaryAction() {
         switch (true) {
+        case SystemUpdateService.scriptRunning:
+            return;
         case SystemUpdateService.isUpgrading:
             SystemUpdateService.cancelUpdates();
             return;
@@ -258,7 +281,7 @@ Item {
     function installSummary() {
         const pkgs = root.installablePackages;
         const bytes = pkgs.reduce((sum, p) => sum + (p.sizeBytes || 0), 0);
-        const via = SystemUpdateService.useCustomCommand ? SettingsData.updaterCustomCommand.trim().split(/\s+/)[0] : (SystemUpdateService.backends || []).filter(b => pkgs.some(p => p.backend === b.id)).map(b => b.displayName).join(", ");
+        const via = SystemUpdateService.scriptMode ? SystemUpdateService.scriptCommand.split(/\s+/)[0] : SystemUpdateService.useCustomCommand ? SettingsData.updaterCustomCommand.trim().split(/\s+/)[0] : (SystemUpdateService.backends || []).filter(b => pkgs.some(p => p.backend === b.id)).map(b => b.displayName).join(", ");
         let text;
         if (bytes > 0)
             text = I18n.tr("%1 will be downloaded and installed via %2.", "system update confirmation, %1 is a download size, %2 the package managers").arg(Format.formatBytes(bytes)).arg(via);
@@ -318,8 +341,8 @@ Item {
 
         SettingsCard {
             width: parent.width
-            title: "Dux Modular Shell"
-            iconName: "deployed_code"
+            title: "Systemaktualisierung"
+            iconName: "system_update_alt"
             settingKey: "softwareUpdatesShell"
             tags: ["dms", "shell", "version", "channel", "restart"]
 
@@ -351,12 +374,24 @@ Item {
                     text: root.primaryLabel()
                     iconName: root.primaryIcon()
                     busy: SystemUpdateService.isChecking
-                    enabled: !SystemUpdateService.isChecking
+                    enabled: !SystemUpdateService.isChecking && !SystemUpdateService.scriptRunning
                     onClicked: root.primaryAction()
                 }
             }
 
+            // Alpe: womit aktualisiert wird und wie der letzte Lauf ausging.
             SettingsRow {
+                visible: SystemUpdateService.scriptMode
+                title: "Wartungsbefehl"
+                iconName: "terminal"
+                subtitle: root.lastRunText()
+                trailingBadge: SystemUpdateService.scriptCommand
+            }
+
+            // Die folgenden Zeilen betreffen das Paket des Ursprungsprojekts. Alpe hält es
+            // fest und wird über das eigene Repository gepflegt, deshalb bleiben sie verborgen.
+            SettingsRow {
+                visible: root.upstreamRows
                 title: I18n.tr("Version")
                 iconName: "tag"
                 subtitle: {
@@ -370,6 +405,7 @@ Item {
             }
 
             SettingsRow {
+                visible: root.upstreamRows
                 title: I18n.tr("Channel")
                 iconName: "alt_route"
                 subtitle: root.channelLabel()
@@ -379,7 +415,7 @@ Item {
             SettingsRow {
                 readonly property var master: SystemUpdateService.releases?.master ?? null
 
-                visible: SystemUpdateService.shellChannel === "git" && SystemUpdateService.commitsBehind >= 0
+                visible: root.upstreamRows && SystemUpdateService.shellChannel === "git" && SystemUpdateService.commitsBehind >= 0
                 title: I18n.tr("Master branch", "git channel row, the branch the build tracks")
                 subtitle: {
                     const date = new Date(master?.date ?? NaN);
@@ -407,7 +443,7 @@ Item {
             }
 
             SettingsNavRow {
-                visible: root.notesRelease !== null
+                visible: root.upstreamRows && root.notesRelease !== null
                 title: I18n.tr("Release notes", "settings page and card title, notes for a DMS release")
                 iconName: "article"
                 hint: root.notesRelease?.codename ? "v" + root.notesRelease.version + " · " + root.notesRelease.codename : "v" + (root.notesRelease?.version ?? "")
@@ -415,7 +451,7 @@ Item {
             }
 
             SettingsRow {
-                visible: SystemUpdateService.restartPending
+                visible: root.upstreamRows && SystemUpdateService.restartPending
                 title: I18n.tr("Requires restart")
                 iconName: "restart_alt"
                 iconColor: Theme.warning
@@ -423,7 +459,7 @@ Item {
             }
 
             SettingsRow {
-                visible: SystemUpdateService.legacyRepos.length > 0
+                visible: root.upstreamRows && SystemUpdateService.legacyRepos.length > 0
                 title: I18n.tr("Package repositories moved", "notification title, the DMS package repositories moved to a new owner")
                 subtitle: I18n.tr("Run %1 in a terminal.", "%1 is a shell command").arg(SystemUpdateService.migrateCommand)
                 iconName: "swap_horiz"
@@ -699,7 +735,7 @@ Item {
                 settingKey: "systemUpdaterReopenAfterUpgrade"
                 tags: ["reopen", "popout", "terminal", "upgrade"]
                 text: I18n.tr("Reopen panel after update")
-                visible: root.upgradeRunsInTerminal
+                visible: root.upgradeRunsInTerminal && !SystemUpdateService.scriptMode
                 checked: SettingsData.updaterReopenAfterUpgrade
                 onToggled: checked => SettingsData.set("updaterReopenAfterUpgrade", checked)
             }
@@ -809,6 +845,7 @@ Item {
                 settingKey: "systemUpdaterCustomCommand"
                 tags: ["custom", "command", "terminal"]
                 text: I18n.tr("Use custom command")
+                description: "Ohne eigenen Befehl nutzt Alpe «" + Brand.updateCommand + "», sobald er im Suchpfad liegt."
                 checked: SettingsData.updaterUseCustomCommand
                 onToggled: checked => {
                     if (!checked) {
