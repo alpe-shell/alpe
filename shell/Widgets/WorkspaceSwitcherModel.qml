@@ -22,6 +22,8 @@ QtObject {
     property bool reverseScrolling: false
 
     readonly property bool useExtWorkspace: {
+        if (CompositorService.isKwin)
+            return KwinService.workspaces.length > 0;
         if (Quickshell.env("DMS_FORCE_EXTWS") === "1")
             return (WindowManager.windowsets?.length ?? 0) > 0;
         if (!CompositorService.compositorDetected || CompositorService.hasWorkspaceIpc)
@@ -29,7 +31,7 @@ QtObject {
         return (WindowManager.windowsets?.length ?? 0) > 0;
     }
     readonly property bool useNativeWorkspaces: !useExtWorkspace && CompositorService.hasWorkspaceIpc
-    readonly property var extProjection: (useExtWorkspace && screen) ? WindowManager.screenProjection(screen) : null
+    readonly property var extProjection: (useExtWorkspace && screen) ? (CompositorService.isKwin ? KwinService.projection : WindowManager.screenProjection(screen)) : null
 
     readonly property string effectiveScreenName: followFocus ? (BarWidgetService.getFocusedScreenName() || screenName) : screenName
     readonly property bool hiddenByOverview: CompositorService.workspacesHiddenByOverview(effectiveScreenName)

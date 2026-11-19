@@ -91,7 +91,7 @@ Singleton {
     }
 
     function isTerminalFocused() {
-        const appId = (ToplevelManager.activeToplevel?.appId ?? "").toLowerCase();
+        const appId = (DToplevels.activeToplevel?.appId ?? "").toLowerCase();
         if (!appId) {
             return false;
         }

@@ -33,7 +33,7 @@ Singleton {
             "apps": apps
         };
     }
-    readonly property Toplevel managerActiveToplevel: ToplevelManager.activeToplevel
+    readonly property var managerActiveToplevel: DToplevels.activeToplevel
 
     property string focusedAppId: ""
     property var today: Wellbeing.emptyDay("")

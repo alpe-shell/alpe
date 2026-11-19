@@ -184,7 +184,7 @@ Item {
             PopoutService.toggleDankLauncherV2();
             return true;
         case "close-window":
-            ToplevelManager.activeToplevel?.close();
+            DToplevels.activeToplevel?.close();
             return true;
         case "settings":
             PopoutService.toggleSettings();

@@ -130,9 +130,9 @@ Singleton {
             return;
         }
 
-        const activeApp = ToplevelManager.activeToplevel;
+        const activeApp = DToplevels.activeToplevel;
         if (!activeApp) {
-            if (nightModePaused && !ToplevelManager.toplevels.values.length)
+            if (nightModePaused && !DToplevels.toplevels.values.length)
                 resumeNightMode();
             return;
         }
@@ -542,7 +542,7 @@ Singleton {
     }
 
     Connections {
-        target: ToplevelManager
+        target: DToplevels
         enabled: root.nightModeEnabled
         function onActiveToplevelChanged() {
             root.handleNightModeExceptions();
@@ -550,7 +550,7 @@ Singleton {
     }
 
     Connections {
-        target: ToplevelManager.activeToplevel
+        target: DToplevels.activeToplevel
         enabled: root.nightModeEnabled
         function onFullscreenChanged() {
             root.handleNightModeExceptions();

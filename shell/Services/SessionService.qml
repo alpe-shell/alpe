@@ -469,6 +469,13 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
                 return;
             }
 
+            // Plasma runs KWin under the systemd user manager, outside the logind session scope:
+            // terminating the session leaves KWin alive and the next login collides with it.
+            if (CompositorService.isKwin) {
+                Quickshell.execDetached(["busctl", "--user", "call", "org.kde.Shutdown", "/Shutdown", "org.kde.Shutdown", "logout"]);
+                return;
+            }
+
             DMSService.sendRequest("loginctl.terminate", null, response => {
                 if (response.error)
                     log.warn("Failed to terminate session:", response.error);

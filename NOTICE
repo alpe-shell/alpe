@@ -71,6 +71,15 @@ Code
 Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
 
 
+Alpe-eigene Teile im Shell-Code
+-------------------------------
+
+  KWin-Unterstützung (shell/Services/kwin/, shell/Services/KwinService.qml,
+  shell/Services/DToplevels.qml und Anpassungen in der Shell): «Patch v4», vom Alpe-Maintainer
+  zwischen dem 15. und 17.11.2026 gegen DMS v2.1.2 geschrieben, ohne fremden Code.
+  Teil von Alpe, MIT wie Alpe.
+
+
 Teile Dritter in Alpe
 ---------------------
 

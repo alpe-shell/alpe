@@ -101,7 +101,7 @@ Singleton {
             right: SettingsData.Position.Right
         })
 
-    readonly property bool supportsMinimize: DCommon.Compositor.supportsMinimize
+    readonly property bool supportsMinimize: isKwin || DCommon.Compositor.supportsMinimize
 
     readonly property bool hasWorkspaceIpc: {
         switch (compositor) {
@@ -254,6 +254,18 @@ Singleton {
         }
     }
 
+    Connections {
+        target: KwinService
+        enabled: root.isKwin
+        function onWindowsChanged() {
+            root.scheduleSort();
+            root.workspaceStateChanged();
+        }
+        function onActiveToplevelChanged() {
+            root.workspaceStateChanged();
+        }
+    }
+
     function canMinimize(toplevel) {
         return supportsMinimize && toplevel && toplevel.minimized !== undefined;
     }
@@ -371,7 +383,7 @@ Singleton {
         const known = _windowKeys.find(entry => entry.toplevel === toplevel);
         if (known)
             return known.key;
-        const live = ToplevelManager.toplevels?.values;
+        const live = DToplevels.toplevels?.values;
         if (live) {
             for (let i = _windowKeys.length - 1; i >= 0; i--) {
                 if (!live.includes(_windowKeys[i].toplevel))
@@ -399,6 +411,8 @@ Singleton {
             return MangoService.activeOutput;
         if (isUmbriel)
             return UmbrielService.focusedOutput;
+        if (isKwin)
+            return KwinService.activeOutput;
 
         return "";
     }
@@ -458,7 +472,7 @@ Singleton {
     }
 
     Connections {
-        target: ToplevelManager.toplevels
+        target: DToplevels.toplevels
         function onValuesChanged() {
             root.scheduleSort();
         }
@@ -531,19 +545,19 @@ Singleton {
     }
 
     function computeSortedToplevels() {
-        if (!ToplevelManager.toplevels || !ToplevelManager.toplevels.values)
+        if (!DToplevels.toplevels || !DToplevels.toplevels.values)
             return [];
 
         if (useNiriSorting)
-            return NiriService.sortToplevels(ToplevelManager.toplevels.values);
+            return NiriService.sortToplevels(DToplevels.toplevels.values);
 
         if (useMangoSorting)
-            return MangoService.sortToplevels(ToplevelManager.toplevels.values);
+            return MangoService.sortToplevels(DToplevels.toplevels.values);
 
         if (isHyprland)
             return sortHyprlandToplevelsSafe();
 
-        return Array.from(ToplevelManager.toplevels.values);
+        return Array.from(DToplevels.toplevels.values);
     }
 
     function _get(o, path, fallback) {
@@ -787,6 +801,8 @@ Singleton {
             return MangoService.filterCurrentWorkspace(toplevels, screen);
         if (isHyprland)
             return filterHyprlandCurrentWorkspaceSafe(toplevels, screen);
+        if (isKwin)
+            return KwinService.filterCurrentWorkspace(toplevels);
         return toplevels;
     }
 
@@ -834,10 +850,10 @@ Singleton {
 
     function fullscreenToplevelOnScreen(screenOrName) {
         const screenName = _screenName(screenOrName);
-        if (!screenName || !ToplevelManager.toplevels?.values)
+        if (!screenName || !DToplevels.toplevels?.values)
             return false;
 
-        const toplevels = ToplevelManager.toplevels.values;
+        const toplevels = DToplevels.toplevels.values;
         for (let i = 0; i < toplevels.length; i++) {
             const toplevel = toplevels[i];
             if (toplevel?.fullscreen && toplevel.activated && _toplevelOnScreen(toplevel, screenName))
@@ -849,14 +865,14 @@ Singleton {
     function visibleNiriFullscreenToplevelOnScreen(screenOrName) {
         if (!isNiri || !NiriService.hasInitialConnection)
             return false;
-        return NiriFullscreen.isFullscreenOnScreen(_screenName(screenOrName), NiriService.allWorkspaces, NiriService.windows, ToplevelManager.toplevels?.values);
+        return NiriFullscreen.isFullscreenOnScreen(_screenName(screenOrName), NiriService.allWorkspaces, NiriService.windows, DToplevels.toplevels?.values);
     }
 
     function filterCurrentDisplay(toplevels, screenName) {
         if (!toplevels || toplevels.length === 0 || !screenName)
             return toplevels;
         if (useNiriSorting) {
-            const active = ToplevelManager.activeToplevel;
+            const active = DToplevels.activeToplevel;
             if (active && toplevels.length === 1 && toplevels[0] === active) {
                 if (NiriService.currentOutput !== screenName)
                     return [];
@@ -1144,14 +1160,14 @@ Singleton {
     function _windowAlive(toplevel) {
         if (!toplevel)
             return false;
-        const alive = ToplevelManager.toplevels?.values;
+        const alive = DToplevels.toplevels?.values;
         return !!alive && Array.from(alive).some(t => t === toplevel);
     }
 
     function _fallbackActiveWindow(screenName, includeLastFocused) {
         switch (compositor) {
         case "niri":
-            return WindowModel.niriActiveWindow(NiriService.windows, NiriService.allWorkspaces, sortedToplevels || [], Array.from(ToplevelManager.toplevels?.values || []), screenName ?? "", NiriService.lastFocusedWindowId, includeLastFocused);
+            return WindowModel.niriActiveWindow(NiriService.windows, NiriService.allWorkspaces, sortedToplevels || [], Array.from(DToplevels.toplevels?.values || []), screenName ?? "", NiriService.lastFocusedWindowId, includeLastFocused);
         default:
             return null;
         }
@@ -1169,7 +1185,7 @@ Singleton {
     }
 
     function activeWindowForScreen(screenName, previous, includeLastFocused) {
-        const active = ToplevelManager.activeToplevel || _fallbackActiveWindow(screenName, includeLastFocused);
+        const active = DToplevels.activeToplevel || _fallbackActiveWindow(screenName, includeLastFocused);
         if (!active)
             return _retainedWindow(screenName, previous);
         if (!screenName || filterCurrentDisplay([active], screenName)?.length > 0)

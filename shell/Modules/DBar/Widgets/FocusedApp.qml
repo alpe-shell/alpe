@@ -50,7 +50,7 @@ BasePill {
         updateDesktopEntry();
     }
 
-    readonly property Toplevel managerActiveToplevel: ToplevelManager.activeToplevel
+    readonly property var managerActiveToplevel: DToplevels.activeToplevel
 
     onManagerActiveToplevelChanged: updateActiveWindow()
 

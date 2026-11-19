@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell.Hyprland
 import Quickshell.Wayland
 import qs.Common
+import qs.Services
 import "../Common/WorkspaceModel.js" as WorkspaceModel
 
 // Delays grab release so keyboardFocus=None commits before the grab dies,
@@ -14,7 +15,7 @@ HyprlandFocusGrab {
     property bool _compositorCleared: false
     property var _restoreToplevel: null
     property string _restoreWorkspace: ""
-    readonly property Toplevel liveToplevel: ToplevelManager.activeToplevel
+    readonly property var liveToplevel: DToplevels.activeToplevel
 
     property Timer _releaseTimer: Timer {
         interval: 50

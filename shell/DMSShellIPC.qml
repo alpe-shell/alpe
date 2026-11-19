@@ -1904,7 +1904,7 @@ Item {
         function move(name: string): string {
             if (!CompositorService.isHyprland)
                 return "SCRATCHPAD_UNSUPPORTED_COMPOSITOR";
-            const active = ToplevelManager.activeToplevel;
+            const active = DToplevels.activeToplevel;
             if (!active)
                 return "SCRATCHPAD_NO_FOCUSED_WINDOW";
             CompositorService.moveWindowToSpecial(active, name || "special");
@@ -1914,7 +1914,7 @@ Item {
         function restore(): string {
             if (!CompositorService.isHyprland)
                 return "SCRATCHPAD_UNSUPPORTED_COMPOSITOR";
-            const active = ToplevelManager.activeToplevel;
+            const active = DToplevels.activeToplevel;
             if (!active)
                 return "SCRATCHPAD_NO_FOCUSED_WINDOW";
             if (!CompositorService.windowScratchpadName(active))
@@ -1928,7 +1928,7 @@ Item {
 
     IpcHandler {
         function getFocusedWindow() {
-            const active = ToplevelManager.activeToplevel;
+            const active = DToplevels.activeToplevel;
             if (!active)
                 return null;
             return {

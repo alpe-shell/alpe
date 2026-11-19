@@ -188,7 +188,7 @@ Item {
     signal rulesChanged
 
     function getActiveWindows() {
-        const toplevels = ToplevelManager.toplevels?.values || [];
+        const toplevels = DToplevels.toplevels?.values || [];
         return toplevels.map(t => ({
                     appId: t.appId || "",
                     title: t.title || ""
@@ -196,7 +196,7 @@ Item {
     }
 
     Connections {
-        target: ToplevelManager.toplevels
+        target: DToplevels.toplevels
         function onValuesChanged() {
             root.activeWindows = root.getActiveWindows();
         }

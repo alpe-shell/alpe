@@ -71,7 +71,7 @@ LauncherTile {
             ScreencopyView {
                 id: screencopyView
                 anchors.fill: parent
-                captureSource: root.visible ? root.waylandToplevel : null
+                captureSource: root.visible && root.waylandToplevel?.kwinId === undefined ? root.waylandToplevel : null
                 live: root.visible && root.hasScreencopy
                 visible: root.hasScreencopy
 

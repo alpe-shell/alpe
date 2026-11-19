@@ -22,6 +22,8 @@ DOSD {
     readonly property var activeWorkspace: root.getActiveWorkspace()
     readonly property bool useNativeWorkspace: CompositorService.hasWorkspaceIpc
     readonly property bool useExtWorkspace: {
+        if (CompositorService.isKwin)
+            return KwinService.workspaces.length > 0;
         if (Quickshell.env("DMS_FORCE_EXTWS") === "1")
             return (WindowManager.windowsets?.length ?? 0) > 0;
         if (!CompositorService.compositorDetected || root.useNativeWorkspace)
@@ -44,7 +46,7 @@ DOSD {
             return CompositorService.activeWorkspaceForScreen(screenName);
         if (!root.useExtWorkspace || !root.screen)
             return null;
-        const projection = WindowManager.screenProjection(root.screen);
+        const projection = CompositorService.isKwin ? KwinService.projection : WindowManager.screenProjection(root.screen);
         const ws = projection?.windowsets?.find(w => w.active);
         if (!ws)
             return null;

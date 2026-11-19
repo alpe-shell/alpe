@@ -1335,7 +1335,7 @@ BasePill {
                         delegateRoot.updateAllData();
                     }
                 }
-                property var _extWindowsetsTrigger: root.useExtWorkspace ? WindowManager.windowsets : null
+                property var _extWindowsetsTrigger: root.useExtWorkspace ? (CompositorService.isKwin ? KwinService.workspaces : WindowManager.windowsets) : null
                 on_ExtWindowsetsTriggerChanged: {
                     if (root.useExtWorkspace)
                         delegateRoot.updateAllData();

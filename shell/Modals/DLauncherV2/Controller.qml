@@ -2822,7 +2822,7 @@ Item {
     function _runningToplevelFor(entry) {
         if (!entry.id)
             return null;
-        const toplevels = ToplevelManager.toplevels.values;
+        const toplevels = DToplevels.toplevels.values;
         for (let i = 0; i < toplevels.length; i++) {
             const appId = toplevels[i].appId;
             if (!appId)
