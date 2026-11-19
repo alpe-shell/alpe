@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name=""/>
+  <group name="General">
+    <!-- Unschärfe des Hintergrunds, 0 bis 64 -->
+    <entry name="Blur" type="Int">
+      <default>48</default>
+    </entry>
+    <!-- Abdunkeln des Hintergrunds in Prozent -->
+    <entry name="Dim" type="Int">
+      <default>40</default>
+    </entry>
+    <!-- Aufbau: hyprlock (aus der hyprlock.conf, siehe layout.js), klar (schlanke Uhr,
+         Milchglasfeld) oder slab (Alfa Slab One, übereinander) -->
+    <entry name="Style" type="String">
+      <default>hyprlock</default>
+    </entry>
+    <!-- Eigenes Layout als JSON (Seite «Sperrbildschirm gestalten»); leer: Vorlage layout.js -->
+    <entry name="Layout" type="String">
+      <default></default>
+    </entry>
+    <!-- Sprache für Tages- und Monatsnamen, etwa en_US; leer: Sprache des Systems -->
+    <entry name="Locale" type="String">
+      <default></default>
+    </entry>
+  </group>
+</kcfg>

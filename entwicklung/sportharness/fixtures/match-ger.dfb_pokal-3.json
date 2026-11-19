@@ -1,0 +1,549 @@
+{
+ "match": {
+  "id": "3",
+  "league": "ger.dfb_pokal",
+  "sport": "soccer",
+  "start": "2026-11-18T19:45:00Z",
+  "status": "live",
+  "label": "67'",
+  "round": "Achtelfinal",
+  "home": {
+   "id": "132",
+   "name": "Bayern Munich",
+   "short": "Bayern",
+   "abbr": "BAY",
+   "color": "#dc052d",
+   "score": "2",
+   "winner": false,
+   "logo": ""
+  },
+  "away": {
+   "id": "125",
+   "name": "SC Freiburg",
+   "short": "Freiburg",
+   "abbr": "SCF",
+   "color": "#111111",
+   "score": "1",
+   "winner": false,
+   "logo": ""
+  },
+  "venue": "",
+  "tv": []
+ },
+ "venue": "Allianz Arena",
+ "attendance": 75000,
+ "referee": "Deniz Aytekin",
+ "periods": [
+  {
+   "name": "1. HZ",
+   "home": "1",
+   "away": "1"
+  },
+  {
+   "name": "2. HZ",
+   "home": "1",
+   "away": "0"
+  }
+ ],
+ "events": [
+  {
+   "minute": "12'",
+   "sort": 720,
+   "type": "goal",
+   "side": "home",
+   "player": "Harry Kane",
+   "detail": "Assist: Michael Olise",
+   "score": "1:0"
+  },
+  {
+   "minute": "29'",
+   "sort": 1740,
+   "type": "yellow",
+   "side": "away",
+   "player": "Maximilian Eggestein",
+   "detail": ""
+  },
+  {
+   "minute": "41'",
+   "sort": 2460,
+   "type": "goal",
+   "side": "away",
+   "player": "Vincenzo Grifo",
+   "detail": "",
+   "score": "1:1"
+  },
+  {
+   "minute": "45'+2'",
+   "sort": 2702,
+   "type": "half",
+   "side": "",
+   "player": "Pause",
+   "detail": "",
+   "score": "1:1"
+  },
+  {
+   "minute": "58'",
+   "sort": 3480,
+   "type": "sub",
+   "side": "home",
+   "player": "Lennart Karl",
+   "detail": "Serge Gnabry"
+  },
+  {
+   "minute": "63'",
+   "sort": 3780,
+   "type": "penalty",
+   "side": "home",
+   "player": "Harry Kane",
+   "detail": "Penalty",
+   "score": "2:1"
+  },
+  {
+   "minute": "65'",
+   "sort": 3900,
+   "type": "yellow",
+   "side": "home",
+   "player": "Joshua Kimmich",
+   "detail": ""
+  }
+ ],
+ "stats": [
+  {
+   "label": "Ballbesitz",
+   "home": "64.3 %",
+   "away": "35.7 %",
+   "hv": 64.3,
+   "av": 35.7,
+   "percent": true
+  },
+  {
+   "label": "Schüsse",
+   "home": "17",
+   "away": "6",
+   "hv": 17.0,
+   "av": 6.0,
+   "percent": false
+  },
+  {
+   "label": "Schüsse aufs Tor",
+   "home": "7",
+   "away": "2",
+   "hv": 7.0,
+   "av": 2.0,
+   "percent": false
+  },
+  {
+   "label": "Ecken",
+   "home": "6",
+   "away": "2",
+   "hv": 6.0,
+   "av": 2.0,
+   "percent": false
+  },
+  {
+   "label": "Pässe",
+   "home": "512",
+   "away": "284",
+   "hv": 512.0,
+   "av": 284.0,
+   "percent": false
+  },
+  {
+   "label": "Passquote",
+   "home": "89 %",
+   "away": "78 %",
+   "hv": 89.0,
+   "av": 78.0,
+   "percent": true
+  },
+  {
+   "label": "Paraden",
+   "home": "1",
+   "away": "5",
+   "hv": 1.0,
+   "av": 5.0,
+   "percent": false
+  },
+  {
+   "label": "Fouls",
+   "home": "8",
+   "away": "11",
+   "hv": 8.0,
+   "av": 11.0,
+   "percent": false
+  },
+  {
+   "label": "Abseits",
+   "home": "2",
+   "away": "1",
+   "hv": 2.0,
+   "av": 1.0,
+   "percent": false
+  },
+  {
+   "label": "Gelbe Karten",
+   "home": "1",
+   "away": "1",
+   "hv": 1.0,
+   "av": 1.0,
+   "percent": false
+  }
+ ],
+ "lineups": {
+  "home": {
+   "formation": "4-2-3-1",
+   "lines": [
+    [
+     {
+      "id": "9001",
+      "name": "Manuel Neuer",
+      "short": "Manuel Neuer",
+      "num": "1",
+      "pos": "G",
+      "place": 1,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     }
+    ],
+    [
+     {
+      "id": "9044",
+      "name": "Josip Stanisic",
+      "short": "Josip Stanisic",
+      "num": "44",
+      "pos": "LB",
+      "place": 3,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9004",
+      "name": "Jonathan Tah",
+      "short": "Jonathan Tah",
+      "num": "4",
+      "pos": "CD-L",
+      "place": 6,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9002",
+      "name": "Dayot Upamecano",
+      "short": "Dayot Upamecano",
+      "num": "2",
+      "pos": "CD-R",
+      "place": 5,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9027",
+      "name": "Konrad Laimer",
+      "short": "Konrad Laimer",
+      "num": "27",
+      "pos": "RB",
+      "place": 2,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     }
+    ],
+    [
+     {
+      "id": "9045",
+      "name": "Aleksandar Pavlovic",
+      "short": "Aleksandar Pavlovic",
+      "num": "45",
+      "pos": "DM-L",
+      "place": 8,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9006",
+      "name": "Joshua Kimmich",
+      "short": "Joshua Kimmich",
+      "num": "6",
+      "pos": "DM-R",
+      "place": 4,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": [
+       "yellow"
+      ]
+     }
+    ],
+    [
+     {
+      "id": "9007",
+      "name": "Serge Gnabry",
+      "short": "Serge Gnabry",
+      "num": "7",
+      "pos": "LM",
+      "place": 11,
+      "starter": true,
+      "subIn": false,
+      "subOut": true,
+      "marks": []
+     },
+     {
+      "id": "9010",
+      "name": "Jamal Musiala",
+      "short": "Jamal Musiala",
+      "num": "10",
+      "pos": "AM",
+      "place": 10,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9017",
+      "name": "Michael Olise",
+      "short": "Michael Olise",
+      "num": "17",
+      "pos": "RM",
+      "place": 7,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     }
+    ],
+    [
+     {
+      "id": "9009",
+      "name": "Harry Kane",
+      "short": "Harry Kane",
+      "num": "9",
+      "pos": "F",
+      "place": 9,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": [
+       "goal",
+       "goal"
+      ]
+     }
+    ]
+   ],
+   "bench": [
+    {
+     "id": "9042",
+     "name": "Lennart Karl",
+     "short": "Lennart Karl",
+     "num": "42",
+     "pos": "SUB",
+     "place": 0,
+     "starter": false,
+     "subIn": true,
+     "subOut": false,
+     "marks": []
+    },
+    {
+     "id": "9026",
+     "name": "Sven Ulreich",
+     "short": "Sven Ulreich",
+     "num": "26",
+     "pos": "SUB",
+     "place": 0,
+     "starter": false,
+     "subIn": false,
+     "subOut": false,
+     "marks": []
+    },
+    {
+     "id": "9008",
+     "name": "Leon Goretzka",
+     "short": "Leon Goretzka",
+     "num": "8",
+     "pos": "SUB",
+     "place": 0,
+     "starter": false,
+     "subIn": false,
+     "subOut": false,
+     "marks": []
+    }
+   ],
+   "coach": ""
+  },
+  "away": {
+   "formation": "4-4-2",
+   "lines": [
+    [
+     {
+      "id": "9001",
+      "name": "Noah Atubolu",
+      "short": "Noah Atubolu",
+      "num": "1",
+      "pos": "G",
+      "place": 1,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     }
+    ],
+    [
+     {
+      "id": "9030",
+      "name": "Christian Günter",
+      "short": "Christian Günter",
+      "num": "30",
+      "pos": "LB",
+      "place": 3,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9028",
+      "name": "Matthias Ginter",
+      "short": "Matthias Ginter",
+      "num": "28",
+      "pos": "CD-L",
+      "place": 6,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9029",
+      "name": "Philipp Lienhart",
+      "short": "Philipp Lienhart",
+      "num": "29",
+      "pos": "CD-R",
+      "place": 5,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9017",
+      "name": "Lukas Kübler",
+      "short": "Lukas Kübler",
+      "num": "17",
+      "pos": "RB",
+      "place": 2,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     }
+    ],
+    [
+     {
+      "id": "9032",
+      "name": "Vincenzo Grifo",
+      "short": "Vincenzo Grifo",
+      "num": "32",
+      "pos": "LM",
+      "place": 11,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": [
+       "goal"
+      ]
+     },
+     {
+      "id": "9027",
+      "name": "Nicolas Höfler",
+      "short": "Nicolas Höfler",
+      "num": "27",
+      "pos": "CM-L",
+      "place": 8,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9008",
+      "name": "Maximilian Eggestein",
+      "short": "Maximilian Eggestein",
+      "num": "8",
+      "pos": "CM-R",
+      "place": 4,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": [
+       "yellow"
+      ]
+     },
+     {
+      "id": "9042",
+      "name": "Ritsu Doan",
+      "short": "Ritsu Doan",
+      "num": "42",
+      "pos": "RM",
+      "place": 7,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     }
+    ],
+    [
+     {
+      "id": "9038",
+      "name": "Michael Gregoritsch",
+      "short": "Michael Gregoritsch",
+      "num": "38",
+      "pos": "CF-L",
+      "place": 10,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     },
+     {
+      "id": "9009",
+      "name": "Lucas Höler",
+      "short": "Lucas Höler",
+      "num": "9",
+      "pos": "CF-R",
+      "place": 9,
+      "starter": true,
+      "subIn": false,
+      "subOut": false,
+      "marks": []
+     }
+    ]
+   ],
+   "bench": [],
+   "coach": ""
+  }
+ },
+ "leaders": [],
+ "players": {},
+ "league": {
+  "id": "ger.dfb_pokal",
+  "name": "DFB-Pokal",
+  "short": "Pokal",
+  "sport": "soccer",
+  "kind": "cup",
+  "country": "Deutschland"
+ },
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

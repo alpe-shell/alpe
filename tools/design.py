@@ -1,0 +1,782 @@
+#!/usr/bin/env python3
+"""Alpe-Design: das Aussehen eines Rechners festhalten und auf einem anderen einspielen.
+
+    alpe design export [--bilder fragen|ja|nein] [--variante kde|hyprland]
+        nimmt das aktuelle Aussehen auf und legt es in ~/alpe/design/<variante>/
+        (KDE-PC: kde, Hyprland/Mac: hyprland – die Variante folgt der laufenden Sitzung)
+    alpe design apply [--variante kde|hyprland] [--ja]
+        spielt das Design ein (mit Sicherung der bisherigen Dateien)
+    alpe design status
+        zeigt, welche Designs im Repository liegen und ob eines eingespielt ist
+
+Übernommen wird, was man sieht: Farben, Schriften, Leiste und ihre Elemente, Dock, Dash mit
+seinen Tabs und Karten, Sperrbildschirm, Effekte und Fensterregeln unter KWin, die Einstellungen
+der Alpe-Plugins, dazu die Einstellungen von kitty und fastfetch. Nicht übernommen wird, was zu einer Person oder einem Gerät gehört: Wetterort
+(das Wetter folgt beim neuen Nutzer seinem Standort), Sport-Favoriten und Streaming-Links,
+Bildschirm- und Geräte-Zuordnungen, eigene Befehle, Verläufe und jeder Pfad in den eigenen
+Ordner. Bilder (Hintergrund, Sperrbildschirm) kommen nur mit, wenn man sie beim Export als eigene
+bestätigt – fremde Fotos dürfen nicht in ein öffentliches Repository.
+"""
+import datetime
+import glob
+import importlib.util
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+HOME = os.path.expanduser("~")
+CONFIG = os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config")
+STATE = os.environ.get("XDG_STATE_HOME") or os.path.join(HOME, ".local", "state")
+DATA = os.environ.get("XDG_DATA_HOME") or os.path.join(HOME, ".local", "share")
+ALPE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SHELL_DIR = os.environ.get("ALPE_SHELL_DIR") or os.path.join(HOME, "dux-shell")
+DESIGN_ROOT = os.environ.get("ALPE_DESIGN_DIR") or os.path.join(ALPE_DIR, "design")
+INSTALLED = os.path.join(DATA, "alpe", "design")       # Bilder des eingespielten Designs
+MARK = os.path.join(CONFIG, "alpe", "design-eingespielt")
+TOKEN = "@DESIGN@"                                       # steht in den Dateien für INSTALLED
+
+SETTINGS = os.path.join(CONFIG, "dms", "settings.json")
+SESSION = os.path.join(STATE, "dms", "session.json")
+PLUGINS = os.path.join(CONFIG, "dms", "plugin_settings.json")
+HYPRLOCK = os.path.join(CONFIG, "hypr", "hyprlock.conf")
+
+# ---------------------------------------------------------------- was dazugehört
+
+# settings.json: Gerät, Person oder eigene Befehle – fällt weg (der neue Nutzer bekommt die Vorgabe)
+SETTINGS_DROP = {
+    "screenPreferences", "showOnLastDisplay", "displayProfiles", "displayProfileAutoSelect",
+    "displayPreviousRefreshModes", "matugenTargetMonitor", "notificationFocusedMonitor",
+    "lockPamPath", "lockScreenVideoPath", "updaterCustomCommand", "updaterUseCustomCommand",
+    "muxCustomCommand", "muxUseCustomCommand", "customPowerActionLock", "customPowerActionLogout",
+    "customPowerActionSuspend", "customPowerActionHibernate", "customPowerActionReboot",
+    "customPowerActionPowerOff", "weatherLocation", "weatherCoordinates",
+}
+# Wer eine Leiste oder ein Dock für einen bestimmten Bildschirm hat, bekommt sie auf allen
+SCREEN_KEYS = {"screenPreferences": ["all"], "frameScreenPreferences": ["all"]}
+# settings.json: so beim neuen Nutzer, egal wie beim Exportierenden
+SETTINGS_FORCE = {"useAutoLocation": True}
+
+# session.json: nur das Aussehen (alles andere – Wetterort, Geräte, Verläufe – bleibt beim Nutzer)
+SESSION_KEEP = [
+    "isLightMode", "wallpaperPath", "wallpaperPathLight", "wallpaperPathDark", "perModeWallpaper",
+    "wallpaperFillMode", "wallpaperTransition", "includedTransitions",
+    "themeModeAutoEnabled", "themeModeAutoMode", "themeModeStartHour", "themeModeStartMinute",
+    "themeModeEndHour", "themeModeEndMinute", "themeModeShareGammaSettings",
+    "nightModeEnabled", "nightModeTemperature", "nightModeHighTemperature", "nightModeAutoEnabled",
+    "nightModeAutoMode", "nightModeStartHour", "nightModeStartMinute", "nightModeEndHour",
+    "nightModeEndMinute", "nightModeTransitionMinutes",
+    "dockPins", "barPinnedApps", "trayItemOrder", "recentColors",
+    "desktopWidgetGridSettings", "lockScreenWidgetGridSettings", "islandFreePositions",
+    "locale", "timeLocale",
+]
+WALLPAPER_KEYS = ("wallpaperPath", "wallpaperPathLight", "wallpaperPathDark")
+
+# plugin_settings.json: je Alpe-Plugin, was zum Aussehen und Verhalten gehört
+PLUGIN_KEEP = {
+    "alpeSport": ["order", "notifyGoals", "notifyStart", "notifyEnd", "barLive", "barUpcoming",
+                  "refreshLive", "growDetail", "barWidgetAdded", "enabled"],
+    "alpeMeteoSwiss": None,     # None: alles ausser Ort und Pfaden
+    "alpeRadar": None,
+}
+PERSONAL_PLUGIN_KEYS = re.compile(r"(location|point|coord|lat|lon|plz|zip|city|ort|favorit|stream|token|key)", re.I)
+
+# KWin (KDE-PC): Effekte, Animation, Fensterregeln, Sperrbildschirm
+KWIN_GROUPS = [("kwinrc", "Round-Corners"), ("kwinrc", "Effect-better-blur-dx")]
+KWIN_KEYS = [("kwinrc", "Plugins", "kwin4_effect_shapecornersEnabled"), ("kwinrc", "Plugins", "better_blur_dxEnabled"),
+             ("kwinrc", "Plugins", "blurEnabled"), ("kdeglobals", "KDE", "AnimationDurationFactor")]
+LOCK_GROUP = "Greeter/LnF/General"
+LOCK_KEYS = ("Style", "Layout")
+
+# Programme, deren Einstellungen zum Aussehen gehören: Ordner unter ~/.config
+PROGRAMME = ("kitty", "fastfetch")
+PROGRAMM_EXT = (".conf", ".jsonc", ".json", ".py", ".ini", ".toml")
+PROGRAMM_SKIP = ("alpe-logo.txt",)                       # entsteht beim Einspielen neu (tools/fastfetch.py)
+SECRET = re.compile(r"(password|passwd|token|secret|api[_-]?key)", re.I)
+
+IMAGE_EXT = (".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif", ".bmp", ".mp4", ".webm", ".mkv", ".mov")
+MAX_BYTES = 50 * 1024 * 1024    # GitHub lehnt Dateien ab 100 MB ab; Videos darüber gehören nicht ins Repository
+
+
+def say(text=""):
+    print(text, flush=True)
+
+
+def kwin():
+    path = os.path.join(SHELL_DIR, "quickshell", "scripts", "alpe-kwin.py")
+    spec = importlib.util.spec_from_file_location("alpe_kwin", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def session_variant():
+    desktop = (os.environ.get("XDG_CURRENT_DESKTOP") or "").lower()
+    if "kde" in desktop or "kwin" in desktop:
+        return "kde"
+    if "hyprland" in desktop or os.environ.get("HYPRLAND_INSTANCE_SIGNATURE"):
+        return "hyprland"
+    return "kde" if shutil.which("kwin_wayland") else "hyprland"
+
+
+def load_json(path, default=None):
+    try:
+        with open(path, encoding="utf-8") as handle:
+            return json.load(handle)
+    except (OSError, ValueError):
+        return default
+
+
+def save_json(path, data):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".alpe-neu"
+    with open(tmp, "w", encoding="utf-8") as handle:
+        json.dump(data, handle, ensure_ascii=False, indent=2)
+        handle.write("\n")
+    os.replace(tmp, path)
+
+
+def personal(value):
+    """Enthält der Wert (auch verschachtelt) einen Pfad in den eigenen Ordner?"""
+    if isinstance(value, str):
+        return HOME in value or value.startswith("~/") or "file://" + HOME in value
+    if isinstance(value, dict):
+        return any(personal(v) for v in value.values())
+    if isinstance(value, list):
+        return any(personal(v) for v in value)
+    return False
+
+
+def screens_to_all(value):
+    if isinstance(value, dict):
+        return {k: (SCREEN_KEYS[k] if k in SCREEN_KEYS else screens_to_all(v)) for k, v in value.items()}
+    if isinstance(value, list):
+        return [screens_to_all(v) for v in value]
+    return value
+
+
+def fill(value, base):
+    if isinstance(value, str):
+        return value.replace(TOKEN, base)
+    if isinstance(value, dict):
+        return {k: fill(v, base) for k, v in value.items()}
+    if isinstance(value, list):
+        return [fill(v, base) for v in value]
+    return value
+
+
+# ---------------------------------------------------------------- Bilder
+
+class Images:
+    """Sammelt Bildpfade, fragt einmal je Datei, ob sie mit darf, und kopiert die erlaubten."""
+
+    def __init__(self, target, mode, ask=input):
+        self.target, self.mode, self.ask = target, mode, ask
+        self.decided = {}
+        self.taken, self.left = [], []
+
+    def take(self, path):
+        """Pfad im Design (@DESIGN@/bilder/…) oder None, wenn das Bild nicht mitkommt."""
+        if not isinstance(path, str) or not path:
+            return None
+        path = path[7:] if path.startswith("file://") else path
+        path = os.path.expanduser(path)
+        if path in self.decided:
+            return self.decided[path]
+        result = None
+        if not os.path.isfile(path):
+            self.left.append((path, "fehlt"))
+        elif os.path.getsize(path) > MAX_BYTES:
+            self.left.append((path, "grösser als 50 MB"))
+        else:
+            allowed = self.mode == "ja"
+            if self.mode == "fragen":
+                answer = self.ask("   Eigenes Bild, darf öffentlich ins Repository? %s [j/N] " % path.replace(HOME, "~"))
+                allowed = answer.strip().lower() in ("j", "ja", "y", "yes")
+            if allowed:
+                name = os.path.basename(path)
+                stem, ext = os.path.splitext(name)
+                n = 2
+                while os.path.exists(os.path.join(self.target, name)):
+                    name = "%s-%d%s" % (stem, n, ext)
+                    n += 1
+                os.makedirs(self.target, exist_ok=True)
+                shutil.copy2(path, os.path.join(self.target, name))
+                result = TOKEN + "/bilder/" + name
+                self.taken.append(name)
+            else:
+                self.left.append((path, "nicht als eigenes bestätigt"))
+        self.decided[path] = result
+        return result
+
+
+def scrub(value, images, where, dropped):
+    """Jeden Pfad in den eigenen Ordner behandeln: Bilder fragen, alles andere entfernen.
+    Gibt (wert, behalten?) zurück."""
+    if isinstance(value, str):
+        if not personal(value):
+            return value, True
+        if value.lower().endswith(IMAGE_EXT):
+            mapped = images.take(value)
+            if mapped:
+                return mapped, True
+        dropped.append("%s (Pfad in den eigenen Ordner)" % where)
+        return None, False
+    if isinstance(value, dict):
+        out = {}
+        for k, v in value.items():
+            new, keep = scrub(v, images, where + "." + k, dropped)
+            if keep:
+                out[k] = new
+        return out, True
+    if isinstance(value, list):
+        out = []
+        for i, v in enumerate(value):
+            new, keep = scrub(v, images, "%s[%d]" % (where, i), dropped)
+            if keep:
+                out.append(new)
+        return out, True
+    return value, True
+
+
+def lock_layout_images(layout, images):
+    """Bilder im Layout des Sperrbildschirms (JSON des Gestalters) übernehmen oder entfernen."""
+    if not isinstance(layout, dict):
+        return layout
+    out = json.loads(json.dumps(layout))
+    background = out.get("background") or {}
+    for key in ("path", "image"):
+        if key in background:
+            mapped = images.take(background[key])
+            if mapped:
+                background[key] = mapped
+            else:
+                background.pop(key, None)
+                if background.get("source") == "image":
+                    background["source"] = "desktop"
+    widgets = []
+    for widget in out.get("widgets") or []:
+        if widget.get("type") == "image":
+            mapped = images.take(widget.get("path"))
+            if not mapped:
+                continue
+            widget["path"] = mapped
+        widgets.append(widget)
+    out["widgets"] = widgets
+    return out
+
+
+def hyprlock_images(text, images):
+    """hyprlock.conf: image-Blöcke mit fremden Bildern weglassen, eigene umschreiben."""
+    out, block, depth = [], [], 0
+    for line in text.splitlines():
+        stripped = line.strip()
+        if depth == 0 and re.match(r"^(image|background)\s*\{", stripped):
+            block, depth = [line], 1
+            continue
+        if depth:
+            block.append(line)
+            depth += stripped.count("{") - stripped.count("}")
+            if depth == 0:
+                kind = block[0].strip().split()[0]
+                keep = []
+                drop = False
+                for item in block:
+                    m = re.match(r"^(\s*)path\s*=\s*(.+?)\s*$", item)
+                    if m:
+                        mapped = images.take(m.group(2))
+                        if mapped:
+                            keep.append("%spath = %s" % (m.group(1), mapped))
+                        elif kind == "image":
+                            drop = True
+                        # background ohne Bild: Alpe nimmt den Desktop-Hintergrund
+                        continue
+                    keep.append(item)
+                if not drop:
+                    out.extend(keep)
+            continue
+        out.append(line)
+    return "\n".join(out) + "\n"
+
+
+# ---------------------------------------------------------------- Export
+
+def export(variant, mode, ask=input):
+    target = os.path.join(DESIGN_ROOT, variant)
+    if os.path.isdir(target):
+        shutil.rmtree(target)
+    os.makedirs(target)
+    images = Images(os.path.join(target, "bilder"), mode, ask)
+    notes, dropped = [], []
+
+    settings = load_json(SETTINGS, {})
+    if not settings:
+        say("   Keine Einstellungen gefunden (%s) – hier läuft Alpe noch nicht?" % SETTINGS.replace(HOME, "~"))
+    out = {}
+    for key, value in settings.items():
+        if key in SETTINGS_DROP:
+            dropped.append(key)
+            continue
+        if key == "customThemeFile" and value:
+            theme = os.path.expanduser(value)
+            if os.path.isfile(theme):
+                shutil.copy2(theme, os.path.join(target, "farben.json"))
+                out[key] = TOKEN + "/farben.json"
+            else:
+                dropped.append(key)
+            continue
+        value = screens_to_all(value)
+        if personal(value):
+            dropped.append(key)
+            continue
+        out[key] = value
+    out.update(SETTINGS_FORCE)
+    dynamic = out.get("currentThemeName") == "dynamic"
+    save_json(os.path.join(target, "settings.json"), out)
+
+    session = load_json(SESSION, {})
+    kept = {k: session[k] for k in SESSION_KEEP if k in session}
+    if not session.get("perModeWallpaper"):
+        # Getrennte Bilder für Hell und Dunkel nutzt nur, wer perModeWallpaper eingeschaltet hat
+        kept.pop("wallpaperPathLight", None)
+        kept.pop("wallpaperPathDark", None)
+    for key in WALLPAPER_KEYS:
+        if kept.get(key):
+            mapped = images.take(kept[key])
+            if mapped:
+                kept[key] = mapped
+            else:
+                kept.pop(key)
+    if session.get("perMonitorWallpaper"):
+        notes.append("Hintergrund je Bildschirm wird nicht übernommen (Bildschirme sind beim neuen Nutzer andere).")
+    if not any(kept.get(k) for k in WALLPAPER_KEYS):
+        notes.append("Kein Hintergrundbild im Design: der neue Nutzer behält seinen.")
+        if dynamic:
+            notes.append("Die Farben kommen aus dem Hintergrundbild (Theme «dynamic»). Ohne Bild sehen sie beim "
+                         "neuen Nutzer anders aus – dann besser ein festes Theme wählen.")
+    save_json(os.path.join(target, "session.json"), kept)
+
+    plugins = load_json(PLUGINS, {})
+    plug_out = {}
+    for plugin, allowed in PLUGIN_KEEP.items():
+        data = plugins.get(plugin)
+        if not isinstance(data, dict):
+            continue
+        if allowed is None:
+            plug_out[plugin] = {k: v for k, v in data.items() if not PERSONAL_PLUGIN_KEYS.search(k) and not personal(v)}
+        else:
+            plug_out[plugin] = {k: data[k] for k in allowed if k in data}
+    save_json(os.path.join(target, "plugins.json"), plug_out)
+
+    fonts = sorted({str(v) for k, v in out.items() if "font" in k.lower() and "family" in k.lower() and v})
+
+    if variant == "kde":
+        k = kwin()
+        entries = []
+        for file, group in KWIN_GROUPS:
+            for key, value in k.read_kconfig(file).get(group, {}).items():
+                entries.append([file, group, key, value])
+        for file, group, key in KWIN_KEYS:
+            value = k.read_kconfig(file).get(group, {}).get(key)
+            if value is not None:
+                entries.append([file, group, key, value])
+        for entry in [e for e in entries if personal(e[3])]:
+            entries.remove(entry)
+            dropped.append("%s [%s] %s (Pfad in den eigenen Ordner)" % tuple(entry[:3]))
+        rules = []
+        for rule in k.rule_list():
+            name = rule.get("Description", rule["id"])
+            if rule.get("title"):
+                # «Fenster anklicken» trägt Klasse und Titel ein. Der Titel kann Dateinamen enthalten und
+                # ist beim neuen Nutzer ein anderer: mit Klasse gilt die Regel für alle Fenster des
+                # Programms, ohne Klasse träfe sie ohne Titel jedes Fenster – dann weg.
+                has_class = rule.get("wmclass") and rule.get("wmclassmatch", "0") not in ("", "0")
+                if not has_class:
+                    dropped.append("Fensterregel «%s» (prüft nur den Fenstertitel)" % name)
+                    continue
+                rule = {key: value for key, value in rule.items() if key not in ("title", "titlematch")}
+                name = re.sub(r"\s*\(.*\)$", "", name) or name
+                rule["Description"] = name
+                notes.append("Fensterregel «%s»: Bedingung Fenstertitel entfernt, gilt für alle Fenster des Programms." % name)
+            clean = {key: value for key, value in rule.items() if key not in ("id", "other") and not personal(value)}
+            rules.append(clean)
+        lock = {}
+        group = k.read_kconfig("kscreenlockerrc").get(LOCK_GROUP, {})
+        for key in LOCK_KEYS:
+            if group.get(key):
+                lock[key] = group[key]
+        if lock.get("Layout"):
+            layout = load_json_text(lock["Layout"])
+            if layout is not None:
+                cleaned, _ = scrub(lock_layout_images(layout, images), images, "Sperrbildschirm", dropped)
+                lock["Layout"] = json.dumps(cleaned, ensure_ascii=False, separators=(",", ":"))
+                fonts += [w.get("font", {}).get("family") for w in layout.get("widgets", []) if isinstance(w.get("font"), dict)]
+            else:
+                lock.pop("Layout")
+        save_json(os.path.join(target, "kwin.json"), {"einstellungen": entries, "regeln": rules, "sperrbildschirm": lock})
+        own_conf = os.path.join(CONFIG, "alpe", "hyprlock.conf")
+        if not lock.get("Layout") and os.path.isfile(own_conf):
+            with open(own_conf, encoding="utf-8", errors="replace") as handle:
+                text = handle.read()
+            with open(os.path.join(target, "hyprlock.conf"), "w", encoding="utf-8") as handle:
+                handle.write(hyprlock_images(text, images))
+            fonts += re.findall(r"font_family\s*=\s*(.+)", text)
+        elif not lock.get("Layout"):
+            notes.append("Sperrbildschirm: kein eigenes Layout gestaltet – es gilt die neutrale Vorlage lockscreen/hyprlock.conf.")
+    else:
+        if os.path.isfile(HYPRLOCK):
+            with open(HYPRLOCK, encoding="utf-8", errors="replace") as handle:
+                text = handle.read()
+            with open(os.path.join(target, "hyprlock.conf"), "w", encoding="utf-8") as handle:
+                handle.write(hyprlock_images(text, images))
+            fonts += re.findall(r"font_family\s*=\s*(.+)", text)
+
+    programme = export_programme(os.path.join(target, "programme"), notes, dropped)
+
+    manifest = {
+        "variante": variant,
+        "alpe": alpe_version(),
+        "exportiert": datetime.date.today().isoformat(),
+        "schriften": sorted({f.strip() for f in fonts if f and f.strip()}),
+        "bilder": images.taken,
+        "programme": programme,
+        "hinweise": notes,
+    }
+    save_json(os.path.join(target, "manifest.json"), manifest)
+
+    say("Design «%s» liegt in %s" % (variant, target.replace(HOME, "~")))
+    say("   Einstellungen: %d übernommen, %d weggelassen (persönlich oder gerätegebunden)" % (len(out), len(dropped)))
+    for item in dropped:
+        say("      weggelassen: %s" % item)
+    for name, files in programme.items():
+        say("   %s: %d Datei(en) übernommen" % (name, len(files)))
+    for name in images.taken:
+        say("   Bild übernommen: bilder/%s" % name)
+    for path, why in images.left:
+        say("   Bild nicht übernommen (%s): %s" % (why, path.replace(HOME, "~")))
+    for note in notes:
+        say("   Hinweis: %s" % note)
+    if manifest["schriften"]:
+        say("   Schriften: %s – fehlen sie beim neuen Nutzer, nimmt die Shell Ersatz." % ", ".join(manifest["schriften"]))
+    leak = [p for p in glob.glob(os.path.join(target, "*.json")) + glob.glob(os.path.join(target, "*.conf"))
+            + glob.glob(os.path.join(target, "programme", "**", "*"), recursive=True)
+            if os.path.isfile(p) and HOME in open(p, encoding="utf-8", errors="replace").read()]
+    if leak:
+        say("   ACHTUNG: noch ein Pfad in den eigenen Ordner in: %s – bitte melden." % ", ".join(os.path.basename(p) for p in leak))
+        return 1
+    say("Prüfen mit «git -C ~/alpe status» und «git -C ~/alpe diff», dann committen.")
+    return 0
+
+
+def export_programme(target, notes, dropped):
+    """kitty und fastfetch: Textdateien aus ~/.config/<programm>, Pfade in den eigenen Ordner als ~,
+    Zeilen mit Passwörtern oder Schlüsseln weg. Gibt {programm: [Dateien]} zurück."""
+    taken = {}
+    for name in PROGRAMME:
+        folder = os.path.join(CONFIG, name)
+        if not os.path.isdir(folder):
+            continue
+        files = []
+        for root, dirs, names in os.walk(folder):
+            dirs[:] = sorted(d for d in dirs if not d.startswith("."))
+            for file in sorted(names):
+                path = os.path.join(root, file)
+                rel = os.path.relpath(path, folder)
+                if (file.startswith(".") or file in PROGRAMM_SKIP or not file.endswith(PROGRAMM_EXT)
+                        or ".vor-alpe" in file or os.path.getsize(path) > 512 * 1024):
+                    continue
+                with open(path, encoding="utf-8", errors="replace") as handle:
+                    lines = handle.read().splitlines(keepends=True)
+                kept = []
+                for line in lines:
+                    if SECRET.search(line) and not line.lstrip().startswith(("#", "//")):
+                        dropped.append("%s/%s: Zeile mit Passwort oder Schlüssel" % (name, rel))
+                        continue
+                    kept.append(line.replace(HOME, "~"))
+                out = os.path.join(target, name, rel)
+                os.makedirs(os.path.dirname(out), exist_ok=True)
+                with open(out, "w", encoding="utf-8") as handle:
+                    handle.write("".join(kept))
+                files.append(rel)
+        if files:
+            taken[name] = files
+    if not taken:
+        notes.append("Keine Einstellungen von kitty oder fastfetch gefunden.")
+    return taken
+
+
+def apply_programme(source, saved_root):
+    """Dateien aus design/<variante>/programme nach ~/.config; bisherige Ordner vorher gesichert."""
+    done = []
+    folder = os.path.join(source, "programme")
+    if not os.path.isdir(folder):
+        return done
+    for name in sorted(os.listdir(folder)):
+        if name not in PROGRAMME:
+            continue
+        dest = os.path.join(CONFIG, name)
+        if os.path.isdir(dest) and os.listdir(dest):
+            shutil.copytree(dest, os.path.join(saved_root, "programme", name), dirs_exist_ok=True)
+        shutil.copytree(os.path.join(folder, name), dest, dirs_exist_ok=True)
+        done.append(name)
+    return done
+
+
+def load_json_text(text):
+    try:
+        return json.loads(text)
+    except ValueError:
+        return None
+
+
+def alpe_version():
+    brand = os.path.join(SHELL_DIR, "quickshell", "Common", "Brand.qml")
+    try:
+        m = re.search(r'version:\s*"([^"]+)"', open(brand, encoding="utf-8").read())
+        return m.group(1) if m else ""
+    except OSError:
+        return ""
+
+
+# ---------------------------------------------------------------- Einspielen
+
+def desktop_ids():
+    data = os.environ.get("XDG_DATA_DIRS") or "/usr/local/share:/usr/share"
+    ids = set()
+    for base in [os.path.join(DATA, "applications")] + [os.path.join(d, "applications") for d in data.split(":") if d]:
+        for path in glob.glob(os.path.join(base, "**", "*.desktop"), recursive=True):
+            did = os.path.relpath(path, base).replace(os.sep, "-")
+            ids.add(did.lower())
+            ids.add(did[:-8].lower())
+    return ids
+
+
+def installed_pins(value, ids):
+    """Nur Programme anheften, die es auf diesem Rechner gibt."""
+    def ok(app):
+        if not isinstance(app, str):
+            return True
+        return app.lower() in ids or (app.lower() + ".desktop") in ids
+    if isinstance(value, list):
+        return [a for a in value if ok(a)]
+    if isinstance(value, dict):
+        return {k: installed_pins(v, ids) for k, v in value.items()}
+    return value
+
+
+def backup_folder():
+    return os.path.join(CONFIG, "alpe", "design-sicherung", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+
+
+def backup(paths, folder=None):
+    folder = folder or backup_folder()
+    saved = 0
+    for path in paths:
+        if os.path.isfile(path):
+            os.makedirs(folder, exist_ok=True)
+            shutil.copy2(path, os.path.join(folder, os.path.basename(path)))
+            saved += 1
+    return folder if saved else None
+
+
+def available():
+    return [v for v in ("kde", "hyprland") if os.path.isfile(os.path.join(DESIGN_ROOT, v, "manifest.json"))]
+
+
+def service(action):
+    """dms.service anhalten bzw. wieder starten, damit die Shell die neuen Dateien nicht mit ihrem
+    Stand im Speicher überschreibt. Unter Hyprland ohne Dienst: nach dem Schreiben neu starten."""
+    if os.environ.get("ALPE_DESIGN_NO_SERVICE") or not shutil.which("systemctl"):
+        return False
+    if action == "stop":
+        active = subprocess.run(["systemctl", "--user", "is-active", "--quiet", "dms.service"], check=False).returncode == 0
+        if active:
+            subprocess.run(["systemctl", "--user", "stop", "dms.service"], check=False)
+        return active
+    subprocess.run(["systemctl", "--user", "start", "dms.service"], check=False)
+    return True
+
+
+def apply(variant):
+    choices = available()
+    if not choices:
+        say("Im Repository liegt noch kein Design (design/kde oder design/hyprland). Nichts zu tun.")
+        return 0
+    if variant not in choices:
+        say("Kein Design für «%s», nehme «%s»." % (variant, choices[0]))
+        variant = choices[0]
+    source = os.path.join(DESIGN_ROOT, variant)
+    base = INSTALLED
+    stopped = service("stop")
+    try:
+        result = write_design(variant, source, base)
+    finally:
+        if stopped:
+            service("start")
+    if variant == "kde" and not os.environ.get("ALPE_DESIGN_NO_SERVICE") and shutil.which("busctl"):
+        # Vorgaben von Alpe: Meta+Q schliesst, Meta+M Systemmonitor (tools/kuerzel.py)
+        subprocess.run([sys.executable, os.path.join(ALPE_DIR, "tools", "kuerzel.py"), "vorgaben", "--warten", "20"], check=False)
+    return result
+
+
+def write_design(variant, source, base):
+    kde_files = [os.path.join(CONFIG, f) for f in ("kwinrc", "kwinrulesrc", "kdeglobals", "kscreenlockerrc")]
+    folder = backup_folder()
+    saved = backup([SETTINGS, SESSION, PLUGINS, HYPRLOCK] + (kde_files if variant == "kde" else []), folder)
+    programme = apply_programme(source, folder)
+    if programme and not saved and os.path.isdir(folder):
+        saved = folder
+    for name in programme:
+        say("   %s: Einstellungen eingespielt" % name)
+    if "fastfetch" in programme:
+        subprocess.run([sys.executable, os.path.join(ALPE_DIR, "tools", "fastfetch.py")], check=False)
+
+    if os.path.isdir(os.path.join(source, "bilder")) or os.path.isfile(os.path.join(source, "farben.json")):
+        os.makedirs(base, exist_ok=True)
+        if os.path.isdir(os.path.join(source, "bilder")):
+            shutil.copytree(os.path.join(source, "bilder"), os.path.join(base, "bilder"), dirs_exist_ok=True)
+        if os.path.isfile(os.path.join(source, "farben.json")):
+            shutil.copy2(os.path.join(source, "farben.json"), os.path.join(base, "farben.json"))
+
+    settings = load_json(SETTINGS, {}) or {}
+    incoming = fill(load_json(os.path.join(source, "settings.json"), {}), base)
+    # Vorgaben wie «Wetter nach Standort» nur für den, der selbst noch nichts eingestellt hat
+    for key in SETTINGS_FORCE:
+        if key in settings:
+            incoming.pop(key, None)
+    settings.update(incoming)
+    save_json(SETTINGS, settings)
+
+    ids = desktop_ids()
+    session = load_json(SESSION, {}) or {}
+    design_session = fill(load_json(os.path.join(source, "session.json"), {}), base)
+    for key in ("dockPins", "barPinnedApps"):
+        if key in design_session:
+            design_session[key] = installed_pins(design_session[key], ids)
+    session.update(design_session)
+    save_json(SESSION, session)
+
+    plugins = load_json(PLUGINS, {}) or {}
+    for plugin, values in load_json(os.path.join(source, "plugins.json"), {}).items():
+        merged = dict(plugins.get(plugin) or {})
+        merged.update(values)
+        plugins[plugin] = merged
+    save_json(PLUGINS, plugins)
+
+    if variant == "kde" and os.path.isfile(os.path.join(source, "kwin.json")):
+        k = kwin()
+        data = fill(load_json(os.path.join(source, "kwin.json"), {}), base)
+        for file, group, key, value in data.get("einstellungen", []):
+            if file in ("kwinrc", "kdeglobals"):
+                k.kwrite(file, group, key, value)
+        present = {r.get("Description") for r in k.rule_list()}
+        added = 0
+        for rule in data.get("regeln", []):
+            if rule.get("Description") in present:
+                continue
+            k.rule_set({"id": None, "values": rule})
+            added += 1
+        for key, value in (data.get("sperrbildschirm") or {}).items():
+            k.kwrite("kscreenlockerrc", LOCK_GROUP, key, value)
+        if "kitty" in programme and shutil.which("kitty"):
+            # Standard-Terminal von KDE (Dolphin «Terminal hier öffnen», Kürzel Ctrl+Alt+T)
+            k.kwrite("kdeglobals", "General", "TerminalApplication", "kitty")
+            k.kwrite("kdeglobals", "General", "TerminalService", "kitty.desktop")
+            say("   Standard-Terminal: kitty")
+        k.reconfigure()
+        say("   KWin: Effekte und %d Fensterregel(n) eingetragen" % added)
+        conf = os.path.join(source, "hyprlock.conf")
+        if os.path.isfile(conf) and shutil.which(k.KWRITE):
+            os.makedirs(base, exist_ok=True)
+            with open(conf, encoding="utf-8") as handle:
+                text = handle.read().replace(TOKEN, base)
+            with open(os.path.join(base, "hyprlock.conf"), "w", encoding="utf-8") as handle:
+                handle.write(text)
+            subprocess.run(["bash", os.path.join(ALPE_DIR, "tools", "lockscreen.sh"), "hyprlock", os.path.join(base, "hyprlock.conf")], check=False)
+        if (data.get("sperrbildschirm") or {}).get("Layout") or os.path.isfile(conf):
+            say("   Sperrbildschirm gestaltet")
+    if variant == "hyprland" and os.path.isfile(os.path.join(source, "hyprlock.conf")):
+        with open(os.path.join(source, "hyprlock.conf"), encoding="utf-8") as handle:
+            text = handle.read().replace(TOKEN, base)
+        os.makedirs(os.path.dirname(HYPRLOCK), exist_ok=True)
+        with open(HYPRLOCK, "w", encoding="utf-8") as handle:
+            handle.write(text)
+        say("   hyprlock.conf geschrieben")
+
+    os.makedirs(os.path.dirname(MARK), exist_ok=True)
+    manifest = load_json(os.path.join(source, "manifest.json"), {})
+    with open(MARK, "w", encoding="utf-8") as handle:
+        handle.write("%s %s %s\n" % (variant, manifest.get("exportiert", ""), datetime.datetime.now().isoformat(timespec="seconds")))
+    say("Design «%s» eingespielt (Stand %s)." % (variant, manifest.get("exportiert", "?")))
+    if saved:
+        say("   Bisherige Dateien gesichert in %s" % saved.replace(HOME, "~"))
+    missing = [f for f in manifest.get("schriften", []) if not font_installed(f) and not bundled_font(f)]
+    if missing:
+        say("   Schriften fehlen (die Shell nimmt Ersatz): %s" % ", ".join(missing))
+    return 0
+
+
+def bundled_font(family):
+    """Schriften des Sperrbildschirms liefert Alpe selbst mit (Modules/Lock/Alpe/fonts)."""
+    folder = os.path.join(SHELL_DIR, "quickshell", "Modules", "Lock", "Alpe", "fonts")
+    key = re.sub(r"[^a-z]", "", family.lower()).replace("nerdfont", "").replace("mono", "", 1)
+    return any(key and key in re.sub(r"[^a-z]", "", f.lower()) for f in os.listdir(folder)) if os.path.isdir(folder) else False
+
+
+def font_installed(family):
+    if not shutil.which("fc-list"):
+        return True
+    out = subprocess.run(["fc-list", ":family"], capture_output=True, text=True, check=False).stdout
+    return family.lower() in out.lower()
+
+
+def status():
+    found = available()
+    if not found:
+        say("Im Repository liegt kein Design. Aufnehmen: alpe design export")
+    for variant in found:
+        m = load_json(os.path.join(DESIGN_ROOT, variant, "manifest.json"), {})
+        say("design/%s: Stand %s (Alpe %s), %d Bild(er)" % (variant, m.get("exportiert", "?"), m.get("alpe", "?"), len(m.get("bilder", []))))
+    if os.path.isfile(MARK):
+        say("Eingespielt: %s" % open(MARK, encoding="utf-8").read().strip())
+    else:
+        say("Auf diesem Rechner noch nicht eingespielt.")
+    return 0
+
+
+def main(argv):
+    args = argv[1:]
+    cmd = args[0] if args else "status"
+
+    def option(name, default):
+        if name in args:
+            i = args.index(name)
+            if i + 1 < len(args):
+                return args[i + 1]
+        return default
+
+    variant = option("--variante", session_variant())
+    if variant not in ("kde", "hyprland"):
+        sys.exit("--variante kde oder hyprland")
+    if cmd == "export":
+        mode = option("--bilder", "fragen" if sys.stdin.isatty() else "nein")
+        if mode not in ("fragen", "ja", "nein"):
+            sys.exit("--bilder fragen, ja oder nein")
+        return export(variant, mode)
+    if cmd == "apply":
+        if "--ja" not in args and sys.stdin.isatty():
+            answer = input("Design einspielen? Leiste, Dock, Dash, Farben und Sperrbildschirm werden ersetzt (mit Sicherung). [j/N] ")
+            if answer.strip().lower() not in ("j", "ja", "y", "yes"):
+                say("Nichts verändert.")
+                return 0
+        return apply(variant)
+    if cmd == "status":
+        return status()
+    say(__doc__.strip())
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

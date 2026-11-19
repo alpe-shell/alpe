@@ -1,0 +1,637 @@
+{
+ "date": "2026-11-18",
+ "updated": "2026-11-19T19:23:43Z",
+ "leagues": [
+  {
+   "id": "nl",
+   "name": "National League",
+   "short": "NL",
+   "sport": "hockey",
+   "kind": "league",
+   "country": "Schweiz",
+   "matches": [
+    {
+     "id": "20271105000098",
+     "league": "nl",
+     "sport": "hockey",
+     "start": "2026-11-18T18:45:00Z",
+     "status": "live",
+     "label": "2. Drittel",
+     "round": "",
+     "home": {
+      "id": "101144",
+      "name": "EV Zug",
+      "short": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "accent": "#ffffff",
+      "score": "3",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "103144",
+      "name": "HC Ajoie",
+      "short": "HC Ajoie",
+      "abbr": "HCA",
+      "color": "#f5c400",
+      "accent": "#111111",
+      "score": "1",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": [
+      "MYSPORTS"
+     ],
+     "periods": [
+      {
+       "home": "2",
+       "away": "0"
+      },
+      {
+       "home": "1",
+       "away": "1"
+      },
+      {
+       "home": "-",
+       "away": "-"
+      }
+     ],
+     "decision": ""
+    },
+    {
+     "id": "20271105000101",
+     "league": "nl",
+     "sport": "hockey",
+     "start": "2026-11-18T18:45:00Z",
+     "status": "live",
+     "label": "2. Drittel",
+     "round": "",
+     "home": {
+      "id": "103140",
+      "name": "Genève-Servette HC",
+      "short": "Genève-Servette HC",
+      "abbr": "GSHC",
+      "color": "#7a1f2b",
+      "accent": "#ffffff",
+      "score": "2",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "101149",
+      "name": "EHC Kloten",
+      "short": "EHC Kloten",
+      "abbr": "EHCK",
+      "color": "#003b7a",
+      "accent": "#e30613",
+      "score": "2",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": [
+      "MYSPORTS"
+     ],
+     "periods": [
+      {
+       "home": "1",
+       "away": "1"
+      },
+      {
+       "home": "1",
+       "away": "1"
+      },
+      {
+       "home": "-",
+       "away": "-"
+      }
+     ],
+     "decision": ""
+    },
+    {
+     "id": "20271105000099",
+     "league": "nl",
+     "sport": "hockey",
+     "start": "2026-11-18T18:45:00Z",
+     "status": "live",
+     "label": "2. Drittel",
+     "round": "",
+     "home": {
+      "id": "102126",
+      "name": "SC Bern",
+      "short": "SC Bern",
+      "abbr": "SCB",
+      "color": "#d50032",
+      "accent": "#ffd400",
+      "score": "1",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "101151",
+      "name": "HC Davos",
+      "short": "HC Davos",
+      "abbr": "HCD",
+      "color": "#003f87",
+      "accent": "#ffd200",
+      "score": "1",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": [
+      "MYSPORTS"
+     ],
+     "periods": [
+      {
+       "home": "1",
+       "away": "0"
+      },
+      {
+       "home": "0",
+       "away": "1"
+      },
+      {
+       "home": "-",
+       "away": "-"
+      }
+     ],
+     "decision": ""
+    },
+    {
+     "id": "20271105000100",
+     "league": "nl",
+     "sport": "hockey",
+     "start": "2026-11-18T18:45:00Z",
+     "status": "live",
+     "label": "Pause",
+     "round": "",
+     "home": {
+      "id": "101139",
+      "name": "ZSC Lions",
+      "short": "ZSC Lions",
+      "abbr": "ZSC",
+      "color": "#0b3b8c",
+      "accent": "#ffffff",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "101150",
+      "name": "HC Lugano",
+      "short": "HC Lugano",
+      "abbr": "HCL",
+      "color": "#111111",
+      "accent": "#ffffff",
+      "score": "2",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": [
+      "MYSPORTS"
+     ],
+     "periods": [
+      {
+       "home": "0",
+       "away": "2"
+      },
+      {
+       "home": "-",
+       "away": "-"
+      },
+      {
+       "home": "-",
+       "away": "-"
+      }
+     ],
+     "decision": ""
+    },
+    {
+     "id": "20271105000102",
+     "league": "nl",
+     "sport": "hockey",
+     "start": "2026-11-18T19:00:00Z",
+     "status": "live",
+     "label": "1. Drittel",
+     "round": "",
+     "home": {
+      "id": "103141",
+      "name": "Lausanne HC",
+      "short": "Lausanne HC",
+      "abbr": "LHC",
+      "color": "#c8102e",
+      "accent": "#1d3f8f",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "102127",
+      "name": "SCL Tigers",
+      "short": "SCL Tigers",
+      "abbr": "SCL",
+      "color": "#f7d117",
+      "accent": "#c8102e",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": [
+      "MYSPORTS"
+     ],
+     "periods": [
+      {
+       "home": "0",
+       "away": "0"
+      },
+      {
+       "home": "-",
+       "away": "-"
+      },
+      {
+       "home": "-",
+       "away": "-"
+      }
+     ],
+     "decision": ""
+    }
+   ],
+   "logo": ""
+  },
+  {
+   "id": "sui.hockey",
+   "name": "Nati Eishockey",
+   "short": "Nati",
+   "sport": "hockey",
+   "kind": "national",
+   "country": "Schweiz, Herren",
+   "matches": [],
+   "logo": ""
+  },
+  {
+   "id": "sui.nt",
+   "name": "Nati Fussball",
+   "short": "Nati",
+   "sport": "soccer",
+   "kind": "national",
+   "country": "Schweiz, Herren",
+   "matches": [],
+   "logo": ""
+  },
+  {
+   "id": "nba",
+   "name": "NBA",
+   "short": "NBA",
+   "sport": "basketball",
+   "kind": "league",
+   "country": "USA",
+   "matches": [
+    {
+     "id": "31",
+     "league": "nba",
+     "sport": "basketball",
+     "start": "2026-11-18T00:30:00Z",
+     "status": "post",
+     "label": "Ende",
+     "round": "",
+     "home": {
+      "id": "2",
+      "name": "Boston Celtics",
+      "short": "Boston Celtics",
+      "abbr": "BOS",
+      "color": "#007a33",
+      "score": "118",
+      "winner": true,
+      "record": "12-2",
+      "logo": ""
+     },
+     "away": {
+      "id": "15",
+      "name": "Milwaukee Bucks",
+      "short": "Milwaukee Bucks",
+      "abbr": "MIL",
+      "color": "#00471b",
+      "score": "104",
+      "winner": false,
+      "record": "1-13",
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    },
+    {
+     "id": "32",
+     "league": "nba",
+     "sport": "basketball",
+     "start": "2026-11-18T03:00:00Z",
+     "status": "post",
+     "label": "Ende n.V.",
+     "round": "",
+     "home": {
+      "id": "7",
+      "name": "Denver Nuggets",
+      "short": "Denver Nuggets",
+      "abbr": "DEN",
+      "color": "#0e2240",
+      "score": "121",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "25",
+      "name": "Oklahoma City Thunder",
+      "short": "Oklahoma City Thunder",
+      "abbr": "OKC",
+      "color": "#007ac1",
+      "score": "125",
+      "winner": true,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    },
+    {
+     "id": "33",
+     "league": "nba",
+     "sport": "basketball",
+     "start": "2026-11-18T03:30:00Z",
+     "status": "post",
+     "label": "Ende",
+     "round": "",
+     "home": {
+      "id": "13",
+      "name": "Los Angeles Lakers",
+      "short": "Los Angeles Lakers",
+      "abbr": "LAL",
+      "color": "#552583",
+      "score": "109",
+      "winner": true,
+      "logo": ""
+     },
+     "away": {
+      "id": "9",
+      "name": "Golden State Warriors",
+      "short": "Golden State Warriors",
+      "abbr": "GSW",
+      "color": "#1d428a",
+      "score": "101",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    }
+   ],
+   "logo": ""
+  },
+  {
+   "id": "ger.dfb_pokal",
+   "name": "DFB-Pokal",
+   "short": "Pokal",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Deutschland",
+   "matches": [
+    {
+     "id": "2",
+     "league": "ger.dfb_pokal",
+     "sport": "soccer",
+     "start": "2026-11-18T17:00:00Z",
+     "status": "post",
+     "label": "n.P.",
+     "round": "Achtelfinal",
+     "home": {
+      "id": "598",
+      "name": "1. FC Union Berlin",
+      "short": "Union Berlin",
+      "abbr": "FCU",
+      "color": "#d4011d",
+      "score": "2",
+      "winner": false,
+      "penalties": "3",
+      "logo": ""
+     },
+     "away": {
+      "id": "131",
+      "name": "Bayer Leverkusen",
+      "short": "Leverkusen",
+      "abbr": "B04",
+      "color": "#e32221",
+      "score": "2",
+      "winner": true,
+      "penalties": "4",
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    },
+    {
+     "id": "1",
+     "league": "ger.dfb_pokal",
+     "sport": "soccer",
+     "start": "2026-11-18T17:00:00Z",
+     "status": "post",
+     "label": "Ende",
+     "round": "Achtelfinal",
+     "home": {
+      "id": "3600",
+      "name": "Hamburger SV",
+      "short": "Hamburg",
+      "abbr": "HSV",
+      "color": "#0a3f86",
+      "score": "1",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "134",
+      "name": "VfB Stuttgart",
+      "short": "Stuttgart",
+      "abbr": "VFB",
+      "color": "#e32219",
+      "score": "3",
+      "winner": true,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    },
+    {
+     "id": "3",
+     "league": "ger.dfb_pokal",
+     "sport": "soccer",
+     "start": "2026-11-18T19:45:00Z",
+     "status": "live",
+     "label": "67'",
+     "round": "Achtelfinal",
+     "home": {
+      "id": "132",
+      "name": "Bayern Munich",
+      "short": "Bayern",
+      "abbr": "BAY",
+      "color": "#dc052d",
+      "score": "2",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "125",
+      "name": "SC Freiburg",
+      "short": "Freiburg",
+      "abbr": "SCF",
+      "color": "#111111",
+      "score": "1",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    },
+    {
+     "id": "4",
+     "league": "ger.dfb_pokal",
+     "sport": "soccer",
+     "start": "2026-11-18T19:45:00Z",
+     "status": "live",
+     "label": "Pause",
+     "round": "Achtelfinal",
+     "home": {
+      "id": "124",
+      "name": "Borussia Dortmund",
+      "short": "Dortmund",
+      "abbr": "BVB",
+      "color": "#fde100",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "2950",
+      "name": "Mainz",
+      "short": "Mainz",
+      "abbr": "M05",
+      "color": "#c3141e",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    }
+   ],
+   "logo": ""
+  },
+  {
+   "id": "ita.coppa_italia",
+   "name": "Coppa Italia",
+   "short": "Coppa",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Italien",
+   "matches": [
+    {
+     "id": "11",
+     "league": "ita.coppa_italia",
+     "sport": "soccer",
+     "start": "2026-11-18T20:00:00Z",
+     "status": "pre",
+     "label": "",
+     "round": "Achtelfinal",
+     "home": {
+      "id": "110",
+      "name": "Internazionale",
+      "short": "Inter",
+      "abbr": "INT",
+      "color": "#0068a8",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "239",
+      "name": "Torino",
+      "short": "Torino",
+      "abbr": "TOR",
+      "color": "#8a1e03",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    }
+   ],
+   "logo": ""
+  },
+  {
+   "id": "esp.copa_del_rey",
+   "name": "Copa del Rey",
+   "short": "Copa",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Spanien",
+   "matches": [
+    {
+     "id": "21",
+     "league": "esp.copa_del_rey",
+     "sport": "soccer",
+     "start": "2026-11-18T20:30:00Z",
+     "status": "pre",
+     "label": "",
+     "round": "2. Runde",
+     "home": {
+      "id": "85",
+      "name": "Celta Vigo",
+      "short": "Celta",
+      "abbr": "CEL",
+      "color": "#8ac3ee",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "away": {
+      "id": "86",
+      "name": "Real Madrid",
+      "short": "Real Madrid",
+      "abbr": "RMA",
+      "color": "#febe10",
+      "score": "0",
+      "winner": false,
+      "logo": ""
+     },
+     "venue": "",
+     "tv": []
+    }
+   ],
+   "logo": ""
+  },
+  {
+   "id": "eng.1",
+   "name": "Premier League",
+   "short": "PL",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "England",
+   "matches": [],
+   "logo": ""
+  },
+  {
+   "id": "ger.1",
+   "name": "Bundesliga",
+   "short": "BL",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "Deutschland",
+   "matches": [],
+   "logo": ""
+  }
+ ],
+ "live": 7,
+ "stale": false,
+ "errors": []
+}

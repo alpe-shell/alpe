@@ -1,0 +1,4 @@
+module qs.Modules.Plugins
+DashTabComponent 1.0 DashTabComponent.qml
+DashCardComponent 1.0 DashCardComponent.qml
+PluginComponent 1.0 PluginComponent.qml

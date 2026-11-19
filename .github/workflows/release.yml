@@ -1,0 +1,34 @@
+# Alpe: Beim Schieben eines Versions-Tags (etwa «git tag v1.1 && git push origin v1.1»)
+# das Archiv alpe-zugerberg-<version>.tar.gz bauen und als Release anhängen.
+# Auf dem anderen Rechner danach: alpe update ~/Downloads/alpe-zugerberg-<version>.tar.gz
+# (oder ohne Archiv einfach «alpe update», das zieht mit git pull).
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  archiv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: alpe
+
+      - name: Archiv bauen
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          tar czf "alpe-zugerberg-$v.tar.gz" --exclude=.git --exclude='__pycache__' alpe
+          echo "ARCHIV=alpe-zugerberg-$v.tar.gz" >> "$GITHUB_ENV"
+
+      - name: Release anlegen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="$(awk '/^## /{n++} n==1' alpe/CHANGELOG.md)"
+          gh release create "$GITHUB_REF_NAME" "$ARCHIV" --repo "$GITHUB_REPOSITORY" \
+            --title "Alpe ${GITHUB_REF_NAME#v} «Zugerberg»" --notes "${notes:-siehe CHANGELOG.md}"

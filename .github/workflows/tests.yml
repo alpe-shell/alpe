@@ -1,0 +1,50 @@
+# Alpe: Bei jedem Push die Schichten auf den Ursprungsstand (BASE) legen und alle Tests laufen lassen.
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  schichten-und-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ursprungsprojekt im Stand aus BASE holen und alle Schichten anwenden
+        run: |
+          git clone --quiet --branch "$(cat BASE)" --depth 1 --recurse-submodules --shallow-submodules \
+            https://github.com/duxlabs-dev/dux-shell "$RUNNER_TEMP/dux-shell"
+          git -C "$RUNNER_TEMP/dux-shell" -c user.name=ci -c user.email=ci@localhost am --quiet "$GITHUB_WORKSPACE"/shell/*.patch
+          git -C "$RUNNER_TEMP/dux-shell" log --oneline -1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Python-Abhängigkeiten
+        run: |
+          pip install h5py numpy PySide6-Essentials
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 >/dev/null
+
+      - name: Tests (wie lokal mit «alpe test»)
+        env:
+          ALPE_SHELL_DIR: ${{ runner.temp }}/dux-shell
+          QT_QPA_PLATFORM: offscreen
+          ALPE_SKIP_GO: "1"   # der Go-Teil läuft unten im eigenen Schritt
+        run: bash tools/test.sh
+
+      - name: Dienst (Go) bauen und testen
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ runner.temp }}/dux-shell/core/go.mod
+          cache: false
+
+      - name: Go-Tests der Alpe-Änderungen
+        working-directory: ${{ runner.temp }}/dux-shell/core
+        run: go test ./internal/server -run 'TestReadAlpeOff' -count=1

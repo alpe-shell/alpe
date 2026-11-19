@@ -1,0 +1,2154 @@
+{
+ "league": {
+  "id": "ger.1",
+  "name": "Bundesliga",
+  "short": "BL",
+  "sport": "soccer",
+  "kind": "league",
+  "country": "Deutschland",
+  "logo": ""
+ },
+ "matches": [
+  {
+   "id": "104",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "131",
+    "name": "Bayer Leverkusen",
+    "short": "Bayer Leverkusen",
+    "abbr": "B04",
+    "color": "#e32221",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "2950",
+    "name": "Mainz",
+    "short": "Mainz",
+    "abbr": "M05",
+    "color": "#c3141e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "101",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "132",
+    "name": "Bayern Munich",
+    "short": "Bayern Munich",
+    "abbr": "BAY",
+    "color": "#dc052d",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "3600",
+    "name": "Hamburger SV",
+    "short": "Hamburger SV",
+    "abbr": "HSV",
+    "color": "#0a3f86",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "107",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "268",
+    "name": "Borussia Mönchengladbach",
+    "short": "Borussia Mönchengladbach",
+    "abbr": "BMG",
+    "color": "#000000",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "138",
+    "name": "VfL Wolfsburg",
+    "short": "VfL Wolfsburg",
+    "abbr": "WOB",
+    "color": "#65b32e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "102",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "124",
+    "name": "Borussia Dortmund",
+    "short": "Borussia Dortmund",
+    "abbr": "BVB",
+    "color": "#fde100",
+    "score": "2",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "134",
+    "name": "VfB Stuttgart",
+    "short": "VfB Stuttgart",
+    "abbr": "VFB",
+    "color": "#e32219",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "105",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "1125",
+    "name": "Eintracht Frankfurt",
+    "short": "Eintracht Frankfurt",
+    "abbr": "SGE",
+    "color": "#e1000f",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "598",
+    "name": "1. FC Union Berlin",
+    "short": "1. FC Union Berlin",
+    "abbr": "FCU",
+    "color": "#d4011d",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "108",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "3841",
+    "name": "FC Augsburg",
+    "short": "FC Augsburg",
+    "abbr": "FCA",
+    "color": "#ba3733",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "122",
+    "name": "1. FC Köln",
+    "short": "1. FC Köln",
+    "abbr": "KOE",
+    "color": "#ed1c24",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "109",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "6418",
+    "name": "1. FC Heidenheim",
+    "short": "1. FC Heidenheim",
+    "abbr": "HDH",
+    "color": "#e2001a",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "270",
+    "name": "FC St. Pauli",
+    "short": "FC St. Pauli",
+    "abbr": "STP",
+    "color": "#6d4c41",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "103",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "11420",
+    "name": "RB Leipzig",
+    "short": "RB Leipzig",
+    "abbr": "RBL",
+    "color": "#dd0741",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "125",
+    "name": "SC Freiburg",
+    "short": "SC Freiburg",
+    "abbr": "SCF",
+    "color": "#111111",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "106",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-10-25T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "137",
+    "name": "Werder Bremen",
+    "short": "Werder Bremen",
+    "abbr": "SVW",
+    "color": "#1d9053",
+    "score": "2",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "7911",
+    "name": "TSG Hoffenheim",
+    "short": "TSG Hoffenheim",
+    "abbr": "TSG",
+    "color": "#1961b5",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "110",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "3600",
+    "name": "Hamburger SV",
+    "short": "Hamburger SV",
+    "abbr": "HSV",
+    "color": "#0a3f86",
+    "score": "2",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "132",
+    "name": "Bayern Munich",
+    "short": "Bayern Munich",
+    "abbr": "BAY",
+    "color": "#dc052d",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "113",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "2950",
+    "name": "Mainz",
+    "short": "Mainz",
+    "abbr": "M05",
+    "color": "#c3141e",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "131",
+    "name": "Bayer Leverkusen",
+    "short": "Bayer Leverkusen",
+    "abbr": "B04",
+    "color": "#e32221",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "116",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "138",
+    "name": "VfL Wolfsburg",
+    "short": "VfL Wolfsburg",
+    "abbr": "WOB",
+    "color": "#65b32e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "268",
+    "name": "Borussia Mönchengladbach",
+    "short": "Borussia Mönchengladbach",
+    "abbr": "BMG",
+    "color": "#000000",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "117",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "122",
+    "name": "1. FC Köln",
+    "short": "1. FC Köln",
+    "abbr": "KOE",
+    "color": "#ed1c24",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "3841",
+    "name": "FC Augsburg",
+    "short": "FC Augsburg",
+    "abbr": "FCA",
+    "color": "#ba3733",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "114",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "598",
+    "name": "1. FC Union Berlin",
+    "short": "1. FC Union Berlin",
+    "abbr": "FCU",
+    "color": "#d4011d",
+    "score": "2",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "1125",
+    "name": "Eintracht Frankfurt",
+    "short": "Eintracht Frankfurt",
+    "abbr": "SGE",
+    "color": "#e1000f",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "111",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "134",
+    "name": "VfB Stuttgart",
+    "short": "VfB Stuttgart",
+    "abbr": "VFB",
+    "color": "#e32219",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "124",
+    "name": "Borussia Dortmund",
+    "short": "Borussia Dortmund",
+    "abbr": "BVB",
+    "color": "#fde100",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "118",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "270",
+    "name": "FC St. Pauli",
+    "short": "FC St. Pauli",
+    "abbr": "STP",
+    "color": "#6d4c41",
+    "score": "2",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "6418",
+    "name": "1. FC Heidenheim",
+    "short": "1. FC Heidenheim",
+    "abbr": "HDH",
+    "color": "#e2001a",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "112",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "125",
+    "name": "SC Freiburg",
+    "short": "SC Freiburg",
+    "abbr": "SCF",
+    "color": "#111111",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "11420",
+    "name": "RB Leipzig",
+    "short": "RB Leipzig",
+    "abbr": "RBL",
+    "color": "#dd0741",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "115",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-01T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "7911",
+    "name": "TSG Hoffenheim",
+    "short": "TSG Hoffenheim",
+    "abbr": "TSG",
+    "color": "#1961b5",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "137",
+    "name": "Werder Bremen",
+    "short": "Werder Bremen",
+    "abbr": "SVW",
+    "color": "#1d9053",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "122",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "131",
+    "name": "Bayer Leverkusen",
+    "short": "Bayer Leverkusen",
+    "abbr": "B04",
+    "color": "#e32221",
+    "score": "2",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "2950",
+    "name": "Mainz",
+    "short": "Mainz",
+    "abbr": "M05",
+    "color": "#c3141e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "119",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "132",
+    "name": "Bayern Munich",
+    "short": "Bayern Munich",
+    "abbr": "BAY",
+    "color": "#dc052d",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "3600",
+    "name": "Hamburger SV",
+    "short": "Hamburger SV",
+    "abbr": "HSV",
+    "color": "#0a3f86",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "125",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T14:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "268",
+    "name": "Borussia Mönchengladbach",
+    "short": "Borussia Mönchengladbach",
+    "abbr": "BMG",
+    "color": "#000000",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "138",
+    "name": "VfL Wolfsburg",
+    "short": "VfL Wolfsburg",
+    "abbr": "WOB",
+    "color": "#65b32e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "120",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "124",
+    "name": "Borussia Dortmund",
+    "short": "Borussia Dortmund",
+    "abbr": "BVB",
+    "color": "#fde100",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "134",
+    "name": "VfB Stuttgart",
+    "short": "VfB Stuttgart",
+    "abbr": "VFB",
+    "color": "#e32219",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "123",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "1125",
+    "name": "Eintracht Frankfurt",
+    "short": "Eintracht Frankfurt",
+    "abbr": "SGE",
+    "color": "#e1000f",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "598",
+    "name": "1. FC Union Berlin",
+    "short": "1. FC Union Berlin",
+    "abbr": "FCU",
+    "color": "#d4011d",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "126",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T16:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "3841",
+    "name": "FC Augsburg",
+    "short": "FC Augsburg",
+    "abbr": "FCA",
+    "color": "#ba3733",
+    "score": "2",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "122",
+    "name": "1. FC Köln",
+    "short": "1. FC Köln",
+    "abbr": "KOE",
+    "color": "#ed1c24",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "127",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "6418",
+    "name": "1. FC Heidenheim",
+    "short": "1. FC Heidenheim",
+    "abbr": "HDH",
+    "color": "#e2001a",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "270",
+    "name": "FC St. Pauli",
+    "short": "FC St. Pauli",
+    "abbr": "STP",
+    "color": "#6d4c41",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "121",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "11420",
+    "name": "RB Leipzig",
+    "short": "RB Leipzig",
+    "abbr": "RBL",
+    "color": "#dd0741",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "125",
+    "name": "SC Freiburg",
+    "short": "SC Freiburg",
+    "abbr": "SCF",
+    "color": "#111111",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "124",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-08T18:30:00Z",
+   "status": "post",
+   "label": "Ende",
+   "round": "",
+   "home": {
+    "id": "137",
+    "name": "Werder Bremen",
+    "short": "Werder Bremen",
+    "abbr": "SVW",
+    "color": "#1d9053",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "7911",
+    "name": "TSG Hoffenheim",
+    "short": "TSG Hoffenheim",
+    "abbr": "TSG",
+    "color": "#1961b5",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "128",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T14:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "3600",
+    "name": "Hamburger SV",
+    "short": "Hamburger SV",
+    "abbr": "HSV",
+    "color": "#0a3f86",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "132",
+    "name": "Bayern Munich",
+    "short": "Bayern Munich",
+    "abbr": "BAY",
+    "color": "#dc052d",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "131",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T14:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "2950",
+    "name": "Mainz",
+    "short": "Mainz",
+    "abbr": "M05",
+    "color": "#c3141e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "131",
+    "name": "Bayer Leverkusen",
+    "short": "Bayer Leverkusen",
+    "abbr": "B04",
+    "color": "#e32221",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "134",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T14:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "138",
+    "name": "VfL Wolfsburg",
+    "short": "VfL Wolfsburg",
+    "abbr": "WOB",
+    "color": "#65b32e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "268",
+    "name": "Borussia Mönchengladbach",
+    "short": "Borussia Mönchengladbach",
+    "abbr": "BMG",
+    "color": "#000000",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "135",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T16:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "122",
+    "name": "1. FC Köln",
+    "short": "1. FC Köln",
+    "abbr": "KOE",
+    "color": "#ed1c24",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "3841",
+    "name": "FC Augsburg",
+    "short": "FC Augsburg",
+    "abbr": "FCA",
+    "color": "#ba3733",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "132",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T16:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "598",
+    "name": "1. FC Union Berlin",
+    "short": "1. FC Union Berlin",
+    "abbr": "FCU",
+    "color": "#d4011d",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "1125",
+    "name": "Eintracht Frankfurt",
+    "short": "Eintracht Frankfurt",
+    "abbr": "SGE",
+    "color": "#e1000f",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "129",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T16:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "134",
+    "name": "VfB Stuttgart",
+    "short": "VfB Stuttgart",
+    "abbr": "VFB",
+    "color": "#e32219",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "124",
+    "name": "Borussia Dortmund",
+    "short": "Borussia Dortmund",
+    "abbr": "BVB",
+    "color": "#fde100",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "136",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T18:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "270",
+    "name": "FC St. Pauli",
+    "short": "FC St. Pauli",
+    "abbr": "STP",
+    "color": "#6d4c41",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "6418",
+    "name": "1. FC Heidenheim",
+    "short": "1. FC Heidenheim",
+    "abbr": "HDH",
+    "color": "#e2001a",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "130",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T18:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "125",
+    "name": "SC Freiburg",
+    "short": "SC Freiburg",
+    "abbr": "SCF",
+    "color": "#111111",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "11420",
+    "name": "RB Leipzig",
+    "short": "RB Leipzig",
+    "abbr": "RBL",
+    "color": "#dd0741",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "133",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-22T18:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "7911",
+    "name": "TSG Hoffenheim",
+    "short": "TSG Hoffenheim",
+    "abbr": "TSG",
+    "color": "#1961b5",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "137",
+    "name": "Werder Bremen",
+    "short": "Werder Bremen",
+    "abbr": "SVW",
+    "color": "#1d9053",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "140",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T14:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "131",
+    "name": "Bayer Leverkusen",
+    "short": "Bayer Leverkusen",
+    "abbr": "B04",
+    "color": "#e32221",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "2950",
+    "name": "Mainz",
+    "short": "Mainz",
+    "abbr": "M05",
+    "color": "#c3141e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "137",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T14:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "132",
+    "name": "Bayern Munich",
+    "short": "Bayern Munich",
+    "abbr": "BAY",
+    "color": "#dc052d",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "3600",
+    "name": "Hamburger SV",
+    "short": "Hamburger SV",
+    "abbr": "HSV",
+    "color": "#0a3f86",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "143",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T14:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "268",
+    "name": "Borussia Mönchengladbach",
+    "short": "Borussia Mönchengladbach",
+    "abbr": "BMG",
+    "color": "#000000",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "138",
+    "name": "VfL Wolfsburg",
+    "short": "VfL Wolfsburg",
+    "abbr": "WOB",
+    "color": "#65b32e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "138",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T16:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "124",
+    "name": "Borussia Dortmund",
+    "short": "Borussia Dortmund",
+    "abbr": "BVB",
+    "color": "#fde100",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "134",
+    "name": "VfB Stuttgart",
+    "short": "VfB Stuttgart",
+    "abbr": "VFB",
+    "color": "#e32219",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "141",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T16:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "1125",
+    "name": "Eintracht Frankfurt",
+    "short": "Eintracht Frankfurt",
+    "abbr": "SGE",
+    "color": "#e1000f",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "598",
+    "name": "1. FC Union Berlin",
+    "short": "1. FC Union Berlin",
+    "abbr": "FCU",
+    "color": "#d4011d",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "144",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T16:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "3841",
+    "name": "FC Augsburg",
+    "short": "FC Augsburg",
+    "abbr": "FCA",
+    "color": "#ba3733",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "122",
+    "name": "1. FC Köln",
+    "short": "1. FC Köln",
+    "abbr": "KOE",
+    "color": "#ed1c24",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "145",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T18:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "6418",
+    "name": "1. FC Heidenheim",
+    "short": "1. FC Heidenheim",
+    "abbr": "HDH",
+    "color": "#e2001a",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "270",
+    "name": "FC St. Pauli",
+    "short": "FC St. Pauli",
+    "abbr": "STP",
+    "color": "#6d4c41",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "139",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T18:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "11420",
+    "name": "RB Leipzig",
+    "short": "RB Leipzig",
+    "abbr": "RBL",
+    "color": "#dd0741",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "125",
+    "name": "SC Freiburg",
+    "short": "SC Freiburg",
+    "abbr": "SCF",
+    "color": "#111111",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  },
+  {
+   "id": "142",
+   "league": "ger.1",
+   "sport": "soccer",
+   "start": "2026-11-29T18:30:00Z",
+   "status": "pre",
+   "label": "",
+   "round": "",
+   "home": {
+    "id": "137",
+    "name": "Werder Bremen",
+    "short": "Werder Bremen",
+    "abbr": "SVW",
+    "color": "#1d9053",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "7911",
+    "name": "TSG Hoffenheim",
+    "short": "TSG Hoffenheim",
+    "abbr": "TSG",
+    "color": "#1961b5",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  }
+ ],
+ "table": {
+  "columns": [
+   {
+    "key": "gp",
+    "label": "Sp"
+   },
+   {
+    "key": "w",
+    "label": "S"
+   },
+   {
+    "key": "d",
+    "label": "U"
+   },
+   {
+    "key": "l",
+    "label": "N"
+   },
+   {
+    "key": "goals",
+    "label": "Tore",
+    "wide": true
+   },
+   {
+    "key": "gd",
+    "label": "TD"
+   },
+   {
+    "key": "pts",
+    "label": "Pkt",
+    "strong": true
+   }
+  ],
+  "groups": [
+   {
+    "name": "",
+    "rows": [
+     {
+      "rank": 1,
+      "team": {
+       "id": "132",
+       "name": "Bayern Munich",
+       "short": "Bayern Munich",
+       "abbr": "BAY",
+       "color": "#dc052d",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "10",
+       "d": "3",
+       "l": "-2",
+       "goals": "29:9",
+       "gd": "+20",
+       "pts": "33"
+      },
+      "zone": {
+       "kind": "cl",
+       "label": "Champions League",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "S",
+        "match": "101"
+       },
+       {
+        "r": "N",
+        "match": "110"
+       },
+       {
+        "r": "S",
+        "match": "119"
+       }
+      ]
+     },
+     {
+      "rank": 2,
+      "team": {
+       "id": "124",
+       "name": "Borussia Dortmund",
+       "short": "Borussia Dortmund",
+       "abbr": "BVB",
+       "color": "#fde100",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "9",
+       "d": "1",
+       "l": "1",
+       "goals": "28:10",
+       "gd": "+18",
+       "pts": "28"
+      },
+      "zone": {
+       "kind": "cl",
+       "label": "Champions League",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "S",
+        "match": "102"
+       },
+       {
+        "r": "N",
+        "match": "111"
+       },
+       {
+        "r": "U",
+        "match": "120"
+       }
+      ]
+     },
+     {
+      "rank": 3,
+      "team": {
+       "id": "11420",
+       "name": "RB Leipzig",
+       "short": "RB Leipzig",
+       "abbr": "RBL",
+       "color": "#dd0741",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "9",
+       "d": "4",
+       "l": "-2",
+       "goals": "27:11",
+       "gd": "+16",
+       "pts": "31"
+      },
+      "zone": {
+       "kind": "cl",
+       "label": "Champions League",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "S",
+        "match": "103"
+       },
+       {
+        "r": "U",
+        "match": "112"
+       },
+       {
+        "r": "S",
+        "match": "121"
+       }
+      ]
+     },
+     {
+      "rank": 4,
+      "team": {
+       "id": "131",
+       "name": "Bayer Leverkusen",
+       "short": "Bayer Leverkusen",
+       "abbr": "B04",
+       "color": "#e32221",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "8",
+       "d": "2",
+       "l": "1",
+       "goals": "26:12",
+       "gd": "+14",
+       "pts": "26"
+      },
+      "zone": {
+       "kind": "cl",
+       "label": "Champions League",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "U",
+        "match": "104"
+       },
+       {
+        "r": "N",
+        "match": "113"
+       },
+       {
+        "r": "S",
+        "match": "122"
+       }
+      ]
+     },
+     {
+      "rank": 5,
+      "team": {
+       "id": "134",
+       "name": "VfB Stuttgart",
+       "short": "VfB Stuttgart",
+       "abbr": "VFB",
+       "color": "#e32219",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "8",
+       "d": "0",
+       "l": "3",
+       "goals": "25:13",
+       "gd": "+12",
+       "pts": "24"
+      },
+      "zone": {
+       "kind": "el",
+       "label": "Europa League",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "N",
+        "match": "102"
+       },
+       {
+        "r": "S",
+        "match": "111"
+       },
+       {
+        "r": "U",
+        "match": "120"
+       }
+      ]
+     },
+     {
+      "rank": 6,
+      "team": {
+       "id": "1125",
+       "name": "Eintracht Frankfurt",
+       "short": "Eintracht Frankfurt",
+       "abbr": "SGE",
+       "color": "#e1000f",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "7",
+       "d": "3",
+       "l": "1",
+       "goals": "24:14",
+       "gd": "+10",
+       "pts": "24"
+      },
+      "zone": {
+       "kind": "ecl",
+       "label": "Conference League (Quali)",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "S",
+        "match": "105"
+       },
+       {
+        "r": "N",
+        "match": "114"
+       },
+       {
+        "r": "S",
+        "match": "123"
+       }
+      ]
+     },
+     {
+      "rank": 7,
+      "team": {
+       "id": "125",
+       "name": "SC Freiburg",
+       "short": "SC Freiburg",
+       "abbr": "SCF",
+       "color": "#111111",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "7",
+       "d": "1",
+       "l": "3",
+       "goals": "23:15",
+       "gd": "+8",
+       "pts": "22"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "N",
+        "match": "103"
+       },
+       {
+        "r": "U",
+        "match": "112"
+       },
+       {
+        "r": "N",
+        "match": "121"
+       }
+      ]
+     },
+     {
+      "rank": 8,
+      "team": {
+       "id": "598",
+       "name": "1. FC Union Berlin",
+       "short": "1. FC Union Berlin",
+       "abbr": "FCU",
+       "color": "#d4011d",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "6",
+       "d": "4",
+       "l": "1",
+       "goals": "22:16",
+       "gd": "+6",
+       "pts": "22"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "N",
+        "match": "105"
+       },
+       {
+        "r": "S",
+        "match": "114"
+       },
+       {
+        "r": "N",
+        "match": "123"
+       }
+      ]
+     },
+     {
+      "rank": 9,
+      "team": {
+       "id": "137",
+       "name": "Werder Bremen",
+       "short": "Werder Bremen",
+       "abbr": "SVW",
+       "color": "#1d9053",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "6",
+       "d": "2",
+       "l": "3",
+       "goals": "21:17",
+       "gd": "+4",
+       "pts": "20"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "S",
+        "match": "106"
+       },
+       {
+        "r": "N",
+        "match": "115"
+       },
+       {
+        "r": "U",
+        "match": "124"
+       }
+      ]
+     },
+     {
+      "rank": 10,
+      "team": {
+       "id": "7911",
+       "name": "TSG Hoffenheim",
+       "short": "TSG Hoffenheim",
+       "abbr": "TSG",
+       "color": "#1961b5",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "5",
+       "d": "0",
+       "l": "6",
+       "goals": "20:18",
+       "gd": "+2",
+       "pts": "15"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "N",
+        "match": "106"
+       },
+       {
+        "r": "S",
+        "match": "115"
+       },
+       {
+        "r": "U",
+        "match": "124"
+       }
+      ]
+     },
+     {
+      "rank": 11,
+      "team": {
+       "id": "268",
+       "name": "Borussia Mönchengladbach",
+       "short": "Borussia Mönchengladbach",
+       "abbr": "BMG",
+       "color": "#000000",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "5",
+       "d": "3",
+       "l": "3",
+       "goals": "19:19",
+       "gd": "+0",
+       "pts": "18"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "S",
+        "match": "107"
+       },
+       {
+        "r": "U",
+        "match": "116"
+       },
+       {
+        "r": "S",
+        "match": "125"
+       }
+      ]
+     },
+     {
+      "rank": 12,
+      "team": {
+       "id": "138",
+       "name": "VfL Wolfsburg",
+       "short": "VfL Wolfsburg",
+       "abbr": "WOB",
+       "color": "#65b32e",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "4",
+       "d": "1",
+       "l": "6",
+       "goals": "18:20",
+       "gd": "-2",
+       "pts": "13"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "N",
+        "match": "107"
+       },
+       {
+        "r": "U",
+        "match": "116"
+       },
+       {
+        "r": "N",
+        "match": "125"
+       }
+      ]
+     },
+     {
+      "rank": 13,
+      "team": {
+       "id": "3841",
+       "name": "FC Augsburg",
+       "short": "FC Augsburg",
+       "abbr": "FCA",
+       "color": "#ba3733",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "4",
+       "d": "4",
+       "l": "3",
+       "goals": "17:21",
+       "gd": "-4",
+       "pts": "16"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "U",
+        "match": "108"
+       },
+       {
+        "r": "N",
+        "match": "117"
+       },
+       {
+        "r": "S",
+        "match": "126"
+       }
+      ]
+     },
+     {
+      "rank": 14,
+      "team": {
+       "id": "3600",
+       "name": "Hamburger SV",
+       "short": "Hamburger SV",
+       "abbr": "HSV",
+       "color": "#0a3f86",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "3",
+       "d": "2",
+       "l": "6",
+       "goals": "16:22",
+       "gd": "-6",
+       "pts": "11"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "N",
+        "match": "101"
+       },
+       {
+        "r": "S",
+        "match": "110"
+       },
+       {
+        "r": "N",
+        "match": "119"
+       }
+      ]
+     },
+     {
+      "rank": 15,
+      "team": {
+       "id": "122",
+       "name": "1. FC Köln",
+       "short": "1. FC Köln",
+       "abbr": "KOE",
+       "color": "#ed1c24",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "3",
+       "d": "0",
+       "l": "8",
+       "goals": "15:23",
+       "gd": "-8",
+       "pts": "9"
+      },
+      "zone": null,
+      "form": [
+       {
+        "r": "U",
+        "match": "108"
+       },
+       {
+        "r": "S",
+        "match": "117"
+       },
+       {
+        "r": "N",
+        "match": "126"
+       }
+      ]
+     },
+     {
+      "rank": 16,
+      "team": {
+       "id": "2950",
+       "name": "Mainz",
+       "short": "Mainz",
+       "abbr": "M05",
+       "color": "#c3141e",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "2",
+       "d": "3",
+       "l": "6",
+       "goals": "14:24",
+       "gd": "-10",
+       "pts": "9"
+      },
+      "zone": {
+       "kind": "relplay",
+       "label": "Relegation",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "U",
+        "match": "104"
+       },
+       {
+        "r": "S",
+        "match": "113"
+       },
+       {
+        "r": "N",
+        "match": "122"
+       }
+      ]
+     },
+     {
+      "rank": 17,
+      "team": {
+       "id": "6418",
+       "name": "1. FC Heidenheim",
+       "short": "1. FC Heidenheim",
+       "abbr": "HDH",
+       "color": "#e2001a",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "2",
+       "d": "1",
+       "l": "8",
+       "goals": "13:25",
+       "gd": "-12",
+       "pts": "7"
+      },
+      "zone": {
+       "kind": "rel",
+       "label": "Abstieg",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "S",
+        "match": "109"
+       },
+       {
+        "r": "N",
+        "match": "118"
+       },
+       {
+        "r": "S",
+        "match": "127"
+       }
+      ]
+     },
+     {
+      "rank": 18,
+      "team": {
+       "id": "270",
+       "name": "FC St. Pauli",
+       "short": "FC St. Pauli",
+       "abbr": "STP",
+       "color": "#6d4c41",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "11",
+       "w": "1",
+       "d": "4",
+       "l": "6",
+       "goals": "12:26",
+       "gd": "-14",
+       "pts": "7"
+      },
+      "zone": {
+       "kind": "rel",
+       "label": "Abstieg",
+       "color": "#81D6AC"
+      },
+      "form": [
+       {
+        "r": "N",
+        "match": "109"
+       },
+       {
+        "r": "S",
+        "match": "118"
+       },
+       {
+        "r": "N",
+        "match": "127"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

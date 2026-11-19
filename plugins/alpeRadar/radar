@@ -1,0 +1,425 @@
+#!/usr/bin/env python3
+"""Niederschlagsradar von MeteoSchweiz fuer den Radar-Tab der Alpe-Shell.
+
+  radar update [--frames N] [--ahead MINUTEN]
+                              holt fehlende Radarbilder, rechnet sie in PNG um, rechnet
+                              auf Wunsch die Bewegung hoch und gibt die Bildliste als JSON aus
+  radar render <h5> <png>     rechnet eine einzelne Datei um (Test)
+
+Quelle: MeteoSchweiz Open Data, Produkt PRECIP (RZC), ODIM HDF5, 1-km-Raster in LV95,
+alle 5 Minuten. Ein Bild ist rund 150 KB gross und wird nach dem Umrechnen verworfen.
+Braucht python-h5py (bringt numpy mit).
+
+Die Hochrechnung ist eine eigene Extrapolation und keine Prognose von MeteoSchweiz: aus den
+letzten beiden Bildern wird je Gebiet die Zugrichtung bestimmt, das juengste Bild wird damit
+weitergeschoben. Niederschlag, der neu entsteht oder sich aufloest, kann sie nicht erkennen.
+"""
+
+import json
+import os
+import struct
+import sys
+import tempfile
+import threading
+import time
+import urllib.error
+import urllib.request
+import zlib
+from datetime import datetime, timedelta, timezone
+
+USER_AGENT = "Alpe Shell radar plugin"
+STAC = "https://data.geo.admin.ch/api/stac/v1/collections/ch.meteoschweiz.ogd-radar-precip/items/"
+HTTP_TIMEOUT = 15
+DEFAULT_FRAMES = 12
+MAX_FRAMES = 36
+KEEP = 48                      # so viele PNG bleiben im Zwischenspeicher
+MAX_AHEAD = 120                # Minuten Hochrechnung hoechstens
+MOTION_BASE = (10, 5, 15)      # bevorzugter Abstand der beiden Bilder in Minuten
+TILE = 128                     # Kantenlaenge der Gebiete, in denen die Zugrichtung bestimmt wird
+MAX_SPEED = 2.2                # km pro Minute; schnellere Verschiebungen gelten als Fehlmessung
+
+# Radarraster (aus den Dateien geprueft): 710 x 640 Zellen zu 1 km, Zeile 0 im Norden.
+GRID_WEST, GRID_NORTH = 2255000, 1480000
+GRID_COLUMNS, GRID_ROWS = 710, 640
+# Angezeigter Ausschnitt in LV95 (West, Sued, Ost, Nord) - wie in tools/build-basemap.py.
+EXTENT = (2400000, 1000000, 2920000, 1370000)
+
+# Untergrenze in mm/h -> Farbe (R, G, B, Deckkraft)
+SCALE = (
+    (0.1, (150, 205, 255, 130)),
+    (0.4, (95, 165, 255, 170)),
+    (1.0, (45, 115, 245, 195)),
+    (2.0, (25, 65, 200, 210)),
+    (4.0, (30, 165, 90, 215)),
+    (7.0, (150, 210, 45, 220)),
+    (10.0, (250, 225, 55, 225)),
+    (20.0, (250, 150, 40, 230)),
+    (40.0, (235, 55, 45, 235)),
+    (70.0, (190, 45, 175, 240)),
+)
+
+
+def cache_dir():
+    base = os.environ.get("XDG_CACHE_HOME") or os.path.join(os.path.expanduser("~"), ".cache")
+    path = os.path.join(base, "alpe", "radar")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def http_get(url):
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=HTTP_TIMEOUT) as response:
+        return response.read()
+
+
+def write_png(path, rgba):
+    """rgba: numpy-Feld (Hoehe, Breite, 4) uint8."""
+    import numpy
+
+    height, width = rgba.shape[:2]
+    rows = numpy.zeros((height, width * 4 + 1), dtype=numpy.uint8)   # Filterbyte 0 je Zeile
+    rows[:, 1:] = rgba.reshape(height, width * 4)
+
+    def chunk(kind, data):
+        body = kind + data
+        return struct.pack(">I", len(data)) + body + struct.pack(">I", zlib.crc32(body) & 0xFFFFFFFF)
+
+    png = (b"\x89PNG\r\n\x1a\n"
+           + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0))
+           + chunk(b"IDAT", zlib.compress(rows.tobytes(), 6))
+           + chunk(b"IEND", b""))
+    temporary = "%s.%d.tmp" % (path, os.getpid())
+    with open(temporary, "wb") as handle:
+        handle.write(png)
+    os.replace(temporary, path)
+
+
+def read_rate(source):
+    """HDF5 -> Niederschlagsrate in mm/h auf dem ganzen Radarraster, Luecken als 0."""
+    import h5py
+    import numpy
+
+    with h5py.File(source, "r") as handle:
+        where = handle["where"].attrs
+        columns, rows = int(where["xsize"]), int(where["ysize"])
+        cell_x, cell_y = float(where["xscale"]), float(where["yscale"])
+        if (columns, rows, cell_x, cell_y) != (GRID_COLUMNS, GRID_ROWS, 1000.0, 1000.0):
+            raise ValueError("unerwartetes Raster %sx%s zu %s m" % (columns, rows, cell_x))
+        what = handle["dataset1/data1/what"].attrs
+        gain, offset = float(what["gain"]), float(what["offset"])
+        rate = handle["dataset1/data1/data"][()].astype("float32") * gain + offset
+    return numpy.nan_to_num(rate, nan=0.0, posinf=0.0, neginf=0.0)
+
+
+def paint(rate, target):
+    """Raster in mm/h -> PNG des Ausschnitts EXTENT. Gibt den Anteil nasser Zellen zurueck."""
+    import numpy
+
+    left = (EXTENT[0] - GRID_WEST) // 1000
+    right = (EXTENT[2] - GRID_WEST) // 1000
+    top = (GRID_NORTH - EXTENT[3]) // 1000
+    bottom = (GRID_NORTH - EXTENT[1]) // 1000
+    rate = rate[top:bottom, left:right]
+
+    image = numpy.zeros(rate.shape + (4,), dtype=numpy.uint8)
+    for limit, colour in SCALE:           # aufsteigend: die hoechste zutreffende Stufe gewinnt
+        image[rate >= limit] = colour
+    write_png(target, image)
+    return float((rate >= SCALE[0][0]).mean())
+
+
+def render(source, target, raw=None):
+    """HDF5 -> PNG; mit raw wird das Raster zusaetzlich fuer die Hochrechnung abgelegt."""
+    import numpy
+
+    rate = read_rate(source)
+    if raw:
+        temporary = "%s.%d.tmp.npz" % (raw, os.getpid())
+        numpy.savez_compressed(temporary, rate=numpy.minimum(rate * 100, 65535).astype("uint16"))
+        os.replace(temporary, raw)
+    return paint(rate, target)
+
+
+def load_raw(path):
+    import numpy
+
+    with numpy.load(path) as data:
+        return data["rate"].astype("float32") / 100
+
+
+def tile_shift(before, after, limit):
+    """Verschiebung (dy, dx) in Zellen, die before am besten auf after legt, und ihre Guete."""
+    import numpy
+
+    window = numpy.outer(numpy.hanning(before.shape[0]), numpy.hanning(before.shape[1]))
+    a = (before - before.mean()) * window
+    b = (after - after.mean()) * window
+    energy = float(numpy.sqrt((a * a).sum() * (b * b).sum()))
+    if energy <= 0:
+        return None
+    surface = numpy.fft.irfft2(numpy.fft.rfft2(b) * numpy.conj(numpy.fft.rfft2(a)), s=a.shape)
+    surface = numpy.fft.fftshift(surface)
+    middle_y, middle_x = a.shape[0] // 2, a.shape[1] // 2
+    search = surface[middle_y - limit:middle_y + limit + 1, middle_x - limit:middle_x + limit + 1]
+    y, x = numpy.unravel_index(int(search.argmax()), search.shape)
+    peak = float(search[y, x])
+
+    def refine(low, mid, high):          # Scheitel der Parabel durch drei Nachbarwerte
+        curve = low - 2 * mid + high
+        return 0.0 if curve >= 0 else max(-0.5, min(0.5, 0.5 * (low - high) / curve))
+
+    dy, dx = float(y - limit), float(x - limit)
+    if 0 < y < search.shape[0] - 1:
+        dy += refine(search[y - 1, x], peak, search[y + 1, x])
+    if 0 < x < search.shape[1] - 1:
+        dx += refine(search[y, x - 1], peak, search[y, x + 1])
+    return dy, dx, peak / energy
+
+
+def motion_field(before, after, minutes):
+    """Zugrichtung je Zelle in Zellen pro Minute (vy, vx) oder None, wenn nichts zu messen ist."""
+    import numpy
+
+    a, b = numpy.log1p(before), numpy.log1p(after)
+    rows, columns = a.shape
+    limit = min(TILE // 2 - 1, int(MAX_SPEED * minutes) + 1)
+    starts_y = list(range(0, rows - TILE + 1, TILE // 2))
+    starts_x = list(range(0, columns - TILE + 1, TILE // 2))
+    found = {}
+    for iy, top in enumerate(starts_y):
+        for ix, left in enumerate(starts_x):
+            tile_a = a[top:top + TILE, left:left + TILE]
+            tile_b = b[top:top + TILE, left:left + TILE]
+            if (tile_a > 0.05).mean() < 0.03 or (tile_b > 0.05).mean() < 0.03:
+                continue                                  # zu trocken fuer eine Messung
+            shift = tile_shift(tile_a, tile_b, limit)
+            if shift and shift[2] >= 0.35 and abs(shift[0]) < limit and abs(shift[1]) < limit:
+                found[(iy, ix)] = shift
+    if not found:
+        return None
+
+    weights = numpy.array([shift[2] for shift in found.values()])
+    vectors = numpy.array([shift[:2] for shift in found.values()])
+    typical = numpy.array([weighted_median(vectors[:, 0], weights), weighted_median(vectors[:, 1], weights)])
+    spread = max(3.0, 0.6 * float(numpy.hypot(*typical)))   # Ausreisser gegen die Hauptstroemung
+    grid = numpy.tile(typical, (len(starts_y), len(starts_x), 1))
+    trust = numpy.full((len(starts_y), len(starts_x)), 0.5)
+    for (iy, ix), shift in found.items():
+        if numpy.hypot(shift[0] - typical[0], shift[1] - typical[1]) <= spread:
+            grid[iy, ix] = shift[:2]
+            trust[iy, ix] = 1.0 + shift[2]
+    # Gewichtetes Glaetten ueber die Nachbargebiete, damit die Stroemung keine Kanten hat.
+    padded = numpy.pad(grid * trust[..., None], ((1, 1), (1, 1), (0, 0)), mode="edge")
+    padded_trust = numpy.pad(trust, 1, mode="edge")
+    total = sum(padded[dy:dy + grid.shape[0], dx:dx + grid.shape[1]] for dy in range(3) for dx in range(3))
+    total_trust = sum(padded_trust[dy:dy + grid.shape[0], dx:dx + grid.shape[1]] for dy in range(3) for dx in range(3))
+    grid = total / total_trust[..., None]
+
+    centres_y = numpy.array(starts_y) + TILE / 2
+    centres_x = numpy.array(starts_x) + TILE / 2
+    field = numpy.empty((2, rows, columns), dtype="float32")
+    for component in range(2):
+        along_x = numpy.stack([numpy.interp(numpy.arange(columns), centres_x, row) for row in grid[..., component]])
+        field[component] = numpy.stack([numpy.interp(numpy.arange(rows), centres_y, along_x[:, x])
+                                        for x in range(columns)], axis=1)
+    return field / minutes
+
+
+def weighted_median(values, weights):
+    import numpy
+
+    order = numpy.argsort(values)
+    cumulative = numpy.cumsum(weights[order])
+    return float(values[order][int(numpy.searchsorted(cumulative, cumulative[-1] / 2))])
+
+
+def advect(rate, field, minutes):
+    """Schiebt das Bild entlang der Stroemung um minutes weiter (rueckwaerts abgetastet, bilinear)."""
+    import numpy
+
+    rows, columns = rate.shape
+    y, x = numpy.mgrid[0:rows, 0:columns].astype("float32")
+    y -= field[0] * minutes
+    x -= field[1] * minutes
+    inside = (y >= 0) & (y <= rows - 1) & (x >= 0) & (x <= columns - 1)
+    y0 = numpy.clip(numpy.floor(y), 0, rows - 2).astype("int32")
+    x0 = numpy.clip(numpy.floor(x), 0, columns - 2).astype("int32")
+    fy, fx = numpy.clip(y - y0, 0, 1), numpy.clip(x - x0, 0, 1)
+    value = (rate[y0, x0] * (1 - fy) * (1 - fx) + rate[y0, x0 + 1] * (1 - fy) * fx
+             + rate[y0 + 1, x0] * fy * (1 - fx) + rate[y0 + 1, x0 + 1] * fy * fx)
+    return numpy.where(inside, value, 0.0).astype("float32")
+
+
+def extrapolate(folder, times, ahead):
+    """Hochrechnung ab dem juengsten Bild. Gibt [(Zeit, Pfad)] zurueck, leer wenn nicht moeglich."""
+    last = times[-1]
+    raw = lambda at: os.path.join(folder, "raw-%s.npz" % at.strftime("%Y%m%d%H%M"))
+    if not os.path.exists(raw(last)):
+        return []
+    earlier = next((last - timedelta(minutes=gap) for gap in MOTION_BASE
+                    if os.path.exists(raw(last - timedelta(minutes=gap)))), None)
+    if earlier is None:
+        return []
+    base = last.strftime("%Y%m%d%H%M")
+    leads = list(range(5, ahead + 1, 5))
+    targets = [os.path.join(folder, "ahead-%s-%03d.png" % (base, lead)) for lead in leads]
+    if not all(os.path.exists(target) for target in targets):
+        after = load_raw(raw(last))
+        field = motion_field(load_raw(raw(earlier)), after, (last - earlier).total_seconds() / 60)
+        if field is None:
+            return []
+        for lead, target in zip(leads, targets):
+            if not os.path.exists(target):
+                paint(advect(after, field, lead), target)
+    return [(last + timedelta(minutes=lead), target) for lead, target in zip(leads, targets)]
+
+
+def frame_time(key):
+    """rzcYYJJJHHMM... -> UTC-Zeitpunkt (JJJ = Tag im Jahr), None bei fremden Namen."""
+    name = key.lower()
+    if not name.startswith("rzc") or not name.endswith(".h5") or not name[3:12].isdigit():
+        return None
+    try:
+        day = datetime.strptime(name[3:8], "%y%j")
+        return day.replace(hour=int(name[8:10]), minute=int(name[10:12]), tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def available(count):
+    """Die juengsten count Bilder als [(Zeit, URL)], aelteste zuerst."""
+    now = datetime.now(timezone.utc)
+    found, failures = {}, []
+    for back in (0, 1):
+        item = (now - timedelta(days=back)).strftime("%Y%m%d") + "-ch"
+        try:
+            assets = json.loads(http_get(STAC + item)).get("assets") or {}
+        except urllib.error.HTTPError as error:
+            failures.append("%s: HTTP %s" % (item, error.code))
+            continue
+        for key in sorted(assets):         # bei zwei Dateien zur selben Zeit gilt die letzte
+            at = frame_time(key)
+            href = assets[key].get("href") if isinstance(assets[key], dict) else None
+            if at is not None and href and at <= now + timedelta(minutes=10):
+                found.setdefault(at, href)
+                found[at] = href
+        if len(found) >= count:
+            break
+    if not found:
+        raise RuntimeError("keine Radarbilder gefunden (%s)" % ("; ".join(failures) or "Liste leer"))
+    return [(at, found[at]) for at in sorted(found)[-count:]]
+
+
+def update(count, ahead=0):
+    folder = cache_dir()
+    frames = available(max(count, 4))
+    # Fuer die Hochrechnung bleiben die Raster der juengsten Bilder liegen.
+    wanted_raw = {at for at, _ in frames[-4:]} if ahead else set()
+    raw_path = lambda at: os.path.join(folder, "raw-%s.npz" % at.strftime("%Y%m%d%H%M"))
+    errors = []
+
+    def fetch(at, url, target):
+        handle, temporary = tempfile.mkstemp(suffix=".h5", dir=folder)
+        try:
+            with os.fdopen(handle, "wb") as out:
+                out.write(http_get(url))
+            render(temporary, target, raw_path(at) if at in wanted_raw else None)
+        except Exception as error:
+            errors.append("%s: %s" % (at.strftime("%H:%M"), error))
+        finally:
+            try:
+                os.unlink(temporary)
+            except OSError:
+                pass
+
+    todo = []
+    for at, url in frames:
+        target = os.path.join(folder, at.strftime("%Y%m%d%H%M") + ".png")
+        if not os.path.exists(target) or (at in wanted_raw and not os.path.exists(raw_path(at))):
+            todo.append(threading.Thread(target=fetch, args=(at, url, target), daemon=True))
+    for start in range(0, len(todo), 4):   # hoechstens vier Abrufe gleichzeitig
+        batch = todo[start:start + 4]
+        for worker in batch:
+            worker.start()
+        for worker in batch:
+            worker.join()
+
+    listed = []
+    for at, _ in frames[-count:]:
+        target = os.path.join(folder, at.strftime("%Y%m%d%H%M") + ".png")
+        if os.path.exists(target):
+            listed.append({"time": at.strftime("%Y-%m-%dT%H:%M:00Z"), "path": target, "forecast": False})
+    if not listed:
+        raise RuntimeError("kein Bild umgerechnet: " + "; ".join(errors[:3]))
+
+    projected = []
+    if ahead and listed[-1]["time"] == frames[-1][0].strftime("%Y-%m-%dT%H:%M:00Z"):
+        try:
+            projected = extrapolate(folder, [at for at, _ in frames], ahead)
+        except Exception as error:
+            errors.append("Hochrechnung: %s" % error)
+    for at, target in projected:
+        listed.append({"time": at.strftime("%Y-%m-%dT%H:%M:00Z"), "path": target, "forecast": True})
+    current = {os.path.basename(target) for _, target in projected}
+    for name in os.listdir(folder):        # Hochrechnungen und Raster zu aelteren Bildern
+        stale_ahead = name.startswith("ahead-") and name not in current
+        stale_raw = name.startswith("raw-") and name not in {os.path.basename(raw_path(at)) for at in wanted_raw}
+        if stale_ahead or stale_raw:
+            try:
+                os.unlink(os.path.join(folder, name))
+            except OSError:
+                pass
+
+    names = sorted(name for name in os.listdir(folder) if name.endswith(".png") and name[:-4].isdigit())
+    for name in names[:-KEEP]:
+        try:
+            os.unlink(os.path.join(folder, name))
+        except OSError:
+            pass
+    for name in os.listdir(folder):        # Reste abgebrochener Laeufe
+        path = os.path.join(folder, name)
+        if name.endswith((".h5", ".tmp", ".tmp.npz")) and time.time() - os.path.getmtime(path) > 600:
+            try:
+                os.unlink(path)
+            except OSError:
+                pass
+    return {
+        "frames": listed,
+        "extent": list(EXTENT),
+        "legend": [{"from": limit, "color": "#%02x%02x%02x" % colour[:3]} for limit, colour in SCALE],
+        "errors": errors[:3],
+    }
+
+
+def main(argv):
+    command = argv[1] if len(argv) > 1 else ""
+    if command == "render" and len(argv) == 4:
+        print("nasse Zellen: %.1f %%" % (100 * render(argv[2], argv[3])))
+        return 0
+    if command == "update":
+        count, ahead = DEFAULT_FRAMES, 0
+        try:
+            if "--frames" in argv:
+                count = max(1, min(MAX_FRAMES, int(argv[argv.index("--frames") + 1])))
+            if "--ahead" in argv:
+                ahead = max(0, min(MAX_AHEAD, int(argv[argv.index("--ahead") + 1]) // 5 * 5))
+        except (IndexError, ValueError):
+            print(json.dumps({"error": "ungueltige Angabe zu --frames oder --ahead"}))
+            return 2
+        try:
+            import h5py  # noqa: F401
+        except ImportError:
+            print(json.dumps({"error": "Das Paket python-h5py fehlt.", "missing": "python-h5py"}))
+            return 3
+        try:
+            print(json.dumps(update(count, ahead)))
+            return 0
+        except Exception as error:
+            print(json.dumps({"error": str(error)}))
+            return 1
+    print(__doc__.strip(), file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

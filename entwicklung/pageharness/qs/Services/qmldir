@@ -1,0 +1,23 @@
+module qs.Services
+singleton BatteryService 1.0 BatteryService.qml
+singleton NetworkService 1.0 NetworkService.qml
+singleton CompositorService 1.0 CompositorService.qml
+singleton CupsService 1.0 CupsService.qml
+singleton KeybindsService 1.0 KeybindsService.qml
+singleton MultimediaService 1.0 MultimediaService.qml
+singleton DMSService 1.0 DMSService.qml
+singleton GreeterService 1.0 GreeterService.qml
+singleton DesktopService 1.0 DesktopService.qml
+singleton PluginService 1.0 PluginService.qml
+singleton HeadsetService 1.0 HeadsetService.qml
+singleton ToastService 1.0 ToastService.qml
+
+singleton SystemUpdateService 1.0 SystemUpdateService.qml
+singleton WeatherService 1.0 WeatherService.qml
+singleton ShellVersionService 1.0 ShellVersionService.qml
+singleton IdleService 1.0 IdleService.qml
+singleton KwinService 1.0 KwinService.qml
+singleton BrightnessService 1.0 BrightnessService.qml
+singleton SessionService 1.0 SessionService.qml
+singleton PopoutService 1.0 PopoutService.qml
+singleton VideoWallpaperService 1.0 VideoWallpaperService.qml

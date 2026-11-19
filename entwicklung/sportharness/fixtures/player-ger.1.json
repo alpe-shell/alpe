@@ -1,0 +1,88 @@
+{
+ "player": {
+  "id": "9009",
+  "name": "Harry Kane",
+  "position": "Sturm",
+  "team": {
+   "id": "132",
+   "name": "Bayern Munich",
+   "abbr": "",
+   "logo": ""
+  },
+  "jersey": "9",
+  "age": "33",
+  "nation": "England",
+  "height": "188 cm"
+ },
+ "splits": [
+  {
+   "title": "German Bundesliga 2026/27",
+   "cells": [
+    {
+     "label": "Startelf",
+     "value": "11"
+    },
+    {
+     "label": "Tore",
+     "value": "16"
+    },
+    {
+     "label": "Vorlagen",
+     "value": "3"
+    },
+    {
+     "label": "Schüsse",
+     "value": "48"
+    },
+    {
+     "label": "aufs Tor",
+     "value": "27"
+    },
+    {
+     "label": "Gelb",
+     "value": "1"
+    }
+   ]
+  },
+  {
+   "title": "UEFA Champions League 2026/27",
+   "cells": [
+    {
+     "label": "Startelf",
+     "value": "4"
+    },
+    {
+     "label": "Tore",
+     "value": "5"
+    },
+    {
+     "label": "Vorlagen",
+     "value": "1"
+    },
+    {
+     "label": "Schüsse",
+     "value": "17"
+    },
+    {
+     "label": "aufs Tor",
+     "value": "9"
+    },
+    {
+     "label": "Gelb",
+     "value": "0"
+    }
+   ]
+  }
+ ],
+ "league": {
+  "id": "ger.1",
+  "name": "Bundesliga",
+  "short": "BL",
+  "sport": "soccer",
+  "kind": "league",
+  "country": "Deutschland"
+ },
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.tar.gz
+*.vor-alpe
+# Testbilder und Zwischenstände der Entwicklungsumgebungen
+entwicklung/**/*.png
+entwicklung/**/out*/
+entwicklung/pageharness/lockalpe/
+entwicklung/pageharness/lockshell/
+# Kopien der Einstellungsseiten aus dem Shell-Code (entstehen beim Ausprobieren)
+entwicklung/pageharness/pages/Alpe*.qml
+entwicklung/sportharness/fixtures/cache/
+# Persönliche Übergabe-Notizen für KI-Chats (bleiben auf dem eigenen Rechner)
+KONTEXT.md
+# Zwischendateien des Design-Werkzeugs
+*.alpe-neu

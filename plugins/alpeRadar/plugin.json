@@ -1,0 +1,46 @@
+{
+    "id": "alpeRadar",
+    "name": "Niederschlagsradar",
+    "description": "Niederschlagsradar der Schweiz als Film, mit eigener Hochrechnung der nächsten Stunde. Quelle: MeteoSchweiz.",
+    "version": "1.0.0",
+    "author": "alpemessi",
+    "type": "dash",
+    "capabilities": ["dash-tab"],
+    "component": "./RadarTab.qml",
+    "icon": "radar",
+    "dash": {
+        "title": "Radar",
+        "options": [
+            {
+                "key": "frames",
+                "text": "Bilder im Film",
+                "type": "choice",
+                "def": "12",
+                "choices": [
+                    { "value": "6", "text": "30 Minuten" },
+                    { "value": "12", "text": "1 Stunde" },
+                    { "value": "24", "text": "2 Stunden" },
+                    { "value": "36", "text": "3 Stunden" }
+                ]
+            },
+            {
+                "key": "ahead",
+                "text": "Hochrechnung",
+                "type": "choice",
+                "def": "60",
+                "choices": [
+                    { "value": "0", "text": "Aus" },
+                    { "value": "30", "text": "30 Minuten" },
+                    { "value": "60", "text": "1 Stunde" },
+                    { "value": "90", "text": "90 Minuten" }
+                ]
+            },
+            {
+                "key": "cities",
+                "text": "Ortsnamen anzeigen",
+                "type": "toggle",
+                "def": true
+            }
+        ]
+    }
+}

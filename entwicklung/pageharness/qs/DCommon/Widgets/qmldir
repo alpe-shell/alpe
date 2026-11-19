@@ -1,0 +1,6 @@
+module qs.DCommon.Widgets
+DButton 1.0 DButton.qml
+DIcon 1.0 DIcon.qml
+StyledText 1.0 StyledText.qml
+DActionButton 1.0 DActionButton.qml
+DListView 1.0 DListView.qml

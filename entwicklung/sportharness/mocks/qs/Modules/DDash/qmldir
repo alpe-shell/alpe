@@ -1,0 +1,3 @@
+module qs.Modules.DDash
+singleton DashMetrics 1.0 DashMetrics.qml
+singleton DashRegistry 1.0 DashRegistry.qml

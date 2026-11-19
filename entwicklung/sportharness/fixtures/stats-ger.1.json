@@ -1,0 +1,155 @@
+{
+ "league": {
+  "id": "ger.1",
+  "name": "Bundesliga",
+  "short": "BL",
+  "sport": "soccer",
+  "kind": "league",
+  "country": "Deutschland"
+ },
+ "categories": [
+  {
+   "key": "goalsLeaders",
+   "title": "Tore",
+   "rows": [
+    {
+     "rank": 1,
+     "player": {
+      "id": "9009",
+      "name": "Harry Kane",
+      "short": "Harry Kane"
+     },
+     "team": {
+      "id": "132",
+      "name": "Bayern Munich",
+      "abbr": "BAY",
+      "logo": ""
+     },
+     "value": "16",
+     "sub": "11 Spiele"
+    },
+    {
+     "rank": 2,
+     "player": {
+      "id": "2",
+      "name": "Serhou Guirassy",
+      "short": "Serhou Guirassy"
+     },
+     "team": {
+      "id": "124",
+      "name": "Borussia Dortmund",
+      "abbr": "BVB",
+      "logo": ""
+     },
+     "value": "9",
+     "sub": "11 Spiele"
+    },
+    {
+     "rank": 3,
+     "player": {
+      "id": "3",
+      "name": "Deniz Undav",
+      "short": "Deniz Undav"
+     },
+     "team": {
+      "id": "134",
+      "name": "VfB Stuttgart",
+      "abbr": "VFB",
+      "logo": ""
+     },
+     "value": "8",
+     "sub": "10 Spiele"
+    },
+    {
+     "rank": 4,
+     "player": {
+      "id": "4",
+      "name": "Patrik Schick",
+      "short": "Patrik Schick"
+     },
+     "team": {
+      "id": "131",
+      "name": "Bayer Leverkusen",
+      "abbr": "B04",
+      "logo": ""
+     },
+     "value": "7",
+     "sub": "11 Spiele"
+    },
+    {
+     "rank": 5,
+     "player": {
+      "id": "5",
+      "name": "Vincenzo Grifo",
+      "short": "Vincenzo Grifo"
+     },
+     "team": {
+      "id": "125",
+      "name": "SC Freiburg",
+      "abbr": "SCF",
+      "logo": ""
+     },
+     "value": "6",
+     "sub": "11 Spiele"
+    }
+   ]
+  },
+  {
+   "key": "assistsLeaders",
+   "title": "Vorlagen",
+   "rows": [
+    {
+     "rank": 1,
+     "player": {
+      "id": "9017",
+      "name": "Michael Olise",
+      "short": "Michael Olise"
+     },
+     "team": {
+      "id": "132",
+      "name": "Bayern Munich",
+      "abbr": "BAY",
+      "logo": ""
+     },
+     "value": "7",
+     "sub": "11 Spiele"
+    },
+    {
+     "rank": 2,
+     "player": {
+      "id": "7",
+      "name": "Julian Brandt",
+      "short": "Julian Brandt"
+     },
+     "team": {
+      "id": "124",
+      "name": "Borussia Dortmund",
+      "abbr": "BVB",
+      "logo": ""
+     },
+     "value": "5",
+     "sub": "11 Spiele"
+    },
+    {
+     "rank": 3,
+     "player": {
+      "id": "8",
+      "name": "Grischa Prömel",
+      "short": "Grischa Prömel"
+     },
+     "team": {
+      "id": "134",
+      "name": "VfB Stuttgart",
+      "abbr": "VFB",
+      "logo": ""
+     },
+     "value": "4",
+     "sub": "9 Spiele"
+    }
+   ]
+  }
+ ],
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

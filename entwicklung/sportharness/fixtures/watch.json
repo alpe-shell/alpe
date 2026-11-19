@@ -1,0 +1,91 @@
+{
+ "matches": [
+  {
+   "id": "20271105000098",
+   "league": "nl",
+   "sport": "hockey",
+   "start": "2026-11-18T18:45:00Z",
+   "status": "live",
+   "label": "2. Drittel",
+   "round": "",
+   "home": {
+    "id": "101144",
+    "name": "EV Zug",
+    "short": "EV Zug",
+    "abbr": "EVZ",
+    "color": "#00539f",
+    "accent": "#ffffff",
+    "score": "3",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "103144",
+    "name": "HC Ajoie",
+    "short": "HC Ajoie",
+    "abbr": "HCA",
+    "color": "#f5c400",
+    "accent": "#111111",
+    "score": "1",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": [
+    "MYSPORTS"
+   ],
+   "periods": [
+    {
+     "home": "2",
+     "away": "0"
+    },
+    {
+     "home": "1",
+     "away": "1"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    }
+   ],
+   "decision": ""
+  },
+  {
+   "id": "3",
+   "league": "ger.dfb_pokal",
+   "sport": "soccer",
+   "start": "2026-11-18T19:45:00Z",
+   "status": "live",
+   "label": "67'",
+   "round": "Achtelfinal",
+   "home": {
+    "id": "132",
+    "name": "Bayern Munich",
+    "short": "Bayern",
+    "abbr": "BAY",
+    "color": "#dc052d",
+    "score": "2",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "125",
+    "name": "SC Freiburg",
+    "short": "Freiburg",
+    "abbr": "SCF",
+    "color": "#111111",
+    "score": "1",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": []
+  }
+ ],
+ "events": [],
+ "hot": true,
+ "next": 30,
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

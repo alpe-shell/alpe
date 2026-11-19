@@ -1,0 +1,284 @@
+#!/usr/bin/env bash
+# alpe – Befehl für Alpe. Eigene Befehle hier; alles andere geht an den Hintergrunddienst
+# (eigener Bau ~/.local/lib/alpe/alpe, sonst dms aus dem Paket), etwa «alpe ipc call …».
+#
+#   alpe version [--short]  Alpe, Shell-Stand, Hintergrunddienst (--short: eine Zeile, für fastfetch)
+#   alpe doctor             prüft die Einrichtung und nennt, was fehlt
+#   alpe ram                Speicher und Rechenzeit der Shell (RSS, PSS, privat)
+#   alpe fastfetch          fastfetch mit Alpe-Logo und Version (immer aktuell)
+#   alpe kopfleiste [MODUS] Proton VPN: Kopfleiste schlank|weg|aus|status
+#   alpe titelleisten [M]   KDE: Titelleisten aller Fenster status|aus|an (KWin-Regel)
+#   alpe kde [ein|aus]      KDE: Plasmas Oberfläche durch Alpe ersetzen bzw. zurück (status)
+#   alpe kuerzel [M]        KDE: Alpe-Kürzel status|vorgaben|zurueck (Meta+Q schliesst, Meta+M Systemmonitor)
+#   alpe update [ARCHIV]    neue Fassung einspielen: aus einem Archiv (alpe-zugerberg-*.tar.gz)
+#                           oder, ohne Angabe, «git pull» in ~/alpe; danach install.sh
+#   alpe design [BEFEHL]    Aussehen festhalten oder einspielen: status|export|apply (tools/design.py)
+#   alpe backup             Einstellungen sichern (Shell, Sperrbildschirm, KWin, hyprlock …)
+#   alpe restore ARCHIV     gesicherte Einstellungen zurückspielen (fragt vorher)
+#   alpe restart            Shell neu starten
+#   alpe lock               jetzt sperren (KDE oder Sperre der Shell)
+#   alpe log                Protokoll der Shell verfolgen
+#   alpe test               alle Prüfungen wie auf GitHub (vor einem Push)
+#   alpe entfernen [--alles] Alpe entfernen (--alles: auch Einstellungen, Pakete und ~/alpe; --check)
+#   alpe help               diese Übersicht
+set -uo pipefail
+
+ALPE_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
+OWN="$HOME/.local/lib/alpe/alpe"
+DROPIN="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/dms.service.d/zz-alpe-backend.conf"
+
+say() { printf '%s\n' "$*"; }
+ok() { printf '  \033[32m✓\033[0m %s\n' "$*"; }
+warn() { printf '  \033[33m!\033[0m %s\n' "$*"; }
+bad() { printf '  \033[31m✗\033[0m %s\n' "$*"; }
+have() { command -v "$1" >/dev/null 2>&1; }
+
+backend() {
+    if [ -x "$OWN" ] && [ -e "$DROPIN" ]; then printf '%s' "$OWN"; return 0; fi
+    local candidate
+    for candidate in /usr/bin/dms /usr/local/bin/dms "$HOME/.local/bin/dms"; do
+        [ -x "$candidate" ] && [ "$(readlink -f "$candidate")" != "$(readlink -f "${BASH_SOURCE[0]}")" ] && { printf '%s' "$candidate"; return 0; }
+    done
+    [ -x "$OWN" ] && { printf '%s' "$OWN"; return 0; }
+    return 1
+}
+
+alpe_version() {
+    sed -n 's/.*property string version: "\(.*\)".*/\1/p' "$SHELL_DIR/quickshell/Common/Brand.qml" 2>/dev/null | head -1
+}
+
+kde() { case "${XDG_CURRENT_DESKTOP:-}" in *KDE*|*kwin*|*KWIN*) return 0 ;; esac; return 1; }
+
+cmd_version() {
+    local b
+    if [ "${1:-}" = "--short" ]; then
+        say "Alpe $(alpe_version || echo '?') «$(sed -n 's/.*property string codename: "\(.*\)".*/\1/p' "$SHELL_DIR/quickshell/Common/Brand.qml" 2>/dev/null | head -1)»"
+        return 0
+    fi
+    say "Alpe $(alpe_version || echo '?') «Zugerberg»"
+    say "  Basis:     $(cat "$ALPE_DIR/BASE" 2>/dev/null || echo '?') (Dux Modular Shell)"
+    say "  Shell:     $SHELL_DIR ($(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null)@$(git -C "$SHELL_DIR" rev-parse --short HEAD 2>/dev/null))"
+    say "  Schichten: $(ls "$ALPE_DIR"/shell/*.patch 2>/dev/null | wc -l)"
+    b="$(backend)" && say "  Dienst:    $b ($("$b" version 2>/dev/null | head -1))" || say "  Dienst:    nicht gefunden"
+}
+
+# Speicher und CPU-Zeit der Shell-Prozesse. RSS zählt geteilte Bibliotheken (Qt, Grafiktreiber)
+# voll; PSS teilt sie unter allen Nutzern auf; «privat» gehört nur diesem Prozess.
+cmd_ram() {
+    local pid name rss pss priv cpu arena total=0
+    say "Prozess                 PID         RSS      PSS   privat   CPU-Zeit"
+    for pid in $(pgrep -u "$USER" -f 'quickshell|/alpe/alpe|bin/dms|dms run' 2>/dev/null); do
+        name="$(ps -o comm= -p "$pid" 2>/dev/null)" || continue
+        rss="$(awk '/^VmRSS:/ {print $2}' "/proc/$pid/status" 2>/dev/null)"
+        pss="$(awk '/^Pss:/ {print $2}' "/proc/$pid/smaps_rollup" 2>/dev/null)"
+        priv="$(awk '/^Private_(Clean|Dirty):/ {s += $2} END {print s + 0}' "/proc/$pid/smaps_rollup" 2>/dev/null)"
+        [ -n "$rss" ] || continue
+        [ -n "$pss" ] || pss="$rss"
+        cpu="$(ps -o time= -p "$pid" 2>/dev/null | tr -d ' ')"
+        printf '%-22s %-8s %6d MB %6d MB %6d MB   %s\n' "$name" "$pid" "$((rss / 1024))" "$((pss / 1024))" "$((priv / 1024))" "$cpu"
+        total=$((total + pss))
+        tr '\0' '\n' < "/proc/$pid/environ" 2>/dev/null | grep -q '^MALLOC_ARENA_MAX=' && arena=1
+    done
+    printf '%-40s %6d MB\n' "zusammen (PSS)" "$((total / 1024))"
+    if [ -n "${arena:-}" ]; then say "Speicher-Arenen begrenzt (MALLOC_ARENA_MAX) – aktiv"
+    else say "Speicher-Arenen nicht begrenzt – nach install.sh und «alpe restart» aktiv"; fi
+}
+
+# MacBook (Asahi) und andere Laptops: Ladegrenze und Zuklappen
+cmd_device() {
+    local b limit kept lid
+    b="$(for d in /sys/class/power_supply/*; do [ "$(cat "$d/type" 2>/dev/null)" = Battery ] && { echo "$d"; break; }; done)"
+    [ -n "$b" ] || return 0
+    say ""
+    say "Dieses Gerät"
+    if [ -r "$b/charge_control_end_threshold" ]; then
+        limit="$(cat "$b/charge_control_end_threshold")"
+        kept="$(cat /etc/alpe/ladegrenze 2>/dev/null || true)"
+        if [ "$limit" -ge 100 ] 2>/dev/null; then ok "Ladegrenze aus ($(basename "$b"))"
+        elif [ "$kept" = "$limit" ] && systemctl is-enabled --quiet alpe-ladegrenze.service 2>/dev/null; then ok "Ladegrenze $limit %, bleibt nach Neustart"
+        else warn "Ladegrenze $limit %, gilt aber nur bis zum Neustart – in Einstellungen → Dieses Gerät neu setzen"; fi
+    else
+        say "  · Akku ohne einstellbare Ladegrenze ($(basename "$b"))"
+    fi
+    lid="$(sed -n 's/^HandleLidSwitch=//p' /etc/systemd/logind.conf.d/60-alpe-deckel.conf 2>/dev/null)"
+    [ -n "$lid" ] && ok "Zuklappen: $lid (Alpe)" || say "  · Zuklappen: Vorgabe des Systems"
+}
+
+cmd_doctor() {
+    local v b missing
+    say "Alpe $(alpe_version || echo '?') – Prüfung"
+    say ""
+    say "Shell-Code"
+    if [ -d "$SHELL_DIR/.git" ]; then
+        ok "$SHELL_DIR, Zweig $(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD)"
+        missing="$(bash "$ALPE_DIR/install.sh" --check 2>/dev/null | grep -c 'wuerde einspielen\|passt nicht' || true)"
+        [ "${missing:-0}" = 0 ] && ok "alle Schichten eingespielt" || warn "$missing Schicht(en) fehlen – bash $ALPE_DIR/install.sh"
+        [ -z "$(git -C "$SHELL_DIR" status --porcelain --untracked-files=no)" ] && ok "keine ungesicherten Änderungen" || warn "ungesicherte Änderungen im Shell-Code (git -C $SHELL_DIR status)"
+    else
+        bad "$SHELL_DIR fehlt – bash $ALPE_DIR/bootstrap.sh"
+    fi
+    say ""
+    say "Dienst"
+    if systemctl --user is-active --quiet dms.service 2>/dev/null; then ok "dms.service läuft"
+    elif pgrep -u "$USER" -x quickshell >/dev/null || pgrep -u "$USER" -f 'dms run' >/dev/null; then ok "Shell läuft (nicht als Dienst)"
+    else bad "Shell läuft nicht"; fi
+    if b="$(backend)"; then
+        v="$("$b" version 2>/dev/null | head -1)"
+        case "$v" in *"$(cat "$ALPE_DIR/BASE" 2>/dev/null | tr -d v)"*) ok "Hintergrunddienst passt: $v" ;; *) warn "Hintergrunddienst: $v (Basis $(cat "$ALPE_DIR/BASE")) – bash $ALPE_DIR/tools/backend.sh status" ;; esac
+    else bad "kein Hintergrunddienst gefunden"; fi
+    say ""
+    say "Werkzeuge"
+    for t in python3 ffmpeg git; do have "$t" && ok "$t" || warn "$t fehlt"; done
+    python3 -c 'import h5py' 2>/dev/null && ok "h5py (Radar)" || warn "h5py fehlt (Radar)"
+    sport="${XDG_CONFIG_HOME:-$HOME/.config}/dms/plugins/alpeSport/sport"
+    if [ -x "$sport" ]; then
+        if out="$(timeout 60 "$sport" selftest --text 2>&1)"; then ok "Sport: alle Quellen erreichbar"
+        else warn "Sport: nicht alle Quellen erreichbar"; fi
+        printf '%s\n' "$out" | sed 's/^/      /'
+    else warn "Sport-Plugin fehlt – bash $ALPE_DIR/install.sh"; fi
+    # Alpe: Mitteilungen des Sport-Hintergrunddiensts
+    have notify-send && ok "notify-send (Sport-Mitteilungen)" || ok "Sport-Mitteilungen über gdbus (notify-send fehlt, geht auch so)"
+    [ -e "${XDG_DATA_HOME:-$HOME/.local/share}/applications/dev.duxlabs.shell.desktop" ] && ok "Prozessname «Alpe»" || warn "Prozessanzeigen nennen die Shell «Dux Modular Shell» – bash $ALPE_DIR/install.sh"
+    ff="${XDG_CONFIG_HOME:-$HOME/.config}/fastfetch"
+    if [ -e "$ff/config.jsonc" ] || [ -e "$ff/config.json" ]; then
+        grep -qs "alpe version --short" "$ff/config.jsonc" "$ff/config.json" && ok "fastfetch zeigt die Version selbst" || warn "fastfetch ohne Alpe-Zeile – alpe fastfetch"
+    fi
+    if have protonvpn-app; then ok "Proton VPN: $(python3 "$ALPE_DIR/tools/kopfleiste.py" status | sed 's/^Proton VPN //')"; fi
+    if kde; then
+        t="$(ALPE_SHELL_DIR="$SHELL_DIR" python3 "$ALPE_DIR/tools/titelleisten.py" status 2>/dev/null)"
+        if printf '%s' "$t" | grep -q "ohne Titelleiste.*für alle Fenster"; then ok "Fenster ohne Titelleiste (KWin-Regel)"
+        else warn "keine KWin-Regel «ohne Titelleiste» für alle Fenster – alpe titelleisten aus"; fi
+        printf '%s\n' "$t" | grep "verwaist" | sed 's/^/      /'
+    fi
+    PATH="$HOME/.local/bin:$PATH" command -v update-all >/dev/null && ok "update-all" || warn "update-all fehlt (Aktualisierung über den Dienst)"
+    if [ "${XDG_CURRENT_DESKTOP:-}" = Hyprland ] || [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+        have slurp && ok "slurp (Fensterregeln: «Fenster anklicken»)" || warn "slurp fehlt – «Fenster anklicken» nimmt dann das fokussierte Fenster nach 3 s (sudo dnf install slurp)"
+        have hypridle && ok "hypridle" || warn "hypridle fehlt (Sperren nach Leerlauf)"
+    fi
+    have pkexec && ok "pkexec (Ladegrenze, Zuklappen)" || warn "pkexec fehlt – Ladegrenze und Zuklappen lassen sich nicht setzen"
+    cmd_device
+    say ""
+    say "Sperrbildschirm"
+    if kde; then
+        bash "$ALPE_DIR/tools/lockscreen.sh" status 2>/dev/null | sed 's/^/  /'
+    else
+        conf="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/hyprlock.conf"
+        if have hyprlock && [ -f "$conf" ]; then
+            if grep -q "Gestaltet in Alpe" "$conf"; then ok "hyprlock, gestaltet in Alpe ($conf)"
+            else ok "hyprlock ($conf) – gestalten unter Einstellungen → Sicherheit → Sperrbildschirm gestalten"; fi
+            while IFS= read -r img; do [ -f "$img" ] || warn "Bild fehlt: $img"; done < <(sed -n 's/^[[:space:]]*path[[:space:]]*=[[:space:]]*//p' "$conf" | grep -v '^screenshot$')
+        else
+            ok "Sperre der Shell (Einstellungen → Sicherheit)"
+        fi
+    fi
+    if kde && [ -f "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" ]; then
+        say ""
+        say "KWin-Effekte"
+        python3 -I "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" state 2>/dev/null | python3 -I -c '
+import json, sys
+try:
+    s = json.load(sys.stdin)
+except Exception:
+    sys.exit(0)
+names = {"corners": "Abgerundete Ecken", "blur": "Better Blur DX", "kwinblur": "KWin-Unschärfe"}
+for key, e in s.get("effects", {}).items():
+    if key == "kwinblur":
+        if e.get("loaded") and s["effects"]["blur"].get("loaded"):
+            print("  \033[33m!\033[0m KWin-Unschärfe und Better Blur DX beide aktiv")
+        continue
+    if not e.get("installed"):
+        print("  \033[33m!\033[0m %s nicht installiert" % names[key])
+    elif e.get("loaded"):
+        print("  \033[32m✓\033[0m %s aktiv" % names[key])
+    elif e.get("enabled"):
+        print("  \033[31m✗\033[0m %s eingeschaltet, aber nicht geladen (nach KWin-Update neu bauen)" % names[key])
+    else:
+        print("  · %s aus" % names[key])'
+        print_fx_hint=0
+        python3 -I "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" state 2>/dev/null | grep -q '"installed": false' && print_fx_hint=1
+        [ "$print_fx_hint" = 1 ] && say "    nachinstallieren: paru -S kwin-effects-better-blur-dx kwin-effect-rounded-corners, danach ab- und anmelden"
+        say ""
+        say "Tastenkürzel"
+        python3 "$ALPE_DIR/tools/kuerzel.py" status 2>/dev/null | sed 's/^/  /'
+    fi
+    say ""
+    say "Speicher"
+    cmd_ram | sed 's/^/  /'
+}
+
+cmd_update() {
+    local archive="${1:-}"
+    if [ -n "$archive" ]; then
+        [ -f "$archive" ] || { say "Archiv nicht gefunden: $archive"; exit 1; }
+        say "== Archiv entpacken nach ~"
+        tar xzf "$archive" -C "$HOME" || exit 1
+    elif git -C "$ALPE_DIR" remote get-url origin >/dev/null 2>&1; then
+        say "== git pull in $ALPE_DIR"
+        git -C "$ALPE_DIR" pull --ff-only || exit 1
+    else
+        say "Kein Archiv angegeben und $ALPE_DIR hat keinen entfernten Ursprung (git remote add origin …)."
+        exit 1
+    fi
+    bash "$ALPE_DIR/install.sh"
+}
+
+# Was eine Sicherung umfasst (relativ zu ~, nur was es gibt)
+BACKUP_PATHS=(
+    .config/dms/settings.json .config/alpe .config/kscreenlockerrc .config/kwinrulesrc .config/kwinrc
+    .config/kglobalshortcutsrc .config/kdeglobals .config/hypr/hyprlock.conf .config/hypr/hypridle.conf
+    .config/hypr/dms .config/systemd/user/dms.service.d .local/state/DankMaterialShell/session.json
+)
+
+cmd_backup() {
+    local out="${1:-$HOME/alpe-sicherung-$(date +%Y%m%d-%H%M%S).tar.gz}" present=() p
+    for p in "${BACKUP_PATHS[@]}"; do [ -e "$HOME/$p" ] && present+=("$p"); done
+    [ ${#present[@]} -gt 0 ] || { say "nichts zu sichern"; exit 1; }
+    tar czf "$out" -C "$HOME" "${present[@]}" || exit 1
+    say "gesichert: $out"
+    printf '  %s\n' "${present[@]}"
+}
+
+cmd_restore() {
+    local archive="${1:-}" answer
+    [ -f "$archive" ] || { say "Aufruf: alpe restore ARCHIV"; exit 1; }
+    say "Enthält:"
+    tar tzf "$archive" | grep -v '/$' | sed 's/^/  ~\//'
+    say ""
+    say "Vorher wird der jetzige Stand gesichert."
+    read -r -p "Zurückspielen? [j/N] " answer
+    case "$answer" in j|J|ja|Ja) ;; *) say "abgebrochen"; exit 0 ;; esac
+    cmd_backup "$HOME/alpe-sicherung-vor-restore-$(date +%Y%m%d-%H%M%S).tar.gz" >/dev/null && say "jetziger Stand gesichert"
+    tar xzf "$archive" -C "$HOME" || exit 1
+    say "zurückgespielt. Shell neu starten: alpe restart (KWin-Einstellungen: ab- und anmelden)"
+}
+
+case "${1:-help}" in
+version|--version|-v) shift; cmd_version "${1:-}" ;;
+fastfetch) shift; exec python3 "$ALPE_DIR/tools/fastfetch.py" "$@" ;;
+kopfleiste) shift; exec python3 "$ALPE_DIR/tools/kopfleiste.py" "$@" ;;
+titelleisten) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec python3 "$ALPE_DIR/tools/titelleisten.py" "$@" ;;
+doctor) cmd_doctor ;;
+ram) cmd_ram ;;
+update) shift; cmd_update "${1:-}" ;;
+backup) shift; cmd_backup "${1:-}" ;;
+restore) shift; cmd_restore "${1:-}" ;;
+kde) shift; exec bash "$ALPE_DIR/tools/kde-sitzung.sh" "$@" ;;
+kuerzel) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec python3 "$ALPE_DIR/tools/kuerzel.py" "$@" ;;
+entfernen) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec bash "$ALPE_DIR/tools/entfernen.sh" "$@" ;;
+design) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec python3 "$ALPE_DIR/tools/design.py" "$@" ;;
+restart) systemctl --user restart dms.service 2>/dev/null || { b="$(backend)" && exec "$b" restart; } ;;
+lock)
+    if kde; then exec loginctl lock-session
+    # Hyprland mit hyprlock und hypridle: über logind, dann sperrt hypridle mit hyprlock.
+    elif have hyprlock && pgrep -u "$USER" -x hypridle >/dev/null; then exec loginctl lock-session
+    else b="$(backend)" && exec "$b" ipc call lock lock; fi ;;
+log) exec journalctl --user -u dms.service -n 200 -f ;;
+test) ALPE_SHELL_DIR="$SHELL_DIR" exec bash "$ALPE_DIR/tools/test.sh" ;;
+help|-h|--help)
+    sed -n '2,21p' "$(readlink -f "${BASH_SOURCE[0]}")" | sed 's/^# \{0,1\}//'
+    if b="$(backend)"; then say ""; say "Übrige Befehle gehen an $b:"; "$b" --help 2>/dev/null | sed -n '/Available Commands/,/^$/p' | sed 's/^/  /'; fi ;;
+*)
+    b="$(backend)" || { say "kein Hintergrunddienst gefunden"; exit 1; }
+    exec "$b" "$@" ;;
+esac

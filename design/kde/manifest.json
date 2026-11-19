@@ -1,0 +1,28 @@
+{
+  "variante": "kde",
+  "alpe": "1.0",
+  "exportiert": "2026-11-19",
+  "schriften": [
+    "AlfaSlabOne",
+    "JetBrains Mono Nerd Font Mono"
+  ],
+  "bilder": [
+    "jagged-peaks-wolkenzug.mp4",
+    "wallpaper.jpg",
+    "wall.png"
+  ],
+  "programme": {
+    "kitty": [
+      "dank-tabs.conf",
+      "dank-theme.conf",
+      "kitty.conf"
+    ],
+    "fastfetch": [
+      "config.jsonc"
+    ]
+  },
+  "hinweise": [
+    "Fensterregel «WingDrive»: Bedingung Fenstertitel entfernt, gilt für alle Fenster des Programms.",
+    "Fensterregel «dev.zed.Zed»: Bedingung Fenstertitel entfernt, gilt für alle Fenster des Programms."
+  ]
+}

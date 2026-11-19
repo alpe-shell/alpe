@@ -1,0 +1,705 @@
+{
+ "league": {
+  "id": "nl",
+  "name": "National League",
+  "short": "NL",
+  "sport": "hockey",
+  "kind": "league",
+  "country": "Schweiz",
+  "logo": ""
+ },
+ "matches": [
+  {
+   "id": "20271105000098",
+   "league": "nl",
+   "sport": "hockey",
+   "start": "2026-11-18T18:45:00Z",
+   "status": "live",
+   "label": "2. Drittel",
+   "round": "",
+   "home": {
+    "id": "101144",
+    "name": "EV Zug",
+    "short": "EV Zug",
+    "abbr": "EVZ",
+    "color": "#00539f",
+    "accent": "#ffffff",
+    "score": "3",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "103144",
+    "name": "HC Ajoie",
+    "short": "HC Ajoie",
+    "abbr": "HCA",
+    "color": "#f5c400",
+    "accent": "#111111",
+    "score": "1",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": [
+    "MYSPORTS"
+   ],
+   "periods": [
+    {
+     "home": "2",
+     "away": "0"
+    },
+    {
+     "home": "1",
+     "away": "1"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    }
+   ],
+   "decision": ""
+  },
+  {
+   "id": "20271105000101",
+   "league": "nl",
+   "sport": "hockey",
+   "start": "2026-11-18T18:45:00Z",
+   "status": "live",
+   "label": "2. Drittel",
+   "round": "",
+   "home": {
+    "id": "103140",
+    "name": "Genève-Servette HC",
+    "short": "Genève-Servette HC",
+    "abbr": "GSHC",
+    "color": "#7a1f2b",
+    "accent": "#ffffff",
+    "score": "2",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "101149",
+    "name": "EHC Kloten",
+    "short": "EHC Kloten",
+    "abbr": "EHCK",
+    "color": "#003b7a",
+    "accent": "#e30613",
+    "score": "2",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": [
+    "MYSPORTS"
+   ],
+   "periods": [
+    {
+     "home": "1",
+     "away": "1"
+    },
+    {
+     "home": "1",
+     "away": "1"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    }
+   ],
+   "decision": ""
+  },
+  {
+   "id": "20271105000099",
+   "league": "nl",
+   "sport": "hockey",
+   "start": "2026-11-18T18:45:00Z",
+   "status": "live",
+   "label": "2. Drittel",
+   "round": "",
+   "home": {
+    "id": "102126",
+    "name": "SC Bern",
+    "short": "SC Bern",
+    "abbr": "SCB",
+    "color": "#d50032",
+    "accent": "#ffd400",
+    "score": "1",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "101151",
+    "name": "HC Davos",
+    "short": "HC Davos",
+    "abbr": "HCD",
+    "color": "#003f87",
+    "accent": "#ffd200",
+    "score": "1",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": [
+    "MYSPORTS"
+   ],
+   "periods": [
+    {
+     "home": "1",
+     "away": "0"
+    },
+    {
+     "home": "0",
+     "away": "1"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    }
+   ],
+   "decision": ""
+  },
+  {
+   "id": "20271105000100",
+   "league": "nl",
+   "sport": "hockey",
+   "start": "2026-11-18T18:45:00Z",
+   "status": "live",
+   "label": "Pause",
+   "round": "",
+   "home": {
+    "id": "101139",
+    "name": "ZSC Lions",
+    "short": "ZSC Lions",
+    "abbr": "ZSC",
+    "color": "#0b3b8c",
+    "accent": "#ffffff",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "101150",
+    "name": "HC Lugano",
+    "short": "HC Lugano",
+    "abbr": "HCL",
+    "color": "#111111",
+    "accent": "#ffffff",
+    "score": "2",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": [
+    "MYSPORTS"
+   ],
+   "periods": [
+    {
+     "home": "0",
+     "away": "2"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    }
+   ],
+   "decision": ""
+  },
+  {
+   "id": "20271105000102",
+   "league": "nl",
+   "sport": "hockey",
+   "start": "2026-11-18T19:00:00Z",
+   "status": "live",
+   "label": "1. Drittel",
+   "round": "",
+   "home": {
+    "id": "103141",
+    "name": "Lausanne HC",
+    "short": "Lausanne HC",
+    "abbr": "LHC",
+    "color": "#c8102e",
+    "accent": "#1d3f8f",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "102127",
+    "name": "SCL Tigers",
+    "short": "SCL Tigers",
+    "abbr": "SCL",
+    "color": "#f7d117",
+    "accent": "#c8102e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "",
+   "tv": [
+    "MYSPORTS"
+   ],
+   "periods": [
+    {
+     "home": "0",
+     "away": "0"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    },
+    {
+     "home": "-",
+     "away": "-"
+    }
+   ],
+   "decision": ""
+  }
+ ],
+ "table": {
+  "columns": [
+   {
+    "key": "gp",
+    "label": "Sp"
+   },
+   {
+    "key": "w",
+    "label": "S"
+   },
+   {
+    "key": "otw",
+    "label": "SnV"
+   },
+   {
+    "key": "otl",
+    "label": "NnV"
+   },
+   {
+    "key": "l",
+    "label": "N"
+   },
+   {
+    "key": "goals",
+    "label": "Tore",
+    "wide": true
+   },
+   {
+    "key": "gd",
+    "label": "+/-"
+   },
+   {
+    "key": "pts",
+    "label": "Pkt",
+    "strong": true
+   }
+  ],
+  "groups": [
+   {
+    "name": "",
+    "rows": [
+     {
+      "rank": 1,
+      "team": {
+       "id": "101144",
+       "name": "EV Zug",
+       "short": "EV Zug",
+       "abbr": "EVZ",
+       "color": "#00539f",
+       "accent": "#ffffff",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "13",
+       "otw": "2",
+       "otl": "1",
+       "l": "2",
+       "goals": "70:40",
+       "gd": "+30",
+       "pts": "42"
+      },
+      "zone": {
+       "kind": "up",
+       "label": "Playoffs"
+      },
+      "form": []
+     },
+     {
+      "rank": 2,
+      "team": {
+       "id": "103140",
+       "name": "Genève-Servette HC",
+       "short": "Genève-Servette HC",
+       "abbr": "GSHC",
+       "color": "#7a1f2b",
+       "accent": "#ffffff",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "13",
+       "otw": "2",
+       "otl": "1",
+       "l": "2",
+       "goals": "68:42",
+       "gd": "+26",
+       "pts": "40"
+      },
+      "zone": {
+       "kind": "up",
+       "label": "Playoffs"
+      },
+      "form": []
+     },
+     {
+      "rank": 3,
+      "team": {
+       "id": "101139",
+       "name": "ZSC Lions",
+       "short": "ZSC Lions",
+       "abbr": "ZSC",
+       "color": "#0b3b8c",
+       "accent": "#ffffff",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "12",
+       "otw": "2",
+       "otl": "1",
+       "l": "3",
+       "goals": "66:44",
+       "gd": "+22",
+       "pts": "38"
+      },
+      "zone": {
+       "kind": "up",
+       "label": "Playoffs"
+      },
+      "form": []
+     },
+     {
+      "rank": 4,
+      "team": {
+       "id": "103141",
+       "name": "Lausanne HC",
+       "short": "Lausanne HC",
+       "abbr": "LHC",
+       "color": "#c8102e",
+       "accent": "#1d3f8f",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "12",
+       "otw": "2",
+       "otl": "1",
+       "l": "3",
+       "goals": "64:46",
+       "gd": "+18",
+       "pts": "36"
+      },
+      "zone": {
+       "kind": "up",
+       "label": "Playoffs"
+      },
+      "form": []
+     },
+     {
+      "rank": 5,
+      "team": {
+       "id": "102126",
+       "name": "SC Bern",
+       "short": "SC Bern",
+       "abbr": "SCB",
+       "color": "#d50032",
+       "accent": "#ffd400",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "11",
+       "otw": "2",
+       "otl": "1",
+       "l": "4",
+       "goals": "62:48",
+       "gd": "+14",
+       "pts": "34"
+      },
+      "zone": {
+       "kind": "up",
+       "label": "Playoffs"
+      },
+      "form": []
+     },
+     {
+      "rank": 6,
+      "team": {
+       "id": "101151",
+       "name": "HC Davos",
+       "short": "HC Davos",
+       "abbr": "HCD",
+       "color": "#003f87",
+       "accent": "#ffd200",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "11",
+       "otw": "2",
+       "otl": "1",
+       "l": "4",
+       "goals": "60:50",
+       "gd": "+10",
+       "pts": "32"
+      },
+      "zone": {
+       "kind": "up",
+       "label": "Playoffs"
+      },
+      "form": []
+     },
+     {
+      "rank": 7,
+      "team": {
+       "id": "103138",
+       "name": "Fribourg-Gottéron",
+       "short": "Fribourg-Gottéron",
+       "abbr": "FRI",
+       "color": "#1a1a1a",
+       "accent": "#ffffff",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "10",
+       "otw": "2",
+       "otl": "1",
+       "l": "5",
+       "goals": "58:52",
+       "gd": "+6",
+       "pts": "30"
+      },
+      "zone": {
+       "kind": "playin",
+       "label": "Play-in"
+      },
+      "form": []
+     },
+     {
+      "rank": 8,
+      "team": {
+       "id": "101149",
+       "name": "EHC Kloten",
+       "short": "EHC Kloten",
+       "abbr": "EHCK",
+       "color": "#003b7a",
+       "accent": "#e30613",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "10",
+       "otw": "2",
+       "otl": "1",
+       "l": "5",
+       "goals": "56:54",
+       "gd": "+2",
+       "pts": "28"
+      },
+      "zone": {
+       "kind": "playin",
+       "label": "Play-in"
+      },
+      "form": []
+     },
+     {
+      "rank": 9,
+      "team": {
+       "id": "101150",
+       "name": "HC Lugano",
+       "short": "HC Lugano",
+       "abbr": "HCL",
+       "color": "#111111",
+       "accent": "#ffffff",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "9",
+       "otw": "2",
+       "otl": "1",
+       "l": "6",
+       "goals": "54:56",
+       "gd": "-2",
+       "pts": "26"
+      },
+      "zone": {
+       "kind": "playin",
+       "label": "Play-in"
+      },
+      "form": []
+     },
+     {
+      "rank": 10,
+      "team": {
+       "id": "101060",
+       "name": "SC Rapperswil-Jona Lakers",
+       "short": "Rapperswil-Jona Lakers",
+       "abbr": "SCRJ",
+       "color": "#002f6c",
+       "accent": "#ffffff",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "9",
+       "otw": "2",
+       "otl": "1",
+       "l": "6",
+       "goals": "52:58",
+       "gd": "-6",
+       "pts": "24"
+      },
+      "zone": {
+       "kind": "playin",
+       "label": "Play-in"
+      },
+      "form": []
+     },
+     {
+      "rank": 11,
+      "team": {
+       "id": "102128",
+       "name": "EHC Biel-Bienne",
+       "short": "EHC Biel-Bienne",
+       "abbr": "EHCB",
+       "color": "#e30613",
+       "accent": "#ffd200",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "8",
+       "otw": "2",
+       "otl": "1",
+       "l": "7",
+       "goals": "50:60",
+       "gd": "-10",
+       "pts": "22"
+      },
+      "zone": null,
+      "form": []
+     },
+     {
+      "rank": 12,
+      "team": {
+       "id": "101152",
+       "name": "HC Ambri-Piotta",
+       "short": "HC Ambrì-Piotta",
+       "abbr": "HCAP",
+       "color": "#1d4f9c",
+       "accent": "#ffffff",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "8",
+       "otw": "2",
+       "otl": "1",
+       "l": "7",
+       "goals": "48:62",
+       "gd": "-14",
+       "pts": "20"
+      },
+      "zone": null,
+      "form": []
+     },
+     {
+      "rank": 13,
+      "team": {
+       "id": "102127",
+       "name": "SCL Tigers",
+       "short": "SCL Tigers",
+       "abbr": "SCL",
+       "color": "#f7d117",
+       "accent": "#c8102e",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "7",
+       "otw": "2",
+       "otl": "1",
+       "l": "8",
+       "goals": "46:64",
+       "gd": "-18",
+       "pts": "18"
+      },
+      "zone": null,
+      "form": []
+     },
+     {
+      "rank": 14,
+      "team": {
+       "id": "103144",
+       "name": "HC Ajoie",
+       "short": "HC Ajoie",
+       "abbr": "HCA",
+       "color": "#f5c400",
+       "accent": "#111111",
+       "score": "",
+       "winner": false,
+       "logo": ""
+      },
+      "cells": {
+       "gp": "19",
+       "w": "7",
+       "otw": "2",
+       "otl": "1",
+       "l": "8",
+       "goals": "44:66",
+       "gd": "-22",
+       "pts": "16"
+      },
+      "zone": null,
+      "form": []
+     }
+    ]
+   }
+  ]
+ },
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

@@ -1,0 +1,152 @@
+{
+    "id": "alpeSport",
+    "name": "Sport",
+    "description": "Spiele, Live-Resultate, Tabellen, Bestenlisten und Spieldetails im Aufbau von FotMob: National League, NBA, die Top-5-Ligen im Fussball und ihre Cups, Länderspiele der Schweiz. Mitteilungen bei Toren der Favoriten, Live-Spiel in der Leiste. Quellen: ESPN, Swiss Ice Hockey Federation.",
+    "version": "1.0.0",
+    "author": "alpemessi",
+    "type": "composite",
+    "capabilities": [
+        "dash-tab",
+        "dash-card",
+        "daemon",
+        "dankbar-widget"
+    ],
+    "icon": "sports_soccer",
+    "components": {
+        "dash": "./SportTab.qml",
+        "dashCard": "./SportCard.qml",
+        "daemon": "./SportDaemon.qml",
+        "widget": "./SportWidget.qml"
+    },
+    "settings": "./SportSettings.qml",
+    "dash": {
+        "title": "Sport",
+        "card": {
+            "title": "Sport heute",
+            "icon": "sports_soccer",
+            "w": 2,
+            "h": 2,
+            "minW": 2,
+            "minH": 1,
+            "maxW": 4,
+            "maxH": 4
+        },
+        "options": [
+            {
+                "key": "liga_nl",
+                "text": "National League (Eishockey)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_sui_hockey",
+                "text": "Nati Eishockey (Länderspiele der Schweiz)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_sui_nt",
+                "text": "Nati Fussball (Länderspiele der Schweiz)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_nba",
+                "text": "NBA (Basketball)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_eng_1",
+                "text": "Premier League (England)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_eng_fa",
+                "text": "FA Cup (England)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_eng_league_cup",
+                "text": "EFL Cup (England)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_esp_1",
+                "text": "LaLiga (Spanien)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_esp_copa_del_rey",
+                "text": "Copa del Rey (Spanien)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_ger_1",
+                "text": "Bundesliga (Deutschland)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_ger_dfb_pokal",
+                "text": "DFB-Pokal (Deutschland)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_ita_1",
+                "text": "Serie A (Italien)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_ita_coppa_italia",
+                "text": "Coppa Italia (Italien)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_fra_1",
+                "text": "Ligue 1 (Frankreich)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_fra_coupe_de_france",
+                "text": "Coupe de France (Frankreich)",
+                "type": "toggle",
+                "def": true
+            },
+            {
+                "key": "liga_uefa_champions",
+                "text": "Champions League (Europa)",
+                "type": "toggle",
+                "def": false
+            },
+            {
+                "key": "liga_uefa_europa",
+                "text": "Europa League (Europa)",
+                "type": "toggle",
+                "def": false
+            },
+            {
+                "key": "liga_sui_1",
+                "text": "Super League (Schweiz)",
+                "type": "toggle",
+                "def": false
+            }
+        ]
+    },
+    "requires": [
+        "python3"
+    ],
+    "permissions": [
+        "settings_read",
+        "settings_write"
+    ]
+}

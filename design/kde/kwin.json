@@ -1,0 +1,158 @@
+{
+  "einstellungen": [
+    [
+      "kwinrc",
+      "Round-Corners",
+      "ActiveOutlineAlpha",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "ActiveSecondOutlineAlpha",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "InactiveCornerRadius",
+      "13"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "InactiveOutlineAlpha",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "InactiveOutlineThickness",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "InactiveSecondOutlineAlpha",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "InactiveSecondOutlineThickness",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "OutlineThickness",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "SecondOutlineThickness",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Round-Corners",
+      "Size",
+      "13"
+    ],
+    [
+      "kwinrc",
+      "Effect-better-blur-dx",
+      "BlurDocks",
+      "true"
+    ],
+    [
+      "kwinrc",
+      "Effect-better-blur-dx",
+      "BlurMenus",
+      "true"
+    ],
+    [
+      "kwinrc",
+      "Effect-better-blur-dx",
+      "BlurStrength",
+      "10"
+    ],
+    [
+      "kwinrc",
+      "Effect-better-blur-dx",
+      "Brightness",
+      "89"
+    ],
+    [
+      "kwinrc",
+      "Effect-better-blur-dx",
+      "CornerRadius",
+      "13"
+    ],
+    [
+      "kwinrc",
+      "Effect-better-blur-dx",
+      "RefractionEdgeSize",
+      "0"
+    ],
+    [
+      "kwinrc",
+      "Effect-better-blur-dx",
+      "WindowClasses",
+      "app.zen_browser.zen\norg.gnome.Nautilus\nWingDrive\ndev.zed.Zed"
+    ],
+    [
+      "kwinrc",
+      "Plugins",
+      "better_blur_dxEnabled",
+      "true"
+    ],
+    [
+      "kwinrc",
+      "Plugins",
+      "blurEnabled",
+      "false"
+    ],
+    [
+      "kdeglobals",
+      "KDE",
+      "AnimationDurationFactor",
+      "0.5"
+    ]
+  ],
+  "regeln": [
+    {
+      "Description": "Alpe: ohne Titelleiste",
+      "types": "33",
+      "decorationpolicy": "none",
+      "decorationpolicyrule": "2",
+      "noborder": "true",
+      "noborderrule": "2"
+    },
+    {
+      "Description": "WingDrive",
+      "wmclass": "WingDrive",
+      "wmclassmatch": "1",
+      "wmclasscomplete": "false",
+      "opacityactive": "90",
+      "opacityactiverule": "2",
+      "opacityinactive": "85",
+      "opacityinactiverule": "2"
+    },
+    {
+      "Description": "dev.zed.Zed",
+      "wmclass": "dev.zed.Zed",
+      "wmclassmatch": "1",
+      "wmclasscomplete": "false",
+      "opacityactive": "90",
+      "opacityactiverule": "2",
+      "opacityinactive": "85",
+      "opacityinactiverule": "2"
+    }
+  ],
+  "sperrbildschirm": {
+    "Style": "hyprlock",
+    "Layout": "{\"general\":{\"ignoreEmptyInput\":true,\"hideCursor\":false},\"background\":{\"path\":\"@DESIGN@/bilder/wallpaper.jpg\",\"color\":\"#ff111111\",\"blurPasses\":3,\"blurSize\":7,\"noise\":0.0117,\"contrast\":1.01,\"brightness\":0.9,\"vibrancy\":0.15,\"vibrancyDarkness\":0,\"blurRadius\":112,\"source\":\"image\",\"image\":\"@DESIGN@/bilder/wall.png\"},\"widgets\":[{\"position\":[\"0\",\"-350\"],\"halign\":\"center\",\"valign\":\"top\",\"zindex\":5,\"rotate\":0,\"opacity\":1,\"type\":\"label\",\"text\":\"{date:%H}\",\"update\":1000,\"color\":\"#bfffffff\",\"fontSize\":150,\"font\":{\"family\":\"AlfaSlabOne\",\"weight\":400,\"italic\":false},\"align\":\"center\",\"shadow\":{\"size\":3,\"passes\":0,\"color\":\"#ff000000\",\"boost\":1.2},\"order\":6},{\"position\":[\"4\",\"-518\"],\"halign\":\"center\",\"valign\":\"top\",\"zindex\":5,\"rotate\":0,\"opacity\":1,\"type\":\"label\",\"text\":\"{date:%M}\",\"update\":1000,\"color\":\"#bfffffff\",\"fontSize\":150,\"font\":{\"family\":\"AlfaSlabOne\",\"weight\":400,\"italic\":false},\"align\":\"center\",\"shadow\":{\"size\":0,\"passes\":0,\"color\":\"#ff000000\",\"boost\":1.2},\"order\":7},{\"position\":[\"0\",\"20\"],\"halign\":\"center\",\"valign\":\"center\",\"zindex\":5,\"rotate\":0,\"opacity\":1,\"type\":\"label\",\"text\":\"{date:%A, %d. %B}\",\"update\":1000,\"color\":\"#ffffffff\",\"fontSize\":24,\"font\":{\"family\":\"JetBrains Mono Nerd Font Mono\",\"weight\":400,\"italic\":false},\"align\":\"center\",\"shadow\":{\"size\":0,\"passes\":0,\"color\":\"#ff000000\",\"boost\":1.2},\"order\":8},{\"position\":[\"0\",\"-40\"],\"halign\":\"center\",\"valign\":\"center\",\"zindex\":20,\"rotate\":0,\"opacity\":1,\"type\":\"input\",\"size\":[\"168\",\"37\"],\"outline\":1,\"outerColor\":\"#00ffffff\",\"innerColor\":\"#1affffff\",\"fontColor\":\"#ffc8c8c8\",\"fontFamily\":\"Sans\",\"checkColor\":\"#ffcc8822\",\"failColor\":\"#ffcc2222\",\"capslockColor\":\"\",\"dotsSize\":0.1,\"dotsSpacing\":1,\"dotsCenter\":true,\"dotsRounding\":-1,\"hideInput\":false,\"fadeOnEmpty\":false,\"rounding\":-1,\"placeholder\":\"Passwort...\",\"failText\":\"<i>{FAIL} <b>({ATTEMPTS})</b></i>\",\"failTimeout\":2000,\"order\":9}],\"reference\":{\"width\":2560,\"height\":1664}}"
+  }
+}

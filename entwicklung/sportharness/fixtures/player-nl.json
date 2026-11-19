@@ -1,0 +1,64 @@
+{
+ "player": {
+  "id": "Genoni Leonardo",
+  "name": "Genoni Leonardo",
+  "position": "Torhüter",
+  "team": {
+   "id": "101144",
+   "name": "EV Zug",
+   "abbr": "EVZ",
+   "color": "#00539f",
+   "logo": ""
+  },
+  "jersey": "",
+  "age": "",
+  "nation": "",
+  "height": ""
+ },
+ "splits": [
+  {
+   "title": "National League 2026/27",
+   "cells": [
+    {
+     "label": "Spiele",
+     "value": "12"
+    },
+    {
+     "label": "Gegentore",
+     "value": "22"
+    },
+    {
+     "label": "Schnitt",
+     "value": "1.84"
+    },
+    {
+     "label": "Schüsse",
+     "value": "295"
+    },
+    {
+     "label": "Paraden",
+     "value": "273"
+    },
+    {
+     "label": "Fangquote",
+     "value": "92.54"
+    },
+    {
+     "label": "Eiszeit",
+     "value": "718:03"
+    }
+   ]
+  }
+ ],
+ "league": {
+  "id": "nl",
+  "name": "National League",
+  "short": "NL",
+  "sport": "hockey",
+  "kind": "league",
+  "country": "Schweiz"
+ },
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

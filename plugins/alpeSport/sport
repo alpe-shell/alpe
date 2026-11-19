@@ -1,0 +1,2095 @@
+#!/usr/bin/env python3
+"""Spiele, Tabellen und Spieldetails fuer den Sport-Tab der Alpe-Shell.
+
+  sport leagues                       bekannte Wettbewerbe (fuer die Leiste)
+  sport day [JJJJ-MM-TT] [--leagues a,b,...]
+                                      alle Spiele eines Tages (Ortszeit), nach Wettbewerb
+  sport league ID                     Spiele rund um heute, Tabelle und Form eines Wettbewerbs
+  sport match ID SPIEL                Spieldetail: Verlauf, Statistik, Aufstellung
+  sport stats ID                      Bestenlisten eines Wettbewerbs (Tore, Skorer, Punkte …)
+  sport player ID SPIELER             Saisonwerte eines Spielers (National League: Name als Kennung)
+  sport watch [--favorites a,b] [--leagues a,b] [--notify goal,start,end] [--dry]
+                                      Spiele der Favoriten heute; meldet Tore, Beginn und Schluss
+                                      als Mitteilung (Stand in ~/.cache/alpe/sport/watch.json)
+  sport cache [clear]                 Grösse des Zwischenspeichers, mit clear leeren
+  sport selftest [--text]             jede Quelle einmal abrufen und die Zeit messen
+
+Quellen (ohne Schluessel, nicht offiziell dokumentiert):
+  - ESPN (site.api.espn.com): Fussball (Top-5-Ligen und Cups) und NBA
+  - Swiss Ice Hockey Federation (data.sihf.ch): National League
+
+Alle Zeiten gehen als UTC (ISO 8601) hinaus; die Oberflaeche zeigt sie in Ortszeit. Antworten
+werden unter ~/.cache/alpe/sport zwischengespeichert, Vereinslogos dauerhaft. Faellt eine Quelle
+aus, liefert das Programm den letzten Stand und meldet den Fehler in "errors".
+Nur Python-Standardbibliothek.
+"""
+
+import hashlib
+import html.parser
+import json
+import os
+import re
+import sys
+import tempfile
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+from datetime import date, datetime, timedelta, timezone
+
+# IPv4 vor IPv6: Ist IPv6 nur scheinbar verfuegbar (z. B. hinter einem VPN), wartet urllib sonst je
+# IPv6-Adresse bis zur Zeitgrenze. 1.10.4: a.espncdn.com brauchte so 24 s (2 x 12 s) pro Logo.
+import socket
+_getaddrinfo = socket.getaddrinfo
+
+
+def _ipv4_first(*args, **kwargs):
+    return sorted(_getaddrinfo(*args, **kwargs), key=lambda info: info[0] != socket.AF_INET)
+
+
+socket.getaddrinfo = _ipv4_first
+
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) Alpe-Shell sport plugin"
+HTTP_TIMEOUT = 12
+ESPN = "https://site.api.espn.com/apis/site/v2/sports/"
+ESPN_STANDINGS = "https://site.api.espn.com/apis/v2/sports/"
+SIHF = "https://data.sihf.ch/Statistic/api/cms/"
+
+# id, Name, Kurzname, Sportart, Quelle, Pfad/Liga, Art (league/cup), Land, Vorgabe an
+LEAGUES = [
+    ("nl", "National League", "NL", "hockey", "sihf", "1", "league", "Schweiz", True),
+    ("sui.hockey", "Nati Eishockey", "Nati", "hockey", "sihf-nati", "", "national", "Schweiz, Herren", True),
+    ("sui.nt", "Nati Fussball", "Nati", "soccer", "espn-team", "475", "national", "Schweiz, Herren", True),
+    ("nba", "NBA", "NBA", "basketball", "espn", "basketball/nba", "league", "USA", True),
+    ("eng.1", "Premier League", "PL", "soccer", "espn", "soccer/eng.1", "league", "England", True),
+    ("eng.fa", "FA Cup", "FA Cup", "soccer", "espn", "soccer/eng.fa", "cup", "England", True),
+    ("eng.league_cup", "EFL Cup", "EFL Cup", "soccer", "espn", "soccer/eng.league_cup", "cup", "England", True),
+    ("esp.1", "LaLiga", "LaLiga", "soccer", "espn", "soccer/esp.1", "league", "Spanien", True),
+    ("esp.copa_del_rey", "Copa del Rey", "Copa", "soccer", "espn", "soccer/esp.copa_del_rey", "cup", "Spanien", True),
+    ("ger.1", "Bundesliga", "BL", "soccer", "espn", "soccer/ger.1", "league", "Deutschland", True),
+    ("ger.dfb_pokal", "DFB-Pokal", "Pokal", "soccer", "espn", "soccer/ger.dfb_pokal", "cup", "Deutschland", True),
+    ("ita.1", "Serie A", "Serie A", "soccer", "espn", "soccer/ita.1", "league", "Italien", True),
+    ("ita.coppa_italia", "Coppa Italia", "Coppa", "soccer", "espn", "soccer/ita.coppa_italia", "cup", "Italien", True),
+    ("fra.1", "Ligue 1", "Ligue 1", "soccer", "espn", "soccer/fra.1", "league", "Frankreich", True),
+    ("fra.coupe_de_france", "Coupe de France", "CdF", "soccer", "espn", "soccer/fra.coupe_de_france", "cup", "Frankreich", True),
+    # Wahlweise (in den Tab-Optionen einschaltbar)
+    ("uefa.champions", "Champions League", "UCL", "soccer", "espn", "soccer/uefa.champions", "cup", "Europa", False),
+    ("uefa.europa", "Europa League", "UEL", "soccer", "espn", "soccer/uefa.europa", "cup", "Europa", False),
+    ("sui.1", "Super League", "SL", "soccer", "espn", "soccer/sui.1", "league", "Schweiz", False),
+]
+LEAGUE = {row[0]: dict(zip(("id", "name", "short", "sport", "source", "path", "kind", "country", "default"), row)) for row in LEAGUES}
+
+# National League: keine Logos in der Schnittstelle. Kuerzel und Vereinsfarben fuer das Abzeichen.
+HOCKEY_TEAMS = {
+    101139: ("ZSC", "ZSC Lions", "#0b3b8c", "#ffffff"),
+    101144: ("EVZ", "EV Zug", "#00539f", "#ffffff"),
+    101149: ("EHCK", "EHC Kloten", "#003b7a", "#e30613"),
+    101150: ("HCL", "HC Lugano", "#111111", "#ffffff"),
+    101151: ("HCD", "HC Davos", "#003f87", "#ffd200"),
+    101152: ("HCAP", "HC Ambrì-Piotta", "#1d4f9c", "#ffffff"),
+    101060: ("SCRJ", "Rapperswil-Jona Lakers", "#002f6c", "#ffffff"),
+    102126: ("SCB", "SC Bern", "#d50032", "#ffd400"),
+    102127: ("SCL", "SCL Tigers", "#f7d117", "#c8102e"),
+    102128: ("EHCB", "EHC Biel-Bienne", "#e30613", "#ffd200"),
+    103138: ("FRI", "Fribourg-Gottéron", "#1a1a1a", "#ffffff"),
+    103140: ("GSHC", "Genève-Servette HC", "#7a1f2b", "#ffffff"),
+    103141: ("LHC", "Lausanne HC", "#c8102e", "#1d3f8f"),
+    103144: ("HCA", "HC Ajoie", "#f5c400", "#111111"),
+}
+
+# Vereinslogos der National League (TheSportsDB, «/small» = 250 px). Die Statistik-Schnittstelle des
+# Verbands liefert keine; fehlt ein Verein, bleibt das Abzeichen mit Kuerzel (z. B. Rapperswil-Jona).
+TSDB = "https://r2.thesportsdb.com/images/media/team/badge/%s.png/small"
+HOCKEY_LOGOS = {
+    101152: "b078t81647290434", 102126: "fwb8rj1647290445", 101151: "c5co1n1647290459",
+    102128: "oy3z7j1647290451", 101149: "f37tvd1626190829", 103140: "9zq0sa1647290526",
+    103144: "yrt6nh1647290474", 103138: "w9ifxt1647290466", 103141: "24kiss1703935058",
+    101150: "l7m2vl1647290511", 101144: "sxn04y1647290534", 101139: "6bp0ty1647290541",
+    102127: "ut3p7c1647290481",
+}
+
+GERMAN_ROUNDS = (
+    (r"round of 128", "1/64-Final"), (r"round of 64", "1/32-Final"), (r"round of 32", "Sechzehntelfinal"),
+    (r"round of 16", "Achtelfinal"), (r"quarter-?finals?", "Viertelfinal"), (r"semi-?finals?", "Halbfinal"),
+    (r"^finals?$", "Final"), (r"third round", "3. Runde"), (r"second round", "2. Runde"),
+    (r"first round", "1. Runde"), (r"fourth round", "4. Runde"), (r"fifth round", "5. Runde"),
+    (r"league phase", "Ligaphase"), (r"group stage", "Gruppenphase"), (r"regular season", ""), (r"knockout round play-?offs?", "Playoffs"), (r"(\d+)(st|nd|rd|th) leg", r"\1. Spiel"),
+)
+
+
+# ---------------------------------------------------------------------------- Hilfen
+
+def cache_dir(*parts):
+    base = os.environ.get("XDG_CACHE_HOME") or os.path.join(os.path.expanduser("~"), ".cache")
+    path = os.path.join(base, "alpe", "sport", *parts)
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def _key(text):
+    return hashlib.sha1(text.encode()).hexdigest()
+
+
+def http_get(url):
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json, */*"})
+    with urllib.request.urlopen(request, timeout=HTTP_TIMEOUT) as response:
+        return response.read()
+
+
+def _write_atomic(path, payload):
+    folder = os.path.dirname(path)
+    fd, tmp = tempfile.mkstemp(dir=folder, prefix=".tmp-")
+    with os.fdopen(fd, "wb") as handle:
+        handle.write(payload)
+    os.replace(tmp, path)
+
+
+def log(line):
+    """Kurzes Protokoll unter ~/.cache/alpe/sport/log.txt (die letzten 200 Zeilen)."""
+    path = os.path.join(cache_dir(), "log.txt")
+    try:
+        try:
+            lines = open(path, encoding="utf-8").read().splitlines()[-199:]
+        except OSError:
+            lines = []
+        lines.append("%s %s" % (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), line))
+        _write_atomic(path, ("\n".join(lines) + "\n").encode("utf-8"))
+    except OSError:
+        pass
+
+
+class Fetcher:
+    """JSON holen mit Zwischenspeicher. Bei einem Fehler gilt der letzte Stand (stale)."""
+
+    def __init__(self):
+        self.errors = []
+        self.stale = False
+
+    def json(self, url, max_age):
+        path = os.path.join(cache_dir("http"), _key(url) + ".json")
+        cached = None
+        try:
+            with open(path) as handle:
+                cached = json.load(handle)
+            if time.time() - cached.get("t", 0) < max_age:
+                return cached["data"]
+        except (OSError, ValueError, KeyError, TypeError):
+            cached = None
+        started = time.time()
+        try:
+            data = json.loads(http_get(url).decode("utf-8"))
+            if time.time() - started > 5:
+                log("langsam %.1f s %s" % (time.time() - started, url))
+        except (urllib.error.URLError, OSError, ValueError) as error:
+            host = urllib.parse.urlparse(url).netloc
+            self.errors.append("%s: %s" % (host, getattr(error, "reason", error)))
+            log("Fehler nach %.1f s: %s %s" % (time.time() - started, getattr(error, "reason", error), url))
+            if cached is not None:
+                self.stale = True
+                return cached.get("data")
+            return None
+        try:
+            _write_atomic(path, json.dumps({"t": time.time(), "data": data}).encode())
+        except OSError:
+            pass
+        return data
+
+
+def logo_url(href):
+    """Logo-Adresse. Bis 1.10.3 lief das ueber den Bildverkleinerer von ESPN (combiner); der antwortet
+    fuer noch nicht verkleinerte Bilder teils sehr langsam. Die Originale (500 px) liegen statisch im
+    CDN; die Oberflaeche verkleinert selbst."""
+    return href or ""
+
+
+LOGO_WAIT = 2.0          # so lange wartet eine Abfrage hoechstens auf fehlende Logos (Sekunden)
+
+
+def _load_logo(url, path):
+    started = time.time()
+    try:
+        payload = http_get(url)
+        if payload[:4] != b"\x89PNG" and payload[:3] != b"\xff\xd8\xff" and payload[:4] != b"RIFF":
+            raise ValueError("kein Bild")
+        _write_atomic(path, payload)
+        if time.time() - started > 5:
+            log("Logo langsam %.1f s %s" % (time.time() - started, url))
+    except (urllib.error.URLError, OSError, ValueError) as error:
+        log("Logo-Fehler nach %.1f s: %s %s" % (time.time() - started, getattr(error, "reason", error), url))
+        try:
+            open(path + ".none", "w").close()       # nicht bei jedem Aufruf erneut versuchen
+        except OSError:
+            pass
+
+
+def _spawn_logo_loader(wanted):
+    """Restliche Logos in einem eigenen, abgekoppelten Prozess holen: Die Abfrage antwortet sofort,
+    das naechste Nachladen hat die Bilder. Der Kindprozess erbt die Ausgabe nicht, sonst wartete die
+    Shell auf dessen Ende."""
+    import subprocess
+    try:
+        fd, listing = tempfile.mkstemp(dir=cache_dir(), prefix="logos-", suffix=".json")
+        with os.fdopen(fd, "w") as handle:
+            json.dump(wanted, handle)
+        subprocess.Popen([sys.executable, os.path.abspath(__file__), "logos", listing],
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         close_fds=True, start_new_session=True)
+    except OSError as error:
+        log("Logo-Lader nicht gestartet: %s" % error)
+
+
+def fetch_logos(objects, wait=LOGO_WAIT):
+    """objects: Liste von dicts mit "logoUrl"; setzt "logo" auf eine lokale Datei (oder "").
+    Wartet hoechstens `wait` Sekunden; was dann fehlt, holt ein Hintergrundprozess."""
+    import threading
+    folder = cache_dir("logos")
+    wanted = {}
+    for obj in objects:
+        url = obj.pop("logoUrl", "")
+        if not url:
+            obj["logo"] = ""
+            continue
+        path = os.path.join(folder, _key(url) + ".png")
+        obj["logo"] = path
+        if not os.path.exists(path) and not os.path.exists(path + ".none"):
+            wanted[url] = path
+    if wanted:
+        items = list(wanted.items())
+        quick, rest = items[:16], items[16:]
+        threads = [threading.Thread(target=_load_logo, args=item, daemon=True) for item in quick]
+        for thread in threads:
+            thread.start()
+        deadline = time.time() + wait
+        for thread in threads:
+            thread.join(max(0, deadline - time.time()))
+        rest += [(url, path) for url, path in quick if not os.path.exists(path) and not os.path.exists(path + ".none")]
+        if rest:
+            _spawn_logo_loader(dict(rest))
+    for obj in objects:
+        if obj.get("logo") and not os.path.exists(obj["logo"]):
+            obj["logo"] = ""
+
+
+def command_logos(listing):
+    try:
+        with open(listing) as handle:
+            wanted = json.load(handle)
+    finally:
+        try:
+            os.unlink(listing)
+        except OSError:
+            pass
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        list(pool.map(lambda item: _load_logo(*item), wanted.items()))
+
+
+def parse_time(text):
+    """ESPN: 2026-11-15T13:00Z, SIHF: 2026-11-15T15:45:00+01:00 -> aware datetime (UTC)."""
+    if not text:
+        return None
+    text = text.strip().replace("Z", "+00:00")
+    if re.match(r".*T\d\d:\d\d\+", text):
+        text = text.replace("+", ":00+", 1)
+    try:
+        value = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
+def iso(value):
+    return value.strftime("%Y-%m-%dT%H:%M:%SZ") if value else ""
+
+
+def local_date(value):
+    return value.astimezone().date() if value else None
+
+
+def today():
+    forced = os.environ.get("ALPE_SPORT_TODAY")
+    return date.fromisoformat(forced) if forced else datetime.now().astimezone().date()
+
+
+def num(text, default=None):
+    try:
+        return float(str(text).replace("%", "").replace("+", "").strip())
+    except (TypeError, ValueError):
+        return default
+
+
+def german_round(text):
+    if not text:
+        return ""
+    low = text.strip().lower().replace("-", " ")
+    for pattern, replacement in GERMAN_ROUNDS:
+        if re.search(pattern, low):
+            return re.sub(pattern, replacement, low) if "\\1" in replacement else replacement
+    return text.strip()
+
+
+def surname(full):
+    """SIHF-Namen stehen als «Nachname Vorname»; fuer Ereignisse genuegt der Nachname."""
+    parts = (full or "").split()
+    return " ".join(parts[:-1]) if len(parts) > 1 else (full or "")
+
+
+SWISS_FLAG = "https://a.espncdn.com/i/teamlogos/countries/500/sui.png"
+
+
+def league_info(league_id):
+    league = LEAGUE[league_id]
+    return {k: league[k] for k in ("id", "name", "short", "sport", "kind", "country")}
+
+
+def national_logo(league_id, logo):
+    return logo_url(SWISS_FLAG) if LEAGUE[league_id]["kind"] == "national" else logo
+
+
+# ---------------------------------------------------------------------------- ESPN
+
+def pick_logo(logos):
+    """ESPN liefert oft eine helle und eine dunkle Fassung; die Shell ist dunkel."""
+    logos = [l for l in logos or [] if isinstance(l, dict) and l.get("href")]
+    for logo in logos:
+        if "dark" in (logo.get("rel") or []):
+            return logo["href"]
+    return logos[0]["href"] if logos else ""
+
+
+def espn_team(competitor):
+    team = competitor.get("team") or {}
+    logo = pick_logo(team.get("logos")) or team.get("logo") or ""
+    score = competitor.get("score")
+    if isinstance(score, dict):
+        score = score.get("displayValue") or score.get("value")
+    out = {
+        "id": str(team.get("id", "")),
+        "name": team.get("displayName") or team.get("name") or "",
+        "short": team.get("shortDisplayName") or team.get("name") or team.get("displayName") or "",
+        "abbr": team.get("abbreviation") or "",
+        "color": ("#" + team["color"]) if team.get("color") else "",
+        "logoUrl": logo_url(logo),
+        "score": "" if score in (None, "") else str(score).split(".")[0],
+        "winner": bool(competitor.get("winner")),
+    }
+    if competitor.get("shootoutScore") not in (None, ""):
+        out["penalties"] = str(competitor["shootoutScore"]).split(".")[0]
+    records = competitor.get("records") or []
+    if isinstance(records, list) and records:
+        total = next((r for r in records if (r or {}).get("type") in ("total", "overall")), records[0]) or {}
+        out["record"] = total.get("summary", "")
+    return out
+
+
+def espn_status(status, sport):
+    status = status or {}
+    kind = status.get("type") or {}
+    name = kind.get("name", "")
+    state = kind.get("state", "pre")
+    period = status.get("period") or 0
+    clock = status.get("displayClock") or ""
+    short = kind.get("shortDetail") or kind.get("detail") or ""
+    if name in ("STATUS_POSTPONED", "STATUS_DELAYED"):
+        return "postponed", "Verschoben"
+    if name in ("STATUS_CANCELED", "STATUS_ABANDONED", "STATUS_FORFEIT"):
+        return "canceled", "Abgesagt"
+    if name == "STATUS_SUSPENDED":
+        return "live", "Unterbrochen"
+    if state == "pre":
+        return "pre", ""
+    if state == "post":
+        if sport == "soccer":
+            if "PEN" in name:
+                return "post", "n.P."
+            if "AET" in name or "EXTRA" in name:
+                return "post", "n.V."
+            return "post", "Ende"
+        return "post", "Ende n.V." if period > 4 or "OT" in short else "Ende"
+    # laeuft
+    if name in ("STATUS_HALFTIME",) or short.lower().startswith("half"):
+        return "live", "Pause"
+    if sport == "soccer":
+        if name == "STATUS_SHOOTOUT":
+            return "live", "Penaltys"
+        if name in ("STATUS_END_OF_REGULATION", "STATUS_END_OF_EXTRATIME"):
+            return "live", "Pause"
+        return "live", clock or short
+    if name == "STATUS_END_PERIOD" or short.lower().startswith("end of"):
+        return "live", "Ende Q%d" % period if period <= 4 else "Ende OT"
+    quarter = "Q%d" % period if period <= 4 else ("OT" if period == 5 else "OT%d" % (period - 4))
+    return "live", ("%s %s" % (quarter, clock)).strip()
+
+
+def espn_match(event, league_id, competition=None):
+    comp = competition or (event.get("competitions") or [{}])[0]
+    sport = LEAGUE[league_id]["sport"]
+    competitors = comp.get("competitors") or []
+    home = next((c for c in competitors if c.get("homeAway") == "home"), competitors[0] if competitors else {})
+    away = next((c for c in competitors if c.get("homeAway") == "away"), competitors[1] if len(competitors) > 1 else {})
+    state, label = espn_status(event.get("status") or comp.get("status"), sport)
+    start = parse_time(event.get("date") or comp.get("date"))
+    notes = comp.get("notes") or event.get("notes") or []
+    note = (notes[0] or {}).get("headline", "") if notes else ""
+    if not note and isinstance(event.get("season"), dict) and LEAGUE[league_id]["kind"] != "league":
+        note = event["season"].get("slug", "")
+    teams = [espn_team(home), espn_team(away)]
+    if sport != "basketball":                       # Bilanz (S-N) gibt es nur fuer die NBA
+        for team in teams:
+            team.pop("record", None)
+    return {
+        "id": str(event.get("id") or comp.get("id") or ""),
+        "league": league_id,
+        "sport": sport,
+        "start": iso(start),
+        "status": state,
+        "label": label,
+        "round": german_round(note),
+        "home": teams[0],
+        "away": teams[1],
+        "venue": ((comp.get("venue") or {}).get("fullName") or ""),
+        "tv": [],
+    }
+
+
+def espn_keys(first, last, by_month=False):
+    """Werte fuer dates=. ESPN nimmt seit Nov. 2026 keine Spannen (A-B) mehr an (HTTP 400),
+    wohl aber einzelne Tage (JJJJMMTT) und ganze Monate (JJJJMM)."""
+    keys, day = [], first
+    while day <= last:
+        key = day.strftime("%Y%m") if by_month else day.strftime("%Y%m%d")
+        if key not in keys:
+            keys.append(key)
+        day += timedelta(days=1)
+    return keys
+
+
+def espn_scoreboard(fetch, league_id, keys, max_age):
+    path = LEAGUE[league_id]["path"]
+    urls = ["%s%s/scoreboard?dates=%s" % (ESPN, path, key) for key in keys]
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        pages = list(pool.map(lambda url: fetch.json(url, max_age) or {}, urls))
+    matches, seen, logo = [], set(), ""
+    for data in pages:
+        for event in data.get("events") or []:
+            match = espn_match(event, league_id)
+            if match["id"] and match["id"] not in seen:
+                seen.add(match["id"])
+                matches.append(match)
+        leagues = data.get("leagues") or []
+        if leagues and not logo:
+            logo = logo_url(pick_logo(leagues[0].get("logos")))
+    return matches, logo
+
+
+# ---------------------------------------------------------------------------- SIHF (National League)
+
+def season_for(day):
+    """SIHF zaehlt die Saison nach dem Endjahr: 2026/27 = 2027."""
+    return day.year + 1 if day.month >= 7 else day.year
+
+
+def hockey_team(cell, score=""):
+    cell = cell or {}
+    tid = cell.get("id")
+    abbr, name, color, accent = HOCKEY_TEAMS.get(tid, (cell.get("acronym", ""), cell.get("name", ""), "", ""))
+    return {
+        "id": str(tid or ""),
+        "name": cell.get("name") or name,
+        "short": name or cell.get("name", ""),
+        "abbr": abbr or cell.get("acronym", ""),
+        "color": color,
+        "accent": accent,
+        "logoUrl": TSDB % HOCKEY_LOGOS[tid] if tid in HOCKEY_LOGOS else "",
+        "score": "" if score in (None, "", "-") else str(score),
+        "winner": False,
+    }
+
+
+def hockey_status(status, decision=""):
+    status = status or {}
+    if status.get("canceled"):
+        return "canceled", "Abgesagt"
+    sid = status.get("id", 0)
+    name = status.get("name") or ""
+    percent = status.get("percent") or 0
+    if sid == 0 or (percent == 0 and name.lower().startswith("wie geplant")):
+        if "verschoben" in name.lower():
+            return "postponed", "Verschoben"
+        return "pre", ""
+    if sid == 12 or percent >= 100 or name.lower().startswith("ende"):
+        decision = (decision or "").upper()
+        return "post", {"OT": "Ende n.V.", "SO": "Ende n.P.", "PS": "Ende n.P."}.get(decision, "Ende")
+    return "live", name
+
+
+def sihf_columns(table):
+    return [(h or {}).get("alias", "") for h in table.get("header") or []]
+
+
+def sihf_row(columns, row):
+    return {alias: row[i] for i, alias in enumerate(columns) if i < len(row)}
+
+
+def hockey_match(cells):
+    status = cells.get("status") or {}
+    result = cells.get("score") or {}
+    decision = cells.get("decision") or ""
+    state, label = hockey_status(status, decision)
+    home = hockey_team(cells.get("homeTeam"), result.get("homeTeam"))
+    away = hockey_team(cells.get("awayTeam"), result.get("awayTeam"))
+    if state == "post":
+        h, a = num(home["score"], 0), num(away["score"], 0)
+        home["winner"], away["winner"] = h > a, a > h
+    start = parse_time(status.get("startDateTime"))
+    if not start and cells.get("date"):
+        try:
+            start = datetime.strptime("%s %s" % (cells["date"], cells.get("time") or "00:00"), "%d.%m.%Y %H:%M").astimezone().astimezone(timezone.utc)
+        except ValueError:
+            start = None
+    periods = cells.get("scorePerPeriod") or {}
+    return {
+        "id": str((cells.get("details") or {}).get("gameId", "")),
+        "league": "nl",
+        "sport": "hockey",
+        "start": iso(start),
+        "status": state,
+        "label": label,
+        "round": "",
+        "home": home,
+        "away": away,
+        "venue": "",
+        "tv": [t for t in (cells.get("broadcasts") or {}).get("entries", []) if t],
+        "periods": [{"home": h, "away": a} for h, a in zip(periods.get("homeTeam") or [], periods.get("awayTeam") or [])],
+        "decision": decision,
+    }
+
+
+def sihf_results(fetch, first, last, max_age):
+    season = season_for(first)
+    query = urllib.parse.urlencode({
+        "alias": "results", "searchQuery": "1//1", "filterBy": "Season,Date",
+        "filterQuery": "%d/%s-%s" % (season, first.strftime("%d.%m.%Y"), last.strftime("%d.%m.%Y")),
+        "orderBy": "date", "orderByDescending": "false", "language": "de",
+    })
+    data = fetch.json(SIHF + "cache300?" + query, max_age) or {}
+    columns = sihf_columns(data)
+    matches = []
+    for row in data.get("data") or []:
+        cells = sihf_row(columns, row)
+        if isinstance(cells.get("homeTeam"), dict):
+            matches.append(hockey_match(cells))
+    return matches
+
+
+def sihf_standing(fetch, day, max_age):
+    season = season_for(day)
+    query = urllib.parse.urlencode({
+        "alias": "standing", "searchQuery": "1//1", "filterBy": "Season",
+        "filterQuery": str(season), "language": "de",
+    })
+    data = fetch.json(SIHF + "cache300?" + query, max_age) or {}
+    names = ["rank", "team", "gamesPlayed", "points", "pointsQuotient", "gamesWonInTime", "gamesWonExtraTime",
+             "gamesWonPenalty", "gamesLostPenalty", "gamesLostExtraTime", "gamesLostInTime", "goalsFor",
+             "goalsAgainst", "goalsDifference", "streak"]
+    columns = sihf_columns(data)
+    known = {c.lower(): c for c in columns}
+    rows = []
+    for raw in data.get("data") or []:
+        cells = sihf_row(columns, raw)
+        # Namen der Kopfzeile verwenden, sonst die dokumentierte Reihenfolge
+        value = lambda key, i: cells.get(known.get(key.lower(), "\0"), raw[i] if i < len(raw) else "")
+        team = value("team", 1)
+        if not isinstance(team, dict) or not team.get("id"):
+            continue                                   # Zeile «Durchschnitt»
+        rank = int(num(value("rank", 0), 0) or 0)
+        w = int(num(value("gamesWonInTime", 5), 0))
+        otw = int(num(value("gamesWonExtraTime", 6), 0) + num(value("gamesWonPenalty", 7), 0))
+        otl = int(num(value("gamesLostPenalty", 8), 0) + num(value("gamesLostExtraTime", 9), 0))
+        l = int(num(value("gamesLostInTime", 10), 0))
+        gf, ga = int(num(value("goalsFor", 11), 0)), int(num(value("goalsAgainst", 12), 0))
+        rows.append({
+            "rank": rank,
+            "team": hockey_team(team),
+            "cells": {"gp": str(int(num(value("gamesPlayed", 2), 0))), "w": str(w), "otw": str(otw), "otl": str(otl),
+                      "l": str(l), "goals": "%d:%d" % (gf, ga), "gd": "%+d" % (gf - ga) if gf != ga else "0",
+                      "pts": str(int(num(value("points", 3), 0)))},
+            "zone": {"kind": "up", "label": "Playoffs"} if rank and rank <= 6 else
+                    {"kind": "playin", "label": "Play-in"} if rank and rank <= 10 else None,
+        })
+    rows.sort(key=lambda r: r["rank"] or 99)
+    if not rows:
+        return None
+    return {
+        "columns": [
+            {"key": "gp", "label": "Sp"}, {"key": "w", "label": "S"}, {"key": "otw", "label": "SnV"},
+            {"key": "otl", "label": "NnV"}, {"key": "l", "label": "N"}, {"key": "goals", "label": "Tore", "wide": True},
+            {"key": "gd", "label": "+/-"}, {"key": "pts", "label": "Pkt", "strong": True},
+        ],
+        "groups": [{"name": "", "rows": rows}],
+    }
+
+
+# ---------------------------------------------------------------------------- Tabellen ESPN
+
+def zone_for(note):
+    if not note:
+        return None
+    text = (note.get("description") or "").strip()
+    low = text.lower()
+    if not text:
+        return None
+    if "champions" in low:
+        kind = "cl"
+        label = "Champions League" + (" (Quali)" if "qual" in low else "")
+    elif "conference" in low:
+        kind = "ecl"
+        label = "Conference League" + (" (Quali)" if "qual" in low else "")
+    elif "europa" in low:
+        kind = "el"
+        label = "Europa League" + (" (Quali)" if "qual" in low else "")
+    elif "relegation" in low and ("playoff" in low or "play-off" in low or "play off" in low):
+        kind, label = "relplay", "Relegation"
+    elif "relegation" in low:
+        kind, label = "rel", "Abstieg"
+    elif "promotion" in low or "playoff" in low:
+        kind, label = "up", "Playoffs"
+    else:
+        kind, label = "other", text
+    return {"kind": kind, "label": label, "color": note.get("color", "")}
+
+
+def espn_stats(entry):
+    stats = {}
+    for item in entry.get("stats") or []:
+        value = item.get("displayValue")
+        if value is None:
+            value = item.get("value")
+        for key in (item.get("name"), item.get("type"), item.get("abbreviation")):
+            if key:
+                stats.setdefault(re.sub(r"[^a-z0-9]", "", str(key).lower()), "" if value is None else str(value))
+    return stats
+
+
+def espn_standings(fetch, league_id, max_age):
+    league = LEAGUE[league_id]
+    data = fetch.json(ESPN_STANDINGS + league["path"] + "/standings", max_age) or {}
+    children = data.get("children") or ([data] if data.get("standings") else [])
+    groups = []
+    teams = []
+    for child in children:
+        entries = (child.get("standings") or {}).get("entries") or []
+        rows = []
+        for entry in entries:
+            stats = espn_stats(entry)
+            team = espn_team({"team": entry.get("team") or {}})
+            teams.append(team)
+            if league["sport"] == "basketball":
+                rank = int(num(stats.get("playoffseed"), 0) or 0)
+                cells = {"w": stats.get("wins", ""), "l": stats.get("losses", ""),
+                         "pct": stats.get("winpercent", ""), "gb": stats.get("gamesbehind", ""),
+                         "streak": stats.get("streak", ""), "l10": stats.get("lasttengames", "")}
+                zone = {"kind": "up", "label": "Playoffs"} if 0 < rank <= 6 else \
+                       {"kind": "playin", "label": "Play-in"} if 0 < rank <= 10 else None
+            else:
+                rank = int(num(stats.get("rank"), 0) or 0)
+                gd = stats.get("pointdifferential", "")
+                cells = {"gp": stats.get("gamesplayed", ""), "w": stats.get("wins", ""), "d": stats.get("ties", ""),
+                         "l": stats.get("losses", ""),
+                         "goals": "%s:%s" % (stats.get("pointsfor", ""), stats.get("pointsagainst", "")),
+                         "gd": gd, "pts": stats.get("points", "")}
+                zone = zone_for(entry.get("note"))
+            rows.append({"rank": rank, "team": team, "cells": cells, "zone": zone})
+        rows.sort(key=lambda r: (r["rank"] or 999, r["team"]["name"]))
+        for index, row in enumerate(rows):                   # Rang fehlt manchmal
+            row["rank"] = row["rank"] or index + 1
+        name = child.get("name") or ""
+        if len(children) == 1:
+            name = ""
+        groups.append({"name": name, "rows": rows})
+    if not any(g["rows"] for g in groups):
+        return None, teams
+    if league["sport"] == "basketball":
+        columns = [{"key": "w", "label": "S"}, {"key": "l", "label": "N"}, {"key": "pct", "label": "%", "wide": True},
+                   {"key": "gb", "label": "GB"}, {"key": "streak", "label": "Serie"}, {"key": "l10", "label": "L10", "wide": True}]
+    else:
+        columns = [{"key": "gp", "label": "Sp"}, {"key": "w", "label": "S"}, {"key": "d", "label": "U"},
+                   {"key": "l", "label": "N"}, {"key": "goals", "label": "Tore", "wide": True},
+                   {"key": "gd", "label": "TD"}, {"key": "pts", "label": "Pkt", "strong": True}]
+    return {"columns": columns, "groups": groups}, teams
+
+
+def add_form(table, matches, count=5):
+    """Form (S/U/N) aus den beendeten Spielen der geholten Zeitspanne, aelteste zuerst."""
+    if not table:
+        return
+    results = {}
+    for match in sorted((m for m in matches if m["status"] == "post"), key=lambda m: m["start"]):
+        h, a = num(match["home"]["score"]), num(match["away"]["score"])
+        if h is None or a is None:
+            continue
+        for side, mine, theirs in (("home", h, a), ("away", a, h)):
+            letter = "S" if mine > theirs else "N" if mine < theirs else "U"
+            if mine == theirs and match["home"].get("penalties"):         # Cup: Penaltyschiessen
+                p_home, p_away = num(match["home"]["penalties"], 0), num(match["away"].get("penalties"), 0)
+                letter = "S" if (p_home > p_away) == (side == "home") else "N"
+            results.setdefault(match[side]["id"], []).append({"r": letter, "match": match["id"]})
+    for group in table["groups"]:
+        for row in group["rows"]:
+            row["form"] = results.get(row["team"]["id"], [])[-count:]
+
+
+# ---------------------------------------------------------------------------- Nationalteams
+
+# Länder: deutscher Name, Kürzel, ESPN-Flagge (/i/teamlogos/countries/500/<code>.png), Farbe
+COUNTRIES = {
+    "switzerland": ("Schweiz", "SUI", "sui", "#d52b1e"), "finland": ("Finnland", "FIN", "fin", "#003580"),
+    "sweden": ("Schweden", "SWE", "swe", "#006aa7"), "czechia": ("Tschechien", "CZE", "cze", "#11457e"),
+    "czech republic": ("Tschechien", "CZE", "cze", "#11457e"), "germany": ("Deutschland", "GER", "ger", "#222222"),
+    "usa": ("USA", "USA", "usa", "#3c3b6e"), "united states": ("USA", "USA", "usa", "#3c3b6e"),
+    "canada": ("Kanada", "CAN", "can", "#d80621"), "slovakia": ("Slowakei", "SVK", "svk", "#0b4ea2"),
+    "latvia": ("Lettland", "LAT", "lat", "#9e3039"), "austria": ("Österreich", "AUT", "aut", "#ed2939"),
+    "norway": ("Norwegen", "NOR", "nor", "#ba0c2f"), "denmark": ("Dänemark", "DEN", "den", "#c8102e"),
+    "france": ("Frankreich", "FRA", "fra", "#0055a4"), "italy": ("Italien", "ITA", "ita", "#008c45"),
+    "hungary": ("Ungarn", "HUN", "hun", "#477050"), "great britain": ("Grossbritannien", "GBR", "gbr", "#012169"),
+    "slovenia": ("Slowenien", "SVN", "svn", "#005ce5"), "kazakhstan": ("Kasachstan", "KAZ", "kaz", "#00afca"),
+    "poland": ("Polen", "POL", "pol", "#dc143c"), "korea": ("Südkorea", "KOR", "kor", "#003478"),
+}
+
+COMPETITIONS = (
+    (r"nations league", "Nations League"), (r"friendly", "Testspiel"),
+    (r"world cup qualifying|world cup qual", "WM-Qualifikation"), (r"world cup", "WM"),
+    (r"european championship qualifying|euro qualifying|euro qual", "EM-Qualifikation"),
+    (r"european championship|^uefa euro", "EM"),
+)
+
+
+def german_competition(name):
+    low = (name or "").lower()
+    for pattern, german in COMPETITIONS:
+        if re.search(pattern, low):
+            return german
+    return name or ""
+
+
+def espn_national(fetch, team_id, first, last, max_age):
+    """Spiele des Nationalteams über den Spielplan des Teams bei ESPN (alle Wettbewerbe).
+    ESPN ordnet nach Saison-Jahr; deshalb beide in Frage kommenden Jahre holen."""
+    years = sorted({first.year, last.year, today().year + 1})
+    urls = ["%ssoccer/all/teams/%s/schedule?season=%d" % (ESPN, team_id, year) for year in years]
+    urls += ["%ssoccer/all/teams/%s/schedule?season=%d&fixture=true" % (ESPN, team_id, year) for year in years]
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        pages = list(pool.map(lambda url: fetch.json(url, max_age) or {}, urls))
+    matches, seen = [], set()
+    for data in pages:
+        for event in data.get("events") or []:
+            league = event.get("league") or {}
+            slug = league.get("slug") or ""
+            match = espn_match(event, "sui.nt")
+            if not match["id"] or not slug or match["id"] in seen:
+                continue
+            seen.add(match["id"])
+            parts = [german_competition(league.get("name") or league.get("abbreviation") or "")]
+            if match["round"]:
+                parts.append(match["round"])
+            match["round"] = " · ".join(p for p in parts if p)
+            match["id"] = "%s~%s" % (slug, match["id"])          # fuer das Spieldetail
+            matches.append(match)
+    return [m for m in matches if first <= (local_date(parse_time(m["start"])) or first) <= last]
+
+
+class _Table(html.parser.HTMLParser):
+    """Liest die Zeilen der ersten Tabelle einer Seite (Zelltexte)."""
+
+    def __init__(self):
+        super().__init__()
+        self.rows, self._row, self._cell, self._in = [], None, None, False
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "tr":
+            self._row = []
+        elif tag in ("td", "th") and self._row is not None:
+            self._cell = []
+
+    def handle_endtag(self, tag):
+        if tag in ("td", "th") and self._row is not None and self._cell is not None:
+            self._row.append(" ".join("".join(self._cell).split()))
+            self._cell = None
+        elif tag == "tr" and self._row is not None:
+            if self._row:
+                self.rows.append(self._row)
+            self._row = None
+
+    def handle_data(self, data):
+        if self._cell is not None:
+            self._cell.append(data)
+
+
+SIHF_NATI_PAGE = "https://www.sihf.ch/de/nationalteams/mens-national-team/resultate-statistiken/"
+
+
+def country_team(name):
+    key = (name or "").strip().lower()
+    german, abbr, code, color = COUNTRIES.get(key, (name or "", (name or "?")[:3].upper(), "", ""))
+    return {
+        "id": abbr, "name": german, "short": german, "abbr": abbr, "color": color,
+        "logoUrl": logo_url("https://a.espncdn.com/i/teamlogos/countries/500/%s.png" % code) if code else "",
+        "score": "", "winner": False,
+    }
+
+
+def sihf_national(fetch, first, last, max_age):
+    """Herren-Nationalteam (Eishockey): Resultate und Programm von sihf.ch. Die Statistik-Schnittstelle
+    führt die Länderspiele nicht; die Seite liefert Datum, Turnier, Ort und Resultat, aber keine
+    Anspielzeit und keinen Live-Stand."""
+    key = os.path.join(cache_dir("http"), _key(SIHF_NATI_PAGE) + ".html")
+    text = None
+    try:
+        if time.time() - os.path.getmtime(key) < max_age:
+            text = open(key, encoding="utf-8").read()
+    except OSError:
+        pass
+    if text is None:
+        try:
+            text = http_get(SIHF_NATI_PAGE).decode("utf-8", "replace")
+            _write_atomic(key, text.encode("utf-8"))
+        except (urllib.error.URLError, OSError) as error:
+            fetch.errors.append("www.sihf.ch: %s" % getattr(error, "reason", error))
+            try:
+                text = open(key, encoding="utf-8").read()
+                fetch.stale = True
+            except OSError:
+                return []
+    parser = _Table()
+    parser.feed(text)
+    now = today()
+    matches = []
+    for row in parser.rows:
+        if len(row) < 6 or not re.match(r"\d\d\.\d\d\.\d{4}$", row[0]):
+            continue
+        try:
+            day = datetime.strptime(row[0], "%d.%m.%Y").date()
+        except ValueError:
+            continue
+        if not (first <= day <= last):
+            continue
+        event, venue, home_name, away_name, result = row[1], row[2], row[3], row[4], row[5]
+        home, away = country_team(home_name), country_team(away_name)
+        score = re.match(r"\s*(\d+)\s*:\s*(\d+)\s*(?:\((\w+)\))?", result or "")
+        played = bool(score) and (day < now or (day == now and (score.group(1), score.group(2)) != ("0", "0")))
+        state, label = ("pre", "")
+        if played:
+            decision = (score.group(3) or "").upper()
+            state, label = "post", {"OT": "Ende n.V.", "SO": "Ende n.P.", "PS": "Ende n.P."}.get(decision, "Ende")
+            home["score"], away["score"] = score.group(1), score.group(2)
+            h, a = int(score.group(1)), int(score.group(2))
+            home["winner"], away["winner"] = h > a, a > h
+        start = datetime(day.year, day.month, day.day, 12, 0).astimezone().astimezone(timezone.utc)
+        matches.append({
+            "id": "%s-%s-%s" % (day.strftime("%Y%m%d"), home["abbr"], away["abbr"]),
+            "league": "sui.hockey", "sport": "hockey", "start": iso(start), "timeUnknown": True,
+            "status": state, "label": label, "round": event, "home": home, "away": away,
+            "venue": venue, "tv": [], "noDetail": True,
+        })
+    return matches
+
+
+# ---------------------------------------------------------------------------- Befehle: Tag und Wettbewerb
+
+def ttl_for(day, matches):
+    if any(m["status"] == "live" for m in matches):
+        return 30
+    now = today()
+    if day == now:
+        soon = [parse_time(m["start"]) for m in matches if m["status"] == "pre"]
+        upcoming = [s for s in soon if s and s - datetime.now(timezone.utc) < timedelta(minutes=20)]
+        return 60 if upcoming else 180
+    if day > now:
+        return 900
+    return 6 * 3600
+
+
+def league_day(fetch, league_id, day, age=None):
+    league = LEAGUE[league_id]
+    first, last = day - timedelta(days=1), day + timedelta(days=1)
+    if age is None:
+        age = 30 if abs((day - today()).days) <= 1 else (900 if day > today() else 6 * 3600)
+    if league["source"] == "sihf":
+        matches, logo = sihf_results(fetch, first, last, age), ""
+    elif league["source"] == "sihf-nati":
+        matches, logo = sihf_national(fetch, first, last, 300 if age < 30 else 1800), ""
+    elif league["source"] == "espn-team":
+        matches, logo = espn_national(fetch, league["path"], first, last, 120 if age <= 30 else 1800), ""
+    else:
+        # ESPN-Tage laufen nach US-Ostküstenzeit: ein Spiel am Ortstag D steht unter D-1 oder D
+        matches, logo = espn_scoreboard(fetch, league_id, espn_keys(day - timedelta(days=1), day), age)
+    matches = [m for m in matches if local_date(parse_time(m["start"])) == day]
+    return matches, logo
+
+
+def command_leagues():
+    return {"leagues": [dict(league_info(row[0]), default=row[8]) for row in LEAGUES]}
+
+
+def command_day(day, league_ids):
+    fetch = Fetcher()
+    ids = [i for i in league_ids if i in LEAGUE] or [row[0] for row in LEAGUES if row[8]]
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(lambda i: (i, league_day(fetch, i, day)), ids))
+    leagues = []
+    logo_holders = []
+    for league_id, (matches, logo) in results:
+        info = league_info(league_id)
+        info["logoUrl"] = national_logo(league_id, logo)
+        logo_holders.append(info)
+        matches.sort(key=lambda m: (m["start"], m["home"]["name"]))
+        for match in matches:
+            logo_holders += [match["home"], match["away"]]
+        info["matches"] = matches
+        leagues.append(info)
+    fetch_logos(logo_holders)
+    return {
+        "date": day.isoformat(),
+        "updated": iso(datetime.now(timezone.utc)),
+        "leagues": leagues,
+        "live": sum(1 for l in leagues for m in l["matches"] if m["status"] == "live"),
+        "stale": fetch.stale,
+        "errors": fetch.errors[:4],
+    }
+
+
+def command_league(league_id):
+    if league_id not in LEAGUE:
+        return {"error": "unbekannter Wettbewerb: %s" % league_id}
+    league = LEAGUE[league_id]
+    fetch = Fetcher()
+    now = today()
+    if league["kind"] == "national":
+        first, last = now - timedelta(days=200), now + timedelta(days=200)
+    elif league["kind"] == "cup":
+        first, last = now - timedelta(days=75), now + timedelta(days=75)
+    elif league["sport"] == "basketball":
+        first, last = now - timedelta(days=2), now + timedelta(days=5)
+    else:
+        first, last = now - timedelta(days=42), now + timedelta(days=21)
+    logo = ""
+    if league["source"] == "sihf":
+        matches = sihf_results(fetch, first, last, 120)
+        table, teams = sihf_standing(fetch, now, 300), []
+    elif league["source"] == "sihf-nati":
+        matches, table = sihf_national(fetch, first, last, 1800), None
+    elif league["source"] == "espn-team":
+        matches, table = espn_national(fetch, league["path"], first, last, 600), None
+    else:
+        # NBA: einzelne Tage (ein Monat waeren ueber 2 MB), sonst ganze Monate
+        keys = espn_keys(first, last, by_month=league["sport"] != "basketball")
+        matches, logo = espn_scoreboard(fetch, league_id, keys, 120)
+        matches = [m for m in matches if first <= (local_date(parse_time(m["start"])) or first) <= last]
+        table, teams = espn_standings(fetch, league_id, 600)
+    if league["sport"] != "basketball" and table:
+        add_form(table, matches)
+    matches.sort(key=lambda m: (m["start"], m["home"]["name"]))
+    info = league_info(league_id)
+    info["logoUrl"] = national_logo(league_id, logo)
+    holders = [info] + [t for m in matches for t in (m["home"], m["away"])]
+    if table:
+        holders += [row["team"] for g in table["groups"] for row in g["rows"]]
+    fetch_logos(holders)
+    return {
+        "league": info,
+        "matches": matches,
+        "table": table,
+        "updated": iso(datetime.now(timezone.utc)),
+        "stale": fetch.stale,
+        "errors": fetch.errors[:4],
+    }
+
+
+# ---------------------------------------------------------------------------- Spieldetail ESPN
+
+SOCCER_STATS = (
+    ("possessionPct", "Ballbesitz", True),
+    ("totalShots", "Schüsse", False),
+    ("shotsOnTarget", "Schüsse aufs Tor", False),
+    ("blockedShots", "Geblockte Schüsse", False),
+    ("wonCorners", "Ecken", False),
+    ("totalPasses", "Pässe", False),
+    ("passPct", "Passquote", True),
+    ("totalCrosses", "Flanken", False),
+    ("totalTackles", "Tacklings", False),
+    ("interceptions", "Abgefangene Bälle", False),
+    ("saves", "Paraden", False),
+    ("foulsCommitted", "Fouls", False),
+    ("offsides", "Abseits", False),
+    ("yellowCards", "Gelbe Karten", False),
+    ("redCards", "Rote Karten", False),
+)
+
+NBA_STATS = (
+    ("fieldGoalsMade-fieldGoalsAttempted", "Würfe", False),
+    ("fieldGoalPct", "Trefferquote", True),
+    ("threePointFieldGoalsMade-threePointFieldGoalsAttempted", "Dreier", False),
+    ("threePointFieldGoalPct", "Dreierquote", True),
+    ("freeThrowsMade-freeThrowsAttempted", "Freiwürfe", False),
+    ("freeThrowPct", "Freiwurfquote", True),
+    ("totalRebounds", "Rebounds", False),
+    ("offensiveRebounds", "Offensiv-Rebounds", False),
+    ("assists", "Assists", False),
+    ("steals", "Steals", False),
+    ("blocks", "Blocks", False),
+    ("turnovers", "Ballverluste", False),
+    ("pointsInPaint", "Punkte in der Zone", False),
+    ("fastBreakPoints", "Fastbreak-Punkte", False),
+    ("largestLead", "Grösste Führung", False),
+    ("fouls", "Fouls", False),
+)
+
+HOCKEY_STATS = (
+    ("SOG Total", "Schüsse aufs Tor", False),
+    ("SHM Total", "Schüsse daneben", False),
+    ("BkS", "Geblockte Schüsse", False),
+    ("FO%", "Bullys gewonnen", True),
+    ("PIM Total", "Strafminuten", False),
+    ("PP OP", "Powerplays", False),
+    ("PPG", "Powerplay-Tore", False),
+    ("PP%", "Powerplay-Quote", True),
+    ("SHG", "Unterzahl-Tore", False),
+)
+
+
+def stat_pair(label, home, away, percent):
+    hv, av = num(home), num(away)
+    if percent and hv is not None and av is not None and hv <= 1 and av <= 1 and (hv + av) > 0 and "." in str(home):
+        hv, av = hv * 100, av * 100                    # 0.7 -> 70
+        home, away = "%d" % round(hv), "%d" % round(av)
+    if percent:
+        home = (str(home) + " %") if home not in ("", None) and "%" not in str(home) else home
+        away = (str(away) + " %") if away not in ("", None) and "%" not in str(away) else away
+    return {"label": label, "home": str(home), "away": str(away),
+            "hv": hv if hv is not None else 0, "av": av if av is not None else 0, "percent": percent}
+
+
+def ratio_value(text):
+    """"41-88" -> 41 fuer den Balken."""
+    match = re.match(r"\s*(\d+)\s*-\s*(\d+)", str(text or ""))
+    return float(match.group(1)) if match else num(text)
+
+
+def espn_team_stats(boxscore, home_id, table):
+    by_team = {}
+    for team in (boxscore or {}).get("teams") or []:
+        tid = str((team.get("team") or {}).get("id", ""))
+        by_team[tid] = {s.get("name"): s.get("displayValue", "") for s in team.get("statistics") or []}
+    sides = list(by_team.keys())
+    if len(sides) != 2:
+        return []
+    home = by_team.get(home_id) or by_team[sides[0]]
+    away = by_team[sides[1]] if home is by_team[sides[0]] else by_team[sides[0]]
+    stats = []
+    for key, label, percent in table:
+        if key in home or key in away:
+            pair = stat_pair(label, home.get(key, ""), away.get(key, ""), percent)
+            if "-" in key:
+                pair["hv"], pair["av"] = ratio_value(home.get(key)) or 0, ratio_value(away.get(key)) or 0
+            stats.append(pair)
+    return stats
+
+
+def soccer_event_type(kind, event):
+    kind = (kind or "").lower()
+    text = (event.get("text") or "").lower()
+    if "own" in kind and "goal" in kind:
+        return "owngoal"
+    if "penalty" in kind and ("miss" in kind or "saved" in kind):
+        return "penmiss"
+    if "penalty" in kind and event.get("scoringPlay"):
+        return "penalty"
+    if "goal" in kind or event.get("scoringPlay"):
+        return "goal"
+    if ("yellow" in kind and "red" in kind) or "second yellow" in text:
+        return "yellowred"
+    if "yellow" in kind:
+        return "yellow"
+    if "red" in kind:
+        return "red"
+    if "substitution" in kind:
+        return "sub"
+    if kind in ("halftime", "half-time"):
+        return "half"
+    if kind in ("end-regular-time",):
+        return "fulltime"
+    if "var" in kind:
+        return "var"
+    return ""
+
+
+def minute_sort(display):
+    match = re.match(r"\s*(\d+)(?:'\s*\+\s*(\d+))?", display or "")
+    if not match:
+        return 0
+    return int(match.group(1)) * 60 + int(match.group(2) or 0)
+
+
+def soccer_events(data, home, away):
+    events = []
+    score = [0, 0]
+    names = (home["name"], away["name"])
+    for raw in data.get("keyEvents") or []:
+        kind = soccer_event_type(((raw.get("type") or {}).get("type") or (raw.get("type") or {}).get("text")), raw)
+        if not kind:
+            continue
+        clock = (raw.get("clock") or {}).get("displayValue", "")
+        team_id = str((raw.get("team") or {}).get("id", ""))
+        side = "home" if team_id == home["id"] else "away" if team_id == away["id"] else ""
+        people = [((p.get("athlete") or {}).get("displayName") or "") for p in raw.get("participants") or []]
+        text = raw.get("text") or ""
+        item = {"minute": clock, "sort": minute_sort(clock), "type": kind, "side": side,
+                "player": people[0] if people else "", "detail": ""}
+        if kind in ("goal", "penalty", "owngoal"):
+            found = re.search(re.escape(names[0]) + r"\s+(\d+),\s+" + re.escape(names[1]) + r"\s+(\d+)", text)
+            if found:
+                new = [int(found.group(1)), int(found.group(2))]
+                if new[0] > score[0]:
+                    item["side"] = "home"
+                elif new[1] > score[1]:
+                    item["side"] = "away"
+                score = new
+            else:
+                benefit = item["side"]
+                if kind == "owngoal":
+                    benefit = "away" if side == "home" else "home"
+                    item["side"] = benefit
+                score[0 if benefit == "home" else 1] += 1
+            item["score"] = "%d:%d" % tuple(score)
+            if kind == "penalty":
+                item["detail"] = "Penalty"
+            elif kind == "owngoal":
+                item["detail"] = "Eigentor"
+            elif len(people) > 1 and people[1]:
+                item["detail"] = "Assist: " + people[1]
+        elif kind == "sub":
+            replaced = re.search(r"\.\s*(.+?) replaces (.+?)(?:\.|$)", text)
+            if replaced:
+                item["player"], item["detail"] = replaced.group(1).strip(), replaced.group(2).strip()
+            elif len(people) > 1:
+                item["detail"] = people[1]
+        elif kind == "half":
+            item.update(side="", player="Pause", score="%d:%d" % tuple(score))
+        elif kind == "fulltime":
+            item.update(side="", player="Ende 90 Minuten", score="%d:%d" % tuple(score))
+        elif kind == "penmiss":
+            item["detail"] = "Penalty verschossen"
+        elif kind == "var":
+            item["detail"] = "Videobeweis"
+        events.append(item)
+    events.sort(key=lambda e: e["sort"])
+    return events
+
+
+DEPTH = (
+    (r"^(G|GK)$", 0), (r"^(SW|CB|CD|CD-L|CD-R|LCB|RCB|D)$", 1), (r"^(LB|RB|LWB|RWB|WB)$", 1),
+    (r"^(DM|DM-L|DM-R|CDM)$", 2), (r"^(CM|CM-L|CM-R|LM|RM|M)$", 3), (r"^(AM|AM-L|AM-R|CAM|LW|RW|LAM|RAM)$", 4),
+    (r"^(F|CF|CF-L|CF-R|ST|LF|RF|SS|FW)$", 5),
+)
+
+
+def depth_of(position):
+    position = (position or "").upper()
+    for pattern, depth in DEPTH:
+        if re.match(pattern, position):
+            return depth
+    return 3
+
+
+def lateral(position):
+    """Links (negativ) nach rechts (positiv) aus Sicht des eigenen Tores."""
+    position = (position or "").upper()
+    if position.endswith("-L") or position in ("LCB", "LCM", "LDM"):
+        return -1
+    if position.endswith("-R") or position in ("RCB", "RCM", "RDM"):
+        return 1
+    if position.startswith("L"):                       # LB, LWB, LM, LW, LF: ganz aussen
+        return -2
+    if position.startswith("R"):
+        return 2
+    return 0
+
+
+def formation_lines(starters, formation):
+    """Startelf auf Linien verteilen: Torhueter, dann die Linien der Formation (z. B. 4-2-3-1)."""
+    keeper = [p for p in starters if depth_of(p["pos"]) == 0][:1]
+    field = [p for p in starters if p not in keeper]
+    field.sort(key=lambda p: (depth_of(p["pos"]), p.get("place") or 99))
+    sizes = [int(x) for x in re.findall(r"\d+", formation or "")]
+    if sum(sizes) != len(field):
+        sizes = []
+        for depth in sorted({depth_of(p["pos"]) for p in field}):
+            sizes.append(sum(1 for p in field if depth_of(p["pos"]) == depth))
+    lines, at = [], 0
+    for size in sizes:
+        line = field[at:at + size]
+        line.sort(key=lambda p: (lateral(p["pos"]), p.get("place") or 0))
+        lines.append(line)
+        at += size
+    return ([keeper] if keeper else []) + lines
+
+
+def soccer_lineups(data, home_id):
+    result = {}
+    for roster in data.get("rosters") or []:
+        side = roster.get("homeAway") or ("home" if str((roster.get("team") or {}).get("id")) == home_id else "away")
+        players = []
+        for entry in roster.get("roster") or []:
+            athlete = entry.get("athlete") or {}
+            plays = entry.get("plays") or []
+            marks = []
+            for play in plays:
+                if play.get("didScore") or play.get("scoringPlay"):
+                    marks.append("goal")
+                if play.get("ownGoal"):
+                    marks.append("owngoal")
+                if play.get("yellowCard"):
+                    marks.append("yellow")
+                if play.get("redCard"):
+                    marks.append("red")
+            players.append({
+                "id": str(athlete.get("id") or ""),
+                "name": athlete.get("displayName") or "",
+                "short": athlete.get("shortName") or athlete.get("lastName") or athlete.get("displayName") or "",
+                "num": str(entry.get("jersey") or ""),
+                "pos": ((entry.get("position") or {}).get("abbreviation") or ""),
+                "place": int(num(entry.get("formationPlace"), 0) or 0),
+                "starter": bool(entry.get("starter")),
+                "subIn": bool(entry.get("subbedIn")),
+                "subOut": bool(entry.get("subbedOut")),
+                "marks": marks,
+            })
+        starters = [p for p in players if p["starter"]]
+        formation = roster.get("formation") or ""
+        if isinstance(formation, dict):
+            formation = formation.get("name") or ""
+        lines = formation_lines(starters, formation) if starters else []
+        if not formation and lines:
+            formation = "-".join(str(len(line)) for line in lines[1:])
+        result[side] = {
+            "formation": formation,
+            "lines": lines,
+            "bench": [p for p in players if not p["starter"]],
+            "coach": "",
+        }
+    return result
+
+
+def nba_players(boxscore, home_id):
+    out = {}
+    wanted = ("MIN", "PTS", "REB", "AST", "FG", "3PT", "+/-")
+    for team in (boxscore or {}).get("players") or []:
+        tid = str((team.get("team") or {}).get("id", ""))
+        side = "home" if tid == home_id else "away"
+        block = (team.get("statistics") or [{}])[0]
+        labels = block.get("labels") or block.get("names") or []
+        index = {label: i for i, label in enumerate(labels)}
+        rows = []
+        for athlete in block.get("athletes") or []:
+            stats = athlete.get("stats") or []
+            if not stats or athlete.get("didNotPlay"):
+                continue
+            person = athlete.get("athlete") or {}
+            rows.append({
+                "id": str(person.get("id") or ""),
+                "name": person.get("shortName") or person.get("displayName") or "",
+                "pos": ((person.get("position") or {}).get("abbreviation") or ""),
+                "starter": bool(athlete.get("starter")),
+                "cells": [stats[index[w]] if w in index and index[w] < len(stats) else "" for w in wanted],
+            })
+        out[side] = {"columns": list(wanted), "rows": rows}
+    return out
+
+
+def nba_leaders(data, home_id):
+    leaders = []
+    names = {"points": "Punkte", "rebounds": "Rebounds", "assists": "Assists"}
+    for team in data.get("leaders") or []:
+        tid = str((team.get("team") or {}).get("id", ""))
+        side = "home" if tid == home_id else "away"
+        for category in team.get("leaders") or []:
+            key = category.get("name")
+            if key not in names or not category.get("leaders"):
+                continue
+            top = category["leaders"][0]
+            leaders.append({"side": side, "title": names[key], "value": top.get("displayValue", ""),
+                            "name": ((top.get("athlete") or {}).get("displayName") or ""),
+                            "id": str((top.get("athlete") or {}).get("id") or "")})
+    return leaders
+
+
+def espn_detail(fetch, league_id, game_id):
+    league = LEAGUE[league_id]
+    path = league["path"]
+    if "~" in game_id:                              # Nationalteam: "<wettbewerb>~<spiel>"
+        slug, game_id = game_id.split("~", 1)
+        path = "soccer/" + slug
+    data = fetch.json("%s%s/summary?event=%s" % (ESPN, path, urllib.parse.quote(game_id)), 20)
+    if not data:
+        return None
+    header = data.get("header") or {}
+    comp = (header.get("competitions") or [{}])[0]
+    event = {"id": header.get("id") or game_id, "date": comp.get("date"), "status": comp.get("status")}
+    match = espn_match(event, league_id, comp)
+    home, away = match["home"], match["away"]
+    labels = ("1. HZ", "2. HZ", "Verl. 1", "Verl. 2") if league["sport"] == "soccer" else ("Q1", "Q2", "Q3", "Q4")
+    lines = {"home": [], "away": []}
+    for competitor in comp.get("competitors") or []:
+        side = "home" if competitor.get("homeAway") == "home" else "away"
+        lines[side] = [str(l.get("displayValue", l.get("value", ""))).split(".")[0] for l in competitor.get("linescores") or []]
+    periods = []
+    for i in range(max(len(lines["home"]), len(lines["away"]))):
+        if i < len(labels):
+            name = labels[i]
+        else:
+            name = "OT%d" % (i - 3) if league["sport"] == "basketball" else "Pen."
+        periods.append({"name": name,
+                        "home": lines["home"][i] if i < len(lines["home"]) else "",
+                        "away": lines["away"][i] if i < len(lines["away"]) else ""})
+    info = data.get("gameInfo") or {}
+    officials = info.get("officials") or []
+    detail = {
+        "match": match,
+        "venue": ((info.get("venue") or {}).get("fullName") or match.get("venue") or ""),
+        "attendance": int(num(info.get("attendance"), 0) or 0),
+        "referee": ((officials[0] or {}).get("displayName") or (officials[0] or {}).get("fullName") or "") if officials else "",
+        "periods": periods,
+        "events": [],
+        "stats": [],
+        "lineups": {},
+        "leaders": [],
+        "players": {},
+    }
+    if league["sport"] == "soccer":
+        detail["events"] = soccer_events(data, home, away)
+        detail["stats"] = espn_team_stats(data.get("boxscore"), home["id"], SOCCER_STATS)
+        detail["lineups"] = soccer_lineups(data, home["id"])
+    else:
+        detail["stats"] = espn_team_stats(data.get("boxscore"), home["id"], NBA_STATS)
+        detail["players"] = nba_players(data.get("boxscore"), home["id"])
+        detail["leaders"] = nba_leaders(data, home["id"])
+    fetch_logos([home, away])
+    return detail
+
+
+# ---------------------------------------------------------------------------- Spieldetail SIHF
+
+def sihf_detail(fetch, game_id):
+    query = urllib.parse.urlencode({"alias": "gameDetail", "searchQuery": game_id, "language": "de"})
+    data = fetch.json(SIHF + "gameoverview?" + query, 20)
+    if not data or "details" not in data:
+        return None
+    details = data.get("details") or {}
+    result = data.get("result") or {}
+    players = {p.get("id"): p for p in data.get("players") or []}
+    decision = ""
+    scores = result.get("scores") or []
+    for period in scores[3:]:
+        indicator = str(period.get("indicator") or period.get("name") or "").upper()
+        decision = "SO" if "SO" in indicator or "PEN" in indicator or "SHOOT" in indicator else "OT"
+    cells = {"homeTeam": details.get("homeTeam"), "awayTeam": details.get("awayTeam"),
+             "score": {"homeTeam": result.get("homeTeam"), "awayTeam": result.get("awayTeam")},
+             "status": data.get("status") or {}, "decision": decision, "details": {"gameId": data.get("gameId", game_id)},
+             "broadcasts": data.get("broadcasts") or {}}
+    match = hockey_match(cells)
+    home_id, away_id = match["home"]["id"], match["away"]["id"]
+    side_of = lambda team_id: "home" if str(team_id) == home_id else "away" if str(team_id) == away_id else ""
+    name_of = lambda licence: surname((players.get(licence) or {}).get("fullName", ""))
+
+    events = []
+    for index, period in enumerate((data.get("summary") or {}).get("periods") or []):
+        for goal in period.get("goals") or []:
+            score = goal.get("result") or {}
+            assists = [name_of(goal.get(k)) for k in ("assist1LicenceNr", "assist2LicenceNr") if goal.get(k)]
+            situation = ((goal.get("situation") or {}).get("code") or "").upper()
+            tags = {"PP1": "Überzahl", "PP2": "Überzahl", "PP": "Überzahl", "SH1": "Unterzahl", "SH2": "Unterzahl",
+                    "SH": "Unterzahl", "EN": "ins leere Tor"}
+            extra = [tags[situation]] if situation in tags else []
+            if goal.get("isEmptyNet") and "ins leere Tor" not in extra:
+                extra.append("ins leere Tor")
+            if goal.get("isPenaltyShot"):
+                extra.append("Penalty")
+            events.append({
+                "minute": goal.get("time", ""), "sort": int(goal.get("timeInSeconds") or 0), "type": "goal",
+                "side": side_of(goal.get("teamId")), "player": name_of(goal.get("scorerLicenceNr")),
+                "detail": ", ".join(([("Assists: " if len(assists) > 1 else "Assist: ") + ", ".join(assists)] if assists else []) + extra),
+                "score": "%s:%s" % (score.get("home", ""), score.get("away", "")),
+            })
+        for foul in period.get("fouls") or []:
+            minutes = int(num(foul.get("minutes"), 0) or 0)
+            events.append({
+                "minute": foul.get("time", ""), "sort": int(foul.get("timeInSeconds") or 0),
+                "type": "penaltymin", "side": side_of(foul.get("teamId")),
+                "player": name_of(foul.get("playerLicenceNr")) or "Bankstrafe",
+                "detail": "%d Min. · %s" % (minutes, foul.get("name") or ""),
+            })
+    shootout = (data.get("summary") or {}).get("shootout") or {}
+    for attempt in shootout.get("shots") or shootout.get("attempts") or []:
+        events.append({"minute": "SO", "sort": 99999, "type": "goal" if attempt.get("isGoal") or attempt.get("scored") else "penmiss",
+                       "side": side_of(attempt.get("teamId")), "player": name_of(attempt.get("playerLicenceNr") or attempt.get("shooterLicenceNr")),
+                       "detail": "Penaltyschiessen"})
+    events.sort(key=lambda e: e["sort"])
+    # Drittelspausen als Trenner (sobald das naechste Drittel begonnen hat oder das Spiel aus ist)
+    marked, h, a = [], 0, 0
+    for i, period in enumerate(scores[:3]):
+        h += int(num(period.get("homeTeam"), 0) or 0)
+        a += int(num(period.get("awayTeam"), 0) or 0)
+        if i < len(scores) - 1 or match["status"] == "post":
+            marked.append({"minute": "", "sort": (i + 1) * 1200, "type": "half", "side": "",
+                           "player": "Ende %d. Drittel" % (i + 1), "score": "%d:%d" % (h, a), "detail": ""})
+    events = sorted(events + marked, key=lambda e: (e["sort"], e["type"] == "half"))
+
+    periods = []
+    for i, period in enumerate(scores):
+        name = ("1. Drittel", "2. Drittel", "3. Drittel")[i] if i < 3 else ("Penaltys" if decision == "SO" else "Verl.")
+        periods.append({"name": name, "home": str(period.get("homeTeam", "")), "away": str(period.get("awayTeam", ""))})
+
+    stats = []
+    tables = {t.get("alias"): t for t in data.get("stats") or []}
+    team_stats = tables.get("gameTeamStats") or {}
+    rows = {row[0]: row for row in team_stats.get("data") or [] if row}
+    for key, label, percent in HOCKEY_STATS:
+        if key in rows and len(rows[key]) >= 3:
+            stats.append(stat_pair(label, rows[key][1], rows[key][2], percent))
+
+    leaders = []
+    for alias, side in (("gameGoalieStatsHome", "home"), ("gameGoalieStatsAway", "away")):
+        table = tables.get(alias) or {}
+        columns = sihf_columns(table)
+        for row in table.get("data") or []:
+            cells = sihf_row(columns, row)
+            if (cells.get("secondsPlayed") or "00:00") in ("00:00", "-", ""):
+                continue
+            leaders.append({"side": side, "title": "Torhüter", "name": surname(cells.get("player", "")), "id": cells.get("player", ""),
+                            "value": "%s Paraden · %s %%" % (cells.get("saves", ""), cells.get("savesPercentage", ""))})
+    scorers = []
+    for alias, side in (("gamePlayerStatsHome", "home"), ("gamePlayerStatsAway", "away")):
+        table = tables.get(alias) or {}
+        columns = sihf_columns(table)
+        for row in table.get("data") or []:
+            cells = sihf_row(columns, row)
+            points = int(num(cells.get("points"), 0) or 0)
+            if points > 0:
+                scorers.append({"side": side, "title": "Skorer", "name": surname(cells.get("player", "")), "id": cells.get("player", ""),
+                                "value": "%s T · %s A" % (cells.get("goals", "0"), cells.get("assists", "0")),
+                                "points": points, "goals": int(num(cells.get("goals"), 0) or 0)})
+    scorers.sort(key=lambda s: (-s["points"], -s["goals"]))
+    for item in scorers[:4]:
+        item.pop("points"), item.pop("goals")
+        leaders.append(item)
+
+    def person(pid):
+        p = players.get(pid) or {}
+        return {"id": p.get("fullName", ""), "name": p.get("fullName", ""), "short": surname(p.get("fullName", "")),
+                "num": str(p.get("jerseyNumber") or "")}
+
+    lineups = {}
+    for side, key in (("home", "homeTeam"), ("away", "awayTeam")):
+        lineup = (data.get("lineUps") or {}).get(key) or {}
+        if not lineup:
+            continue
+        defenders = lineup.get("defenders") or {}
+        forwards = lineup.get("forwarders") or {}
+        blocks = []
+        count = max(len(forwards.get("left") or []), len(forwards.get("center") or []), len(forwards.get("right") or []),
+                    len(defenders.get("left") or []), len(defenders.get("right") or []))
+        for i in range(count):
+            pick = lambda group, part: person((group.get(part) or [])[i]) if i < len(group.get(part) or []) else None
+            block = {"name": "%d. Block" % (i + 1),
+                     "forwards": [p for p in (pick(forwards, "left"), pick(forwards, "center"), pick(forwards, "right")) if p],
+                     "defense": [p for p in (pick(defenders, "left"), pick(defenders, "right")) if p]}
+            if block["forwards"] or block["defense"]:
+                blocks.append(block)
+        lineups[side] = {
+            "goalies": [person(g) for g in lineup.get("goalkeepers") or []],
+            "blocks": blocks,
+            "coach": (lineup.get("coach") or {}).get("fullName", ""),
+        }
+    fetch_logos([match["home"], match["away"]])
+    venue = details.get("venue") or {}
+    referees = [r.get("fullName", "") for r in details.get("referees") or [] if r.get("fullName")]
+    return {
+        "match": match,
+        "venue": ", ".join(x for x in (venue.get("name"), venue.get("city")) if x),
+        "attendance": int(num(venue.get("spectators"), 0) or 0),
+        "referee": " / ".join(referees),
+        "periods": periods,
+        "events": events,
+        "stats": stats,
+        "lineups": lineups,
+        "leaders": leaders,
+        "players": {},
+    }
+
+
+def command_match(league_id, game_id):
+    if league_id not in LEAGUE:
+        return {"error": "unbekannter Wettbewerb: %s" % league_id}
+    fetch = Fetcher()
+    if LEAGUE[league_id]["source"] == "sihf":
+        detail = sihf_detail(fetch, game_id)
+    elif LEAGUE[league_id]["source"] == "sihf-nati":
+        return {"error": "Für Länderspiele im Eishockey gibt es keine Spieldetails."}
+    else:
+        detail = espn_detail(fetch, league_id, game_id)
+    if detail is None:
+        return {"error": "Spieldetails nicht erreichbar", "errors": fetch.errors[:4]}
+    detail["league"] = league_info(league_id)
+    detail["updated"] = iso(datetime.now(timezone.utc))
+    detail["stale"] = fetch.stale
+    detail["errors"] = fetch.errors[:4]
+    return detail
+
+
+# ---------------------------------------------------------------------------- Statistik
+
+ESPN_WEB = "https://site.web.api.espn.com/apis/common/v3/sports/"
+
+SOCCER_LEADER_TITLES = {
+    "goalsLeaders": "Tore", "assistsLeaders": "Vorlagen", "goals": "Tore", "assists": "Vorlagen",
+    "shotsOnTargetLeaders": "Schüsse aufs Tor", "yellowCardsLeaders": "Gelbe Karten", "redCardsLeaders": "Rote Karten",
+}
+
+NBA_LEADERS = (
+    ("points", "Punkte", "offensive.avgPoints", "offensive", "avgPoints"),
+    ("rebounds", "Rebounds", "general.avgRebounds", "general", "avgRebounds"),
+    ("assists", "Assists", "offensive.avgAssists", "offensive", "avgAssists"),
+)
+
+STAT_LABELS = {
+    # Fussball
+    "appearances": "Spiele", "starts": "Startelf", "totalGoals": "Tore", "goalAssists": "Vorlagen",
+    "totalShots": "Schüsse", "shotsOnTarget": "aufs Tor", "foulsCommitted": "Fouls", "foulsSuffered": "Gefoult",
+    "yellowCards": "Gelb", "redCards": "Rot", "offsides": "Abseits", "saves": "Paraden",
+    "goalsConceded": "Gegentore", "cleanSheet": "Zu null", "shotsFaced": "Schüsse aufs Tor",
+    "subIns": "Einwechslungen", "minutes": "Minuten",
+    # NBA
+    "gamesPlayed": "Spiele", "avgMinutes": "Minuten", "fieldGoalPct": "Wurf %", "threePointPct": "Dreier %",
+    "freeThrowPct": "Freiwurf %", "avgRebounds": "Rebounds", "avgAssists": "Assists", "avgBlocks": "Blocks",
+    "avgSteals": "Steals", "avgFouls": "Fouls", "avgTurnovers": "Ballverluste", "avgPoints": "Punkte",
+}
+
+POSITIONS = {"forward": "Sturm", "midfielder": "Mittelfeld", "defender": "Verteidigung", "goalkeeper": "Tor",
+             "guard": "Guard", "center": "Center", "point guard": "Point Guard", "shooting guard": "Shooting Guard",
+             "small forward": "Small Forward", "power forward": "Power Forward"}
+
+
+def german_season(text):
+    """«2026-27 English Premier League» -> «English Premier League 2026/27»."""
+    text = (text or "").strip()
+    found = re.match(r"^(\d{4})-(\d{2})\s+(.*)$", text)
+    if found:
+        return "%s %s/%s" % (found.group(3), found.group(1), found.group(2))
+    found = re.match(r"^(\d{4})\s+(.*)$", text)
+    return "%s %s" % (found.group(2), found.group(1)) if found else text
+
+
+def stat_team(team, sport_path=""):
+    team = team or {}
+    logo = pick_logo(team.get("logos")) or team.get("logo") or ""
+    return {"id": str(team.get("id", "")), "name": team.get("displayName") or team.get("name") or "",
+            "abbr": team.get("abbreviation") or "", "logoUrl": logo_url(logo)}
+
+
+def espn_soccer_leaders(fetch, league):
+    data = fetch.json(ESPN + league["path"] + "/statistics", 3600) or {}
+    categories = []
+    for category in data.get("stats") or []:
+        rows = []
+        for rank, entry in enumerate((category.get("leaders") or [])[:10], 1):
+            athlete = entry.get("athlete") or {}
+            shown = entry.get("displayValue") or ""
+            games = re.search(r"Matches:\s*(\d+)", shown)
+            rows.append({
+                "rank": rank,
+                "player": {"id": str(athlete.get("id") or ""), "name": athlete.get("displayName") or "",
+                           "short": athlete.get("shortName") or athlete.get("displayName") or ""},
+                "team": stat_team(athlete.get("team")),
+                "value": str(int(num(entry.get("value"), 0) or 0)),
+                "sub": ("%s Spiele" % games.group(1)) if games else "",
+            })
+        if rows:
+            name = category.get("name") or ""
+            categories.append({"key": name, "title": SOCCER_LEADER_TITLES.get(name, category.get("displayName") or name),
+                               "rows": rows})
+    return categories[:4]
+
+
+def espn_nba_leaders(fetch):
+    def one(spec):
+        key, title, sort, group, field = spec
+        url = ESPN_WEB + "basketball/nba/statistics/byathlete?" + urllib.parse.urlencode(
+            {"limit": 10, "sort": sort + ":desc", "category": group})
+        data = fetch.json(url, 3600) or {}
+        names = {c.get("name"): c.get("names") or [] for c in data.get("categories") or []}
+        index = (names.get(group) or []).index(field) if field in (names.get(group) or []) else -1
+        rows = []
+        for rank, entry in enumerate((data.get("athletes") or [])[:10], 1):
+            athlete = entry.get("athlete") or {}
+            values = next((c.get("values") or [] for c in entry.get("categories") or [] if c.get("name") == group), [])
+            value = values[index] if 0 <= index < len(values) else None
+            abbr = athlete.get("teamShortName") or ""
+            rows.append({
+                "rank": rank,
+                "player": {"id": str(athlete.get("id") or ""), "name": athlete.get("displayName") or "",
+                           "short": athlete.get("shortName") or athlete.get("displayName") or ""},
+                "team": {"id": str(athlete.get("teamId") or ""), "name": abbr, "abbr": abbr,
+                         "logoUrl": logo_url("https://a.espncdn.com/i/teamlogos/nba/500/%s.png" % abbr.lower()) if abbr else ""},
+                "value": "%.1f" % value if isinstance(value, (int, float)) else "",
+                "sub": "pro Spiel",
+            })
+        return {"key": key, "title": title, "rows": rows} if rows else None
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        return [c for c in pool.map(one, NBA_LEADERS) if c]
+
+
+def sihf_named(table):
+    """Zeilen einer SIHF-Tabelle als dicts nach der sichtbaren Kopfzeile («GP», «PTS», …)."""
+    names = [(h or {}).get("name", "") for h in table.get("header") or []]
+    return [{name: row[i] for i, name in enumerate(names) if i < len(row)} for row in table.get("data") or []]
+
+
+def sihf_players(fetch, season, goalies=False):
+    query = urllib.parse.urlencode({
+        "alias": "goalkeeper" if goalies else "player", "searchQuery": "1//1", "filterBy": "Season",
+        "filterQuery": str(season), "orderBy": "points", "orderByDescending": "true",
+        "take": "100" if goalies else "600", "language": "de",
+    })
+    return sihf_named(fetch.json(SIHF + "cache300?" + query, 1800) or {})
+
+
+def sihf_stat_team(cell):
+    team = hockey_team(cell if isinstance(cell, dict) else {})
+    return {"id": team["id"], "name": team["name"], "abbr": team["abbr"], "logoUrl": team.get("logoUrl", ""),
+            "color": team.get("color", "")}
+
+
+def sihf_leaders(fetch, season):
+    players = [p for p in sihf_players(fetch, season) if p.get("Spieler")]
+    goalies = [g for g in sihf_players(fetch, season, goalies=True) if g.get("Spieler")]
+    value = lambda row, key: num(row.get(key), 0) or 0
+
+    def category(key, title, rows, sort, show, sub):
+        ordered = sorted(rows, key=sort)[:10]
+        return {"key": key, "title": title, "rows": [{
+            "rank": i + 1,
+            "player": {"id": r["Spieler"], "name": r["Spieler"], "short": surname(r["Spieler"])},
+            "team": sihf_stat_team(r.get("Team")), "value": show(r), "sub": sub(r),
+        } for i, r in enumerate(ordered)]}
+
+    out = []
+    if players:
+        out.append(category("points", "Skorer", players, lambda r: (-value(r, "PTS"), -value(r, "G")),
+                            lambda r: str(int(value(r, "PTS"))), lambda r: "%d T · %d A" % (value(r, "G"), value(r, "A"))))
+        out.append(category("goals", "Tore", players, lambda r: (-value(r, "G"), value(r, "GP")),
+                            lambda r: str(int(value(r, "G"))), lambda r: "%d Spiele" % value(r, "GP")))
+        out.append(category("assists", "Assists", players, lambda r: (-value(r, "A"), value(r, "GP")),
+                            lambda r: str(int(value(r, "A"))), lambda r: "%d Spiele" % value(r, "GP")))
+        out.append(category("plusminus", "Plus/Minus", players, lambda r: -value(r, "+/-"),
+                            lambda r: "%+d" % value(r, "+/-"), lambda r: "%d Spiele" % value(r, "GP")))
+    if goalies:
+        most = max(value(g, "GPI") for g in goalies)
+        regular = [g for g in goalies if value(g, "GPI") >= max(2, most / 3)]
+        out.append(category("saves", "Torhüter", regular, lambda r: -value(r, "SVS%"),
+                            lambda r: "%.2f %%" % value(r, "SVS%"), lambda r: "%.2f GAA · %d Sp." % (value(r, "GAA"), value(r, "GPI"))))
+    return out
+
+
+def command_stats(league_id):
+    if league_id not in LEAGUE:
+        return {"error": "unbekannter Wettbewerb: %s" % league_id}
+    league = LEAGUE[league_id]
+    fetch = Fetcher()
+    if league["source"] == "sihf":
+        categories = sihf_leaders(fetch, season_for(today()))
+    elif league["source"] == "espn" and league["sport"] == "basketball":
+        categories = espn_nba_leaders(fetch)
+    elif league["source"] == "espn":
+        categories = espn_soccer_leaders(fetch, league)
+    else:
+        categories = []
+    fetch_logos([row["team"] for c in categories for row in c["rows"]])
+    return {"league": league_info(league_id), "categories": categories, "updated": iso(datetime.now(timezone.utc)),
+            "stale": fetch.stale, "errors": fetch.errors[:4]}
+
+
+def same_person(a, b):
+    tokens = lambda text: sorted(re.sub(r"[^\w ]", " ", (text or "").lower()).split())
+    return tokens(a) == tokens(b) and bool(tokens(a))
+
+
+def sihf_player(fetch, name):
+    season = season_for(today())
+    found = next((p for p in sihf_players(fetch, season) if same_person(p.get("Spieler"), name)), None)
+    goalie = next((g for g in sihf_players(fetch, season, goalies=True) if same_person(g.get("Spieler"), name)), None)
+    row = goalie or found
+    if not row:
+        return None
+    team = sihf_stat_team(row.get("Team"))
+    if goalie:
+        cells = [("Spiele", "GPI"), ("Gegentore", "GA"), ("Schnitt", "GAA"), ("Schüsse", "SA"), ("Paraden", "SVS"),
+                 ("Fangquote", "SVS%"), ("Eiszeit", "MIP")]
+        position = "Torhüter"
+    else:
+        cells = [("Spiele", "GP"), ("Tore", "G"), ("Assists", "A"), ("Punkte", "PTS"), ("Pkt/Sp.", "P/GP"),
+                 ("Strafminuten", "PIM Total"), ("Plus/Minus", "+/-")]
+        position = row.get("Pos") or ""
+    return {
+        "player": {"id": name, "name": row["Spieler"], "position": position, "team": team, "jersey": "", "age": "",
+                   "nation": "", "height": ""},
+        "splits": [{"title": "National League %d/%02d" % (season - 1, season % 100),
+                    "cells": [{"label": label, "value": str(row.get(key, ""))} for label, key in cells if key in row]}],
+    }
+
+
+def metric_height(text):
+    """ESPN gibt Fuss und Zoll an («6' 2\"»); hier in Zentimetern."""
+    found = re.match(r"\s*(\d+)'\s*(\d+)?", text or "")
+    if not found:
+        return text or ""
+    return "%d cm" % round((int(found.group(1)) * 12 + int(found.group(2) or 0)) * 2.54)
+
+
+def espn_player(fetch, league, athlete_id):
+    sport_path = league["path"]
+    if league["source"] == "espn-team":
+        sport_path = "soccer/all"
+    bio = (fetch.json(ESPN_WEB + sport_path + "/athletes/" + urllib.parse.quote(athlete_id), 86400) or {}).get("athlete") or {}
+    overview = fetch.json(ESPN_WEB + sport_path + "/athletes/" + urllib.parse.quote(athlete_id) + "/overview", 1800) or {}
+    stats = overview.get("statistics") or {}
+    names = stats.get("names") or []
+    labels = stats.get("labels") or []
+    splits = []
+    for split in (stats.get("splits") or [])[:6]:
+        values = split.get("stats") or []
+        cells = [{"label": STAT_LABELS.get(names[i] if i < len(names) else "", labels[i] if i < len(labels) else ""),
+                  "value": str(v)} for i, v in enumerate(values)]
+        splits.append({"title": german_season(split.get("displayName") or ""), "cells": cells})
+    if not bio and not splits:
+        return None
+    position = ((bio.get("position") or {}).get("displayName") or (bio.get("position") or {}).get("name") or "")
+    return {
+        "player": {
+            "id": athlete_id, "name": bio.get("displayName") or "", "position": POSITIONS.get(position.lower(), position),
+            "team": stat_team(bio.get("team")), "jersey": str(bio.get("jersey") or ""),
+            "age": str(bio.get("age") or ""), "nation": bio.get("citizenship") or "",
+            "height": metric_height(bio.get("displayHeight") or ""),
+        },
+        "splits": splits,
+    }
+
+
+def command_player(league_id, player_id):
+    if league_id not in LEAGUE:
+        return {"error": "unbekannter Wettbewerb: %s" % league_id}
+    league = LEAGUE[league_id]
+    fetch = Fetcher()
+    if league["sport"] == "hockey":
+        result = sihf_player(fetch, player_id) if league["source"] == "sihf" else None
+        if result is None and league["source"] == "sihf":
+            return {"error": "Keine Saisonwerte für %s gefunden" % player_id, "errors": fetch.errors[:4]}
+        if result is None:
+            return {"error": "Für Länderspiele im Eishockey gibt es keine Spielerwerte."}
+    else:
+        result = espn_player(fetch, league, player_id)
+    if result is None:
+        return {"error": "Spielerwerte nicht erreichbar", "errors": fetch.errors[:4]}
+    fetch_logos([result["player"]["team"]])
+    result.update({"league": league_info(league_id), "updated": iso(datetime.now(timezone.utc)),
+                   "stale": fetch.stale, "errors": fetch.errors[:4]})
+    return result
+
+
+# ---------------------------------------------------------------------------- Beobachter (Mitteilungen)
+
+PLAN_AGE = 1800          # Spielplan der Favoriten: so lange gilt der Zwischenspeicher
+HOT_AGE = 25             # laufende oder bald beginnende Spiele
+
+
+def plugin_settings():
+    """Einstellungen des Plugins (Favoriten usw.), wie die Shell sie speichert."""
+    config = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.path.expanduser("~"), ".config")
+    try:
+        with open(os.path.join(config, "dms", "plugin_settings.json"), encoding="utf-8") as handle:
+            data = json.load(handle).get("alpeSport") or {}
+        return data if isinstance(data, dict) else {}
+    except (OSError, ValueError, AttributeError):
+        return {}
+
+
+def score_of(team):
+    return int(num(team.get("score"), 0) or 0)
+
+
+def notify(title, body, icon):
+    """Mitteilung an die Shell (freedesktop). Zum Testen: ALPE_SPORT_NOTIFY_LOG=datei schreibt nur mit."""
+    target = os.environ.get("ALPE_SPORT_NOTIFY_LOG")
+    if target:
+        with open(target, "a", encoding="utf-8") as handle:
+            handle.write(json.dumps({"title": title, "body": body, "icon": icon}, ensure_ascii=False) + "\n")
+        return
+    import shutil
+    import subprocess
+    if shutil.which("notify-send"):
+        command = ["notify-send", "--app-name=Sport", "--icon=" + (icon or "trophy"), title, body]
+    else:
+        quote = lambda text: '"%s"' % text.replace("\\", "\\\\").replace('"', '\\"')
+        command = ["gdbus", "call", "--session", "--dest", "org.freedesktop.Notifications",
+                   "--object-path", "/org/freedesktop/Notifications", "--method", "org.freedesktop.Notifications.Notify",
+                   "Sport", "0", icon or "trophy", title, body, "[]", "{}", "8000"]
+    try:
+        subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                       timeout=10, check=False)
+    except (OSError, subprocess.SubprocessError) as error:
+        log("Mitteilung nicht gesendet: %s" % error)
+
+
+def match_line(match):
+    home, away = match["home"], match["away"]
+    return "%s %s:%s %s" % (home.get("short") or home["name"], home.get("score") or "0", away.get("score") or "0",
+                            away.get("short") or away["name"])
+
+
+def watch_events(previous, match):
+    """Ereignisse zwischen zwei Ständen eines Spiels: start, goal, end."""
+    if not previous:
+        return []
+    events = []
+    was, now = previous.get("status"), match["status"]
+    if was == "pre" and now == "live":
+        events.append({"kind": "start", "side": ""})
+    if match["sport"] != "basketball" and now in ("live", "post"):
+        for side in ("home", "away"):
+            before, after = int(previous.get(side, 0)), score_of(match[side])
+            for _ in range(max(0, min(after - before, 3))):
+                events.append({"kind": "goal", "side": side})
+    if was in ("pre", "live") and now == "post":
+        events.append({"kind": "end", "side": ""})
+    return events
+
+
+def event_text(kind, side, match):
+    league = LEAGUE.get(match["league"], {}).get("short", "")
+    if kind == "start":
+        return ("Spielbeginn" if match["sport"] != "soccer" else "Anpfiff") + (" · " + league if league else ""), \
+            "%s – %s" % (match["home"].get("short") or match["home"]["name"], match["away"].get("short") or match["away"]["name"]), \
+            match["home"].get("logo") or ""
+    if kind == "goal":
+        team = match[side]
+        clock = match.get("label") or ""
+        return "Tor für %s" % (team.get("short") or team["name"]), match_line(match) + ("  ·  " + clock if clock else ""), \
+            team.get("logo") or ""
+    label = match.get("label") or ""
+    extra = "" if label in ("", "Ende") else " (%s)" % label.replace("Ende ", "")
+    winner = next((match[s] for s in ("home", "away") if match[s].get("winner")), None)
+    return "Schluss" + (" · " + league if league else ""), match_line(match) + extra, \
+        (winner or match["home"]).get("logo") or ""
+
+
+def command_watch(favorites, league_ids, kinds, dry=False):
+    path = os.path.join(cache_dir(), "watch.json")
+    day = today()
+    try:
+        with open(path, encoding="utf-8") as handle:
+            state = json.load(handle)
+    except (OSError, ValueError):
+        state = {}
+    if state.get("day") != day.isoformat():
+        state = {"day": day.isoformat(), "matches": {}, "plan": {}, "planned": 0, "leagues": []}
+    favorites = set(favorites)
+    sports = {f.split(":", 1)[0] for f in favorites}
+    ids = [i for i in league_ids if i in LEAGUE and LEAGUE[i]["sport"] in sports]
+    fetch = Fetcher()
+    is_favorite = lambda m: "%s:%s" % (m["sport"], m["home"]["id"]) in favorites or \
+        "%s:%s" % (m["sport"], m["away"]["id"]) in favorites
+    now = datetime.now(timezone.utc)
+
+    fresh = {}
+    if time.time() - state.get("planned", 0) > PLAN_AGE or sorted(state.get("leagues", [])) != sorted(ids):
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            for league_id, (found, _) in pool.map(lambda i: (i, league_day(fetch, i, day, PLAN_AGE)), ids):
+                fresh[league_id] = found
+        state["plan"] = {i: [m["id"] for m in found if is_favorite(m)] for i, found in fresh.items()}
+        state["plan"] = {i: v for i, v in state["plan"].items() if v}
+        state["planned"], state["leagues"] = time.time(), ids
+
+    def hot(league_id):
+        for match_id in state["plan"].get(league_id, []):
+            known = state["matches"].get("%s/%s" % (league_id, match_id))
+            if not known or known["status"] == "live":
+                return True
+            start = parse_time(known.get("start"))
+            if known["status"] == "pre" and start and start - now < timedelta(minutes=15):
+                return True
+        return False
+
+    def current(league_id):
+        heat = hot(league_id)
+        if league_id in fresh and not heat:
+            return fresh[league_id]
+        return league_day(fetch, league_id, day, HOT_AGE if heat else PLAN_AGE)[0]
+
+    matches = []
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        for league_id, found in pool.map(lambda i: (i, current(i)), list(state["plan"])):
+            wanted = set(state["plan"][league_id])
+            matches += [m for m in found if m["id"] in wanted]
+    fetch_logos([t for m in matches for t in (m["home"], m["away"])], wait=1.0)
+
+    events = []
+    for match in matches:
+        key = "%s/%s" % (match["league"], match["id"])
+        for event in watch_events(state["matches"].get(key), match):
+            title, body, icon = event_text(event["kind"], event["side"], match)
+            event.update({"match": key, "title": title, "body": body})
+            events.append(event)
+            if event["kind"] in kinds and not dry:
+                notify(title, body, icon)
+        state["matches"][key] = {"status": match["status"], "start": match["start"],
+                                 "home": score_of(match["home"]), "away": score_of(match["away"])}
+    try:
+        _write_atomic(path, json.dumps(state).encode())
+    except OSError:
+        pass
+
+    matches.sort(key=lambda m: (m["status"] != "live", m["status"] == "post", m["start"] or ""))
+    any_hot = any(hot(i) for i in state["plan"])
+    upcoming = [parse_time(m["start"]) for m in matches if m["status"] == "pre" and m["start"]]
+    if any_hot:
+        wait = HOT_AGE + 5
+    elif upcoming:
+        wait = int(max(60, min(PLAN_AGE, (min(upcoming) - now).total_seconds() - 600)))
+    else:
+        wait = PLAN_AGE
+    return {"matches": matches, "events": events, "hot": any_hot, "next": wait,
+            "updated": iso(now), "stale": fetch.stale, "errors": fetch.errors[:4]}
+
+
+# ---------------------------------------------------------------------------- Zwischenspeicher
+
+def command_cache(clear=False):
+    base = cache_dir()
+    if clear:
+        import shutil
+        for part in ("http", "logos"):
+            shutil.rmtree(os.path.join(base, part), ignore_errors=True)
+        for name in ("watch.json",):
+            try:
+                os.remove(os.path.join(base, name))
+            except OSError:
+                pass
+    size, files = 0, 0
+    for folder, _, names in os.walk(base):
+        for name in names:
+            try:
+                size += os.path.getsize(os.path.join(folder, name))
+                files += 1
+            except OSError:
+                pass
+    return {"bytes": size, "files": files, "path": base}
+
+
+# ---------------------------------------------------------------------------- Selbsttest
+
+def command_selftest():
+    """Prueft jede Quelle ohne Zwischenspeicher und misst die Zeit (fuer alpe doctor)."""
+    day = today().strftime("%Y%m%d")
+    checks = [
+        ("ESPN Spiele (Tag)", ESPN + "soccer/ger.1/scoreboard?dates=" + day),
+        ("ESPN Spiele (Monat)", ESPN + "soccer/uefa.champions/scoreboard?dates=" + today().strftime("%Y%m")),
+        ("ESPN Tabelle", ESPN_STANDINGS + "soccer/eng.1/standings"),
+        ("ESPN NBA", ESPN + "basketball/nba/scoreboard?dates=" + day),
+        ("ESPN Nati Fussball", ESPN + "soccer/all/teams/475/schedule?season=%d" % today().year),
+        ("SIHF National League", SIHF + "cache300?" + urllib.parse.urlencode({
+            "alias": "results", "searchQuery": "1//1", "filterBy": "Season,Date", "language": "de",
+            "filterQuery": "%d/%s-%s" % (season_for(today()), today().strftime("%d.%m.%Y"), today().strftime("%d.%m.%Y"))})),
+        ("sihf.ch Nati Eishockey", SIHF_NATI_PAGE),
+        ("ESPN Logo", "https://a.espncdn.com/i/teamlogos/soccer/500/132.png"),
+        ("Logo National League", TSDB % HOCKEY_LOGOS[101144]),
+        ("ESPN Spieldetail", ESPN + "soccer/ger.1/summary?event=401884740"),
+    ]
+    out = []
+    for name, url in checks:
+        started = time.time()
+        try:
+            size = len(http_get(url))
+            out.append({"name": name, "ok": True, "ms": int((time.time() - started) * 1000), "bytes": size})
+        except (urllib.error.URLError, OSError) as error:
+            out.append({"name": name, "ok": False, "ms": int((time.time() - started) * 1000),
+                        "error": str(getattr(error, "reason", error)), "url": url})
+    return {"checks": out}
+
+
+# ---------------------------------------------------------------------------- Aufruf
+
+def main(argv):
+    command = argv[1] if len(argv) > 1 else ""
+    started = time.time()
+    if command == "logos" and len(argv) == 3:
+        command_logos(argv[2])
+        return 0
+    try:
+        if command == "leagues":
+            result = command_leagues()
+        elif command == "selftest":
+            result = command_selftest()
+            if "--text" in argv:
+                for c in result["checks"]:
+                    print("%-24s %s  %5d ms  %s" % (c["name"], "ok    " if c["ok"] else "FEHLER", c["ms"],
+                                                     "%d KB" % (c["bytes"] // 1024) if c["ok"] else c["error"]))
+                return 0 if all(c["ok"] for c in result["checks"]) else 1
+        elif command == "day":
+            day = today()
+            if len(argv) > 2 and not argv[2].startswith("--"):
+                day = date.fromisoformat(argv[2])
+            leagues = []
+            if "--leagues" in argv:
+                leagues = [x for x in argv[argv.index("--leagues") + 1].split(",") if x]
+            result = command_day(day, leagues)
+        elif command == "league" and len(argv) == 3:
+            result = command_league(argv[2])
+        elif command == "match" and len(argv) == 4:
+            result = command_match(argv[2], argv[3])
+        elif command == "stats" and len(argv) == 3:
+            result = command_stats(argv[2])
+        elif command == "player" and len(argv) == 4:
+            result = command_player(argv[2], argv[3])
+        elif command == "cache":
+            result = command_cache(clear="clear" in argv[2:])
+        elif command == "watch":
+            options = plugin_settings()
+            option = lambda name, fallback: argv[argv.index(name) + 1] if name in argv and argv.index(name) + 1 < len(argv) else fallback
+            favorites = [x for x in option("--favorites", ",".join(options.get("favorites") or [])).split(",") if x]
+            leagues = [x for x in option("--leagues", ",".join(row[0] for row in LEAGUES)).split(",") if x]
+            kinds = [x for x in option("--notify", "goal,start,end").split(",") if x]
+            result = command_watch(favorites, leagues, kinds, dry="--dry" in argv)
+        else:
+            print(__doc__.strip(), file=sys.stderr)
+            return 2
+    except (ValueError, IndexError) as error:
+        print(json.dumps({"error": "ungültige Angabe: %s" % error}))
+        return 2
+    except Exception as error:                     # die Oberflaeche soll immer JSON bekommen
+        print(json.dumps({"error": "%s: %s" % (type(error).__name__, error)}))
+        return 1
+    text = json.dumps(result, ensure_ascii=False)
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout.buffer.write((text + "\n").encode("utf-8"))   # unabhaengig von der Locale
+    else:
+        sys.stdout.write(text + "\n")
+    sys.stdout.flush()
+    took = time.time() - started
+    if took > 3:
+        log("%s dauerte %.1f s, Antwort %d KB" % (" ".join(argv[1:]), took, len(text) // 1024))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

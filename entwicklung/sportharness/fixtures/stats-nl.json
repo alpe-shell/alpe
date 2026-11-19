@@ -1,0 +1,487 @@
+{
+ "league": {
+  "id": "nl",
+  "name": "National League",
+  "short": "NL",
+  "sport": "hockey",
+  "kind": "league",
+  "country": "Schweiz"
+ },
+ "categories": [
+  {
+   "key": "points",
+   "title": "Skorer",
+   "rows": [
+    {
+     "rank": 1,
+     "player": {
+      "id": "Tanus Kristian",
+      "name": "Tanus Kristian",
+      "short": "Tanus"
+     },
+     "team": {
+      "id": "103144",
+      "name": "HC Ajoie",
+      "abbr": "HCA",
+      "color": "#f5c400",
+      "logo": ""
+     },
+     "value": "28",
+     "sub": "6 T · 22 A"
+    },
+    {
+     "rank": 2,
+     "player": {
+      "id": "Järventie Roby",
+      "name": "Järventie Roby",
+      "short": "Järventie"
+     },
+     "team": {
+      "id": "101152",
+      "name": "HC Ambri-Piotta",
+      "abbr": "HCAP",
+      "color": "#1d4f9c",
+      "logo": ""
+     },
+     "value": "27",
+     "sub": "12 T · 15 A"
+    },
+    {
+     "rank": 3,
+     "player": {
+      "id": "Kovar Jan",
+      "name": "Kovar Jan",
+      "short": "Kovar"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "27",
+     "sub": "9 T · 18 A"
+    },
+    {
+     "rank": 4,
+     "player": {
+      "id": "Hofmann Grégory",
+      "name": "Hofmann Grégory",
+      "short": "Hofmann"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "25",
+     "sub": "12 T · 13 A"
+    },
+    {
+     "rank": 5,
+     "player": {
+      "id": "Malgin Denis",
+      "name": "Malgin Denis",
+      "short": "Malgin"
+     },
+     "team": {
+      "id": "101139",
+      "name": "ZSC Lions",
+      "abbr": "ZSC",
+      "color": "#0b3b8c",
+      "logo": ""
+     },
+     "value": "25",
+     "sub": "6 T · 19 A"
+    },
+    {
+     "rank": 6,
+     "player": {
+      "id": "Ritzmann Marco",
+      "name": "Ritzmann Marco",
+      "short": "Ritzmann"
+     },
+     "team": {
+      "id": "103140",
+      "name": "Genève-Servette HC",
+      "abbr": "GSHC",
+      "color": "#7a1f2b",
+      "logo": ""
+     },
+     "value": "21",
+     "sub": "7 T · 14 A"
+    }
+   ]
+  },
+  {
+   "key": "goals",
+   "title": "Tore",
+   "rows": [
+    {
+     "rank": 1,
+     "player": {
+      "id": "Hofmann Grégory",
+      "name": "Hofmann Grégory",
+      "short": "Hofmann"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "12",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 2,
+     "player": {
+      "id": "Järventie Roby",
+      "name": "Järventie Roby",
+      "short": "Järventie"
+     },
+     "team": {
+      "id": "101152",
+      "name": "HC Ambri-Piotta",
+      "abbr": "HCAP",
+      "color": "#1d4f9c",
+      "logo": ""
+     },
+     "value": "12",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 3,
+     "player": {
+      "id": "Kovar Jan",
+      "name": "Kovar Jan",
+      "short": "Kovar"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "9",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 4,
+     "player": {
+      "id": "Ritzmann Marco",
+      "name": "Ritzmann Marco",
+      "short": "Ritzmann"
+     },
+     "team": {
+      "id": "103140",
+      "name": "Genève-Servette HC",
+      "abbr": "GSHC",
+      "color": "#7a1f2b",
+      "logo": ""
+     },
+     "value": "7",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 5,
+     "player": {
+      "id": "Malgin Denis",
+      "name": "Malgin Denis",
+      "short": "Malgin"
+     },
+     "team": {
+      "id": "101139",
+      "name": "ZSC Lions",
+      "abbr": "ZSC",
+      "color": "#0b3b8c",
+      "logo": ""
+     },
+     "value": "6",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 6,
+     "player": {
+      "id": "Tanus Kristian",
+      "name": "Tanus Kristian",
+      "short": "Tanus"
+     },
+     "team": {
+      "id": "103144",
+      "name": "HC Ajoie",
+      "abbr": "HCA",
+      "color": "#f5c400",
+      "logo": ""
+     },
+     "value": "6",
+     "sub": "20 Spiele"
+    }
+   ]
+  },
+  {
+   "key": "assists",
+   "title": "Assists",
+   "rows": [
+    {
+     "rank": 1,
+     "player": {
+      "id": "Tanus Kristian",
+      "name": "Tanus Kristian",
+      "short": "Tanus"
+     },
+     "team": {
+      "id": "103144",
+      "name": "HC Ajoie",
+      "abbr": "HCA",
+      "color": "#f5c400",
+      "logo": ""
+     },
+     "value": "22",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 2,
+     "player": {
+      "id": "Malgin Denis",
+      "name": "Malgin Denis",
+      "short": "Malgin"
+     },
+     "team": {
+      "id": "101139",
+      "name": "ZSC Lions",
+      "abbr": "ZSC",
+      "color": "#0b3b8c",
+      "logo": ""
+     },
+     "value": "19",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 3,
+     "player": {
+      "id": "Kovar Jan",
+      "name": "Kovar Jan",
+      "short": "Kovar"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "18",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 4,
+     "player": {
+      "id": "Järventie Roby",
+      "name": "Järventie Roby",
+      "short": "Järventie"
+     },
+     "team": {
+      "id": "101152",
+      "name": "HC Ambri-Piotta",
+      "abbr": "HCAP",
+      "color": "#1d4f9c",
+      "logo": ""
+     },
+     "value": "15",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 5,
+     "player": {
+      "id": "Ritzmann Marco",
+      "name": "Ritzmann Marco",
+      "short": "Ritzmann"
+     },
+     "team": {
+      "id": "103140",
+      "name": "Genève-Servette HC",
+      "abbr": "GSHC",
+      "color": "#7a1f2b",
+      "logo": ""
+     },
+     "value": "14",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 6,
+     "player": {
+      "id": "Hofmann Grégory",
+      "name": "Hofmann Grégory",
+      "short": "Hofmann"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "13",
+     "sub": "20 Spiele"
+    }
+   ]
+  },
+  {
+   "key": "plusminus",
+   "title": "Plus/Minus",
+   "rows": [
+    {
+     "rank": 1,
+     "player": {
+      "id": "Kovar Jan",
+      "name": "Kovar Jan",
+      "short": "Kovar"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "+12",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 2,
+     "player": {
+      "id": "Malgin Denis",
+      "name": "Malgin Denis",
+      "short": "Malgin"
+     },
+     "team": {
+      "id": "101139",
+      "name": "ZSC Lions",
+      "abbr": "ZSC",
+      "color": "#0b3b8c",
+      "logo": ""
+     },
+     "value": "+10",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 3,
+     "player": {
+      "id": "Hofmann Grégory",
+      "name": "Hofmann Grégory",
+      "short": "Hofmann"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "+9",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 4,
+     "player": {
+      "id": "Järventie Roby",
+      "name": "Järventie Roby",
+      "short": "Järventie"
+     },
+     "team": {
+      "id": "101152",
+      "name": "HC Ambri-Piotta",
+      "abbr": "HCAP",
+      "color": "#1d4f9c",
+      "logo": ""
+     },
+     "value": "+7",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 5,
+     "player": {
+      "id": "Ritzmann Marco",
+      "name": "Ritzmann Marco",
+      "short": "Ritzmann"
+     },
+     "team": {
+      "id": "103140",
+      "name": "Genève-Servette HC",
+      "abbr": "GSHC",
+      "color": "#7a1f2b",
+      "logo": ""
+     },
+     "value": "+4",
+     "sub": "20 Spiele"
+    },
+    {
+     "rank": 6,
+     "player": {
+      "id": "Tanus Kristian",
+      "name": "Tanus Kristian",
+      "short": "Tanus"
+     },
+     "team": {
+      "id": "103144",
+      "name": "HC Ajoie",
+      "abbr": "HCA",
+      "color": "#f5c400",
+      "logo": ""
+     },
+     "value": "-1",
+     "sub": "20 Spiele"
+    }
+   ]
+  },
+  {
+   "key": "saves",
+   "title": "Torhüter",
+   "rows": [
+    {
+     "rank": 1,
+     "player": {
+      "id": "Wolf Simon",
+      "name": "Wolf Simon",
+      "short": "Wolf"
+     },
+     "team": {
+      "id": "102126",
+      "name": "SC Bern",
+      "abbr": "SCB",
+      "color": "#d50032",
+      "logo": ""
+     },
+     "value": "92.96 %",
+     "sub": "1.95 GAA · 10 Sp."
+    },
+    {
+     "rank": 2,
+     "player": {
+      "id": "Genoni Leonardo",
+      "name": "Genoni Leonardo",
+      "short": "Genoni"
+     },
+     "team": {
+      "id": "101144",
+      "name": "EV Zug",
+      "abbr": "EVZ",
+      "color": "#00539f",
+      "logo": ""
+     },
+     "value": "92.54 %",
+     "sub": "1.84 GAA · 12 Sp."
+    }
+   ]
+  }
+ ],
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

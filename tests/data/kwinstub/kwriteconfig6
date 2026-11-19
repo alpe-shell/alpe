@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+# Attrappe: schreibt KConfig-Schlüssel (nur fuer Tests)
+import sys, os, re
+a = sys.argv[1:]; file = None; groups = []; key = None; delete = False; value = None
+i = 0
+while i < len(a):
+    if a[i] == "--file": file = a[i+1]; i += 2
+    elif a[i] == "--group": groups.append(a[i+1]); i += 2
+    elif a[i] == "--key": key = a[i+1]; i += 2
+    elif a[i] == "--delete": delete = True; i += 1
+    elif a[i] == "--notify": i += 1
+    else: value = a[i]; i += 1
+path = os.path.join(os.environ["XDG_CONFIG_HOME"], file)
+lines = open(path).read().splitlines() if os.path.exists(path) else []
+head = "".join("[%s]" % g for g in groups)
+out, cur, done = [], None, False
+for l in lines:
+    if l.startswith("["):
+        if cur == head and not done and not delete: out.append("%s=%s" % (key, value)); done = True
+        cur = l
+    elif cur == head and l.split("=", 1)[0] == key:
+        if not delete: out.append("%s=%s" % (key, value))
+        done = True; continue
+    out.append(l)
+if not done and not delete:
+    if cur != head: out.append(head)
+    out.append("%s=%s" % (key, value))
+# Wie KConfig: Gruppen ohne Schlüssel werden nicht geschrieben
+kept, block = [], []
+for l in out + ["[]"]:
+    if l.startswith("["):
+        if block and any("=" in x for x in block[1:]):
+            kept += block
+        block = [l]
+    else:
+        block.append(l)
+open(path, "w").write("\n".join(k for k in kept) + "\n")

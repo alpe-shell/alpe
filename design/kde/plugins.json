@@ -1,0 +1,32 @@
+{
+  "alpeSport": {
+    "order": [
+      "nl",
+      "nba",
+      "eng.1",
+      "ger.1",
+      "esp.1",
+      "ita.1",
+      "sui.hockey",
+      "sui.nt",
+      "eng.fa",
+      "eng.league_cup",
+      "esp.copa_del_rey",
+      "ger.dfb_pokal",
+      "ita.coppa_italia",
+      "fra.1",
+      "fra.coupe_de_france",
+      "uefa.champions",
+      "uefa.europa",
+      "sui.1"
+    ],
+    "barWidgetAdded": true,
+    "enabled": true
+  },
+  "alpeMeteoSwiss": {
+    "enabled": true
+  },
+  "alpeRadar": {
+    "enabled": true
+  }
+}

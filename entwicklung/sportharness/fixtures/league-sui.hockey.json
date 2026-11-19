@@ -1,0 +1,248 @@
+{
+ "league": {
+  "id": "sui.hockey",
+  "name": "Nati Eishockey",
+  "short": "Nati",
+  "sport": "hockey",
+  "kind": "national",
+  "country": "Schweiz, Herren",
+  "logo": ""
+ },
+ "matches": [
+  {
+   "id": "20260531-SUI-FIN",
+   "league": "sui.hockey",
+   "sport": "hockey",
+   "start": "2026-05-31T12:00:00Z",
+   "timeUnknown": true,
+   "status": "post",
+   "label": "Ende n.V.",
+   "round": "2026 IIHF Ice Hockey World Championship / Gold Medal Game",
+   "home": {
+    "id": "SUI",
+    "name": "Schweiz",
+    "short": "Schweiz",
+    "abbr": "SUI",
+    "color": "#d52b1e",
+    "score": "0",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "FIN",
+    "name": "Finnland",
+    "short": "Finnland",
+    "abbr": "FIN",
+    "color": "#003580",
+    "score": "1",
+    "winner": true,
+    "logo": ""
+   },
+   "venue": "Swiss Life Arena, Zurich",
+   "tv": [],
+   "noDetail": true
+  },
+  {
+   "id": "20261105-SUI-FIN",
+   "league": "sui.hockey",
+   "sport": "hockey",
+   "start": "2026-11-05T12:00:00Z",
+   "timeUnknown": true,
+   "status": "post",
+   "label": "Ende",
+   "round": "NOCCO Hockey Games, Finland",
+   "home": {
+    "id": "SUI",
+    "name": "Schweiz",
+    "short": "Schweiz",
+    "abbr": "SUI",
+    "color": "#d52b1e",
+    "score": "1",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "FIN",
+    "name": "Finnland",
+    "short": "Finnland",
+    "abbr": "FIN",
+    "color": "#003580",
+    "score": "3",
+    "winner": true,
+    "logo": ""
+   },
+   "venue": "Helsinki / FIN",
+   "tv": [],
+   "noDetail": true
+  },
+  {
+   "id": "20261107-SWE-SUI",
+   "league": "sui.hockey",
+   "sport": "hockey",
+   "start": "2026-11-07T12:00:00Z",
+   "timeUnknown": true,
+   "status": "post",
+   "label": "Ende",
+   "round": "NOCCO Hockey Games, Finland",
+   "home": {
+    "id": "SWE",
+    "name": "Schweden",
+    "short": "Schweden",
+    "abbr": "SWE",
+    "color": "#006aa7",
+    "score": "4",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "SUI",
+    "name": "Schweiz",
+    "short": "Schweiz",
+    "abbr": "SUI",
+    "color": "#d52b1e",
+    "score": "2",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "Helsinki / FIN",
+   "tv": [],
+   "noDetail": true
+  },
+  {
+   "id": "20261108-CZE-SUI",
+   "league": "sui.hockey",
+   "sport": "hockey",
+   "start": "2026-11-08T12:00:00Z",
+   "timeUnknown": true,
+   "status": "post",
+   "label": "Ende",
+   "round": "NOCCO Hockey Games, Finland",
+   "home": {
+    "id": "CZE",
+    "name": "Tschechien",
+    "short": "Tschechien",
+    "abbr": "CZE",
+    "color": "#11457e",
+    "score": "4",
+    "winner": true,
+    "logo": ""
+   },
+   "away": {
+    "id": "SUI",
+    "name": "Schweiz",
+    "short": "Schweiz",
+    "abbr": "SUI",
+    "color": "#d52b1e",
+    "score": "2",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "Helsinki / FIN",
+   "tv": [],
+   "noDetail": true
+  },
+  {
+   "id": "20261210-SWE-SUI",
+   "league": "sui.hockey",
+   "sport": "hockey",
+   "start": "2026-12-10T12:00:00Z",
+   "timeUnknown": true,
+   "status": "pre",
+   "label": "",
+   "round": "SWISS Ice Hockey Games",
+   "home": {
+    "id": "SWE",
+    "name": "Schweden",
+    "short": "Schweden",
+    "abbr": "SWE",
+    "color": "#006aa7",
+    "score": "",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "SUI",
+    "name": "Schweiz",
+    "short": "Schweiz",
+    "abbr": "SUI",
+    "color": "#d52b1e",
+    "score": "",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "Zürich / SUI",
+   "tv": [],
+   "noDetail": true
+  },
+  {
+   "id": "20261212-SUI-CZE",
+   "league": "sui.hockey",
+   "sport": "hockey",
+   "start": "2026-12-12T12:00:00Z",
+   "timeUnknown": true,
+   "status": "pre",
+   "label": "",
+   "round": "SWISS Ice Hockey Games",
+   "home": {
+    "id": "SUI",
+    "name": "Schweiz",
+    "short": "Schweiz",
+    "abbr": "SUI",
+    "color": "#d52b1e",
+    "score": "",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "CZE",
+    "name": "Tschechien",
+    "short": "Tschechien",
+    "abbr": "CZE",
+    "color": "#11457e",
+    "score": "",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "Zürich / SUI",
+   "tv": [],
+   "noDetail": true
+  },
+  {
+   "id": "20261213-SUI-FIN",
+   "league": "sui.hockey",
+   "sport": "hockey",
+   "start": "2026-12-13T12:00:00Z",
+   "timeUnknown": true,
+   "status": "pre",
+   "label": "",
+   "round": "SWISS Ice Hockey Games",
+   "home": {
+    "id": "SUI",
+    "name": "Schweiz",
+    "short": "Schweiz",
+    "abbr": "SUI",
+    "color": "#d52b1e",
+    "score": "",
+    "winner": false,
+    "logo": ""
+   },
+   "away": {
+    "id": "FIN",
+    "name": "Finnland",
+    "short": "Finnland",
+    "abbr": "FIN",
+    "color": "#003580",
+    "score": "",
+    "winner": false,
+    "logo": ""
+   },
+   "venue": "Zürich / SUI",
+   "tv": [],
+   "noDetail": true
+  }
+ ],
+ "table": null,
+ "updated": "2026-11-19T19:23:43Z",
+ "stale": false,
+ "errors": []
+}

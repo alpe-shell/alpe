@@ -1,0 +1,616 @@
+#!/usr/bin/env python3
+"""MeteoSchweiz-Wetteranbieter fuer die Alpe-Shell.
+
+Vertrag (dux-go/weather.Command): Standort als JSON auf stdin
+({"latitude": .., "longitude": ..}), Prognose in der Open-Meteo-Form auf stdout.
+Bei einem Fehler: Exit-Code != 0 und der Grund auf stderr, die Shell nimmt dann
+den naechsten Anbieter.
+
+Datenquellen, in dieser Rangfolge je Messwert:
+  1. MeteoSchweiz Open Data, Lokalprognose (Tageswerte): Piktogramm, Tmin, Tmax.
+  2. MeteoSchweiz ICON-CH1/CH2 ueber Open-Meteo: aktuelle Werte und Stundenwerte, 5 Tage.
+  3. Open-Meteo "best match": alles, was 1 und 2 nicht liefern (Tage 6-9, UV, Sicht, Sonne, Mond),
+     ausser der Tages-Regenwahrscheinlichkeit: die bleibt ab Tag 6 leer.
+
+Nur Standardbibliothek. Diagnose: fetch --check <lat> <lon>
+"""
+
+import csv
+import gzip
+import io
+import json
+import math
+import os
+import sys
+import threading
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime, timedelta, timezone
+
+try:
+    from zoneinfo import ZoneInfo
+    SWISS_TZ = ZoneInfo("Europe/Zurich")
+except Exception:  # ohne Zeitzonendaten faellt nur der amtliche Tagesteil weg
+    SWISS_TZ = None
+
+USER_AGENT = "Alpe Shell MeteoSwiss weather plugin"
+OPEN_METEO = "https://api.open-meteo.com/v1/forecast"
+STAC = "https://data.geo.admin.ch/api/stac/v1/collections/ch.meteoschweiz.ogd-local-forecasting"
+POINTS_URL = ("https://data.geo.admin.ch/ch.meteoschweiz.ogd-local-forecasting/"
+              "ogd-local-forecasting_meta_point.csv")
+
+DEADLINE_SECONDS = 11.0      # die Shell bricht nach 15 s ab
+HTTP_TIMEOUT = 7.0
+FORECAST_DAYS = 9            # so weit reicht die Lokalprognose
+MAX_POINT_DISTANCE_KM = 20   # weiter weg: Standort liegt nicht in der Schweiz
+POINTS_MAX_AGE = 30 * 86400
+DAILY_MAX_AGE = 55 * 60      # MeteoSchweiz rechnet stuendlich neu
+DAILY_STALE_LIMIT = 12 * 3600
+CACHE_VERSION = 2
+
+# Piktogramm, Tmin, Tmax, Regenmenge 10%- und 90%-Quantil (alle fuer den lokalen Kalendertag)
+OGD_PARAMS = ("jp2000d0", "tre200pn", "tre200px", "rreq10p0", "rreq90p0")
+
+CURRENT_VARS = ("temperature_2m", "apparent_temperature", "relative_humidity_2m", "is_day",
+                "weather_code", "surface_pressure", "wind_speed_10m", "wind_direction_10m")
+HOURLY_MODEL_VARS = ("temperature_2m", "apparent_temperature", "relative_humidity_2m", "dew_point_2m",
+                     "weather_code", "precipitation_probability", "wind_speed_10m", "surface_pressure",
+                     "is_day")
+HOURLY_EXTRA_VARS = ("visibility", "uv_index")
+DAILY_VARS = ("temperature_2m_max", "temperature_2m_min", "weather_code", "precipitation_probability_max")
+DAILY_TIME_VARS = ("sunrise", "sunset", "moonrise", "moonset")
+
+# MeteoSchweiz-Piktogramm (1-42, nachts +100) -> WMO-Wettercode, den die Shell kennt.
+PICTOGRAM_TO_WMO = {
+    1: 0, 2: 1, 3: 2, 4: 2, 5: 3,
+    6: 80, 7: 85, 8: 85, 9: 81, 10: 85, 11: 85,
+    12: 95, 13: 95,
+    14: 61, 15: 71, 16: 71, 17: 63, 18: 73, 19: 73, 20: 65, 21: 75, 22: 75,
+    23: 95, 24: 95, 25: 96,
+    26: 2, 27: 3, 28: 45,
+    29: 80, 30: 85, 31: 85, 32: 80, 33: 81, 34: 86, 35: 3,
+    36: 95, 37: 95, 38: 95, 39: 95, 40: 95, 41: 95, 42: 95,
+}
+
+# Amtliche Beschreibung der Piktogramme (MeteoSchweiz, Stand 14.02.2022)
+PICTOGRAM_TEXT = {
+    1: "sonnig",
+    2: "ziemlich sonnig",
+    3: "teilweise sonnig",
+    4: "wechselnd bewölkt",
+    5: "bedeckt",
+    6: "Aufhellungen, einzelne Regenschauer",
+    7: "Aufhellungen, einzelne Regen- oder Schneeschauer",
+    8: "Aufhellungen, einzelne Schneeschauer",
+    9: "bewölkt, einige Regenschauer",
+    10: "bewölkt, einige Regen- oder Schneeschauer",
+    11: "bewölkt, einige Schneeschauer",
+    12: "Aufhellungen, leicht gewitterhaft",
+    13: "Aufhellungen und gewitterhaft",
+    14: "stark bewölkt, schwacher Regen",
+    15: "stark bewölkt, schwacher Schnee oder Regen",
+    16: "stark bewölkt, schwacher Schnee",
+    17: "stark bewölkt, zeitweise Regen",
+    18: "stark bewölkt, zeitweise Schnee oder Regen",
+    19: "stark bewölkt, zeitweise Schnee",
+    20: "stark bewölkt, anhaltender Regen",
+    21: "stark bewölkt, anhaltender Regen oder Schnee",
+    22: "stark bewölkt, anhaltender Schnee",
+    23: "stark bewölkt, leicht gewitterhaft",
+    24: "stark bewölkt, gewitterhaft",
+    25: "stark bewölkt, stark gewitterhaft",
+    26: "Hohe Bewölkung",
+    27: "Hochnebel",
+    28: "Nebel",
+    29: "leicht bewölkt, einzelne Regenschauer",
+    30: "leicht bewölkt, leichter Schneefall",
+    31: "teilweise sonnig, einige Schnee- oder Regenschauer",
+    32: "teilweise sonnig, einige Regenschauer",
+    33: "bewölkt, häufige Regenschauer",
+    34: "bewölkt, häufige Schneeschauer",
+    35: "bedeckt und trocken",
+    36: "teilweise sonnig, gewitterhaft",
+    37: "teilweise sonnig, Gewitter und Schneeschauer",
+    38: "bewölkt, Gewitter und häufige Regenschauer",
+    39: "bewölkt, Gewitter und häufige Schneeschauer",
+    40: "stark bewölkt, leicht gewitterhaft",
+    41: "bewölkt, leicht gewitterhaft",
+    42: "stark bewölkt, Gewitter und häufige Schneeschauer",
+}
+
+notes = []
+
+
+def note(text):
+    notes.append(text)
+
+
+def cache_dir():
+    base = os.environ.get("XDG_CACHE_HOME") or os.path.join(os.path.expanduser("~"), ".cache")
+    path = os.path.join(base, "alpe", "meteoswiss")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def http_get(url, timeout=HTTP_TIMEOUT):
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Encoding": "gzip"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        body = response.read()
+        if (response.headers.get("Content-Encoding") or "").lower() == "gzip":
+            body = gzip.decompress(body)
+        return body
+
+
+def write_atomic(path, data):
+    temporary = "%s.%d.tmp" % (path, os.getpid())
+    with open(temporary, "wb") as handle:
+        handle.write(data)
+    os.replace(temporary, path)
+
+
+def number(value):
+    """Zahl oder None; NaN, Unendlich und Wahrheitswerte gelten als fehlend."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return value if math.isfinite(value) else None
+
+
+# ---------------------------------------------------------------- Open-Meteo
+
+def open_meteo(latitude, longitude, model):
+    hourly = HOURLY_MODEL_VARS + (() if model else HOURLY_EXTRA_VARS)
+    daily = DAILY_VARS + (() if model else DAILY_TIME_VARS)
+    query = {
+        "latitude": repr(float(latitude)),
+        "longitude": repr(float(longitude)),
+        "current": ",".join(CURRENT_VARS),
+        "hourly": ",".join(hourly),
+        "daily": ",".join(daily),
+        "timezone": "auto",
+        "forecast_days": str(FORECAST_DAYS),
+    }
+    if model:
+        query["models"] = model
+    data = json.loads(http_get(OPEN_METEO + "?" + urllib.parse.urlencode(query, safe=",")))
+    if not isinstance(data, dict) or data.get("error"):
+        raise ValueError(str(data.get("reason", "unerwartete Antwort")) if isinstance(data, dict) else "unerwartete Antwort")
+    return data
+
+
+def series(block, name):
+    """block[name] als Abbildung Zeit -> Wert; fehlende Werte fallen weg."""
+    if not isinstance(block, dict):
+        return {}
+    times, values = block.get("time"), block.get(name)
+    if not isinstance(times, list) or not isinstance(values, list):
+        return {}
+    return {t: v for t, v in zip(times, values) if isinstance(t, str) and v is not None}
+
+
+def axis_of(*blocks):
+    """Die laengste Zeitachse gewinnt: best match reicht weiter als ICON-CH."""
+    best = []
+    for block in blocks:
+        times = block.get("time") if isinstance(block, dict) else None
+        if isinstance(times, list) and len(times) > len(best):
+            best = [t for t in times if isinstance(t, str)]
+    return best
+
+
+def merged(axis, name, *blocks, text=False):
+    """Je Zeitpunkt der erste Block, der einen Wert hat."""
+    tables = [series(block, name) for block in blocks]
+    out = []
+    for at in axis:
+        value = None
+        for table in tables:
+            candidate = table.get(at)
+            candidate = candidate if text and isinstance(candidate, str) else (None if text else number(candidate))
+            if candidate is not None:
+                value = candidate
+                break
+        out.append(("" if value is None else value) if text else value)
+    return out
+
+
+# ------------------------------------------------- MeteoSchweiz Lokalprognose
+
+def load_points():
+    path = os.path.join(cache_dir(), "points.csv")
+    age = time.time() - os.path.getmtime(path) if os.path.exists(path) else None
+    if age is None or age > POINTS_MAX_AGE:
+        try:
+            write_atomic(path, http_get(POINTS_URL))
+        except Exception as error:
+            if age is None:
+                raise
+            note("Punktliste nicht aktualisiert (%s), nehme die vorhandene" % error)
+    with open(path, "rb") as handle:
+        return handle.read().decode("latin-1")
+
+
+def nearest_point(latitude, longitude):
+    """Naechster Prognosepunkt. Ortschaften (mit PLZ) haben Vorrang vor Gipfeln und Stationen,
+    die oft auf ganz anderer Hoehe liegen."""
+    reader = csv.DictReader(io.StringIO(load_points()), delimiter=";")
+    cos_lat = math.cos(math.radians(latitude))
+    best = {True: None, False: None}
+    for row in reader:
+        row = {(key or "").strip().lstrip("﻿").lower(): (value or "").strip() for key, value in row.items()}
+        try:
+            lat = float(row["point_coordinates_wgs84_lat"])
+            lon = float(row["point_coordinates_wgs84_lon"])
+        except (KeyError, ValueError):
+            continue
+        if not row.get("point_id") or not row.get("point_type_id"):
+            continue
+        distance = 111.19 * math.hypot(lat - latitude, (lon - longitude) * cos_lat)
+        is_place = bool(row.get("postal_code"))
+        if best[is_place] is None or distance < best[is_place]["distance_km"]:
+            best[is_place] = {
+                "point_id": row["point_id"],
+                "point_type_id": row["point_type_id"],
+                "name": row.get("point_name", ""),
+                "postal_code": row.get("postal_code", ""),
+                "height": row.get("point_height_masl", ""),
+                "distance_km": round(distance, 1),
+            }
+    place, other = best[True], best[False]
+    if place and place["distance_km"] <= MAX_POINT_DISTANCE_KM:
+        return place
+    if other and other["distance_km"] <= MAX_POINT_DISTANCE_KM:
+        return other
+    return None
+
+
+def integer_text(value):
+    """'8840', '8840.0' und ' 8840 ' sind dieselbe Kennung."""
+    value = value.strip().strip('"')
+    try:
+        as_float = float(value)
+        return str(int(as_float)) if as_float == int(as_float) else value
+    except ValueError:
+        return value
+
+
+def local_date(stamp):
+    """YYYYMMDDHHMM in UTC -> Kalendertag in der Schweiz."""
+    stamp = stamp.strip().strip('"')
+    if len(stamp) < 12 or not stamp[:12].isdigit():
+        return None
+    try:
+        at = datetime.strptime(stamp[:12], "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+    return at.astimezone(SWISS_TZ).date().isoformat()
+
+
+def parse_parameter(body, parameter, point):
+    """Eine Parameterdatei (alle Punkte) -> {Datum: Wert} fuer den einen Punkt."""
+    lines = body.decode("latin-1").splitlines()
+    if not lines:
+        return {}
+    header = [name.strip().strip('"').lstrip("﻿").lower() for name in lines[0].split(";")]
+    try:
+        id_at, type_at = header.index("point_id"), header.index("point_type_id")
+    except ValueError:
+        raise ValueError("Spalten point_id/point_type_id fehlen: %s" % header)
+    time_at = next((i for i, name in enumerate(header) if name in ("date", "time")), None)
+    if time_at is None:
+        time_at = next((i for i, name in enumerate(header) if "date" in name or "time" in name), None)
+    if time_at is None:
+        raise ValueError("Zeitspalte fehlt: %s" % header)
+    value_at = header.index(parameter) if parameter in header else len(header) - 1
+    want_id, want_type = integer_text(point["point_id"]), integer_text(point["point_type_id"])
+    width = max(id_at, type_at, time_at, value_at)
+    out = {}
+    for line in lines[1:]:
+        cells = line.split(";")
+        if len(cells) <= width:
+            continue
+        if integer_text(cells[id_at]) != want_id or integer_text(cells[type_at]) != want_type:
+            continue
+        day = local_date(cells[time_at])
+        if day is None:
+            continue
+        try:
+            value = float(cells[value_at].strip().strip('"'))
+        except ValueError:
+            continue
+        if math.isfinite(value):
+            out[day] = value
+    return out
+
+
+def latest_run(assets):
+    """Juengster Lauf mit Piktogramm; Schluessel: vnut12.lssw.<YYYYMMDDHHMM>.<parameter>.csv"""
+    runs = {}
+    for key, asset in assets.items():
+        parts = key.split(".")
+        if len(parts) < 5 or parts[-1] != "csv" or not isinstance(asset, dict) or not asset.get("href"):
+            continue
+        run, parameter = parts[-3], parts[-2]
+        if run.isdigit() and parameter in OGD_PARAMS:
+            runs.setdefault(run, {})[parameter] = asset["href"]
+    for run in sorted(runs, reverse=True):
+        if "jp2000d0" in runs[run]:
+            return run, runs[run]
+    return None, {}
+
+
+def fetch_daily(point):
+    today = datetime.now(SWISS_TZ).date()
+    assets, failure = None, None
+    for back in (0, 1):
+        item = "%s-ch" % (today - timedelta(days=back)).strftime("%Y%m%d")
+        try:
+            assets = json.loads(http_get("%s/items/%s" % (STAC, item))).get("assets") or {}
+        except urllib.error.HTTPError as error:
+            failure = "%s: HTTP %s" % (item, error.code)
+            continue
+        if assets:
+            break
+    if not assets:
+        raise ValueError("kein Prognoselauf gefunden (%s)" % failure)
+    run, links = latest_run(assets)
+    if run is None:
+        raise ValueError("kein Lauf mit Piktogramm in %d Dateien" % len(assets))
+
+    tables, errors = {}, {}
+
+    def load(parameter, url):
+        try:
+            tables[parameter] = parse_parameter(http_get(url), parameter, point)
+        except Exception as error:
+            errors[parameter] = str(error)
+
+    workers = [threading.Thread(target=load, args=item, daemon=True) for item in links.items()]
+    for worker in workers:
+        worker.start()
+    for worker in workers:
+        worker.join()
+    if not tables.get("jp2000d0"):
+        raise ValueError("Piktogramm-Datei ohne Werte fuer Punkt %s/%s (%s)"
+                         % (point["point_id"], point["point_type_id"], errors or "leer"))
+
+    days = {}
+    for day, code in tables["jp2000d0"].items():
+        base = int(code) % 100
+        entry = {"pictogram": int(code)}
+        if base in PICTOGRAM_TO_WMO:
+            entry["weather_code"] = PICTOGRAM_TO_WMO[base]
+        if base in PICTOGRAM_TEXT:
+            entry["text"] = PICTOGRAM_TEXT[base]
+        for name, parameter in (("temperature_2m_min", "tre200pn"), ("temperature_2m_max", "tre200px")):
+            value = tables.get(parameter, {}).get(day)
+            if value is not None and -70 <= value <= 60:
+                entry[name] = value
+        for name, parameter in (("precip_min", "rreq10p0"), ("precip_max", "rreq90p0")):
+            value = tables.get(parameter, {}).get(day)
+            if value is not None and 0 <= value <= 1000:
+                entry[name] = value
+        days[day] = entry
+    return {"v": CACHE_VERSION, "run": run, "fetched": time.time(), "point": point, "days": days}
+
+
+def write_extras(official):
+    """Zusatzdaten fuer die Shell: der Dienst reicht nur die Open-Meteo-Felder durch, alles
+    Weitere (Regenmenge, Symboltext, Prognosepunkt) liest die Wetteranzeige aus dieser Datei."""
+    path = os.path.join(os.path.dirname(cache_dir()), "weather-extras.json")
+    if not official:
+        try:
+            os.unlink(path)       # sonst zeigt die Shell Mengen einer alten Prognose
+        except OSError:
+            pass
+        return
+    days = {}
+    for day, entry in official["days"].items():
+        extra = {key: entry[key] for key in ("precip_min", "precip_max", "text", "pictogram") if key in entry}
+        if extra:
+            days[day] = extra
+    write_atomic(path, json.dumps({
+        "provider": "alpeMeteoSwiss",
+        "name": "MeteoSchweiz",
+        "updated": time.time(),
+        "run": official.get("run"),
+        "point": official.get("point"),
+        "days": days,
+    }, ensure_ascii=False).encode("utf-8"))
+
+
+def daily_official(latitude, longitude, result):
+    """Amtliche Tageswerte, aus dem Zwischenspeicher wenn frisch. Schreibt nach result."""
+    try:
+        if SWISS_TZ is None:
+            raise ValueError("Zeitzonendaten fehlen (tzdata)")
+        point = nearest_point(latitude, longitude)
+        if point is None:
+            note("kein MeteoSchweiz-Prognosepunkt innert %d km" % MAX_POINT_DISTANCE_KM)
+            return
+        path = os.path.join(cache_dir(), "daily-%s-%s.json" % (point["point_type_id"], point["point_id"]))
+        cached = None
+        try:
+            with open(path, "r", encoding="utf-8") as handle:
+                cached = json.load(handle)
+        except (OSError, ValueError):
+            pass
+        if not isinstance(cached, dict) or cached.get("v") != CACHE_VERSION:
+            cached = None             # Stand einer frueheren Plugin-Version, dem Felder fehlen
+        age = time.time() - cached["fetched"] if cached and isinstance(cached.get("fetched"), (int, float)) else None
+        if age is not None and 0 <= age < DAILY_MAX_AGE:
+            result["official"] = cached
+            return
+        # Der abgelaufene Stand gilt sofort, damit ein Abbruch durch die Frist nicht leer ausgeht.
+        if age is not None and 0 <= age < DAILY_STALE_LIMIT:
+            result["official"] = cached
+        try:
+            fresh = fetch_daily(point)
+        except Exception as error:
+            note("Lokalprognose nicht aktualisiert: %s" % error)
+            return
+        result["official"] = fresh
+        write_atomic(path, json.dumps(fresh).encode("utf-8"))
+    except Exception as error:
+        note("Lokalprognose nicht verfuegbar: %s" % error)
+
+
+# -------------------------------------------------------------- Zusammenbau
+
+def build(latitude, longitude):
+    result = {}
+
+    def run(name, call):
+        try:
+            result[name] = call()
+        except Exception as error:
+            note("%s: %s" % (name, error))
+
+    workers = [
+        threading.Thread(target=run, args=("icon", lambda: open_meteo(latitude, longitude, "meteoswiss_icon_seamless")), daemon=True),
+        threading.Thread(target=run, args=("best", lambda: open_meteo(latitude, longitude, None)), daemon=True),
+        threading.Thread(target=daily_official, args=(latitude, longitude, result), daemon=True),
+    ]
+    deadline = time.monotonic() + DEADLINE_SECONDS
+    for worker in workers:
+        worker.start()
+    for worker in workers:
+        worker.join(max(0.0, deadline - time.monotonic()))
+
+    # Schnappschuss: ein Thread, der die Frist verpasst hat, darf danach nichts mehr aendern.
+    result = dict(result)
+    icon, best, official = result.get("icon"), result.get("best"), result.get("official")
+    if icon is None and best is None:
+        raise RuntimeError("Open-Meteo nicht erreichbar: " + "; ".join(notes))
+    icon, best = icon or {}, best or {}
+    base = best or icon
+
+    current = {}
+    icon_current, best_current = icon.get("current") or {}, best.get("current") or {}
+    for name in CURRENT_VARS:
+        value = number(icon_current.get(name))
+        current[name] = value if value is not None else number(best_current.get(name))
+    current["time"] = icon_current.get("time") or best_current.get("time") or ""
+
+    hourly_axis = axis_of(best.get("hourly"), icon.get("hourly"))
+    hourly = {"time": hourly_axis}
+    for name in HOURLY_MODEL_VARS + HOURLY_EXTRA_VARS:
+        values = merged(hourly_axis, name, icon.get("hourly"), best.get("hourly"))
+        if any(value is not None for value in values):
+            hourly[name] = values
+
+    daily_axis = axis_of(best.get("daily"), icon.get("daily"))
+    daily = {"time": daily_axis}
+    for name in DAILY_TIME_VARS:
+        values = merged(daily_axis, name, best.get("daily"), text=True)
+        if any(values):
+            daily[name] = values
+    days = (official or {}).get("days") or {}
+    used_official = 0
+    for name in DAILY_VARS:
+        # Die Regenwahrscheinlichkeit nur vom MeteoSchweiz-Modell: die eines fremden Modells
+        # widerspricht ab Tag 6 dem amtlichen Symbol daneben.
+        sources = (icon.get("daily"),) if name == "precipitation_probability_max" and icon else (icon.get("daily"), best.get("daily"))
+        values = merged(daily_axis, name, *sources)
+        for index, day in enumerate(daily_axis):
+            value = number((days.get(day) or {}).get(name))
+            if value is not None:
+                values[index] = value
+                used_official += name == "weather_code"
+        if any(value is not None for value in values):
+            daily[name] = values
+
+    if not hourly_axis or not daily_axis:
+        raise RuntimeError("Prognose ohne Stunden oder Tage: " + "; ".join(notes))
+
+    forecast = {
+        "latitude": number(base.get("latitude")) if number(base.get("latitude")) is not None else latitude,
+        "longitude": number(base.get("longitude")) if number(base.get("longitude")) is not None else longitude,
+        "current": current,
+        "hourly": hourly,
+        "daily": daily,
+    }
+    if isinstance(base.get("timezone"), str) and base["timezone"]:
+        forecast["timezone"] = base["timezone"]
+    offset = base.get("utc_offset_seconds")
+    if isinstance(offset, int) and not isinstance(offset, bool):
+        forecast["utc_offset_seconds"] = offset
+    try:
+        write_extras(official)
+    except Exception as error:
+        note("Zusatzdaten nicht geschrieben: %s" % error)
+    info = {
+        "icon": bool(icon), "best": bool(best),
+        "official_days": used_official,
+        "point": (official or {}).get("point"), "run": (official or {}).get("run"),
+        "pictograms": {day: entry.get("pictogram") for day, entry in days.items()},
+        "days": days,
+    }
+    return forecast, info
+
+
+def check(latitude, longitude):
+    forecast, info = build(latitude, longitude)
+    point = info["point"]
+    print("Standort          %.4f, %.4f  (%s)" % (latitude, longitude, forecast.get("timezone", "?")))
+    print("ICON-CH           %s" % ("ja" if info["icon"] else "NEIN"))
+    print("Open-Meteo        %s" % ("ja" if info["best"] else "NEIN"))
+    if point:
+        print("Prognosepunkt     %s %s, %s m, %.1f km entfernt (Punkt %s/%s)"
+              % (point["postal_code"], point["name"], point["height"] or "?", point["distance_km"],
+                 point["point_type_id"], point["point_id"]))
+        print("Prognoselauf      %s UTC, amtliche Tage: %d" % (info["run"], info["official_days"]))
+    else:
+        print("Prognosepunkt     keiner - Tageswerte kommen aus dem Modell")
+    current = forecast["current"]
+    print("Jetzt             %s  %s C, Code %s, Wind %s km/h"
+          % (current["time"], current["temperature_2m"], current["weather_code"], current["wind_speed_10m"]))
+    hourly = forecast["hourly"]
+    filled = sum(value is not None for value in hourly.get("temperature_2m", []))
+    print("Stunden           %d, davon %d mit Temperatur" % (len(hourly["time"]), filled))
+    print("Tag         Pikto  Code   Tmin   Tmax  Regen%   Menge mm   amtlicher Text")
+    daily = forecast["daily"]
+    for index, day in enumerate(daily["time"]):
+        cell = lambda name: daily[name][index] if name in daily and daily[name][index] is not None else "-"
+        extra = info["days"].get(day) or {}
+        amount = "%s-%s" % (extra["precip_min"], extra["precip_max"]) if "precip_min" in extra and "precip_max" in extra else "-"
+        print("%s  %5s  %4s  %5s  %5s  %5s  %9s   %s" % (day, info["pictograms"].get(day, "-"), cell("weather_code"),
+              cell("temperature_2m_min"), cell("temperature_2m_max"), cell("precipitation_probability_max"),
+              amount, extra.get("text", "")))
+    for text in notes:
+        print("Hinweis: " + text)
+
+
+def main(argv):
+    if len(argv) >= 2 and argv[1] == "--check":
+        try:
+            latitude, longitude = float(argv[2]), float(argv[3])
+        except (IndexError, ValueError):
+            print("Aufruf: fetch --check <Breite> <Laenge>   z.B. fetch --check 46.99 8.60", file=sys.stderr)
+            return 2
+        check(latitude, longitude)
+        return 0
+    try:
+        query = json.loads(sys.stdin.read())
+        latitude, longitude = float(query["latitude"]), float(query["longitude"])
+    except Exception as error:
+        print("ungueltige Anfrage: %s" % error, file=sys.stderr)
+        return 2
+    if not (abs(latitude) <= 90 and abs(longitude) <= 180):
+        print("ungueltiger Standort", file=sys.stderr)
+        return 2
+    forecast, _ = build(latitude, longitude)
+    sys.stdout.write(json.dumps(forecast, allow_nan=False, separators=(",", ":")))
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        code = main(sys.argv)
+    except Exception as error:
+        print(str(error), file=sys.stderr)
+        code = 1
+    sys.stdout.flush()
+    # Nicht auf Threads warten, die noch an einer Verbindung haengen.
+    os._exit(code)

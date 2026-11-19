@@ -1,0 +1,13 @@
+module qs.Modules.Settings.Widgets
+SettingsRow 1.0 SettingsRow.qml
+SettingsToggleRow 1.0 SettingsToggleRow.qml
+SettingsNavRow 1.0 SettingsNavRow.qml
+SettingsDropdownRow 1.0 SettingsDropdownRow.qml
+SettingsSliderRow 1.0 SettingsSliderRow.qml
+SettingsNoteRow 1.0 SettingsNoteRow.qml
+SettingsCard 1.0 SettingsCard.qml
+SettingsPage 1.0 SettingsPage.qml
+singleton SettingsMetrics 1.0 SettingsMetrics.qml
+SettingsTextFieldRow 1.0 SettingsTextFieldRow.qml
+SettingsSliderControl 1.0 SettingsSliderControl.qml
+SettingsSectionLabel 1.0 SettingsSectionLabel.qml

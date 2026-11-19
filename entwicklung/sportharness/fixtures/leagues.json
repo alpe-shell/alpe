@@ -1,0 +1,166 @@
+{
+ "leagues": [
+  {
+   "id": "nl",
+   "name": "National League",
+   "short": "NL",
+   "sport": "hockey",
+   "kind": "league",
+   "country": "Schweiz",
+   "default": true
+  },
+  {
+   "id": "sui.hockey",
+   "name": "Nati Eishockey",
+   "short": "Nati",
+   "sport": "hockey",
+   "kind": "national",
+   "country": "Schweiz, Herren",
+   "default": true
+  },
+  {
+   "id": "sui.nt",
+   "name": "Nati Fussball",
+   "short": "Nati",
+   "sport": "soccer",
+   "kind": "national",
+   "country": "Schweiz, Herren",
+   "default": true
+  },
+  {
+   "id": "nba",
+   "name": "NBA",
+   "short": "NBA",
+   "sport": "basketball",
+   "kind": "league",
+   "country": "USA",
+   "default": true
+  },
+  {
+   "id": "eng.1",
+   "name": "Premier League",
+   "short": "PL",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "England",
+   "default": true
+  },
+  {
+   "id": "eng.fa",
+   "name": "FA Cup",
+   "short": "FA Cup",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "England",
+   "default": true
+  },
+  {
+   "id": "eng.league_cup",
+   "name": "EFL Cup",
+   "short": "EFL Cup",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "England",
+   "default": true
+  },
+  {
+   "id": "esp.1",
+   "name": "LaLiga",
+   "short": "LaLiga",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "Spanien",
+   "default": true
+  },
+  {
+   "id": "esp.copa_del_rey",
+   "name": "Copa del Rey",
+   "short": "Copa",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Spanien",
+   "default": true
+  },
+  {
+   "id": "ger.1",
+   "name": "Bundesliga",
+   "short": "BL",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "Deutschland",
+   "default": true
+  },
+  {
+   "id": "ger.dfb_pokal",
+   "name": "DFB-Pokal",
+   "short": "Pokal",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Deutschland",
+   "default": true
+  },
+  {
+   "id": "ita.1",
+   "name": "Serie A",
+   "short": "Serie A",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "Italien",
+   "default": true
+  },
+  {
+   "id": "ita.coppa_italia",
+   "name": "Coppa Italia",
+   "short": "Coppa",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Italien",
+   "default": true
+  },
+  {
+   "id": "fra.1",
+   "name": "Ligue 1",
+   "short": "Ligue 1",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "Frankreich",
+   "default": true
+  },
+  {
+   "id": "fra.coupe_de_france",
+   "name": "Coupe de France",
+   "short": "CdF",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Frankreich",
+   "default": true
+  },
+  {
+   "id": "uefa.champions",
+   "name": "Champions League",
+   "short": "UCL",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Europa",
+   "default": false
+  },
+  {
+   "id": "uefa.europa",
+   "name": "Europa League",
+   "short": "UEL",
+   "sport": "soccer",
+   "kind": "cup",
+   "country": "Europa",
+   "default": false
+  },
+  {
+   "id": "sui.1",
+   "name": "Super League",
+   "short": "SL",
+   "sport": "soccer",
+   "kind": "league",
+   "country": "Schweiz",
+   "default": false
+  }
+ ]
+}

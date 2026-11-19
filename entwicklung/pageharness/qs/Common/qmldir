@@ -1,0 +1,12 @@
+module qs.Common
+singleton SettingsTabs 1.0 SettingsTabs.qml
+singleton Brand 1.0 Brand.qml
+singleton I18n 1.0 I18n.qml
+singleton Theme 1.0 Theme.qml
+singleton SettingsData 1.0 SettingsData.qml
+singleton Proc 1.0 Proc.qml
+singleton SessionData 1.0 SessionData.qml
+singleton Log 1.0 Log.qml
+singleton PopoutManager 1.0 PopoutManager.qml
+singleton ModalManager 1.0 ModalManager.qml
+singleton CacheData 1.0 CacheData.qml
