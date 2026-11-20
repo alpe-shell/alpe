@@ -1,6 +1,6 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo/alpe-logo-dunkel.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo/logo/alpe-logo-dunkel.svg">
     <img src="assets/logo/alpe-logo-hell.svg" alt="Alpe «Zugerberg»" width="520">
   </picture>
 </p>
