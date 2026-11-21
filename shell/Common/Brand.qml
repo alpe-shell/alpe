@@ -9,8 +9,8 @@ Singleton {
     readonly property string name: "Alpe"
     readonly property string version: "1.0"
     readonly property string codename: "Zugerberg"
-    // Alpe 1.0: öffentliches Repository (Installation, Fehler melden)
-    readonly property string url: "https://github.com/alpemessi/alpe"
+    // Öffentliches Repository (Installation, Fehler melden)
+    readonly property string url: "https://github.com/alpe-shell/alpe"
     readonly property string upstreamName: "Dux Modular Shell"
     readonly property string upstreamUrl: "https://github.com/duxlabs-dev/dux-shell"
 
