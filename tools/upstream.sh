@@ -66,7 +66,7 @@ rerere_save() {   # neue Lösungen in den Alpe-Ordner übernehmen
 apply_patches() {   # Arbeitsordner Basis-Commit Stand – legt fehlende Schichten auf, 1 bei Konflikt
     local dir="$1" base="$2" ref="$3" applied title
     applied="$(git -C "$dir" log --format=%s "$base"..HEAD)"
-    for patch in "$HERE"/shell/*.patch; do
+    for patch in "$HERE"/schichten/*.patch; do
         title="$(git mailinfo /dev/null /dev/null < "$patch" | sed -n 's/^Subject: //p' | head -1)"
         if printf '%s\n' "$applied" | grep -Fxq -- "$title"; then
             say "   schon da: $title"; continue
@@ -214,16 +214,16 @@ adopt)
         say "   Entwicklungsstand nur auf diesem Rechner; der Alpe-Ordner bleibt bei $BASE"
     else
         say "== Alpe-Ordner erneuern"
-        saved="$STATE/$name-$stamp"; mkdir -p "$saved/shell"
-        cp "$HERE"/shell/*.patch "$saved/shell/"; cp "$HERE/BASE" "$saved/"; [ -e "$HERE/BASE.commit" ] && cp "$HERE/BASE.commit" "$saved/"
+        saved="$STATE/$name-$stamp"; mkdir -p "$saved/schichten"
+        cp "$HERE"/schichten/*.patch "$saved/schichten/"; cp "$HERE/BASE" "$saved/"; [ -e "$HERE/BASE.commit" ] && cp "$HERE/BASE.commit" "$saved/"
         tmp="$(mktemp -d)"
         git_s format-patch --quiet --start-number 0 -o "$tmp" "$commit"..alpe
-        rm -f "$HERE"/shell/*.patch
-        mv "$tmp"/*.patch "$HERE/shell/"
+        rm -f "$HERE"/schichten/*.patch
+        mv "$tmp"/*.patch "$HERE/schichten/"
         rmdir "$tmp"
         printf '%s\n' "$ref" > "$HERE/BASE"
         printf '%s\n' "$commit" > "$HERE/BASE.commit"
-        say "   $(ls "$HERE"/shell/*.patch | wc -l) Schichten, BASE: $(cat "$HERE/BASE")"
+        say "   $(ls "$HERE"/schichten/*.patch | wc -l) Schichten, BASE: $(cat "$HERE/BASE")"
     fi
     git_s worktree remove --force "$dir" 2>/dev/null || true
     git_s branch -D "alpe-try-$name" >/dev/null 2>&1 || true
@@ -259,11 +259,11 @@ back)
     git_s reset --quiet --hard "$last"
     say "Zweig alpe zurück auf $last"
     saved="$STATE/${last#alpe-vor-}"
-    if [ -d "$saved/shell" ]; then
-        rm -f "$HERE"/shell/*.patch; cp "$saved"/shell/*.patch "$HERE/shell/"
+    if [ -d "$saved/schichten" ]; then
+        rm -f "$HERE"/schichten/*.patch; cp "$saved"/schichten/*.patch "$HERE/schichten/"
         cp "$saved/BASE" "$HERE/BASE"; rm -f "$HERE/BASE.commit"
         [ -e "$saved/BASE.commit" ] && cp "$saved/BASE.commit" "$HERE/BASE.commit"
-        say "Alpe-Ordner: $(ls "$HERE"/shell/*.patch | wc -l) Schichten, BASE $(cat "$HERE/BASE")"
+        say "Alpe-Ordner: $(ls "$HERE"/schichten/*.patch | wc -l) Schichten, BASE $(cat "$HERE/BASE")"
     fi
     git_s branch -D "$last" >/dev/null
     if systemctl --user is-active --quiet dms.service 2>/dev/null; then systemctl --user restart dms.service && say "Shell neu gestartet"; fi

@@ -138,7 +138,7 @@ fi
 
 # ---------------------------------------------------------------- Schichten und Plugins
 if [ "$CHECK" = 1 ] && [ ! -d "$SHELL_DIR/.git" ]; then
-    say "== Alpe-Schichten: $(ls "$HERE"/shell/*.patch | wc -l) Stueck wuerden eingespielt, dazu die Plugins"
+    say "== Alpe-Schichten: $(ls "$HERE"/schichten/*.patch | wc -l) Stueck wuerden eingespielt, dazu die Plugins"
 else
     ALPE_SHELL_DIR="$SHELL_DIR" ALPE_NO_RESTART=1 bash "$HERE/install.sh" $([ "$CHECK" = 1 ] && printf -- '--check')
 fi

@@ -54,8 +54,8 @@ cleanup_work() { git -C "$SHELL_DIR" worktree remove --force "$work/baum" >/dev/
 git -C "$SHELL_DIR" worktree add --quiet --detach "$work/baum" "$BASE_TAG" \
     || { rm -rf "$work"; say "   FEHLER: Arbeitsbaum für $BASE_TAG liess sich nicht anlegen."; exit 1; }
 count=0
-for patch in "$HERE"/shell/*.patch; do count=$((count + 1)); done
-if ! git -C "$work/baum" -c user.name=Alpe -c user.email=alpe@localhost am --quiet --committer-date-is-author-date "$HERE"/shell/*.patch >/dev/null 2>&1; then
+for patch in "$HERE"/schichten/*.patch; do count=$((count + 1)); done
+if ! git -C "$work/baum" -c user.name=Alpe -c user.email=alpe@localhost am --quiet --committer-date-is-author-date "$HERE"/schichten/*.patch >/dev/null 2>&1; then
     git -C "$work/baum" am --abort >/dev/null 2>&1
     cleanup_work
     say "   FEHLER: Die Schichten passen nicht auf $BASE_TAG – das Archiv ist unvollständig oder BASE stimmt nicht."
@@ -71,7 +71,7 @@ elif [ "$CHECK" = 1 ]; then
     pending=1
 else
     git -C "$SHELL_DIR" reset --quiet --hard "$new"
-    for patch in "$HERE"/shell/*.patch; do
+    for patch in "$HERE"/schichten/*.patch; do
         say "   eingespielt: $(git mailinfo /dev/null /dev/null < "$patch" | sed -n 's/^Subject: //p' | head -1)"
     done
     pending=1

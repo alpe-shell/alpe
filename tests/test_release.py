@@ -19,12 +19,12 @@ def repo(brand=None, patch=None, changelog="# Änderungen\n\n## 1.1 (Dezember 20
     root = tempfile.mkdtemp()
     os.makedirs(os.path.join(root, "tools"))
     shutil.copy(SCRIPT, os.path.join(root, "tools", "release-pruefen.sh"))
-    os.makedirs(os.path.join(root, "shell", "Common") if brand else os.path.join(root, "shell"))
+    os.makedirs(os.path.join(root, "shell", "Common") if brand else os.path.join(root, "schichten"))
     if brand:
         with open(os.path.join(root, "shell", "Common", "Brand.qml"), "w") as handle:
             handle.write('Singleton {\n    readonly property string version: "%s"\n}\n' % brand)
     if patch:
-        with open(os.path.join(root, "shell", "0001-Alpe.patch"), "w") as handle:
+        with open(os.path.join(root, "schichten", "0001-Alpe.patch"), "w") as handle:
             handle.write('-    readonly property string version: "0.9"\n+    readonly property string version: "%s"\n' % patch)
     with open(os.path.join(root, "CHANGELOG.md"), "w") as handle:
         handle.write(changelog)

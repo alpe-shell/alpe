@@ -59,7 +59,7 @@ cmd_version() {
     say "Alpe $(alpe_version || echo '?') «Zugerberg»"
     say "  Basis:     $(cat "$ALPE_DIR/BASE" 2>/dev/null || echo '?') (Dux Modular Shell)"
     say "  Shell:     $SHELL_DIR ($(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null)@$(git -C "$SHELL_DIR" rev-parse --short HEAD 2>/dev/null))"
-    say "  Schichten: $(ls "$ALPE_DIR"/shell/*.patch 2>/dev/null | wc -l)"
+    say "  Schichten: $(ls "$ALPE_DIR"/schichten/*.patch 2>/dev/null | wc -l)"
     b="$(backend)" && say "  Dienst:    $b ($("$b" version 2>/dev/null | head -1))" || say "  Dienst:    nicht gefunden"
 }
 

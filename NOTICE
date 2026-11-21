@@ -1,0 +1,79 @@
+Alpe – Herkunft und fremde Teile
+================================
+
+Alpe steht unter der MIT-Lizenz (siehe LICENSE). Alpe ist ursprünglich ein Fork der
+Dux Modular Shell (DMS). Deren Code und die unten genannten Teile Dritter bleiben unter
+ihren eigenen Lizenzen; die Hinweise hier und in den genannten Dateien gehören zu jeder
+Weitergabe dazu.
+
+
+Dux Modular Shell (DMS)
+-----------------------
+
+Herkunft:  https://github.com/duxlabs-dev/dux-shell, Stand v2.1.2 (November 2026),
+           übernommen nach shell/ (QML, bisher quickshell/) und core/ (Go-Dienst)
+Baustein:  dux-qml-common (https://github.com/duxlabs-dev/dux-qml-common), Commit 0877466,
+           übernommen nach shell/DCommon/
+Lizenz:    MIT. Die Relizenzierung von GPL-3.0 auf MIT mit Zustimmung aller Mitwirkenden ist
+           in shell/LICENSE_CHANGE_12_11_2025.md belegt.
+
+Lizenztext der Dux Modular Shell:
+
+    MIT License
+
+    Copyright (c) 2025 Avenge Media LLC
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+dux-qml-common steht unter derselben Lizenz, Copyright (c) 2025-2026 Avenge Media LLC.
+
+
+Teile Dritter im Code der Dux Modular Shell
+-------------------------------------------
+
+Schriften (shell/DCommon/assets/fonts/, Lizenztext jeweils im Ordner)
+  Google Sans Flex, DM Serif Display, Gochi Hand, Notable    SIL Open Font License 1.1
+  FiraCode Nerd Font (The Fira Code Project Authors)         SIL Open Font License 1.1
+  Material Symbols Rounded (Google)                          Apache License 2.0
+
+Klänge (shell/assets/sounds/)
+  freedesktop/   Freedesktop-Klangthema; Urheber und Lizenz je Datei in CREDITS
+                 (CC-BY-SA, CC-BY 3.0, GPLv2+)
+  plasma/        «Harmony 2», Klangthema für KDE Plasma 6, CC-BY-SA 4.0 (LICENSE im Ordner)
+
+Code
+  shell/Common/suncalc.js             BSD-2-Clause, Copyright (c) 2025 Vladimir Agafonkin
+  core/internal/highlight/            MIT, Copyright (C) 2017 Alec Thomas (COPYING im Ordner)
+  core/pkg/ipp/                       Apache License 2.0 (LICENSE im Ordner)
+  core/internal/proto/*               Wayland-Protokollbindungen; MIT-artige Lizenzen der
+                                      Protokollautoren, im Kopf jeder Datei
+  shell/matugen/vsix-build/           MIT, Copyright (c) 2025 DankLinux
+  core/internal/matugen/sourcecolor.go  Gewichtungen der Farbwahl nach caelestia-cli, dort
+                                      ursprünglich aus Material Color Utilities (Google,
+                                      Apache License 2.0); übernommen sind nur Zahlenwerte
+
+Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
+
+
+Teile Dritter in Alpe
+---------------------
+
+  Alfa Slab One, JetBrains Mono       SIL Open Font License 1.1 (OFL-Dateien bei den Schriften)
+  Wetterdaten und Radarbilder         MeteoSchweiz Open Data, Quellenangabe «MeteoSchweiz»
+                                      in der Oberfläche

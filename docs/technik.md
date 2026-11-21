@@ -11,10 +11,10 @@ Hintergrunddienst (`alpe ipc call …`, `alpe run` …).
 
 ## Aufbau in drei Schichten
 
-1. **KWin-Unterstützung** (`shell/0000`): ein Patch, der der Dux Modular Shell die Zusammenarbeit
+1. **KWin-Unterstützung** (`schichten/0000`): ein Patch, der der Dux Modular Shell die Zusammenarbeit
    mit KWin beibringt – KWin-Skript als Brücke (`Services/kwin/dms-bridge.js`), Arbeitsflächen,
    Fensterliste, Leiste und Dock. Unter anderen Fensterverwaltungen bleibt er untätig.
-2. **Alpe im Shell-Code** (`shell/0001`): alles, was Alpe an der Shell ändert. Jede Stelle ist
+2. **Alpe im Shell-Code** (`schichten/0001`): alles, was Alpe an der Shell ändert. Jede Stelle ist
    klein gehalten und mit `Alpe:` kommentiert, damit sich neue Versionen des Ursprungsprojekts
    weiter übernehmen lassen. Nach Themen:
    - **Name und Zeichen:** `Common/Brand.qml` hält Name, Version, Codename und Adresse; `I18n.tr`
@@ -218,7 +218,7 @@ unberührt.
     bash ~/alpe/tools/upstream.sh check            # neuere Versionen anzeigen
     bash ~/alpe/tools/upstream.sh try v2.2.0       # Schichten auflegen, Prüfungen laufen lassen
     bash ~/alpe/tools/upstream.sh resume v2.2.0    # nach einem von Hand gelösten Konflikt
-    bash ~/alpe/tools/upstream.sh adopt v2.2.0     # übernehmen: Zweig alpe, shell/*.patch, BASE
+    bash ~/alpe/tools/upstream.sh adopt v2.2.0     # übernehmen: Zweig alpe, schichten/*.patch, BASE
     bash ~/alpe/tools/upstream.sh back             # zurück auf den Stand vor der Übernahme
     bash ~/alpe/tools/upstream.sh abandon v2.2.0   # Versuch verwerfen
 

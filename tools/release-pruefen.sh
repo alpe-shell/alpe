@@ -4,7 +4,7 @@
 #   bash tools/release-pruefen.sh v1.1     prüft Tag gegen Brand.qml und den obersten Eintrag in CHANGELOG.md
 #
 # Brand.qml liegt im Quellbaum (shell/Common/Brand.qml); solange Alpe als Schichten auf dem
-# Ursprungsprojekt liegt, steht die Version in der Schicht unter shell/*.patch.
+# Ursprungsprojekt liegt, steht die Version in der Schicht unter schichten/*.patch.
 set -uo pipefail
 ALPE_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
 
@@ -20,7 +20,7 @@ brand_file="$ALPE_DIR/shell/Common/Brand.qml"
 if [ -f "$brand_file" ]; then
     brand="$(sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' "$brand_file" | head -1)"
 else
-    brand="$(cat "$ALPE_DIR"/shell/*.patch 2>/dev/null | sed -n 's/^+.*property string version: "\([^"]*\)".*/\1/p' | tail -1)"
+    brand="$(cat "$ALPE_DIR"/schichten/*.patch 2>/dev/null | sed -n 's/^+.*property string version: "\([^"]*\)".*/\1/p' | tail -1)"
 fi
 changelog="$(sed -n 's/^## \([0-9][0-9.]*\).*/\1/p' "$ALPE_DIR/CHANGELOG.md" 2>/dev/null | head -1)"
 

@@ -23,10 +23,6 @@ SOFTWARE.
 ---------------------------------------------------------------------------
 Fremde Teile
 
-- Die Schichten unter shell/ ändern die Dux Modular Shell
-  (https://github.com/duxlabs-dev/dux-shell), MIT-Lizenz, Copyright (c) 2025
-  Avenge Media LLC. Ihre Lizenz gilt für den Code, auf den sie sich beziehen.
-- Schriften im Shell-Code (Modules/Lock/Alpe/fonts): Alfa Slab One und
-  JetBrains Mono, SIL Open Font License 1.1 (siehe die OFL-Dateien dort).
-- Wetterdaten und Radarbilder: MeteoSchweiz Open Data, Quellenangabe
-  «MeteoSchweiz» in der Oberfläche.
+Alpe ist ursprünglich ein Fork der Dux Modular Shell (MIT, Copyright (c) 2025
+Avenge Media LLC). Herkunft, Lizenztexte und alle Teile Dritter (Schriften,
+Klänge, Bibliotheken) stehen in der Datei NOTICE.

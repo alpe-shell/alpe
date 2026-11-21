@@ -15,7 +15,7 @@ jobs:
         run: |
           git clone --quiet --branch "$(cat BASE)" --depth 1 --recurse-submodules --shallow-submodules \
             https://github.com/duxlabs-dev/dux-shell "$RUNNER_TEMP/dux-shell"
-          git -C "$RUNNER_TEMP/dux-shell" -c user.name=ci -c user.email=ci@localhost am --quiet "$GITHUB_WORKSPACE"/shell/*.patch
+          git -C "$RUNNER_TEMP/dux-shell" -c user.name=ci -c user.email=ci@localhost am --quiet "$GITHUB_WORKSPACE"/schichten/*.patch
           git -C "$RUNNER_TEMP/dux-shell" log --oneline -1
 
       - uses: actions/setup-node@v5
