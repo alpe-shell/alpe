@@ -37,7 +37,7 @@ def session(tools):
         with open(path, "w") as handle:
             handle.write("#!/bin/sh\n" + body + "\n")
         os.chmod(path, os.stat(path).st_mode | stat.S_IEXEC)
-    env = dict(os.environ, PATH=folder + ":/usr/bin:/bin", LOG=os.path.join(folder, "log"))
+    env = dict(os.environ, PATH=folder, LOG=os.path.join(folder, "log"))
     def call(*args):
         out = subprocess.run([sys.executable, SCRIPT, *args], capture_output=True, text=True, env=env)
         return json.loads(out.stdout)

@@ -21,7 +21,7 @@ def query(tools, usb=None):
             with open(path, "w") as handle:
                 handle.write("#!/bin/sh\n" + body + "\n")
             os.chmod(path, os.stat(path).st_mode | stat.S_IEXEC)
-        env = dict(os.environ, PATH=folder + ":/usr/bin:/bin", ALPE_USB_ROOT=os.path.join(folder, "usb"))
+        env = dict(os.environ, PATH=folder, ALPE_USB_ROOT=os.path.join(folder, "usb"))
         for index, (vendor, product) in enumerate(usb or []):
             base = os.path.join(folder, "usb", "1-%d" % index)
             os.makedirs(base)
