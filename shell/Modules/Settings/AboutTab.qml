@@ -13,29 +13,7 @@ Item {
     LayoutMirroring.enabled: I18n.isRtl
     LayoutMirroring.childrenInherit: true
 
-    readonly property string assetsDir: "file://" + Theme.shellDir + "/assets/"
     readonly property string githubUrl: "https://github.com/duxlabs-dev/dux-shell"
-    readonly property string kofiUrl: "https://ko-fi.com/duxlabs"
-    readonly property string discordUrl: "https://discord.gg/ppWTpKmPgT"
-
-    readonly property var compositor: {
-        switch (true) {
-        case CompositorService.isHyprland:
-            return {
-                logo: "hyprland.svg",
-                url: "https://hypr.land",
-                label: I18n.tr("Hyprland website"),
-                discordUrl: "https://discord.com/invite/hQ9XvMUjjr",
-                discordLabel: I18n.tr("Hyprland Discord server")
-            };
-        default:
-            return {
-                logo: "",
-                url: "",
-                label: ""
-            };
-        }
-    }
 
     function host(url) {
         return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -94,42 +72,6 @@ Item {
                 subtitle: root.host(Brand.url) + " – Anleitung, Neuigkeiten, Fehler melden"
                 url: Brand.url
             }
-        }
-
-        SettingsCard {
-            // Die Kanäle gehören zum Ursprungsprojekt; Fragen zu Alpe sind dort fehl am Platz.
-            visible: false
-            title: I18n.tr("Community", "about page card title, chat and community links")
-
-            SettingsLinkRow {
-                visible: root.compositor.url !== ""
-                title: root.compositor.label
-                subtitle: root.host(root.compositor.url)
-                url: root.compositor.url
-                leading: LogoImage {
-                    source: root.compositor.logo ? root.assetsDir + root.compositor.logo : ""
-                }
-            }
-
-            SettingsLinkRow {
-                title: "niri/dux Discord"
-                subtitle: root.host(root.discordUrl)
-                url: root.discordUrl
-                leading: LogoImage {
-                    source: root.assetsDir + "discord.svg"
-                }
-            }
-
-            SettingsLinkRow {
-                visible: (root.compositor.discordUrl ?? "") !== ""
-                title: root.compositor.discordLabel ?? ""
-                subtitle: root.host(root.compositor.discordUrl ?? "")
-                url: root.compositor.discordUrl ?? ""
-                leading: LogoImage {
-                    source: root.assetsDir + "discord.svg"
-                }
-            }
-
         }
 
         SettingsCard {
