@@ -201,10 +201,6 @@ QtObject {
         CompositorService.stepWorkspace(realWorkspaces.map(ws => recordOf(ws)).filter(ws => ws.special !== true), currentWorkspace, direction);
     }
 
-    function secondaryAction(entry) {
-        CompositorService.workspaceSecondaryAction(entry ? recordOf(entry) : null, effectiveScreenName);
-    }
-
     property real _touchpadAccumulator: 0
     property real _mouseAccumulator: 0
     property bool _scrollInProgress: false

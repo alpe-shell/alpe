@@ -1510,15 +1510,6 @@ Singleton {
         }
     }
 
-    function overviewActiveForScreen(screenName) {
-        return false;
-    }
-
-    // Eine eigene Übersicht des Compositors gab es nur unter niri und Mango; Hyprland nutzt HyprlandOverview.
-    function toggleOverview(screenName) {}
-
-    function workspaceSecondaryAction(record, screenName) {}
-
     readonly property bool canStepWindowFocus: compositor === "hyprland"
 
     function stepWindowFocus(screenName, direction) {

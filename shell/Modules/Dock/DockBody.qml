@@ -403,26 +403,14 @@ FocusScope {
         onTriggered: dock.startupRevealDone = true
     }
 
-    readonly property bool overviewReveal: dock.config.openOnOverview && CompositorService.overviewActiveForScreen(dock._dockScreenName)
     readonly property bool hoverOrActive: dockMouseArea.containsMouse || dock.interactionActive || contextMenuOpen || revealSticky
 
-    onOverviewRevealChanged: {
-        if (overviewReveal && usesConnectedFrameChrome) {
-            slideXSpring.snapTo(dockSlide.targetX);
-            slideYSpring.snapTo(dockSlide.targetY);
-            dock._syncDockChromeState();
-        }
-    }
-
     property bool reveal: {
-        if ((!startupRevealDone && !overviewReveal) || !dock.geometryReady || !(hostWindow?.visible ?? true))
+        if (!startupRevealDone || !dock.geometryReady || !(hostWindow?.visible ?? true))
             return false;
 
         if (_modalRetractActive)
             return false;
-
-        if (overviewReveal)
-            return true;
 
         if (hiddenForFullscreen || !dock.config.enabled)
             return false;

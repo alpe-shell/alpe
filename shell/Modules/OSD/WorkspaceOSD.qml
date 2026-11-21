@@ -36,10 +36,6 @@ DOSD {
     autoHideInterval: 1500
     enableMouseInteraction: false
 
-    function inOverview() {
-        return root.useNativeWorkspace && CompositorService.overviewActiveForScreen(root.screen?.name);
-    }
-
     function getActiveWorkspace() {
         const screenName = root.screen?.name ?? "";
         if (root.useNativeWorkspace)
@@ -76,8 +72,6 @@ DOSD {
             return;
         }
         if (root.lastActiveWorkspaceId === ws.id)
-            return;
-        if (root.inOverview())
             return;
 
         root.lastActiveWorkspaceId = ws.id;

@@ -247,7 +247,6 @@ BasePill {
     }
 
     onRightClicked: {
-        CompositorService.workspaceSecondaryAction(null, root.effectiveScreenName);
         root.toggleHyprlandOverview();
     }
 
@@ -549,7 +548,6 @@ BasePill {
                                 return;
                             root.switchToWorkspaceByModelData(modelData);
                         } else if (mouse.button === Qt.RightButton) {
-                            CompositorService.workspaceSecondaryAction(record, root.effectiveScreenName);
                             root.toggleHyprlandOverview();
                         }
                     }

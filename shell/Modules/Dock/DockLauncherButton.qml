@@ -20,10 +20,6 @@ Item {
         PopoutService.toggleDankLauncherV2();
     }
 
-    function secondaryActivate() {
-        CompositorService.toggleOverview(root.dockApps?.surfaceContext?.screen?.name);
-    }
-
     MouseArea {
         id: mouseArea
 
@@ -31,12 +27,10 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         acceptedButtons: Qt.LeftButton | Qt.RightButton
+        // Rechtsklick öffnete die Übersicht von niri; er bleibt angenommen und tut nichts.
         onClicked: mouse => {
-            if (mouse.button === Qt.RightButton) {
-                root.secondaryActivate();
-            } else {
+            if (mouse.button === Qt.LeftButton)
                 root.activate();
-            }
         }
     }
 

@@ -464,8 +464,6 @@ Item {
                     SessionData.suppressOSDTemporarily();
                     AudioService.toggleMute();
                 }
-                if (group.isWorkspaces)
-                    workspaces.secondaryAction(null);
                 return;
             }
             if (group.isWorkspaces) {
