@@ -106,7 +106,6 @@ Singleton {
     }
 
     // Umsortieren per Ziehen konnte nur niri; der Zieh-Pfad in WorkspaceSwitcher bleibt dadurch aus.
-    readonly property bool workspaceReorderSupported: false
 
     readonly property bool isKnownCompositor: configKey !== ""
     readonly property bool supportsWindowRules: isHyprland
@@ -1512,10 +1511,6 @@ Singleton {
     }
 
     function overviewActiveForScreen(screenName) {
-        return false;
-    }
-
-    function workspacesHiddenByOverview(screenName) {
         return false;
     }
 

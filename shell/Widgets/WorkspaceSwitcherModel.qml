@@ -34,7 +34,6 @@ QtObject {
     readonly property var extProjection: (useExtWorkspace && screen) ? (CompositorService.isKwin ? KwinService.projection : WindowManager.screenProjection(screen)) : null
 
     readonly property string effectiveScreenName: followFocus ? (BarWidgetService.getFocusedScreenName() || screenName) : screenName
-    readonly property bool hiddenByOverview: CompositorService.workspacesHiddenByOverview(effectiveScreenName)
     readonly property string compositorName: CompositorService.compositor
 
     readonly property var currentWorkspace: {
@@ -52,8 +51,6 @@ QtObject {
         }
         if (!useNativeWorkspaces)
             return [1];
-        if (hiddenByOverview)
-            return [];
 
         const baseList = CompositorService.workspacesForScreen(screenName, followFocus, {
             "occupiedOnly": occupiedOnly,

@@ -61,8 +61,6 @@ BasePill {
     readonly property real compactScale: compactIndicators ? BarMetrics.indicatorCompactScale : 1
     readonly property real activeIconRatio: 1.6 * compactScale
     readonly property real iconRatio: 1.2 * compactScale
-    readonly property real overviewTintAlpha: 0.18
-    readonly property real dragOpacity: 0.8
     readonly property real hoverFadeAlpha: 0.7
     readonly property real inactiveLabelAlpha: 0.85
     readonly property real unfocusedAppAlpha: 0.7
@@ -88,7 +86,6 @@ BasePill {
     readonly property bool useExtWorkspace: workspaces.useExtWorkspace
     readonly property bool useNativeWorkspaces: workspaces.useNativeWorkspaces
     readonly property string effectiveScreenName: workspaces.effectiveScreenName
-    readonly property bool workspacesHiddenByOverview: workspaces.hiddenByOverview
     readonly property var currentWorkspace: workspaces.currentWorkspace
     readonly property var workspaceList: workspaces.workspaceList
 
@@ -267,17 +264,6 @@ BasePill {
         workspaces.handleWheel(wheel);
     }
 
-    property int dragSourceIndex: -1
-    property int dragTargetIndex: -1
-    property bool suppressShiftAnimation: false
-
-    onWorkspaceListChanged: {
-        if (dragSourceIndex >= 0) {
-            dragSourceIndex = -1;
-            dragTargetIndex = -1;
-            suppressShiftAnimation = false;
-        }
-    }
 
     BarSegment {
         id: workspaceRow
@@ -285,51 +271,6 @@ BasePill {
         anchors.centerIn: root.visualContent
         spacing: root.segmented ? BarMetrics.segmentGap : Theme.spacingS
         vertical: root.isVertical
-
-        // Pille für Compositors, die Arbeitsflächen in der Übersicht verbergen (bisher nur Mango); derzeit nie sichtbar
-        Item {
-            id: overviewPill
-            visible: CompositorService.workspacesHiddenByOverview(root.effectiveScreenName)
-            width: root.isVertical ? root.widgetThickness : overviewBg.width
-            height: root.isVertical ? overviewBg.height : root.widgetThickness
-
-            Rectangle {
-                id: overviewBg
-                anchors.centerIn: parent
-                width: root.isVertical ? Math.min(root.widgetThickness, Math.max(root.widgetThickness * root.compactRatio, overviewContent.implicitWidth + Theme.spacingS)) : (overviewContent.implicitWidth + Theme.spacingS * 2)
-                height: root.isVertical ? Math.max(root.widgetThickness * root.slimRatio, overviewContent.implicitHeight + Theme.spacingXS) : Math.min(root.widgetThickness, Math.max(root.widgetThickness * root.slimRatio, overviewContent.implicitHeight + Theme.spacingXS))
-                radius: BarMetrics.pillRadius(Math.min(width, height), BarMetrics.widgetStyle(root.barConfig))
-                color: Theme.withAlpha(Theme.primary, root.overviewTintAlpha)
-
-                Row {
-                    id: overviewContent
-                    anchors.centerIn: parent
-                    spacing: Theme.spacingXS
-
-                    DIcon {
-                        anchors.verticalCenter: parent.verticalCenter
-                        name: "grid_view"
-                        size: root.labelSize + 2
-                        color: Theme.primary
-                    }
-
-                    StyledText {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !root.isVertical
-                        text: I18n.tr("Overview", "noun, niri compositor overview mode label")
-                        color: Theme.primary
-                        font.pixelSize: root.labelSize
-                        font.weight: Theme.fontWeightMedium
-                    }
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: CompositorService.toggleOverview(root.effectiveScreenName)
-            }
-        }
 
         Repeater {
             id: workspaceRepeater
@@ -339,61 +280,6 @@ BasePill {
 
             Item {
                 id: delegateRoot
-
-                property bool isDropTarget: root.dragTargetIndex === index
-
-                z: dragHandler.dragging ? 1000 : 1
-
-                property real shiftOffset: {
-                    if (root.dragSourceIndex < 0 || index === root.dragSourceIndex)
-                        return 0;
-                    const dragIdx = root.dragSourceIndex;
-                    const dropIdx = root.dragTargetIndex;
-                    if (dropIdx < 0)
-                        return 0;
-                    const shiftAmount = delegateRoot.width + workspaceRow.spacing;
-                    if (dragIdx < dropIdx && index > dragIdx && index <= dropIdx)
-                        return -shiftAmount;
-                    if (dragIdx > dropIdx && index >= dropIdx && index < dragIdx)
-                        return shiftAmount;
-                    return 0;
-                }
-
-                readonly property var shiftSpringParams: Theme.springPreset("fast", 150)
-
-                SpringMotion {
-                    id: shiftXSpring
-                    enabled: !root.suppressShiftAnimation
-                    positionEpsilon: 0.05
-                    velocityEpsilon: 0.05
-                    stiffness: delegateRoot.shiftSpringParams.stiffness
-                    damping: delegateRoot.shiftSpringParams.damping
-                    value: delegateRoot.shiftOffset
-
-                    Component.onCompleted: snapTo(delegateRoot.shiftOffset)
-                }
-
-                SpringMotion {
-                    id: shiftYSpring
-                    enabled: !root.suppressShiftAnimation
-                    positionEpsilon: 0.05
-                    velocityEpsilon: 0.05
-                    stiffness: delegateRoot.shiftSpringParams.stiffness
-                    damping: delegateRoot.shiftSpringParams.damping
-                    value: delegateRoot.shiftOffset
-
-                    Component.onCompleted: snapTo(delegateRoot.shiftOffset)
-                }
-
-                onShiftOffsetChanged: {
-                    shiftXSpring.retarget(shiftOffset);
-                    shiftYSpring.retarget(shiftOffset);
-                }
-
-                transform: Translate {
-                    x: root.isVertical ? 0 : shiftXSpring.value
-                    y: root.isVertical ? shiftYSpring.value : 0
-                }
 
                 readonly property var record: root.recordOf(modelData)
                 property bool isActive: {
@@ -641,23 +527,6 @@ BasePill {
                     animated: delegateRoot.colorAnimationReady
                 }
 
-                Item {
-                    id: dragHandler
-                    anchors.fill: parent
-                    property bool dragging: false
-                    property point dragStartPos: Qt.point(0, 0)
-                    property real dragAxisOffset: 0
-                    readonly property var rootWorkspaceList: root.workspaceList
-
-                    onRootWorkspaceListChanged: {
-                        if (!dragging)
-                            return;
-                        dragging = false;
-                        dragAxisOffset = 0;
-                        mouseArea.mousePressed = false;
-                    }
-                }
-
                 HoverHandler {
                     id: pillHover
                     enabled: !isPlaceholder
@@ -667,61 +536,12 @@ BasePill {
                     id: mouseArea
                     anchors.fill: parent
                     hoverEnabled: !isPlaceholder
-                    cursorShape: isPlaceholder ? Qt.ArrowCursor : (dragHandler.dragging ? Qt.ClosedHandCursor : Qt.PointingHandCursor)
+                    cursorShape: isPlaceholder ? Qt.ArrowCursor : Qt.PointingHandCursor
                     enabled: !isPlaceholder
                     acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-                    property bool mousePressed: false
-
-                    onPressed: mouse => {
-                        if (mouse.button === Qt.LeftButton && CompositorService.workspaceReorderSupported && root.opt("workspaceDragReorder") && !isPlaceholder) {
-                            mousePressed = true;
-                            dragHandler.dragStartPos = Qt.point(mouse.x, mouse.y);
-                        }
-                    }
-
-                    onPositionChanged: mouse => {
-                        if (!mousePressed || !CompositorService.workspaceReorderSupported || !root.opt("workspaceDragReorder") || isPlaceholder)
-                            return;
-
-                        if (!dragHandler.dragging) {
-                            const distance = root.isVertical ? Math.abs(mouse.y - dragHandler.dragStartPos.y) : Math.abs(mouse.x - dragHandler.dragStartPos.x);
-                            if (distance > 5) {
-                                dragHandler.dragging = true;
-                                root.dragSourceIndex = index;
-                                root.dragTargetIndex = index;
-                            }
-                        }
-
-                        if (!dragHandler.dragging)
-                            return;
-
-                        const rawAxisOffset = root.isVertical ? (mouse.y - dragHandler.dragStartPos.y) : (mouse.x - dragHandler.dragStartPos.x);
-
-                        const itemSize = (root.isVertical ? delegateRoot.height : delegateRoot.width) + workspaceRow.spacing;
-                        const maxOffsetPositive = (root.workspaceList.length - 1 - index) * itemSize;
-                        const maxOffsetNegative = -index * itemSize;
-                        const axisOffset = Math.max(maxOffsetNegative, Math.min(maxOffsetPositive, rawAxisOffset));
-                        dragHandler.dragAxisOffset = axisOffset;
-
-                        const slotOffset = Math.round(axisOffset / itemSize);
-                        const newTargetIndex = Math.max(0, Math.min(root.workspaceList.length - 1, index + slotOffset));
-
-                        if (newTargetIndex !== root.dragTargetIndex) {
-                            root.dragTargetIndex = newTargetIndex;
-                        }
-                    }
-
                     onReleased: mouse => {
-                        const wasDragging = dragHandler.dragging;
-
-                        mousePressed = false;
-                        dragHandler.dragging = false;
-                        dragHandler.dragAxisOffset = 0;
-                        root.dragSourceIndex = -1;
-                        root.dragTargetIndex = -1;
-
-                        if (wasDragging || isPlaceholder)
+                        if (isPlaceholder)
                             return;
 
                         if (mouse.button === Qt.LeftButton) {
@@ -775,8 +595,8 @@ BasePill {
                 width: root.isVertical ? root.widgetThickness : visualWidth
                 height: root.isVertical ? visualHeight : root.widgetThickness
 
-                readonly property real outlineWidth: dragHandler.dragging || isUrgent || isDropTarget ? Theme.outlineWidthFocused : 0
-                readonly property color outlineColor: dragHandler.dragging ? Theme.primary : (isUrgent ? urgentColor : (isDropTarget ? Theme.primary : Theme.withAlpha(Theme.primary, 0)))
+                readonly property real outlineWidth: isUrgent ? Theme.outlineWidthFocused : 0
+                readonly property color outlineColor: isUrgent ? urgentColor : Theme.withAlpha(Theme.primary, 0)
 
                 Behavior on width {
                     enabled: !SettingsData.reduceMotion
@@ -867,7 +687,6 @@ BasePill {
                     pressed: mouseArea.pressed
                     color: root.cardsStyle && !isActive ? "transparent" : delegateRoot.displayColor
                     radiusOverride: BarMetrics.indicatorRadius(root.indicatorStyle, thickness, root.roundness)
-                    opacity: dragHandler.dragging ? root.dragOpacity : 1.0
 
                     border.width: root.cardsStyle && !isActive ? Math.max(Theme.outlineWidth, delegateRoot.outlineWidth) : delegateRoot.outlineWidth
                     border.color: delegateRoot.outlineWidth > 0 ? delegateRoot.outlineColor : delegateRoot.displayColor
@@ -882,10 +701,6 @@ BasePill {
                         color: delegateRoot.displayColor
                     }
 
-                    transform: Translate {
-                        x: root.isVertical ? 0 : (dragHandler.dragging ? dragHandler.dragAxisOffset : 0)
-                        y: root.isVertical ? (dragHandler.dragging ? dragHandler.dragAxisOffset : 0) : 0
-                    }
 
                     Behavior on opacity {
                         enabled: !SettingsData.reduceMotion
@@ -938,10 +753,6 @@ BasePill {
                     anchors.fill: parent
                     active: root.opt("showWorkspaceApps") || root.opt("showWorkspaceIndex") || root.opt("showWorkspaceName") || loadedHasIcon
                     opacity: visualContent.opacity
-                    transform: Translate {
-                        x: root.isVertical ? 0 : (dragHandler.dragging ? dragHandler.dragAxisOffset : 0)
-                        y: root.isVertical ? (dragHandler.dragging ? dragHandler.dragAxisOffset : 0) : 0
-                    }
                     sourceComponent: Item {
                         id: contentRoot
                         readonly property real contentWidth: contentRow.item?.implicitWidth ?? 0
