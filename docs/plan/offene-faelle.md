@@ -1,6 +1,6 @@
 # Phase A – offene Fälle
 
-Stand: 21. November 2026, nach C5. Ergänzt mit den Entscheiden 0.5 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
+Stand: 21. November 2026, nach C5 und Mac-Test. Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
 (Abschnitt «Stand»). Erledigte Fälle werden gestrichen, nicht gelöscht.
 
 ## Entscheide des Maintainers
@@ -15,10 +15,17 @@ Das Symbol im Kontrollzentrum und auf dem Sperrbildschirm zeigte nur unter niri 
 seit C2 immer aus. Bleibt in Phase A unverändert (Plan 0.5 Nr. 3). Vorschlag für nach 1.1: an
 `PrivacyService.screensharingActive` hängen.
 
-## Mac-Test (ausstehend)
+## Mac-Test
 
-Die Ladeprüfung braucht `kwin_wayland --virtual` und wird am Mac ohne KWin übersprungen;
-getestet wird in der echten Hyprland-Sitzung, `~/alpe` bleibt unberührt.
+**Stand nach C5 (`2271063`) getestet am 21.11.2026** (Plan 0.6): Hyprland 0.57.2, Fedora Asahi
+45, Quickshell 0.3.2 (COPR `avengemedia/quickshell`); Shell startet, Plugins geladen, keine
+QML-Fehler; `doctor` erkennt Hyprland. Befunde 1–4 siehe Plan 0.6 und die Fälle unten.
+
+Anleitung für den nächsten Stand (nach D3). Die Ladeprüfung braucht `kwin_wayland --virtual`
+und wird am Mac übersprungen; getestet wird in der echten Hyprland-Sitzung, `~/alpe` bleibt
+unberührt. **Ab D2 schreibt die Testshell nach `~/.config/alpe`, `~/.local/state/alpe`,
+`~/.cache/alpe` und `~/.config/hypr/alpe/`** (Plan 7.4); vorher entstehende Dateien in
+`~/.config/hypr/dms/` (z. B. `layout.lua`) schreibt die Shell beim Start selbst.
 
 Am PC (Maintainer):
 
@@ -26,45 +33,71 @@ Am PC (Maintainer):
 git -C ~/alpe-phase-a push origin phase-a
 ```
 
-Am Mac:
+Am Mac – sichern (Hypr-Ordner mit, weil die Shell darin schreibt):
 
 ```
 cp -r ~/.config/dms ~/.config/dms.vor-phase-a
+cp -r ~/.config/hypr ~/.config/hypr.vor-phase-a
+cp -r ~/.config/alpe ~/.config/alpe.vor-phase-a
+cp -r ~/.local/state/alpe ~/.local/state/alpe.vor-phase-a
 git -C ~/alpe fetch origin phase-a
-git -C ~/alpe worktree add ~/alpe-phase-a origin/phase-a
+git -C ~/alpe-phase-a checkout --detach origin/phase-a
 bash ~/alpe-phase-a/tools/test.sh
 cd ~/alpe-phase-a/core
-env CGO_ENABLED=0 go build -o /tmp/alpe-dienst-c5 ./cmd/dms
-/tmp/alpe-dienst-c5 doctor
+make dev BUILD_DIR=/tmp/alpe-d3
+/tmp/alpe-d3/alpe-dienst doctor
 ```
 
-(`go` fehlt: `sudo dnf install golang`.) Bei `doctor` muss unter «Compositor» Hyprland
-stehen.
+(Beim ersten Mal statt `checkout` noch `git -C ~/alpe worktree add ~/alpe-phase-a origin/phase-a`.)
+Ab D1 heisst das Programm `alpe-dienst`. Bei `doctor` muss unter «Compositor» Hyprland stehen.
 
-Laufende Shell stoppen – zuerst `systemctl --user is-active dms.service`; bei `active`:
+Laufende Shell stoppen:
 
 ```
 systemctl --user stop dms.service
 ```
 
-sonst `dms kill`. Testshell starten:
+Ab D2 sucht die Shell ihre Einstellungen in `~/.config/alpe` (Umzug erst in F1). Damit der Test
+nicht mit Werkseinstellungen läuft, die DMS-Dateien wie Umzug-Schritt 4 dazukopieren (`-n`:
+nichts überschreiben; Sicherungen von oben):
 
 ```
-/tmp/alpe-dienst-c5 -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-c5.log
+cp -rn ~/.config/dms/. ~/.config/alpe/
+mkdir -p ~/.local/state/alpe
+cp -rn ~/.local/state/dms/. ~/.local/state/alpe/
 ```
 
-Durchklicken: Arbeitsflächen wechseln (auch Mausrad), Rechtsklick aufs Launcher-Logo
-(Hyprland-Übersicht), Dock, Launcher, Kontrollzentrum, Tastaturlayout; Einstellungen →
-Tastenkürzel (bearbeiten, abbrechen), Fensterregeln (neue Regel, abbrechen), Anzeige,
-Maus & Touchpad, Compositor-Layout, Über-Seite; Energiemenü nur öffnen; im zweiten
-Terminal `/tmp/alpe-dienst-c5 screenshot window`.
-
-Beenden mit Strg+C, dann `systemctl --user start dms.service` (oder neu anmelden).
-Auswertung:
+Testshell starten:
 
 ```
-grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Unable to assign|not installed" /tmp/alpe-c5.log
+/tmp/alpe-d3/alpe-dienst -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-d3.log
 ```
+
+Durchklicken wie beim letzten Mal (Arbeitsflächen, Launcher-Rechtsklick, Dock, Launcher,
+Kontrollzentrum, Tastaturlayout, Einstellungen → Tastenkürzel, Fensterregeln, Anzeige, Maus &
+Touchpad, Compositor-Layout, Über-Seite; Energiemenü nur öffnen; im zweiten Terminal
+`/tmp/alpe-d3/alpe-dienst screenshot window`). Zusätzlich: Starter-Einträge aus «Zuletzt»
+(App-ID), Mitteilung senden (`notify-send test`).
+
+Beenden mit Strg+C, dann `systemctl --user start dms.service`. Auswerten:
+
+```
+grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Unable to assign|not installed" /tmp/alpe-d3.log
+ls ~/.config/hypr/alpe
+```
+
+Danach den Stand vor dem Test zurückholen. Wichtig für den späteren Umzug: Ein
+`~/.config/alpe/settings.json` aus dem Test würde das Sicherheitsnetz von `alpe start`
+(Plan 6.6) abschalten.
+
+```
+rm -rf ~/.config/alpe ~/.local/state/alpe ~/.config/hypr/alpe
+mv ~/.config/alpe.vor-phase-a ~/.config/alpe
+mv ~/.local/state/alpe.vor-phase-a ~/.local/state/alpe
+```
+
+(Gab es `~/.local/state/alpe` vor dem Test nicht, meldet das erste `cp` bzw. das letzte `mv`
+nur «nicht gefunden».)
 
 ## Nach C4: Liste für D
 
@@ -84,6 +117,53 @@ grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Una
   vermutlich tot seit C1; prüfen und entfernen.
 - Theme-Kategorie «registry»: Die Auswahl ist weg, `Theme.qml` kennt die Kategorie aber noch
   (wer ein Register-Theme aktiv hatte, behält es als eigene Datei). Mit D6/D7 bereinigen.
+
+## Hyprland: `hyprctl descriptions` (nach Phase A)
+
+Unter Hyprland 0.57.2 meldet `HyprlandService.qml:257` `hyprctl descriptions parse failed:
+SyntaxError: JSON.parse`. Gibt es schon in 1.0 (Journal vom 20.11.2026, vor Phase A), also
+nicht durch Phase A verursacht. Folge: `hyprOptionNames` bleibt leer; die Layout-/Eingabe-
+Erzeugung läuft trotzdem weiter. Vermutung: Hyprland 0.57 liefert für `hyprctl -j descriptions`
+kein gültiges JSON (oder Text vor dem JSON). Nicht in Phase A beheben (Plan 0.6 Nr. 3).
+
+## Plugin-Kompatibilität (Entscheid vor D7)
+
+Fremde Plugins: am Mac hueManager, calculator; am PC sathiAi, claudeCodeUsage (am PC am
+21.11. dazugekommen). Was sie vom Ursprung benutzen (am PC gelesen):
+
+| Schnittstelle | Beispiel | betrifft | Was Phase A daran ändert |
+|---|---|---|---|
+| Module `qs.Common`, `qs.Services`, `qs.Widgets`, `qs.Modules.Plugins`, `qs.DCommon.Widgets`, `qs.Modals.Common` | `import qs.Common` | alle | nichts (neutral) |
+| Basistypen `PluginComponent`, `PluginSettings`, `PopoutComponent` | | alle | nichts (neutral) |
+| Singletons `Theme`, `PluginService`, `ToastService`, `SessionData` | `Theme.primary` | alle | nichts – D7 benennt nur `DMS*`/`Dank*`-Namen |
+| **`Dank*`-Widgets** (`DankIcon`, `DankButton`, `DankTextField` …) aus `qs.Widgets` | `DankIcon { name: "close" }` | claudeCodeUsage; laut Maintainer auch hueManager, calculator | 40 Dateien `shell/Widgets/Dank*.qml`. Schon im Ursprung **reine Weiterleitungen** auf `DCommon.D*` mit Veraltet-Meldung (`Deprecation.type`); die Shell selbst benutzt sie nicht mehr |
+| Programm `dms` | `dms ipc call …`, `dms notify` | sathiAi | heisst ab D1 `alpe-dienst` |
+| `plugin.json` `requires_dms` | | Register-Plugins | wird geprüft gegen `Brand.upstreamVersion` |
+| Plugin-Ordner `~/.config/dms/plugins` | | alle | ab D2 `~/.config/alpe/plugins`; fremde Plugins zieht der Umzug nicht mit (0.4) |
+
+(`DankRectangle` in sathiAi ist eine eigene Datei des Plugins, kein Shell-Typ.)
+
+**Vorschlag:** Kompatibilität gezielt behalten, wo sie nichts kostet, sonst bewusst brechen.
+
+1. **`Dank*`-Widgets behalten** (40 kleine Weiterleitungen, kein eigener Code). Sie stehen als
+   «Plugin-Schnittstelle» auf der Ausnahmeliste der Namensprüfung; D7 fasst sie nicht an.
+   Ohne sie laden claudeCodeUsage, hueManager und calculator nicht mehr («DankIcon is not a
+   type»). Entfernen erst, wenn Alpe eine eigene Plugin-Schnittstelle beschreibt (Phase B).
+2. **`requires_dms` weiter lesen**, zusätzlich `requires_alpe` (gegen `Brand.version`) für
+   eigene Plugins. Kostet ein paar Zeilen in `PluginService`.
+3. **Programm `dms` bewusst brechen.** Ein `/usr/bin/dms` im Paket würde mit `dux-shell`
+   kollidieren, das beim Umzug als Rückweg installiert bleibt (Plan 6.2). Folge: In sathiAi
+   scheitern «Einstellungen öffnen» (`dms ipc call settings …`) und die Systemmitteilung
+   (`dms notify`, das Plugin hat einen Ersatzweg über `ToastService`). `alpe doctor` nennt
+   fremde Plugins, die `"dms"` aufrufen. (Alternative ohne Kollision: Weiterleitung
+   `/usr/share/alpe/compat/bin/dms` und dieser Ordner vorne im `PATH` von `alpe.service` –
+   nicht empfohlen, verdeckt ein echtes `dms` und ist schwer zu erklären.)
+4. **Plugin-Ordner:** wie entschieden; fremde Plugins holt man selbst nach
+   `~/.config/alpe/plugins`, `alpe doctor` sagt welche.
+
+Bewusst brechen in allen Punkten hiesse: 40 Dateien weniger und eine saubere Namensprüfung,
+aber jedes fremde Plugin mit `Dank*`-Widgets lädt nicht mehr – bei den vier bekannten wären es
+mindestens drei.
 
 ## Bekannte Fehlschläge (schon vor C1, unverändert)
 

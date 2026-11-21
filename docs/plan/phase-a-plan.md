@@ -61,9 +61,9 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 
 ### Als Nächstes
 
-- Mac-Test des Stands nach C5 (Anleitung in `docs/plan/offene-faelle.md`, Fall «Mac-Test»).
-- ~~**C4**, **C5**~~ erledigt; **Halt nach C5** (Freigabe für D1 ff.).
-- Danach D1 ff. nach Abschnitt 10.
+- ~~Mac-Test des Stands nach C5~~ erledigt, Befunde in 0.6.
+- ~~**C4**, **C5**~~ erledigt.
+- SettingsSearchRegistration, **C6**, **D1–D3**; **Halt nach D3**.
 
 ---
 
@@ -144,7 +144,7 @@ Antworten auf Abschnitt 12:
 | 5 | Greeter weg; Aktualisierung/Changelog/Willkommen des Ursprungs weg; Plugin- und Theme-Browser **inklusive `internal/registries` ganz entfernen** (eigener Commit, lokales Laden von Plugins bleibt); vsix weg; **Tailscale weg** (QML-Service, `internal/server/tailscale`, Abhängigkeit `tailscale.com`, Einstellungen, Leisten-Widget) |
 | 6 | D7 als letzte Etappe mit eigenem Halt, nur bei grüner Ladeprüfung der ganzen Shell; bei Problemen D7 verwerfen und interne Namen auf die Ausnahmeliste |
 | 7 | Eigenes COPR `alpe-shell/alpe` mit selbst gebautem Quickshell (Vorlage: errornointernet), bei Bedarf matugen. Mac-Ausgaben inkl. `getconf PAGESIZE` folgen |
-| 8 | Hyprland startet über `exec-once = alpe start` |
+| 8 | ~~Hyprland startet über `exec-once = alpe start`~~ **geändert in 0.6 Nr. 1:** Hyprland startet `alpe.service` über `hyprland-session.target` |
 | 9 | dux-go/dux-gop bleiben, Ausnahme in der Namensprüfung |
 | 10 | AUR-Veröffentlichung zum Release von 1.1 durch den Maintainer; bis dahin baut `get.sh` aus dem PKGBUILD im Repo |
 | 11 | Alte Ordner bleiben bis `alpe umzug aufraeumen`; `alpe doctor` erinnert daran |
@@ -187,6 +187,22 @@ Antworten auf Abschnitt 12:
 | 3 | Bildschirmfreigabe-Symbol: **nicht in Phase A**, bleibt unverändert; in `offene-faelle.md` mit dem Vorschlag, es nach 1.1 an `PrivacyService.screensharingActive` zu hängen. |
 | 4 | **C5** = Aufräumen der abgeschalteten Zweige (Fensterregel- und Kürzel-Editor, Zieh-Pfad zum Umsortieren der Arbeitsflächen, Übersichts-Pille). Nur nachweislich toten Code entfernen, Ladeprüfung unter KWin und Hyprland. |
 | 5 | Weiterhin ein Thema pro Commit. **Halt nach C5** (statt nach C4). |
+
+### 0.6 Befunde aus dem Mac-Test nach C5 (21.11.2026)
+
+Mac-Test auf `2271063`: Shell startet unter Hyprland 0.57.2 (Fedora Asahi 45, aarch64, Quickshell
+0.3.2 aus COPR `avengemedia/quickshell`), alle Plugins geladen, keine QML-Fehler im Log;
+`doctor` erkennt Hyprland, 1 Warnung (`QT_QPA_PLATFORMTHEME=gtk3`).
+
+| # | Befund | Entscheid / Folge |
+|---|---|---|
+| 1 | Am Mac läuft die Shell als `dms.service` (enabled, active), gestartet über `hyprland-session.target`, nicht per `exec-once`. | **Entscheid 8 geändert:** Unter Hyprland startet `alpe.service` wie heute `dms.service` über `hyprland-session.target` (`hyprland-session.target.wants/alpe.service`), unter KDE über `graphical-session.target`. Ein gemeinsamer Startweg: `ExecStart=/usr/bin/alpe start --session` in der Unit für KWin und Hyprland, keine `exec-once`-Zeile. Angepasst: 6.1, 6.4, 6.6, 6.8, 7.2 Schritt 7, 7.4. |
+| 2 | Die Testshell schreibt beim Start `~/.config/hypr/dms/layout.lua` (`HyprlandService`). | Mac-Anleitung sichert `~/.config/hypr` mit. Umzug: Die Shell erzeugt Dateien im Hypr-Ordner selbst (`outputs`, `layout`, `cursor`, `input`, `windowrules`, über matugen `colors`); beim Wechsel auf `hypr/alpe/` siehe 7.4. |
+| 3 | `hyprctl descriptions parse failed: SyntaxError: JSON.parse` (`HyprlandService.qml:257`) unter Hyprland 0.57.2, auch schon in 1.0. | In `offene-faelle.md`, nicht in Phase A. |
+| 4 | Fremde Plugins (Mac: hueManager, calculator; PC: sathiAi, claudeCodeUsage) benutzen DMS-Namen (`DankIcon` …). | Vorschlag in `offene-faelle.md` («Plugin-Kompatibilität»), Entscheid vor D7. |
+
+Weiter: SettingsSearchRegistration beheben (eigener Commit), **C6** Aufräumen (Reste aus C5 und
+der Liste «Nach C4»), dann D1–D3. **Halt nach D3.**
 
 ---
 
@@ -434,6 +450,12 @@ oder fälschlich Entferntes übrig bleibt, und führe danach die Ladeprüfung de
 aus `~/.config/dms` und ersetzt sich dann per `exec` durch `alpe-dienst -c … run`),
 `WantedBy=graphical-session.target`.
 
+Eingeschaltet wird die Unit je Compositor wie heute `dms.service` (0.6 Nr. 1): unter KDE
+`systemctl --user enable alpe.service` (→ `graphical-session.target.wants`), unter Hyprland
+`alpe-dienst systemd enable` (→ `hyprland-session.target.wants/alpe.service`; Hyprland ≥ 0.57
+liefert die Target-Unit selbst und startet sie). Derselbe `ExecStart` für beide; keine
+`exec-once`-Zeile.
+
 Hinweis zu `Type=notify`: `alpe start` muss per `exec` in `alpe-dienst` übergehen (gleiche PID),
 sonst passt `NotifyAccess=main` nicht.
 
@@ -494,7 +516,10 @@ Kürzel, fastfetch, Proton-VPN-Kopfleiste), `alpe kde ein`, `alpe design apply`.
    **Kein DMS-Installer, kein `dux-shell` mehr.** Ist `dux-shell` installiert und `dms.service`
    aktiv: `alpe umzug` statt Neuinstallation.
 3. Optionale Pakete (h5py, ffmpeg, kitty, fastfetch, KWin-Effekte) wie heute, mit Merkliste.
-4. `alpe einrichten`, unter KDE `alpe kde ein --jetzt`, unter Hyprland Startzeile (7.4).
+4. `alpe einrichten`, unter KDE `alpe kde ein --jetzt`, unter Hyprland
+   `alpe-dienst systemd enable` (`hyprland-session.target` will `alpe.service`, 0.6 Nr. 1); eine
+   vorhandene `exec-once`-Zeile mit `dms run`/`alpe start` wird mit Sicherung auskommentiert,
+   sonst liefen zwei Shells.
 5. Design einspielen (wie heute).
 - Fallback ohne Paket für Entwicklung: `make install PREFIX=$HOME/.local` + Unit nach
   `~/.config/systemd/user/` (Option `--aus-quelle`).
@@ -522,7 +547,8 @@ läuft.
 - **`alpe start [ARGS]`** (neu): fehlt `~/.config/alpe/settings.json` und gibt es
   `~/.config/dms/settings.json`, zuerst `alpe umzug --nur-dateien`; danach
   `exec alpe-dienst -c <Oberfläche> run ARGS`. Oberfläche = `/usr/share/alpe/shell`, im
-  Entwicklungsmodus der Repo-Baum. Wird von `alpe.service` und von Hyprland (`exec-once`) benutzt.
+  Entwicklungsmodus der Repo-Baum. Einziger Startweg: `ExecStart` von `alpe.service`, unter KWin
+  und Hyprland gleich (0.6 Nr. 1).
 - `alpe doctor` erinnert an `alpe umzug aufraeumen`, solange die alten DMS-Ordner liegen.
 
 ### 6.7 Sperrbildschirm: nutzerspezifische Dateien (wird vor E1 vorgelegt)
@@ -546,7 +572,10 @@ einem Test gestarteter Dienst kann so die Unit des laufenden Systems neu starten
 Ab D1:
 - `alpe-dienst` ruft nie `systemctl start/stop/restart` auf und nutzt keinen Haken, der das tut
   (`TryManagedRestart` entfällt, ebenso `trySystemdStart`; `runSystemctl` bleibt nur für lesende
-  Abfragen in `doctor`).
+  Abfragen in `doctor`). `alpe-dienst systemd enable/disable` setzt bzw. entfernt nur die
+  Wants-Verknüpfung (Datei, `daemon-reload`); die Option `--now` (startet/stoppt die Unit) entfällt.
+  Der Deployer in `internal/config` (`startInLiveSession`) hat keinen Aufrufer; bleibt er nach
+  E4/F2, verliert er den `start`-Aufruf ebenfalls.
 - `alpe-dienst restart` startet nur die eigene Instanz neu (wie der Weg ohne systemd heute). Läuft der
   Dienst unter systemd (`INVOCATION_ID`/`NOTIFY_SOCKET` gesetzt), meldet `alpe-dienst restart`, dass die
   Unit über `alpe restart` neu zu starten ist, und ändert nichts. Läuft er nicht unter systemd, meldet er
@@ -617,7 +646,10 @@ Ohne 1.0-Spuren sagt `install.sh` nur, dass es durch Paket + `alpe einrichten` e
 7. **Dienste**: `dms.service` disable; Drop-ins aus `dms.service.d/` in die Sicherung;
    Inhalt übersetzen: `QT_QPA_PLATFORMTHEME*` → `alpe.service.d/kde.conf`, eigener Bau →
    ggf. `alpe entwicklung ein` (nur wenn er auf ein Repo zeigt, sonst verworfen),
-   `MALLOC_ARENA_MAX` steckt im Paket. `alpe.service` enable. Unter KDE bleibt
+   `MALLOC_ARENA_MAX` steckt im Paket. `alpe.service` wird von denselben Targets gewollt wie
+   bisher `dms.service`: jede Verknüpfung `<target>.wants/dms.service` unter
+   `~/.config/systemd/user/` wird zu `<target>.wants/alpe.service` (PC: `graphical-session.target`,
+   Mac: `hyprland-session.target`), die alte kommt in die Sicherung. Unter KDE bleibt
    `plasma-plasmashell.service` maskiert (geprüft, nicht geändert).
 8. **Hyprland (Mac)**: siehe 7.4.
 9. **Aufräumen**: Link `~/.local/bin/alpe` (zeigt ins Repo, verdeckt `/usr/bin/alpe`) entfernen,
@@ -645,18 +677,35 @@ DMS-eigene Dateien ohne Bedeutung für Alpe (`releases.json`, `launcher_cache.js
 
 ### 7.4 Hyprland (Mac)
 
-Heute (laut bootstrap.sh): `exec-once = dms run` in der eigenen Hyprland-Konfiguration,
+Heute (Mac-Test nach C5, 0.6): `dms.service` ist eingeschaltet und wird von
+`hyprland-session.target` gestartet; Hyprland 0.57 liefert und startet das Target selbst.
+`bootstrap.sh` nahm noch `exec-once = dms run` an – das ist am Mac nicht der Fall. Dazu
 `source = ~/.config/hypr/alpe.conf` (Datei mit `env = DMS_SHELL_DIR,…`) ganz oben, und – vom
 DMS-Setup – Includes aus `~/.config/hypr/dms/*.lua` (binds, colors, layout, outputs, cursor,
-windowrules, binds-user).
+input, windowrules, binds-user).
+
+**Die Shell schreibt selbst in diesen Ordner** (0.6 Nr. 2): `HyprlandService` erzeugt beim Start
+bzw. bei Änderungen `outputs.lua`, `layout.lua`, `cursor.lua`, `input.lua` und legt
+`windowrules.lua` an, matugen schreibt `colors.lua`, der Kürzel-Editor `binds-user.lua`. Ab D2
+schreibt Alpe nach `hypr/alpe/`. Folge: Startet Alpe 1.1 einmal vor dem Umzug (z. B. Paket ohne
+Umzug, `alpe start`), liegen in `hypr/alpe/` schon frisch erzeugte Dateien, die
+`hyprland.lua` noch nicht einbindet.
+
 Umzug:
-1. `hypr/alpe.conf` und ihre `source`-Zeile entfernen (die Umlenkung ist überflüssig; ausserdem
-   ist `hypr/alpe` künftig ein Ordner).
-2. `hypr/dms/` → `hypr/alpe/` (kopieren, alte bleibt bis zum Aufräumen), alle Verweise in
-   `hyprland.conf`/`hyprland.lua` und Unterdateien umschreiben (Sicherung `*.vor-alpe-1.1`).
-3. Startzeile `exec-once = dms run …` → `exec-once = alpe start` (gleiches Startmodell wie
-   heute, Entscheid 8).
-4. Wirksam nach Ab-/Anmelden; `--jetzt` startet die neue Shell sofort und beendet die alte.
+1. `hypr/alpe.conf` und ihre `source`-Zeile entfernen (die Umlenkung ist überflüssig).
+2. `hypr/dms/` → `hypr/alpe/` kopieren, alte bleibt bis zum Aufräumen. Kollisionen: Für die
+   erzeugten Dateien (`outputs`, `layout`, `cursor`, `input`, `colors`) gewinnt die Fassung aus
+   `hypr/dms/` nur, wenn `hypr/alpe/` sie noch nicht hat – die Shell erzeugt sie ohnehin aus den
+   Einstellungen neu. Von Hand gepflegte Dateien (`binds-user.lua`, `windowrules.lua`, alles
+   Unbekannte) gewinnen aus `hypr/dms/`; eine abweichende Datei in `hypr/alpe/` geht als
+   `*.vor-umzug` daneben und ins Protokoll.
+3. Alle Verweise `hypr/dms/` in `hyprland.conf`/`hyprland.lua` und Unterdateien auf `hypr/alpe/`
+   umschreiben (Sicherung `*.vor-alpe-1.1`).
+4. Start: Verknüpfung `hyprland-session.target.wants/dms.service` → `…/alpe.service` (7.2
+   Schritt 7). Eine `exec-once`-Zeile mit `dms run` gibt es am Mac nicht; findet der Umzug doch
+   eine, wird sie auskommentiert (sonst zwei Shells).
+5. Wirksam nach Ab-/Anmelden; `--jetzt` stoppt `dms.service` und startet `alpe.service` (nur
+   mit dieser Option und nach Rückfrage im Umzug).
 
 ### 7.5 Test
 
@@ -720,6 +769,7 @@ Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 
 | C3 | mango, sway, scroll, miracle, labwc, umbriel, river entfernt | dito; CompositorService auf Hyprland + KWin |
 | C4 | Grenzfälle entfernt | nach Entscheid des Maintainers (4.3), je Thema ein Commit |
 | C5 | Abgeschaltete Zweige aufgeräumt | 0.5 Nr. 4: nur nachweislich toter Code; Ladeprüfung KWin + Hyprland |
+| C6 | Aufräumen der Reste (0.6) | leere `CompositorService`-Funktionen (`toggleOverview`, `workspaceSecondaryAction`, `overviewActiveForScreen`) samt Aufrufern, `fullscreenAutoHide`-Kette, `_bindsStale`, `duxinstall`-Dateilogger, veraltete Entwicklerwerkzeuge; davor eigener Commit: SettingsSearchRegistration |
 | D1 | Go: Modulpfad, Binary `alpe-dienst`, Socket, Umgebungsvariablen; **kein Neustart von systemd-Units** (6.8) | zentrale Konstanten in `core/internal/brand`; Test zu 6.8 |
 | D2 | Go/QML: Pfade `~/.config|state|cache/alpe`, System-Plugins, hypr-Ordner | zentrale Stellen `Paths.qml`/`brand` statt verstreuter Literale |
 | D3 | App-ID, Desktop-Dateien, D-Bus-Namen, Icon | |
@@ -736,7 +786,7 @@ Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 
 | G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
-(Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D6, nach E4, nach F2, D7 separat, zuletzt G1. Vor B2 zusätzlich,
+(Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D3 (0.6), nach D6, nach E4, nach F2, D7 separat, zuletzt G1. Vor B2 zusätzlich,
 falls die Herkunft des KWin-Patches nicht als MIT belegt ist; vor C4 wegen Tailscale; vor E1 mit
 der Vorlage 6.7.
 
@@ -794,7 +844,8 @@ nachvollziehbar ist) und prüfe nach jedem Schritt mit der Ladeprüfung.
    `alpe version`
 8. **Hyprland-Start:** weiter `exec-once = alpe-dienst … run` (wie heute) oder über
    `alpe.service` (setzt eine `graphical-session.target` unter Hyprland voraus, z. B. uwsm)?
-   Empfehlung für 1.1: `exec-once`, keine zweite Baustelle.
+   Empfehlung für 1.1: `exec-once`, keine zweite Baustelle. → Nach dem Mac-Test geändert:
+   `alpe.service` über `hyprland-session.target` (0.6 Nr. 1).
 9. **dux-go / dux-gop** als Go-Abhängigkeiten behalten (Ausnahme in der Namensprüfung) oder
    vendoren und umbenennen (= weiterer Fork von ~2 MB Code)? Empfehlung: behalten.
 10. **AUR:** Veröffentlichst du `alpe-shell` im AUR (und später `alpe-shell-git`)? Bis dahin baut
