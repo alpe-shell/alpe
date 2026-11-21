@@ -2,12 +2,12 @@
 
 Stand: 21. November 2026, Branch `phase-a`. **Freigegeben am 21.11.2026** mit den Entscheiden in 0.4. Grundlage: `docs/plan/phase-a.md`, `CLAUDE.md`,
 `KONTEXT.md`, Erkundung von `~/alpe` (Commit c988364) und `~/dux-shell` (Branch `alpe` =
-v2.1.2 + 2 Schichten). Umgesetzt bis C3, siehe «Stand»; offene Einzelfälle in
+v2.1.2 + 2 Schichten). Umgesetzt bis C5, siehe «Stand»; offene Einzelfälle in
 `docs/plan/offene-faelle.md`.
 
 ---
 
-## Stand (21.11.2026, nach C3)
+## Stand (21.11.2026, nach C5)
 
 ### Erledigt
 
@@ -21,12 +21,25 @@ v2.1.2 + 2 Schichten). Umgesetzt bis C3, siehe «Stand»; offene Einzelfälle in
 | `eb97e37` | **C2** niri entfernt (Shell und Dienst) | test.sh grün |
 | `e175ce4` | **C3** mango, sway, scroll, miracle, labwc, umbriel, river entfernt; nur noch Hyprland und KWin; `doctor` kennt KWin | test.sh grün |
 | `2c92ce4` | Ladeprüfung vergleicht ohne Zeilennummern | Endstand: test.sh grün; Ladeprüfung KWin 30/30, Hyprland 39/39, nichts neu |
+| `f6b06c7` | Plan 0.5 (Entscheide nach C3), C5, offene Fälle | – |
+| `9c008a6` | **C4** Greeter | je Commit: test.sh grün, go/Node-Tests mit denselben bekannten Fehlschlägen, Ladeprüfung KWin + Hyprland ohne Neues |
+| `f1b6842` | **C4** Aktualisierungs-/Versionshinweise, Willkommen | dito |
+| `7043bb7` | **C4** Version allein aus `Brand.qml` (Makefile per ldflags, `tests/test_version.py`) | dito |
+| `95744af` | **C4** Plugin- und Theme-Browser samt Registern | dito (KWin im 2. Lauf, siehe offene Fälle) |
+| `4580f06` | **C4** Tailscale (go.mod −17 Module) | dito; Grundlinien KWin 29, Hyprland 38 |
+| `10c0e1b` | **C4** `internal/distros`, `update`/`migrate`/`setup`/`switch`; neu `internal/osinfo` | dito |
+| `bb67ffe` | **C4** Übersetzungen nur de (+ en als Quelltexte) | dito |
+| `f631f56` | **C4** VS-Code-Farbschema (vsix) | dito |
+| `c88c3f3` | **C4** Community-Links und Assets des Ursprungs | dito |
+| `ae2a925` | **C5** Fensterregel-Editor ohne niri/Mango | dito, zusätzlich qmllint |
+| `8cb116f` | **C5** Tastenkürzel-Editor ohne niri/Mango | dito |
+| `e6c7d59` | **C5** Arbeitsflächen-Umschalter: Zieh-Pfad, Übersichts-Pille | dito |
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
 Fälle). Node-Tests des Ursprungs: 10 Fehlschläge, alle schon vor C1 rot.
 
-Von 4.1 vorerst **nicht** entfernt: `core/internal/distros`, `shell/VERSION`, `shell/CODENAME`
-(siehe Entscheide unten).
+Offene Fragen aus C4 (Deployer in `internal/config`, Hinweistexte auf `dms setup`) stehen in
+`docs/plan/offene-faelle.md` unter «Nach C4: Liste für D».
 
 ### Entscheide nach C3 (Punkte 1–4)
 
@@ -48,9 +61,8 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 
 ### Als Nächstes
 
-- Mac-Test des Stands nach C3 (Anleitung in `docs/plan/offene-faelle.md`, Fall «Mac-Test»).
-- **C4** (Grenzfälle nach 0.4/4.3 und 0.5, je Thema ein Commit), **C5** (Aufräumen), Halt nach C5.
-  Der Halt wegen Tailscale entfällt: entschieden in 0.4 Nr. 5 (Tailscale weg).
+- Mac-Test des Stands nach C5 (Anleitung in `docs/plan/offene-faelle.md`, Fall «Mac-Test»).
+- ~~**C4**, **C5**~~ erledigt; **Halt nach C5** (Freigabe für D1 ff.).
 - Danach D1 ff. nach Abschnitt 10.
 
 ---

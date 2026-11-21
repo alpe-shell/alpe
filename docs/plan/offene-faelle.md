@@ -1,6 +1,6 @@
 # Phase A – offene Fälle
 
-Stand: 21. November 2026, nach C3 (`2c92ce4`), ergänzt mit den Entscheiden 0.5. Ergänzt `docs/plan/phase-a-plan.md`
+Stand: 21. November 2026, nach C5. Ergänzt mit den Entscheiden 0.5 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
 (Abschnitt «Stand»). Erledigte Fälle werden gestrichen, nicht gelöscht.
 
 ## Entscheide des Maintainers
@@ -34,8 +34,8 @@ git -C ~/alpe fetch origin phase-a
 git -C ~/alpe worktree add ~/alpe-phase-a origin/phase-a
 bash ~/alpe-phase-a/tools/test.sh
 cd ~/alpe-phase-a/core
-env CGO_ENABLED=0 go build -o /tmp/alpe-dienst-c3 ./cmd/dms
-/tmp/alpe-dienst-c3 doctor
+env CGO_ENABLED=0 go build -o /tmp/alpe-dienst-c5 ./cmd/dms
+/tmp/alpe-dienst-c5 doctor
 ```
 
 (`go` fehlt: `sudo dnf install golang`.) Bei `doctor` muss unter «Compositor» Hyprland
@@ -50,21 +50,40 @@ systemctl --user stop dms.service
 sonst `dms kill`. Testshell starten:
 
 ```
-/tmp/alpe-dienst-c3 -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-c3.log
+/tmp/alpe-dienst-c5 -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-c5.log
 ```
 
 Durchklicken: Arbeitsflächen wechseln (auch Mausrad), Rechtsklick aufs Launcher-Logo
 (Hyprland-Übersicht), Dock, Launcher, Kontrollzentrum, Tastaturlayout; Einstellungen →
 Tastenkürzel (bearbeiten, abbrechen), Fensterregeln (neue Regel, abbrechen), Anzeige,
 Maus & Touchpad, Compositor-Layout, Über-Seite; Energiemenü nur öffnen; im zweiten
-Terminal `/tmp/alpe-dienst-c3 screenshot window`.
+Terminal `/tmp/alpe-dienst-c5 screenshot window`.
 
 Beenden mit Strg+C, dann `systemctl --user start dms.service` (oder neu anmelden).
 Auswertung:
 
 ```
-grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Unable to assign|not installed" /tmp/alpe-c3.log
+grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Unable to assign|not installed" /tmp/alpe-c5.log
 ```
+
+## Nach C4: Liste für D
+
+- **Hinweise auf entfernte Befehle** (sichtbare Texte, D6): Die Oberfläche empfiehlt weiterhin
+  `dms setup`, wenn `hyprland.lua` fehlt (`KeybindsTab.qml`, `Widgets/ConfigInclude.qml`,
+  `Widgets/IncludeSetupBanner.qml`, `KeybindsService.qml`), ebenso der Dienst
+  (`keybinds/providers/hyprland.go`, `windowrules/providers/hyprland_parser.go`,
+  `server/evdev/manager.go`). Aufgerufen wird `setup` nirgends, darum ist es nach Plan 0.5
+  Nr. 1 weg. Die Texte sollen auf den Reparatur-Knopf der Oberfläche bzw. den künftigen
+  `alpe`-Befehl zeigen.
+- **Deployer in `core/internal/config`** (`deployer.go`, `session_units.go`, eingebettete
+  `hypr-*.lua`, Terminal-Vorlagen): hat seit dem Wegfall von `dms setup` keinen Aufrufer mehr,
+  ist aber die einzige Stelle, die auf einem frischen Hyprland-System `hypr/dms/*.lua` anlegt
+  (Plan 7.4). Bleibt vorerst stehen; in E4/F2 entscheiden, ob `alpe` bzw. `get.sh` ihn für eine
+  frische Mac-Installation nutzt oder ob er wegkommt.
+- `core/internal/log/filelogger.go` schreibt noch `duxinstall-*.log` (`DUXINSTALL_LOG_DIR`),
+  vermutlich tot seit C1; prüfen und entfernen.
+- Theme-Kategorie «registry»: Die Auswahl ist weg, `Theme.qml` kennt die Kategorie aber noch
+  (wer ein Register-Theme aktiv hatte, behält es als eigene Datei). Mit D6/D7 bereinigen.
 
 ## Bekannte Fehlschläge (schon vor C1, unverändert)
 
@@ -100,20 +119,30 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
 - Hyprland: `[CompositorService] failed to update DMS window rule dms-floating-windows …
   hyprland.lua not found …; run dms setup …`; verweist auf `dms setup` (Befehl fällt mit C4 weg).
 
-- Einmal flüchtig unter Hyprland (Code identisch mit der Grundlinie), danach nicht wieder:
-  `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null` und
-  `SettingsRow.qml: Cannot find member data`. Nicht in die Grundlinie aufgenommen;
-  taucht es wieder auf, Ursache suchen statt aufnehmen.
+- Sporadisch: `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null`
+  und `SettingsRow.qml: Cannot find member data`. Gesehen einmal unter Hyprland (vor C4) und
+  einmal unter KWin während C4 (Plugin-Register-Commit); der Wiederholungslauf mit demselben Code
+  war sauber. Nicht in die Grundlinie aufgenommen. Vermutete Ursache: Beim Abbau einer
+  `SettingsRow` setzt Qt die `Item`-Eigenschaft `target` von `SettingsSearchRegistration` auf
+  `null`, die Bindung `flickable: QmlUtils.findParentFlickable(target.parent)` wird danach noch
+  einmal ausgewertet. Vorschlag (eigener Commit): `target?.parent`, `sync()` und
+  `Component.onDestruction` gegen `target === null` absichern; prüfen, ob `unregisterCard`
+  dann trotzdem greift.
 - Die Ladeprüfung läuft nur, wo `kwin_wayland` installiert ist (auch für Hyprland).
 
-## Aufräumen (nach Entscheid 4)
+## Aufräumen (Entscheid 4, C5)
 
-- `WindowRuleEditorDialog.qml`: `isNiri`/`niriConfigNext`/`isMango` konstant `false`,
-  die zugehörigen Felder und Zweige entfernen.
-- `KeybindEditorDialog.qml`: Zweige für Provider `"niri"` und `"mangowc"`.
-- `WorkspaceSwitcher.qml`: Zieh-Pfad zum Umsortieren (`workspaceReorderSupported`),
-  Übersichts-Pille (`workspacesHiddenByOverview`); `CompositorService.toggleOverview`
-  und `workspaceSecondaryAction` sind leer.
+- ~~`WindowRuleEditorDialog.qml`: `isNiri`/`niriConfigNext`/`isMango` konstant `false`,
+  die zugehörigen Felder und Zweige entfernen.~~ Erledigt in C5 (`ae2a925`).
+- ~~`KeybindEditorDialog.qml`: Zweige für Provider `"niri"` und `"mangowc"`.~~ Erledigt in C5
+  (`8cb116f`). Übrig: `compositorFlagOptions()` kennt noch niri-Aktionsnamen
+  (`move-column-to-workspace*`, `screenshot-window`); unter Hyprland/KWin nie erreicht, aber
+  nur über die Aktionsdaten nachweisbar, darum nicht angefasst.
+- ~~`WorkspaceSwitcher.qml`: Zieh-Pfad zum Umsortieren (`workspaceReorderSupported`),
+  Übersichts-Pille (`workspacesHiddenByOverview`).~~ Erledigt in C5. Übrig:
+  `CompositorService.toggleOverview` (leer, noch vom Dock-Launcher aufgerufen) und
+  `workspaceSecondaryAction` (leer, noch von Arbeitsflächen-Umschalter, Modell und Insel
+  aufgerufen) – nicht Teil von Entscheid 4.
 - `DBarBody.fullscreenAutoHide` ist konstant `false`; die Kette über DBar und IPC kann weg.
 - `KeybindsService._bindsStale` wird nie mehr gesetzt.
 - Allgemein genutzte Helfer mit niri im Namen umbenennen (Phase D):
