@@ -2,7 +2,7 @@
 
 Stand: 21. November 2026, Branch `phase-a`. **Freigegeben am 21.11.2026** mit den Entscheiden in 0.4. Grundlage: `docs/plan/phase-a.md`, `CLAUDE.md`,
 `KONTEXT.md`, Erkundung von `~/alpe` (Commit c988364) und `~/dux-shell` (Branch `alpe` =
-v2.1.2 + 2 Schichten). Umgesetzt bis D3, siehe «Stand»; offene Einzelfälle in
+v2.1.2 + 2 Schichten). Umgesetzt bis D3 (abgenommen), siehe «Stand»; Entscheide nach D3 in 0.7; offene Einzelfälle in
 `docs/plan/offene-faelle.md`.
 
 ---
@@ -76,9 +76,13 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 
 - ~~Mac-Test des Stands nach C5~~ erledigt, Befunde in 0.6.
 - ~~**C4**, **C5**~~ erledigt.
-- ~~SettingsSearchRegistration, **C6**, **D1–D3**~~ erledigt; **Halt nach D3**.
-- Mac-Test des Stands nach D3 (Anleitung in `offene-faelle.md`), Entscheid Plugin-Kompatibilität (vor D7).
-- Danach D4 (KWin-Brücke) bis D6, Halt nach D6.
+- ~~SettingsSearchRegistration, **C6**, **D1–D3**~~ erledigt; Halt nach D3 am 22.11.2026
+  abgenommen, Entscheide in 0.7. Ladeprüfung bis D3: jeder Commit einzeln, Endstand `170c7d1`
+  KWin 29/29, Hyprland 38/38.
+- **Als Nächstes: D4 (KWin-Brücke), D5 (Einstellungen), D6 (sichtbare Texte), Halt nach D6.**
+  Prüfregel ab D4 siehe 0.7 Nr. 6.
+- Mac-Test nach D6 (Anleitung in `offene-faelle.md`, vor dem Test auf den Stand nach D6
+  nachführen).
 
 ---
 
@@ -157,7 +161,7 @@ Antworten auf Abschnitt 12:
 | 3 | `phase-a` auf `origin/main` gesetzt (erledigt), alle URLs auf `alpe-shell/alpe`; `main` und `v1.0` bleiben unberührt |
 | 4 | Übersetzungen nur de + en |
 | 5 | Greeter weg; Aktualisierung/Changelog/Willkommen des Ursprungs weg; Plugin- und Theme-Browser **inklusive `internal/registries` ganz entfernen** (eigener Commit, lokales Laden von Plugins bleibt); vsix weg; **Tailscale weg** (QML-Service, `internal/server/tailscale`, Abhängigkeit `tailscale.com`, Einstellungen, Leisten-Widget) |
-| 6 | D7 als letzte Etappe mit eigenem Halt, nur bei grüner Ladeprüfung der ganzen Shell; bei Problemen D7 verwerfen und interne Namen auf die Ausnahmeliste |
+| 6 | ~~D7 als letzte Etappe mit eigenem Halt~~ **geändert in 0.7 Nr. 3:** D7 entfällt, interne Namen auf die Ausnahmeliste, Phase C |
 | 7 | Eigenes COPR `alpe-shell/alpe` mit selbst gebautem Quickshell (Vorlage: errornointernet), bei Bedarf matugen. Mac-Ausgaben inkl. `getconf PAGESIZE` folgen |
 | 8 | ~~Hyprland startet über `exec-once = alpe start`~~ **geändert in 0.6 Nr. 1:** Hyprland startet `alpe.service` über `hyprland-session.target` |
 | 9 | dux-go/dux-gop bleiben, Ausnahme in der Namensprüfung |
@@ -190,7 +194,7 @@ Antworten auf Abschnitt 12:
   mit `shell.qml`, Vorgabe `shell/`).
 - Gearbeitet wird im Worktree `~/alpe-phase-a`; `~/alpe` bleibt bis zum Ende von Phase A auf
   eacdaa4 (dort hängt die laufende 1.0-Einrichtung).
-- **Halte:** nach A1, nach B3 (Baumvergleich), nach C4 (seit 0.5: nach C5), nach D6, nach E4, nach F2, dann D7
+- **Halte:** nach A1, nach B3 (Baumvergleich), nach C4 (seit 0.5: nach C5), nach D6, nach E4, nach F2, ~~dann D7~~ (entfällt, 0.7)
   separat, zuletzt G1 – jeweils mit Zusammenfassung und Diffstat.
 
 ### 0.5 Entscheide nach C3 (21.11.2026)
@@ -214,10 +218,22 @@ Mac-Test auf `2271063`: Shell startet unter Hyprland 0.57.2 (Fedora Asahi 45, aa
 | 1 | Am Mac läuft die Shell als `dms.service` (enabled, active), gestartet über `hyprland-session.target`, nicht per `exec-once`. | **Entscheid 8 geändert:** Unter Hyprland startet `alpe.service` wie heute `dms.service` über `hyprland-session.target` (`hyprland-session.target.wants/alpe.service`), unter KDE über `graphical-session.target`. Ein gemeinsamer Startweg: `ExecStart=/usr/bin/alpe start --session` in der Unit für KWin und Hyprland, keine `exec-once`-Zeile. Angepasst: 6.1, 6.4, 6.6, 6.8, 7.2 Schritt 7, 7.4. |
 | 2 | Die Testshell schreibt beim Start `~/.config/hypr/dms/layout.lua` (`HyprlandService`). | Mac-Anleitung sichert `~/.config/hypr` mit. Umzug: Die Shell erzeugt Dateien im Hypr-Ordner selbst (`outputs`, `layout`, `cursor`, `input`, `windowrules`, über matugen `colors`); beim Wechsel auf `hypr/alpe/` siehe 7.4. |
 | 3 | `hyprctl descriptions parse failed: SyntaxError: JSON.parse` (`HyprlandService.qml:257`) unter Hyprland 0.57.2, auch schon in 1.0. | In `offene-faelle.md`, nicht in Phase A. |
-| 4 | Fremde Plugins (Mac: hueManager, calculator; PC: sathiAi, claudeCodeUsage) benutzen DMS-Namen (`DankIcon` …). | Vorschlag in `offene-faelle.md` («Plugin-Kompatibilität»), Entscheid vor D7. |
+| 4 | Fremde Plugins (Mac: hueManager, calculator; PC: sathiAi, claudeCodeUsage) benutzen DMS-Namen (`DankIcon` …). | Vorschlag in `offene-faelle.md` («Plugin-Kompatibilität»); angenommen in 0.7 Nr. 3. |
 
 Weiter: SettingsSearchRegistration beheben (eigener Commit), **C6** Aufräumen (Reste aus C5 und
 der Liste «Nach C4»), dann D1–D3. **Halt nach D3.**
+
+### 0.7 Entscheide nach dem Halt D3 (22.11.2026)
+
+| # | Entscheid |
+|---|---|
+| 1 | Entfernte versteckte Migrationen (DMS-1.x-Ordner, ICC aus `hypr/dms/`, Zwischenablage aus `dms-clipboard`): einverstanden. Umgezogen wird allein über `alpe umzug`. |
+| 2 | Hyprland-Kürzel mit `dms ipc …`/`dms screenshot` schreibt der Umzug (F1) auf `alpe-dienst` um (`offene-faelle.md`, «Nach D1»). |
+| 3 | Plugin-Kompatibilität wie vorgeschlagen: die 40 `Dank*`-Weiterleitungen in `shell/Widgets/` bleiben, `requires_dms` wird weiter gelesen, **kein** `/usr/bin/dms`. **D7 entfällt:** Interne Bezeichner (`DMSService`, `DankBar`, `dmsBin`, `isDmsAction`, `source: "dms"` …) kommen auf die Ausnahmeliste der Namensprüfung (G1) und werden erst in Phase C angefasst. Ersetzt 0.4 Nr. 6 und Antwort 12.6. |
+| 4 | Root-Helfer der Prozessliste (`process.restartService`, System-Dienste auf Klick) bleibt; 6.8 betrifft nur `alpe.service`. |
+| 5 | Werkzeuge mit `dms.service` und 1.0-Pfaden (`tools/alpe`, `entfernen.sh`, `install.sh`, `design.py`): wie geplant in E4. |
+| 6 | **Prüfregel ab D4:** `bash tools/test.sh` nach jedem Commit. Die Ladeprüfung läuft **einmal pro Halt** auf dem Endstand unter KWin und Hyprland; nur wenn sie neue Meldungen zeigt, werden die Commits dazwischen einzeln geprüft. Keine Überwachungen, die sich periodisch neu stellen. |
+| 7 | Mac-Test nach D6 statt nach D3. |
 
 ---
 
@@ -765,12 +781,16 @@ Modular Shell 2.1.2, MIT»), `docs/technik.md` (neue Struktur, Namen, Dienst, En
   `rpmbuild` in `fedora:latest` (x86_64; aarch64 erst im COPR).
 - Abnahme-Grep als Test: `tools/namen-pruefen.sh` listet jeden Treffer von `dms|dux|dank`
   ausserhalb einer Ausnahmeliste und schlägt fehl, wenn etwas Neues dazukommt.
+  Auf der Ausnahmeliste stehen neben den Ausnahmen aus 2.2 auch die internen Bezeichner
+  (0.7 Nr. 3) und die `Dank*`-Weiterleitungen als Plugin-Schnittstelle.
 
 ---
 
 ## 10. Reihenfolge der Commits (Branch `phase-a`)
 
-Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 Umzugstest).
+Jeder Commit: `bash tools/test.sh` grün (ab F1 zusätzlich Umzugstest). Ladeprüfung: von C3 bis D3
+je Commit; **ab D4 einmal pro Halt auf dem Endstand** unter KWin und Hyprland, bei neuen
+Meldungen die Commits dazwischen einzeln (0.7 Nr. 6).
 
 | # | Commit | Inhalt |
 |---|---|---|
@@ -791,7 +811,7 @@ Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 
 | D4 | KWin-Brücke `alpe-bridge`, Aktionen `alpe-*` | Test test_bridge.js angepasst |
 | D5 | Einstellungen: Schlüssel/Werte + Migration | Test mit alter settings.json |
 | D6 | Sichtbare Texte, Über-Seite, Brand.apply weg, Übersetzungen | |
-| D7 | Interne Bezeichner (DMSService, DankBar …) | skriptbasiert, ein Commit je Bereich (Tiefe: Frage 6) |
+| ~~D7~~ | ~~Interne Bezeichner (DMSService, DankBar …)~~ | **entfällt** (0.7 Nr. 3): Ausnahmeliste der Namensprüfung, Phase C |
 | E1 | Makefile, systemd-Unit, Desktop-Dateien | `make install DESTDIR` getestet in Temp-Wurzel |
 | E2 | PKGBUILD | CI-Bau |
 | E3 | RPM-Spec | CI-Bau x86_64 |
@@ -801,16 +821,15 @@ Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 
 | G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
-(Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D3 (0.6), nach D6, nach E4, nach F2, D7 separat, zuletzt G1. Vor B2 zusätzlich,
+(Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D3 (0.6, abgenommen), nach D6, nach E4, nach F2, zuletzt G1 (D7 entfällt, 0.7). Vor B2 zusätzlich,
 falls die Herkunft des KWin-Patches nicht als MIT belegt ist; vor C4 wegen Tailscale; vor E1 mit
 der Vorlage 6.7.
 
 Danach Zusammenfassung mit fish-tauglichen Testanleitungen (VM «frisch», PC-Umzug, Mac-Umzug,
 Messung Speicher/Startzeit vorher/nachher mit `alpe doctor`). Kein Push, kein Tag.
 
-Grössenordnung: B1 ≈ 2800 Dateien (inkl. Schriften, Übersetzungen), D7 berührt mehrere hundert
-Dateien. Ich arbeite skriptbasiert (Umbenennungsskript liegt unter `entwicklung/`, damit es
-nachvollziehbar ist) und prüfe nach jedem Schritt mit der Ladeprüfung.
+Grössenordnung: B1 ≈ 2800 Dateien (inkl. Schriften, Übersetzungen). Umbenennungen laufen
+skriptbasiert und nachvollziehbar; geprüft wird nach 0.7 Nr. 6.
 
 ---
 
@@ -848,7 +867,8 @@ nachvollziehbar ist) und prüfe nach jedem Schritt mit der Ladeprüfung.
 6. **Tiefe der Umbenennung:** auch rein interne Bezeichner (`DMSService` → …, `DankBar` …, ≈ 4000
    Stellen) in Phase A? Die Abnahme («grep trifft nur Herkunft») verlangt es; Alternative wäre,
    interne Namen als Ausnahme zu führen und in Phase B mit dem Neubau zu erledigen. Meine
-   Empfehlung: ja, skriptbasiert in D7, weil es danach nie billiger wird.
+   Empfehlung: ja, skriptbasiert in D7, weil es danach nie billiger wird. → Geändert in 0.7 Nr. 3:
+   D7 entfällt, interne Namen auf die Ausnahmeliste, Phase C.
 7. **Fedora:** eigenes COPR mit nachgebautem Quickshell (+ matugen), oder fremde COPRs als
    Abhängigkeit? Und bitte vom Mac (fish):
    `rpm -qi quickshell matugen`

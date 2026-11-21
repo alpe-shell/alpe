@@ -1,6 +1,6 @@
 # Phase A – offene Fälle
 
-Stand: 21. November 2026, nach D3. Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
+Stand: 22. November 2026, Halt nach D3 abgenommen (Plan 0.7). Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
 (Abschnitt «Stand»). Erledigte Fälle werden gestrichen, nicht gelöscht.
 
 ## Entscheide des Maintainers
@@ -21,7 +21,8 @@ seit C2 immer aus. Bleibt in Phase A unverändert (Plan 0.5 Nr. 3). Vorschlag f�
 45, Quickshell 0.3.2 (COPR `avengemedia/quickshell`); Shell startet, Plugins geladen, keine
 QML-Fehler; `doctor` erkennt Hyprland. Befunde 1–4 siehe Plan 0.6 und die Fälle unten.
 
-Anleitung für den nächsten Stand (nach D3). Die Ladeprüfung braucht `kwin_wayland --virtual`
+Anleitung für den nächsten Stand (Stand D3; der Test folgt nach D6, Plan 0.7 Nr. 7 – Pfade
+/tmp/alpe-d3 dann sinngemäss). Die Ladeprüfung braucht `kwin_wayland --virtual`
 und wird am Mac übersprungen; getestet wird in der echten Hyprland-Sitzung, `~/alpe` bleibt
 unberührt. **Ab D2 schreibt die Testshell nach `~/.config/alpe`, `~/.local/state/alpe`,
 `~/.cache/alpe` und `~/.config/hypr/alpe/`** (Plan 7.4); vorher entstehende Dateien in
@@ -195,7 +196,7 @@ nicht durch Phase A verursacht. Folge: `hyprOptionNames` bleibt leer; die Layout
 Erzeugung läuft trotzdem weiter. Vermutung: Hyprland 0.57 liefert für `hyprctl -j descriptions`
 kein gültiges JSON (oder Text vor dem JSON). Nicht in Phase A beheben (Plan 0.6 Nr. 3).
 
-## Plugin-Kompatibilität (Entscheid vor D7)
+## Plugin-Kompatibilität (entschieden, Plan 0.7 Nr. 3)
 
 Fremde Plugins: am Mac hueManager, calculator; am PC sathiAi, claudeCodeUsage (am PC am
 21.11. dazugekommen). Was sie vom Ursprung benutzen (am PC gelesen):
@@ -212,7 +213,7 @@ Fremde Plugins: am Mac hueManager, calculator; am PC sathiAi, claudeCodeUsage (a
 
 (`DankRectangle` in sathiAi ist eine eigene Datei des Plugins, kein Shell-Typ.)
 
-**Vorschlag:** Kompatibilität gezielt behalten, wo sie nichts kostet, sonst bewusst brechen.
+**Vorschlag (am 22.11.2026 angenommen; D7 entfällt, interne Namen auf die Ausnahmeliste):** Kompatibilität gezielt behalten, wo sie nichts kostet, sonst bewusst brechen.
 
 1. **`Dank*`-Widgets behalten** (40 kleine Weiterleitungen, kein eigener Code). Sie stehen als
    «Plugin-Schnittstelle» auf der Ausnahmeliste der Namensprüfung; D7 fasst sie nicht an.
