@@ -13,6 +13,8 @@ const (
 	EnvPrefix = "ALPE"
 	// DirName ist der Ordner unter ~/.config, ~/.local/state, ~/.cache (Plan 2.2, D2).
 	DirName = "alpe"
+	// SystemPluginDir enthält die mit dem Paket ausgelieferten Plugins (Plan 6.1).
+	SystemPluginDir = "/usr/share/alpe/plugins"
 	// Unit ist die systemd-Benutzereinheit; der Dienst startet sie nie selbst (Plan 6.8).
 	Unit = "alpe.service"
 )

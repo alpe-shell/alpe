@@ -26,8 +26,8 @@ test("the lock IPC switch drops the lock demo keybind action and keeps the other
 });
 
 test("the user plugin switch keeps the user tree out of a scan and a resync", () => {
-    const user = "/home/user/.config/DankMaterialShell/plugins";
-    const system = "/etc/xdg/quickshell/dms-plugins";
+    const user = "/home/user/.config/alpe/plugins";
+    const system = "/usr/share/alpe/plugins";
     const folder = dirs => ({ folder: "", count: dirs.length, get: (i, role) => role === "filePath" ? "file://" + dirs[i] : 0 });
     for (const disableUserPlugins of [false, true]) {
         const loaded = [];

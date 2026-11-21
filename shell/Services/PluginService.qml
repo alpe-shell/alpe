@@ -24,7 +24,8 @@ Singleton {
     readonly property string pluginDirectory: Paths.strip(Paths.config) + "/plugins"
 
     property bool pluginDirectoryExists: false
-    property string systemPluginDirectory: "/etc/xdg/quickshell/dms-plugins"
+    // Mit dem Paket ausgelieferte Plugins (Plan 6.1; im Dienst brand.SystemPluginDir).
+    property string systemPluginDirectory: "/usr/share/alpe/plugins"
 
     property var knownManifests: ({})
     property var pathToPluginId: ({})

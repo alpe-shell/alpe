@@ -71,7 +71,7 @@ func (m *Manager) findInstalledPath(pluginID string) (string, error) {
 	}
 
 	// Check system plugins directory
-	systemDir := "/etc/xdg/quickshell/dms-plugins"
+	systemDir := brand.SystemPluginDir
 	return m.findInDir(systemDir, pluginID)
 }
 
@@ -147,7 +147,7 @@ func (m *Manager) Uninstall(plugin Plugin) error {
 		return fmt.Errorf("plugin not installed: %s", plugin.Name)
 	}
 
-	if strings.HasPrefix(pluginPath, "/etc/xdg/quickshell/dms-plugins") {
+	if strings.HasPrefix(pluginPath, brand.SystemPluginDir) {
 		return fmt.Errorf("cannot uninstall system plugin: %s", plugin.Name)
 	}
 	updatedLock := lock.Clone()
@@ -258,7 +258,7 @@ func (m *Manager) ListInstalled() ([]string, error) {
 		}
 	}
 
-	systemPluginsDir := "/etc/xdg/quickshell/dms-plugins"
+	systemPluginsDir := brand.SystemPluginDir
 	systemExists, err := afero.DirExists(m.fs, systemPluginsDir)
 	if err == nil && systemExists {
 		entries, err := afero.ReadDir(m.fs, systemPluginsDir)
@@ -328,7 +328,7 @@ func (m *Manager) UninstallByIDOrName(idOrName string) error {
 		return fmt.Errorf("plugin not found: %s", idOrName)
 	}
 
-	if strings.HasPrefix(pluginPath, "/etc/xdg/quickshell/dms-plugins") {
+	if strings.HasPrefix(pluginPath, brand.SystemPluginDir) {
 		return fmt.Errorf("cannot uninstall system plugin: %s", idOrName)
 	}
 	manifest := m.getPluginManifest(pluginPath)
@@ -370,7 +370,7 @@ func (m *Manager) findInstalledPathByIDOrName(idOrName string) (string, error) {
 		return path, nil
 	}
 
-	systemDir := "/etc/xdg/quickshell/dms-plugins"
+	systemDir := brand.SystemPluginDir
 	return m.findInDirByIDOrName(systemDir, idOrName)
 }
 
