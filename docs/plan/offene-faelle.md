@@ -1,6 +1,6 @@
 # Phase A – offene Fälle
 
-Stand: 21. November 2026, nach C5 und Mac-Test. Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
+Stand: 21. November 2026, nach D3. Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
 (Abschnitt «Stand»). Erledigte Fälle werden gestrichen, nicht gelöscht.
 
 ## Entscheide des Maintainers
@@ -65,7 +65,12 @@ nichts überschreiben; Sicherungen von oben):
 cp -rn ~/.config/dms/. ~/.config/alpe/
 mkdir -p ~/.local/state/alpe
 cp -rn ~/.local/state/dms/. ~/.local/state/alpe/
+mkdir -p ~/.config/hypr/alpe
+cp -rn ~/.config/hypr/dms/. ~/.config/hypr/alpe/
 ```
+
+(Die Kopie nach `hypr/alpe/` zeigt der Kürzel- und der Fensterregel-Seite die bestehenden
+Einträge; Hyprland selbst liest weiter `hypr/dms/`.)
 
 Testshell starten:
 
@@ -73,11 +78,21 @@ Testshell starten:
 /tmp/alpe-d3/alpe-dienst -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-d3.log
 ```
 
+**Ab D2 liest die Testshell `~/.config/hypr/alpe/`.** Die Seiten Tastenkürzel,
+Fensterregeln und Anzeige melden darum, dass ihre Dateien nicht eingebunden sind: **die Knöpfe
+«Einrichten»/«Einbinden» nicht drücken** – sie würden `require("alpe.…")` in die echte
+`hyprland.lua` schreiben. Die Hyprland-Kürzel der 1.0-Einrichtung (`dms ipc call …`) erreichen
+die Testshell nicht (anderer Socket); Aufrufe stattdessen im zweiten Terminal, z. B.
+`/tmp/alpe-d3/alpe-dienst ipc call spotlight toggle`. «Neu starten» im Energiemenü nicht
+auslösen: Das ruft jetzt `alpe restart`, und das 1.0-`alpe` startet `dms.service`.
+
 Durchklicken wie beim letzten Mal (Arbeitsflächen, Launcher-Rechtsklick, Dock, Launcher,
 Kontrollzentrum, Tastaturlayout, Einstellungen → Tastenkürzel, Fensterregeln, Anzeige, Maus &
 Touchpad, Compositor-Layout, Über-Seite; Energiemenü nur öffnen; im zweiten Terminal
-`/tmp/alpe-d3/alpe-dienst screenshot window`). Zusätzlich: Starter-Einträge aus «Zuletzt»
-(App-ID), Mitteilung senden (`notify-send test`).
+`/tmp/alpe-d3/alpe-dienst screenshot window`). Zusätzlich: Mitteilung senden (`notify-send test`),
+`/tmp/alpe-d3/alpe-dienst restart` im zweiten Terminal (muss ohne systemd die Testshell neu
+laden und darf nichts an `dms.service` ändern), `hyprctl clients | grep class` (Shell-Fenster
+mit `io.github.alpe_shell.Alpe`).
 
 Beenden mit Strg+C, dann `systemctl --user start dms.service`. Auswerten:
 
@@ -146,6 +161,31 @@ nur «nicht gefunden».)
   `systemctl restart` für **System**-Dienste auf, auf ausdrückliche Handlung des Nutzers. Das
   ist nicht der eigene Dienst; Plan 6.8 bezieht sich auf `alpe.service`. Bleibt, falls du es
   nicht anders willst.
+
+## Nach D2/D3: Folgen für Umzug und Werkzeuge
+
+- **Umzug (F1) zusätzlich zu Plan 7:** Drop-ins der Autostart-Seite enthalten
+  `After=dms.service` (`~/.config/systemd/user/<app>.service.d/`); die Shell schreibt ab D1
+  `After=alpe.service`. Bestehende umschreiben. Ebenso die Hyprland-Fensterregel
+  `dms-floating-windows` mit dem alten App-ID-Muster (die Shell aktualisiert sie beim Start
+  selbst, sofern `hypr/alpe/windowrules.lua` eingebunden ist) und `kwinrc`
+  `[Effect-better-blur-dx] WindowClasses` mit `dev.duxlabs.shell` (Plan 7.2 Schritt 6).
+- **Werkzeuge (E4):** `tools/alpe` (Sicherungsliste mit `.config/dms`, `hypr/dms`,
+  `dms.service.d`; Prüfung auf `dev.duxlabs.shell.desktop`), `tools/entfernen.sh`
+  (`$CONFIG/dms` …), `tools/design.py` (stoppt/startet `dms.service` beim Einspielen),
+  `install.sh` (Desktop-Datei `dev.duxlabs.shell`). Umgestellt sind in D2 nur die Werkzeuge,
+  die Dateien der Shell schreiben oder lesen (`design.py`, `activate-plugins.py`, `maclock.sh`,
+  `alpe sport`, Sport-Plugin).
+- `doctor` sucht die Oberfläche noch unter `quickshell/dms` (`config.LocateDMSConfig`); mit E1
+  (`/usr/share/alpe/shell`) anpassen.
+- Bewusst gleich geblieben (D6/D7): Dateinamen `dms-colors.json`/`dms-typography.json` im
+  Cache-Ordner, fcitx5-Theme-Name `dms` (in der fcitx5-Einstellung der Nutzer gewählt),
+  Lualine-Theme `dms`, Kennung `source: "dms"` zwischen Kürzel-Parser und Oberfläche,
+  Regelname `dms-floating-windows`, CUPS-Benutzername `dms`, Hotspot-Name
+  «DankMaterialShell Hotspot», Kalender-Anbindung an `dev.duxlabs.calendar` (fremde App).
+- Logos der Oberfläche (`danklogo*.svg`, Starter, Mitteilungen, Prozessliste) ersetzt D6;
+  App-Symbol und Desktop-Dateien liefert E1.
+- Kürzel-Hinweistexte, Abschnittsüberschrift «DMS Include Configs» in `hyprland.lua`: D6.
 
 ## Hyprland: `hyprctl descriptions` (nach Phase A)
 

@@ -2,12 +2,12 @@
 
 Stand: 21. November 2026, Branch `phase-a`. **Freigegeben am 21.11.2026** mit den Entscheiden in 0.4. Grundlage: `docs/plan/phase-a.md`, `CLAUDE.md`,
 `KONTEXT.md`, Erkundung von `~/alpe` (Commit c988364) und `~/dux-shell` (Branch `alpe` =
-v2.1.2 + 2 Schichten). Umgesetzt bis C5, siehe «Stand»; offene Einzelfälle in
+v2.1.2 + 2 Schichten). Umgesetzt bis D3, siehe «Stand»; offene Einzelfälle in
 `docs/plan/offene-faelle.md`.
 
 ---
 
-## Stand (21.11.2026, nach C5)
+## Stand (21.11.2026, nach D3)
 
 ### Erledigt
 
@@ -34,12 +34,25 @@ v2.1.2 + 2 Schichten). Umgesetzt bis C5, siehe «Stand»; offene Einzelfälle in
 | `ae2a925` | **C5** Fensterregel-Editor ohne niri/Mango | dito, zusätzlich qmllint |
 | `8cb116f` | **C5** Tastenkürzel-Editor ohne niri/Mango | dito |
 | `e6c7d59` | **C5** Arbeitsflächen-Umschalter: Zieh-Pfad, Übersichts-Pille | dito |
+| `5a3e441` | Plan 0.6 (Mac-Test): `alpe.service` auch unter Hyprland, Umzug 7.4 | – |
+| `4c43cdb` | Einstellungssuche: abgebaute Karten (SettingsSearchRegistration) | test.sh grün, Node-Test neu, Ladeprüfung KWin + Hyprland ohne Neues |
+| `ca4fadc` … `918a7d7` | **C6** leere Übersichts-Funktionen, `fullscreenAutoHide`, `_bindsStale`, `duxinstall`-Logger, tote Entwicklerwerkzeuge (5 Commits) | je Commit test.sh grün, Go/Node wie bekannt, Ladeprüfung (siehe Halt-Meldung) |
+| `51f6c6a` | **D1** Go-Modulpfad `github.com/alpe-shell/alpe/core` | dito |
+| `d6d0408` | **D1** `alpe-dienst`, Socket `alpe-<pid>.sock`, `ALPE_*`, Kürzel-Aktionen `alpe-dienst ipc …` (alte gelten beim Einlesen weiter) | dito, Node-Test neu |
+| `0b6325a` | **D1** Plan 6.8: kein Start/Stopp/Neustart von Units; Neustart über `alpe restart` | dito, Go-Tests neu |
+| `1c1602c` | **D2** versteckte DMS-1.x-Ordnermigration entfernt | dito |
+| `9cdc770` | **D2** `~/.config|state|cache/alpe` (Dienst, Oberfläche, Werkzeuge, die Shell-Dateien schreiben) | dito; Grundlinien: nur Pfade umbenannt |
+| `1094e90` | **D2** System-Plugins `/usr/share/alpe/plugins` | dito |
+| `95ce578` | **D2** `hypr/alpe/`, `require("alpe.…")`; versteckte ICC-Migration entfernt | dito |
+| `bca3795` | **D3** App-ID `io.github.alpe_shell.Alpe`, D-Bus `….NMAgent`, `….KwinBridge` | dito |
+| `d3343e9` | **D3** unbenutzte DMS-Logos im Dienst entfernt | dito |
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
 Fälle). Node-Tests des Ursprungs: 10 Fehlschläge, alle schon vor C1 rot.
 
 Offene Fragen aus C4 (Deployer in `internal/config`, Hinweistexte auf `dms setup`) stehen in
-`docs/plan/offene-faelle.md` unter «Nach C4: Liste für D».
+`docs/plan/offene-faelle.md` unter «Nach C4: Liste für D», Folgen von D1–D3 unter «Nach D1» und
+«Nach D2/D3».
 
 ### Entscheide nach C3 (Punkte 1–4)
 
@@ -63,7 +76,9 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 
 - ~~Mac-Test des Stands nach C5~~ erledigt, Befunde in 0.6.
 - ~~**C4**, **C5**~~ erledigt.
-- SettingsSearchRegistration, **C6**, **D1–D3**; **Halt nach D3**.
+- ~~SettingsSearchRegistration, **C6**, **D1–D3**~~ erledigt; **Halt nach D3**.
+- Mac-Test des Stands nach D3 (Anleitung in `offene-faelle.md`), Entscheid Plugin-Kompatibilität (vor D7).
+- Danach D4 (KWin-Brücke) bis D6, Halt nach D6.
 
 ---
 
