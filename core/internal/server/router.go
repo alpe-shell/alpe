@@ -25,7 +25,6 @@ import (
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/notifyactions"
 	serverPlugins "github.com/duxlabs-dev/dux-shell/core/internal/server/plugins"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/sysupdate"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/tailscale"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/thememode"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/wallpaper"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/wayland"
@@ -171,14 +170,6 @@ func newRequestMux(readiness *systemd.Readiness) *ipc.Mux {
 			return
 		}
 		cups.HandleRequest(conn, req, mgr)
-	}))
-
-	mux.HandlePrefix("tailscale.", requestHandler(func(conn *ipc.ConnWriter, req ipc.Request) {
-		if tailscaleManager == nil {
-			conn.RespondError(req.ID, "Tailscale not available")
-			return
-		}
-		tailscale.HandleRequest(conn, req, tailscaleManager)
 	}))
 
 	mux.HandlePrefix("brightness.", requestHandler(func(conn *ipc.ConnWriter, req ipc.Request) {

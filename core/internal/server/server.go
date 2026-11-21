@@ -29,7 +29,6 @@ import (
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/network"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/notifyactions"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/sysupdate"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/tailscale"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/thememode"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/trayrecovery"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/wallpaper"
@@ -68,7 +67,6 @@ var waylandManager *wayland.Manager
 var bluezManager *bluez.Manager
 var appPickerManager *apppicker.Manager
 var cupsManager *cups.Manager
-var tailscaleManager *tailscale.Manager
 var brightnessManager *brightness.Manager
 var wlrOutputManager *wlroutput.Manager
 var evdevManager *evdev.Manager
@@ -472,10 +470,6 @@ func getCapabilities() Capabilities {
 		caps = append(caps, "cups")
 	}
 
-	if tailscaleManager != nil && tailscaleManager.IsAvailable() {
-		caps = append(caps, "tailscale")
-	}
-
 	if brightnessManager != nil {
 		caps = append(caps, "brightness")
 	}
@@ -707,15 +701,6 @@ func handleSubscribe(ctx context.Context, conn *ipc.ConnWriter, req ipc.Request)
 		subscribeCups(&wg, eventChan, stopChan, clientID)
 	}
 
-	if shouldSubscribe("tailscale") && tailscaleManager != nil && tailscaleManager.IsAvailable() {
-		mgr := tailscaleManager
-		id := clientID + "-tailscale"
-		source := mgr.Subscribe(id)
-		forwardSubscription(&wg, eventChan, stopChan, "tailscale", source, func() {
-			mgr.Unsubscribe(id)
-		}, mgr.GetState)
-	}
-
 	if shouldSubscribe("brightness") && brightnessManager != nil {
 		mgr := brightnessManager
 		stateID := clientID + "-brightness-state"
@@ -924,9 +909,6 @@ func cleanupManagers() {
 	if geoClientInstance != nil {
 		geoClientInstance.Close()
 	}
-	if tailscaleManager != nil {
-		tailscaleManager.Close()
-	}
 	if filesService != nil {
 		filesService.Close()
 	}
@@ -974,14 +956,6 @@ func (s *Server) Serve(printDocs bool) error {
 
 	tuneRuntime()
 	startPprof()
-
-	// Tailscale manager always starts — reconnects internally via WatchIPNBus.
-	// The capability is only advertised once tailscaled is reachable; the
-	// callback wakes capability subscribers so QML clients see it transition.
-	tailscaleManager = tailscale.NewManager("")
-	tailscaleManager.SetAvailabilityCallback(func(bool) {
-		notifyCapabilityChange()
-	})
 
 	log.Infof("DMS API Server listening on: %s", s.ipc.SocketPath())
 	log.Infof("API Version: %d", APIVersion)

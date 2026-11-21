@@ -4,7 +4,6 @@ ERROR  go: Failed to initialize wayland manager: ErrUnknown: compositor does not
 ERROR quickshell.service.pipewire.loop: Failed to connect pipewire context. Errno: 112
 WARN  go: Failed to initialize evdev manager: insufficient permissions to access input devices. Add your user to the 'input' group: `sudo usermod -a -G input $USER` or run `dms setup`
 WARN  go: Wayland manager unavailable: ErrUnknown: compositor does not support gamma control
-WARN  go: [Tailscale] IPN bus subscribe failed: Failed to connect to local Tailscale daemon for /localapi/v0/watch-ipn-bus; not running? Error: dial unix /var/run/tailscale/tailscaled.sock: connect: no such file or directory
 WARN qml: [DSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
 WARN qml: [Proc:<Z>] runCommand callback error for command: ["sh","-c","for b in /sys/class/power_supply/*; do [ \"$(cat $b/type 2>/dev/null)\" = Battery ] && [ -f $b/charge_control_end_threshold ] && { echo \"charge=$(cat $b/charge_control_end_threshold)\"; break; }; done; [ -f /etc/alpe/ladegrenze ] && echo persist=1; for k in HandleLidSwitch HandleLidSwitchExternalPower HandleLidSwitchDocked; do printf \"%s=\" $k; busctl --json=short get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager $k 2>/dev/null || printf \"{}\"; echo; done"] Error: TypeError: Cannot read property 'lid' of null
 WARN qml: [WlrOutputService:<Z>] Received empty outputs list

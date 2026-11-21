@@ -27,10 +27,6 @@ QtObject {
             "component": cupsComponent
         },
         {
-            "id": "builtin_tailscale",
-            "component": tailscaleComponent
-        },
-        {
             "id": "builtin_display_profiles",
             "component": displayProfilesComponent
         }
@@ -41,9 +37,6 @@ QtObject {
     }
     readonly property Component cupsComponent: Component {
         CupsWidget {}
-    }
-    readonly property Component tailscaleComponent: Component {
-        TailscaleWidget {}
     }
     readonly property Component displayProfilesComponent: Component {
         DisplayProfilesWidget {}
@@ -417,17 +410,6 @@ QtObject {
             "category": "system",
             "enabled": CupsService.cupsAvailable,
             "warning": !CupsService.cupsAvailable ? I18n.tr("CUPS not available") : undefined,
-            "isBuiltinPlugin": true
-        },
-        {
-            "id": "builtin_tailscale",
-            "text": I18n.tr("Tailscale", "Tailscale mesh VPN widget title"),
-            "description": I18n.tr("Tailscale Network", "Tailscale control center widget description"),
-            "icon": "device_hub",
-            "type": "builtin_plugin",
-            "category": "network",
-            "enabled": TailscaleService.available,
-            "warning": !TailscaleService.available ? I18n.tr("Tailscale not available", "Warning when Tailscale service is not running") : undefined,
             "isBuiltinPlugin": true
         },
         {

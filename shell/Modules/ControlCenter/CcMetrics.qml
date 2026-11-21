@@ -173,7 +173,6 @@ Singleton {
         case "network":
         case "bluetooth":
         case "builtin_vpn":
-        case "builtin_tailscale":
             return detailHeightList;
         default:
             return detailHeightDefault;

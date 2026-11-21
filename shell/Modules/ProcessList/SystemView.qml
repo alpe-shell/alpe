@@ -28,11 +28,6 @@ Item {
         active: root.visible
     }
 
-    Ref {
-        service: TailscaleService
-        active: root.visible
-    }
-
     SystemFacts {
         id: facts
     }
@@ -178,7 +173,7 @@ Item {
 
     readonly property var storageRows: (DriveService.drives ?? []).map(d => row(d.model || d.name, Drives.driveSubtitle(d))).concat([row(I18n.tr("Root Filesystem", "the filesystem mounted at /"), rootText)])
 
-    readonly property var networkRows: [row(I18n.tr("Connection", "system info label: network connection type"), connectionText), row(I18n.tr("Wi-Fi network", "name of the connected Wi-Fi network"), NetworkService.wifiConnected ? NetworkService.currentWifiSSID : "", "", true), row("VPN", (NetworkService.vpnActive ?? []).length > 0 ? I18n.tr("%1 active", "number of active VPN connections").arg(NetworkService.vpnActive.length) : "", (NetworkService.vpnActive ?? []).map(v => v.name ?? v).join("\n")), row("Tailscale", TailscaleService.connected ? I18n.tr("Connected") : "")]
+    readonly property var networkRows: [row(I18n.tr("Connection", "system info label: network connection type"), connectionText), row(I18n.tr("Wi-Fi network", "name of the connected Wi-Fi network"), NetworkService.wifiConnected ? NetworkService.currentWifiSSID : "", "", true), row("VPN", (NetworkService.vpnActive ?? []).length > 0 ? I18n.tr("%1 active", "number of active VPN connections").arg(NetworkService.vpnActive.length) : "", (NetworkService.vpnActive ?? []).map(v => v.name ?? v).join("\n"))]
 
     readonly property var sensorNames: ({
             "cpu": I18n.tr("CPU"),

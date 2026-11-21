@@ -2,7 +2,6 @@
 # Design, vereint über 3 Läufe. Neu schreiben: ladepruefung.py hyprland --grundlinie
 ERROR qml: [KeybindsService:<Z>] Failed to parse binds: SyntaxError: JSON.parse: Parse error
 ERROR quickshell.service.pipewire.loop: Failed to connect pipewire context. Errno: 112
-WARN  go: [Tailscale] IPN bus subscribe failed: Failed to connect to local Tailscale daemon for /localapi/v0/watch-ipn-bus; not running? Error: dial unix /var/run/tailscale/tailscaled.sock: connect: no such file or directory
 WARN qml: [CompositorService:<Z>] failed to update DMS window rule dms-floating-windows 1 {"success":false,"error":"hyprland.lua not found in <TMP>/h/.config/hypr; run `dms setup` to migrate before editing window rules: stat <TMP>/h/.config/hypr/hyprland.lua: no such file or directory"}
 WARN qml: [DSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
 WARN qml: [KeybindsService:<Z>] Load process failed with code: 1

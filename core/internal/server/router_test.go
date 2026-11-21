@@ -30,7 +30,6 @@ func TestRouteRequestUnavailableManagers(t *testing.T) {
 		{"bluetooth.getState", "bluetooth manager not initialized"},
 		{"browser.open", "apppicker manager not initialized"},
 		{"apppicker.open", "apppicker manager not initialized"},
-		{"tailscale.getState", "Tailscale not available"},
 		{"brightness.getState", "brightness manager not initialized"},
 		{"wlroutput.getState", "wlroutput manager not initialized"},
 		{"evdev.getState", "evdev manager not initialized"},

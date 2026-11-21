@@ -58,7 +58,6 @@ Singleton {
     signal clipboardStateUpdate(var data)
     signal locationStateUpdate(var data)
     signal sysupdateStateUpdate(var data)
-    signal tailscaleStateUpdate(var data)
     signal wellbeingStateUpdate(var data)
     signal filesEvent(var data)
 
@@ -341,8 +340,6 @@ Singleton {
             locationStateUpdate(data);
         } else if (service === "sysupdate") {
             sysupdateStateUpdate(data);
-        } else if (service === "tailscale") {
-            tailscaleStateUpdate(data);
         } else if (service === "wellbeing") {
             wellbeingStateUpdate(data);
         } else if (service === "files") {

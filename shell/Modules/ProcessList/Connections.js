@@ -7,24 +7,9 @@ function splitRemote(remote) {
     return m ? { host: m[1], port: Number(m[2]) } : { host: s, port: 0 };
 }
 
-function ipv4(host) {
-    const parts = host.split(".").map(Number);
-    return parts.length === 4 && parts.every(n => Number.isInteger(n) && n >= 0 && n <= 255) ? parts : null;
-}
-
-// Tailscale hands out 100.64.0.0/10 and fd7a:115c:a1e0::/48.
-function isTailscale(host) {
-    const v4 = ipv4(host);
-    if (v4)
-        return v4[0] === 100 && v4[1] >= 64 && v4[1] <= 127;
-    return host.toLowerCase().startsWith("fd7a:115c:a1e0:");
-}
-
-// "internet", "tailscale" or "local". dgop's local flag covers private, CGNAT and link-local remotes.
+// "internet" or "local". dgop's local flag covers private, CGNAT and link-local remotes.
 function kind(remote) {
-    if (!remote?.local)
-        return "internet";
-    return isTailscale(splitRemote(remote.remote).host) ? "tailscale" : "local";
+    return remote?.local ? "local" : "internet";
 }
 
 const SERVICES = {
@@ -40,10 +25,10 @@ function service(port, protocol) {
     return SERVICES[port] || (port > 0 ? String(port) : "");
 }
 
-// Remotes grouped by kind and host:port, busiest first: {internet: [...], tailscale: [...], local: [...]}.
-// names maps a Tailscale address to its device name.
+// Remotes grouped by kind and host:port, busiest first: {internet: [...], local: [...]}.
+// names maps an address to a device name.
 function group(remotes, names) {
-    const out = { internet: [], tailscale: [], local: [] };
+    const out = { internet: [], local: [] };
     const seen = {};
     for (const r of remotes || []) {
         const k = kind(r);

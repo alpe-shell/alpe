@@ -33,21 +33,11 @@ Rectangle {
     readonly property var sandbox: detail?.sandbox ?? null
     readonly property var privileges: detail?.privileges ?? null
 
-    // Tailscale device names by address, from the peer list the Tailscale page loads.
-    readonly property var tailscaleNames: {
-        const names = {};
-        for (const p of TailscaleService.allPeersList ?? []) {
-            for (const ip of [p?.tailscaleIp, p?.tailscaleIpv6])
-                if (ip)
-                    names[ip] = p.hostname || p.dnsName || ip;
-        }
-        return names;
-    }
-    readonly property var connections: Remotes.group(live?.remotes ?? [], tailscaleNames)
+    readonly property var connections: Remotes.group(live?.remotes ?? [], {})
     readonly property var listening: detail?.listening ?? []
     readonly property int connectionCount: (live?.connections ?? 0) + (live?.localConnections ?? 0)
     readonly property bool hasNetwork: connectionCount > 0 || listening.length > 0
-    readonly property bool otherNetwork: connections.tailscale.length > 0 || connections.local.length > 0 || listening.length > 0
+    readonly property bool otherNetwork: connections.local.length > 0 || listening.length > 0
 
     readonly property var windows: (CompositorService.sortedToplevels ?? []).filter(t => CompositorService.windowPid(t) === pid)
     // A merged row stands for its children too; their streams are matched by the binary's name.
@@ -162,11 +152,6 @@ Rectangle {
         running: root.visible && root.pid > 0
         repeat: true
         onTriggered: root.refreshDetail()
-    }
-
-    Ref {
-        service: TailscaleService
-        active: root.connections.tailscale.length > 0
     }
 
     component InfoChip: Rectangle {
@@ -531,13 +516,6 @@ Rectangle {
                 Layout.preferredWidth: root.connections.internet.length > 0 ? grid.cellWidth : grid.width
                 Layout.alignment: Qt.AlignTop
                 spacing: Theme.spacingL
-
-                Section {
-                    width: parent.width
-                    title: "Tailscale"
-                    iconName: "vpn_key"
-                    rows: root.connectionRows(root.connections.tailscale)
-                }
 
                 Section {
                     width: parent.width
