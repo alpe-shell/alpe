@@ -230,7 +230,7 @@ Singleton {
         const pid = String(process.pid);
         switch (restartKind(process)) {
         case "dms":
-            Quickshell.execDetached([Proc.dmsBin, "restart"]);
+            Quickshell.execDetached(Proc.shellRestartCommand);
             return;
         case "reload":
             if (name(process) === "hyprland")

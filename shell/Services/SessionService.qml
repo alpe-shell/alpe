@@ -658,7 +658,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
             poweroff();
             return true;
         case "restart":
-            Quickshell.execDetached([Proc.dmsBin, "restart"]);
+            Quickshell.execDetached(Proc.shellRestartCommand);
             return true;
         default:
             return false;

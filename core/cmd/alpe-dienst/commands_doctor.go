@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -1387,7 +1388,7 @@ func checkSystemdServices() []checkResult {
 	dmsState := dmsServiceState()
 	wanted := config.SessionWanted()
 	if !dmsState.exists {
-		results = append(results, checkResult{catServices, "dms.service", statusInfo, "Not installed", "Optional user service", doctorDocsURL + "#services"})
+		results = append(results, checkResult{catServices, brand.Unit, statusInfo, "Not installed", "Optional user service", doctorDocsURL + "#services"})
 	} else {
 		status, message := statusOK, dmsState.enabled
 		if dmsState.active != "" {
@@ -1413,16 +1414,16 @@ func checkSystemdServices() []checkResult {
 		}
 		if wm, ok := config.RunningCompositor(); ok && status != statusOK {
 			if unit := config.SessionUnitName(wm); !slices.Contains(wanted, unit) {
-				details = fmt.Sprintf("Nothing starts dms.service with %s. Run 'dms systemd enable'.", unit)
+				details = fmt.Sprintf("Nothing starts alpe.service with %s. Run 'alpe-dienst systemd enable'.", unit)
 			}
 		}
-		results = append(results, checkResult{catServices, "dms.service", status, message, details, doctorDocsURL + "#services"})
+		results = append(results, checkResult{catServices, brand.Unit, status, message, details, doctorDocsURL + "#services"})
 	}
 
 	if dmsState.exists && dmsState.enabled == "enabled" {
 		gsState := getServiceState("graphical-session.target", true)
 		if gsState.exists && gsState.active != "active" {
-			results = append(results, checkResult{catServices, "graphical-session.target", statusWarn, "Inactive", "Compositor session never activated it, so dms.service cannot autostart. On Hyprland, hyprland-session.target must exist and be started by the compositor.", doctorDocsURL + "#services"})
+			results = append(results, checkResult{catServices, "graphical-session.target", statusWarn, "Inactive", "Compositor session never activated it, so alpe.service cannot autostart. On Hyprland, hyprland-session.target must exist and be started by the compositor.", doctorDocsURL + "#services"})
 		}
 	}
 
@@ -1453,7 +1454,7 @@ type serviceState struct {
 	active  string
 }
 
-var dmsServiceState = sync.OnceValue(func() serviceState { return getServiceState("dms", true) })
+var dmsServiceState = sync.OnceValue(func() serviceState { return getServiceState(brand.Unit, true) })
 
 func getServiceState(name string, userService bool) serviceState {
 	args := []string{"is-enabled", name}

@@ -460,10 +460,6 @@ func (cd *ConfigDeployer) deployHyprlandConfig(terminalCommand string, useSystem
 		return result, result.Error
 	}
 
-	if autostart {
-		cd.startInLiveSession(deps.WindowManagerHyprland)
-	}
-
 	result.Deployed = true
 	cd.log("Successfully deployed Hyprland configuration")
 	return result, nil

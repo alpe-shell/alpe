@@ -31,7 +31,7 @@ var shellApp = shellapp.New(shellapp.Config{
 	ExtraEnv:               dmsExtraEnv,
 	OnUIExit:               logStartupFailure,
 	SessionRestartExitCode: dmsSessionRestartExitCode,
-	TryManagedRestart:      trySystemdRestart,
+	TryManagedRestart:      refuseUnitRestart,
 })
 
 type embeddedShell struct{}
@@ -59,6 +59,7 @@ func (b *dmsBackend) Done() <-chan error { return b.done }
 
 func bootBackend(ctx context.Context) (shellapp.Backend, error) {
 	server.CLIVersion = Version
+	noteUnmanaged()
 
 	srv := server.New()
 	if err := srv.Listen(); err != nil {

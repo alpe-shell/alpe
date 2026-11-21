@@ -7,7 +7,7 @@ import qs.Services
 import qs.DCommon.Widgets
 import qs.Modules.Settings.Widgets
 
-// Alpe: Dienste und Autostart. Die Shell selbst (dms.service mit ihren Drop-ins), eigene
+// Alpe: Dienste und Autostart. Die Shell selbst (alpe.service mit ihren Drop-ins), eigene
 // systemd-Benutzerdienste (~/.config/systemd/user) mit Start, Stopp und Autostart, die übrigen
 // Benutzerdienste zum Ansehen und Neustarten. Autostart-Programme hat die eigene Seite.
 Item {
@@ -36,11 +36,11 @@ Item {
     Component.onCompleted: refresh()
 
     readonly property var all: info ? info.services : []
-    readonly property var shell: all.find(s => s.Id === "dms.service") || null
+    readonly property var shell: all.find(s => s.Id === Proc.shellUnit) || null
     // Maskierte Dienste (Verweis auf /dev/null) sind bewusst abgeschaltet: nur nennen, nicht schalten.
-    readonly property var own: all.filter(s => s.own && s.Id !== "dms.service" && s.UnitFileState !== "masked")
+    readonly property var own: all.filter(s => s.own && s.Id !== Proc.shellUnit && s.UnitFileState !== "masked")
     readonly property var masked: all.filter(s => s.UnitFileState === "masked")
-    readonly property var others: all.filter(s => !s.own && s.Id !== "dms.service" && !launchedApp(s.Id) && s.UnitFileState !== "masked" && (s.ActiveState === "active" || s.ActiveState === "failed"))
+    readonly property var others: all.filter(s => !s.own && s.Id !== Proc.shellUnit && !launchedApp(s.Id) && s.UnitFileState !== "masked" && (s.ActiveState === "active" || s.ActiveState === "failed"))
 
     function act(action, unit) {
         message = "";
@@ -81,10 +81,10 @@ Item {
             iconName: "deployed_code"
             title: "Shell"
             settingKey: "alpeServiceShell"
-            tags: ["dienste", "services", "systemd", "dms.service", "neustart"]
+            tags: ["dienste", "services", "systemd", "alpe.service", "neustart"]
 
             SettingsRow {
-                title: "Alpe (dms.service)"
+                title: "Alpe (alpe.service)"
                 subtitle: root.shell ? root.stateText(root.shell) : (root.loading ? "lese …" : "nicht als Dienst eingerichtet")
                 iconName: root.shell && root.shell.ActiveState === "active" ? "check_circle" : "error_outline"
                 iconColor: root.shell && root.shell.ActiveState === "active" ? Theme.primary : Theme.error
@@ -94,7 +94,7 @@ Item {
                     text: "Protokoll"
                     iconName: "receipt_long"
                     variant: "text"
-                    onClicked: root.journal("dms.service")
+                    onClicked: root.journal(Proc.shellUnit)
                 }
             }
 
@@ -114,7 +114,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Neu starten"
                     variant: "tonal"
-                    onClicked: Quickshell.execDetached(["systemctl", "--user", "restart", "dms.service"])
+                    onClicked: Quickshell.execDetached(Proc.shellRestartCommand)
                 }
             }
         }

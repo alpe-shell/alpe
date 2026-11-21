@@ -505,34 +505,30 @@ func TestDeployHyprlandConfigSystemdAutostart(t *testing.T) {
 	}
 }
 
-func TestDeployHyprlandStartsShellInLiveSession(t *testing.T) {
+// Plan 6.8: Auch in einer laufenden Hyprland-Sitzung startet der Deployer alpe.service nicht
+// selbst; er setzt nur die Wants-Verknüpfung.
+func TestDeployHyprlandNeverStartsUnit(t *testing.T) {
 	cases := []struct {
-		name        string
-		instance    string
-		unitActive  bool
-		useSystemd  bool
-		wantStarted bool
+		name       string
+		instance   string
+		unitActive bool
+		useSystemd bool
 	}{
-		{"live session", "sig", true, true, true},
-		{"session unit inactive", "sig", false, true, false},
-		{"other session", "", true, true, false},
-		{"no systemd", "sig", true, false, false},
+		{"live session", "sig", true, true},
+		{"session unit inactive", "sig", false, true},
+		{"other session", "", true, true},
+		{"no systemd", "sig", true, false},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Setenv("HOME", t.TempDir())
 			t.Setenv("HYPRLAND_INSTANCE_SIGNATURE", tc.instance)
-			t.Setenv("MANGO_INSTANCE_SIGNATURE", "")
-			started := false
+			var calls []string
 			prev := systemctlUser
 			systemctlUser = func(args ...string) error {
-				switch args[0] {
-				case "is-active":
-					if !tc.unitActive {
-						return errors.New("inactive")
-					}
-				case "start":
-					started = true
+				calls = append(calls, strings.Join(args, " "))
+				if args[0] == "is-active" && !tc.unitActive {
+					return errors.New("inactive")
 				}
 				return nil
 			}
@@ -540,7 +536,10 @@ func TestDeployHyprlandStartsShellInLiveSession(t *testing.T) {
 
 			_, err := NewConfigDeployer(nil).deployHyprlandConfig("kitty", tc.useSystemd)
 			require.NoError(t, err)
-			assert.Equal(t, tc.wantStarted, started)
+			for _, call := range calls {
+				verb := strings.Fields(call)[0]
+				assert.NotContains(t, []string{"start", "stop", "restart"}, verb, "systemctl %s", call)
+			}
 		})
 	}
 }

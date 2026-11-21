@@ -50,11 +50,11 @@ Item {
     }
 
     function restartShell() {
-        Quickshell.execDetached(["sh", "-c", 'if systemctl --user is-active --quiet dms.service; then exec systemctl --user restart dms.service; fi; exec "$1" restart', "sh", Proc.dmsBin]);
+        Quickshell.execDetached(Proc.shellRestartCommand);
     }
 
     function openJournal() {
-        Quickshell.execDetached(["sh", "-c", 'for term in "$1" "${TERMINAL:-}" kitty ghostty foot alacritty konsole; do [ -n "$term" ] && command -v "$term" >/dev/null 2>&1 && exec "$term" -e journalctl --user -u dms.service -b -e; done', "sh", SessionData.resolveTerminal()]);
+        Quickshell.execDetached(["sh", "-c", 'for term in "$1" "${TERMINAL:-}" kitty ghostty foot alacritty konsole; do [ -n "$term" ] && command -v "$term" >/dev/null 2>&1 && exec "$term" -e journalctl --user -u alpe.service -b -e; done', "sh", SessionData.resolveTerminal()]);
     }
 
     function clearCache() {

@@ -282,16 +282,16 @@ Item {
         // make sure we don't overwrite an existing override with a default one, in case the user has already customized it
         function buildOverrideContent(existing) {
             if (!existing)
-                return "[Unit]\nAfter=dms.service\n";
+                return "[Unit]\nAfter=" + Proc.shellUnit + "\n";
             const lines = existing.split("\n");
-            const hasAfter = lines.some(l => l.trim() === "After=dms.service");
+            const hasAfter = lines.some(l => l.trim() === "After=" + Proc.shellUnit);
             if (hasAfter)
                 return existing;
             const unitIdx = lines.findIndex(l => l.trim() === "[Unit]");
             if (unitIdx >= 0) {
-                lines.splice(unitIdx + 1, 0, "After=dms.service");
+                lines.splice(unitIdx + 1, 0, "After=" + Proc.shellUnit);
             } else {
-                lines.push("[Unit]", "After=dms.service");
+                lines.push("[Unit]", "After=" + Proc.shellUnit);
             }
             return lines.join("\n");
         }
@@ -304,7 +304,7 @@ Item {
         }
 
         onLoadFailed: {
-            setText("[Unit]\nAfter=dms.service\n");
+            setText("[Unit]\nAfter=" + Proc.shellUnit + "\n");
             ToastService.showInfo(I18n.tr("Systemd override generated"));
         }
 

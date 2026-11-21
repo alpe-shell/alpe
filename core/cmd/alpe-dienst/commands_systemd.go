@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/utils"
 	"strings"
 
@@ -14,16 +15,16 @@ var systemdCompositorFlag string
 
 var systemdCmd = &cobra.Command{
 	Use:   "systemd",
-	Short: "Start DMS as a systemd user service with the compositor session",
-	Long: `Manage dms.service for the compositor session.
+	Short: "Start Alpe as a systemd user service with the compositor session",
+	Long: `Manage alpe.service for the compositor session.
 
-enable makes the compositor's own session unit want dms.service, so DMS starts
+enable makes the compositor's own session unit want alpe.service, so DMS starts
 with that compositor only: hyprland-session.target. The compositor is the running one, or --compositor.`,
 }
 
 var systemdEnableCmd = &cobra.Command{
 	Use:   "enable",
-	Short: "Start dms.service with the compositor session",
+	Short: "Start alpe.service with the compositor session",
 	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		wm, err := systemdCompositor()
@@ -34,22 +35,14 @@ var systemdEnableCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Printf("dms.service starts with %s\n", unit)
-		now, _ := cmd.Flags().GetBool("now")
-		if !now {
-			return nil
-		}
-		if err := runSystemctl("--user", "start", dmsSystemdUnit); err != nil {
-			return err
-		}
-		fmt.Println("dms.service started")
+		fmt.Printf("%s starts with %s\n", brand.Unit, unit)
 		return nil
 	},
 }
 
 var systemdDisableCmd = &cobra.Command{
 	Use:   "disable",
-	Short: "Stop starting dms.service with any compositor session",
+	Short: "Stop starting alpe.service with any compositor session",
 	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		removed, err := config.DisableSession()
@@ -57,51 +50,36 @@ var systemdDisableCmd = &cobra.Command{
 			return err
 		}
 		if len(removed) == 0 {
-			fmt.Println("dms.service was not wanted by any compositor session")
+			fmt.Println("alpe.service was not wanted by any compositor session")
 		} else {
-			fmt.Printf("dms.service no longer starts with %s\n", strings.Join(removed, ", "))
+			fmt.Printf("alpe.service no longer starts with %s\n", strings.Join(removed, ", "))
 		}
-		now, _ := cmd.Flags().GetBool("now")
-		if !now {
-			return nil
-		}
-		return runSystemctl("--user", "stop", dmsSystemdUnit)
+		return nil
 	},
 }
 
 var systemdStatusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "Show which compositor sessions start dms.service",
+	Short: "Show which compositor sessions start alpe.service",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		state := getServiceState("dms", true)
+		state := getServiceState(brand.Unit, true)
 		if !state.exists {
-			fmt.Println("dms.service: not installed")
+			fmt.Println("alpe.service: not installed")
 			return
 		}
-		fmt.Printf("dms.service: %s", state.enabled)
+		fmt.Printf("alpe.service: %s", state.enabled)
 		if state.active != "" {
 			fmt.Printf(", %s", state.active)
 		}
 		fmt.Println()
 		wanted := config.SessionWanted()
 		if len(wanted) == 0 {
-			fmt.Println("Starts with: nothing (run 'dms systemd enable')")
+			fmt.Println("Starts with: nothing (run 'alpe-dienst systemd enable')")
 			return
 		}
 		fmt.Printf("Starts with: %s\n", strings.Join(wanted, ", "))
 	},
-}
-
-func systemdLifecycleCmd(verb string) *cobra.Command {
-	return &cobra.Command{
-		Use:   verb,
-		Short: strings.ToUpper(verb[:1]) + verb[1:] + " dms.service",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runSystemctl("--user", verb, dmsSystemdUnit)
-		},
-	}
 }
 
 func systemdCompositor() (deps.WindowManager, error) {
@@ -123,7 +101,6 @@ func systemdCompositor() (deps.WindowManager, error) {
 
 func init() {
 	systemdEnableCmd.Flags().StringVar(&systemdCompositorFlag, "compositor", "", "hyprland (default: the running one)")
-	systemdEnableCmd.Flags().Bool("now", false, "Also start dms.service")
-	systemdDisableCmd.Flags().Bool("now", false, "Also stop dms.service")
-	systemdCmd.AddCommand(systemdEnableCmd, systemdDisableCmd, systemdStatusCmd, systemdLifecycleCmd("start"), systemdLifecycleCmd("stop"), systemdLifecycleCmd("restart"))
+	// Plan 6.8: kein --now und kein start/stop/restart; die Unit startet und stoppt «alpe».
+	systemdCmd.AddCommand(systemdEnableCmd, systemdDisableCmd, systemdStatusCmd)
 }

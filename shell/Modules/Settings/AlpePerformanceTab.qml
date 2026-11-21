@@ -143,7 +143,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Neu starten"
                     variant: "tonal"
-                    onClicked: Quickshell.execDetached(["sh", "-c", "systemctl --user restart dms.service 2>/dev/null || dms restart"])
+                    onClicked: Quickshell.execDetached(Proc.shellRestartCommand)
                 }
             }
         }
