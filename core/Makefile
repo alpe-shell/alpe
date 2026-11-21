@@ -1,7 +1,5 @@
 BINARY_NAME=dms
-BINARY_NAME_INSTALL=duxinstall
 SOURCE_DIR=cmd/dms
-SOURCE_DIR_INSTALL=cmd/duxinstall
 BUILD_DIR=bin
 SHELL_SRC=../shell
 EMBED_DIR=internal/shellembed/dist
@@ -32,7 +30,7 @@ else
 DIST_ARCHS = $(ARCH)
 endif
 
-.PHONY: all build sync-shell duxinstall dist clean install install-all install-duxinstall uninstall uninstall-all uninstall-duxinstall install-config uninstall-config test fmt vet deps print-version help
+.PHONY: all build sync-shell dist clean install uninstall install-config uninstall-config test fmt vet deps print-version help
 
 # Default target
 all: build
@@ -45,9 +43,7 @@ sync-shell:
 	@rm -rf $(EMBED_DIR)/.git* $(EMBED_DIR)/.github
 	@rm -rf $(EMBED_DIR)/tests
 	@find $(EMBED_DIR) -type d \( -name .claude -o -name .vscode \) -prune -exec rm -rf {} +
-	@rm -f $(EMBED_DIR)/AGENTS.md $(EMBED_DIR)/qmlformat-all.sh
 	@rm -f $(EMBED_DIR)/scripts/i18nsync.py $(EMBED_DIR)/scripts/build-vscode-vsix.sh $(EMBED_DIR)/scripts/qmllint-entrypoints.sh
-	@rm -f $(EMBED_DIR)/scripts/spam-notifications.sh $(EMBED_DIR)/scripts/verify-notifications.sh
 	@rm -f $(EMBED_DIR)/translations/*.py $(EMBED_DIR)/translations/WORKFLOW.md
 	@cd $(EMBED_DIR) && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16 > .dankrev
 
@@ -57,12 +53,6 @@ build: sync-shell
 	@mkdir -p $(BUILD_DIR)
 	CGO_ENABLED=0 $(GO) build -tags withshell $(BUILD_LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) ./$(SOURCE_DIR)
 	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME)"
-
-duxinstall:
-	@echo "Building $(BINARY_NAME_INSTALL)..."
-	@mkdir -p $(BUILD_DIR)
-	CGO_ENABLED=0 $(GO) build $(BUILD_LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME_INSTALL) ./$(SOURCE_DIR_INSTALL)
-	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME_INSTALL)"
 
 # Build distro binaries (no update/greeter support) for each DIST_OSES/DIST_ARCHS pair
 dist: sync-shell
@@ -77,40 +67,14 @@ dist: sync-shell
 	done
 	@echo "Distribution builds complete"
 
-build-all: build duxinstall
-
 install:
 	@echo "Installing $(BINARY_NAME) to $(INSTALL_DIR)..."
 	@install -D -m 755 $(BUILD_DIR)/$(BINARY_NAME) $(INSTALL_DIR)/$(BINARY_NAME)
 	@echo "Installation complete"
 
-install-all:
-	@echo "Installing $(BINARY_NAME) to $(INSTALL_DIR)..."
-	@install -D -m 755 $(BUILD_DIR)/$(BINARY_NAME) $(INSTALL_DIR)/$(BINARY_NAME)
-	@echo "Installing $(BINARY_NAME_INSTALL) to $(INSTALL_DIR)..."
-	@install -D -m 755 $(BUILD_DIR)/$(BINARY_NAME_INSTALL) $(INSTALL_DIR)/$(BINARY_NAME_INSTALL)
-	@echo "Installation complete"
-
-install-duxinstall:
-	@echo "Installing $(BINARY_NAME_INSTALL) to $(INSTALL_DIR)..."
-	@install -D -m 755 $(BUILD_DIR)/$(BINARY_NAME_INSTALL) $(INSTALL_DIR)/$(BINARY_NAME_INSTALL)
-	@echo "Installation complete"
-
 uninstall:
 	@echo "Uninstalling $(BINARY_NAME) from $(INSTALL_DIR)..."
 	@rm -f $(INSTALL_DIR)/$(BINARY_NAME)
-	@echo "Uninstall complete"
-
-uninstall-all:
-	@echo "Uninstalling $(BINARY_NAME) from $(INSTALL_DIR)..."
-	@rm -f $(INSTALL_DIR)/$(BINARY_NAME)
-	@echo "Uninstalling $(BINARY_NAME_INSTALL) from $(INSTALL_DIR)..."
-	@rm -f $(INSTALL_DIR)/$(BINARY_NAME_INSTALL)
-	@echo "Uninstall complete"
-
-uninstall-duxinstall:
-	@echo "Uninstalling $(BINARY_NAME_INSTALL) from $(INSTALL_DIR)..."
-	@rm -f $(INSTALL_DIR)/$(BINARY_NAME_INSTALL)
 	@echo "Uninstall complete"
 
 clean:
@@ -160,16 +124,10 @@ help:
 	@echo "  all                 - Build the main binary (dms) (default)"
 	@echo "  build               - Build the main binary (dms) with the embedded UI"
 	@echo "  sync-shell          - Copy quickshell/ into the embed dir (runs before tagged builds)"
-	@echo "  duxinstall         - Build duxinstall binary"
 	@echo "  dist                - Build dms for linux/freebsd amd64/arm64 (no update/greeter)"
 	@echo "                        Use ARCH=amd64 or ARCH=arm64 and/or DIST_OSES=linux to narrow"
-	@echo "  build-all           - Build both binaries"
 	@echo "  install             - Install dms to $(INSTALL_DIR)"
-	@echo "  install-all         - Install both dms and duxinstall to $(INSTALL_DIR)"
-	@echo "  install-duxinstall - Install only duxinstall to $(INSTALL_DIR)"
 	@echo "  uninstall           - Remove dms from $(INSTALL_DIR)"
-	@echo "  uninstall-all       - Remove both binaries from $(INSTALL_DIR)"
-	@echo "  uninstall-duxinstall - Remove only duxinstall from $(INSTALL_DIR)"
 	@echo "  clean               - Clean build artifacts"
 	@echo "  test                - Run tests"
 	@echo "  fmt                 - Format Go code"

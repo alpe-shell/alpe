@@ -5,8 +5,6 @@ go 1.27.3
 require (
 	github.com/Wifx/gonetworkmanager/v2 v2.2.0
 	github.com/alecthomas/chroma/v2 v2.27.0
-	github.com/charmbracelet/bubbles v1.0.0
-	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/dlclark/regexp2/v2 v2.9.1
 	github.com/duxlabs-dev/dux-go v1.6.3-0.20261104145443-699311effba8
@@ -45,7 +43,6 @@ require (
 	github.com/Microsoft/go-winio v0.6.4 // indirect
 	github.com/ProtonMail/go-crypto v1.5.2 // indirect
 	github.com/akutz/memconn v0.1.0 // indirect
-	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/colorprofile v0.4.3 // indirect
 	github.com/charmbracelet/log v1.0.0 // indirect
@@ -60,7 +57,6 @@ require (
 	github.com/dblohm7/wingoes v0.0.0-20260526185140-fb298caac7ca // indirect
 	github.com/ebitengine/purego v0.11.2 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.6 // indirect
 	github.com/go-git/gcfg/v2 v2.0.2 // indirect
@@ -74,13 +70,10 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jsimonetti/rtnetlink v1.4.2 // indirect
 	github.com/lufia/plan9stats v0.0.0-20260802145828-341c2f0c90b5 // indirect
-	github.com/mattn/go-localereader v0.0.2-0.20220822084749-2491eb6c1c75 // indirect
 	github.com/mattn/go-runewidth v0.0.31 // indirect
 	github.com/mdlayher/netlink v1.11.2 // indirect
 	github.com/mdlayher/socket v0.8.0 // indirect
 	github.com/mitchellh/go-ps v1.0.0 // indirect
-	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6 // indirect
-	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
 	github.com/pjbgf/sha1cd v0.7.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

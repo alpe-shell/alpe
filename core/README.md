@@ -9,9 +9,6 @@ Go-based backend for Dux Modular Shell providing system integration, IPC, and in
 **dms CLI**
 Command-line interface and daemon for shell management and system control.
 
-**duxinstall**
-Distribution-aware installer for deploying DMS and compositor configurations on Arch, Fedora, Debian, Ubuntu, openSUSE, Gentoo, and Void. Supports both an interactive TUI and a headless (unattended) mode via CLI flags.
-
 ## System Integration
 
 ### Wayland Protocols (Client)
@@ -102,7 +99,6 @@ Requires Go 1.25+
 
 ```bash
 make              # Build dms CLI
-make duxinstall   # Build installer
 make test         # Run tests
 ```
 
@@ -122,14 +118,6 @@ sudo make install  # Install to /usr/local/bin/dms
 
 ## Development
 
-**Setup pre-commit hooks:**
-
-```bash
-git config core.hooksPath .githooks
-```
-
-This runs gofmt, golangci-lint, tests, and builds before each commit when `core/` files are staged.
-
 **Regenerating Wayland Protocol Bindings:**
 
 Protocol XML files live in `internal/proto/xml/`. Bindings are generated with the [dankgo](https://github.com/duxlabs-dev/dux-go) `go-wayland-scanner`:
@@ -142,91 +130,7 @@ go run github.com/duxlabs-dev/dux-go/cmd/go-wayland-scanner@latest \
 
 **Module Structure:**
 
-- `cmd/` - Binary entrypoints (dms, duxinstall)
+- `cmd/` - Binary entrypoints (dms)
 - `internal/distros/` - Distribution-specific installation logic
 - `internal/proto/` - Wayland protocol bindings
 - `pkg/` - Shared packages
-
-## Installation via duxinstall
-
-**Interactive (TUI):**
-
-```bash
-curl -fsSL https://install.duxlabs.dev | sh
-```
-
-**Headless (unattended):**
-
-Headless mode requires cached credentials or a passwordless rule for your privilege escalation tool (sudo, doas, or run0). With sudo, run `sudo -v` first:
-
-```bash
-sudo -v && curl -fsSL https://install.duxlabs.dev | sh -s -- -c niri -t ghostty -y
-sudo -v && curl -fsSL https://install.duxlabs.dev | sh -s -- -c hyprland -t kitty --dux-greeter -y
-sudo -v && curl -fsSL https://install.duxlabs.dev | sh -s -- -c niri -t ghostty --git-deps niri,quickshell --all-features -y
-```
-
-| Flag | Short | Description |
-|------|-------|-------------|
-| `--compositor <niri\|hyprland\|mango>` | `-c` | Compositor/WM to install (required for headless) |
-| `--term <ghostty\|kitty\|alacritty>` | `-t` | Terminal emulator (required for headless) |
-| `--privesc <sudo\|doas\|run0>` | | Privilege escalation tool (default: autodetect) |
-| `--git` | | Install the git version of every dependency that has one |
-| `--git-deps <name,...>` | | Install the git version of specific dependencies (e.g. `niri,quickshell`) |
-| `--all-features` | | Enable all optional dependencies (`dux-greeter`, `dux-search`, `dux-calendar`, `dux-files`) |
-| `--dux-greeter` | | Install dux-greeter |
-| `--dux-search` | | Install dux-search and enable its user indexing service |
-| `--dux-calendar` | | Install dux-calendar |
-| `--dux-files` | | Install dux-files (dfiles file manager) |
-| `--include-deps <name,...>` | | Enable optional dependencies (e.g. `dux-greeter`) |
-| `--exclude-deps <name,...>` | | Skip specific dependencies |
-| `--replace-configs <name,...>` | | Replace specific configuration files (mutually exclusive with `--replace-configs-all`) |
-| `--replace-configs-all` | | Replace all configuration files (mutually exclusive with `--replace-configs`) |
-| `--yes` | `-y` | Required for headless mode - confirms installation without interactive prompts |
-
-Headless mode requires `--yes` to proceed; without it, the installer exits with an error.
-Configuration files are not replaced by default unless `--replace-configs` or `--replace-configs-all` is specified.
-Optional packages (`dux-greeter`, `dux-search`, `dux-calendar`, `dux-files`) are disabled by default; enable them with their dedicated flags, `--include-deps`, or `--all-features`.
-The old `--dms-greeter`, `--danksearch` and `--dankcalendar` flags and dependency names still work but are deprecated.
-
-When no flags are provided, `duxinstall` launches the interactive TUI.
-
-### Headless mode validation rules
-
-Headless mode activates when `--compositor` or `--term` is provided.
-
-- Both `--compositor` and `--term` are required; providing only one results in an error.
-- Headless-only flags (`--privesc`, `--git`, `--git-deps`, `--all-features`, `--include-deps`, `--exclude-deps`, `--replace-configs`, `--replace-configs-all`, `--yes`, `--dux-search`, `--dux-calendar`, `--dux-files`, `--dux-greeter` and their deprecated aliases) are rejected in TUI mode.
-- Positional arguments are not accepted.
-
-### Log file location
-
-`duxinstall` writes logs to `/tmp` by default.
-Set the `DUXINSTALL_LOG_DIR` environment variable to override the log directory.
-
-## Supported Distributions
-
-Arch, Fedora, Debian, Ubuntu, openSUSE, Gentoo, Void (and derivatives)
-
-**Arch Linux**
-Uses `pacman` for system packages, builds AUR packages via `makepkg`, no AUR helper dependency.
-
-**Fedora**
-
-Uses COPR repositories (`duxlabs/dux-repo`, plus `duxlabs/dms` or `duxlabs/dms-git` for git builds).
-
-**Ubuntu**
-Requires PPA support. Most packages built from source (slow first install).
-
-**Debian**
-Debian 13+ (Trixie), testing, and sid. Stable quickshell from Debian (trixie-backports on 13). Other companions via OBS.
-
-**openSUSE**
-Most packages available in standard repos. Minimal building required.
-
-**Gentoo**
-Uses Portage with GURU overlay. Automatically configures USE flags. Variable success depending on system configuration.
-
-**Void Linux**
-Uses XBPS with the DMS and Dux Labs self-hosted repositories.
-
-See installer output for distribution-specific details during installation.

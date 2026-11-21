@@ -3,7 +3,7 @@
 import os, shutil, sys, re
 src = sys.argv[1]; dst = "/tmp/lint"
 shutil.rmtree(dst, ignore_errors=True)
-shutil.copytree(src, dst + "/qs", symlinks=False, ignore=shutil.ignore_patterns("translations", "PLUGINS", "tests", "assets", "*.wav", "*.png"))
+shutil.copytree(src, dst + "/qs", symlinks=False, ignore=shutil.ignore_patterns("translations", "tests", "assets", "*.wav", "*.png"))
 for root, dirs, files in os.walk(dst + "/qs"):
     qml = sorted(f for f in files if f.endswith(".qml"))
     if not qml: continue
