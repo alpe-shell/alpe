@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Alpe installieren – ein Befehl:
 #
-#   curl -fsSL https://raw.githubusercontent.com/alpemessi/alpe/main/get.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/alpe-shell/alpe/main/get.sh | bash
 #
 # Was geschieht (jeder Schritt mit Rückfrage, nichts ohne Zustimmung):
 #   1. prüft Rechner und Sitzung (KDE Plasma oder Hyprland; Arch/CachyOS oder Fedora/Asahi)
@@ -16,7 +16,7 @@
 #   --ohne-design das Design nicht einspielen (eigene Einstellungen bleiben, wie sie sind)
 set -euo pipefail
 
-REPO_URL="${ALPE_REPO_URL:-https://github.com/alpemessi/alpe.git}"
+REPO_URL="${ALPE_REPO_URL:-https://github.com/alpe-shell/alpe.git}"
 DMS_INSTALLER="${ALPE_DMS_INSTALLER:-https://install.duxlabs.dev}"
 DIR="${ALPE_HOME:-$HOME/alpe}"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"

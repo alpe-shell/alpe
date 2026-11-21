@@ -1,7 +1,7 @@
 # Alpe: Beim Schieben eines Versions-Tags (etwa «git tag v1.1 && git push origin v1.1»)
 # das Archiv alpe-zugerberg-<version>.tar.gz bauen und als Release anhängen.
-# Auf dem anderen Rechner danach: alpe update ~/Downloads/alpe-zugerberg-<version>.tar.gz
-# (oder ohne Archiv einfach «alpe update», das zieht mit git pull).
+# Gibt es den Release schon (Tag erneut geschoben, Lauf wiederholt), wird das Archiv ersetzt
+# und der Text nachgeführt, statt abzubrechen.
 name: Release
 
 on:
@@ -15,9 +15,12 @@ jobs:
   archiv:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: alpe
+
+      - name: Tag, Brand.qml und CHANGELOG.md stimmen überein
+        run: bash alpe/tools/release-pruefen.sh "$GITHUB_REF_NAME"
 
       - name: Archiv bauen
         run: |
@@ -25,10 +28,17 @@ jobs:
           tar czf "alpe-zugerberg-$v.tar.gz" --exclude=.git --exclude='__pycache__' alpe
           echo "ARCHIV=alpe-zugerberg-$v.tar.gz" >> "$GITHUB_ENV"
 
-      - name: Release anlegen
+      - name: Release anlegen oder nachführen
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           notes="$(awk '/^## /{n++} n==1' alpe/CHANGELOG.md)"
-          gh release create "$GITHUB_REF_NAME" "$ARCHIV" --repo "$GITHUB_REPOSITORY" \
-            --title "Alpe ${GITHUB_REF_NAME#v} «Zugerberg»" --notes "${notes:-siehe CHANGELOG.md}"
+          title="Alpe ${GITHUB_REF_NAME#v} «Zugerberg»"
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$ARCHIV" --clobber --repo "$GITHUB_REPOSITORY"
+            gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
+              --title "$title" --notes "${notes:-siehe CHANGELOG.md}"
+          else
+            gh release create "$GITHUB_REF_NAME" "$ARCHIV" --repo "$GITHUB_REPOSITORY" \
+              --title "$title" --notes "${notes:-siehe CHANGELOG.md}"
+          fi

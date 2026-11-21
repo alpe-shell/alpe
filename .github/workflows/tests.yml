@@ -9,7 +9,7 @@ jobs:
   schichten-und-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Ursprungsprojekt im Stand aus BASE holen und alle Schichten anwenden
         run: |
@@ -18,11 +18,11 @@ jobs:
           git -C "$RUNNER_TEMP/dux-shell" -c user.name=ci -c user.email=ci@localhost am --quiet "$GITHUB_WORKSPACE"/shell/*.patch
           git -C "$RUNNER_TEMP/dux-shell" log --oneline -1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -40,7 +40,7 @@ jobs:
         run: bash tools/test.sh
 
       - name: Dienst (Go) bauen und testen
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: ${{ runner.temp }}/dux-shell/core/go.mod
           cache: false

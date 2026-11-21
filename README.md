@@ -7,8 +7,8 @@
 
 # Alpe «Zugerberg»
 
-[![Tests](https://github.com/alpemessi/alpe/actions/workflows/tests.yml/badge.svg)](https://github.com/alpemessi/alpe/actions/workflows/tests.yml)
-[![Version](https://img.shields.io/github/v/release/alpemessi/alpe?label=Version)](https://github.com/alpemessi/alpe/releases)
+[![Tests](https://github.com/alpe-shell/alpe/actions/workflows/tests.yml/badge.svg)](https://github.com/alpe-shell/alpe/actions/workflows/tests.yml)
+[![Version](https://img.shields.io/github/v/release/alpe-shell/alpe?label=Version)](https://github.com/alpe-shell/alpe/releases)
 [![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-blue.svg)](LICENSE)
 
 **Eine Desktop-Shell für Linux, massgeschneidert für die Schweiz.** Wetter von MeteoSchweiz mit
@@ -26,7 +26,7 @@ https://github.com/user-attachments/assets/fdb085bb-e699-43d1-967c-eb4ee050b9e3
 ## Installation
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/alpemessi/alpe/main/get.sh | bash
+curl -fsSL https://raw.githubusercontent.com/alpe-shell/alpe/main/get.sh | bash
 ```
 
 Der Installer fragt bei jedem Schritt nach und verändert nichts ohne Zustimmung:
@@ -39,7 +39,7 @@ Der Installer fragt bei jedem Schritt nach und verändert nichts ohne Zustimmung
 6. spielt das Alpe-Design ein: Leiste, Dock, Dash, Farben, Effekte, Sperrbildschirm, kitty und fastfetch wie auf den Bildern.
 
 Danach einmal ab- und wieder anmelden. Nur schauen, was geschehen würde:
-`curl -fsSL https://raw.githubusercontent.com/alpemessi/alpe/main/get.sh | bash -s -- --check`
+`curl -fsSL https://raw.githubusercontent.com/alpe-shell/alpe/main/get.sh | bash -s -- --check`
 
 | | KDE-PC | MacBook (Apple Silicon) |
 |---|---|---|
@@ -119,7 +119,7 @@ Wie die Teile arbeiten, steht in [docs/technik.md](docs/technik.md).
 
 ## Fehler melden, mitmachen
 
-Fehler und Wünsche bitte als [Issue](https://github.com/alpemessi/alpe/issues), am besten mit der
+Fehler und Wünsche bitte als [Issue](https://github.com/alpe-shell/alpe/issues), am besten mit der
 Ausgabe von `alpe doctor`. Vor einem Pull Request `alpe test` laufen lassen.
 
 ## Datenquellen

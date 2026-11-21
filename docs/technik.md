@@ -161,7 +161,7 @@ Es gibt nur eine Ausgabe von Alpe. Was ein Rechner hat (Akku, WLAN, KWin oder Hy
 Tastaturbeleuchtung), erkennt die Shell zur Laufzeit; Einstellungen → System → «Dieses Gerät»
 zeigt das Ergebnis. Am einfachsten richtet `get.sh` alles ein (siehe README); von Hand:
 
-1. Den Ordner `alpe` auf den Rechner bringen (`git clone https://github.com/alpemessi/alpe ~/alpe`
+1. Den Ordner `alpe` auf den Rechner bringen (`git clone https://github.com/alpe-shell/alpe ~/alpe`
    oder ein Archiv der Releases nach `~` entpacken).
 2. `bash ~/alpe/bootstrap.sh --check` – prüft und zeigt, was geschähe.
 3. `bash ~/alpe/bootstrap.sh` – holt den Shell-Code im Stand aus `BASE`, legt alle Schichten
