@@ -2,8 +2,56 @@
 
 Stand: 21. November 2026, Branch `phase-a`. **Freigegeben am 21.11.2026** mit den Entscheiden in 0.4. Grundlage: `docs/plan/phase-a.md`, `CLAUDE.md`,
 `KONTEXT.md`, Erkundung von `~/alpe` (Commit c988364) und `~/dux-shell` (Branch `alpe` =
-v2.1.2 + 2 Schichten). **Noch nichts umgesetzt.** Dieser Plan wartet auf Freigabe; die offenen
-Fragen stehen gesammelt in Abschnitt 12.
+v2.1.2 + 2 Schichten). Umgesetzt bis C3, siehe «Stand»; offene Einzelfälle in
+`docs/plan/offene-faelle.md`.
+
+---
+
+## Stand (21.11.2026, nach C3)
+
+### Erledigt
+
+| Commit | Inhalt | Prüfung |
+|---|---|---|
+| A0, A1, B1–B3 | Plan, CI, Einverleiben (vor dieser Sitzung) | – |
+| `19fc86b` | Plan 6.8 (`alpe-dienst` startet keine systemd-Units), `CLAUDE.md`: kein `pkill` | – |
+| `ee40068` | Ladeprüfung der ganzen Shell (`entwicklung/ladepruefung/`) | – |
+| `012a459` | **C1** Ursprungs-Infrastruktur entfernt (Installer `duxinstall`, Installationsassistent in `internal/tui`, Pre-Commit, Beispiel-Plugins, Entwicklerskripte), `go.mod` bereinigt | test.sh grün, Ladeprüfung KWin/Hyprland ohne Neues |
+| `5caf121` | Grundlinien der Ladeprüfung: KWin 30, Hyprland 39 Einträge (je 3 Läufe) | – |
+| `eb97e37` | **C2** niri entfernt (Shell und Dienst) | test.sh grün |
+| `e175ce4` | **C3** mango, sway, scroll, miracle, labwc, umbriel, river entfernt; nur noch Hyprland und KWin; `doctor` kennt KWin | test.sh grün |
+| `2c92ce4` | Ladeprüfung vergleicht ohne Zeilennummern | Endstand: test.sh grün; Ladeprüfung KWin 30/30, Hyprland 39/39, nichts neu |
+
+Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
+Fälle). Node-Tests des Ursprungs: 10 Fehlschläge, alle schon vor C1 rot.
+
+Von 4.1 vorerst **nicht** entfernt: `core/internal/distros`, `shell/VERSION`, `shell/CODENAME`
+(siehe Entscheide unten).
+
+### Entscheide nach C3 (Punkte 1–4)
+
+Stand: **noch offen**, Entscheid des Maintainers ausstehend. Vorschläge:
+
+1. `core/internal/distros` (genutzt von `doctor`, `update`, `migrate`, `setup`, `switch`;
+   hält `deps.WindowManagerNiri`/`WindowManagerMango` am Leben) – Vorschlag: in C4 entfernen
+   samt der Befehle, die nur Distributions-Installation betreffen; `GetOSInfo` für `doctor`
+   als kleines eigenes Paket behalten.
+2. `shell/VERSION` und `CODENAME` (gelesen von `bootstrap.sh`, `ShellVersionService`,
+   `commands_common.go`) – Vorschlag: in C4 zusammen mit `ShellVersionService` entfernen,
+   Version allein aus `Brand.qml`.
+3. Bildschirmfreigabe-Symbol (Kontrollzentrum, Sperrbildschirm) zeigte nur unter niri etwas
+   und ist jetzt immer aus – Vorschlag: an `PrivacyService.screensharingActive` hängen oder
+   samt Option entfernen.
+4. Abgeschaltete Zweige (niri/Mango-Felder im Fensterregel- und Kürzel-Editor, Zieh-Pfad
+   zum Umsortieren der Arbeitsflächen, Übersichts-Pille, `fullscreenAutoHide`-Kette) –
+   Vorschlag: eigener Aufräum-Commit vor D7.
+
+### Als Nächstes
+
+- Mac-Test des Stands nach C3 (Anleitung in `docs/plan/offene-faelle.md`, Fall «Mac-Test»).
+- Entscheide 1–4, dann **C4** (Grenzfälle nach 4.3, je Thema ein Commit; Halt nach C4,
+  zusätzlich Halt wegen Tailscale).
+- Danach D1 ff. nach Abschnitt 10.
 
 ---
 
