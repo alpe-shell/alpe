@@ -35,7 +35,6 @@ DDialog {
     property string editTrigger: ""
     property string editReleaseAction: ""
     property var editPassThrough: undefined
-    property var _loneModifiers: []
     property bool hasChanges: false
     property bool useCustomCompositor: false
     property bool _altShiftGhost: false
@@ -65,10 +64,6 @@ DDialog {
     readonly property var compositorArgDefs: argConfig?.config?.args ?? []
     readonly property var compositorFlags: compositorFlagOptions()
     readonly property var bindOptionList: bindOptions()
-    readonly property bool isNiri: KeybindsService.currentProvider === "niri"
-    readonly property bool showReleaseOption: isNiri && editTrigger !== "both" && !KeyUtils.isScrollTrigger(editKey)
-    readonly property bool showPassThroughOption: isNiri && KeyUtils.isKeyboardTrigger(editKey)
-    readonly property bool effectivePassThrough: editPassThrough ?? editTrigger === "release"
 
     readonly property string customCategory: I18n.tr("Custom")
     readonly property string repeatTooltip: I18n.tr("Repeats while the key is held", "keybind option tooltip")
@@ -268,11 +263,6 @@ DDialog {
             "repeat": editRepeat,
             "allowInhibiting": editAllowInhibiting
         };
-        if (isNiri) {
-            data.trigger = editTrigger;
-            data.releaseAction = editReleaseAction;
-            data.passThrough = editPassThrough;
-        }
         saveRequested(addingNewKey ? "" : originalKey, data);
     }
 
@@ -281,21 +271,16 @@ DDialog {
             KeybindsService.showHyprlandReadOnlyWarning();
             return;
         }
-        _loneModifiers = [];
         recording = true;
     }
 
     function stopRecording() {
-        _loneModifiers = [];
         recording = false;
     }
 
     function captureKey(event) {
-        if (KeyUtils.modifierFromQtKey(event.key)) {
-            if (isNiri)
-                _loneModifiers = KeyUtils.heldModifiers(event.key, event.modifiers, _loneModifiers);
+        if (KeyUtils.modifierFromQtKey(event.key))
             return;
-        }
         switch (event.key) {
         // lock keys are toggles; NumLock picks the numpad keysym (KP_7 vs KP_Home) and must not become the bind
         case Qt.Key_NumLock:
@@ -306,11 +291,8 @@ DDialog {
 
         if (event.key === 0 && (event.modifiers & Qt.AltModifier)) {
             _altShiftGhost = true;
-            if (_loneModifiers.length)
-                _loneModifiers = KeyUtils.heldModifiers(Qt.Key_Shift, event.modifiers, _loneModifiers);
             return;
         }
-        _loneModifiers = [];
 
         const mods = KeyUtils.modsFromEvent(event.modifiers);
 
@@ -326,19 +308,6 @@ DDialog {
 
         updateEdit({
             "key": token
-        });
-        stopRecording();
-    }
-
-    // A lone modifier binds release-only so its chords keep working.
-    function captureKeyRelease(event) {
-        if (_loneModifiers.length === 0 || !KeyUtils.modifierFromQtKey(event.key))
-            return;
-        const token = KeyUtils.bareModifierToken(_loneModifiers, KeybindsService.modKey, KeybindsService.modSymbol);
-        updateEdit({
-            "key": token,
-            "trigger": "release",
-            "repeat": undefined
         });
         stopRecording();
     }
@@ -479,8 +448,6 @@ DDialog {
             return false;
         if (argDef.type !== "text" && argDef.type !== "number")
             return false;
-        if (KeybindsService.currentProvider === "mangowc")
-            return true;
         return index === 0;
     }
 
@@ -581,42 +548,8 @@ DDialog {
         return Actions.buildCompositorAction(provider, compositorParsedArgs?.base || base, args);
     }
 
-    function niriBindOptions() {
-        const options = [];
-        if (showReleaseOption)
-            options.push({
-                "label": I18n.tr("Release", "noun, hyprland bind flag toggle, trigger on key release"),
-                "value": "release",
-                "tooltip": I18n.tr("Triggers when the key is released", "keybind option tooltip, hyprland release flag")
-            });
-        if (editTrigger !== "release")
-            options.push({
-                "label": I18n.tr("Repeat"),
-                "value": "repeat",
-                "tooltip": repeatTooltip
-            });
-        options.push({
-            "label": I18n.tr("When locked"),
-            "value": "locked",
-            "tooltip": lockedTooltip
-        }, {
-            "label": I18n.tr("Inhibitable", "adjective, niri keybind option, apps may inhibit this shortcut"),
-            "value": "inhibit",
-            "tooltip": I18n.tr("Apps that capture the keyboard can block it", "keybind option tooltip, niri allow inhibiting")
-        });
-        if (showPassThroughOption)
-            options.push({
-                "label": I18n.tr("Non-consuming", "adjective, hyprland bind flag toggle, key is not swallowed"),
-                "value": "passthrough",
-                "tooltip": I18n.tr("The key also reaches the focused window", "keybind option tooltip, hyprland non-consuming flag")
-            });
-        return options;
-    }
-
     function bindOptions() {
         switch (KeybindsService.currentProvider) {
-        case "niri":
-            return niriBindOptions();
         case "hyprland":
             return [
                 {
@@ -697,50 +630,10 @@ DDialog {
     function selectedBindOptions() {
         if (KeybindsService.currentProvider === "hyprland")
             return editFlags.split("");
-        const selected = [];
-        if (editTrigger === "release")
-            selected.push("release");
-        if (editRepeat !== false)
-            selected.push("repeat");
-        if (editAllowWhenLocked)
-            selected.push("locked");
-        if (editAllowInhibiting !== false)
-            selected.push("inhibit");
-        if (effectivePassThrough)
-            selected.push("passthrough");
-        return selected;
+        return [];
     }
 
     function setBindOption(value, checked) {
-        switch (value) {
-        case "release":
-            updateEdit({
-                "trigger": checked ? "release" : "",
-                "repeat": undefined
-            });
-            return;
-        case "passthrough":
-            // niri forwards release-only binds by default, so only write a differing value
-            updateEdit({
-                "passThrough": checked === (editTrigger === "release") ? undefined : checked
-            });
-            return;
-        case "repeat":
-            updateEdit({
-                "repeat": checked ? undefined : false
-            });
-            return;
-        case "locked":
-            updateEdit({
-                "allowWhenLocked": checked
-            });
-            return;
-        case "inhibit":
-            updateEdit({
-                "allowInhibiting": checked ? undefined : false
-            });
-            return;
-        }
         const flags = editFlags.split("").filter(flag => flag !== value);
         if (checked)
             flags.push(value);
@@ -881,7 +774,6 @@ DDialog {
                         if (!root.recording)
                             return;
                         event.accepted = true;
-                        root.captureKeyRelease(event);
                     }
 
                     Rectangle {
@@ -1299,7 +1191,7 @@ DDialog {
     SettingsCard {
         title: I18n.tr("Options")
         enabled: root.formEnabled
-        visible: KeybindsService.currentProvider === "niri" || KeybindsService.currentProvider === "hyprland"
+        visible: KeybindsService.currentProvider === "hyprland"
 
         SettingsRow {
             body: DFilterChips {
@@ -1309,42 +1201,6 @@ DDialog {
                 model: root.bindOptionList
                 selectedValues: root.selectedBindOptions()
                 onSelectionToggled: (index, selected) => root.setBindOption(root.bindOptionList[index].value, selected)
-            }
-        }
-
-        SettingsRow {
-            visible: KeybindsService.currentProvider === "niri"
-
-            body: DTextField {
-                id: cooldownField
-
-                readonly property int cooldownMs: root.editCooldownMs
-
-                width: parent.width
-                outlined: true
-                leftIconName: "timer"
-                labelText: I18n.tr("Cooldown", "noun, niri keybind cooldown time field label")
-                placeholderText: "0"
-                rightAccessoryWidth: cooldownUnit.width + Theme.spacingS
-                onCooldownMsChanged: {
-                    const newText = cooldownMs > 0 ? String(cooldownMs) : "";
-                    if (text !== newText)
-                        text = newText;
-                }
-                Component.onCompleted: text = cooldownMs > 0 ? String(cooldownMs) : ""
-                onTextChanged: {
-                    const value = parseInt(text) || 0;
-                    if (value !== root.editCooldownMs)
-                        root.updateEdit({
-                            "cooldownMs": value
-                        });
-                }
-
-                FieldUnit {
-                    id: cooldownUnit
-                    field: cooldownField
-                    text: I18n.tr("ms", "milliseconds unit suffix after a number field")
-                }
             }
         }
     }
