@@ -5,7 +5,7 @@
 // Icon names differ between themes, so list each spelling, best first.
 const PROGRAM_ICONS = [
     {
-        programs: ["dms", "dsearch"],
+        programs: ["alpe-dienst", "dsearch"],
         passesIcon: true,
         logo: "danklogo.svg"
     },

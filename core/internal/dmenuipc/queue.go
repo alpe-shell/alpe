@@ -2,6 +2,7 @@ package dmenuipc
 
 import (
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"syscall"
@@ -10,7 +11,7 @@ import (
 )
 
 func AcquireQueueSlot(onWait func()) (release func(), err error) {
-	dir := filepath.Join(utils.RuntimeDir(), "dms")
+	dir := filepath.Join(utils.RuntimeDir(), brand.ID)
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return nil, fmt.Errorf("create dmenu queue dir: %w", err)
 	}

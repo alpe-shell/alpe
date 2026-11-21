@@ -27,7 +27,7 @@ Singleton {
     property bool freedeskAvailable: false
     property string pendingProfileImage: ""
 
-    readonly property string socketPath: Quickshell.env("DMS_SOCKET")
+    readonly property string socketPath: Quickshell.env("ALPE_SOCKET")
 
     function init() {
     }
@@ -194,7 +194,7 @@ Singleton {
         if (socketPath && socketPath.length > 0) {
             checkDMSCapabilities();
         } else {
-            log.info("DMS_SOCKET not set");
+            log.info("ALPE_SOCKET not set");
         }
     }
 

@@ -375,7 +375,7 @@ DFloatingWindow {
                         horizontalPadding: Theme.spacingM
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
-                            Quickshell.execDetached(["dms", "cl", "copy", SettingsData.getCurrentSettingsJson()]);
+                            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", SettingsData.getCurrentSettingsJson()]);
                             ToastService.showInfo(I18n.tr("Copied to clipboard"));
                         }
                     }
@@ -390,7 +390,7 @@ DFloatingWindow {
                         horizontalPadding: Theme.spacingM
                         anchors.verticalCenter: parent.verticalCenter
                         onClicked: {
-                            Quickshell.execDetached(["dms", "cl", "copy", SessionData.getCurrentSessionJson()]);
+                            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", SessionData.getCurrentSessionJson()]);
                             ToastService.showInfo(I18n.tr("Copied to clipboard"));
                         }
                     }

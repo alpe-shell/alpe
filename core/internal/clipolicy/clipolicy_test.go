@@ -47,11 +47,11 @@ func TestLogindUnlockDisabled(t *testing.T) {
 }
 
 var shellSwitchEnv = map[string]string{
-	"disable_lock_ipc_unlock":  "DMS_POLICY_DISABLE_LOCK_IPC_UNLOCK",
-	"disable_logind_unlock":    "DMS_POLICY_DISABLE_LOGIND_UNLOCK",
-	"disable_custom_lock_pam":  "DMS_POLICY_DISABLE_CUSTOM_LOCK_PAM",
-	"disable_user_plugins":     "DMS_POLICY_DISABLE_USER_PLUGINS",
-	"disable_settings_ipc_set": "DMS_POLICY_DISABLE_SETTINGS_IPC_SET",
+	"disable_lock_ipc_unlock":  "ALPE_POLICY_DISABLE_LOCK_IPC_UNLOCK",
+	"disable_logind_unlock":    "ALPE_POLICY_DISABLE_LOGIND_UNLOCK",
+	"disable_custom_lock_pam":  "ALPE_POLICY_DISABLE_CUSTOM_LOCK_PAM",
+	"disable_user_plugins":     "ALPE_POLICY_DISABLE_USER_PLUGINS",
+	"disable_settings_ipc_set": "ALPE_POLICY_DISABLE_SETTINGS_IPC_SET",
 }
 
 func TestShellEnv(t *testing.T) {
@@ -87,7 +87,7 @@ func TestShellEnv(t *testing.T) {
 						want = append(want, other+"=0")
 					}
 				}
-				want = append(want, "DMS_POLICY_LOCK_SETTINGS={}")
+				want = append(want, "ALPE_POLICY_LOCK_SETTINGS={}")
 
 				env, err := ShellEnv(fs)
 				require.NoError(t, err)
@@ -102,7 +102,7 @@ func TestShellEnvMalformedPolicyTurnsEverySwitchOnAndIgnoresLockSettings(t *test
 	require.NoError(t, afero.WriteFile(fs, PackagedPath, []byte(`{"lock_settings": {"lockBeforeSuspend": true}}`), 0o644))
 	require.NoError(t, afero.WriteFile(fs, AdminPath, []byte("{not json"), 0o644))
 
-	want := []string{"DMS_POLICY_LOCK_SETTINGS={}"}
+	want := []string{"ALPE_POLICY_LOCK_SETTINGS={}"}
 	for _, name := range shellSwitchEnv {
 		want = append(want, name+"=1")
 	}
@@ -166,7 +166,7 @@ func TestShellEnvLockSettings(t *testing.T) {
 
 	env, err := ShellEnv(fs)
 	require.NoError(t, err)
-	assert.Contains(t, env, `DMS_POLICY_LOCK_SETTINGS={"acLockTimeout":300,"customPowerActionLock":"","lockBeforeSuspend":true}`)
+	assert.Contains(t, env, `ALPE_POLICY_LOCK_SETTINGS={"acLockTimeout":300,"customPowerActionLock":"","lockBeforeSuspend":true}`)
 }
 
 func TestLockSettingBool(t *testing.T) {

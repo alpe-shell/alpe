@@ -10,7 +10,7 @@ Singleton {
 
     // Ending one of these takes the desktop down. Process names are cut to 15 characters.
     readonly property var sessionNames: ["systemd", "(sd-pam)", "sd-pam", "dbus-broker", "dbus-broker-lau", "dbus-daemon"].concat(Object.keys(reloadCommands))
-    readonly property var treeSkipNames: sessionNames.concat(["qs", "quickshell", "dms", "polkitd"])
+    readonly property var treeSkipNames: sessionNames.concat(["qs", "quickshell", "alpe-dienst", "polkitd"])
     // Compositors can't restart in place; "restart" reloads their config. Empty entries have no reload command.
     readonly property var reloadCommands: ({
             "hyprland": [],
@@ -66,7 +66,7 @@ Singleton {
     }
 
     function isDms(process) {
-        return (process?.pid ?? 0) === Quickshell.processId || (name(process) === "dms" && isOwn(process));
+        return (process?.pid ?? 0) === Quickshell.processId || (name(process) === "alpe-dienst" && isOwn(process));
     }
 
     function isSession(process) {
@@ -90,7 +90,7 @@ Singleton {
         return process?.status === "T";
     }
 
-    // The root helper is a "dms" of another user; stopping it would hang sampling.
+    // The root helper is an "alpe-dienst" of another user; stopping it would hang sampling.
     function canPause(process) {
         // Kernel threads (PID 2 and its children) ignore SIGSTOP.
         const kernel = process?.pid === 2 || process?.ppid === 2;

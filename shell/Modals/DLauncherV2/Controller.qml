@@ -2897,6 +2897,6 @@ Item {
     function copyToClipboard(text) {
         if (!text)
             return;
-        Quickshell.execDetached(["dms", "cl", "copy", text]);
+        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", text]);
     }
 }

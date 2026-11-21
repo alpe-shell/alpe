@@ -90,15 +90,15 @@ func fakeShelly(t *testing.T) (string, string) {
 	log := filepath.Join(dir, "calls")
 	t.Setenv("PATH", dir)
 	t.Setenv("TERMINAL", "")
-	t.Setenv("DMS_FORCE_PKEXEC", "")
-	t.Setenv("DMS_TEST_SHELLY_LOG", log)
-	t.Setenv("DMS_TEST_SHELLY_EXIT", "0")
+	t.Setenv("ALPE_FORCE_PKEXEC", "")
+	t.Setenv("ALPE_TEST_SHELLY_LOG", log)
+	t.Setenv("ALPE_TEST_SHELLY_EXIT", "0")
 	t.Setenv("SHELLY_ELEVATOR", "")
-	writeUpdateExecutable(t, dir, "shelly", `printf '%s|%s\n' "$*" "$SHELLY_ELEVATOR" >> "$DMS_TEST_SHELLY_LOG"
+	writeUpdateExecutable(t, dir, "shelly", `printf '%s|%s\n' "$*" "$SHELLY_ELEVATOR" >> "$ALPE_TEST_SHELLY_LOG"
 case "$*" in
   'list-updates standard --json') printf '%s\n' '`+shellyRepoFixture+`' ;;
   'list-updates aur --json') printf '%s\n' '`+shellyAURFixture+`' ;;
-  'upgrade standard --no-confirm'|'upgrade all --no-flatpak --no-appimage --no-confirm') exit "$DMS_TEST_SHELLY_EXIT" ;;
+  'upgrade standard --no-confirm'|'upgrade all --no-flatpak --no-appimage --no-confirm') exit "$ALPE_TEST_SHELLY_EXIT" ;;
   *) echo "unexpected arguments: $*" >&2; exit 99 ;;
 esac`)
 	return dir, log
@@ -174,7 +174,7 @@ func TestShellyUpgrade(t *testing.T) {
 shift
 exec /bin/sh "$@"`)
 			} else if !tt.attached {
-				t.Setenv("DMS_FORCE_PKEXEC", "1")
+				t.Setenv("ALPE_FORCE_PKEXEC", "1")
 				elevator = "pkexec"
 			}
 			if err := (shellyBackend{}).Upgrade(t.Context(), opts, nil); err != nil {
@@ -207,7 +207,7 @@ func TestShellyUpgradeHolds(t *testing.T) {
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			_, log := fakeShelly(t)
-			t.Setenv("DMS_FORCE_PKEXEC", "1")
+			t.Setenv("ALPE_FORCE_PKEXEC", "1")
 			opts := UpgradeOptions{DryRun: tt.dryRun, IncludeAUR: tt.includeAUR, Ignored: tt.ignored, Targets: []Package{{Name: "linux", Backend: "shelly", Repo: RepoSystem}}}
 			err := (shellyBackend{}).Upgrade(t.Context(), opts, nil)
 			calls := readUpdateCalls(t, log)
@@ -232,7 +232,7 @@ func TestShellyUpgradeHolds(t *testing.T) {
 
 func TestShellyHoldCheckFailure(t *testing.T) {
 	dir, log := fakeShelly(t)
-	writeUpdateExecutable(t, dir, "shelly", `printf '%s\n' "$*" >> "$DMS_TEST_SHELLY_LOG"
+	writeUpdateExecutable(t, dir, "shelly", `printf '%s\n' "$*" >> "$ALPE_TEST_SHELLY_LOG"
 echo 'AUR unavailable' >&2
 exit 1`)
 	opts := UpgradeOptions{IncludeAUR: true, Ignored: []string{"example-git"}, Targets: []Package{{Name: "linux", Backend: "shelly", Repo: RepoSystem}}}
@@ -284,8 +284,8 @@ func TestShellySkipsExcludedTargets(t *testing.T) {
 
 func TestShellyUpgradeFailure(t *testing.T) {
 	_, _ = fakeShelly(t)
-	t.Setenv("DMS_FORCE_PKEXEC", "1")
-	t.Setenv("DMS_TEST_SHELLY_EXIT", "126")
+	t.Setenv("ALPE_FORCE_PKEXEC", "1")
+	t.Setenv("ALPE_TEST_SHELLY_EXIT", "126")
 	opts := UpgradeOptions{Targets: []Package{{Name: "linux", Backend: "shelly", Repo: RepoSystem}}}
 	if err := (shellyBackend{}).Upgrade(t.Context(), opts, nil); err == nil {
 		t.Fatal("authentication or upgrade failure must propagate")

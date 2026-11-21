@@ -212,7 +212,7 @@ PanelWindow {
                 targetColor: Theme.withAlpha(root.host.surfaceColor, Theme.popupTransparency)
                 borderColor: Theme.outlineVariant
                 borderWidth: 0
-                shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1"
+                shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1"
             }
 
             MouseArea {

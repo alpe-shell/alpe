@@ -142,7 +142,7 @@ PanelWindow {
         osdHidden();
     }
 
-    WlrLayershell.layer: LayerShell.fromEnv("DMS_OSD_LAYER", WlrLayer.Overlay, {
+    WlrLayershell.layer: LayerShell.fromEnv("ALPE_OSD_LAYER", WlrLayer.Overlay, {
         "allow": ["top", "overlay"],
         "invalidLayer": WlrLayer.Overlay,
         "label": "OSDs"
@@ -350,7 +350,7 @@ PanelWindow {
             targetColor: Theme.withAlpha(root.surfaceColor, osdContainer.popupSurfaceAlpha)
             borderColor: Theme.outlineVariant
             borderWidth: 0
-            shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1"
+            shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1"
         }
 
         MouseArea {

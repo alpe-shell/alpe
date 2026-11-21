@@ -595,7 +595,7 @@ func (r *RegionSelector) handleScrollFrame() {
 	}
 }
 
-var scrollDebug = os.Getenv("DMS_SCROLL_DEBUG") != ""
+var scrollDebug = os.Getenv("ALPE_SCROLL_DEBUG") != ""
 
 func (s *scrollSession) extractRows() ([]byte, error) {
 	src := s.buf

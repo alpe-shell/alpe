@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/clipolicy"
 	"github.com/alpe-shell/alpe/core/internal/gpu"
 	"github.com/alpe-shell/alpe/core/internal/log"
@@ -20,9 +21,8 @@ import (
 )
 
 var shellApp = shellapp.New(shellapp.Config{
-	ID:                     "dms",
-	LegacyIDs:              []string{"danklinux"},
-	EnvPrefix:              "DMS",
+	ID:                     brand.ID,
+	EnvPrefix:              brand.EnvPrefix,
 	QSAppID:                "dev.duxlabs.shell",
 	Version:                Version,
 	Embedded:               embeddedShell{},
@@ -117,7 +117,7 @@ const qmlJSStackSize = 16 << 20
 func dmsExtraEnv(string) []string {
 	var env []string
 	if selfPath, err := os.Executable(); err == nil {
-		env = append(env, "DMS_EXECUTABLE="+selfPath)
+		env = append(env, brand.Env("EXECUTABLE")+"="+selfPath)
 	}
 	if os.Getenv("QSG_USE_SIMPLE_ANIMATION_DRIVER") == "" && scrollingWallpaperConfigured() {
 		env = append(env, "QSG_USE_SIMPLE_ANIMATION_DRIVER=1")

@@ -16,7 +16,7 @@ Singleton {
     property var _iconFallbackWaiters: ({})
 
     readonly property var envHiddenTrayIds: {
-        const envValue = Quickshell.env("DMS_HIDE_TRAYIDS") || "";
+        const envValue = Quickshell.env("ALPE_HIDE_TRAYIDS") || "";
         return envValue ? envValue.split(",").map(id => id.trim().toLowerCase()) : [];
     }
 

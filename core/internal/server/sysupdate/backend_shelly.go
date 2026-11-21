@@ -20,7 +20,7 @@ func (shellyBackend) DisplayName() string { return "Shelly (AUR)" }
 func (shellyBackend) Repo() RepoKind      { return RepoSystem }
 func (shellyBackend) NeedsAuth() bool     { return true }
 func (shellyBackend) RunsInTerminal() bool {
-	return os.Getenv("DMS_FORCE_PKEXEC") != "1"
+	return os.Getenv("ALPE_FORCE_PKEXEC") != "1"
 }
 
 func (shellyBackend) IsAvailable(ctx context.Context) bool {

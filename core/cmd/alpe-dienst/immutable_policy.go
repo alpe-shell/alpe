@@ -162,7 +162,7 @@ func requireMutableSystemCommand(cmd *cobra.Command, _ []string) error {
 
 // preRunPrivileged combines the immutable-system check with a privesc tool
 // selection prompt (shown only when multiple tools are available and the
-// $DMS_PRIVESC env var isn't set).
+// $ALPE_PRIVESC env var isn't set).
 func preRunPrivileged(cmd *cobra.Command, args []string) error {
 	if err := requireMutableSystemCommand(cmd, args); err != nil {
 		return err

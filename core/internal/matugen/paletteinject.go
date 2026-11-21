@@ -22,10 +22,10 @@ type paletteEntry struct {
 	Enabled bool   `json:"enabled"`
 	Command string `json:"command"`
 	// Args are passed verbatim; {image} and {mode} are substituted, and the same
-	// values are exported as $DMS_WALLPAPER and $DMS_MODE.
+	// values are exported as $ALPE_WALLPAPER and $ALPE_MODE.
 	Args []string `json:"args"`
 	// OutputFile is where the command writes its JSON (also exported as
-	// $DMS_PALETTE_OUT); when empty DMS reads the command's stdout instead.
+	// $ALPE_PALETTE_OUT); when empty DMS reads the command's stdout instead.
 	// {image}/{mode} are substituted here too.
 	OutputFile string `json:"output_file"`
 	// Namespace is the palette's key in matugen's import data. When empty it
@@ -127,8 +127,8 @@ func lookPathIn(command string, env []string) (string, error) {
 // on any failure: a bad command must never break a theme build.
 func runPaletteEntry(e paletteEntry, imagePath string, mode ColorMode) string {
 	env := append(utils.EnvWithUserBinPath(nil),
-		"DMS_WALLPAPER="+imagePath,
-		"DMS_MODE="+string(mode),
+		"ALPE_WALLPAPER="+imagePath,
+		"ALPE_MODE="+string(mode),
 	)
 	resolved, err := lookPathIn(e.Command, env)
 	if err != nil {
@@ -148,7 +148,7 @@ func runPaletteEntry(e paletteEntry, imagePath string, mode ColorMode) string {
 	defer cancel()
 	cmd := exec.CommandContext(ctx, resolved, args...)
 	cmd.WaitDelay = time.Second
-	cmd.Env = append(env, "DMS_PALETTE_OUT="+outputFile)
+	cmd.Env = append(env, "ALPE_PALETTE_OUT="+outputFile)
 
 	var raw []byte
 	if outputFile != "" {

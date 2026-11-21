@@ -25,558 +25,558 @@ const ACTION_TYPES = [
 
 const DMS_ACTIONS = [
     {
-        id: "spawn dms ipc call spotlight toggle",
+        id: "spawn alpe-dienst ipc call spotlight toggle",
         label: "Default Launcher: Toggle"
     },
     {
-        id: "spawn dms ipc call spotlight open",
+        id: "spawn alpe-dienst ipc call spotlight open",
         label: "Default Launcher: Open"
     },
     {
-        id: "spawn dms ipc call spotlight close",
+        id: "spawn alpe-dienst ipc call spotlight close",
         label: "Default Launcher: Close"
     },
     {
-        id: "spawn dms ipc call island toggle home",
+        id: "spawn alpe-dienst ipc call island toggle home",
         label: "DankIsland: Toggle"
     },
     {
-        id: "spawn dms ipc call island open home",
+        id: "spawn alpe-dienst ipc call island open home",
         label: "DankIsland: Open Clock"
     },
     {
-        id: "spawn dms ipc call island open media",
+        id: "spawn alpe-dienst ipc call island open media",
         label: "DankIsland: Open Media"
     },
     {
-        id: "spawn dms ipc call island toggle media",
+        id: "spawn alpe-dienst ipc call island toggle media",
         label: "DankIsland: Toggle Media"
     },
     {
-        id: "spawn dms ipc call island open launcher",
+        id: "spawn alpe-dienst ipc call island open launcher",
         label: "DankIsland: Open Launcher"
     },
     {
-        id: "spawn dms ipc call island open controlcenter",
+        id: "spawn alpe-dienst ipc call island open controlcenter",
         label: "DankIsland: Open Control Center"
     },
     {
-        id: "spawn dms ipc call island open wallpaper",
+        id: "spawn alpe-dienst ipc call island open wallpaper",
         label: "DankIsland: Open Wallpapers"
     },
     {
-        id: "spawn dms ipc call island open weather",
+        id: "spawn alpe-dienst ipc call island open weather",
         label: "DankIsland: Open Weather"
     },
     {
-        id: "spawn dms ipc call island open notificationcenter",
+        id: "spawn alpe-dienst ipc call island open notificationcenter",
         label: "DankIsland: Open Notification Center"
     },
     {
-        id: "spawn dms ipc call island cycle",
+        id: "spawn alpe-dienst ipc call island cycle",
         label: "DankIsland: Cycle Activity"
     },
     {
-        id: "spawn dms ipc call island close",
+        id: "spawn alpe-dienst ipc call island close",
         label: "DankIsland: Close"
     },
     {
-        id: "spawn dms ipc call dot toggle home",
+        id: "spawn alpe-dienst ipc call dot toggle home",
         label: "DankDot: Toggle"
     },
     {
-        id: "spawn dms ipc call dot open home",
+        id: "spawn alpe-dienst ipc call dot open home",
         label: "DankDot: Open Clock"
     },
     {
-        id: "spawn dms ipc call dot open media",
+        id: "spawn alpe-dienst ipc call dot open media",
         label: "DankDot: Open Media"
     },
     {
-        id: "spawn dms ipc call dot open launcher",
+        id: "spawn alpe-dienst ipc call dot open launcher",
         label: "DankDot: Open Launcher"
     },
     {
-        id: "spawn dms ipc call dot open controlcenter",
+        id: "spawn alpe-dienst ipc call dot open controlcenter",
         label: "DankDot: Open Control Center"
     },
     {
-        id: "spawn dms ipc call dot open wallpaper",
+        id: "spawn alpe-dienst ipc call dot open wallpaper",
         label: "DankDot: Open Wallpapers"
     },
     {
-        id: "spawn dms ipc call dot open weather",
+        id: "spawn alpe-dienst ipc call dot open weather",
         label: "DankDot: Open Weather"
     },
     {
-        id: "spawn dms ipc call dot open notificationcenter",
+        id: "spawn alpe-dienst ipc call dot open notificationcenter",
         label: "DankDot: Open Notification Center"
     },
     {
-        id: "spawn dms ipc call dot cycle",
+        id: "spawn alpe-dienst ipc call dot cycle",
         label: "DankDot: Cycle Activity"
     },
     {
-        id: "spawn dms ipc call dot close",
+        id: "spawn alpe-dienst ipc call dot close",
         label: "DankDot: Close"
     },
     {
-        id: "spawn dms ipc call defaultApp browser",
+        id: "spawn alpe-dienst ipc call defaultApp browser",
         label: "Default Web Browser: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp fileManager",
+        id: "spawn alpe-dienst ipc call defaultApp fileManager",
         label: "Default File Manager: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp mail",
+        id: "spawn alpe-dienst ipc call defaultApp mail",
         label: "Default Mail: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp calendar",
+        id: "spawn alpe-dienst ipc call defaultApp calendar",
         label: "Default Calendar: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp textEditor",
+        id: "spawn alpe-dienst ipc call defaultApp textEditor",
         label: "Default Text Editor: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp pdfReader",
+        id: "spawn alpe-dienst ipc call defaultApp pdfReader",
         label: "Default PDF Reader: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp imageViewer",
+        id: "spawn alpe-dienst ipc call defaultApp imageViewer",
         label: "Default Image Viewer: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp videoPlayer",
+        id: "spawn alpe-dienst ipc call defaultApp videoPlayer",
         label: "Default Video Player: Open"
     },
     {
-        id: "spawn dms ipc call defaultApp musicPlayer",
+        id: "spawn alpe-dienst ipc call defaultApp musicPlayer",
         label: "Default Music Player: Open"
     },
     {
-        id: "spawn dms ipc call spotlight-bar toggle",
+        id: "spawn alpe-dienst ipc call spotlight-bar toggle",
         label: "Spotlight Bar: Toggle"
     },
     {
-        id: "spawn dms ipc call spotlight-bar open",
+        id: "spawn alpe-dienst ipc call spotlight-bar open",
         label: "Spotlight Bar: Open"
     },
     {
-        id: "spawn dms ipc call spotlight-bar close",
+        id: "spawn alpe-dienst ipc call spotlight-bar close",
         label: "Spotlight Bar: Close"
     },
     {
-        id: "spawn dms ipc call clipboard toggle",
+        id: "spawn alpe-dienst ipc call clipboard toggle",
         label: "Clipboard: Toggle"
     },
     {
-        id: "spawn dms ipc call clipboard open",
+        id: "spawn alpe-dienst ipc call clipboard open",
         label: "Clipboard: Open"
     },
     {
-        id: "spawn dms ipc call clipboard close",
+        id: "spawn alpe-dienst ipc call clipboard close",
         label: "Clipboard: Close"
     },
     {
-        id: "spawn dms ipc call notifications toggle",
+        id: "spawn alpe-dienst ipc call notifications toggle",
         label: "Notifications: Toggle"
     },
     {
-        id: "spawn dms ipc call notifications open",
+        id: "spawn alpe-dienst ipc call notifications open",
         label: "Notifications: Open"
     },
     {
-        id: "spawn dms ipc call notifications close",
+        id: "spawn alpe-dienst ipc call notifications close",
         label: "Notifications: Close"
     },
     {
-        id: "spawn dms ipc call processlist toggle",
+        id: "spawn alpe-dienst ipc call processlist toggle",
         label: "Task Manager: Toggle"
     },
     {
-        id: "spawn dms ipc call processlist open",
+        id: "spawn alpe-dienst ipc call processlist open",
         label: "Task Manager: Open"
     },
     {
-        id: "spawn dms ipc call processlist close",
+        id: "spawn alpe-dienst ipc call processlist close",
         label: "Task Manager: Close"
     },
     {
-        id: "spawn dms ipc call processlist focusOrToggle",
+        id: "spawn alpe-dienst ipc call processlist focusOrToggle",
         label: "Task Manager: Focus or Toggle"
     },
     {
-        id: "spawn dms ipc call settings toggle",
+        id: "spawn alpe-dienst ipc call settings toggle",
         label: "Settings: Toggle"
     },
     {
-        id: "spawn dms ipc call settings open",
+        id: "spawn alpe-dienst ipc call settings open",
         label: "Settings: Open"
     },
     {
-        id: "spawn dms ipc call settings close",
+        id: "spawn alpe-dienst ipc call settings close",
         label: "Settings: Close"
     },
     {
-        id: "spawn dms ipc call settings focusOrToggle",
+        id: "spawn alpe-dienst ipc call settings focusOrToggle",
         label: "Settings: Focus or Toggle"
     },
     {
-        id: "spawn dms ipc call powermenu toggle",
+        id: "spawn alpe-dienst ipc call powermenu toggle",
         label: "Power Menu: Toggle"
     },
     {
-        id: "spawn dms ipc call powermenu open",
+        id: "spawn alpe-dienst ipc call powermenu open",
         label: "Power Menu: Open"
     },
     {
-        id: "spawn dms ipc call powermenu close",
+        id: "spawn alpe-dienst ipc call powermenu close",
         label: "Power Menu: Close"
     },
     {
-        id: "spawn dms ipc call control-center toggle",
+        id: "spawn alpe-dienst ipc call control-center toggle",
         label: "Control Center: Toggle"
     },
     {
-        id: "spawn dms ipc call control-center open",
+        id: "spawn alpe-dienst ipc call control-center open",
         label: "Control Center: Open"
     },
     {
-        id: "spawn dms ipc call control-center close",
+        id: "spawn alpe-dienst ipc call control-center close",
         label: "Control Center: Close"
     },
     {
-        id: "spawn dms ipc call notepad toggle",
+        id: "spawn alpe-dienst ipc call notepad toggle",
         label: "Notepad: Toggle"
     },
     {
-        id: "spawn dms ipc call notepad open",
+        id: "spawn alpe-dienst ipc call notepad open",
         label: "Notepad: Open"
     },
     {
-        id: "spawn dms ipc call notepad close",
+        id: "spawn alpe-dienst ipc call notepad close",
         label: "Notepad: Close"
     },
     {
-        id: "spawn dms ipc call notepad expand",
+        id: "spawn alpe-dienst ipc call notepad expand",
         label: "Notepad: Expand"
     },
     {
-        id: "spawn dms ipc call notepad collapse",
+        id: "spawn alpe-dienst ipc call notepad collapse",
         label: "Notepad: Collapse"
     },
     {
-        id: "spawn dms ipc call notepad toggleExpand",
+        id: "spawn alpe-dienst ipc call notepad toggleExpand",
         label: "Notepad: Toggle Expand"
     },
     {
-        id: "spawn dms ipc call dash toggle \"\"",
+        id: "spawn alpe-dienst ipc call dash toggle \"\"",
         label: "Dashboard: Toggle"
     },
     {
-        id: "spawn dms ipc call dash open overview",
+        id: "spawn alpe-dienst ipc call dash open overview",
         label: "Dashboard: Overview"
     },
     {
-        id: "spawn dms ipc call dash open media",
+        id: "spawn alpe-dienst ipc call dash open media",
         label: "Dashboard: Media"
     },
     {
-        id: "spawn dms ipc call dash open weather",
+        id: "spawn alpe-dienst ipc call dash open weather",
         label: "Dashboard: Weather"
     },
     {
-        id: "spawn dms ipc call dash open wellbeing",
+        id: "spawn alpe-dienst ipc call dash open wellbeing",
         label: "Dashboard: Digital Wellbeing"
     },
     {
-        id: "spawn dms ipc call dankdash wallpaper",
+        id: "spawn alpe-dienst ipc call dankdash wallpaper",
         label: "Wallpaper Browser"
     },
     {
-        id: "spawn dms ipc call file browse wallpaper",
+        id: "spawn alpe-dienst ipc call file browse wallpaper",
         label: "File: Browse Wallpaper"
     },
     {
-        id: "spawn dms ipc call file browse profile",
+        id: "spawn alpe-dienst ipc call file browse profile",
         label: "File: Browse Profile"
     },
     {
-        id: "spawn dms ipc call color-picker toggle",
+        id: "spawn alpe-dienst ipc call color-picker toggle",
         label: "Color Picker: Toggle"
     },
     {
-        id: "spawn dms ipc call color-picker open",
+        id: "spawn alpe-dienst ipc call color-picker open",
         label: "Color Picker: Open"
     },
     {
-        id: "spawn dms ipc call color-picker close",
+        id: "spawn alpe-dienst ipc call color-picker close",
         label: "Color Picker: Close"
     },
     {
-        id: "spawn dms ipc call keybinds close",
+        id: "spawn alpe-dienst ipc call keybinds close",
         label: "Keybinds Cheatsheet: Close"
     },
     {
-        id: "spawn dms ipc call lock lock",
+        id: "spawn alpe-dienst ipc call lock lock",
         label: "Lock Screen"
     },
     {
-        id: "spawn dms ipc call lock lockAndOutputsOff",
+        id: "spawn alpe-dienst ipc call lock lockAndOutputsOff",
         label: "Lock Screen & Outputs Off"
     },
     {
-        id: "spawn dms ipc call lock demo",
+        id: "spawn alpe-dienst ipc call lock demo",
         label: "Lock Screen: Demo"
     },
     {
-        id: "spawn dms ipc call inhibit toggle",
+        id: "spawn alpe-dienst ipc call inhibit toggle",
         label: "Idle Inhibit: Toggle"
     },
     {
-        id: "spawn dms ipc call inhibit enable",
+        id: "spawn alpe-dienst ipc call inhibit enable",
         label: "Idle Inhibit: Enable"
     },
     {
-        id: "spawn dms ipc call inhibit disable",
+        id: "spawn alpe-dienst ipc call inhibit disable",
         label: "Idle Inhibit: Disable"
     },
     {
-        id: "spawn dms ipc call audio increment 5",
+        id: "spawn alpe-dienst ipc call audio increment 5",
         label: "Volume Up"
     },
     {
-        id: "spawn dms ipc call audio increment 1",
+        id: "spawn alpe-dienst ipc call audio increment 1",
         label: "Volume Up (1%)"
     },
     {
-        id: "spawn dms ipc call audio increment 5",
+        id: "spawn alpe-dienst ipc call audio increment 5",
         label: "Volume Up (5%)"
     },
     {
-        id: "spawn dms ipc call audio increment 10",
+        id: "spawn alpe-dienst ipc call audio increment 10",
         label: "Volume Up (10%)"
     },
     {
-        id: "spawn dms ipc call audio decrement 5",
+        id: "spawn alpe-dienst ipc call audio decrement 5",
         label: "Volume Down"
     },
     {
-        id: "spawn dms ipc call audio decrement 1",
+        id: "spawn alpe-dienst ipc call audio decrement 1",
         label: "Volume Down (1%)"
     },
     {
-        id: "spawn dms ipc call audio decrement 5",
+        id: "spawn alpe-dienst ipc call audio decrement 5",
         label: "Volume Down (5%)"
     },
     {
-        id: "spawn dms ipc call audio decrement 10",
+        id: "spawn alpe-dienst ipc call audio decrement 10",
         label: "Volume Down (10%)"
     },
     {
-        id: "spawn dms ipc call mpris increment 5",
+        id: "spawn alpe-dienst ipc call mpris increment 5",
         label: "Player Volume Up (5%)"
     },
     {
-        id: "spawn dms ipc call mpris decrement 5",
+        id: "spawn alpe-dienst ipc call mpris decrement 5",
         label: "Player Volume Down (5%)"
     },
     {
-        id: "spawn dms ipc call audio mute",
+        id: "spawn alpe-dienst ipc call audio mute",
         label: "Volume Mute Toggle"
     },
     {
-        id: "spawn dms ipc call mic mute",
+        id: "spawn alpe-dienst ipc call mic mute",
         label: "Microphone Mute Toggle"
     },
     {
-        id: "spawn dms ipc call audio cycleoutput",
+        id: "spawn alpe-dienst ipc call audio cycleoutput",
         label: "Audio Output: Cycle"
     },
     {
-        id: "spawn dms ipc call brightness increment 5 \"\"",
+        id: "spawn alpe-dienst ipc call brightness increment 5 \"\"",
         label: "Brightness Up"
     },
     {
-        id: "spawn dms ipc call brightness increment 1 \"\"",
+        id: "spawn alpe-dienst ipc call brightness increment 1 \"\"",
         label: "Brightness Up (1%)"
     },
     {
-        id: "spawn dms ipc call brightness increment 5 \"\"",
+        id: "spawn alpe-dienst ipc call brightness increment 5 \"\"",
         label: "Brightness Up (5%)"
     },
     {
-        id: "spawn dms ipc call brightness increment 10 \"\"",
+        id: "spawn alpe-dienst ipc call brightness increment 10 \"\"",
         label: "Brightness Up (10%)"
     },
     {
-        id: "spawn dms ipc call brightness decrement 5 \"\"",
+        id: "spawn alpe-dienst ipc call brightness decrement 5 \"\"",
         label: "Brightness Down"
     },
     {
-        id: "spawn dms ipc call brightness decrement 1 \"\"",
+        id: "spawn alpe-dienst ipc call brightness decrement 1 \"\"",
         label: "Brightness Down (1%)"
     },
     {
-        id: "spawn dms ipc call brightness decrement 5 \"\"",
+        id: "spawn alpe-dienst ipc call brightness decrement 5 \"\"",
         label: "Brightness Down (5%)"
     },
     {
-        id: "spawn dms ipc call brightness decrement 10 \"\"",
+        id: "spawn alpe-dienst ipc call brightness decrement 10 \"\"",
         label: "Brightness Down (10%)"
     },
     {
-        id: "spawn dms ipc call brightness toggleExponential \"\"",
+        id: "spawn alpe-dienst ipc call brightness toggleExponential \"\"",
         label: "Brightness: Toggle Exponential"
     },
     {
-        id: "spawn dms ipc call theme toggle",
+        id: "spawn alpe-dienst ipc call theme toggle",
         label: "Theme: Toggle Light/Dark"
     },
     {
-        id: "spawn dms ipc call theme light",
+        id: "spawn alpe-dienst ipc call theme light",
         label: "Theme: Light Mode"
     },
     {
-        id: "spawn dms ipc call theme dark",
+        id: "spawn alpe-dienst ipc call theme dark",
         label: "Theme: Dark Mode"
     },
     {
-        id: "spawn dms ipc call night toggle",
+        id: "spawn alpe-dienst ipc call night toggle",
         label: "Night Mode: Toggle"
     },
     {
-        id: "spawn dms ipc call night enable",
+        id: "spawn alpe-dienst ipc call night enable",
         label: "Night Mode: Enable"
     },
     {
-        id: "spawn dms ipc call night disable",
+        id: "spawn alpe-dienst ipc call night disable",
         label: "Night Mode: Disable"
     },
     {
-        id: "spawn dms ipc call wellbeing toggle",
+        id: "spawn alpe-dienst ipc call wellbeing toggle",
         label: "Screen Time Tracking: Toggle"
     },
     {
-        id: "spawn dms ipc call bar toggle index 0",
+        id: "spawn alpe-dienst ipc call bar toggle index 0",
         label: "Bar: Toggle (Primary)"
     },
     {
-        id: "spawn dms ipc call bar reveal index 0",
+        id: "spawn alpe-dienst ipc call bar reveal index 0",
         label: "Bar: Reveal (Primary)"
     },
     {
-        id: "spawn dms ipc call bar hide index 0",
+        id: "spawn alpe-dienst ipc call bar hide index 0",
         label: "Bar: Hide (Primary)"
     },
     {
-        id: "spawn dms ipc call bar toggleReveal index 0",
+        id: "spawn alpe-dienst ipc call bar toggleReveal index 0",
         label: "Bar: Toggle Autohide Reveal (Primary)"
     },
     {
-        id: "spawn dms ipc call bar toggleAutoHide index 0",
+        id: "spawn alpe-dienst ipc call bar toggleAutoHide index 0",
         label: "Bar: Toggle Auto-Hide (Primary)"
     },
     {
-        id: "spawn dms ipc call bar autoHide index 0",
+        id: "spawn alpe-dienst ipc call bar autoHide index 0",
         label: "Bar: Enable Auto-Hide (Primary)"
     },
     {
-        id: "spawn dms ipc call bar manualHide index 0",
+        id: "spawn alpe-dienst ipc call bar manualHide index 0",
         label: "Bar: Disable Auto-Hide (Primary)"
     },
     {
-        id: "spawn dms ipc call dock toggle",
+        id: "spawn alpe-dienst ipc call dock toggle",
         label: "Dock: Toggle"
     },
     {
-        id: "spawn dms ipc call dock reveal",
+        id: "spawn alpe-dienst ipc call dock reveal",
         label: "Dock: Reveal"
     },
     {
-        id: "spawn dms ipc call dock hide",
+        id: "spawn alpe-dienst ipc call dock hide",
         label: "Dock: Hide"
     },
     {
-        id: "spawn dms ipc call dock toggleAutoHide",
+        id: "spawn alpe-dienst ipc call dock toggleAutoHide",
         label: "Dock: Toggle Auto-Hide"
     },
     {
-        id: "spawn dms ipc call dock autoHide",
+        id: "spawn alpe-dienst ipc call dock autoHide",
         label: "Dock: Enable Auto-Hide"
     },
     {
-        id: "spawn dms ipc call dock manualHide",
+        id: "spawn alpe-dienst ipc call dock manualHide",
         label: "Dock: Disable Auto-Hide"
     },
     {
-        id: "spawn dms ipc call mpris playPause",
+        id: "spawn alpe-dienst ipc call mpris playPause",
         label: "Media: Play/Pause"
     },
     {
-        id: "spawn dms ipc call mpris play",
+        id: "spawn alpe-dienst ipc call mpris play",
         label: "Media: Play"
     },
     {
-        id: "spawn dms ipc call mpris pause",
+        id: "spawn alpe-dienst ipc call mpris pause",
         label: "Media: Pause"
     },
     {
-        id: "spawn dms ipc call mpris previous",
+        id: "spawn alpe-dienst ipc call mpris previous",
         label: "Media: Previous Track"
     },
     {
-        id: "spawn dms ipc call mpris next",
+        id: "spawn alpe-dienst ipc call mpris next",
         label: "Media: Next Track"
     },
     {
-        id: "spawn dms ipc call mpris stop",
+        id: "spawn alpe-dienst ipc call mpris stop",
         label: "Media: Stop"
     },
     {
-        id: "spawn dms screenshot",
+        id: "spawn alpe-dienst screenshot",
         label: "Screenshot: Region"
     },
     {
-        id: "spawn dms screenshot full",
+        id: "spawn alpe-dienst screenshot full",
         label: "Screenshot: Full Screen"
     },
     {
-        id: "spawn dms screenshot all",
+        id: "spawn alpe-dienst screenshot all",
         label: "Screenshot: All Screens"
     },
     {
-        id: "spawn dms screenshot window",
+        id: "spawn alpe-dienst screenshot window",
         label: "Screenshot: Window"
     },
     {
-        id: "spawn dms ipc call hypr toggleOverview",
+        id: "spawn alpe-dienst ipc call hypr toggleOverview",
         label: "Hyprland: Toggle Overview",
         compositor: "hyprland"
     },
     {
-        id: "spawn dms ipc call hypr openOverview",
+        id: "spawn alpe-dienst ipc call hypr openOverview",
         label: "Hyprland: Open Overview",
         compositor: "hyprland"
     },
     {
-        id: "spawn dms ipc call hypr closeOverview",
+        id: "spawn alpe-dienst ipc call hypr closeOverview",
         label: "Hyprland: Close Overview",
         compositor: "hyprland"
     },
     {
-        id: "spawn dms ipc call wallpaper next",
+        id: "spawn alpe-dienst ipc call wallpaper next",
         label: "Wallpaper: Next"
     },
     {
-        id: "spawn dms ipc call wallpaper prev",
+        id: "spawn alpe-dienst ipc call wallpaper prev",
         label: "Wallpaper: Previous"
     },
     {
-        id: "spawn dms ipc call workspace-rename open",
+        id: "spawn alpe-dienst ipc call workspace-rename open",
         label: "Workspace: Rename"
     }
 ];
@@ -1822,7 +1822,7 @@ const SCREENSHOT_FLAGS = [
 
 const DMS_ACTION_ARGS = {
     "audio increment": {
-        base: "spawn dms ipc call audio increment",
+        base: "spawn alpe-dienst ipc call audio increment",
         args: [
             {
                 name: "amount",
@@ -1834,7 +1834,7 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "audio decrement": {
-        base: "spawn dms ipc call audio decrement",
+        base: "spawn alpe-dienst ipc call audio decrement",
         args: [
             {
                 name: "amount",
@@ -1846,7 +1846,7 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "player increment": {
-        base: "spawn dms ipc call mpris increment",
+        base: "spawn alpe-dienst ipc call mpris increment",
         args: [
             {
                 name: "amount",
@@ -1858,7 +1858,7 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "player decrement": {
-        base: "spawn dms ipc call mpris decrement",
+        base: "spawn alpe-dienst ipc call mpris decrement",
         args: [
             {
                 name: "amount",
@@ -1870,7 +1870,7 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "brightness increment": {
-        base: "spawn dms ipc call brightness increment",
+        base: "spawn alpe-dienst ipc call brightness increment",
         args: [
             {
                 name: "amount",
@@ -1889,7 +1889,7 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "brightness decrement": {
-        base: "spawn dms ipc call brightness decrement",
+        base: "spawn alpe-dienst ipc call brightness decrement",
         args: [
             {
                 name: "amount",
@@ -1908,7 +1908,7 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "brightness toggleExponential": {
-        base: "spawn dms ipc call brightness toggleExponential",
+        base: "spawn alpe-dienst ipc call brightness toggleExponential",
         args: [
             {
                 name: "device",
@@ -1920,7 +1920,7 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "dash toggle": {
-        base: "spawn dms ipc call dash toggle",
+        base: "spawn alpe-dienst ipc call dash toggle",
         args: [
             {
                 name: "tab",
@@ -1932,19 +1932,19 @@ const DMS_ACTION_ARGS = {
         ]
     },
     "screenshot": {
-        base: "spawn dms screenshot",
+        base: "spawn alpe-dienst screenshot",
         args: SCREENSHOT_FLAGS
     },
     "screenshot full": {
-        base: "spawn dms screenshot full",
+        base: "spawn alpe-dienst screenshot full",
         args: SCREENSHOT_FLAGS
     },
     "screenshot all": {
-        base: "spawn dms screenshot all",
+        base: "spawn alpe-dienst screenshot all",
         args: SCREENSHOT_FLAGS
     },
     "screenshot window": {
-        base: "spawn dms screenshot window",
+        base: "spawn alpe-dienst screenshot window",
         args: SCREENSHOT_FLAGS
     }
 };
@@ -2092,7 +2092,15 @@ function getActionType(action) {
 function isDmsAction(action) {
     if (!action)
         return false;
-    return action.startsWith("spawn dms ipc call ") || /^spawn dms screenshot( |$)/.test(action);
+    return action.startsWith("spawn alpe-dienst ipc call ") || /^spawn alpe-dienst screenshot( |$)/.test(action);
+}
+
+// Kürzel aus DMS- und Alpe-1.0-Konfigurationen rufen noch «dms ipc call …» bzw. «dms screenshot»
+// auf. Beim Einlesen gelten sie als die gleichnamige Alpe-Aktion; der Umzug schreibt die Dateien um.
+function normalizeLegacyAction(action) {
+    if (!action)
+        return action;
+    return action.replace(/^spawn dms (ipc call |screenshot( |$))/, "spawn alpe-dienst $1");
 }
 
 function isValidAction(action) {

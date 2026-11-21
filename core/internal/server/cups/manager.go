@@ -13,12 +13,12 @@ import (
 )
 
 func NewManager() (*Manager, error) {
-	host := os.Getenv("DMS_IPP_HOST")
+	host := os.Getenv("ALPE_IPP_HOST")
 	if host == "" {
 		host = "localhost"
 	}
 
-	portStr := os.Getenv("DMS_IPP_PORT")
+	portStr := os.Getenv("ALPE_IPP_PORT")
 	port := 631
 	if portStr != "" {
 		if p, err := strconv.Atoi(portStr); err == nil {
@@ -26,8 +26,8 @@ func NewManager() (*Manager, error) {
 		}
 	}
 
-	username := os.Getenv("DMS_IPP_USERNAME")
-	password := os.Getenv("DMS_IPP_PASSWORD")
+	username := os.Getenv("ALPE_IPP_USERNAME")
+	password := os.Getenv("ALPE_IPP_PASSWORD")
 
 	client := ipp.NewCUPSClient(host, port, username, password, false)
 	baseURL := fmt.Sprintf("http://%s:%d", host, port)

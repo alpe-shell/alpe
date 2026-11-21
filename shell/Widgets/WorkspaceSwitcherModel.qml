@@ -24,7 +24,7 @@ QtObject {
     readonly property bool useExtWorkspace: {
         if (CompositorService.isKwin)
             return KwinService.workspaces.length > 0;
-        if (Quickshell.env("DMS_FORCE_EXTWS") === "1")
+        if (Quickshell.env("ALPE_FORCE_EXTWS") === "1")
             return (WindowManager.windowsets?.length ?? 0) > 0;
         if (!CompositorService.compositorDetected || CompositorService.hasWorkspaceIpc)
             return false;

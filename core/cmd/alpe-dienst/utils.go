@@ -8,7 +8,7 @@ import (
 )
 
 func disableMemProfilingUnlessRequested() {
-	if os.Getenv("DMS_PPROF") != "" {
+	if os.Getenv("ALPE_PPROF") != "" {
 		return
 	}
 	runtime.MemProfileRate = 0

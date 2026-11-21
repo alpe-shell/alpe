@@ -25,7 +25,7 @@ func tuneRuntime() {
 }
 
 func startPprof() {
-	addr := os.Getenv("DMS_PPROF")
+	addr := os.Getenv("ALPE_PPROF")
 	if addr == "" {
 		return
 	}

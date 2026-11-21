@@ -48,8 +48,8 @@ try:
     env = dict(os.environ, CGO_ENABLED="0")
     env.pop("GOFLAGS", None)
     make("dev", "BUILD_DIR=" + out_dir, env=env)
-    got = subprocess.run([os.path.join(out_dir, "dms"), "version"], capture_output=True, text=True).stdout.strip()
-    expect(got, "dms " + brand, "«dms version» meldet die Version aus Brand.qml")
+    got = subprocess.run([os.path.join(out_dir, "alpe-dienst"), "version"], capture_output=True, text=True).stdout.strip()
+    expect(got, "alpe-dienst " + brand, "«alpe-dienst version» meldet die Version aus Brand.qml")
 finally:
     shutil.rmtree(out_dir, ignore_errors=True)
 

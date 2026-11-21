@@ -30,7 +30,7 @@ type File struct {
 	LockSettings map[string]json.RawMessage `json:"lock_settings"`
 }
 
-// shellSwitches reach the shell as DMS_POLICY_<KEY> in its launch environment.
+// shellSwitches reach the shell as ALPE_POLICY_<KEY> in its launch environment.
 var shellSwitches = []struct {
 	key   string
 	value func(*File) *bool
@@ -149,8 +149,8 @@ func LockSettingBool(settings map[string]json.RawMessage, key string) *bool {
 	return value
 }
 
-// ShellEnv returns every shell switch as DMS_POLICY_<KEY>=1 or 0 and the
-// managed lock settings as DMS_POLICY_LOCK_SETTINGS=<JSON object>, so a value
+// ShellEnv returns every shell switch as ALPE_POLICY_<KEY>=1 or 0 and the
+// managed lock settings as ALPE_POLICY_LOCK_SETTINGS=<JSON object>, so a value
 // inherited by the shell never counts. A policy file that fails to load turns
 // every switch on and manages no lock setting, and its error is returned with
 // them.
@@ -162,10 +162,10 @@ func ShellEnv(fs afero.Fs) ([]string, error) {
 		if err != nil || flag(policies, s.value) {
 			value = "1"
 		}
-		env = append(env, "DMS_POLICY_"+strings.ToUpper(s.key)+"="+value)
+		env = append(env, "ALPE_POLICY_"+strings.ToUpper(s.key)+"="+value)
 	}
 	// The values come from json.Unmarshal, so they marshal.
 	settings, _ := json.Marshal(lockSettings(policies))
-	env = append(env, "DMS_POLICY_LOCK_SETTINGS="+string(settings))
+	env = append(env, "ALPE_POLICY_LOCK_SETTINGS="+string(settings))
 	return env, err
 }

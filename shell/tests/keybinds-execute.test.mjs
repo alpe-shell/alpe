@@ -67,11 +67,11 @@ test("the shell field reads and writes the backslash escaping core uses", () => 
 });
 
 test("the cheatsheet loads a custom config path when one is given", () => {
-    const ctx = vm.createContext({ cheatsheetProvider: "hyprland", cheatsheetLoading: false, cheatsheetProcess: { running: false, command: [] } });
+    const ctx = vm.createContext({ Proc: { dmsBin: "alpe-dienst" }, cheatsheetProvider: "hyprland", cheatsheetLoading: false, cheatsheetProcess: { running: false, command: [] } });
     vm.runInContext(extract("loadCheatsheet"), ctx);
     for (const [provider, path, expected] of [
-        ["sway", "/etc/sway/config", ["dms", "keybinds", "show", "sway", "--path", "/etc/sway/config"]],
-        ["", "", ["dms", "keybinds", "show", "hyprland"]]
+        ["sway", "/etc/sway/config", ["alpe-dienst", "keybinds", "show", "sway", "--path", "/etc/sway/config"]],
+        ["", "", ["alpe-dienst", "keybinds", "show", "hyprland"]]
     ]) {
         ctx.cheatsheetProcess.running = false;
         ctx.loadCheatsheet(provider, path);

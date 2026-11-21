@@ -21,7 +21,7 @@ Singleton {
     readonly property var log: Log.scoped("Theme")
 
     readonly property string stateDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.GenericCacheLocation).toString()) + "/dms"
-    readonly property bool envDisableMatugen: Quickshell.env("DMS_DISABLE_MATUGEN") === "1" || Quickshell.env("DMS_DISABLE_MATUGEN") === "true"
+    readonly property bool envDisableMatugen: Quickshell.env("ALPE_DISABLE_MATUGEN") === "1" || Quickshell.env("ALPE_DISABLE_MATUGEN") === "true"
     readonly property string defaultFontFamily: "Google Sans Flex"
     readonly property string defaultMonoFontFamily: "Fira Code"
     readonly property string defaultDisplayFontFamily: "DM Serif Display"
@@ -1832,7 +1832,7 @@ Singleton {
             args.push("--contrast", SettingsData.matugenContrast.toString());
         }
         // Only sent when it would change something. A shell newer than the dms
-        // binary is a supported setup (DMS_SHELL_DIR / -c), and an older binary
+        // binary is a supported setup (ALPE_SHELL_DIR / -c), and an older binary
         // exits with "unknown flag: --source-mode" rather than ignoring it, so
         // the default must not put the flag on the command line at all.
         const seedColor = (typeof SettingsData !== "undefined" && !stockColors) ? SettingsData.matugenSeedColor : "";

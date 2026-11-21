@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"net"
 	"path/filepath"
 	"strings"
@@ -17,7 +18,7 @@ func fakeServer(t *testing.T, handle func(net.Conn)) {
 	t.Setenv("XDG_RUNTIME_DIR", dir)
 	t.Setenv("WAYLAND_DISPLAY", "")
 
-	ln, err := net.Listen("unix", filepath.Join(dir, "danklinux.sock"))
+	ln, err := net.Listen("unix", filepath.Join(dir, brand.ID+".sock"))
 	if err != nil {
 		t.Fatal(err)
 	}

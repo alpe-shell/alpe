@@ -127,7 +127,7 @@ Singleton {
     Process {
         id: keymapProcess
         running: false
-        command: ["dms", "keybinds", "keymap"]
+        command: [Proc.dmsBin, "keybinds", "keymap"]
 
         stdout: StdioCollector {
             onStreamFinished: {
@@ -298,7 +298,7 @@ Singleton {
         if (!target)
             return;
         cheatsheetLoading = true;
-        cheatsheetProcess.command = path ? ["dms", "keybinds", "show", target, "--path", path] : ["dms", "keybinds", "show", target];
+        cheatsheetProcess.command = path ? [Proc.dmsBin, "keybinds", "show", target, "--path", path] : [Proc.dmsBin, "keybinds", "show", target];
         cheatsheetProcess.running = true;
     }
 
@@ -362,7 +362,7 @@ Singleton {
             return;
         const hasData = Object.keys(_allBinds).length > 0;
         loading = showLoading !== false && !hasData;
-        loadProcess.command = ["dms", "keybinds", "show", currentProvider];
+        loadProcess.command = [Proc.dmsBin, "keybinds", "show", currentProvider];
         loadProcess.provider = currentProvider;
         loadProcess.running = true;
     }
@@ -409,6 +409,7 @@ Singleton {
                 const bind = binds[i];
                 if (currentProvider === "hyprland" && bind.action && bind.action.startsWith("exec "))
                     bind.action = "spawn " + bind.action.slice(5);
+                bind.action = Actions.normalizeLegacyAction(bind.action);
                 const targetCat = Actions.isDmsAction(bind.action) ? "DMS" : cat;
                 if (!processed[targetCat])
                     processed[targetCat] = [];
@@ -538,7 +539,7 @@ Singleton {
         if (!bindData.key || !Actions.isValidAction(bindData.action))
             return;
         saving = true;
-        const cmd = ["dms", "keybinds", "set", currentProvider, bindData.key, bindData.action];
+        const cmd = [Proc.dmsBin, "keybinds", "set", currentProvider, bindData.key, bindData.action];
         cmd.push("--desc", bindData.desc || "");
         if (originalKey && originalKey !== bindData.key)
             cmd.push("--replace-key", originalKey);
@@ -587,7 +588,7 @@ Singleton {
         }
         if (!key)
             return;
-        removeProcess.command = ["dms", "keybinds", "remove", currentProvider, key];
+        removeProcess.command = [Proc.dmsBin, "keybinds", "remove", currentProvider, key];
         removeProcess.provider = currentProvider;
         removeProcess.running = true;
         bindRemoved(key);
@@ -600,7 +601,7 @@ Singleton {
         }
         if (!key)
             return;
-        removeProcess.command = ["dms", "keybinds", "reset", currentProvider, key];
+        removeProcess.command = [Proc.dmsBin, "keybinds", "reset", currentProvider, key];
         removeProcess.provider = currentProvider;
         removeProcess.running = true;
         bindRemoved(key);
@@ -626,6 +627,6 @@ Singleton {
         const actions = Actions.getDmsActions(CompositorService.isHyprland);
         if (!AdminPolicy.disableLockIpcUnlock)
             return actions;
-        return actions.filter(action => action.id !== "spawn dms ipc call lock demo");
+        return actions.filter(action => action.id !== "spawn alpe-dienst ipc call lock demo");
     }
 }

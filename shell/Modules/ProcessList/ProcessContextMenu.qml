@@ -212,14 +212,14 @@ Popup {
 
     function copyPid() {
         if (processData)
-            Quickshell.execDetached(["dms", "cl", "copy", "--", processData.pid.toString()]);
+            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", "--", processData.pid.toString()]);
         close();
     }
 
     function copyName() {
         if (processData) {
             const name = processData.command || "";
-            Quickshell.execDetached(["dms", "cl", "copy", "--", name]);
+            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", "--", name]);
         }
         close();
     }
@@ -227,7 +227,7 @@ Popup {
     function copyFullCommand() {
         if (processData) {
             const fullCmd = processData.fullCommand || processData.command || "";
-            Quickshell.execDetached(["dms", "cl", "copy", "--", fullCmd]);
+            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", "--", fullCmd]);
         }
         close();
     }

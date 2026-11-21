@@ -92,7 +92,7 @@ Item {
     readonly property bool useBackgroundDarken: !connected && !FrameTransitionState.effectiveFrameEnabled && SettingsData.modalDarkenBackground
     readonly property bool useSingleWindow: connected || CompositorService.isHyprland || useBackgroundDarken
     readonly property bool usesOverlayLayer: useBackgroundDarken || SettingsData.launcherUseOverlayLayer || triggerUsesOverlayLayer
-    readonly property var effectiveLauncherLayer: LayerShell.fromEnv("DMS_MODAL_LAYER", root.usesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top, {
+    readonly property var effectiveLauncherLayer: LayerShell.fromEnv("ALPE_MODAL_LAYER", root.usesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top, {
         "allow": ["top", "overlay"],
         "invalidLayer": WlrLayer.Top,
         "label": "modals",
@@ -1110,7 +1110,7 @@ Item {
                             targetRadius: root.cornerRadius
                             bottomLeftRadius: root.frameBottomRadius
                             bottomRightRadius: root.frameBottomRadius
-                            shadowEnabled: !root.frameOwnsConnectedChrome && Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1"
+                            shadowEnabled: !root.frameOwnsConnectedChrome && Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1"
                         }
 
                         Item {
@@ -1314,7 +1314,7 @@ Item {
                     targetRadius: root.cornerRadius
                     bottomLeftRadius: root.frameBottomRadius
                     bottomRightRadius: root.frameBottomRadius
-                    shadowEnabled: Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1"
+                    shadowEnabled: Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1"
                 }
 
                 Item {

@@ -54,10 +54,10 @@ build)
     # Go lädt bei Bedarf die passende Toolchain und die Module selbst nach (GOTOOLCHAIN=auto).
     GOTOOLCHAIN="${GOTOOLCHAIN:-auto}" make -C "$CORE" build COMMIT="$(git -C "$HERE" rev-parse --short=8 HEAD 2>/dev/null || echo unbekannt)" >/dev/null \
         || die "Bau gescheitert (Ausgabe oben). Der bisherige Dienst bleibt unverändert."
-    built="$CORE/bin/dms"
+    built="$CORE/bin/alpe-dienst"
     [ -x "$built" ] || die "Kein Ergebnis in $built"
     got="$(version_of "$built")"
-    case "$got" in "dms $version") ;; *) die "Der neue Bau meldet «$got» statt $version – nicht übernommen" ;; esac
+    case "$got" in "alpe-dienst $version"|"dms $version") ;; *) die "Der neue Bau meldet «$got» statt $version – nicht übernommen" ;; esac
     mkdir -p "$LIB"
     [ -x "$BIN" ] && cp -f "$BIN" "$BIN.prev"
     install -m755 "$built" "$BIN.new" && mv -f "$BIN.new" "$BIN"

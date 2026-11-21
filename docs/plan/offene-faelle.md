@@ -117,6 +117,36 @@ nur «nicht gefunden».)
 - Theme-Kategorie «registry»: Die Auswahl ist weg, `Theme.qml` kennt die Kategorie aber noch
   (wer ein Register-Theme aktiv hatte, behält es als eigene Datei). Mit D6/D7 bereinigen.
 
+## Nach D1: Folgen der neuen Namen
+
+- **Kürzel in Hyprland-Dateien:** Die Kürzel-Aktionen heissen jetzt `alpe-dienst ipc call …` bzw.
+  `alpe-dienst screenshot …`. Bestehende Zeilen mit `dms ipc call …` erkennt der Kürzel-Editor
+  weiter (`KeybindActions.normalizeLegacyAction`), ausgeführt werden sie aber von Hyprland mit
+  dem alten Programm `dms` – das spricht nur DMS-Sockets an, nie `alpe-<pid>.sock`. **Der Umzug
+  (F1) muss in `hypr/alpe/*.lua` und eigenen Hyprland-Dateien `dms ipc`/`dms screenshot` auf
+  `alpe-dienst` umschreiben.** Mac-Test bis dahin: Kürzel der Testshell über
+  `alpe-dienst ipc call …` im Terminal prüfen; die eingebauten Hyprland-Kürzel erreichen sie
+  nicht.
+- `tools/maclock.py` (bzw. der Hyprland-Sperr-Teil der Werkzeuge) schreibt noch
+  `dms ipc call lock lock` in `hypridle.conf` und die Hyprland-Kürzel (`tests/test_maclock.py`).
+  Mit E4 auf `alpe-dienst` umstellen, der Umzug schreibt bestehende Zeilen um.
+- `tools/alpe`, `tools/backend.sh`, `bootstrap.sh`, `get.sh` kennen noch `/usr/bin/dms` und
+  `dms.service` (1.0-Weg, wird in E4/F2 ersetzt). `backend.sh` baut schon `bin/alpe-dienst`.
+- Hilfetexte des Dienstes (`--help`, Beispiele `dms screenshot …`, `dms ipc …`) und
+  Oberflächentexte («sperrt über «dms ipc call lock lock»», veraltet-Meldungen in der IPC)
+  nennen noch `dms`: D6.
+- `ALPE_SHELL_DIR` ist jetzt zugleich die Variable des Dienstes (vorher `DMS_SHELL_DIR`) und die
+  der Werkzeuge/Tests – gleiche Bedeutung (Ordner mit `shell.qml`). Die Hyprland-Zeile
+  `env = DMS_SHELL_DIR,…` aus `hypr/alpe.conf` wirkt auf `alpe-dienst` nicht mehr (Umzug 7.4
+  entfernt sie ohnehin).
+- Toter Code aus C4, erst jetzt gesehen: `internal/version` (`GetDMSVersionInfo`,
+  `GetLatestDMSVersion`, Abfrage der DMS-Releases über `internal/netfetch/release.go`) hat
+  ausser `CompareVersions` keinen Aufrufer mehr. Kandidat für einen Aufräum-Commit.
+- `process.restartService` im Root-Helfer (Prozessliste → «Dienst neu starten») ruft
+  `systemctl restart` für **System**-Dienste auf, auf ausdrückliche Handlung des Nutzers. Das
+  ist nicht der eigene Dienst; Plan 6.8 bezieht sich auf `alpe.service`. Bleibt, falls du es
+  nicht anders willst.
+
 ## Hyprland: `hyprctl descriptions` (nach Phase A)
 
 Unter Hyprland 0.57.2 meldet `HyprlandService.qml:257` `hyprctl descriptions parse failed:

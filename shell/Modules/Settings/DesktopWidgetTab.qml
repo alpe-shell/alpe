@@ -22,7 +22,7 @@ Item {
     readonly property string widgetName: instanceData?.name || widgetDef?.name || widgetType
     readonly property bool fixed: widgetType === "lockAuth"
     readonly property var cfg: instanceData?.config ?? {}
-    readonly property string overlayCommand: "dms ipc call desktopWidget toggleOverlay " + instanceId
+    readonly property string overlayCommand: "alpe-dienst ipc call desktopWidget toggleOverlay " + instanceId
     readonly property var groupOptions: [
         {
             "value": "",
@@ -144,7 +144,7 @@ Item {
                         iconName: "content_copy"
                         Accessible.name: I18n.tr("Copy")
                         onClicked: {
-                            Quickshell.execDetached(["dms", "cl", "copy", root.overlayCommand]);
+                            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", root.overlayCommand]);
                             ToastService.showInfo(I18n.tr("Copied to clipboard"));
                         }
                     }

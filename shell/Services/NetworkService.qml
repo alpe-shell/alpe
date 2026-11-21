@@ -124,7 +124,7 @@ Singleton {
 
     property var activeService: null
 
-    readonly property string socketPath: Quickshell.env("DMS_SOCKET")
+    readonly property string socketPath: Quickshell.env("ALPE_SOCKET")
 
     // Backend adoption must be state-checked here, not only edge-triggered below:
     // with staged shell loading this singleton can be instantiated after
@@ -133,7 +133,7 @@ Singleton {
     Component.onCompleted: {
         log.info("Initializing...");
         if (!socketPath || socketPath.length === 0) {
-            log.info("DMS_SOCKET not set, network backend unavailable");
+            log.info("ALPE_SOCKET not set, network backend unavailable");
             return;
         }
         if (DMSNetworkService.networkAvailable) {
@@ -141,7 +141,7 @@ Singleton {
             useDMSService();
             return;
         }
-        log.debug("DMS_SOCKET found, waiting for capabilities...");
+        log.debug("ALPE_SOCKET found, waiting for capabilities...");
     }
 
     Connections {

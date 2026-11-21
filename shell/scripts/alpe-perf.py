@@ -44,7 +44,7 @@ def shell_processes():
             target = ""
         if exe in ("quickshell", "qs") or os.path.basename(target) in ("quickshell", "qs"):
             kind = "Oberfläche (Quickshell)"
-        elif (exe in ("dms", "alpe") or os.path.basename(target) in ("dms", "alpe")) and "run" in cmdline[1:]:
+        elif (exe in ("alpe-dienst", "dms", "alpe") or os.path.basename(target) in ("alpe-dienst", "dms", "alpe")) and "run" in cmdline[1:]:
             kind = "Dienst (" + ("eigener Bau" if "/.local/lib/alpe/" in target else "Paket") + ")"
         else:
             continue

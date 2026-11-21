@@ -1,5 +1,5 @@
-BINARY_NAME=dms
-SOURCE_DIR=cmd/dms
+BINARY_NAME=alpe-dienst
+SOURCE_DIR=cmd/alpe-dienst
 BUILD_DIR=bin
 SHELL_SRC=../shell
 EMBED_DIR=internal/shellembed/dist
@@ -10,7 +10,7 @@ GO=go
 GOFLAGS=-ldflags="-s -w"
 
 # Alpe: Die Version steht allein in shell/Common/Brand.qml (Plan 0.5 Nr. 2); der Dienst
-# bekommt sie beim Bau. tests/test_version.py prüft, dass «dms version» sie meldet.
+# bekommt sie beim Bau. tests/test_version.py prüft, dass «alpe-dienst version» sie meldet.
 BRAND_QML=$(SHELL_SRC)/Common/Brand.qml
 BRAND_VERSION=$(shell sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' $(BRAND_QML) | head -1)
 COMMIT_HASH=$(shell git rev-parse --short=8 HEAD 2>/dev/null || echo "unknown")
@@ -49,7 +49,7 @@ sync-shell:
 	@rm -f $(EMBED_DIR)/translations/*.py $(EMBED_DIR)/translations/WORKFLOW.md
 	@cd $(EMBED_DIR) && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16 > .dankrev
 
-# Build the main binary (dms)
+# Build the main binary (alpe-dienst)
 build: sync-shell
 	@echo "Building $(BINARY_NAME)..."
 	@mkdir -p $(BUILD_DIR)
@@ -123,13 +123,13 @@ print-version:
 
 help:
 	@echo "Available targets:"
-	@echo "  all                 - Build the main binary (dms) (default)"
-	@echo "  build               - Build the main binary (dms) with the embedded UI"
+	@echo "  all                 - Build the main binary (alpe-dienst) (default)"
+	@echo "  build               - Build the main binary (alpe-dienst) with the embedded UI"
 	@echo "  sync-shell          - Copy quickshell/ into the embed dir (runs before tagged builds)"
-	@echo "  dist                - Build dms for linux/freebsd amd64/arm64"
+	@echo "  dist                - Build alpe-dienst for linux/freebsd amd64/arm64"
 	@echo "                        Use ARCH=amd64 or ARCH=arm64 and/or DIST_OSES=linux to narrow"
-	@echo "  install             - Install dms to $(INSTALL_DIR)"
-	@echo "  uninstall           - Remove dms from $(INSTALL_DIR)"
+	@echo "  install             - Install alpe-dienst to $(INSTALL_DIR)"
+	@echo "  uninstall           - Remove alpe-dienst from $(INSTALL_DIR)"
 	@echo "  clean               - Clean build artifacts"
 	@echo "  test                - Run tests"
 	@echo "  fmt                 - Format Go code"

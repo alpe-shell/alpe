@@ -61,7 +61,7 @@ Singleton {
         }
     }
     readonly property bool frameCompositorLayoutReady: (!isHyprland || HyprlandService.frameLayoutReady)
-    readonly property bool useHyprlandFocusGrab: isHyprland && Quickshell.env("DMS_HYPRLAND_EXCLUSIVE_FOCUS") !== "1"
+    readonly property bool useHyprlandFocusGrab: isHyprland && Quickshell.env("ALPE_HYPRLAND_EXCLUSIVE_FOCUS") !== "1"
 
     readonly property string hyprlandSignature: Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
 

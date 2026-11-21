@@ -197,7 +197,7 @@ DFloatingWindow {
                 }
 
                 StyledText {
-                    text: I18n.tr("%1 not available", "%1 is a tool or environment variable name").arg("DMS_SOCKET")
+                    text: I18n.tr("%1 not available", "%1 is a tool or environment variable name").arg("ALPE_SOCKET")
                     font.pixelSize: Theme.fontSizeMedium
                     color: Theme.surfaceText
                     anchors.horizontalCenter: parent.horizontalCenter

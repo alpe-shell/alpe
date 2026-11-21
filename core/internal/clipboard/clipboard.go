@@ -15,11 +15,11 @@ import (
 	"github.com/duxlabs-dev/dux-go/wlclipboard"
 )
 
-const envServe = "_DMS_CLIPBOARD_SERVE"
-const envMime = "_DMS_CLIPBOARD_MIME"
-const envPasteOnce = "_DMS_CLIPBOARD_PASTE_ONCE"
-const envCacheFile = "_DMS_CLIPBOARD_CACHE"
-const envReady = "_DMS_CLIPBOARD_READY"
+const envServe = "_ALPE_CLIPBOARD_SERVE"
+const envMime = "_ALPE_CLIPBOARD_MIME"
+const envPasteOnce = "_ALPE_CLIPBOARD_PASTE_ONCE"
+const envCacheFile = "_ALPE_CLIPBOARD_CACHE"
+const envReady = "_ALPE_CLIPBOARD_READY"
 
 // MaybeServeAndExit intercepts before cobra when re-exec'd as a clipboard
 // child. Reads source data into memory, deletes any cache file, then serves.

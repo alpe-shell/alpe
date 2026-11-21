@@ -183,7 +183,7 @@ func GenerateFilename(format Format) string {
 }
 
 func GetOutputDir() string {
-	if dir := os.Getenv("DMS_SCREENSHOT_DIR"); dir != "" {
+	if dir := os.Getenv("ALPE_SCREENSHOT_DIR"); dir != "" {
 		return dir
 	}
 

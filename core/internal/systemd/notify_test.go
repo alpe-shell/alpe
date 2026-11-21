@@ -107,7 +107,7 @@ func TestReadinessExternalNotifications(t *testing.T) {
 }
 
 func TestReadinessForeignOwner(t *testing.T) {
-	if name := os.Getenv("DMS_TEST_TRAY_HOST"); name != "" {
+	if name := os.Getenv("ALPE_TEST_TRAY_HOST"); name != "" {
 		bus, err := dbus.ConnectSessionBus()
 		require.NoError(t, err)
 		defer bus.Close()
@@ -316,7 +316,7 @@ func readNotification(t *testing.T, socket *net.UnixConn) string {
 func shellReadyForeignOwner(t *testing.T, name string) int {
 	t.Helper()
 	cmd := exec.Command(os.Args[0], "-test.run=^TestReadinessForeignOwner$")
-	cmd.Env = append(os.Environ(), "DMS_TEST_TRAY_HOST="+name)
+	cmd.Env = append(os.Environ(), "ALPE_TEST_TRAY_HOST="+name)
 	stdin, err := cmd.StdinPipe()
 	require.NoError(t, err)
 	stdout, err := cmd.StdoutPipe()

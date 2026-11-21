@@ -59,7 +59,7 @@ Singleton {
     property double lastResumeSignalTimestamp: 0
     property var pendingSleepFn: null
 
-    readonly property string socketPath: Quickshell.env("DMS_SOCKET")
+    readonly property string socketPath: Quickshell.env("ALPE_SOCKET")
 
     Timer {
         id: sessionInitTimer
@@ -75,7 +75,7 @@ Singleton {
             if (socketPath && socketPath.length > 0) {
                 checkDMSCapabilities();
             } else {
-                log.debug("DMS_SOCKET not set");
+                log.debug("ALPE_SOCKET not set");
             }
         }
     }
@@ -289,8 +289,8 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
                 return;
             env[target] = orig.length > 0 ? orig : null;
         };
-        restore("NIXPKGS_QT6_QML_IMPORT_PATH", "DMS_ORIG_NIXPKGS_QT6_QML_IMPORT_PATH");
-        restore("QT_PLUGIN_PATH", "DMS_ORIG_QT_PLUGIN_PATH");
+        restore("NIXPKGS_QT6_QML_IMPORT_PATH", "ALPE_ORIG_NIXPKGS_QT6_QML_IMPORT_PATH");
+        restore("QT_PLUGIN_PATH", "ALPE_ORIG_QT_PLUGIN_PATH");
         // Alpe: die Begrenzung der Speicher-Arenen gilt nur für die Shell selbst
         // (Drop-in zz-alpe-name.conf), nicht für Programme, die man aus ihr startet.
         if (Quickshell.env("ALPE_SHELL_ARENA") === "1") {
@@ -347,7 +347,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
         }
 
         const userPrefix = SettingsData.launchPrefix?.trim() || "";
-        const defaultPrefix = Quickshell.env("DMS_DEFAULT_LAUNCH_PREFIX") || "";
+        const defaultPrefix = Quickshell.env("ALPE_DEFAULT_LAUNCH_PREFIX") || "";
         const prefix = userPrefix.length > 0 ? userPrefix : defaultPrefix;
         const workDir = desktopEntry.workingDirectory || Quickshell.env("HOME");
         const cursorEnv = typeof SettingsData.getCursorEnvironment === "function" ? SettingsData.getCursorEnvironment() : {};
@@ -399,7 +399,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
             cmd = [nvidiaCommand].concat(cmd);
 
         const userPrefix = SettingsData.launchPrefix?.trim() || "";
-        const defaultPrefix = Quickshell.env("DMS_DEFAULT_LAUNCH_PREFIX") || "";
+        const defaultPrefix = Quickshell.env("ALPE_DEFAULT_LAUNCH_PREFIX") || "";
         const prefix = userPrefix.length > 0 ? userPrefix : defaultPrefix;
         const workDir = desktopEntry.workingDirectory || Quickshell.env("HOME");
         const cursorEnv = typeof SettingsData.getCursorEnvironment === "function" ? SettingsData.getCursorEnvironment() : {};
@@ -658,7 +658,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
             poweroff();
             return true;
         case "restart":
-            Quickshell.execDetached(["dms", "restart"]);
+            Quickshell.execDetached([Proc.dmsBin, "restart"]);
             return true;
         default:
             return false;

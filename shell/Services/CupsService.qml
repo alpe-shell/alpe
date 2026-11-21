@@ -183,7 +183,7 @@ Singleton {
 
     signal cupsStateUpdate
 
-    readonly property string socketPath: Quickshell.env("DMS_SOCKET")
+    readonly property string socketPath: Quickshell.env("ALPE_SOCKET")
 
     Component.onCompleted: {
         if (socketPath && socketPath.length > 0) {

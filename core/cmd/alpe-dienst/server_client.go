@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"io"
 	"net"
 	"os"
@@ -125,15 +126,14 @@ func getServerSocketPath() string {
 		return server.GetSocketPath()
 	}
 
-	for _, id := range []string{"dms", "danklinux"} {
-		for _, entry := range entries {
-			name := entry.Name()
-			if filepath.Ext(name) != ".sock" {
-				continue
-			}
-			if name == id+".sock" || strings.HasPrefix(name, id+"-") {
-				return filepath.Join(runtimeDir, name)
-			}
+	// Nur Alpe-Sockets: Ein daneben laufendes DMS (dms-<pid>.sock) darf nie angesprochen werden.
+	for _, entry := range entries {
+		name := entry.Name()
+		if filepath.Ext(name) != ".sock" {
+			continue
+		}
+		if name == brand.ID+".sock" || strings.HasPrefix(name, brand.ID+"-") {
+			return filepath.Join(runtimeDir, name)
 		}
 	}
 

@@ -80,7 +80,7 @@ Item {
     property bool keepPopoutsOpen: modalHandle.keepPopoutsOpen
     property var customKeyboardFocus: modalHandle.customKeyboardFocus
     property bool useOverlayLayer: modalHandle.useOverlayLayer
-    readonly property var effectiveModalLayer: root.useOverlayLayer ? WlrLayer.Overlay : LayerShell.fromEnv("DMS_MODAL_LAYER", WlrLayer.Top, {
+    readonly property var effectiveModalLayer: root.useOverlayLayer ? WlrLayer.Overlay : LayerShell.fromEnv("ALPE_MODAL_LAYER", WlrLayer.Top, {
         "allow": ["top", "overlay"],
         "invalidLayer": WlrLayer.Top,
         "label": "modals",
@@ -829,7 +829,7 @@ Item {
                             targetColor: root.frameOwnsConnectedChrome ? Theme.withAlpha(root.effectiveBackgroundColor, 0) : root.effectiveBackgroundColor
                             borderColor: root.frameOwnsConnectedChrome ? Theme.withAlpha(root.effectiveBorderColor, 0) : root.effectiveBorderColor
                             borderWidth: root.frameOwnsConnectedChrome ? 0 : root.effectiveBorderWidth
-                            shadowEnabled: !root.frameOwnsConnectedChrome && root.enableShadow && Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1"
+                            shadowEnabled: !root.frameOwnsConnectedChrome && root.enableShadow && Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1"
                         }
 
                         Rectangle {

@@ -1405,7 +1405,7 @@ func pulseReducedMotion() {
 }
 
 func refreshGTKColorScheme() {
-	if os.Getenv("DMS_ENABLE_GTK_REFRESH") != "1" {
+	if os.Getenv("ALPE_ENABLE_GTK_REFRESH") != "1" {
 		return
 	}
 	output, err := utils.GsettingsGet("org.gnome.desktop.interface", "color-scheme")

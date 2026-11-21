@@ -91,7 +91,7 @@ DPopout {
     function copyValue(value) {
         if (!value)
             return;
-        Quickshell.execDetached(["dms", "cl", "copy", value.toString()]);
+        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", value.toString()]);
         ToastService.showInfo(I18n.tr("Copied to clipboard"));
         close();
     }

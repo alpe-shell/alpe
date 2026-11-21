@@ -20,7 +20,7 @@ import qs.Services
 ShellRoot {
     id: entrypoint
 
-    readonly property bool disableHotReload: Quickshell.env("DMS_DISABLE_HOT_RELOAD") === "1" || Quickshell.env("DMS_DISABLE_HOT_RELOAD") === "true"
+    readonly property bool disableHotReload: Quickshell.env("ALPE_DISABLE_HOT_RELOAD") === "1" || Quickshell.env("ALPE_DISABLE_HOT_RELOAD") === "true"
 
     readonly property bool shellReady: !!Quickshell.env("NOTIFY_SOCKET") && dmsShellLoader.status === Loader.Ready && DMSService.isConnected && DMSService.apiVersion >= 38
 

@@ -30,7 +30,7 @@ const (
 )
 
 var (
-	errDDCDisabled   = errors.New("disabled via DMS_NO_DDC")
+	errDDCDisabled   = errors.New("disabled via ALPE_NO_DDC")
 	errInvalidEDID   = errors.New("invalid edid")
 	errDisplayAsleep = errors.New("display asleep")
 	errNoMonitor     = errors.New("no monitor on bus")
@@ -44,7 +44,7 @@ func NewDDCBackend() (*DDCBackend, error) {
 }
 
 func newDDCBackend(onReread func()) (*DDCBackend, error) {
-	if os.Getenv("DMS_NO_DDC") != "" {
+	if os.Getenv("ALPE_NO_DDC") != "" {
 		return nil, errDDCDisabled
 	}
 

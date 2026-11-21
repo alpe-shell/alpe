@@ -77,7 +77,7 @@ def settings_tabs():
 def build_dienst(target):
     env = dict(os.environ, CGO_ENABLED="0")
     env.pop("GOFLAGS", None)
-    subprocess.run(["go", "build", "-o", target, "./cmd/dms"], cwd=CORE, env=env, check=True)
+    subprocess.run(["go", "build", "-o", target, "./cmd/alpe-dienst"], cwd=CORE, env=env, check=True)
 
 
 # ---------------------------------------------------------------- systemd (echte Umgebung, nur eigene Scopes)
@@ -308,7 +308,7 @@ def normalize(line, base):
     line = re.sub(r"0x[0-9a-fA-F]+", "0x…", line)
     line = re.sub(r"\(qs:\d+\)", "(qs)", line)
     line = re.sub(r"\b\d{1,2}:\d{2}:\d{2}(\.\d+)?\b", "<ZEIT>", line)
-    line = re.sub(r"dms-\d+\.sock", "dms-<PID>.sock", line)
+    line = re.sub(r"(alpe|dms)-\d+\.sock", r"\1-<PID>.sock", line)
     line = re.sub(r"\b\d+(\.\d+)?\s?(ms|s|µs)\b", "<DAUER>", line)
     line = re.sub(r"by-id/[a-z0-9]+", "by-id/<ID>", line)
     line = re.sub(r"\[pid \d+\]|pid[ =:]\d+", "pid <PID>", line)

@@ -35,7 +35,7 @@ Singleton {
         running: false
         onExited: exitCode => {
             root._cavaChecked = true;
-            root.cavaAvailable = exitCode === 0 && Quickshell.env("DMS_DISABLE_CAVA") !== "1";
+            root.cavaAvailable = exitCode === 0 && Quickshell.env("ALPE_DISABLE_CAVA") !== "1";
         }
     }
 

@@ -324,7 +324,7 @@ PanelWindow {
                             property bool showTooltip: false
 
                             onClicked: {
-                                Quickshell.execDetached(["dms", "cl", "copy", ToastService.currentDetails]);
+                                Quickshell.execDetached([Proc.dmsBin, "cl", "copy", ToastService.currentDetails]);
                                 showTooltip = true;
                                 detailsTooltipTimer.start();
                             }
@@ -408,7 +408,7 @@ PanelWindow {
                             property bool showTooltip: false
 
                             onClicked: {
-                                Quickshell.execDetached(["dms", "cl", "copy", ToastService.currentCommand]);
+                                Quickshell.execDetached([Proc.dmsBin, "cl", "copy", ToastService.currentCommand]);
                                 showTooltip = true;
                                 tooltipTimer.start();
                             }

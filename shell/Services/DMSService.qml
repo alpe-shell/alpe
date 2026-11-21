@@ -24,7 +24,7 @@ Singleton {
     property string mprisCommandLease: ""
     property bool matugenSmartSupported: false
 
-    readonly property string socketPath: Quickshell.env("DMS_SOCKET")
+    readonly property string socketPath: Quickshell.env("ALPE_SOCKET")
 
     property var pendingRequests: ({})
     property var requestTimeouts: ({})

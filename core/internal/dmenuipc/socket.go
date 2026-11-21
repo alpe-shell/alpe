@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"io"
 	"net"
 	"os"
@@ -99,7 +100,7 @@ type Session struct {
 }
 
 func Listen() (*Session, error) {
-	dir := filepath.Join(utils.RuntimeDir(), "dms")
+	dir := filepath.Join(utils.RuntimeDir(), brand.ID)
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return nil, fmt.Errorf("create dmenu socket dir: %w", err)
 	}

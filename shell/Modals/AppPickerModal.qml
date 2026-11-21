@@ -198,7 +198,7 @@ DModal {
     onSearchQueryChanged: updateApplicationList()
 
     function copyEditableTarget() {
-        Quickshell.execDetached(["dms", "cl", "copy", editableTargetData]);
+        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", editableTargetData]);
         ToastService.showInfo(I18n.tr("Copied to clipboard"));
         targetCopied = true;
         targetCopyConfirmationTimer.restart();

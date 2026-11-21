@@ -19,8 +19,8 @@ test("the lock IPC switch drops the lock demo keybind action and keeps the other
         const context = vm.createContext({ Actions, CompositorService: { isHyprland: false }, AdminPolicy: { disableLockIpcUnlock } });
         vm.runInContext(getDmsActions, context);
         const ids = context.getDmsActions().map(action => action.id);
-        assert.equal(ids.includes("spawn dms ipc call lock demo"), !disableLockIpcUnlock);
-        assert.ok(ids.includes("spawn dms ipc call lock lock"));
+        assert.equal(ids.includes("spawn alpe-dienst ipc call lock demo"), !disableLockIpcUnlock);
+        assert.ok(ids.includes("spawn alpe-dienst ipc call lock lock"));
         assert.equal(ids.length, Actions.getDmsActions(false).length - (disableLockIpcUnlock ? 1 : 0));
     }
 });

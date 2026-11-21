@@ -269,7 +269,7 @@ Item {
     function _triggerBarUsesOverlayLayer(targetScreen, barConfig) {
         const frameHostsBar = CompositorService.frameHostsBarForConfig(targetScreen, barConfig);
         const frameRequiresOverlay = CompositorService.framePeerSurfacesUseOverlayForScreen(targetScreen) && !frameHostsBar;
-        return LayerShell.envUsesOverlay("DMS_DANKBAR_LAYER", (barConfig?.useOverlayLayer ?? false) || frameRequiresOverlay);
+        return LayerShell.envUsesOverlay("ALPE_DANKBAR_LAYER", (barConfig?.useOverlayLayer ?? false) || frameRequiresOverlay);
     }
 
     function dockClearance(side, popupGap) {

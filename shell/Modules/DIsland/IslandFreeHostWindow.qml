@@ -154,7 +154,7 @@ PanelWindow {
     color: "transparent"
     exclusiveZone: -1
     WlrLayershell.namespace: "dms:dankisland"
-    WlrLayershell.layer: LayerShell.fromEnv("DMS_DANKISLAND_LAYER", body.usesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top)
+    WlrLayershell.layer: LayerShell.fromEnv("ALPE_DANKISLAND_LAYER", body.usesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top)
     WlrLayershell.keyboardFocus: islandChrome.keyboardFocusPolicy
     BackgroundEffect.blurRegion: root.blurWanted && BlurService.enabled && BlurService.available && body.surfaceOpacity > 0 && body.surfaceOpacity < 1 ? surfaceBlurRegion : null
 

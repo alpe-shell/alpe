@@ -95,7 +95,7 @@ Item {
     Process {
         id: prober
         running: true
-        command: ["sh", "-c", 'dir="${XDG_CACHE_HOME:-$HOME/.cache}/alpe"; if [ -d "$dir" ]; then printf "cache=%s\\n" "$(du -sh "$dir" 2>/dev/null | cut -f1)"; else echo "cache=leer"; fi; case "${DMS_EXECUTABLE:-}" in */.local/lib/alpe/*) echo hold=own ;; *) if command -v pacman-conf >/dev/null 2>&1; then if pacman -Qq "$1" >/dev/null 2>&1; then if pacman-conf IgnorePkg 2>/dev/null | grep -qx "$1"; then echo hold=held; else echo hold=open; fi; else echo hold=unknown; fi; else echo hold=unknown; fi ;; esac; if git -C "$2" rev-parse --is-inside-work-tree >/dev/null 2>&1; then if [ -z "$(git -C "$2" status --porcelain 2>/dev/null)" ]; then echo tree=clean; else echo tree=dirty; fi; else echo tree=nogit; fi', "sh", Brand.heldPackages[0] ?? "", Quickshell.shellDir]
+        command: ["sh", "-c", 'dir="${XDG_CACHE_HOME:-$HOME/.cache}/alpe"; if [ -d "$dir" ]; then printf "cache=%s\\n" "$(du -sh "$dir" 2>/dev/null | cut -f1)"; else echo "cache=leer"; fi; case "${ALPE_EXECUTABLE:-}" in */.local/lib/alpe/*) echo hold=own ;; *) if command -v pacman-conf >/dev/null 2>&1; then if pacman -Qq "$1" >/dev/null 2>&1; then if pacman-conf IgnorePkg 2>/dev/null | grep -qx "$1"; then echo hold=held; else echo hold=open; fi; else echo hold=unknown; fi; else echo hold=unknown; fi ;; esac; if git -C "$2" rev-parse --is-inside-work-tree >/dev/null 2>&1; then if [ -z "$(git -C "$2" status --porcelain 2>/dev/null)" ]; then echo tree=clean; else echo tree=dirty; fi; else echo tree=nogit; fi', "sh", Brand.heldPackages[0] ?? "", Quickshell.shellDir]
         stdout: StdioCollector {
             onStreamFinished: root.parse(text)
         }

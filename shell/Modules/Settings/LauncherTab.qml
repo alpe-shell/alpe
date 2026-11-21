@@ -10,8 +10,8 @@ Item {
     id: root
 
     property var parentModal: null
-    readonly property string defaultLauncherAction: "spawn dms ipc call spotlight toggle"
-    readonly property string spotlightBarAction: "spawn dms ipc call spotlight-bar toggle"
+    readonly property string defaultLauncherAction: "spawn alpe-dienst ipc call spotlight toggle"
+    readonly property string spotlightBarAction: "spawn alpe-dienst ipc call spotlight-bar toggle"
     readonly property int keybindDataVersion: KeybindsService._dataVersion
     readonly property bool keybindsAvailable: KeybindsService.available
     readonly property string defaultLauncherKeybindSearch: "spotlight toggle"

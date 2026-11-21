@@ -91,7 +91,7 @@ Item {
     property var surfaceScreen: null
     readonly property bool frameGapStandaloneActive: CompositorService.frameConfiguredForScreen(screen) && !CompositorService.usesConnectedFrameChromeForScreen(screen)
     readonly property bool directionalRevealActive: Theme.isDirectionalEffect
-    readonly property var effectivePopoutLayer: LayerShell.fromEnv("DMS_POPOUT_LAYER", root.triggerUsesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top, {
+    readonly property var effectivePopoutLayer: LayerShell.fromEnv("ALPE_POPOUT_LAYER", root.triggerUsesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top, {
         "allow": ["top", "overlay"],
         "invalidLayer": WlrLayer.Top,
         "label": "popouts"
@@ -1934,7 +1934,7 @@ Item {
                         bottomRightRadius: chrome.surfaceBottomRightRadius
                         // Shadow only; contentWrapper paints the fill.
                         targetColor: "transparent"
-                        shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1" && !(root.suspendShadowWhileResizing && root._resizeActive) && !root.frameOwnsConnectedChrome
+                        shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1" && !(root.suspendShadowWhileResizing && root._resizeActive) && !root.frameOwnsConnectedChrome
                     }
 
                     Item {
@@ -1944,7 +1944,7 @@ Item {
                         readonly property real extraLeft: (contentContainer.barTop || contentContainer.barBottom) ? Theme.connectedCornerRadius : 0
                         readonly property real extraTop: (contentContainer.barLeft || contentContainer.barRight) ? Theme.connectedCornerRadius : 0
 
-                        readonly property bool shadowsOn: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1" && !(root.suspendShadowWhileResizing && root._resizeActive)
+                        readonly property bool shadowsOn: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1" && !(root.suspendShadowWhileResizing && root._resizeActive)
                         readonly property real shadowBlurPx: root.shadowLevel && root.shadowLevel.blurPx !== undefined ? root.shadowLevel.blurPx : 0
                         readonly property real shadowSpreadPx: root.shadowLevel && root.shadowLevel.spreadPx !== undefined ? root.shadowLevel.spreadPx : 0
                         readonly property real shadowOffsetX: Theme.elevationOffsetXFor(root.shadowLevel, root.effectiveShadowDirection, root.shadowFallbackOffset)
@@ -2142,7 +2142,7 @@ Item {
                     fallbackOffset: root.shadowFallbackOffset
                     targetRadius: Theme.windowRadius
                     targetColor: root._fluidMotionActive ? Theme.readableSurface : "transparent"
-                    shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1" && !(root.suspendShadowWhileResizing && root._resizeActive)
+                    shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled && Quickshell.env("ALPE_DISABLE_LAYER") !== "true" && Quickshell.env("ALPE_DISABLE_LAYER") !== "1" && !(root.suspendShadowWhileResizing && root._resizeActive)
                 }
 
                 DLayer {

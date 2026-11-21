@@ -348,7 +348,7 @@ Singleton {
     }
 
     function restartShell() {
-        Quickshell.execDetached(["dms", "restart"]);
+        Quickshell.execDetached([Proc.dmsBin, "restart"]);
     }
 
     function runUpdates(opts) {

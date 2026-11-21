@@ -41,8 +41,8 @@ Singleton {
         return null;
     }
 
-    readonly property var forcedFprintAvailable: envFlag("DMS_FORCE_FPRINT_AVAILABLE")
-    readonly property var forcedU2fAvailable: envFlag("DMS_FORCE_U2F_AVAILABLE")
+    readonly property var forcedFprintAvailable: envFlag("ALPE_FORCE_FPRINT_AVAILABLE")
+    readonly property var forcedU2fAvailable: envFlag("ALPE_FORCE_U2F_AVAILABLE")
 
     // --- Derived auth probe state ---
 
@@ -210,7 +210,7 @@ Singleton {
     }
 
     property var authApplyProcess: Process {
-        command: ["dms", "auth", "sync", "--yes"]
+        command: [Proc.dmsBin, "auth", "sync", "--yes"]
         running: false
 
         stdout: StdioCollector {
@@ -266,7 +266,7 @@ Singleton {
     }
 
     property var authApplyTerminalFallbackProcess: Process {
-        command: ["dms", "auth", "sync", "--terminal", "--yes"]
+        command: [Proc.dmsBin, "auth", "sync", "--terminal", "--yes"]
         running: false
 
         stderr: StdioCollector {

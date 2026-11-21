@@ -103,7 +103,7 @@ func TestRunPaletteEntry(t *testing.T) {
 
 	// output_file is read back instead of stdout when set.
 	out := filepath.Join(t.TempDir(), "pal.json")
-	fileEntry := paletteEntry{Enabled: true, Command: "sh", Args: []string{"-c", `printf '%s' '{"color0":"#abcabc"}' > "$DMS_PALETTE_OUT"`}, OutputFile: out, Namespace: "p"}
+	fileEntry := paletteEntry{Enabled: true, Command: "sh", Args: []string{"-c", `printf '%s' '{"color0":"#abcabc"}' > "$ALPE_PALETTE_OUT"`}, OutputFile: out, Namespace: "p"}
 	assert.JSONEq(t, `{"color0":"#abcabc"}`, runPaletteEntry(fileEntry, "/img.png", ColorModeDark),
 		"palette is read from output_file")
 }

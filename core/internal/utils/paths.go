@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -8,7 +9,7 @@ import (
 	"github.com/duxlabs-dev/dux-go/paths"
 )
 
-var app = paths.New("dms")
+var app = paths.New(brand.ID)
 
 func App() paths.App { return app }
 

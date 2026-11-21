@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 
 	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/alpe-shell/alpe/core/internal/plugins"
@@ -100,7 +101,7 @@ func runVersion(cmd *cobra.Command, args []string) {
 
 // Alpe: Die Version setzt das Makefile beim Bau aus shell/Common/Brand.qml (Plan 0.5 Nr. 2).
 func formatVersion(version string) string {
-	return "dms " + version
+	return brand.Binary + " " + version
 }
 
 func startDebugServer() error {

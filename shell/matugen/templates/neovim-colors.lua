@@ -35,7 +35,7 @@ local function deepGet(t, k)
 	return t
 end
 
-local mode = vim.system({ "dms", "ipc", "call", "theme", "getMode" }, { text = true }):wait().stdout
+local mode = vim.system({ "alpe-dienst", "ipc", "call", "theme", "getMode" }, { text = true }):wait().stdout
 if mode ~= nil then
 	if mode:match("light") then
 		vim.o.background = "light"

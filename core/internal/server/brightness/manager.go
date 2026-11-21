@@ -50,7 +50,7 @@ func (m *Manager) initDDC() {
 	ddc, err := newDDCBackend(m.updateState)
 	switch {
 	case errors.Is(err, errDDCDisabled):
-		log.Info("DDC backend disabled via DMS_NO_DDC")
+		log.Info("DDC backend disabled via ALPE_NO_DDC")
 		return
 	case err != nil:
 		log.Debugf("Failed to initialize DDC backend: %v", err)
