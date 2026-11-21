@@ -172,7 +172,6 @@ func getCommonCommands() []*cobra.Command {
 		iccCmd,
 		dpmsCmd,
 		keybindsCmd,
-		setupCmd,
 		colorCmd,
 		qrCmd,
 		screenshotCmd,
@@ -191,8 +190,6 @@ func getCommonCommands() []*cobra.Command {
 		systemCmd,
 		systemdCmd,
 		switchUserCmd,
-		switchCmd,
-		migrateCmd,
 		dmenuCmd,
 	}...)
 }

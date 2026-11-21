@@ -56,7 +56,7 @@ build: sync-shell
 	CGO_ENABLED=0 $(GO) build -tags withshell $(BUILD_LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) ./$(SOURCE_DIR)
 	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME)"
 
-# Build distro binaries (no update/greeter support) for each DIST_OSES/DIST_ARCHS pair
+# Build distro binaries for each DIST_OSES/DIST_ARCHS pair
 dist: sync-shell
 	@echo "Building $(BINARY_NAME) for distribution ($(DIST_OSES) x $(DIST_ARCHS))..."
 	@mkdir -p $(BUILD_DIR)
@@ -126,7 +126,7 @@ help:
 	@echo "  all                 - Build the main binary (dms) (default)"
 	@echo "  build               - Build the main binary (dms) with the embedded UI"
 	@echo "  sync-shell          - Copy quickshell/ into the embed dir (runs before tagged builds)"
-	@echo "  dist                - Build dms for linux/freebsd amd64/arm64 (no update/greeter)"
+	@echo "  dist                - Build dms for linux/freebsd amd64/arm64"
 	@echo "                        Use ARCH=amd64 or ARCH=arm64 and/or DIST_OSES=linux to narrow"
 	@echo "  install             - Install dms to $(INSTALL_DIR)"
 	@echo "  uninstall           - Remove dms from $(INSTALL_DIR)"

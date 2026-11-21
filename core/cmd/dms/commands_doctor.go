@@ -19,8 +19,8 @@ import (
 	"github.com/duxlabs-dev/dux-shell/core/internal/blur"
 	"github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
 	"github.com/duxlabs-dev/dux-shell/core/internal/config"
-	"github.com/duxlabs-dev/dux-shell/core/internal/distros"
 	"github.com/duxlabs-dev/dux-shell/core/internal/matugen"
+	"github.com/duxlabs-dev/dux-shell/core/internal/osinfo"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/brightness"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/network"
 	"github.com/duxlabs-dev/dux-shell/core/internal/site"
@@ -211,7 +211,6 @@ func runDoctor(cmd *cobra.Command, args []string) {
 		checkSystemInfo(),
 		versions,
 		checkDMSInstallation(),
-		checkPackageRepos(),
 		checkWindowManagers(qsVersion),
 		qsFeatures,
 		checkOptionalDependencies(),
@@ -251,42 +250,20 @@ func printDoctorHeader() {
 func checkSystemInfo() []checkResult {
 	var results []checkResult
 
-	osInfo, err := distros.GetOSInfo()
+	// Alpe: Nur anzeigen, welches System läuft; eine Distributionsprüfung gibt es nicht mehr (Plan 0.5 Nr. 1).
+	osInfo, err := osinfo.Get()
 	if err != nil {
-		status, message, details := statusWarn, fmt.Sprintf("Unknown (%v)", err), ""
-
-		if strings.Contains(err.Error(), "Unsupported distribution") {
-			osRelease := readOSRelease()
-			switch {
-			case osRelease["ID"] == "nixos":
-				status = statusOK
-				message = osRelease["PRETTY_NAME"]
-				if message == "" {
-					message = fmt.Sprintf("NixOS %s", osRelease["VERSION_ID"])
-				}
-				details = "Supported for runtime (install via NixOS module or Flake)"
-			case osRelease["PRETTY_NAME"] != "":
-				message = fmt.Sprintf("%s (not supported by dms setup)", osRelease["PRETTY_NAME"])
-				details = "DMS may work but automatic installation is not available"
-			}
-		}
-
-		results = append(results, checkResult{catSystem, "Operating System", status, message, details, doctorDocsURL + "#operating-system"})
+		results = append(results, checkResult{catSystem, "Operating System", statusWarn, fmt.Sprintf("Unknown (%v)", err), "", doctorDocsURL + "#operating-system"})
 	} else {
-		status := statusOK
 		message := osInfo.PrettyName
 		if message == "" {
-			message = fmt.Sprintf("%s %s", osInfo.Distribution.ID, osInfo.VersionID)
+			message = fmt.Sprintf("%s %s", osInfo.ID, osInfo.VersionID)
 		}
 		details := fmt.Sprintf("ID: %s, Version: %s, Arch: %s", osInfo.ID, osInfo.VersionID, osInfo.Architecture)
-		switch {
-		case osInfo.Immutable:
-			details += "; image-based (" + osInfo.ImmutableReason + "), duxinstall deploys configuration only"
-		case distros.IsUnsupportedDistro(osInfo.Distribution.ID, osInfo.VersionID):
-			status = statusWarn
-			message += " (version may not be fully supported)"
+		if osInfo.Immutable {
+			details += "; image-based (" + osInfo.ImmutableReason + ")"
 		}
-		results = append(results, checkResult{catSystem, "Operating System", status, message, details, doctorDocsURL + "#operating-system"})
+		results = append(results, checkResult{catSystem, "Operating System", statusOK, message, details, doctorDocsURL + "#operating-system"})
 	}
 
 	arch := runtime.GOARCH
@@ -689,20 +666,6 @@ func checkXDGMenuFile(prefix string) bool {
 	return false
 }
 
-func readOSRelease() map[string]string {
-	result := make(map[string]string)
-	data, err := os.ReadFile("/etc/os-release")
-	if err != nil {
-		return result
-	}
-	for line := range strings.SplitSeq(string(data), "\n") {
-		if parts := strings.SplitN(line, "=", 2); len(parts) == 2 {
-			result[parts[0]] = strings.Trim(parts[1], "\"")
-		}
-	}
-	return result
-}
-
 func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver string) {
 	dmsCliPath, _ := os.Executable()
 	dmsCliDetails := ""
@@ -724,7 +687,7 @@ func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver stri
 	if dmsVersion != "" {
 		results = append(results, checkResult{catVersions, "DMS Shell", statusOK, dmsVersion, dmsPath, doctorDocsURL + "#dms-shell"})
 	} else {
-		results = append(results, checkResult{catVersions, "DMS Shell", statusError, "Not installed or not detected", "Run 'dms setup' to install", doctorDocsURL + "#dms-shell"})
+		results = append(results, checkResult{catVersions, "DMS Shell", statusError, "Not installed or not detected", "", doctorDocsURL + "#dms-shell"})
 	}
 
 	return results, qsSemver
@@ -821,43 +784,13 @@ func checkDMSInstallation() []checkResult {
 	return results
 }
 
-func checkPackageRepos() []checkResult {
-	osInfo, err := distros.GetOSInfo()
-	if err != nil {
-		return nil
-	}
-	distro, err := distros.NewDistribution(osInfo.Distribution.ID, nil)
-	if err != nil {
-		return nil
-	}
-	return packageReposResult(distro)
-}
-
-func packageReposResult(distro distros.Distribution) []checkResult {
-	moves, ok := distros.PlanRepoMoves(distro)
-	if !ok {
-		return nil
-	}
-	url := doctorDocsURL + "#package-repos"
-	legacy := distros.LegacyRepoPaths(moves)
-	if len(legacy) > 0 {
-		return []checkResult{{catInstallation, "Package Repos", statusWarn, "Legacy repositories, run: " + migrateDuxCommand, strings.Join(legacy, ", "), url}}
-	}
-	for _, move := range moves {
-		if move.NewPresent {
-			return []checkResult{{catInstallation, "Package Repos", statusOK, "Current", "", url}}
-		}
-	}
-	return []checkResult{{catInstallation, "Package Repos", statusInfo, "No DMS package repositories", "", url}}
-}
-
 func checkWindowManagers(qsVersion string) []checkResult {
 	compositors := []struct {
 		name, versionCmd, versionArg string
 		parseVersion                 func(string) string
 		commands                     []string
 	}{
-		{"Hyprland", "Hyprland", "--version", distros.ParseHyprlandVersion, []string{"hyprland", "Hyprland"}},
+		{"Hyprland", "Hyprland", "--version", parseHyprlandVersion, []string{"hyprland", "Hyprland"}},
 		{"KWin", "kwin_wayland", "--version", firstSubmatch(kwinVersionRegex), []string{"kwin_wayland"}},
 	}
 
@@ -1895,4 +1828,20 @@ func checkFonts() []checkResult {
 	)
 
 	return results
+}
+
+var (
+	hyprlandTagRegex     = regexp.MustCompile(`Tag: v?(\d+\.\d+\.\d+)`)
+	hyprlandVersionRegex = regexp.MustCompile(`v?(\d+\.\d+\.\d+)`)
+)
+
+// parseHyprlandVersion liest die Version aus «Hyprland --version» (Tag-Zeile bevorzugt).
+func parseHyprlandVersion(out string) string {
+	if m := hyprlandTagRegex.FindStringSubmatch(out); m != nil {
+		return m[1]
+	}
+	if m := hyprlandVersionRegex.FindStringSubmatch(out); m != nil {
+		return m[1]
+	}
+	return ""
 }

@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/duxlabs-dev/dux-shell/core/internal/clipolicy"
-	"github.com/duxlabs-dev/dux-shell/core/internal/distros"
+	"github.com/duxlabs-dev/dux-shell/core/internal/osinfo"
 	"github.com/duxlabs-dev/dux-shell/core/internal/privesc"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -99,7 +99,7 @@ func mergePolicyFile(base *immutableCommandPolicy, path string) error {
 
 func getImmutablePolicy() (*immutableCommandPolicy, error) {
 	immutablePolicyOnce.Do(func() {
-		detectedImmutable, reason := distros.DetectImmutable()
+		detectedImmutable, reason := osinfo.DetectImmutable()
 		immutablePolicy = immutableCommandPolicy{
 			ImmutableSystem: detectedImmutable,
 			ImmutableReason: reason,

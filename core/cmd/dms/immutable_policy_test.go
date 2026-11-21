@@ -17,7 +17,7 @@ func TestDefaultImmutablePolicyBlocksNothing(t *testing.T) {
 	}
 
 	blocked := normalizeBlockedCommands(*policyFile.BlockedCommands)
-	if commandBlockedByPolicy("setup", blocked) {
-		t.Fatal("setup only writes to the home directory and must stay available on image-based systems")
+	if len(blocked) != 0 {
+		t.Fatalf("embedded CLI policy must block nothing, got %v", blocked)
 	}
 }

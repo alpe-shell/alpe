@@ -14,13 +14,10 @@ var Version = "dev"
 
 func init() {
 	authCmd.AddCommand(authSyncCmd, authResolveLockCmd, authListServicesCmd, authValidateCmd)
-	setupCmd.AddCommand(setupHeadlessCmd, setupBindsCmd, setupLayoutCmd, setupColorsCmd, setupOutputsCmd, setupCursorCmd, setupWindowrulesCmd)
-	updateCmd.AddCommand(updateCheckCmd)
 	pluginsCmd.AddCommand(pluginsListCmd, pluginsUninstallCmd)
 	rootCmd.AddCommand(getCommonCommands()...)
 
 	rootCmd.AddCommand(authCmd)
-	rootCmd.AddCommand(updateCmd)
 
 	rootCmd.SetHelpTemplate(getHelpTemplate())
 }

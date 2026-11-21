@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
 	"strings"
 
 	"github.com/duxlabs-dev/dux-shell/core/internal/config"
@@ -108,11 +109,10 @@ func systemdCompositor() (deps.WindowManager, error) {
 		if wm, ok := config.RunningCompositor(); ok {
 			return wm, nil
 		}
-		name, err := detectCompositorForSetup()
-		if err != nil {
-			return 0, err
+		if !utils.CommandExists("Hyprland") {
+			return 0, fmt.Errorf("no supported compositor found (Hyprland required)")
 		}
-		systemdCompositorFlag = name
+		systemdCompositorFlag = "hyprland"
 	}
 	switch strings.ToLower(systemdCompositorFlag) {
 	case "hyprland":

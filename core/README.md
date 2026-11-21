@@ -70,10 +70,9 @@ Custom IPC via unix socket (JSON API) for shell communication.
 - `dms run [-d]` - Start shell (optionally as daemon)
 - `dms restart` / `dms kill` - Manage running processes
 - `dms ipc <command>` - Send IPC commands (toggle launcher, notifications, etc.)
-- `dms plugins [install|browse|search|lock|restore]` - Plugin management and portable exact-revision lockfiles
+- `dms plugins [list|uninstall]` - Manage locally installed plugins
 - `dms brightness [list|set]` - Control display/monitor brightness
 - `dms color pick` - Native color picker (see below)
-- `dms update` - Update DMS and dependencies (disabled in distro packages)
 
 ### Color Picker
 
@@ -129,6 +128,6 @@ go run github.com/duxlabs-dev/dux-go/cmd/go-wayland-scanner@latest \
 **Module Structure:**
 
 - `cmd/` - Binary entrypoints (dms)
-- `internal/distros/` - Distribution-specific installation logic
+- `internal/osinfo/` - Operating system detection (os-release, image-based systems)
 - `internal/proto/` - Wayland protocol bindings
 - `pkg/` - Shared packages

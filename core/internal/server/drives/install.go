@@ -5,17 +5,13 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/distros"
+	"github.com/duxlabs-dev/dux-shell/core/internal/osinfo"
 )
 
-var installCommands = map[distros.DistroFamily]string{
-	distros.FamilyArch:   "sudo pacman -S smartmontools",
-	distros.FamilyFedora: "sudo dnf install smartmontools",
-	distros.FamilyUbuntu: "sudo apt install smartmontools",
-	distros.FamilyDebian: "sudo apt install smartmontools",
-	distros.FamilySUSE:   "sudo zypper install smartmontools",
-	distros.FamilyVoid:   "sudo xbps-install smartmontools",
-	distros.FamilyGentoo: "sudo emerge sys-apps/smartmontools",
+// Alpe: nur die Paketverwaltungen der unterstützten Systeme (Plan 0.5 Nr. 1).
+var installCommands = map[osinfo.Family]string{
+	osinfo.FamilyArch:   "sudo pacman -S smartmontools",
+	osinfo.FamilyFedora: "sudo dnf install smartmontools",
 }
 
 // smartctlPath also checks sbin directories, which are often missing from a user's PATH.
@@ -34,9 +30,9 @@ func smartctlPath() string {
 }
 
 func installCommand() string {
-	info, err := distros.GetOSInfo()
+	info, err := osinfo.Get()
 	if err != nil || info.Immutable {
 		return ""
 	}
-	return installCommands[distros.Registry[info.Distribution.ID].Family]
+	return installCommands[info.Family]
 }
