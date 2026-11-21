@@ -4,7 +4,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Quickshell.I3
 import qs.Common
 import qs.Services
 import "../Common/SleepLock.js" as SleepLock
@@ -441,28 +440,6 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
 
     function _logout() {
         if (SettingsData.customPowerActionLogout.length === 0) {
-            if (CompositorService.isMango) {
-                MangoService.quit();
-                return;
-            }
-
-            if (CompositorService.isLabwc) {
-                LabwcService.quit();
-                return;
-            }
-
-            if (CompositorService.isUmbriel) {
-                UmbrielService.action("session-quit", "skip-confirmation");
-                return;
-            }
-
-            if (CompositorService.isSway || CompositorService.isScroll || CompositorService.isMiracle) {
-                try {
-                    I3.dispatch("exit");
-                } catch (_) {}
-                return;
-            }
-
             if (CompositorService.isHyprland) {
                 HyprlandService.exit();
                 return;

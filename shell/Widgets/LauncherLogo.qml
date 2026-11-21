@@ -52,17 +52,6 @@ Item {
         switch (CompositorService.compositor) {
         case "hyprland":
             return "file://" + Theme.shellDir + "/assets/hyprland.svg";
-        case "mango":
-            return "file://" + Theme.shellDir + "/assets/mango.png";
-        case "sway":
-        case "scroll":
-            return "file://" + Theme.shellDir + "/assets/sway.svg";
-        case "miracle":
-            return "file://" + Theme.shellDir + "/assets/miraclewm.svg";
-        case "labwc":
-            return "file://" + Theme.shellDir + "/assets/labwc.png";
-        case "umbriel":
-            return "file://" + Theme.shellDir + "/assets/umbriel.svg";
         default:
             return "";
         }

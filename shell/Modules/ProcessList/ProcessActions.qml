@@ -14,12 +14,6 @@ Singleton {
     // Compositors can't restart in place; "restart" reloads their config. Empty entries have no reload command.
     readonly property var reloadCommands: ({
             "hyprland": [],
-            "sway": ["swaymsg", "reload"],
-            "scroll": ["scrollmsg", "reload"],
-            "mango": [],
-            "labwc": ["labwc", "--reconfigure"],
-            "miracle-wm": [],
-            "umbriel": [],
             "kwin_wayland": [],
             "gnome-shell": []
         })
@@ -84,7 +78,7 @@ Singleton {
     }
 
     function isCompositor(process) {
-        return ["hyprland", "mango"].includes(name(process)) || (reloadCommands[name(process)] ?? []).length > 0;
+        return ["hyprland"].includes(name(process)) || (reloadCommands[name(process)] ?? []).length > 0;
     }
 
     // PID 1 is never signalled; everything else can be, other users' processes after authentication.
@@ -241,8 +235,6 @@ Singleton {
         case "reload":
             if (name(process) === "hyprland")
                 HyprlandService.reloadConfig();
-            else if (name(process) === "mango")
-                MangoService.reloadConfig(true);
             else
                 Quickshell.execDetached(reloadCommands[name(process)]);
             return;

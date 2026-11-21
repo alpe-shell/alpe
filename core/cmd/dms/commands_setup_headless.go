@@ -26,7 +26,7 @@ var setupHeadlessCmd = &cobra.Command{
 }
 
 func init() {
-	setupHeadlessCmd.Flags().String("compositor", "", "Compositor to configure: hyprland or mango")
+	setupHeadlessCmd.Flags().String("compositor", "", "Compositor to configure: hyprland")
 	setupHeadlessCmd.Flags().String("terminal", "", "Also deploy a terminal config: ghostty, kitty, or alacritty (binds otherwise use $TERMINAL or the first installed terminal)")
 	setupHeadlessCmd.Flags().Bool("no-systemd", false, "Deploy session config without systemd integration")
 	setupHeadlessCmd.Flags().Bool("force", false, "Overwrite existing configs (timestamped backups are created)")
@@ -133,10 +133,8 @@ func parseHeadlessCompositor(name string) (deps.WindowManager, error) {
 	switch name {
 	case "hyprland":
 		return deps.WindowManagerHyprland, nil
-	case "mango":
-		return deps.WindowManagerMango, nil
 	default:
-		return 0, fmt.Errorf("unknown compositor %q (expected hyprland or mango)", name)
+		return 0, fmt.Errorf("unknown compositor %q (expected hyprland)", name)
 	}
 }
 

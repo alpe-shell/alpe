@@ -232,7 +232,7 @@ Singleton {
         return resolveIpcWidget(widgetId)?.item ?? null;
     }
 
-    readonly property bool focusedScreenDetectionSupported: CompositorService.isHyprland || CompositorService.isMango || CompositorService.isSway || CompositorService.isScroll || CompositorService.isMiracle || CompositorService.isUmbriel
+    readonly property bool focusedScreenDetectionSupported: CompositorService.isHyprland
 
     function getFocusedScreenName() {
         return CompositorService.getFocusedScreenName();
@@ -269,7 +269,6 @@ Singleton {
         const signalMap = {
             "battery": "toggleBatteryPopup",
             "vpn": "toggleVpnPopup",
-            "layout": "toggleLayoutPopup",
             "clock": "clockClicked",
             "cpuUsage": "cpuClicked",
             "memUsage": "ramClicked",

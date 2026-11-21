@@ -59,7 +59,6 @@ type TemplateDef struct {
 var templateRegistry = []TemplateDef{
 	{ID: "gtk", Kind: TemplateKindGTK, RunUnconditionally: true},
 	{ID: "hyprland", Commands: []string{"Hyprland"}, ConfigFile: "hyprland.toml"},
-	{ID: "mangowc", Commands: []string{"mango"}, ConfigFile: "mangowc.toml", RequiredEnv: "MANGO_INSTANCE_SIGNATURE"},
 	{ID: "qt5ct", Commands: []string{"qt5ct"}, ConfigFile: "qt5ct.toml"},
 	{ID: "qt6ct", Commands: []string{"qt6ct"}, ConfigFile: "qt6ct.toml"},
 	{ID: "fcitx5", Commands: []string{"fcitx5"}, ConfigDirs: []string{"fcitx5"}, ConfigFile: "fcitx5.toml"},

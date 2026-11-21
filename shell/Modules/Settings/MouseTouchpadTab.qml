@@ -33,8 +33,8 @@ Item {
             iconName: "mouse"
 
             SettingsToggleRow {
-                // Only Hyprland can report the live mode; untouched Mango shows its default
-                readonly property int inheritedMode: CompositorService.isHyprland ? HyprlandService.followMouseMode : CompositorService.isMango ? 1 : 0
+                // Only Hyprland can report the live mode
+                readonly property int inheritedMode: CompositorService.isHyprland ? HyprlandService.followMouseMode : 0
                 visible: CompositorService.supportsInputConfig && (!CompositorService.isHyprland || HyprlandService.hyprSupports("input:follow_mouse"))
                 enabled: inputInclude.included && (!CompositorService.isHyprland || (HyprlandService.luaConfigActive && HyprlandService.followMouseMode >= 0))
                 tags: ["mouse", "focus", "follow", "pointer", "window", "sloppy"]
@@ -136,14 +136,6 @@ Item {
                 }
             }
 
-            SettingsToggleRow {
-                visible: CompositorService.isMango
-                tags: ["mouse", "middle", "click", "emulation"]
-                settingKey: "mouseMiddleEmulation"
-                text: I18n.tr("Middle click emulation")
-                checked: SettingsData.mouseMiddleEmulation
-                onToggled: checked => SettingsData.set("mouseMiddleEmulation", checked)
-            }
         }
 
         SettingsCard {
@@ -275,15 +267,6 @@ Item {
                 text: I18n.tr("Disable while typing")
                 checked: SettingsData.touchpadDisableWhileTyping
                 onToggled: checked => SettingsData.set("touchpadDisableWhileTyping", checked)
-            }
-
-            SettingsToggleRow {
-                visible: CompositorService.isMango
-                tags: ["touchpad", "disable", "external", "mouse"]
-                settingKey: "touchpadDisableOnExternalMouse"
-                text: I18n.tr("Disable with external mouse")
-                checked: SettingsData.touchpadDisableOnExternalMouse
-                onToggled: checked => SettingsData.set("touchpadDisableOnExternalMouse", checked)
             }
 
             SettingsToggleRow {

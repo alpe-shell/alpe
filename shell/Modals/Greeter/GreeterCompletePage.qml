@@ -370,8 +370,6 @@ Item {
                                 let url = Site.docs + "/dms/keybinds-ipc";
                                 if (CompositorService.isHyprland)
                                     url = Site.docs + "/dms/compositors#dms-keybindings-1";
-                                else if (CompositorService.isMango)
-                                    url = Site.docs + "/dms/compositors#dms-keybindings-2";
                                 Qt.openUrlExternally(url);
                             }
                         }

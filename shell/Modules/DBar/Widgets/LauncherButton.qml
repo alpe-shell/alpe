@@ -35,9 +35,7 @@ BasePill {
     }
 
     onRightClicked: {
-        if (CompositorService.isMango) {
-            CompositorService.toggleOverview(root.parentScreen?.name);
-        } else if (root.hyprlandOverviewLoader?.item) {
+        if (root.hyprlandOverviewLoader?.item) {
             root.hyprlandOverviewLoader.item.overviewOpen = !root.hyprlandOverviewLoader.item.overviewOpen;
         }
     }

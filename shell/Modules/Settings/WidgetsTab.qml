@@ -71,10 +71,6 @@ Item {
     readonly property var widgetAvailability: {
         const dgopWarning = DgopService.dgopAvailable ? undefined : I18n.tr("Requires %1", "missing program").arg("dgop");
         return {
-            "layout": {
-                "enabled": CompositorService.isMango && MangoService.available,
-                "warning": !CompositorService.isMango ? I18n.tr("Requires MangoWC compositor") : (!MangoService.available ? I18n.tr("Mango service not available") : undefined)
-            },
             "cpuUsage": {
                 "enabled": DgopService.dgopAvailable,
                 "warning": dgopWarning

@@ -29,11 +29,6 @@ function activeLinesCommand(file) {
     return `grep -v '^[[:space:]]*\\(//\\|#\\|--\\)' ${file} 2>/dev/null`;
 }
 
-// Only core reads TOML the way Mango does, vars and nested sources included.
-function tomlIncludedCommand(fragment, dmsBin) {
-    return `${shQuote(dmsBin || "dms")} config resolve-include mangowc ${shQuote(fragment)} 2>/dev/null | grep -Fq '"included":true'`;
-}
-
 function buildRepairScript(options) {
     const configFile = options.configFile;
     const backupFile = options.backupFile;
@@ -58,14 +53,14 @@ function buildRepairScript(options) {
         commands.push("touch " + fragments.map(shQuote).join(" "));
 
     for (const include of includes) {
-        if (!(include.grepPattern || include.tomlFragment) || !include.includeLine)
+        if (!include.grepPattern || !include.includeLine)
             continue;
         const sectionHeader = options.sectionHeader || sectionHeaderFor(include.includeLine);
         const file = shQuote(configFile);
         const active = activeLinesCommand(file);
-        const included = include.tomlFragment ? tomlIncludedCommand(include.tomlFragment, options.dmsBin) : `${active} | grep -q ${shQuote(include.grepPattern)}`;
-        const managed = include.tomlFragment ? `grep -Fq 'dms/' ${file} 2>/dev/null` : `${active} | grep -q ${shQuote(managedIncludePatternFor(include.includeLine))}`;
-        // The append must start on its own line, or a TOML [global] fuses with the last statement.
+        const included = `${active} | grep -q ${shQuote(include.grepPattern)}`;
+        const managed = `${active} | grep -q ${shQuote(managedIncludePatternFor(include.includeLine))}`;
+        // The append must start on its own line.
         commands.push(`if ! { ${included}; }; then if grep -Fqx ${shQuote(sectionHeader)} ${file} 2>/dev/null || ${managed}; then { [ -z "$(tail -c 1 ${file})" ] || printf '\\n'; printf '%s\\n' ${shQuote(include.includeLine)}; } >> ${file}; elif [ -s ${file} ]; then printf '\\n%s\\n%s\\n' ${shQuote(sectionHeader)} ${shQuote(include.includeLine)} >> ${file}; else printf '%s\\n%s\\n' ${shQuote(sectionHeader)} ${shQuote(include.includeLine)} >> ${file}; fi; fi`);
     }
 
@@ -73,18 +68,15 @@ function buildRepairScript(options) {
 }
 
 const compositorDirs = {
-    hyprland: "hypr",
-    mango: "mango"
+    hyprland: "hypr"
 };
 
 const configNames = {
-    hyprland: "hyprland.lua",
-    mango: "config.conf"
+    hyprland: "hyprland.lua"
 };
 
 const fragmentExtensions = {
-    hyprland: "lua",
-    mango: "conf"
+    hyprland: "lua"
 };
 
 const luaInclude = name => ({
@@ -92,41 +84,24 @@ const luaInclude = name => ({
             includeLine: `require("dms.${name}")`
         });
 
-const confInclude = (name, grepPattern, includeLine) => ({
-            grepPattern: grepPattern ?? `source.*dms/${name}.conf`,
-            includeLine: includeLine ?? `source=./dms/${name}.conf`
-        });
-
-// Each include brings its own [global], so tables appended after it cannot capture it.
-const tomlInclude = fragment => ({
-            tomlFragment: fragment,
-            includeLine: `[global]\nsource = "./dms/${fragment}"`
-        });
-
 const includeTable = {
     outputs: {
-        hyprland: [luaInclude("outputs")],
-        mango: [confInclude("outputs")]
+        hyprland: [luaInclude("outputs")]
     },
     layout: {
-        hyprland: [luaInclude("layout")],
-        mango: [confInclude("layout")]
+        hyprland: [luaInclude("layout")]
     },
     input: {
-        hyprland: [luaInclude("input")],
-        mango: [confInclude("input")]
+        hyprland: [luaInclude("input")]
     },
     windowrules: {
-        hyprland: [luaInclude("windowrules")],
-        mango: [confInclude("windowrules", "dms/windowrules.conf")]
+        hyprland: [luaInclude("windowrules")]
     },
     cursor: {
-        hyprland: [luaInclude("cursor")],
-        mango: [confInclude("cursor")]
+        hyprland: [luaInclude("cursor")]
     },
     binds: {
-        hyprland: [luaInclude("binds"), luaInclude("binds-user")],
-        mango: [confInclude("binds", undefined, "source = ./dms/binds.conf")]
+        hyprland: [luaInclude("binds"), luaInclude("binds-user")]
     }
 };
 
@@ -146,7 +121,7 @@ function includeSpec(kind, compositor, configName) {
     return {
         configName: name,
         fragmentNames: fragmentNames,
-        includes: name.endsWith(".toml") ? fragmentNames.map(tomlInclude) : includes
+        includes: includes
     };
 }
 
@@ -179,5 +154,5 @@ function resolveIncludeArgs(kind, compositor) {
     const spec = includeSpec(kind, compositor);
     if (!spec)
         return null;
-    return [compositor === "mango" ? "mangowc" : compositor, spec.fragmentNames[0]];
+    return [compositor, spec.fragmentNames[0]];
 }

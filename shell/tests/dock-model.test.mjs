@@ -38,7 +38,6 @@ test("compositor window identity survives reorder and rejects null", () => {
     const key = context.windowKey(first);
     assert.notEqual(context.windowKey(second), key);
     assert.equal(context.windowKey(first), key);
-    assert.equal(context.windowKey({ mangoWindowId: 5 }), "mango:5");
     assert.equal(context.windowKey(null), "");
     live.splice(live.indexOf(first), 1);
     context.windowKey({});

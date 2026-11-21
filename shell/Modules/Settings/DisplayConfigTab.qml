@@ -319,7 +319,6 @@ Item {
                 id: displayFormatGroup
                 settingKey: "displayNameMode"
                 resetKeys: []
-                visible: !CompositorService.isMango
                 text: I18n.tr("Name format")
                 model: [I18n.tr("Name"), I18n.tr("Model")]
                 currentIndex: SettingsData.displayNameMode === "model" ? 1 : 0

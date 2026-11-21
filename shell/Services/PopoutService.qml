@@ -27,8 +27,6 @@ Singleton {
     property var colorPickerPopoutLoader: null
     property var systemUpdatePopout: null
     property var systemUpdateLoader: null
-    property var layoutPopout: null
-    property var layoutPopoutLoader: null
     property var clipboardHistoryPopout: null
     property var clipboardHistoryPopoutLoader: null
 
@@ -189,7 +187,6 @@ Singleton {
             "powerMenuPopout": () => _unloadPopoutNow("powerMenuPopout", "powerMenuPopoutLoader"),
             "duration": () => _unloadPopoutNow("durationPopout", "durationPopoutLoader"),
             "systemUpdate": () => _unloadPopoutNow("systemUpdatePopout", "systemUpdateLoader"),
-            "layout": () => _unloadPopoutNow("layoutPopout", "layoutPopoutLoader"),
             "clipboardHistory": () => _unloadPopoutNow("clipboardHistoryPopout", "clipboardHistoryPopoutLoader"),
             "settings": () => unloadSettingsNow()
         })
@@ -753,10 +750,6 @@ Singleton {
 
     function unloadClipboardHistoryPopout() {
         _scheduleUnload("clipboardHistory");
-    }
-
-    function unloadLayoutPopout() {
-        _scheduleUnload("layout");
     }
 
     property bool _dankLauncherV2WantsOpen: false

@@ -21,7 +21,6 @@ import (
 	"github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
 	"github.com/duxlabs-dev/dux-shell/core/internal/config"
 	"github.com/duxlabs-dev/dux-shell/core/internal/distros"
-	"github.com/duxlabs-dev/dux-shell/core/internal/mangoconf"
 	"github.com/duxlabs-dev/dux-shell/core/internal/matugen"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/brightness"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server/network"
@@ -93,14 +92,7 @@ func (ds *DoctorStatus) OKCount() int {
 
 var (
 	quickshellVersionRegex = regexp.MustCompile(`(?i)quickshell (\d+\.\d+\.\d+)`)
-	swayVersionRegex       = regexp.MustCompile(`sway version (\d+\.\d+)`)
-	riverVersionRegex      = regexp.MustCompile(`river (\d+\.\d+)`)
-	wayfireVersionRegex    = regexp.MustCompile(`wayfire (\d+\.\d+)`)
-	labwcVersionRegex      = regexp.MustCompile(`labwc (\d+\.\d+\.\d+)`)
-	mangowcVersionRegex    = regexp.MustCompile(`mango (\d+\.\d+\.\d+)`)
-	miracleVersionRegex    = regexp.MustCompile(`miracle-wm v?(\d+\.\d+\.\d+)`)
-	scrollVersionRegex     = regexp.MustCompile(`scroll version (\d+\.\d+)`)
-	umbrielVersionRegex    = regexp.MustCompile(`umbriel (\d+\.\d+\.\d+)`)
+	kwinVersionRegex       = regexp.MustCompile(`kwin (\d+\.\d+(?:\.\d+)?)`)
 )
 
 var doctorCmd = &cobra.Command{
@@ -869,19 +861,11 @@ func checkWindowManagers(qsVersion string) []checkResult {
 		commands                     []string
 	}{
 		{"Hyprland", "Hyprland", "--version", distros.ParseHyprlandVersion, []string{"hyprland", "Hyprland"}},
-		{"Sway", "sway", "--version", firstSubmatch(swayVersionRegex), []string{"sway"}},
-		{"River", "river", "-version", firstSubmatch(riverVersionRegex), []string{"river"}},
-		{"Wayfire", "wayfire", "--version", firstSubmatch(wayfireVersionRegex), []string{"wayfire"}},
-		{"labwc", "labwc", "--version", firstSubmatch(labwcVersionRegex), []string{"labwc"}},
-		{"mangowc", "mango", "-v", firstSubmatch(mangowcVersionRegex), []string{"mango"}},
-		{"Miracle WM", "miracle-wm", "--version", firstSubmatch(miracleVersionRegex), []string{"miracle-wm"}},
-		{"Scroll", "scroll", "--version", firstSubmatch(scrollVersionRegex), []string{"scroll"}},
-		{"Umbriel", "umbriel", "--version", firstSubmatch(umbrielVersionRegex), []string{"umbriel"}},
+		{"KWin", "kwin_wayland", "--version", firstSubmatch(kwinVersionRegex), []string{"kwin_wayland"}},
 	}
 
 	var results []checkResult
 	foundAny := false
-	mangoVersion := ""
 
 	for _, c := range compositors {
 		if !slices.ContainsFunc(c.commands, utils.CommandExists) {
@@ -916,16 +900,13 @@ func checkWindowManagers(qsVersion string) []checkResult {
 			results = append(results, checkHyprlandQuickshellFloor(ver, qsVersion)...)
 			results = append(results, checkHyprlandDeprecatedConfig()...)
 		}
-		if c.name == "mangowc" {
-			mangoVersion = ver
-		}
 	}
 
 	if !foundAny {
 		results = append(results, checkResult{
 			catCompositor, "Compositor", statusError,
 			"No supported Wayland compositor found",
-			"Install Hyprland, Sway, River, Wayfire, labwc, mangowc, miracle-wm, Scroll, or Umbriel",
+			"Install Hyprland or KWin",
 			doctorDocsURL + "#compositor-checks",
 		})
 	}
@@ -934,101 +915,14 @@ func checkWindowManagers(qsVersion string) []checkResult {
 		results = append(results, checkResult{catCompositor, "Active", statusInfo, wm, "", doctorDocsURL + "#compositor"})
 	}
 
-	if os.Getenv("MANGO_INSTANCE_SIGNATURE") != "" {
-		if mangoLacksSnakeCase(mangoVersion) {
-			results = append(results, checkResult{
-				catCompositor, "Mango config format", statusError,
-				fmt.Sprintf("Mango %s is older than 0.18", mangoVersion),
-				"DMS writes Mango config with the snake_case keys of Mango 0.18 and later, which this release rejects; upgrade Mango",
-				doctorDocsURL + "#compositor-checks",
-			})
-		}
-		results = append(results, checkMangoConfig(mangoconf.Dir())...)
-	}
-
 	results = append(results, checkCompositorBlurSupport())
 
 	return results
 }
 
 var (
-	mangoLegacyOverviewBinds = regexp.MustCompile(`(?im)^\s*mousebind\s*=\s*none\s*,\s*(btn_left\s*,\s*toggleoverview\s*,\s*1|btn_right\s*,\s*killclient\s*,\s*0)\s*$`)
-	mangoUnknownKeyword      = regexp.MustCompile(`Unknown keyword:\s*(\S+)`)
-	ansiEscape               = regexp.MustCompile(`\x1b\[[0-9;]*m`)
+	ansiEscape = regexp.MustCompile(`\x1b\[[0-9;]*m`)
 )
-
-// Mango's parser follows source= and always exits 0; only its output tells.
-var mangoParseConfig = func(path string) (string, error) {
-	if _, err := exec.LookPath("mango"); err != nil {
-		return "", err
-	}
-	out, _ := exec.Command("mango", "-p", "-c", path).CombinedOutput()
-	return string(out), nil
-}
-
-// Each "Unknown keyword" line is followed by a location line naming the file.
-func mangoUnknownKeywords(output string) []string {
-	var found []string
-	seen := map[string]bool{}
-	key := ""
-	for line := range strings.SplitSeq(ansiEscape.ReplaceAllString(output, ""), "\n") {
-		if m := mangoUnknownKeyword.FindStringSubmatch(line); m != nil {
-			key = m[1]
-			continue
-		}
-		slash := strings.LastIndex(line, "/")
-		if key == "" || slash < 0 {
-			continue
-		}
-		file, _, _ := strings.Cut(line[slash+1:], ":")
-		entry := key + " (" + file + ")"
-		if !seen[entry] {
-			seen[entry] = true
-			found = append(found, entry)
-		}
-		key = ""
-	}
-	return found
-}
-
-func checkMangoConfig(mangoDir string) []checkResult {
-	url := doctorDocsURL + "#compositor-checks"
-	mainPath := mangoconf.MainConfig(mangoDir)
-	var results []checkResult
-	if output, err := mangoParseConfig(mainPath); err == nil {
-		if unknown := mangoUnknownKeywords(output); len(unknown) > 0 {
-			results = append(results, checkResult{catCompositor, "Mango config keys", statusError,
-				"Unknown keys: " + strings.Join(unknown, ", "),
-				"Mango 0.18 renamed its config keys to snake_case. Run migrate-config-keys.sh from Mango's 0.18.0 release over ~/.config/mango, or rename the keys by hand.", url})
-		}
-	}
-
-	paths, _ := filepath.Glob(filepath.Join(mangoDir, "dms", "*.conf"))
-	paths = append([]string{mainPath}, paths...)
-	var overviewBinds []string
-	for _, path := range paths {
-		data, err := os.ReadFile(path)
-		if err != nil {
-			continue
-		}
-		if mangoconf.IsTOML(path) {
-			var b strings.Builder
-			for _, e := range mangoconf.TOMLEntries(string(data)) {
-				b.WriteString(e.Key + "=" + e.Value + "\n")
-			}
-			data = []byte(b.String())
-		}
-		if mangoLegacyOverviewBinds.Match(data) {
-			overviewBinds = append(overviewBinds, filepath.Base(path))
-		}
-	}
-	if len(overviewBinds) > 0 {
-		results = append(results, checkResult{catCompositor, "Mango mouse binds", statusWarn,
-			"Obsolete overview binds in " + strings.Join(overviewBinds, ", "),
-			"mousebind=NONE,btn_left,toggleoverview,1 and mousebind=NONE,btn_right,killclient,0 swallow normal clicks; remove them.", url})
-	}
-	return results
-}
 
 func checkCompositorBlurSupport() checkResult {
 	supported, err := blur.ProbeSupport()
@@ -1088,10 +982,6 @@ func hyprlandReadsOnlyLua(ver string) bool {
 	return ver != "" && version.CompareVersions(ver, "0.57.0") >= 0
 }
 
-func mangoLacksSnakeCase(ver string) bool {
-	return ver != "" && version.CompareVersions(ver, "0.18.0") < 0
-}
-
 func firstSubmatch(re *regexp.Regexp) func(string) string {
 	return func(s string) string {
 		if m := re.FindStringSubmatch(s); len(m) > 1 {
@@ -1122,12 +1012,6 @@ func detectRunningWM() string {
 	switch {
 	case os.Getenv("HYPRLAND_INSTANCE_SIGNATURE") != "":
 		return "Hyprland"
-	case os.Getenv("MANGO_INSTANCE_SIGNATURE") != "":
-		return "MangoWC"
-	case os.Getenv("MIRACLESOCK") != "":
-		return "Miracle WM"
-	case os.Getenv("UMBRIEL_SOCKET") != "":
-		return "Umbriel"
 	case os.Getenv("XDG_CURRENT_DESKTOP") != "":
 		return os.Getenv("XDG_CURRENT_DESKTOP")
 	}
@@ -1588,8 +1472,6 @@ func checkSystemdServices() []checkResult {
 			if dmsState.active != "" {
 				message += ", " + dmsState.active
 			}
-		case dmsState.enabled == "disabled" && os.Getenv("MANGO_INSTANCE_SIGNATURE") != "":
-			status, message = statusInfo, "Disabled (Mango starts DMS from its config)"
 		case dmsState.enabled == "disabled":
 			status, message = statusWarn, "Disabled"
 		case dmsState.active == "inactive":
@@ -1761,7 +1643,7 @@ func checkSettingsPortal() []checkResult {
 	if err == nil {
 		return []checkResult{{catServices, "xdg-desktop-portal", statusOK, "Settings portal reachable", "", doctorDocsURL + "#services"}}
 	}
-	hint := "Apps cannot follow light/dark mode. The portal is D-Bus activated and needs graphical-session.target; without systemd, or a compositor that never starts that target (Mango before 0.17.1), exec the portal backend and xdg-desktop-portal at session start."
+	hint := "Apps cannot follow light/dark mode. The portal is D-Bus activated and needs graphical-session.target; without systemd, or a compositor that never starts that target, exec the portal backend and xdg-desktop-portal at session start."
 	return []checkResult{{catServices, "xdg-desktop-portal", statusWarn, "Settings portal unreachable", hint, doctorDocsURL + "#services"}}
 }
 

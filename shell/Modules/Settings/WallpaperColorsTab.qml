@@ -214,13 +214,8 @@ Column {
 
     function setCursorHideTimeout(value) {
         const updated = JSON.parse(JSON.stringify(SettingsData.cursorSettings));
-        if (CompositorService.isHyprland) {
-            updated.hyprland = updated.hyprland || {};
-            updated.hyprland.inactiveTimeout = value;
-        } else {
-            updated.mango = updated.mango || {};
-            updated.mango.cursorHideTimeout = value;
-        }
+        updated.hyprland = updated.hyprland || {};
+        updated.hyprland.inactiveTimeout = value;
         SettingsData.set("cursorSettings", updated);
     }
 
@@ -1054,11 +1049,7 @@ Column {
             text: I18n.tr("Cursor auto-hide timeout")
             minimumLabel: I18n.tr("Off")
             visible: CompositorService.supportsCursorConfig
-            value: {
-                if (CompositorService.isHyprland)
-                    return SettingsData.cursorSettings.hyprland?.inactiveTimeout || 0;
-                return SettingsData.cursorSettings.mango?.cursorHideTimeout || 0;
-            }
+            value: SettingsData.cursorSettings.hyprland?.inactiveTimeout || 0
             minimum: 0
             maximum: 10
             unit: "s"

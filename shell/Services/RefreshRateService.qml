@@ -304,7 +304,7 @@ Singleton {
     }
 
     function applyWlrModeOverrides(modeOverrides, callback) {
-        if (CompositorService.isHyprland || CompositorService.isMango) {
+        if (CompositorService.isHyprland) {
             applyModeOverridesWithoutReload(modeOverrides, callback);
             return;
         }
@@ -327,11 +327,8 @@ Singleton {
     }
 
     function persistOutputsConfig(modeOverrides, callback, skipReload) {
-        if (CompositorService.isHyprland) {
+        if (CompositorService.isHyprland)
             HyprlandService.generateOutputsConfig(buildWlrOutputsData(modeOverrides), SessionData.hyprlandOutputSettings, callback, skipReload);
-            return;
-        }
-        MangoService.generateOutputsConfig(buildWlrOutputsData(modeOverrides), callback, skipReload);
     }
 
     function buildWlrOutputsData(modeOverrides) {

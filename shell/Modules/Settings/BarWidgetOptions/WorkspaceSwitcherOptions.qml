@@ -215,11 +215,5 @@ Column {
             onToggled: checked => root.page.set("reverseScrolling", checked)
         }
 
-        SettingsToggleRow {
-            text: I18n.tr("Show all tags")
-            visible: CompositorService.isMango
-            checked: root.page.value("dwlShowAllTags")
-            onToggled: checked => root.page.set("dwlShowAllTags", checked)
-        }
     }
 }

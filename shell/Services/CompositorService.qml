@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.I3
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.Common
@@ -17,20 +16,14 @@ Singleton {
     readonly property var log: Log.scoped("CompositorService")
 
     property bool isHyprland: false
-    property bool isMango: false
-    property bool isSway: false
-    property bool isScroll: false
-    property bool isMiracle: false
-    property bool isLabwc: false
-    property bool isUmbriel: false
     property bool isKwin: false
     property string compositor: "unknown"
     property bool compositorDetected: false
     property bool outputPowerAvailable: false
-    readonly property bool genericPowerBackend: compositorDetected && !isHyprland && !isMango && !isSway && !isScroll && !isMiracle && !isLabwc && !isUmbriel
+    readonly property bool genericPowerBackend: compositorDetected && !isHyprland
     onGenericPowerBackendChanged: probeOutputPower()
 
-    readonly property bool inOverview: (isHyprland && HyprlandService.inOverview) || (isMango && MangoService.inOverview)
+    readonly property bool inOverview: isHyprland && HyprlandService.inOverview
 
     function probeOutputPower() {
         outputPowerAvailable = false;
@@ -71,11 +64,6 @@ Singleton {
     readonly property bool useHyprlandFocusGrab: isHyprland && Quickshell.env("DMS_HYPRLAND_EXCLUSIVE_FOCUS") !== "1"
 
     readonly property string hyprlandSignature: Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
-    readonly property string swaySocket: Quickshell.env("SWAYSOCK")
-    readonly property string miracleSocket: Quickshell.env("MIRACLESOCK")
-    readonly property string labwcPid: Quickshell.env("LABWC_PID")
-    readonly property string mangoSignature: Quickshell.env("MANGO_INSTANCE_SIGNATURE")
-    property bool useMangoSorting: isMango && MangoService
 
     property var randrScales: ({})
     property bool randrReady: false
@@ -102,11 +90,6 @@ Singleton {
     readonly property bool hasWorkspaceIpc: {
         switch (compositor) {
         case "hyprland":
-        case "mango":
-        case "sway":
-        case "scroll":
-        case "miracle":
-        case "umbriel":
             return true;
         default:
             return false;
@@ -116,7 +99,6 @@ Singleton {
     readonly property bool windowOverlapSupported: {
         switch (compositor) {
         case "hyprland":
-        case "mango":
             return true;
         default:
             return false;
@@ -127,21 +109,21 @@ Singleton {
     readonly property bool workspaceReorderSupported: false
 
     readonly property bool isKnownCompositor: configKey !== ""
-    readonly property bool supportsWindowRules: isHyprland || isMango
+    readonly property bool supportsWindowRules: isHyprland
     readonly property string dmsFloatingRuleId: "dms-floating-windows"
     property bool dmsWindowFloatingActive: false
     readonly property string dmsOpaqueRuleId: "dms-window-opaque"
-    readonly property bool supportsLayoutConfig: isHyprland || isMango
-    readonly property bool supportsCursorConfig: isHyprland || isMango
-    readonly property bool supportsDisplayConfig: isHyprland || isMango
-    readonly property bool supportsBarAutoHideReveal: isHyprland || isMango
-    readonly property bool supportsWorkspaces: isHyprland || isMango || isUmbriel
+    readonly property bool supportsLayoutConfig: isHyprland
+    readonly property bool supportsCursorConfig: isHyprland
+    readonly property bool supportsDisplayConfig: isHyprland
+    readonly property bool supportsBarAutoHideReveal: isHyprland
+    readonly property bool supportsWorkspaces: isHyprland
     // compositors where a workspace that does not exist yet is still a valid switch target
-    readonly property bool supportsPersistentWorkspaces: isHyprland || isMango || isSway || isScroll || isMiracle
-    readonly property bool supportsWorkspaceUrgency: isKnownCompositor && !isLabwc
-    readonly property bool supportsWorkspaceFollowFocus: isKnownCompositor && !isLabwc
-    // labwc root menu and desktop scroll, sway/scroll --whole-window binds, plasmashell desktop menu
-    readonly property bool reservesDesktopInput: isLabwc || isSway || isScroll || isKwin
+    readonly property bool supportsPersistentWorkspaces: isHyprland
+    readonly property bool supportsWorkspaceUrgency: isKnownCompositor
+    readonly property bool supportsWorkspaceFollowFocus: isKnownCompositor
+    // plasmashell desktop menu
+    readonly property bool reservesDesktopInput: isKwin
     readonly property bool desktopContextMenuEnabled: {
         switch (SettingsData.desktopContextMenu) {
         case "on":
@@ -152,27 +134,15 @@ Singleton {
             return !reservesDesktopInput;
         }
     }
-    readonly property bool supportsSmartDock: isHyprland || isMango
+    readonly property bool supportsSmartDock: isHyprland
     readonly property bool supportsNativeOverview: false
-    readonly property bool supportsPointerConfig: isHyprland || isMango
-    readonly property bool supportsInputConfig: isHyprland || isMango
+    readonly property bool supportsPointerConfig: isHyprland
+    readonly property bool supportsInputConfig: isHyprland
 
     readonly property string displayName: {
         switch (compositor) {
         case "hyprland":
             return "Hyprland";
-        case "mango":
-            return "MangoWC";
-        case "sway":
-            return "Sway";
-        case "scroll":
-            return "Scroll";
-        case "miracle":
-            return "Miracle WM";
-        case "labwc":
-            return "Labwc";
-        case "umbriel":
-            return "Umbriel";
         case "kwin":
             return "KWin";
         default:
@@ -183,12 +153,6 @@ Singleton {
     readonly property string configKey: {
         switch (compositor) {
         case "hyprland":
-        case "mango":
-        case "sway":
-        case "scroll":
-        case "miracle":
-        case "labwc":
-        case "umbriel":
             return compositor;
         default:
             return "";
@@ -200,30 +164,6 @@ Singleton {
     Connections {
         target: root.isHyprland ? Hyprland.workspaces : null
         function onValuesChanged() {
-            root.workspaceStateChanged();
-        }
-    }
-
-    Connections {
-        target: root.isSway || root.isScroll || root.isMiracle ? I3.workspaces : null
-        function onValuesChanged() {
-            root.workspaceStateChanged();
-        }
-    }
-
-    Binding {
-        target: UmbrielService
-        property: "active"
-        value: root.isUmbriel
-    }
-
-    Connections {
-        target: UmbrielService
-        enabled: root.isUmbriel
-        function onWorkspacesChanged() {
-            root.workspaceStateChanged();
-        }
-        function onWindowsChanged() {
             root.workspaceStateChanged();
         }
     }
@@ -323,12 +263,6 @@ Singleton {
                 return hyprlandMonitor.scale;
         }
 
-        if (isMango && screen) {
-            const mangoScale = MangoService.getOutputScale(screen.name);
-            if (mangoScale !== undefined && mangoScale > 0)
-                return mangoScale;
-        }
-
         return screen?.devicePixelRatio || 1;
     }
 
@@ -338,8 +272,6 @@ Singleton {
     function windowKey(toplevel) {
         if (!toplevel)
             return "";
-        if (toplevel.mangoWindowId !== undefined)
-            return "mango:" + toplevel.mangoWindowId;
         const known = _windowKeys.find(entry => entry.toplevel === toplevel);
         if (known)
             return known.key;
@@ -361,14 +293,6 @@ Singleton {
     function getFocusedScreenName() {
         if (isHyprland && Hyprland.focusedMonitor)
             return Hyprland.focusedMonitor.name;
-        if (isSway || isScroll || isMiracle) {
-            const focusedWs = I3.workspaces?.values?.find(ws => ws.focused === true);
-            return focusedWs?.monitor?.name || "";
-        }
-        if (isMango && MangoService.activeOutput)
-            return MangoService.activeOutput;
-        if (isUmbriel)
-            return UmbrielService.focusedOutput;
         if (isKwin)
             return KwinService.activeOutput;
 
@@ -411,13 +335,7 @@ Singleton {
                 continue;
             if (!x || !y)
                 return false;
-            // Only mango enriched snapshots support value comparison
-            const xKey = x.mangoWindowId;
-            const yKey = y.mangoWindowId;
-            if (xKey === undefined || yKey === undefined)
-                return false;
-            if (xKey !== yKey || x.mangoMonitor !== y.mangoMonitor || x.appId !== y.appId || x.title !== y.title || !!x.activated !== !!y.activated || !!x.fullscreen !== !!y.fullscreen || !!x.maximized !== !!y.maximized || !!x.minimized !== !!y.minimized)
-                return false;
+            return false;
         }
         return true;
     }
@@ -483,24 +401,9 @@ Singleton {
         scheduleSort();
     }
 
-    Connections {
-        target: MangoService
-        enabled: root.isMango
-        function onStateChanged() {
-            root.scheduleSort();
-            root.workspaceStateChanged();
-        }
-        function onWindowsChanged() {
-            root.scheduleSort();
-        }
-    }
-
     function computeSortedToplevels() {
         if (!DToplevels.toplevels || !DToplevels.toplevels.values)
             return [];
-
-        if (useMangoSorting)
-            return MangoService.sortToplevels(DToplevels.toplevels.values);
 
         if (isHyprland)
             return sortHyprlandToplevelsSafe();
@@ -743,8 +646,6 @@ Singleton {
     }
 
     function filterCurrentWorkspace(toplevels, screen) {
-        if (useMangoSorting)
-            return MangoService.filterCurrentWorkspace(toplevels, screen);
         if (isHyprland)
             return filterHyprlandCurrentWorkspaceSafe(toplevels, screen);
         if (isKwin)
@@ -753,12 +654,7 @@ Singleton {
     }
 
     readonly property string toplevelKey: {
-        switch (compositor) {
-        case "mango":
-            return "mangoWindowId";
-        default:
-            return "address";
-        }
+        return "address";
     }
 
     function toplevelPlacement(toplevel) {
@@ -766,11 +662,6 @@ Singleton {
             return {
                 "workspace": "",
                 "output": ""
-            };
-        if (useMangoSorting)
-            return {
-                "workspace": (toplevel.mangoTags || []).join(", "),
-                "output": toplevel.mangoMonitor ?? ""
             };
         if (isHyprland) {
             const workspace = WindowModel.hyprlandToplevelFor(Array.from(Hyprland.toplevels?.values || []), toplevel)?.workspace;
@@ -802,8 +693,6 @@ Singleton {
     function filterCurrentDisplay(toplevels, screenName) {
         if (!toplevels || toplevels.length === 0 || !screenName)
             return toplevels;
-        if (useMangoSorting)
-            return MangoService.filterCurrentDisplay(toplevels, screenName);
         if (isHyprland)
             return filterHyprlandCurrentDisplaySafe(toplevels, screenName);
         return toplevels.filter(t => _toplevelOnScreen(t, screenName));
@@ -1103,8 +992,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             return WindowModel.hyprlandWindowPid(Array.from(Hyprland.toplevels?.values || []), toplevel);
-        case "mango":
-            return WindowModel.mangoWindowPid(MangoService.windows, WindowModel.sortedWindowFor(sortedToplevels || [], toplevel));
         default:
             return toplevel.pid || 0;
         }
@@ -1128,7 +1015,6 @@ Singleton {
     function windowsHideBar(screenName, position, thickness, screenWidth, screenHeight) {
         switch (compositor) {
         case "hyprland":
-        case "mango":
             return filterCurrentWorkspace(sortedToplevels, screenName).length > 0;
         default:
             return false;
@@ -1139,10 +1025,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             return _hyprlandDockOverlap(screenName, position, thickness, screenWidth, screenHeight);
-        case "mango":
-            if (!screenName || !MangoService.windows)
-                return false;
-            return WindowModel.mangoEdgeOverlap(MangoService.windows, MangoService.outputs[screenName], screenName, position, thickness, screenWidth, screenHeight, _edgePositions);
         default:
             return false;
         }
@@ -1150,8 +1032,6 @@ Singleton {
 
     function maximizedWindowOnScreen(screenName) {
         switch (compositor) {
-        case "mango":
-            return WindowModel.mangoMaximizedOnScreen(MangoService.windows || [], MangoService.outputs[screenName], screenName);
         case "hyprland":
             return filterCurrentWorkspace(sortedToplevels, screenName).some(t => t?.maximized);
         default:
@@ -1258,7 +1138,7 @@ Singleton {
 
     // Primary detection asks the kernel which process owns the $WAYLAND_DISPLAY
     // socket — the compositor quickshell is actually connected to. Env vars like
-    // HYPRLAND_INSTANCE_SIGNATURE / MANGO_INSTANCE_SIGNATURE can leak into the
+    // HYPRLAND_INSTANCE_SIGNATURE can leak into the
     // systemd user environment from previous sessions and lie. Unset
     // WAYLAND_DISPLAY falls back to "wayland-0", mirroring wl_display_connect.
     // /proc/net/unix: field 6 is state (01 = listening), 7 inode, 8 bound path.
@@ -1286,18 +1166,6 @@ Singleton {
         switch (comm) {
         case "hyprland":
             return "hyprland";
-        case "sway":
-            return "sway";
-        case "scroll":
-            return "scroll";
-        case "mango":
-            return "mango";
-        case "miracle-wm":
-            return "miracle";
-        case "labwc":
-            return "labwc";
-        case "umbriel":
-            return "umbriel";
         case "kwin_wayland":
             return "kwin";
         default:
@@ -1307,12 +1175,6 @@ Singleton {
 
     function _applyCompositor(name) {
         isHyprland = name === "hyprland";
-        isMango = name === "mango";
-        isSway = name === "sway";
-        isScroll = name === "scroll";
-        isMiracle = name === "miracle";
-        isLabwc = name === "labwc";
-        isUmbriel = name === "umbriel";
         isKwin = name === "kwin";
         compositor = name;
         compositorDetected = true;
@@ -1373,9 +1235,7 @@ Singleton {
     }
 
     function reloadAfterWindowRuleWrite() {
-        if (isMango)
-            MangoService.reloadConfig();
-        else if (isHyprland)
+        if (isHyprland)
             HyprlandService.reloadConfig();
     }
 
@@ -1437,42 +1297,7 @@ Singleton {
     // of winning on a stale env var.
     function _envDetectionCandidates() {
         const runtimeDir = Quickshell.env("XDG_RUNTIME_DIR") || "";
-        const umbrielSocket = Quickshell.env("UMBRIEL_SOCKET") || "";
         return [
-            {
-                name: "mango",
-                present: !!mangoSignature,
-                test: ["test", "-S", mangoSignature],
-                detail: "MANGO_INSTANCE_SIGNATURE " + mangoSignature
-            },
-            {
-                name: "umbriel",
-                present: !!umbrielSocket,
-                test: ["test", "-S", umbrielSocket],
-                detail: "UMBRIEL_SOCKET " + umbrielSocket
-            },
-            {
-                name: "miracle",
-                present: !!miracleSocket,
-                test: ["test", "-S", miracleSocket],
-                detail: "MIRACLESOCK " + miracleSocket
-            },
-            {
-                name: "sway",
-                present: !!swaySocket,
-                test: ["test", "-S", swaySocket],
-                resolve: () => {
-                    const desktop = String(Quickshell.env("XDG_CURRENT_DESKTOP") || "").toLowerCase();
-                    return desktop.includes("sway") ? "sway" : "scroll";
-                },
-                detail: "SWAYSOCK " + swaySocket
-            },
-            {
-                name: "labwc",
-                present: !!labwcPid,
-                test: ["sh", "-c", "[ \"$(ps -p \"$LABWC_PID\" -o comm= 2>/dev/null)\" = labwc ]"],
-                detail: "LABWC_PID " + labwcPid
-            },
             {
                 name: "hyprland",
                 present: !!hyprlandSignature,
@@ -1514,20 +1339,6 @@ Singleton {
     function powerOffMonitors() {
         if (isHyprland)
             return HyprlandService.dpmsOff();
-        if (isMango)
-            return MangoService.powerOffMonitors();
-        if (isSway || isScroll || isMiracle) {
-            try {
-                I3.dispatch("output * dpms off");
-            } catch (_) {}
-            return;
-        }
-        if (isLabwc) {
-            Quickshell.execDetached(["dms", "dpms", "off"]);
-            return;
-        }
-        if (isUmbriel)
-            return UmbrielService.action("dpms-off");
         if (isKwin) {
             // Alpe: KWin schaltet über sein eigenes DPMS-Protokoll; kscreen-doctor spricht es.
             Quickshell.execDetached(["kscreen-doctor", "--dpms", "off"]);
@@ -1543,20 +1354,6 @@ Singleton {
     function powerOnMonitors() {
         if (isHyprland)
             return HyprlandService.dpmsOn();
-        if (isMango)
-            return MangoService.powerOnMonitors();
-        if (isSway || isScroll || isMiracle) {
-            try {
-                I3.dispatch("output * dpms on");
-            } catch (_) {}
-            return;
-        }
-        if (isLabwc) {
-            Quickshell.execDetached(["dms", "dpms", "on"]);
-            return;
-        }
-        if (isUmbriel)
-            return UmbrielService.action("dpms-on");
         if (isKwin) {
             Quickshell.execDetached(["kscreen-doctor", "--dpms", "on"]);
             return;
@@ -1566,21 +1363,6 @@ Singleton {
             return;
         }
         log.warn("Cannot power on monitors, unknown compositor");
-    }
-    function escapeSwayWorkspaceName(name) {
-        return String(name ?? "").replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
-    }
-
-    function dispatchSwayWorkspace(ws) {
-        if (!ws)
-            return;
-        try {
-            if (ws.num !== undefined && ws.num !== -1) {
-                I3.dispatch(`workspace number ${ws.num}`);
-            } else if (ws.name) {
-                I3.dispatch(`workspace "${escapeSwayWorkspaceName(ws.name)}"`);
-            }
-        } catch (_) {}
     }
 
     function _hyprlandWorkspaceState() {
@@ -1606,38 +1388,6 @@ Singleton {
         };
     }
 
-    function _mangoWorkspaceState(screenName) {
-        return {
-            get available() {
-                return MangoService.available;
-            },
-            get tagCount() {
-                return MangoService.tagCount;
-            },
-            get output() {
-                return MangoService.getOutputState(screenName);
-            },
-            get visibleTags() {
-                return MangoService.getVisibleTags(screenName);
-            },
-            get activeTags() {
-                return MangoService.getActiveTags(screenName);
-            }
-        };
-    }
-
-    function _i3WorkspaceState() {
-        return {
-            get workspaces() {
-                return I3.workspaces?.values || [];
-            }
-        };
-    }
-
-    function _followedScreen(screenName, followFocus) {
-        return followFocus ? (getFocusedScreenName() || screenName) : screenName;
-    }
-
     function _workspaceKey(record) {
         switch (compositor) {
         case "hyprland":
@@ -1651,17 +1401,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             return WorkspaceModel.hyprlandWorkspacesForScreen(_hyprlandWorkspaceState(), screenName, followFocus, options.occupiedOnly, options.minCount, options.showSpecial);
-        case "mango":
-            {
-                const name = _followedScreen(screenName, followFocus);
-                return WorkspaceModel.mangoWorkspacesForScreen(_mangoWorkspaceState(name), name, options.showAllTags, options.minCount);
-            }
-        case "sway":
-        case "scroll":
-        case "miracle":
-            return WorkspaceModel.i3WorkspacesForScreen(_i3WorkspaceState(), screenName, followFocus, options.minCount);
-        case "umbriel":
-            return WorkspaceModel.umbrielWorkspacesForScreen(UmbrielService.workspaces, _followedScreen(screenName, followFocus), options.occupiedOnly, _workspaceRecords);
         default:
             return [];
         }
@@ -1671,14 +1410,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             return WorkspaceModel.hyprlandCurrentId(_hyprlandWorkspaceState(), screenName, followFocus);
-        case "mango":
-            return WorkspaceModel.mangoCurrentTag(_mangoWorkspaceState(_followedScreen(screenName, followFocus)));
-        case "sway":
-        case "scroll":
-        case "miracle":
-            return WorkspaceModel.i3CurrentKey(_i3WorkspaceState(), screenName, followFocus);
-        case "umbriel":
-            return WorkspaceModel.umbrielCurrentId(UmbrielService.workspaces, _followedScreen(screenName, followFocus));
         default:
             return 1;
         }
@@ -1688,8 +1419,6 @@ Singleton {
         if (!record)
             return false;
         switch (compositor) {
-        case "mango":
-            return record.active === true;
         case "hyprland":
             return record.special === true ? record.active === true : WorkspaceModel.hyprlandKey(record) === currentKey;
         default:
@@ -1701,14 +1430,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             return WorkspaceModel.hyprlandActiveWorkspace(_hyprlandWorkspaceState(), screenName);
-        case "mango":
-            return WorkspaceModel.mangoActiveWorkspace(_mangoWorkspaceState(screenName), screenName);
-        case "sway":
-        case "scroll":
-        case "miracle":
-            return WorkspaceModel.i3ActiveWorkspace(_i3WorkspaceState(), screenName);
-        case "umbriel":
-            return WorkspaceModel.umbrielActiveWorkspace(UmbrielService.workspaces, screenName);
         default:
             return null;
         }
@@ -1720,14 +1441,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             return WorkspaceModel.hyprlandWindowsOnWorkspace(sortedToplevels, record, Array.from(Hyprland.toplevels?.values || []));
-        case "mango":
-            return WorkspaceModel.mangoWindowsOnWorkspace(sortedToplevels, record);
-        case "sway":
-        case "scroll":
-        case "miracle":
-            return WorkspaceModel.i3WindowsOnWorkspace(sortedToplevels, record);
-        case "umbriel":
-            return WorkspaceModel.umbrielWindowsOnWorkspace(UmbrielService.windows, record);
         default:
             return [];
         }
@@ -1739,9 +1452,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             return WorkspaceModel.hyprlandWorkspaceOccupied(Array.from(Hyprland.toplevels?.values || []), record);
-        case "mango":
-        case "umbriel":
-            return record.occupied === true;
         default:
             return false;
         }
@@ -1749,12 +1459,6 @@ Singleton {
 
     function workspaceAppsActive(record, currentKey) {
         switch (compositor) {
-        case "mango":
-            return record.active === true;
-        case "sway":
-        case "scroll":
-        case "miracle":
-            return WorkspaceModel.i3WorkspaceFocused(_i3WorkspaceState(), record);
         case "hyprland":
             return isCurrentWorkspace(record, currentKey);
         default:
@@ -1763,24 +1467,11 @@ Singleton {
     }
 
     function workspaceUrgent(record, loadedUrgent) {
-        switch (compositor) {
-        case "sway":
-        case "scroll":
-        case "miracle":
-        case "umbriel":
-            return loadedUrgent;
-        default:
-            return record?.urgent === true;
-        }
+        return record?.urgent === true;
     }
 
     function loadWorkspaceUrgent(record) {
-        switch (compositor) {
-        case "umbriel":
-            return WorkspaceModel.umbrielWorkspaceUrgent(UmbrielService.windows, record);
-        default:
-            return record?.urgent ?? false;
-        }
+        return record?.urgent ?? false;
     }
 
     function switchToWorkspace(record, screenName, moveToOutput) {
@@ -1798,21 +1489,6 @@ Singleton {
             if (moveToOutput && record.output && record.output !== moveToOutput)
                 HyprlandService.moveWorkspaceToMonitor(WorkspaceModel.hyprlandSelector(record), moveToOutput);
             HyprlandService.focusWorkspace(WorkspaceModel.hyprlandSelector(record));
-            return;
-        case "mango":
-            MangoService.switchToTag(record.output, record.id);
-            return;
-        case "sway":
-        case "scroll":
-        case "miracle":
-            dispatchSwayWorkspace(typeof record.id === "number" ? {
-                "num": record.id
-            } : {
-                "name": record.id
-            });
-            return;
-        case "umbriel":
-            UmbrielService.action("workspace-switch", String(record.idx), "--output", record.output);
             return;
         }
     }
@@ -1832,68 +1508,23 @@ Singleton {
                 stepWorkspace(WorkspaceModel.hyprlandScrollWorkspaces(state, screenName, followFocus), WorkspaceModel.hyprlandScrollCurrentId(state, screenName), direction);
                 return;
             }
-        case "mango":
-            {
-                const state = _mangoWorkspaceState(screenName);
-                stepWorkspace(WorkspaceModel.mangoScrollWorkspaces(state, screenName, showAllTags), WorkspaceModel.mangoScrollCurrentTag(state), direction);
-                return;
-            }
-        case "sway":
-        case "scroll":
-        case "miracle":
-            {
-                const state = _i3WorkspaceState();
-                stepWorkspace(WorkspaceModel.i3ScrollWorkspaces(state, screenName, followFocus), WorkspaceModel.i3CurrentKey(state, screenName, followFocus), direction);
-                return;
-            }
-        case "umbriel":
-            {
-                const name = _followedScreen(screenName, followFocus);
-                stepWorkspace(WorkspaceModel.umbrielWorkspacesForScreen(UmbrielService.workspaces, name, false, _workspaceRecords), WorkspaceModel.umbrielCurrentId(UmbrielService.workspaces, name), direction);
-                return;
-            }
         }
     }
 
     function overviewActiveForScreen(screenName) {
-        switch (compositor) {
-        case "mango":
-            return MangoService.isOutputInOverview(screenName);
-        default:
-            return false;
-        }
+        return false;
     }
 
     function workspacesHiddenByOverview(screenName) {
-        switch (compositor) {
-        case "mango":
-            return MangoService.isOutputInOverview(screenName);
-        default:
-            return false;
-        }
+        return false;
     }
 
-    function toggleOverview(screenName) {
-        switch (compositor) {
-        case "mango":
-            if (MangoService.getOutputState(screenName))
-                MangoService.dispatchOnOutput(screenName, "toggleoverview");
-            else
-                MangoService.dispatch("toggleoverview");
-            return;
-        }
-    }
+    // Eine eigene Übersicht des Compositors gab es nur unter niri und Mango; Hyprland nutzt HyprlandOverview.
+    function toggleOverview(screenName) {}
 
-    function workspaceSecondaryAction(record, screenName) {
-        switch (compositor) {
-        case "mango":
-            if (record)
-                MangoService.toggleTag(screenName, record.id);
-            return;
-        }
-    }
+    function workspaceSecondaryAction(record, screenName) {}
 
-    readonly property bool canStepWindowFocus: compositor === "hyprland" || compositor === "mango"
+    readonly property bool canStepWindowFocus: compositor === "hyprland"
 
     function stepWindowFocus(screenName, direction) {
         switch (compositor) {
@@ -1902,15 +1533,6 @@ Singleton {
                 HyprlandService.focusMonitor(screenName);
             HyprlandService.cycleWindow(direction > 0);
             return true;
-        case "mango":
-            {
-                const command = direction > 0 ? "focusstack,next" : "focusstack,prev";
-                if (screenName)
-                    MangoService.dispatchOnOutput(screenName, command);
-                else
-                    MangoService.dispatch(command);
-                return true;
-            }
         default:
             return false;
         }
@@ -1920,9 +1542,6 @@ Singleton {
         switch (compositor) {
         case "hyprland":
             HyprlandService.focusWindow(windowId);
-            return true;
-        case "umbriel":
-            UmbrielService.action("window-focus", String(windowId));
             return true;
         default:
             return false;
@@ -1941,8 +1560,6 @@ Singleton {
         function onCompositorLayoutRefreshNeeded(frame) {
             if (root.isHyprland && typeof HyprlandService !== "undefined")
                 HyprlandService.generateLayoutConfig(frame);
-            if (!frame && root.isMango && typeof MangoService !== "undefined")
-                MangoService.generateLayoutConfig();
         }
 
         function onBlurStrengthRefreshNeeded() {
@@ -1952,17 +1569,11 @@ Singleton {
         function onCompositorInputRefreshNeeded() {
             if (root.isHyprland && typeof HyprlandService !== "undefined")
                 HyprlandService.generateInputConfig();
-            if (root.isMango && typeof MangoService !== "undefined")
-                MangoService.generateInputConfig();
         }
 
         function onCompositorCursorRefreshNeeded() {
             if (root.isHyprland && typeof HyprlandService !== "undefined") {
                 HyprlandService.generateCursorConfig();
-                return;
-            }
-            if (root.isMango && typeof MangoService !== "undefined") {
-                MangoService.generateCursorConfig();
                 return;
             }
         }

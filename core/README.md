@@ -26,7 +26,6 @@ All Wayland protocols are consumed as a client - connecting to the compositor.
 | `keyboard-shortcuts-inhibit-unstable-v1`  | Inhibit compositor shortcuts during color picker/screenshot |
 | `ext-data-control-v1`                     | Clipboard history and persistence                           |
 | `ext-workspace-v1`                        | Workspace integration                                       |
-| `dwl-ipc-unstable-v2`                     | dwl/MangoWC IPC for tags, outputs, etc.                     |
 
 ### DBus Interfaces
 

@@ -3,7 +3,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.I3
 import qs.Common
 import qs.Services
 
@@ -20,9 +19,7 @@ Singleton {
 
     readonly property bool available: {
         switch (CompositorService.compositor) {
-        case "mango":
         case "hyprland":
-        case "sway":
             return true;
         default:
             return false;
@@ -42,10 +39,7 @@ Singleton {
 
     readonly property string currentLayout: {
         switch (CompositorService.compositor) {
-        case "mango":
-            return MangoService.currentKeyboardLayout;
         case "hyprland":
-        case "sway":
             return _polledLayout;
         default:
             return "";
@@ -94,32 +88,10 @@ Singleton {
         }
     }
 
-    Loader {
-        active: root.active && CompositorService.isSway
-        sourceComponent: I3IpcListener {
-            subscriptions: ["input"]
-            onIpcEvent: event => {
-                if (event.type !== "input")
-                    return;
-                try {
-                    const payload = JSON.parse(event.data);
-                    if (payload.change !== "xkb_layout")
-                        return;
-                    const name = payload.input?.xkb_active_layout_name;
-                    if (name)
-                        root._polledLayout = name;
-                } catch (e) {}
-            }
-        }
-    }
-
     function refresh() {
         switch (CompositorService.compositor) {
         case "hyprland":
             _pollHyprland();
-            return;
-        case "sway":
-            _pollSway();
             return;
         }
     }
@@ -130,25 +102,7 @@ Singleton {
             Quickshell.execDetached(["hyprctl", "switchxkblayout", _hyprlandKeyboard, "next"]);
             _pollHyprland();
             return;
-        case "mango":
-            MangoService.cycleKeyboardLayout();
-            return;
-        case "sway":
-            I3.dispatch("input type:keyboard xkb_switch_layout next");
-            return;
         }
-    }
-
-    function _pollSway() {
-        Proc.runCommand("keyboard-layout-sway", ["swaymsg", "-t", "get_inputs", "-r"], (output, exitCode) => {
-            if (exitCode !== 0)
-                return;
-            try {
-                const keyboard = JSON.parse(output).find(i => i.type === "keyboard" && i.xkb_active_layout_name);
-                if (keyboard)
-                    root._polledLayout = keyboard.xkb_active_layout_name;
-            } catch (e) {}
-        });
     }
 
     function _pollHyprland() {

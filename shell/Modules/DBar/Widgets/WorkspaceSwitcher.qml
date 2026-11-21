@@ -286,7 +286,7 @@ BasePill {
         spacing: root.segmented ? BarMetrics.segmentGap : Theme.spacingS
         vertical: root.isVertical
 
-        // mango reports active_tags=0 while the overview is open; surface it as a pill
+        // Pille für Compositors, die Arbeitsflächen in der Übersicht verbergen (bisher nur Mango); derzeit nie sichtbar
         Item {
             id: overviewPill
             visible: CompositorService.workspacesHiddenByOverview(root.effectiveScreenName)

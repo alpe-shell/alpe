@@ -9,7 +9,6 @@ import (
 
 	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 	"github.com/duxlabs-dev/dux-shell/core/internal/luaconfig"
-	"github.com/duxlabs-dev/dux-shell/core/internal/mangoconf"
 	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +26,7 @@ var resolveIncludeCmd = &cobra.Command{
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		switch len(args) {
 		case 0:
-			return []string{"hyprland", "mangowc"}, cobra.ShellCompDirectiveNoFileComp
+			return []string{"hyprland"}, cobra.ShellCompDirectiveNoFileComp
 		case 1:
 			return []string{
 				"binds.lua",
@@ -38,11 +37,6 @@ var resolveIncludeCmd = &cobra.Command{
 				"cursor.lua",
 				"input.lua",
 				"windowrules.lua",
-				"cursor.conf",
-				"input.conf",
-				"layout.conf",
-				"outputs.conf",
-				"binds.conf",
 			}, cobra.ShellCompDirectiveNoFileComp
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
@@ -50,31 +44,8 @@ var resolveIncludeCmd = &cobra.Command{
 	Run: runResolveInclude,
 }
 
-var mangoMonitorRulesCmd = &cobra.Command{
-	Use:    "mango-monitor-rules",
-	Short:  "Print the monitor rules of the Mango main config as monitor_rule= lines",
-	Hidden: true,
-	Args:   cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		for _, line := range mangoMonitorRules(mangoconf.Dir()) {
-			fmt.Println(line)
-		}
-	},
-}
-
 func init() {
-	configCmd.AddCommand(resolveIncludeCmd, mangoMonitorRulesCmd)
-}
-
-// mangoMonitorRules lets the shell carry fields it does not model when it rewrites dms/outputs.conf.
-func mangoMonitorRules(dir string) []string {
-	var out []string
-	_ = mangoconf.Walk(dir, mangoconf.MainConfig(dir), mangoconf.Vars{}, func(_ string, e mangoconf.Entry) {
-		if e.Key == "monitor_rule" && !strings.Contains(e.Value, "\n") {
-			out = append(out, "monitor_rule="+e.Value)
-		}
-	})
-	return out
+	configCmd.AddCommand(resolveIncludeCmd)
 }
 
 type IncludeResult struct {
@@ -92,8 +63,6 @@ func runResolveInclude(cmd *cobra.Command, args []string) {
 	switch compositor {
 	case "hyprland":
 		result, err = checkHyprlandInclude(filename)
-	case "mangowc", "mango":
-		result, err = checkMangoWCInclude(filename)
 	default:
 		log.Fatalf("Unknown compositor: %s", compositor)
 	}
@@ -126,18 +95,5 @@ func checkHyprlandInclude(filename string) (IncludeResult, error) {
 		return result, nil
 	}
 	result.Included = luaconfig.RequiresTarget(mainLua, targetAbs, make(map[string]bool))
-	return result, nil
-}
-
-func checkMangoWCInclude(filename string) (IncludeResult, error) {
-	configDir := mangoconf.Dir()
-	targetPath := filepath.Join(configDir, "dms", filename)
-	var result IncludeResult
-	if _, err := os.Stat(targetPath); err == nil {
-		result.Exists = true
-	}
-	_ = mangoconf.Walk(configDir, mangoconf.MainConfig(configDir), mangoconf.Vars{}, func(_ string, e mangoconf.Entry) {
-		result.Included = result.Included || (e.IsSource() && e.Value == targetPath)
-	})
 	return result, nil
 }

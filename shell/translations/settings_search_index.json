@@ -1837,7 +1837,6 @@
       "floating",
       "hyprland",
       "interface",
-      "mango",
       "open",
       "rule",
       "settings",
@@ -1901,7 +1900,6 @@
       "hyprland",
       "interface",
       "link",
-      "mango",
       "match",
       "menu",
       "modal",
@@ -11494,8 +11492,7 @@
       "screens",
       "setup"
     ],
-    "parentLabel": "Displays",
-    "conditionKey": "isMango"
+    "parentLabel": "Displays"
   },
   {
     "section": "displayProfileAutoSelect",
@@ -12945,41 +12942,6 @@
     "conditionKey": "layoutCapable"
   },
   {
-    "section": "mangoLayoutGapsMode",
-    "label": "Gaps",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "auto",
-      "config",
-      "follows",
-      "gap",
-      "gaps",
-      "inner",
-      "integrations",
-      "keeps",
-      "mango",
-      "mangowc",
-      "margin",
-      "margins",
-      "outer",
-      "override",
-      "padding",
-      "panel",
-      "spacing",
-      "statusbar",
-      "system",
-      "taskbar",
-      "topbar",
-      "unmanaged"
-    ],
-    "description": "Auto follows bar spacing, Off keeps your %1 config",
-    "descriptionArgs": [
-      "MangoWC"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
     "section": "hyprlandGlowEnabled",
     "label": "Glow",
     "tabIndex": 37,
@@ -13038,26 +13000,6 @@
       "hyprland",
       "inner",
       "integrations",
-      "override",
-      "system"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
-    "section": "mangoLayoutGapsOverride",
-    "label": "Inner gaps",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "gap_inner_horizontal",
-      "gap_inner_vertical",
-      "gappih",
-      "gappiv",
-      "gaps",
-      "inner",
-      "integrations",
-      "mango",
-      "mangowc",
       "override",
       "system"
     ],
@@ -13148,27 +13090,6 @@
     ],
     "icon": "crop_square",
     "conditionKey": "isHyprland"
-  },
-  {
-    "section": "mangoLayout",
-    "label": "Layout overrides",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "border",
-      "dwl",
-      "gaps",
-      "integrations",
-      "layout",
-      "mango",
-      "mangowc",
-      "overrides",
-      "radius",
-      "system",
-      "window"
-    ],
-    "icon": "crop_square",
-    "conditionKey": "isMango"
   },
   {
     "section": "hyprlandMasterOrientation",
@@ -13276,25 +13197,6 @@
     "conditionKey": "layoutCapable"
   },
   {
-    "section": "compositorNotifications",
-    "label": "Notifications",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "alert",
-      "alerts",
-      "compositor",
-      "integrations",
-      "notif",
-      "notifications",
-      "notifs",
-      "system",
-      "toast"
-    ],
-    "icon": "notifications",
-    "conditionKey": "isNiriOrMango"
-  },
-  {
     "section": "hyprlandLayoutGapsOutOverride",
     "label": "Outer gaps",
     "tabIndex": 37,
@@ -13312,27 +13214,6 @@
     "conditionKey": "layoutCapable"
   },
   {
-    "section": "mangoLayoutGapsOutOverride",
-    "label": "Outer gaps",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "edge",
-      "gap_outer_horizontal",
-      "gap_outer_vertical",
-      "gappoh",
-      "gappov",
-      "gaps",
-      "integrations",
-      "mango",
-      "mangowc",
-      "outer",
-      "override",
-      "system"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
     "section": "hyprlandLayoutBorderSizeEnabled",
     "label": "Override border size",
     "tabIndex": 37,
@@ -13342,24 +13223,6 @@
       "border_size",
       "hyprland",
       "integrations",
-      "override",
-      "size",
-      "system"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
-    "section": "mangoLayoutBorderSizeEnabled",
-    "label": "Override border size",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "border",
-      "border_px",
-      "borderpx",
-      "integrations",
-      "mango",
-      "mangowc",
       "override",
       "size",
       "system"
@@ -14677,21 +14540,6 @@
     "conditionKey": "pointerCapable"
   },
   {
-    "section": "touchpadDisableOnExternalMouse",
-    "label": "Disable with external mouse",
-    "tabIndex": 44,
-    "category": "Mouse & touchpad",
-    "keywords": [
-      "disable",
-      "external",
-      "input",
-      "mouse",
-      "touchpad"
-    ],
-    "parentLabel": "Input",
-    "conditionKey": "isNiriOrMango"
-  },
-  {
     "section": "touchpadDragLock",
     "label": "Drag lock",
     "tabIndex": 44,
@@ -14741,22 +14589,6 @@
     ],
     "parentLabel": "Input",
     "conditionKey": "pointerCapable"
-  },
-  {
-    "section": "mouseMiddleEmulation",
-    "label": "Middle click emulation",
-    "tabIndex": 44,
-    "category": "Mouse & touchpad",
-    "keywords": [
-      "click",
-      "emulation",
-      "input",
-      "middle",
-      "mouse",
-      "touchpad"
-    ],
-    "parentLabel": "Input",
-    "conditionKey": "isNiriOrMango"
   },
   {
     "section": "touchpadMiddleEmulation",
@@ -16037,33 +15869,6 @@
       "picture",
       "template",
       "terminal",
-      "theming",
-      "tint",
-      "wallpaper"
-    ],
-    "parentLabel": "Wallpaper & colors",
-    "conditionKey": "matugenAvailable"
-  },
-  {
-    "section": "matugenTemplateMangowc",
-    "label": "mangowc",
-    "tabIndex": 50,
-    "category": "App theming",
-    "keywords": [
-      "app",
-      "background",
-      "bg",
-      "colors",
-      "colour",
-      "colours",
-      "desktop",
-      "hue",
-      "image",
-      "mangowc",
-      "matugen",
-      "palette",
-      "picture",
-      "template",
       "theming",
       "tint",
       "wallpaper"

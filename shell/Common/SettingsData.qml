@@ -251,10 +251,6 @@ Singleton {
     property int hyprlandWorkspaceBackAndForth: Spec.SPEC.hyprlandWorkspaceBackAndForth.def
     property int hyprlandExitWindowRetainsFullscreen: Spec.SPEC.hyprlandExitWindowRetainsFullscreen.def
     property string hyprlandBellSound: Spec.SPEC.hyprlandBellSound.def
-    property int mangoLayoutGapsOverride: Spec.SPEC.mangoLayoutGapsOverride.def
-    property int mangoLayoutGapsOutOverride: Spec.SPEC.mangoLayoutGapsOutOverride.def
-    property int mangoLayoutRadiusOverride: Spec.SPEC.mangoLayoutRadiusOverride.def
-    property int mangoLayoutBorderSize: Spec.SPEC.mangoLayoutBorderSize.def
     property int focusFollowsMouse: Spec.SPEC.focusFollowsMouse.def
     property bool hyprlandSwallowFocusClick: Spec.SPEC.hyprlandSwallowFocusClick.def
     property bool hyprlandTabletEnabled: Spec.SPEC.hyprlandTabletEnabled.def
@@ -692,9 +688,6 @@ Singleton {
             case "hyprland":
                 g = hyprlandLayoutGapsOverride;
                 break;
-            case "mango":
-                g = mangoLayoutGapsOverride;
-                break;
             }
             if (g >= 0)
                 return g;
@@ -776,7 +769,6 @@ Singleton {
     property bool runDmsMatugenTemplates: Spec.SPEC.runDmsMatugenTemplates.def
     property bool matugenTemplateGtk: Spec.SPEC.matugenTemplateGtk.def
     property bool matugenTemplateHyprland: Spec.SPEC.matugenTemplateHyprland.def
-    property bool matugenTemplateMangowc: Spec.SPEC.matugenTemplateMangowc.def
     property bool matugenTemplateQt5ct: Spec.SPEC.matugenTemplateQt5ct.def
     property bool matugenTemplateQt6ct: Spec.SPEC.matugenTemplateQt6ct.def
     property bool matugenTemplateFcitx5: Spec.SPEC.matugenTemplateFcitx5.def

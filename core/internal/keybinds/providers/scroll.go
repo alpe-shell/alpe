@@ -44,31 +44,3 @@ func hyprlandScrollToCanonical(token string) (string, bool) {
 	v, ok := hyprlandScrollCanonical[strings.ToLower(token)]
 	return v, ok
 }
-
-// MangoWC binds the wheel through a dedicated axisbind directive whose key field
-// is a direction (UP/DOWN/LEFT/RIGHT) rather than a keysym.
-const mangowcAxisBindPrefix = "axisbind"
-
-var mangowcScrollDirection = map[string]string{
-	"wheelscrollup":    "UP",
-	"wheelscrolldown":  "DOWN",
-	"wheelscrollleft":  "LEFT",
-	"wheelscrollright": "RIGHT",
-}
-
-var mangowcScrollCanonical = map[string]string{
-	"up":    "WheelScrollUp",
-	"down":  "WheelScrollDown",
-	"left":  "WheelScrollLeft",
-	"right": "WheelScrollRight",
-}
-
-func mangowcScrollToDirection(token string) (string, bool) {
-	v, ok := mangowcScrollDirection[strings.ToLower(token)]
-	return v, ok
-}
-
-func mangowcDirectionToScroll(direction string) (string, bool) {
-	v, ok := mangowcScrollCanonical[strings.ToLower(direction)]
-	return v, ok
-}

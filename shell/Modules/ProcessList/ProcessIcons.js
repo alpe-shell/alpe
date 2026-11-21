@@ -14,26 +14,6 @@ const PROGRAM_ICONS = [
         logo: "hyprland.svg"
     },
     {
-        programs: ["sway", "scroll"],
-        logo: "sway.svg"
-    },
-    {
-        programs: ["mango"],
-        logo: "mango.png"
-    },
-    {
-        programs: ["labwc"],
-        logo: "labwc.png"
-    },
-    {
-        programs: ["miracle-wm"],
-        logo: "miraclewm.svg"
-    },
-    {
-        programs: ["umbriel"],
-        logo: "umbriel.svg"
-    },
-    {
         programs: ["docker", "dockerd", "docker-proxy", "docker-init", "docker-compose"],
         icons: ["docker", "docker-desktop"]
     },

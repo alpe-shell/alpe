@@ -14,20 +14,16 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("KeybindsService")
 
-    property bool available: CompositorService.isHyprland || CompositorService.isMango
+    property bool available: CompositorService.isHyprland
     property string currentProvider: {
         if (CompositorService.isHyprland)
             return "hyprland";
-        if (CompositorService.isMango)
-            return "mangowc";
         return "";
     }
 
     readonly property string cheatsheetProvider: {
         if (CompositorService.isHyprland)
             return "hyprland";
-        if (CompositorService.isMango)
-            return "mangowc";
         return "";
     }
     property bool cheatsheetAvailable: cheatsheetProvider !== ""
@@ -74,15 +70,12 @@ Singleton {
         switch (currentProvider) {
         case "hyprland":
             return configDir + "/hypr";
-        case "mangowc":
-            return MangoService.configDir + "/mango";
         default:
             return "";
         }
     }
-    readonly property string includeCompositor: currentProvider === "mangowc" ? "mango" : currentProvider
-    readonly property bool includeMango: includeCompositor === "mango"
-    readonly property var includePaths: ConfigIncludeResolve.includePaths("binds", includeCompositor, includeMango ? MangoService.configDir : configDir, includeMango ? MangoService.configName : "")
+    readonly property string includeCompositor: currentProvider
+    readonly property var includePaths: ConfigIncludeResolve.includePaths("binds", includeCompositor, configDir, "")
     readonly property string dmsBindsPath: includePaths?.fragmentFiles[0] ?? ""
     readonly property string mainConfigPath: includePaths?.configFile ?? ""
     readonly property bool readOnly: currentProvider === "hyprland" && CompositorService.isHyprland && !HyprlandService.luaConfigActive
@@ -95,15 +88,6 @@ Singleton {
     signal bindRemoved(string key)
     signal dmsBindsFixed
     signal cheatsheetLoaded
-
-    Connections {
-        target: CompositorService
-        function onCompositorChanged() {
-            if (!CompositorService.isMango)
-                return;
-            Qt.callLater(root.loadBinds);
-        }
-    }
 
     property int _consumers: 0
     property bool _bindsStale: false
@@ -229,8 +213,6 @@ Singleton {
             root._pendingSavedKey = savedKey;
             savedKey = "";
             root.bindSaveCompleted(true);
-            if (CompositorService.isMango)
-                MangoService.reloadConfig();
             root.loadBinds(false);
         }
     }
@@ -259,8 +241,6 @@ Singleton {
                 return;
             }
             root.lastError = "";
-            if (CompositorService.isMango)
-                MangoService.reloadConfig();
             root.loadBinds(false);
         }
     }
@@ -288,8 +268,6 @@ Singleton {
             root.dmsBindsIncluded = true;
             root.dmsBindsFixed();
             ToastService.showInfo(I18n.tr("Binds include added"), I18n.tr("%1 is now included in config", "keybinds toast, %1 is the binds file path").arg("dms/" + root.includePaths.fragmentFiles[0].split("/").pop()), "", "keybinds");
-            if (CompositorService.isMango)
-                MangoService.reloadConfig();
             Qt.callLater(root.forceReload);
         }
     }
@@ -303,7 +281,7 @@ Singleton {
         }
         const timestamp = Math.floor(Date.now() / 1000);
         const backupPath = `${mainConfigPath}.dmsbackup${timestamp}`;
-        const script = ConfigIncludeResolve.repairScriptFor("binds", includeCompositor, includeMango ? MangoService.configDir : configDir, backupPath, includeMango ? MangoService.configName : "", Proc.dmsBin);
+        const script = ConfigIncludeResolve.repairScriptFor("binds", includeCompositor, configDir, backupPath, "", Proc.dmsBin);
         if (!script)
             return;
         fixing = true;
@@ -341,7 +319,7 @@ Singleton {
             return false;
         if (provider === "hyprland" && (!luaAction || !HyprlandService.luaConfigActive))
             return false;
-        return provider === "hyprland" || provider === "mangowc";
+        return provider === "hyprland";
     }
 
     function executeAction(action, luaAction) {
@@ -373,13 +351,6 @@ Singleton {
             Quickshell.execDetached(["hyprctl", "dispatch", luaAction]);
             return true;
         }
-        if (provider === "mangowc") {
-            const trimmed = action.trim();
-            const space = trimmed.indexOf(" ");
-            MangoService.dispatch(space < 0 ? trimmed : trimmed.slice(0, space) + "," + trimmed.slice(space + 1).trim());
-            return true;
-        }
-
         return false;
     }
 

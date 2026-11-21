@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"maps"
 	"os"
-	"path/filepath"
 	"slices"
 	"strconv"
 
@@ -64,7 +63,7 @@ var keybindsRemoveCmd = &cobra.Command{
 var keybindsResetCmd = &cobra.Command{
 	Use:   "reset <provider> <key>",
 	Short: "Reset a keybind override to its DMS default",
-	Long:  "Drop the user override for the given key so the DMS default re-applies. For providers without a separate default file (MangoWC) this is equivalent to remove.",
+	Long:  "Drop the user override for the given key so the DMS default re-applies. For providers without a separate default file this is equivalent to remove.",
 	Args:  cobra.ExactArgs(2),
 	Run:   runKeybindsEdit,
 }
@@ -112,32 +111,6 @@ func initializeProviders() {
 	hyprlandProvider := providers.NewHyprlandProvider("")
 	if err := registry.Register(hyprlandProvider); err != nil {
 		log.Warnf("Failed to register Hyprland provider: %v", err)
-	}
-
-	mangowcProvider := providers.NewMangoWCProvider("")
-	if err := registry.Register(mangowcProvider); err != nil {
-		log.Warnf("Failed to register MangoWC provider: %v", err)
-	}
-
-	configDir, _ := os.UserConfigDir()
-
-	if configDir != "" {
-		scrollProvider := providers.NewSwayProvider(filepath.Join(configDir, "scroll"))
-		if err := registry.Register(scrollProvider); err != nil {
-			log.Warnf("Failed to register Scroll provider: %v", err)
-		}
-	}
-
-	miracleProvider := providers.NewMiracleProvider("")
-	if err := registry.Register(miracleProvider); err != nil {
-		log.Warnf("Failed to register Miracle WM provider: %v", err)
-	}
-
-	if configDir != "" {
-		swayProvider := providers.NewSwayProvider(filepath.Join(configDir, "sway"))
-		if err := registry.Register(swayProvider); err != nil {
-			log.Warnf("Failed to register Sway provider: %v", err)
-		}
 	}
 
 	config := keybinds.DefaultDiscoveryConfig()
@@ -198,14 +171,6 @@ func makeProviderWithPath(name, path string) keybinds.Provider {
 	switch name {
 	case "hyprland":
 		return providers.NewHyprlandProvider(path)
-	case "mangowc":
-		return providers.NewMangoWCProvider(path)
-	case "sway":
-		return providers.NewSwayProvider(path)
-	case "scroll":
-		return providers.NewSwayProvider(path)
-	case "miracle":
-		return providers.NewMiracleProvider(path)
 	default:
 		return nil
 	}

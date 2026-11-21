@@ -1938,7 +1938,7 @@ Item {
         }
 
         function open(): string {
-            if (!CompositorService.isHyprland && !CompositorService.isMango)
+            if (!CompositorService.isHyprland)
                 return "WINDOW_RULES_UNSUPPORTED_COMPOSITOR";
             root.windowRuleModalLoaderRef.active = true;
             if (root.windowRuleModalLoaderRef.item) {
@@ -1957,7 +1957,7 @@ Item {
         }
 
         function toggle(): string {
-            if (!CompositorService.isHyprland && !CompositorService.isMango)
+            if (!CompositorService.isHyprland)
                 return "WINDOW_RULES_UNSUPPORTED_COMPOSITOR";
             root.windowRuleModalLoaderRef.active = true;
             if (root.windowRuleModalLoaderRef.item) {

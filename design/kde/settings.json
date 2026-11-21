@@ -188,7 +188,6 @@
   "fadeToLockEnabled": false,
   "fadeToDpmsEnabled": false,
   "terminalsAlwaysDark": false,
-  "matugenTemplateMangowc": false,
   "matugenTemplateQt5ct": false,
   "matugenTemplateQt6ct": false,
   "matugenTemplateFirefox": true,

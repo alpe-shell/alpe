@@ -47,7 +47,6 @@ var componentNames = {
     "notepadButton": "notepadButtonComponent",
     "colorPicker": "colorPickerComponent",
     "systemUpdate": "systemUpdateComponent",
-    "layout": "layoutComponent",
     "powerMenuButton": "powerMenuButtonComponent",
     "appsDock": "appsDockComponent",
     "island": "islandComponent"

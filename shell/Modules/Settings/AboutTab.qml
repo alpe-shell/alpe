@@ -28,45 +28,6 @@ Item {
                 discordUrl: "https://discord.com/invite/hQ9XvMUjjr",
                 discordLabel: I18n.tr("Hyprland Discord server")
             };
-        case CompositorService.isSway:
-            return {
-                logo: "sway.svg",
-                url: "https://swaywm.org",
-                label: I18n.tr("Sway website")
-            };
-        case CompositorService.isScroll:
-            return {
-                logo: "sway.svg",
-                url: "https://github.com/dawsers/scroll",
-                label: I18n.tr("Scroll GitHub")
-            };
-        case CompositorService.isMiracle:
-            return {
-                logo: "miraclewm.svg",
-                url: "https://github.com/miracle-wm-org/miracle-wm",
-                label: "miracle-wm"
-            };
-        case CompositorService.isMango:
-            return {
-                logo: "mango.png",
-                url: "https://github.com/mangowm/mango",
-                label: I18n.tr("mangowc GitHub"),
-                discordUrl: "https://discord.gg/CPjbDxesh5",
-                discordLabel: I18n.tr("mangowc Discord server")
-            };
-        case CompositorService.isLabwc:
-            return {
-                logo: "labwc.png",
-                url: "https://labwc.github.io/",
-                label: I18n.tr("LabWC website"),
-                ircUrl: "https://web.libera.chat/gamja/?channels=#labwc"
-            };
-        case CompositorService.isUmbriel:
-            return {
-                logo: "umbriel.svg",
-                url: "https://github.com/noctalia-dev/umbriel",
-                label: "Umbriel"
-            };
         default:
             return {
                 logo: "",
@@ -169,13 +130,6 @@ Item {
                 }
             }
 
-            SettingsLinkRow {
-                visible: (root.compositor.ircUrl ?? "") !== ""
-                iconName: "forum"
-                title: I18n.tr("LabWC IRC channel")
-                subtitle: "libera.chat"
-                url: root.compositor.ircUrl ?? ""
-            }
         }
 
         SettingsCard {

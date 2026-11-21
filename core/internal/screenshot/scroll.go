@@ -176,8 +176,8 @@ func (r *RegionSelector) enterScrollPhase(os *OutputSurface, x, y, w, h int) {
 }
 
 func scrollCaptureRect(comp Compositor, scale float64, x, y, w, h int) (int, int, int, int) {
-	// mango takes device pixels, deviating from spec (observed); Hyprland scales the box itself, so it stays on the spec path
-	if comp == CompositorMango || scale <= 1 {
+	// Hyprland scales the box itself, so it stays on the spec path
+	if scale <= 1 {
 		return x, y, w, h
 	}
 	// spec: logical coordinates, scaled by the compositor

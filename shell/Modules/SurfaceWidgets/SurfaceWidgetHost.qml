@@ -176,8 +176,7 @@ Loader {
             "memUsage": dgopAvailable,
             "cpuTemp": dgopAvailable,
             "gpuTemp": dgopAvailable,
-            "network_speed_monitor": dgopAvailable,
-            "layout": CompositorService.isMango && MangoService.available
+            "network_speed_monitor": dgopAvailable
         };
 
         return widgetVisibility[widgetId] ?? true;

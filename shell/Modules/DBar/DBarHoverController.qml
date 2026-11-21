@@ -324,10 +324,6 @@ Item {
                 loader: "batteryPopoutLoader",
                 triggerSource: "battery"
             },
-            layout: {
-                loader: "layoutPopoutLoader",
-                triggerSource: "layout"
-            },
             vpn: {
                 loader: "vpnPopoutLoader",
                 triggerSource: "vpn"

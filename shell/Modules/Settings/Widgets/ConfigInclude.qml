@@ -73,9 +73,8 @@ QtObject {
             return;
         }
         const compositor = CompositorService.compositor;
-        const mango = compositor === "mango";
-        const dir = mango ? MangoService.configDir : configDir();
-        const configName = mango ? MangoService.configName : "";
+        const dir = configDir();
+        const configName = "";
         const paths = ConfigIncludeResolve.includePaths(includeKind, compositor, dir, configName);
         if (!paths)
             return;

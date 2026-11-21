@@ -229,18 +229,6 @@ Item {
             SettingsToggleRow {
                 enabled: SettingsData.runDmsMatugenTemplates
                 tab: "theme"
-                tags: ["matugen", "mangowc", "template"]
-                settingKey: "matugenTemplateMangowc"
-                text: "mangowc"
-                description: root.getTemplateDescription("mangowc", "")
-                descriptionColor: root.getTemplateDescriptionColor("mangowc")
-                checked: SettingsData.matugenTemplateMangowc
-                onToggled: checked => SettingsData.set("matugenTemplateMangowc", checked)
-            }
-
-            SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
-                tab: "theme"
                 tags: ["matugen", "qt5ct", "template"]
                 settingKey: "matugenTemplateQt5ct"
                 text: "qt5ct"

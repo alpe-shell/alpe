@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -9,14 +8,13 @@ import (
 	"strings"
 
 	"github.com/duxlabs-dev/dux-shell/core/internal/deps"
-	"github.com/duxlabs-dev/dux-shell/core/internal/mangoconf"
 )
 
 // dms.service is wanted by the compositor's own session unit rather than enabled
 // for graphical-session.target, so it never starts under GNOME or KDE on the same user.
 const HyprlandSessionTarget = "hyprland-session.target"
 
-var sessionUnits = []string{HyprlandSessionTarget, mangoconf.SessionTarget}
+var sessionUnits = []string{HyprlandSessionTarget}
 
 var systemctlUser = func(args ...string) error {
 	output, err := exec.Command("systemctl", append([]string{"--user"}, args...)...).CombinedOutput()
@@ -34,14 +32,12 @@ func SessionUnitName(wm deps.WindowManager) string {
 	switch wm {
 	case deps.WindowManagerHyprland:
 		return HyprlandSessionTarget
-	case deps.WindowManagerMango:
-		return mangoconf.SessionTarget
 	}
 	return ""
 }
 
 // SessionUnit returns the unit dms.service should be wanted by under wm, making sure it
-// exists. Hyprland before 0.57 gets our target written; Mango before 0.17.1 has none and yields "".
+// exists. Hyprland before 0.57 gets our target written.
 func SessionUnit(wm deps.WindowManager) (string, error) {
 	switch wm {
 	case deps.WindowManagerHyprland:
@@ -49,11 +45,6 @@ func SessionUnit(wm deps.WindowManager) (string, error) {
 			return "", fmt.Errorf("write %s: %w", HyprlandSessionTarget, err)
 		}
 		return HyprlandSessionTarget, nil
-	case deps.WindowManagerMango:
-		if !mangoSessionTargetInstalled() {
-			return "", nil
-		}
-		return mangoconf.SessionTarget, nil
 	}
 	return "", fmt.Errorf("unsupported compositor %v", wm)
 }
@@ -79,9 +70,6 @@ func EnableSession(wm deps.WindowManager) (string, error) {
 	unit, err := SessionUnit(wm)
 	if err != nil {
 		return "", err
-	}
-	if unit == "" {
-		return "", errors.New("this Mango has no mango-session.target (added in 0.17.1); start DMS from the Mango config instead")
 	}
 	if err := systemctlUser("add-wants", unit, "dms"); err != nil {
 		return unit, fmt.Errorf("add-wants %s dms: %w", unit, err)
@@ -112,8 +100,6 @@ func RunningCompositor() (deps.WindowManager, bool) {
 	switch {
 	case os.Getenv("HYPRLAND_INSTANCE_SIGNATURE") != "":
 		return deps.WindowManagerHyprland, true
-	case os.Getenv("MANGO_INSTANCE_SIGNATURE") != "":
-		return deps.WindowManagerMango, true
 	}
 	return 0, false
 }

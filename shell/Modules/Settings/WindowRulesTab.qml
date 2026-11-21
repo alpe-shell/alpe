@@ -34,11 +34,7 @@ Item {
         id: windowRulesInclude
         includeKind: "windowrules"
         autoCheck: false
-        onFixed: {
-            if (CompositorService.isMango)
-                MangoService.reloadConfig();
-            root.loadWindowRules();
-        }
+        onFixed: root.loadWindowRules()
     }
 
     onPageActiveChanged: {
@@ -204,7 +200,7 @@ Item {
 
     function loadWindowRules() {
         const compositor = CompositorService.compositor;
-        if (compositor !== "hyprland" && compositor !== "mango") {
+        if (compositor !== "hyprland") {
             windowRulesInclude.checking = false;
             windowRules = [];
             externalRules = [];
@@ -239,7 +235,7 @@ Item {
             return;
         }
         const compositor = CompositorService.compositor;
-        if (compositor !== "hyprland" && compositor !== "mango")
+        if (compositor !== "hyprland")
             return;
 
         Proc.runCommand("remove-windowrule", [Proc.dmsBin, "config", "windowrules", "remove", compositor, ruleId], (output, exitCode) => {
@@ -259,7 +255,7 @@ Item {
             return;
         }
         const compositor = CompositorService.compositor;
-        if (compositor !== "hyprland" && compositor !== "mango")
+        if (compositor !== "hyprland")
             return;
         const previous = windowRules;
         const reordered = indices.map(index => previous[index]);

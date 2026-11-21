@@ -62,7 +62,7 @@ Item {
         if (loader.item)
             return loader.item;
 
-        const pairs = [[PopoutService.appDrawerLoader, PopoutService.appDrawerPopout], [PopoutService.batteryPopoutLoader, PopoutService.batteryPopout], [PopoutService.clipboardHistoryPopoutLoader, PopoutService.clipboardHistoryPopout], [PopoutService.controlCenterLoader, PopoutService.controlCenterPopout], [PopoutService.dankDashPopoutLoader, PopoutService.dankDashPopout], [PopoutService.layoutPopoutLoader, PopoutService.layoutPopout], [PopoutService.notificationCenterLoader, PopoutService.notificationCenterPopout], [PopoutService.processListPopoutLoader, PopoutService.processListPopout], [PopoutService.systemUpdateLoader, PopoutService.systemUpdatePopout], [PopoutService.vpnPopoutLoader, PopoutService.vpnPopout], [PopoutService.colorPickerPopoutLoader, PopoutService.colorPickerPopout], [PopoutService.durationPopoutLoader, PopoutService.durationPopout], [PopoutService.powerMenuPopoutLoader, PopoutService.powerMenuPopout]];
+        const pairs = [[PopoutService.appDrawerLoader, PopoutService.appDrawerPopout], [PopoutService.batteryPopoutLoader, PopoutService.batteryPopout], [PopoutService.clipboardHistoryPopoutLoader, PopoutService.clipboardHistoryPopout], [PopoutService.controlCenterLoader, PopoutService.controlCenterPopout], [PopoutService.dankDashPopoutLoader, PopoutService.dankDashPopout], [PopoutService.notificationCenterLoader, PopoutService.notificationCenterPopout], [PopoutService.processListPopoutLoader, PopoutService.processListPopout], [PopoutService.systemUpdateLoader, PopoutService.systemUpdatePopout], [PopoutService.vpnPopoutLoader, PopoutService.vpnPopout], [PopoutService.colorPickerPopoutLoader, PopoutService.colorPickerPopout], [PopoutService.durationPopoutLoader, PopoutService.durationPopout], [PopoutService.powerMenuPopoutLoader, PopoutService.powerMenuPopout]];
         for (let i = 0; i < pairs.length; i++) {
             if (loader === pairs[i][0] && pairs[i][1])
                 return pairs[i][1];
@@ -151,7 +151,6 @@ Item {
             gpuTempComponent,
             notificationButtonComponent,
             batteryComponent,
-            layoutComponent,
             controlCenterButtonComponent,
             capsLockIndicatorComponent,
             idleInhibitorComponent,
@@ -703,30 +702,6 @@ Item {
                     widgetItem: batteryWidget,
                     section: root.getWidgetSection(parent) || "right",
                     triggerSource: "battery",
-                    mode: "click"
-                });
-            }
-        }
-    }
-
-    Component {
-        id: layoutComponent
-
-        DWLLayout {
-            id: layoutWidget
-            layoutPopupVisible: PopoutService.layoutPopoutLoader?.item ? PopoutService.layoutPopoutLoader?.item.shouldBeVisible : false
-            widgetThickness: surfaceContext.widgetThickness
-            barThickness: surfaceContext.thickness
-            axis: surfaceContext.axis
-            section: root.getWidgetSection(parent) || "center"
-            popoutTarget: PopoutService.layoutPopoutLoader?.item ?? null
-            parentScreen: surfaceContext.screen
-            onToggleLayoutPopup: {
-                root.openWidgetPopout({
-                    loader: PopoutService.layoutPopoutLoader,
-                    widgetItem: layoutWidget,
-                    section: root.getWidgetSection(parent) || "center",
-                    triggerSource: "layout",
                     mode: "click"
                 });
             }

@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/duxlabs-dev/dux-shell/core/internal/deps"
-	"github.com/duxlabs-dev/dux-shell/core/internal/mangoconf"
 	"github.com/duxlabs-dev/dux-shell/core/internal/version"
 )
 
@@ -69,7 +68,6 @@ func (cd *ConfigDeployer) deployConfigurationsInternal(_ context.Context, wm dep
 		"Hyprland": {
 			filepath.Join(HyprlandConfigDir(), "hyprland.lua"),
 		},
-		"Mango": mangoconf.MainConfigs(mangoconf.Dir()),
 		"Ghostty": {
 			filepath.Join(os.Getenv("HOME"), ".config", "ghostty", "config"),
 		},
@@ -129,14 +127,6 @@ func (cd *ConfigDeployer) deployConfigurationsInternal(_ context.Context, wm dep
 				return results, fmt.Errorf("failed to deploy Hyprland keybinds: %w", result.Error)
 			}
 		}
-	case deps.WindowManagerMango:
-		if shouldReplaceConfig("Mango") {
-			result, err := cd.deployMangoConfig(terminalCommand, useSystemd)
-			results = append(results, result)
-			if err != nil {
-				return results, fmt.Errorf("failed to deploy Mango config: %w", err)
-			}
-		}
 	}
 
 	switch terminal {
@@ -173,8 +163,6 @@ func (cd *ConfigDeployer) DeployCompositor(wm deps.WindowManager, terminalComman
 	switch wm {
 	case deps.WindowManagerHyprland:
 		return cd.deployHyprlandConfig(terminalCommand, useSystemd)
-	case deps.WindowManagerMango:
-		return cd.deployMangoConfig(terminalCommand, useSystemd)
 	default:
 		return DeploymentResult{}, fmt.Errorf("unsupported window manager")
 	}

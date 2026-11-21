@@ -25,11 +25,7 @@ Column {
         id: windowRulesInclude
         includeKind: "windowrules"
         procTag: "windowrules-include-theme"
-        onFixed: {
-            if (CompositorService.isMango)
-                MangoService.reloadConfig();
-            CompositorService.seedDmsWindowFloatingRule();
-        }
+        onFixed: CompositorService.seedDmsWindowFloatingRule()
     }
 
     readonly property var opacityTargets: {
@@ -344,7 +340,7 @@ Column {
 
         SettingsToggleSliderRow {
             tab: "theme"
-            tags: ["window", "corner", "radius", "match", "follow", "link", "strength", "rounded", "popout", "menu", "modal", "compositor", "hyprland", "mango"]
+            tags: ["window", "corner", "radius", "match", "follow", "link", "strength", "rounded", "popout", "menu", "modal", "compositor", "hyprland"]
             settingKey: "windowRadius"
             text: I18n.tr("Override window radius", "toggle: stop the window radius following the corner style setting")
             visible: root.windowRadiusKey !== ""
@@ -560,7 +556,7 @@ Column {
 
         SettingsToggleRow {
             tab: "theme"
-            tags: ["floating", "window", "tile", "tiling", "compositor", "rule", "hyprland", "mango"]
+            tags: ["floating", "window", "tile", "tiling", "compositor", "rule", "hyprland"]
             settingKey: "dmsWindowsFloating"
             text: I18n.tr("Open floating")
             description: I18n.tr("Adds a compositor window rule so DMS windows such as Settings open floating", "theme floating windows section, open floating toggle description")

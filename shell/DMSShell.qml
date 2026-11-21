@@ -621,25 +621,6 @@ Item {
     }
 
     LazyLoader {
-        id: layoutPopoutLoader
-
-        active: false
-
-        Component.onCompleted: {
-            PopoutService.layoutPopoutLoader = layoutPopoutLoader;
-        }
-
-        DWLLayoutPopout {
-            id: layoutPopout
-            onPopoutClosed: PopoutService.unloadLayoutPopout()
-
-            Component.onCompleted: {
-                PopoutService.layoutPopout = layoutPopout;
-            }
-        }
-    }
-
-    LazyLoader {
         id: vpnPopoutLoader
 
         active: false

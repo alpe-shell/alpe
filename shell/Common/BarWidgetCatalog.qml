@@ -9,13 +9,6 @@ Singleton {
 
     readonly property var widgets: [
         {
-            "id": "layout",
-            "text": I18n.tr("Layout"),
-            "description": I18n.tr("Display and switch MangoWC layouts"),
-            "icon": "view_quilt",
-            "section": "left"
-        },
-        {
             "id": "launcherButton",
             "text": I18n.tr("App launcher"),
             "description": I18n.tr("Quick access to application launcher"),

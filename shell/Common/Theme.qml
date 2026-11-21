@@ -1854,8 +1854,6 @@ Singleton {
                     skipTemplates.push("gtk");
                 if (!SettingsData.matugenTemplateHyprland)
                     skipTemplates.push("hyprland");
-                if (!SettingsData.matugenTemplateMangowc)
-                    skipTemplates.push("mangowc");
                 if (!SettingsData.matugenTemplateQt5ct)
                     skipTemplates.push("qt5ct");
                 if (!SettingsData.matugenTemplateQt6ct)

@@ -8,8 +8,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const KNOWN_CYCLES = [
     ["Paths", "SettingsData"],
     ["SessionData", "SessionService"],
-    ["CompositorService", "HyprlandService"],
-    ["CompositorService", "MangoService"]
+    ["CompositorService", "HyprlandService"]
 ].map(members => members.join(","));
 
 function stripLiterals(source) {

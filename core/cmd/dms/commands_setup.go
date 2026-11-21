@@ -12,7 +12,6 @@ import (
 	"github.com/duxlabs-dev/dux-shell/core/internal/deps"
 	"github.com/duxlabs-dev/dux-shell/core/internal/distros"
 	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/mangoconf"
 	"github.com/duxlabs-dev/dux-shell/core/internal/privesc"
 	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
 	"github.com/spf13/cobra"
@@ -91,58 +90,40 @@ var setupWindowrulesCmd = &cobra.Command{
 }
 
 type dmsConfigSpec struct {
-	hyprFile     string
-	mangoFile    string
-	hyprContent  func(terminal string) string
-	mangoContent func(terminal string) string
+	hyprFile    string
+	hyprContent func(terminal string) string
 }
 
 var dmsConfigSpecs = map[string]dmsConfigSpec{
 	"binds": {
-		hyprFile:  "binds.lua",
-		mangoFile: "binds.conf",
+		hyprFile: "binds.lua",
 		hyprContent: func(t string) string {
 			return strings.ReplaceAll(config.DMSBindsLuaConfig, "{{TERMINAL_COMMAND}}", t)
 		},
-		mangoContent: func(t string) string {
-			return strings.ReplaceAll(config.MangoBindsConfig, "{{TERMINAL_COMMAND}}", t)
-		},
 	},
 	"layout": {
-		hyprFile:     "layout.lua",
-		mangoFile:    "layout.conf",
-		hyprContent:  func(_ string) string { return config.DMSLayoutLuaConfig },
-		mangoContent: func(_ string) string { return config.MangoLayoutConfig },
+		hyprFile:    "layout.lua",
+		hyprContent: func(_ string) string { return config.DMSLayoutLuaConfig },
 	},
 	"colors": {
-		hyprFile:     "colors.lua",
-		mangoFile:    "colors.conf",
-		hyprContent:  func(_ string) string { return config.DMSColorsLuaConfig },
-		mangoContent: func(_ string) string { return config.MangoColorsConfig },
+		hyprFile:    "colors.lua",
+		hyprContent: func(_ string) string { return config.DMSColorsLuaConfig },
 	},
 	"input": {
-		hyprFile:     "input.lua",
-		mangoFile:    "input.conf",
-		hyprContent:  func(_ string) string { return config.DMSInputLuaConfig },
-		mangoContent: func(_ string) string { return "" },
+		hyprFile:    "input.lua",
+		hyprContent: func(_ string) string { return config.DMSInputLuaConfig },
 	},
 	"outputs": {
-		hyprFile:     "outputs.lua",
-		mangoFile:    "outputs.conf",
-		hyprContent:  func(_ string) string { return config.DMSOutputsLuaConfig },
-		mangoContent: func(_ string) string { return "" },
+		hyprFile:    "outputs.lua",
+		hyprContent: func(_ string) string { return config.DMSOutputsLuaConfig },
 	},
 	"cursor": {
-		hyprFile:     "cursor.lua",
-		mangoFile:    "cursor.conf",
-		hyprContent:  func(_ string) string { return config.DMSCursorLuaConfig },
-		mangoContent: func(_ string) string { return "" },
+		hyprFile:    "cursor.lua",
+		hyprContent: func(_ string) string { return config.DMSCursorLuaConfig },
 	},
 	"windowrules": {
-		hyprFile:     "windowrules.lua",
-		mangoFile:    "windowrules.conf",
-		hyprContent:  func(_ string) string { return config.DMSWindowRulesLuaConfig },
-		mangoContent: func(_ string) string { return "" },
+		hyprFile:    "windowrules.lua",
+		hyprContent: func(_ string) string { return config.DMSWindowRulesLuaConfig },
 	},
 }
 
@@ -210,7 +191,7 @@ func detectTerminal() (string, error) {
 
 func detectCompositorForSetup() (string, error) {
 	var compositors []string
-	for _, candidate := range []string{"Hyprland", "mango"} {
+	for _, candidate := range []string{"Hyprland"} {
 		if utils.CommandExists(candidate) {
 			compositors = append(compositors, candidate)
 		}
@@ -218,7 +199,7 @@ func detectCompositorForSetup() (string, error) {
 
 	switch len(compositors) {
 	case 0:
-		return "", fmt.Errorf("no supported compositors found (Hyprland or mango required)")
+		return "", fmt.Errorf("no supported compositors found (Hyprland required)")
 	case 1:
 		return strings.ToLower(compositors[0]), nil
 	}
@@ -256,9 +237,6 @@ func runSetupDmsConfig(name string) error {
 	case "hyprland":
 		filename = spec.hyprFile
 		contentFn = spec.hyprContent
-	case "mango", "mangowc":
-		filename = spec.mangoFile
-		contentFn = spec.mangoContent
 	default:
 		return fmt.Errorf("unsupported compositor: %s", compositor)
 	}
@@ -271,8 +249,6 @@ func runSetupDmsConfig(name string) error {
 	switch compositor {
 	case "hyprland":
 		dmsDir = filepath.Join(utils.XDGConfigHome(), "hypr", "dms")
-	case "mango", "mangowc":
-		dmsDir = filepath.Join(mangoconf.Dir(), "dms")
 	}
 
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
@@ -328,10 +304,7 @@ func runSetup() error {
 	terminal, terminalSelected := promptTerminal()
 	useSystemd := true
 	if wmSelected {
-		if wm == deps.WindowManagerMango && !mangoconf.SessionTargetInstalled() {
-			useSystemd = false
-			fmt.Println("\nThis Mango has no mango-session.target (added in 0.17.1); DMS will start from the Mango config.")
-		} else if isVoidSetup() {
+		if isVoidSetup() {
 			useSystemd = false
 			fmt.Println("\nVoid Linux detected; deploying non-systemd session config.")
 		} else {
@@ -462,19 +435,16 @@ func execGroups(user string) (string, error) {
 func promptCompositor() (deps.WindowManager, bool) {
 	fmt.Println("Select compositor:")
 	fmt.Println("1) Hyprland")
-	fmt.Println("2) Mango")
-	fmt.Println("3) None")
+	fmt.Println("2) None")
 
 	var response string
-	fmt.Print("\nChoice (1-3): ")
+	fmt.Print("\nChoice (1-2): ")
 	fmt.Scanln(&response)
 	response = strings.TrimSpace(response)
 
 	switch response {
 	case "1":
 		return deps.WindowManagerHyprland, true
-	case "2":
-		return deps.WindowManagerMango, true
 	default:
 		return deps.WindowManagerHyprland, false
 	}
@@ -539,8 +509,6 @@ func compositorPrimaryPaths(wm deps.WindowManager) []string {
 	switch wm {
 	case deps.WindowManagerHyprland:
 		return []string{filepath.Join(config.HyprlandConfigDir(), "hyprland.lua")}
-	case deps.WindowManagerMango:
-		return mangoconf.MainConfigs(mangoconf.Dir())
 	default:
 		return nil
 	}

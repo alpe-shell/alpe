@@ -28,23 +28,6 @@ Item {
         }
 
         SettingsCard {
-            width: parent.width
-            tags: ["compositor", "toast"]
-            title: I18n.tr("Notifications")
-            settingKey: "compositorNotifications"
-            iconName: "notifications"
-            visible: CompositorService.isMango
-
-            SettingsToggleRow {
-                tags: ["compositor", "toast", "reload"]
-                settingKey: "showConfigReloadToast"
-                text: I18n.tr("Show \"config reloaded\" toast")
-                checked: SessionData.showConfigReloadToast
-                onToggled: checked => SessionData.showConfigReloadToast = checked
-            }
-        }
-
-        SettingsCard {
             id: hyprTilingCard
             width: parent.width
             tags: ["hyprland", "layout", "tiling", "dwindle", "master", "scrolling", "general:layout"]
@@ -678,87 +661,5 @@ Item {
             }
         }
 
-        SettingsCard {
-            width: parent.width
-            tags: ["mangowc", "mango", "dwl", "layout", "gaps", "radius", "window", "border"]
-            title: I18n.tr("Layout overrides")
-            settingKey: "mangoLayout"
-            iconName: "crop_square"
-            visible: CompositorService.isMango
-
-            SettingsButtonGroupRow {
-                tags: ["mangowc", "mango", "gaps", "override", "inner", "outer", "unmanaged"]
-                settingKey: "mangoLayoutGapsMode"
-                resetKeys: ["mangoLayoutGapsOverride"]
-                text: I18n.tr("Gaps")
-                description: I18n.tr("Auto follows bar spacing, Off keeps your %1 config").arg("MangoWC")
-                model: [I18n.tr("Auto"), I18n.tr("Custom"), I18n.tr("Off")]
-                currentIndex: {
-                    if (SettingsData.mangoLayoutGapsOverride === -2)
-                        return 2;
-                    return SettingsData.mangoLayoutGapsOverride >= 0 ? 1 : 0;
-                }
-                onSelectionChanged: (index, selected) => {
-                    if (!selected)
-                        return;
-                    switch (index) {
-                    case 1:
-                        SettingsData.set("mangoLayoutGapsOverride", Math.max(4, (SettingsData.getPrimaryBarConfig()?.spacing ?? 4)));
-                        return;
-                    case 2:
-                        SettingsData.set("mangoLayoutGapsOverride", -2);
-                        return;
-                    default:
-                        SettingsData.set("mangoLayoutGapsOverride", -1);
-                    }
-                }
-            }
-
-            SettingsSliderRow {
-                tags: ["mangowc", "mango", "gaps", "override", "inner", "gap_inner_horizontal", "gap_inner_vertical", "gappih", "gappiv"]
-                settingKey: "mangoLayoutGapsOverride"
-                resetKeys: []
-                text: I18n.tr("Inner gaps")
-                visible: SettingsData.mangoLayoutGapsOverride >= 0
-                value: Math.max(0, SettingsData.mangoLayoutGapsOverride)
-                minimum: 0
-                maximum: 50
-                unit: "px"
-                onSliderValueChanged: newValue => SettingsData.set("mangoLayoutGapsOverride", newValue)
-            }
-
-            SettingsSliderRow {
-                tags: ["mangowc", "mango", "gaps", "override", "outer", "edge", "gap_outer_horizontal", "gap_outer_vertical", "gappoh", "gappov"]
-                settingKey: "mangoLayoutGapsOutOverride"
-                text: I18n.tr("Outer gaps")
-                visible: SettingsData.mangoLayoutGapsOverride >= 0
-                value: SettingsData.mangoLayoutGapsOutOverride >= 0 ? SettingsData.mangoLayoutGapsOutOverride : Math.max(0, SettingsData.mangoLayoutGapsOverride)
-                minimum: 0
-                maximum: 50
-                unit: "px"
-                onSliderValueChanged: newValue => SettingsData.set("mangoLayoutGapsOutOverride", newValue)
-            }
-
-            SettingsControlledBy {
-                target: "surfaces"
-                parentModal: root.parentModal
-                section: "windowRadius"
-                settingLabel: I18n.tr("Window radius")
-                reason: Math.round(Theme.windowRadius) + "px"
-            }
-
-            SettingsToggleSliderRow {
-                tags: ["mangowc", "mango", "border", "override", "border_px", "borderpx"]
-                settingKey: "mangoLayoutBorderSizeEnabled"
-                text: I18n.tr("Override border size")
-                checked: SettingsData.mangoLayoutBorderSize >= 0
-                value: Math.max(0, SettingsData.mangoLayoutBorderSize)
-                minimum: 0
-                maximum: 10
-                unit: "px"
-                onToggled: checked => SettingsData.set("mangoLayoutBorderSize", checked ? 2 : -1)
-                onSliderValueChanged: newValue => SettingsData.set("mangoLayoutBorderSize", newValue)
-            }
-        }
     }
 }

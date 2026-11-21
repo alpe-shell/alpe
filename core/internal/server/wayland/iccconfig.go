@@ -179,8 +179,6 @@ func legacyICCDir() string {
 	switch screenshot.DetectCompositor() {
 	case screenshot.CompositorHyprland:
 		compositorDir = "hypr"
-	case screenshot.CompositorMango:
-		compositorDir = "mango"
 	default:
 		return ""
 	}

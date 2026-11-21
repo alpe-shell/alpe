@@ -372,22 +372,6 @@ var LOCAL_SPEC = {
         def: "default",
         onChange: "updateCompositorLayout"
     },
-    mangoLayoutGapsOverride: {
-        def: -1,
-        onChange: "updateCompositorLayout"
-    },
-    mangoLayoutGapsOutOverride: {
-        def: -1,
-        onChange: "updateCompositorLayout"
-    },
-    mangoLayoutRadiusOverride: {
-        def: -1,
-        onChange: "updateCompositorLayout"
-    },
-    mangoLayoutBorderSize: {
-        def: -1,
-        onChange: "updateCompositorLayout"
-    },
     focusFollowsMouse: {
         def: -1,
         onChange: "updateCompositorInput"
@@ -1043,12 +1027,6 @@ var LOCAL_SPEC = {
                 hideOnTouch: false,
                 inactiveTimeout: 0,
                 warpOnMonitorChange: -1
-            },
-            dwl: {
-                cursorHideTimeout: 0
-            },
-            mango: {
-                cursorHideTimeout: 0
             }
         },
         onChange: "updateCompositorCursor"
@@ -1257,9 +1235,6 @@ var LOCAL_SPEC = {
         def: true
     },
     matugenTemplateHyprland: {
-        def: true
-    },
-    matugenTemplateMangowc: {
         def: true
     },
     matugenTemplateQt5ct: {

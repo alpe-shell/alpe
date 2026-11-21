@@ -20,18 +20,6 @@ function hyprland(scenario) {
     return { workspaces, monitors, focusedWorkspace: workspace(s.focusedWorkspaceId), toplevels, windows: toplevels.filter(tl => tl.wayland).map(tl => tl.wayland), visibleSpecials: {} };
 }
 
-function i3(scenario) {
-    const s = fixture("i3")[scenario];
-    const monitors = {};
-    return { workspaces: s.workspaces.map(ws => ({ ...ws, number: ws.num, monitor: monitors[ws.monitor] ??= { name: ws.monitor } })), windows: s.windows };
-}
-
-function mango(scenario, screenName) {
-    const s = fixture("mango")[scenario];
-    const output = s.outputs[screenName];
-    return { available: s.available, tagCount: s.tagCount, output: output ? { tags: output.tags } : null, visibleTags: output?.visibleTags ?? [], activeTags: output?.activeTags ?? [], windows: s.windows };
-}
-
 
 test("neighbor stepping stops at the ends", () => {
     const list = ["a", "b", "c"];
@@ -81,24 +69,6 @@ test("hyprland padding honours workspace rules that bind ids to a monitor", () =
     assert.deepEqual(pick(model.hyprlandWorkspacesForScreen(raw, "HDMI-A-1", false, false, 8), "id"), [2, 4, 6, 7, 8, -1337]);
     assert.deepEqual(pick(model.hyprlandWorkspacesForScreen(raw, "DP-1", false, false, 8), "id"), [1, 3, 5, 7, 8]);
     assert.deepEqual(pick(model.hyprlandWorkspacesForScreen(raw, "DP-1", true, false, 8), "id"), [1, 2, 3, 4, 5, 6, 7, 8, -1337]);
-});
-
-test("i3 padding fills numbers up to the minimum and keeps named workspaces last", () => {
-    const raw = i3("twoScreens");
-    assert.deepEqual(pick(model.i3WorkspacesForScreen(raw, "HDMI-A-1", false, 4), "id"), [2, 4, "chat", "notes"]);
-    assert.deepEqual(pick(model.i3WorkspacesForScreen(raw, "DP-1", false, 4), "id"), [1, 3, 4]);
-    assert.deepEqual(pick(model.i3WorkspacesForScreen(raw, "HDMI-A-1", true, 4), "id"), [1, 2, 3, 4, "chat", "notes"]);
-    assert.deepEqual(pick(model.i3WorkspacesForScreen(i3("empty"), "DP-1", false, 3), "id"), [1, 2, 3]);
-    assert.deepEqual(plain(model.i3WorkspacesForScreen(i3("empty"), "DP-1", false, 3)[1]), { id: 2, idx: 2, name: "2", output: "DP-1", active: false, placeholder: false, urgent: false, focused: false });
-    assert.deepEqual(plain(model.i3WorkspacesForScreen(raw, "HDMI-A-1", false, 0)), plain(model.i3WorkspacesForScreen(raw, "HDMI-A-1", false)));
-});
-
-test("mango padding shows the first tags as real targets and caps at the tag count", () => {
-    const dp1 = mango("available", "DP-1");
-    assert.deepEqual(pick(model.mangoWorkspacesForScreen(dp1, "DP-1", false, 2), "id"), [0, 1, 2, 3]);
-    assert.deepEqual(pick(model.mangoWorkspacesForScreen(dp1, "DP-1", false, 9), "id"), [0, 1, 2, 3, 4]);
-    assert.deepEqual(plain(model.mangoWorkspacesForScreen(dp1, "DP-1", false, 0)), plain(model.mangoWorkspacesForScreen(dp1, "DP-1", false)));
-    assert.deepEqual(pick(model.mangoWorkspacesForScreen(dp1, "DP-1", true, 2), "id"), [0, 1, 2, 3, 4]);
 });
 
 test("hyprland special workspaces are opt-in, listed last on their monitor and active while overlaid", () => {
@@ -180,86 +150,3 @@ test("hyprland main: named workspaces all report id -1, so identity and targets 
     assert.deepEqual([one, music, { id: -1337, address: "-1337", name: "chat" }, { id: -1, address: "special:scratch", name: "special:scratch" }].map(model.hyprlandSelector), [1, "name:music", "name:chat", "special:scratch"]);
 });
 
-test("mango tags come from the output state, visible or all", () => {
-    const dp1 = mango("available", "DP-1");
-    const visible = model.mangoWorkspacesForScreen(dp1, "DP-1", false);
-    assert.deepEqual(pick(visible, "id"), [1, 2, 3]);
-    assert.deepEqual(pick(visible, "idx"), [2, 3, 4]);
-    assert.deepEqual(pick(visible, "active"), [false, true, false]);
-    assert.deepEqual(pick(visible, "urgent"), [false, false, true]);
-    assert.deepEqual(pick(visible, "occupied"), [true, true, true]);
-    assert.deepEqual(pick(model.mangoWorkspacesForScreen(dp1, "DP-1", true), "id"), [0, 1, 2, 3, 4]);
-    assert.deepEqual(pick(model.mangoWorkspacesForScreen(mango("available", "HDMI-A-1"), "HDMI-A-1", false), "active"), [true, true, false]);
-    assert.deepEqual(pick(model.mangoWorkspacesForScreen(mango("available", "HDMI-A-1"), "HDMI-A-1", false), "urgent"), [false, true, false]);
-    assert.deepEqual(plain(model.mangoWorkspacesForScreen(mango("available", "DP-2"), "DP-2", false)), []);
-    assert.deepEqual(plain(model.mangoWorkspacesForScreen(mango("unavailable", "DP-1"), "DP-1", true)), []);
-    assert.equal(model.mangoCurrentTag(dp1), 2);
-    assert.equal(model.mangoCurrentTag(mango("available", "DP-2")), -1);
-    assert.equal(model.mangoCurrentTag(mango("unavailable", "DP-1")), -1);
-});
-
-test("mango scroll targets, active tag and windows", () => {
-    const dp1 = mango("available", "DP-1");
-    assert.deepEqual(pick(model.mangoScrollWorkspaces(dp1, "DP-1", false), "id"), [1, 2, 3]);
-    assert.deepEqual(pick(model.mangoScrollWorkspaces(dp1, "DP-1", true), "id"), [0, 1, 2, 3, 4]);
-    assert.deepEqual(pick(model.mangoScrollWorkspaces(dp1, "DP-1", false), "active"), [false, true, false]);
-    assert.deepEqual(plain(model.mangoScrollWorkspaces(mango("unavailable", "DP-1"), "DP-1", true)), [{ id: 0, idx: 1, name: "", output: "DP-1", active: true, placeholder: false }]);
-    assert.equal(model.mangoScrollCurrentTag(mango("available", "DP-2")), 0);
-    assert.equal(model.mangoScrollCurrentTag(mango("available", "DP-9")), 0);
-    assert.deepEqual(plain(model.mangoActiveWorkspace(dp1, "DP-1")), { id: 2, idx: 3, name: "", output: "DP-1", active: true, placeholder: false });
-    assert.equal(model.mangoActiveWorkspace(mango("available", "HDMI-A-1"), "HDMI-A-1").id, 0);
-    assert.equal(model.mangoActiveWorkspace(mango("available", "DP-2"), "DP-2"), null);
-    assert.deepEqual(pick(model.mangoWindowsOnWorkspace(dp1.windows, { id: 2, output: "DP-1" }), "appId"), ["alacritty", "firefox"]);
-    assert.deepEqual(pick(model.mangoWindowsOnWorkspace(dp1.windows, { id: 1, output: "DP-1" }), "appId"), ["firefox"]);
-});
-
-test("mango workspace apps follow their output when windows share a tag", () => {
-    const windows = [
-        { appId: "app1", mangoMonitor: "DP-1", mangoTags: [1] },
-        { appId: "app2", mangoMonitor: "HDMI-A-1", mangoTags: [1] }
-    ];
-    const dp1 = model.mangoRecord(0, {}, "DP-1");
-    const hdmi = model.mangoRecord(0, {}, "HDMI-A-1");
-    assert.deepEqual(pick(model.mangoWindowsOnWorkspace(windows, dp1), "appId"), ["app1"]);
-    assert.deepEqual(pick(model.mangoWindowsOnWorkspace(windows, hdmi), "appId"), ["app2"]);
-
-    windows[0].mangoMonitor = "HDMI-A-1";
-    assert.deepEqual(pick(model.mangoWindowsOnWorkspace(windows, dp1), "appId"), []);
-    assert.deepEqual(pick(model.mangoWindowsOnWorkspace(windows, hdmi), "appId"), ["app1", "app2"]);
-});
-
-test("i3 lists order numbered before named and strip the number prefix", () => {
-    const raw = i3("twoScreens");
-    const screen = model.i3WorkspacesForScreen(raw, "HDMI-A-1", false);
-    assert.deepEqual(pick(screen, "id"), [2, "chat", "notes"]);
-    assert.deepEqual(pick(screen, "idx"), [2, null, null]);
-    assert.deepEqual(pick(screen, "urgent"), [true, false, false]);
-    const followed = model.i3WorkspacesForScreen(raw, "HDMI-A-1", true);
-    assert.deepEqual(pick(followed, "id"), [1, 2, 3, "chat", "notes"]);
-    assert.deepEqual(pick(followed, "name"), ["1", "2", "code", "chat", "notes"]);
-    assert.deepEqual(plain(model.i3WorkspacesForScreen(i3("empty"), "DP-1", false)), [{ id: 1, idx: 1, name: "", output: "", active: false, placeholder: false, urgent: false, focused: false }]);
-    assert.deepEqual(pick(model.i3WorkspacesForScreen(raw, "DP-9", false), "id"), [1]);
-    assert.equal(model.i3CurrentKey(raw, "HDMI-A-1", false), 1);
-    assert.equal(model.i3CurrentKey(raw, "HDMI-A-1", true), 3);
-    assert.equal(model.i3CurrentKey(raw, "DP-1", false), 3);
-    assert.equal(model.i3StripNumber(3, "3:code"), "code");
-    assert.equal(model.i3StripNumber(-1, "3:code"), "3:code");
-    assert.equal(model.i3StripNumber(-1, undefined), "");
-});
-
-test("i3 scroll order, active workspace, focus and windows", () => {
-    const raw = i3("twoScreens");
-    assert.deepEqual(pick(model.i3ScrollWorkspaces(raw, "HDMI-A-1", false), "id"), ["notes", "chat", 2]);
-    assert.deepEqual(pick(model.i3ScrollWorkspaces(raw, "HDMI-A-1", true), "id"), ["notes", "chat", 1, 2, 3]);
-    assert.deepEqual(pick(model.i3ScrollWorkspaces(i3("empty"), "DP-1", false), "id"), [1]);
-    assert.deepEqual(plain(model.i3ActiveWorkspace(raw, "HDMI-A-1")), { id: 2, idx: 2, name: "2", output: "HDMI-A-1", active: true, placeholder: false });
-    assert.deepEqual(plain(model.i3ActiveWorkspace(raw, "DP-1")), { id: 3, idx: 3, name: "code", output: "DP-1", active: true, placeholder: false });
-    assert.equal(model.i3ActiveWorkspace(raw, "").id, 3);
-    assert.deepEqual(plain(model.i3ActiveWorkspace(i3("namedActive"), "HDMI-A-1")), { id: "notes", idx: null, name: "notes", output: "HDMI-A-1", active: true, placeholder: false });
-    assert.equal(model.i3ActiveWorkspace(i3("empty"), "DP-1"), null);
-    assert.equal(model.i3WorkspaceFocused(raw, { id: 3 }), true);
-    assert.equal(model.i3WorkspaceFocused(raw, { id: 2 }), false);
-    assert.deepEqual(pick(model.i3WindowsOnWorkspace(raw.windows, { id: 2 }), "appId"), ["mpv"]);
-    assert.deepEqual(pick(model.i3WindowsOnWorkspace(raw.windows, { id: "chat" }), "appId"), ["zathura"]);
-    assert.deepEqual(plain(model.i3WindowsOnWorkspace(raw.windows, { id: 1 })), []);
-});

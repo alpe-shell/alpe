@@ -146,14 +146,10 @@ Singleton {
         const legacy = SettingsData.displayProfiles || {};
         const configDir = Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation));
         const compositorDirs = {
-            "hyprland": configDir + "/hypr/dms/profiles",
-            "dwl": configDir + "/mango/dms/profiles",
-            "mango": configDir + "/mango/dms/profiles"
+            "hyprland": configDir + "/hypr/dms/profiles"
         };
         const compositorExts = {
-            "hyprland": ".conf",
-            "dwl": ".conf",
-            "mango": ".conf"
+            "hyprland": ".conf"
         };
 
         const tasks = [];
@@ -211,10 +207,6 @@ Singleton {
                         switch (t.compositor) {
                         case "hyprland":
                             parsed = OutputModel.parseHyprlandConfProfile(content);
-                            break;
-                        case "dwl":
-                        case "mango":
-                            parsed = OutputModel.parseMangoOutputs(content);
                             break;
                         default:
                             parsed = {};
@@ -897,8 +889,6 @@ Singleton {
         switch (CompositorService.compositor) {
         case "hyprland":
             return OutputModel.parseHyprlandOutputs(content);
-        case "mango":
-            return OutputModel.parseMangoOutputs(content);
         default:
             return {};
         }
@@ -975,9 +965,6 @@ Singleton {
                 HyprlandService.generateOutputsConfig(outputsData, hyprlandSettings, finish);
                 break;
             }
-        case "mango":
-            MangoService.generateOutputsConfig(outputsData, finish);
-            break;
         default:
             {
                 if (_cancelOutputWrite)
@@ -1312,7 +1299,7 @@ Singleton {
         }
 
         const mergedOutputs = buildOutputsWithPendingChanges();
-        if (CompositorService.isHyprland || CompositorService.isMango) {
+        if (CompositorService.isHyprland) {
             changesApplied(changeDescriptions);
             if (formatChanged)
                 SettingsData.saveSettings();

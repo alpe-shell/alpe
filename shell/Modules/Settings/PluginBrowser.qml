@@ -155,14 +155,6 @@ RegistryBrowserWindow {
     function rankingCompositor() {
         if (CompositorService.isHyprland)
             return "hyprland";
-        if (CompositorService.isSway)
-            return "sway";
-        if (CompositorService.isMango)
-            return "mangowc";
-        if (CompositorService.isLabwc)
-            return "labwc";
-        if (CompositorService.isMiracle)
-            return "miracle-wm";
         return "";
     }
 

@@ -223,7 +223,6 @@ func TestRegionCaptureScales(t *testing.T) {
 		wantCapture, wantResult float64
 	}{
 		{"protocol compositor", CompositorHyprland, 1, 2},
-		{"Mango", CompositorMango, 2, 2},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

@@ -19,8 +19,7 @@ const scope = vm.createContext({
     cheatsheetProvider: "",
     log: { info() {} },
     HyprlandService: { luaConfigActive: true },
-    Quickshell: { execDetached: argv => calls.push(Array.from(argv)) },
-    MangoService: { dispatch() {} }
+    Quickshell: { execDetached: argv => calls.push(Array.from(argv)) }
 });
 vm.runInContext(extract("executeAction") + "\n" + extract("canExecuteAction"), scope);
 
