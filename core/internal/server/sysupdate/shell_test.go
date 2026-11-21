@@ -2,15 +2,11 @@ package sysupdate
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/duxlabs-dev/dux-shell/core/internal/netfetch"
 )
 
 func TestGitBuildCount(t *testing.T) {
@@ -97,19 +93,6 @@ func TestFindShellPackagePrefersOwner(t *testing.T) {
 	}
 }
 
-func TestCommitsBehind(t *testing.T) {
-	master := &MasterInfo{CommitCount: 4920}
-	if got := commitsBehind(ShellInfo{Channel: ChannelStable, Running: "1.7.0+git4915.abc"}, master); got != nil {
-		t.Errorf("stable channel = %d, want nil", *got)
-	}
-	if got := commitsBehind(ShellInfo{Channel: ChannelGit, Running: "1.7.0+git4915.abc"}, master); got == nil || *got != 5 {
-		t.Errorf("git channel = %v, want 5", got)
-	}
-	if got := commitsBehind(ShellInfo{Channel: ChannelGit, Running: "1.7.0+git4930.abc"}, master); got == nil || *got != 0 {
-		t.Errorf("ahead of feed = %v, want 0", got)
-	}
-}
-
 func newTestManager(t *testing.T) *Manager {
 	t.Helper()
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
@@ -117,80 +100,6 @@ func newTestManager(t *testing.T) *Manager {
 		notifyDirty: make(chan struct{}, 1),
 		stopChan:    make(chan struct{}),
 		state:       State{Shell: ShellInfo{Channel: ChannelGit, Running: "1.7.0+git4915.abc"}},
-	}
-}
-
-func stubFeed(t *testing.T, res netfetch.Conditional, err error) *int {
-	t.Helper()
-	calls := 0
-	orig := releasesFetch
-	releasesFetch = func(_ context.Context, etag string) (netfetch.Conditional, error) {
-		calls++
-		if res.NotModified && etag == "" {
-			t.Error("304 stub called without an ETag")
-		}
-		return res, err
-	}
-	t.Cleanup(func() { releasesFetch = orig })
-	return &calls
-}
-
-func TestRefreshReleasesFetchesAndCaches(t *testing.T) {
-	m := newTestManager(t)
-	body, _ := json.Marshal(ReleasesFeed{
-		Latest:   &Release{Tag: "v1.7.1", Version: "1.7.1"},
-		Releases: []Release{{Tag: "v1.7.1", Version: "1.7.1"}},
-		Master:   &MasterInfo{CommitCount: 4920},
-	})
-	calls := stubFeed(t, netfetch.Conditional{Body: body, ETag: `"abc"`}, nil)
-
-	feed, err := m.refreshReleases(context.Background(), false)
-	if err != nil || feed.Latest == nil || feed.Latest.Version != "1.7.1" || feed.ETag != `"abc"` {
-		t.Fatalf("first fetch = %+v, %v", feed, err)
-	}
-	state := m.GetState()
-	if state.Shell.CommitsBehind == nil || *state.Shell.CommitsBehind != 5 {
-		t.Errorf("shell after fetch = %+v", state.Shell)
-	}
-
-	// Fresh cache: no network.
-	if _, err := m.refreshReleases(context.Background(), false); err != nil || *calls != 1 {
-		t.Errorf("fresh cache fetched again: calls=%d err=%v", *calls, err)
-	}
-	// Force: network with the cached ETag.
-	if _, err := m.refreshReleases(context.Background(), true); err != nil || *calls != 2 {
-		t.Errorf("force did not fetch: calls=%d err=%v", *calls, err)
-	}
-}
-
-func TestRefreshReleasesNotModifiedKeepsBody(t *testing.T) {
-	m := newTestManager(t)
-	old := time.Now().Add(-2 * time.Hour).Unix()
-	if err := saveReleases(ReleasesFeed{FetchedAt: old, ETag: `"abc"`, Latest: &Release{Version: "1.7.0"}, Releases: []Release{}}); err != nil {
-		t.Fatal(err)
-	}
-	stubFeed(t, netfetch.Conditional{ETag: `"abc"`, NotModified: true}, nil)
-
-	feed, err := m.refreshReleases(context.Background(), false)
-	if err != nil || feed.Latest == nil || feed.Latest.Version != "1.7.0" {
-		t.Fatalf("304 dropped cached body: %+v, %v", feed, err)
-	}
-	if feed.FetchedAt == old {
-		t.Error("304 did not bump fetchedAt")
-	}
-}
-
-func TestRefreshReleasesErrorServesCache(t *testing.T) {
-	m := newTestManager(t)
-	old := time.Now().Add(-2 * time.Hour).Unix()
-	if err := saveReleases(ReleasesFeed{FetchedAt: old, Latest: &Release{Version: "1.7.0"}, Releases: []Release{}}); err != nil {
-		t.Fatal(err)
-	}
-	stubFeed(t, netfetch.Conditional{}, errors.New("offline"))
-
-	feed, err := m.refreshReleases(context.Background(), true)
-	if err == nil || feed.Latest == nil || feed.Latest.Version != "1.7.0" || feed.FetchedAt != old {
-		t.Errorf("offline = %+v, %v", feed, err)
 	}
 }
 

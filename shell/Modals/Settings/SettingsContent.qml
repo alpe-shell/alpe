@@ -549,7 +549,6 @@ FocusScope {
             "default_apps": "DefaultAppsTab.qml",
             "running_apps": "RunningAppsTab.qml",
             "updater": "SoftwareUpdatesTab.qml",
-            "updater_changelog": "ChangelogTab.qml",
             "power_sleep": "PowerSleepTab.qml",
             "clipboard": "ClipboardTab.qml",
             "desktop_widgets": "DesktopWidgetsTab.qml",

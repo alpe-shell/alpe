@@ -46,7 +46,6 @@ type Manager struct {
 	wakeSched chan struct{}
 
 	refreshSerial sync.Mutex
-	releasesMu    sync.Mutex
 
 	opMu     sync.Mutex
 	opCtx    context.Context
@@ -108,25 +107,11 @@ func (m *Manager) probeShell() {
 
 	info := ProbeShell(context.Background(), running)
 
-	feed, _ := LoadReleases()
 	m.mu.Lock()
 	info.UpdatePackage = findShellPackage(m.state.Packages, info.PackageName)
-	info.CommitsBehind = commitsBehind(info, feed.Master)
 	m.state.Shell = info
 	m.mu.Unlock()
 	m.markDirty()
-}
-
-func (m *Manager) Releases(force bool) ReleasesFeed {
-	var feed ReleasesFeed
-	lowprio.Run(func() {
-		var err error
-		feed, err = m.refreshReleases(context.Background(), force)
-		if err != nil {
-			log.Debugf("[sysupdate] releases feed: %v", err)
-		}
-	})
-	return feed
 }
 
 // Scheduled from the persisted last check so shell restarts (which re-send the interval) don't push a daily cadence out.
@@ -730,10 +715,6 @@ func cloneState(s State) State {
 	if s.Shell.UpdatePackage != nil {
 		pkg := *s.Shell.UpdatePackage
 		out.Shell.UpdatePackage = &pkg
-	}
-	if s.Shell.CommitsBehind != nil {
-		n := *s.Shell.CommitsBehind
-		out.Shell.CommitsBehind = &n
 	}
 	return out
 }

@@ -4,10 +4,8 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Modals
-import qs.Modals.Changelog
 import qs.Modals.Clipboard
 import qs.Modals.Common
-import qs.Modals.Greeter
 import qs.Modals.Settings
 import qs.Modals.DLauncherV2
 import qs.Modules
@@ -1334,58 +1332,6 @@ Item {
 
                     delegate: WorkspaceOSD {}
                 }
-            }
-        }
-    }
-
-    Loader {
-        id: greeterLoader
-        active: false
-        readonly property GreeterModal loadedModal: item as GreeterModal
-        sourceComponent: GreeterModal {
-            onGreeterCompleted: greeterLoader.active = false
-            Component.onCompleted: show()
-        }
-
-        Component.onCompleted: {
-            if (FirstLaunchService.shouldShowGreeter)
-                active = true;
-        }
-
-        Connections {
-            target: FirstLaunchService
-            function onGreeterRequested() {
-                if (greeterLoader.active && greeterLoader.loadedModal) {
-                    greeterLoader.loadedModal.show();
-                    return;
-                }
-                greeterLoader.active = true;
-            }
-        }
-    }
-
-    Loader {
-        id: changelogLoader
-        active: false
-        readonly property ChangelogModal loadedModal: item as ChangelogModal
-        sourceComponent: ChangelogModal {
-            onChangelogDismissed: changelogLoader.active = false
-            Component.onCompleted: show()
-        }
-
-        Component.onCompleted: {
-            if (ChangelogService.shouldShowChangelog)
-                active = true;
-        }
-
-        Connections {
-            target: ChangelogService
-            function onChangelogRequested() {
-                if (changelogLoader.active && changelogLoader.loadedModal) {
-                    changelogLoader.loadedModal.show();
-                    return;
-                }
-                changelogLoader.active = true;
             }
         }
     }

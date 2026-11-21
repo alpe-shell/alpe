@@ -6,26 +6,19 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import "RepoMoveNotice.js" as RepoMoveNotice
 
 Singleton {
     id: root
 
     property int refCount: 0
-    // `Ref { modules: ["releases"] }` also holds the feed document; a plain Ref only keeps the daemon polling.
-    property int releasesRefCount: 0
     readonly property bool pollWanted: refCount > 0 || SettingsData.updaterNotify
 
     function addRef(modules) {
         refCount++;
-        if (modules.includes("releases"))
-            releasesRefCount++;
     }
 
     function removeRef(modules) {
         refCount = Math.max(0, refCount - 1);
-        if (modules.includes("releases"))
-            releasesRefCount = Math.max(0, releasesRefCount - 1);
     }
 
     property bool sysupdateAvailable: false
@@ -71,29 +64,12 @@ Singleton {
     property var _rawShellUpdate: null
     // From the filtered list, so an AUR-off/ignored dms package doesn't advertise.
     readonly property var shellUpdate: _rawShellUpdate ? (availableUpdates.find(p => p.name === _rawShellUpdate.name) ?? null) : null
-    // -1 while unknown (stable channel or no feed yet)
-    property int commitsBehind: -1
-    property var releases: null
-    // Repo files, not URLs: what `dms migrate dux` would move.
-    property var legacyRepos: []
-    property string migrateCommand: "dms migrate dux"
 
     readonly property int updateCount: availableUpdates.length
     readonly property var systemUpdates: availableUpdates.filter(p => !shellUpdate || p.name !== shellUpdate.name)
     // The feed never flips this: DMS only updates through the package manager.
     readonly property bool shellUpdateAvailable: shellUpdate !== null
     readonly property string shellUpdateVersion: shellUpdate?.toVersion || ""
-    // Notes follow the version the repo offers (or the running one), never the feed's newest tag.
-    readonly property string notesVersion: (shellUpdateVersion || shellRunning).replace(/^v/, "")
-    readonly property var notesRelease: {
-        const list = releases?.releases ?? [];
-        const mm = notesVersion.match(/^\d+\.\d+/)?.[0] ?? "";
-        const match = list.find(r => r.version === notesVersion) ?? list.find(r => mm !== "" && (r.version === mm || r.version.startsWith(mm + "."))) ?? null;
-        if (match || shellChannel === "stable")
-            return match;
-        // Git builds may carry no semver (Fedora: 0.0.git.N.sha) or run past the newest tag
-        return list.find(r => !r.prerelease) ?? null;
-    }
     readonly property bool shellManagedExternally: shellInstallMethod === "nix"
     readonly property bool helperAvailable: sysupdateAvailable && backends.length > 0
     readonly property bool useCustomCommand: SettingsData.updaterUseCustomCommand && (SettingsData.updaterCustomCommand || "").trim().length > 0
@@ -129,20 +105,6 @@ Singleton {
         }
         function onSysupdateStateUpdate(data) {
             root._applyState(data);
-        }
-    }
-
-    Connections {
-        target: SessionData
-        function onLoaded() {
-            root._maybeNotifyRepoMove();
-        }
-    }
-
-    Connections {
-        target: ShellVersionService
-        function onSemverVersionChanged() {
-            root._maybeNotifyRepoMove();
         }
     }
 
@@ -185,7 +147,6 @@ Singleton {
         const has = DMSService.capabilities.includes("sysupdate");
         if (has && !sysupdateAvailable) {
             sysupdateAvailable = true;
-            requestRepoStatus();
             if (pollWanted) {
                 requestState();
                 // The daemon persists its last check but not the interval; re-apply it on every fresh connection.
@@ -207,39 +168,6 @@ Singleton {
             }
         });
     }
-
-    function requestRepoStatus() {
-        DMSService.sysupdateRepoStatus(resp => {
-            const result = resp?.result;
-            if (!result)
-                return;
-            root.legacyRepos = result.legacy || [];
-            root.migrateCommand = result.command || "dms migrate dux";
-            root._maybeNotifyRepoMove();
-        });
-    }
-
-    function _maybeNotifyRepoMove() {
-        if (_repoNoticeInFlight || !SessionData._hasLoaded)
-            return;
-        const current = ShellVersionService.semverVersion;
-        if (!RepoMoveNotice.repoNoticeDue(legacyRepos, SessionData.repoMoveNoticeVersion, current))
-            return;
-        _repoNoticeInFlight = true;
-        DMSService.notifySend({
-            "summary": I18n.tr("Package repositories moved", "notification title, the DMS package repositories moved to a new owner"),
-            "body": I18n.tr("Run %1 in a terminal.", "%1 is a shell command").arg(migrateCommand),
-            "actionLabel": I18n.tr("Settings"),
-            "actionArgs": ["ipc", "call", "settings", "openWith", "updater"]
-        }, resp => {
-            root._repoNoticeInFlight = false;
-            if (!resp || resp.error)
-                return;
-            SessionData.set("repoMoveNoticeVersion", current);
-        });
-    }
-
-    property bool _repoNoticeInFlight: false
 
     function _applyState(data) {
         if (!data) {
@@ -273,7 +201,6 @@ Singleton {
         rebootRecommended = reboot.recommended === true;
         rebootPackages = reboot.packages || [];
         _rawShellUpdate = shell.updatePackage || null;
-        commitsBehind = typeof shell.commitsBehind === "number" ? shell.commitsBehind : -1;
 
         const phase = data.phase || "idle";
         switch (phase) {
@@ -418,18 +345,6 @@ Singleton {
 
     function checkForUpdates() {
         DMSService.sysupdateRefresh(false, null);
-        if (releasesRefCount > 0)
-            loadReleases(true);
-    }
-
-    function loadReleases(force) {
-        if (!DMSService.isConnected || !sysupdateAvailable)
-            return;
-        DMSService.sysupdateReleases(force, resp => {
-            // A late reply must not repopulate a feed the last Ref already dropped.
-            if (root.releasesRefCount > 0 && resp && resp.result)
-                root.releases = resp.result;
-        });
     }
 
     function restartShell() {
@@ -568,17 +483,7 @@ Singleton {
         Qt.callLater(() => root._syncAcquire());
         Qt.callLater(() => root._maybeStartupCheck());
     }
-    onReleasesRefCountChanged: {
-        if (releasesRefCount <= 0)
-            releases = null;
-        else if (releases === null)
-            loadReleases(false);
-    }
-    onSysupdateAvailableChanged: {
-        _syncAcquire();
-        if (sysupdateAvailable && releasesRefCount > 0 && releases === null)
-            loadReleases(false);
-    }
+    onSysupdateAvailableChanged: _syncAcquire()
 
     function _syncSubscription() {
         if (!pollWanted) {

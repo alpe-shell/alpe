@@ -174,15 +174,3 @@ func findShellPackage(pkgs []Package, ownerName string) *Package {
 	}
 	return fallback
 }
-
-func commitsBehind(shell ShellInfo, master *MasterInfo) *int {
-	if master == nil || shell.Channel != ChannelGit {
-		return nil
-	}
-	n := GitBuildCount(shell.Running)
-	if n == 0 {
-		return nil
-	}
-	behind := max(master.CommitCount-n, 0)
-	return &behind
-}

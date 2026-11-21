@@ -21,7 +21,6 @@ Item {
 
     Ref {
         service: SystemUpdateService
-        modules: ["releases"]
     }
 
     readonly property var intervalOptions: [
@@ -57,7 +56,6 @@ Item {
     property int nowUnix: Math.floor(Date.now() / 1000)
 
     readonly property int packageListCap: 60
-    readonly property bool upstreamRows: false
     readonly property int logTailLines: 20
     readonly property real logViewHeight: Theme.listItemHeight * 5
     readonly property bool upgradeRunsInTerminal: SystemUpdateService.scriptMode || SystemUpdateService.useCustomCommand || (SystemUpdateService.backends || []).some(b => b.runsInTerminal === true)
@@ -69,7 +67,6 @@ Item {
     readonly property bool upgradeFailed: SystemUpdateService.hasError && !busy && (SystemUpdateService.recentLog || []).length > 0
     readonly property var installablePackages: SystemUpdateService.availableUpdates
     readonly property bool anythingToInstall: installablePackages.length > 0 && SystemUpdateService.helperAvailable
-    readonly property var notesRelease: SystemUpdateService.notesRelease
     readonly property int serviceLastCheckUnix: SystemUpdateService.lastCheckUnix
 
     onServiceLastCheckUnixChanged: nowUnix = Math.floor(Date.now() / 1000)
@@ -134,31 +131,6 @@ Item {
 
     function countText(count) {
         return count === 1 ? I18n.tr("%1 update", "singular, %1 is 1, available system update count").arg(count) : I18n.tr("%1 updates", "plural, %1 is a count of available system updates").arg(count);
-    }
-
-    function installMethodLabel() {
-        switch (SystemUpdateService.shellInstallMethod) {
-        case "pacman":
-        case "rpm":
-        case "dpkg":
-        case "xbps":
-            return SystemUpdateService.shellPackageName || SystemUpdateService.shellInstallMethod;
-        case "nix":
-            return "Nix";
-        default:
-            return "";
-        }
-    }
-
-    function channelLabel() {
-        switch (SystemUpdateService.shellChannel) {
-        case "stable":
-            return I18n.tr("Stable", "release channel");
-        case "git":
-            return I18n.tr("Git", "release channel that follows the master branch");
-        default:
-            return I18n.tr("Unknown");
-        }
     }
 
     function statusTitle() {
@@ -386,97 +358,6 @@ Item {
                 iconName: "terminal"
                 subtitle: root.lastRunText()
                 trailingBadge: SystemUpdateService.scriptCommand
-            }
-
-            // Die folgenden Zeilen betreffen das Paket des Ursprungsprojekts. Alpe hält es
-            // fest und wird über das eigene Repository gepflegt, deshalb bleiben sie verborgen.
-            SettingsRow {
-                visible: root.upstreamRows
-                title: I18n.tr("Version")
-                iconName: "tag"
-                subtitle: {
-                    const running = SystemUpdateService.shellRunning || ShellVersionService.shellVersion;
-                    const to = SystemUpdateService.shellUpdateVersion;
-                    if (to)
-                        return running + " → " + to;
-                    return running;
-                }
-                trailingBadge: root.installMethodLabel()
-            }
-
-            SettingsRow {
-                visible: root.upstreamRows
-                title: I18n.tr("Channel")
-                iconName: "alt_route"
-                subtitle: root.channelLabel()
-                trailingBadge: SystemUpdateService.shellManagedExternally ? I18n.tr("Managed by Nix", "badge on the DMS update row when the shell is installed through Nix") : ""
-            }
-
-            SettingsRow {
-                readonly property var master: SystemUpdateService.releases?.master ?? null
-
-                visible: root.upstreamRows && SystemUpdateService.shellChannel === "git" && SystemUpdateService.commitsBehind >= 0
-                title: I18n.tr("Master branch", "git channel row, the branch the build tracks")
-                subtitle: {
-                    const date = new Date(master?.date ?? NaN);
-                    return isNaN(date) ? "" : I18n.tr("Last commit %1", "git channel row, %1 is a localized date").arg(date.toLocaleDateString(Qt.locale(), Locale.ShortFormat));
-                }
-                iconName: "commit"
-
-                // Drawn in the slot so it precedes the button; trailingBadge would land after it
-                StyledText {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: SystemUpdateService.commitsBehind === 0 ? I18n.tr("Up to date") : I18n.tr("%1 behind", "git channel badge, %1 is the number of commits master is ahead").arg(SystemUpdateService.commitsBehind)
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: SystemUpdateService.commitsBehind === 0 ? Theme.surfaceVariantText : Theme.primary
-                }
-
-                DActionButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    buttonSize: Theme.buttonHeightS
-                    iconName: "open_in_browser"
-                    iconColor: Theme.primary
-                    backgroundColor: SettingsMetrics.controlSurface
-                    tooltipText: I18n.tr("View on GitHub", "link to the release on GitHub")
-                    onClicked: Qt.openUrlExternally("https://github.com/duxlabs-dev/dux-shell/commits/master")
-                }
-            }
-
-            SettingsNavRow {
-                visible: root.upstreamRows && root.notesRelease !== null
-                title: I18n.tr("Release notes", "settings page and card title, notes for a DMS release")
-                iconName: "article"
-                hint: root.notesRelease?.codename ? "v" + root.notesRelease.version + " · " + root.notesRelease.codename : "v" + (root.notesRelease?.version ?? "")
-                onClicked: keyboard => root.parentModal?.navigateTo("updater_changelog", keyboard)
-            }
-
-            SettingsRow {
-                visible: root.upstreamRows && SystemUpdateService.restartPending
-                title: I18n.tr("Requires restart")
-                iconName: "restart_alt"
-                iconColor: Theme.warning
-                subtitle: SystemUpdateService.shellInstalled ? I18n.tr("Installed %1, still running %2", "%1 is the installed version, %2 the running one").arg(SystemUpdateService.shellInstalled).arg(SystemUpdateService.shellRunning) : I18n.tr("A newer dms binary is installed.", "software updates row subtitle, the running shell is older than the installed binary")
-            }
-
-            SettingsRow {
-                visible: root.upstreamRows && SystemUpdateService.legacyRepos.length > 0
-                title: I18n.tr("Package repositories moved", "notification title, the DMS package repositories moved to a new owner")
-                subtitle: I18n.tr("Run %1 in a terminal.", "%1 is a shell command").arg(SystemUpdateService.migrateCommand)
-                iconName: "swap_horiz"
-                iconColor: Theme.warning
-
-                DActionButton {
-                    anchors.verticalCenter: parent.verticalCenter
-                    buttonSize: Theme.buttonHeightS
-                    iconName: "content_copy"
-                    iconColor: Theme.surfaceText
-                    backgroundColor: SettingsMetrics.controlSurface
-                    tooltipText: I18n.tr("Copy")
-                    onClicked: {
-                        Quickshell.execDetached(["dms", "cl", "copy", SystemUpdateService.migrateCommand]);
-                        ToastService.showInfo(I18n.tr("Copied to clipboard"));
-                    }
-                }
             }
         }
 

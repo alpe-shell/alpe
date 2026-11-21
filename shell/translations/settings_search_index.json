@@ -18295,22 +18295,6 @@
     "conditionKey": "dotEnabled"
   },
   {
-    "section": "softwareUpdatesChangelog",
-    "label": "Release notes",
-    "tabIndex": 66,
-    "category": "Release notes",
-    "keywords": [
-      "changelog",
-      "highlights",
-      "integrations",
-      "notes",
-      "release",
-      "system"
-    ],
-    "parentLabel": "System & integrations",
-    "icon": "cloud_off"
-  },
-  {
     "section": "wellbeingAppLimits",
     "label": "App limits",
     "tabIndex": 67,

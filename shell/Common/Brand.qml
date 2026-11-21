@@ -20,8 +20,6 @@ Singleton {
     readonly property var heldPackages: ["dux-shell", "dms", "dms-cli"]
     // Die Systemprüfung des Ursprungsprojekts kennt KWin nicht und meldet dort Fehler, die keine sind.
     readonly property bool systemCheck: false
-    // Willkommensgruss beim ersten Start und Versionshinweise des Ursprungsprojekts
-    readonly property bool welcome: false
 
     // Ersetzt den Namen des Ursprungsprojekts in fertigen Texten. Das läuft über die
     // Ausgabe der Übersetzung statt über die Quelltexte, damit alle Sprachen stimmen

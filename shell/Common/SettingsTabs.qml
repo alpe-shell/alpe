@@ -640,14 +640,6 @@ Singleton {
                     "hint": "Einstellungsseiten ein- und ausblenden"
                 },
                 {
-                    "id": "updater_changelog",
-                    "hidden": true,
-                    "text": I18n.tr("Release notes", "settings page and card title, notes for a DMS release"),
-                    "icon": "article",
-                    "tabIndex": 66,
-                    "hint": I18n.tr("Summary, highlights, links", "settings sidebar hint for the release notes page")
-                },
-                {
                     "id": "clipboard",
                     "text": I18n.tr("Clipboard", "noun, settings page name and launcher section title"),
                     "icon": "content_paste",

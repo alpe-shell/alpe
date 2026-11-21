@@ -82,7 +82,6 @@ type ShellInfo struct {
 	GitBuild       int           `json:"gitBuild,omitempty"`
 	RestartPending bool          `json:"restartPending"`
 	UpdatePackage  *Package      `json:"updatePackage,omitempty"`
-	CommitsBehind  *int          `json:"commitsBehind,omitempty"`
 }
 
 type State struct {
@@ -102,41 +101,6 @@ type State struct {
 	Error            *ErrorInfo    `json:"error,omitempty"`
 	Shell            ShellInfo     `json:"shell"`
 	Reboot           RebootInfo    `json:"reboot"`
-}
-
-type ReleaseCounts struct {
-	Breaking int `json:"breaking"`
-	Features int `json:"features"`
-	Fixes    int `json:"fixes"`
-	Other    int `json:"other"`
-}
-
-type Release struct {
-	Tag         string        `json:"tag"`
-	Version     string        `json:"version"`
-	Codename    string        `json:"codename,omitempty"`
-	Prerelease  bool          `json:"prerelease"`
-	PublishedAt string        `json:"publishedAt"`
-	URL         string        `json:"url"`
-	BlogURL     string        `json:"blogUrl,omitempty"`
-	Summary     string        `json:"summary,omitempty"`
-	Counts      ReleaseCounts `json:"counts"`
-	Highlights  []string      `json:"highlights"`
-}
-
-type MasterInfo struct {
-	SHA         string `json:"sha"`
-	CommitCount int    `json:"commitCount"`
-	Date        string `json:"date"`
-}
-
-// The /dms/releases API document plus cache metadata.
-type ReleasesFeed struct {
-	FetchedAt int64       `json:"fetchedAt"`
-	ETag      string      `json:"etag,omitempty"`
-	Latest    *Release    `json:"latest,omitempty"`
-	Releases  []Release   `json:"releases"`
-	Master    *MasterInfo `json:"master,omitempty"`
 }
 
 type UpgradeOptions struct {

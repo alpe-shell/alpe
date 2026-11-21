@@ -825,14 +825,4 @@ Singleton {
     function notifySend(params, callback) {
         sendRequest("notify.send", params, callback);
     }
-
-    function sysupdateReleases(force, callback) {
-        sendRequest("sysupdate.releases", {
-            "force": force === true
-        }, callback);
-    }
-
-    function sysupdateRepoStatus(callback) {
-        sendRequest("sysupdate.repoStatus", null, callback);
-    }
 }
