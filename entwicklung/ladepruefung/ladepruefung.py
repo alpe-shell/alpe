@@ -312,6 +312,10 @@ def normalize(line, base):
     line = re.sub(r"\b\d+(\.\d+)?\s?(ms|s|µs)\b", "<DAUER>", line)
     line = re.sub(r"by-id/[a-z0-9]+", "by-id/<ID>", line)
     line = re.sub(r"\[pid \d+\]|pid[ =:]\d+", "pid <PID>", line)
+    line = re.sub(r"<Unknown File>:\d+", "<Unknown File>:<N>", line)
+    # Hashes aus dem zufälligen Temp-Pfad (Bild-Cache, Standbild eines Video-Hintergrunds)
+    line = re.sub(r"imagecache/[0-9a-f]{8}@", "imagecache/<HASH>@", line)
+    line = re.sub(r"video-wallpaper/[0-9a-f]{32}\.", "video-wallpaper/<HASH>.", line)
     return line.strip()
 
 
