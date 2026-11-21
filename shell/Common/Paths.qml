@@ -15,10 +15,12 @@ Singleton {
     readonly property url pictures: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
     readonly property url xdgCache: StandardPaths.standardLocations(StandardPaths.GenericCacheLocation)[0]
 
-    readonly property url data: `${StandardPaths.standardLocations(StandardPaths.GenericDataLocation)[0]}/dms`
-    readonly property url state: `${StandardPaths.standardLocations(StandardPaths.GenericStateLocation)[0]}/dms`
-    readonly property url cache: `${StandardPaths.standardLocations(StandardPaths.GenericCacheLocation)[0]}/dms`
-    readonly property url config: `${StandardPaths.standardLocations(StandardPaths.GenericConfigLocation)[0]}/dms`
+    // Ordnername unter ~/.config, ~/.local/state, ~/.cache, ~/.local/share (Plan 2.2, D2; im Dienst brand.DirName).
+    readonly property string appDir: "alpe"
+    readonly property url data: `${StandardPaths.standardLocations(StandardPaths.GenericDataLocation)[0]}/${appDir}`
+    readonly property url state: `${StandardPaths.standardLocations(StandardPaths.GenericStateLocation)[0]}/${appDir}`
+    readonly property url cache: `${StandardPaths.standardLocations(StandardPaths.GenericCacheLocation)[0]}/${appDir}`
+    readonly property url config: `${StandardPaths.standardLocations(StandardPaths.GenericConfigLocation)[0]}/${appDir}`
 
     readonly property url imagecache: `${cache}/imagecache`
 

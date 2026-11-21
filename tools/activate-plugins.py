@@ -17,7 +17,7 @@ PLUGINS = ["alpeMeteoSwiss", "alpeRadar", "alpeSport"]
 PROVIDER = "plugin_alpeMeteoSwiss"
 
 config = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.path.expanduser("~"), ".config")
-folder = os.path.join(config, "dms")
+folder = os.path.join(config, "alpe")
 check = "--check" in sys.argv[1:]
 
 

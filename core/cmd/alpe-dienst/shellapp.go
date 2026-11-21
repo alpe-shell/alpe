@@ -94,7 +94,7 @@ func scrollingWallpaperConfigured() bool {
 	if err != nil {
 		return false
 	}
-	data, err := os.ReadFile(filepath.Join(configDir, "dms", "settings.json"))
+	data, err := os.ReadFile(filepath.Join(configDir, brand.DirName, "settings.json"))
 	if err != nil {
 		return false
 	}

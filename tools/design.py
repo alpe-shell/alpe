@@ -38,9 +38,9 @@ INSTALLED = os.path.join(DATA, "alpe", "design")       # Bilder des eingespielte
 MARK = os.path.join(CONFIG, "alpe", "design-eingespielt")
 TOKEN = "@DESIGN@"                                       # steht in den Dateien für INSTALLED
 
-SETTINGS = os.path.join(CONFIG, "dms", "settings.json")
-SESSION = os.path.join(STATE, "dms", "session.json")
-PLUGINS = os.path.join(CONFIG, "dms", "plugin_settings.json")
+SETTINGS = os.path.join(CONFIG, "alpe", "settings.json")
+SESSION = os.path.join(STATE, "alpe", "session.json")
+PLUGINS = os.path.join(CONFIG, "alpe", "plugin_settings.json")
 HYPRLOCK = os.path.join(CONFIG, "hypr", "hyprlock.conf")
 
 # ---------------------------------------------------------------- was dazugehört

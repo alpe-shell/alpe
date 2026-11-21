@@ -28,7 +28,7 @@ func TestDefaultDiscoveryConfig(t *testing.T) {
 			configDirs:     "",
 			expectedCount:  1,
 			checkFirstPath: true,
-			firstPath:      "/custom/config/dms/cheatsheets",
+			firstPath:      "/custom/config/alpe/cheatsheets",
 		},
 		{
 			name:          "with XDG_CONFIG_DIRS set",

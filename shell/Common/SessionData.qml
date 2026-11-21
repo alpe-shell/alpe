@@ -1761,7 +1761,7 @@ Singleton {
     FileView {
         id: settingsFile
 
-        path: StandardPaths.writableLocation(StandardPaths.GenericStateLocation) + "/dms/session.json"
+        path: StandardPaths.writableLocation(StandardPaths.GenericStateLocation) + "/" + Paths.appDir + "/session.json"
         blockLoading: true
         blockWrites: true
         atomicWrites: true

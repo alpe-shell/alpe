@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
@@ -1131,7 +1132,7 @@ func downloadToTempFile(rawURL string) (string, error) {
 	if err != nil {
 		cacheDir = "/tmp"
 	}
-	clipDir := filepath.Join(cacheDir, "dms", "clipboard")
+	clipDir := filepath.Join(cacheDir, brand.DirName, "clipboard")
 	if err := os.MkdirAll(clipDir, 0o755); err != nil {
 		return "", fmt.Errorf("create cache dir: %w", err)
 	}

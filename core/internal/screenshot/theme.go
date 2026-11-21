@@ -2,6 +2,7 @@ package screenshot
 
 import (
 	"encoding/json"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -87,7 +88,7 @@ func getColorsFilePath() string {
 		log.Error("Failed to get user cache dir", "err", err)
 		return ""
 	}
-	return filepath.Join(cacheDir, "dms", "dms-colors.json")
+	return filepath.Join(cacheDir, brand.DirName, "dms-colors.json")
 }
 
 func isLightMode() bool {

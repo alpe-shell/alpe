@@ -2,6 +2,7 @@ package sysupdate
 
 import (
 	"encoding/json"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 
@@ -10,7 +11,7 @@ import (
 )
 
 func cacheDir() string {
-	return filepath.Join(utils.XDGCacheHome(), "dms")
+	return filepath.Join(utils.XDGCacheHome(), brand.DirName)
 }
 
 func writeFileAtomic(path string, data []byte) error {

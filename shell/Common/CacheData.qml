@@ -276,7 +276,7 @@ Singleton {
     FileView {
         id: launcherCacheFile
 
-        path: _stateDir + "/dms/launcher_cache.json"
+        path: _stateDir + "/" + Paths.appDir + "/launcher_cache.json"
         blockLoading: true
         blockWrites: true
         atomicWrites: true
@@ -286,7 +286,7 @@ Singleton {
     FileView {
         id: cacheFile
 
-        path: _stateDir + "/dms/cache.json"
+        path: _stateDir + "/" + Paths.appDir + "/cache.json"
         blockLoading: true
         blockWrites: true
         atomicWrites: true

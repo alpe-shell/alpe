@@ -3,6 +3,7 @@ package lyrics
 import (
 	"context"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"path/filepath"
 	"strings"
 	"time"
@@ -27,7 +28,7 @@ func HandleRequest(conn *ipc.ConnWriter, req ipc.Request) {
 const pluginPrefix = "plugin_"
 
 var client = corelyrics.New(corelyrics.Options{
-	CacheDir:  filepath.Join(utils.XDGCacheHome(), "dms", "lyrics"),
+	CacheDir:  filepath.Join(utils.XDGCacheHome(), brand.DirName, "lyrics"),
 	UserAgent: "DuxShell/1 (+https://github.com/duxlabs-dev/dux-shell)",
 	Resolve:   pluginSource,
 })

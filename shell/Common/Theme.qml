@@ -20,7 +20,7 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("Theme")
 
-    readonly property string stateDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.GenericCacheLocation).toString()) + "/dms"
+    readonly property string stateDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.GenericCacheLocation).toString()) + "/" + Paths.appDir
     readonly property bool envDisableMatugen: Quickshell.env("ALPE_DISABLE_MATUGEN") === "1" || Quickshell.env("ALPE_DISABLE_MATUGEN") === "true"
     readonly property string defaultFontFamily: "Google Sans Flex"
     readonly property string defaultMonoFontFamily: "Fira Code"

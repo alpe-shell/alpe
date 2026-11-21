@@ -51,11 +51,11 @@ a = home("autor")
 pics = os.path.join(a, "Bilder")
 write(os.path.join(pics, "berg.jpg"), "JPEG")             # eigenes Foto
 write(os.path.join(pics, "fremd.png"), "PNG")              # fremdes Foto
-write(os.path.join(a, ".config", "dms", "farben.json"), {"primary": "#ffffff"})
-write(os.path.join(a, ".config", "dms", "settings.json"), {
+write(os.path.join(a, ".config", "alpe", "farben.json"), {"primary": "#ffffff"})
+write(os.path.join(a, ".config", "alpe", "settings.json"), {
     "configVersion": 7,
     "currentThemeName": "custom",
-    "customThemeFile": os.path.join(a, ".config", "dms", "farben.json"),
+    "customThemeFile": os.path.join(a, ".config", "alpe", "farben.json"),
     "fontFamily": "Inter Variable",
     "cornerRadius": 18,
     "barConfigs": [{"id": "default", "position": 0, "screenPreferences": ["DP-2"], "leftWidgets": ["launcherButton"]}],
@@ -68,7 +68,7 @@ write(os.path.join(a, ".config", "dms", "settings.json"), {
     "lockScreenVideoPath": os.path.join(a, "Videos", "berge.mp4"),
     "launcherLogoCustomPath": os.path.join(a, "Bilder", "logo.svg"),
 })
-write(os.path.join(a, ".local", "state", "dms", "session.json"), {
+write(os.path.join(a, ".local", "state", "alpe", "session.json"), {
     "isLightMode": False,
     "wallpaperPath": os.path.join(pics, "berg.jpg"),
     "wallpaperPathLight": os.path.join(pics, "alt-hell.png"),
@@ -82,7 +82,7 @@ write(os.path.join(a, ".local", "state", "dms", "session.json"), {
     "dockPins": {"dock": ["kitty", "org.kde.dolphin", "gibtsnicht"]},
     "nightModeEnabled": True,
 })
-write(os.path.join(a, ".config", "dms", "plugin_settings.json"), {
+write(os.path.join(a, ".config", "alpe", "plugin_settings.json"), {
     "alpeSport": {"favorites": ["hockey:101144"], "favoriteNames": {"hockey:101144": {"name": "EV Zug"}},
                   "streams": {"nl": {"name": "MySports", "url": "https://x"}}, "order": ["nl", "nba"], "growDetail": True, "notifyGoals": False},
     "alpeMeteoSwiss": {"pointName": "Brunnen", "units": "metric", "showRain": True},
@@ -97,7 +97,7 @@ write(os.path.join(cfg, "kwinrulesrc"), "[General]\nOrder=titel,zed,brief,wing\n
       "[brief]\nDescription=Bewerbung\ntitle=Bewerbung_Meier.docx\ntitlematch=1\nabove=true\naboverule=2\n\n"
       "[wing]\nDescription=WingDrive (WingDrive)\nwmclass=wingdrive\nwmclassmatch=1\ntitle=WingDrive\ntitlematch=1\nopacityactive=90\nopacityactiverule=2\n")
 layout = {"background": {"source": "image", "image": os.path.join(pics, "berg.jpg"), "path": os.path.join(pics, "berg.jpg"),
-                         "fallback": os.path.join(a, ".cache", "dms", "lock-standbild.jpg")},
+                         "fallback": os.path.join(a, ".cache", "alpe", "lock-standbild.jpg")},
           "reference": {"profile": os.path.join(a, ".config", "alpe", "lockprofil")},
           "widgets": [{"type": "image", "path": os.path.join(pics, "fremd.png")}, {"type": "image", "path": os.path.join(pics, "berg.jpg")},
                       {"type": "label", "text": "{date:%H}", "font": {"family": "AlfaSlabOne"}}]}
@@ -140,21 +140,21 @@ check("AlfaSlabOne" in m["schriften"] and "Inter Variable" in m["schriften"] and
 b = home("neu")
 for app in ("kitty.desktop", "org.kde.dolphin.desktop"):
     write(os.path.join(b, "sys", "applications", app), "[Desktop Entry]\nName=x\nExec=x\n")
-write(os.path.join(b, ".config", "dms", "settings.json"), {"fontFamily": "Noto Sans", "eigenerSchluessel": 1, "useAutoLocation": False})
-write(os.path.join(b, ".local", "state", "dms", "session.json"), {"weatherLocation": "Bern"})
+write(os.path.join(b, ".config", "alpe", "settings.json"), {"fontFamily": "Noto Sans", "eigenerSchluessel": 1, "useAutoLocation": False})
+write(os.path.join(b, ".local", "state", "alpe", "session.json"), {"weatherLocation": "Bern"})
 write(os.path.join(b, ".config", "kwinrulesrc"), "[General]\nOrder=eigen\n\n[eigen]\nDescription=Firefox\nwmclass=firefox\n")
 out = run(b, "apply", "--ja")
 check(out.returncode == 0 and "eingespielt" in out.stdout, "Einspielen läuft durch\n" + out.stdout + out.stderr)
 base = os.path.join(b, ".local", "share", "alpe", "design")
-s2 = json.load(open(os.path.join(b, ".config", "dms", "settings.json")))
+s2 = json.load(open(os.path.join(b, ".config", "alpe", "settings.json")))
 check(s2["fontFamily"] == "Inter Variable" and s2["eigenerSchluessel"] == 1, "Design gewinnt, eigene andere Einstellungen bleiben")
 check(s2["customThemeFile"] == os.path.join(base, "farben.json") and os.path.isfile(s2["customThemeFile"]), "Farbschema an Ort und Stelle")
-se2 = json.load(open(os.path.join(b, ".local", "state", "dms", "session.json")))
+se2 = json.load(open(os.path.join(b, ".local", "state", "alpe", "session.json")))
 check(se2["wallpaperPath"] == os.path.join(base, "bilder", "berg.jpg") and os.path.isfile(se2["wallpaperPath"]), "Hintergrund eingespielt")
 check(se2["weatherLocation"] == "Bern" and s2["useAutoLocation"] is False, "eigener Wetterort bleibt (kein Umschalten auf Standort)")
 c = home("leer")
 run(c, "apply", "--ja")
-check(json.load(open(os.path.join(c, ".config", "dms", "settings.json")))["useAutoLocation"] is True, "frischer Nutzer: Wetter nach Standort")
+check(json.load(open(os.path.join(c, ".config", "alpe", "settings.json")))["useAutoLocation"] is True, "frischer Nutzer: Wetter nach Standort")
 check(se2["dockPins"] == {"dock": ["kitty", "org.kde.dolphin"]}, "Dock: nur installierte Programme angeheftet")
 rules = open(os.path.join(b, ".config", "kwinrulesrc")).read()
 check("Description=Firefox" in rules and "Description=Zed" in rules and "Description=Alpe: ohne Titelleiste" in rules and "rules=" not in rules, "Fensterregeln dazu, eigene bleiben, Format KWin 6.8")
@@ -169,7 +169,7 @@ check("Eingespielt: kde" in run(b, "status").stdout, "status nennt das eingespie
 e = home("autor2")
 write(os.path.join(e, "Bilder", "logo.png"), "PNG")
 write(os.path.join(e, "Bilder", "fremd.png"), "PNG")
-write(os.path.join(e, ".config", "dms", "settings.json"), {"fontFamily": "Inter"})
+write(os.path.join(e, ".config", "alpe", "settings.json"), {"fontFamily": "Inter"})
 write(os.path.join(e, ".config", "alpe", "hyprlock.conf"),
       "background {\n    path = %s/Bilder/fremd.png\n    blur_passes = 3\n}\n\nimage {\n    path = %s/Bilder/logo.png\n    size = 300\n}\n\n"
       "image {\n    path = %s/Bilder/fremd.png\n    size = 200\n}\n\nlabel {\n    text = $TIME\n    font_family = AlfaSlabOne\n}\n" % (e, e, e))
@@ -180,7 +180,7 @@ check("@DESIGN@/bilder/logo.png" in conf and "fremd" not in conf and conf.count(
 
 # ---------------------------------------------------------------- kitty und fastfetch
 f = home("autor3")
-write(os.path.join(f, ".config", "dms", "settings.json"), {"fontFamily": "Inter"})
+write(os.path.join(f, ".config", "alpe", "settings.json"), {"fontFamily": "Inter"})
 write(os.path.join(f, ".config", "kitty", "kitty.conf"),
       "font_family JetBrains Mono\ninclude themes/alpe.conf\nbackground_image %s/Bilder/x.png\nremote_control_password geheim\n# password-Kommentar bleibt\n" % f)
 write(os.path.join(f, ".config", "kitty", "themes", "alpe.conf"), "background #13212C\n")

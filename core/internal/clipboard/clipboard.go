@@ -3,6 +3,7 @@ package clipboard
 import (
 	"bytes"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"image"
 	"io"
 	"net/url"
@@ -247,7 +248,7 @@ func createClipboardCacheFile() (*os.File, error) {
 	preferredDirs := []string{}
 
 	if cacheDir, err := os.UserCacheDir(); err == nil {
-		preferredDirs = append(preferredDirs, filepath.Join(cacheDir, "dms", "clipboard"))
+		preferredDirs = append(preferredDirs, filepath.Join(cacheDir, brand.DirName, "clipboard"))
 	}
 	preferredDirs = append(preferredDirs, "/var/tmp/dms/clipboard")
 

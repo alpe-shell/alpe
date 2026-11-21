@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -264,7 +265,7 @@ func ensureFontCache() {
 	var fontsToCheck []string
 
 	if configDir, err := os.UserConfigDir(); err == nil {
-		settingsPath := filepath.Join(configDir, "dms", "settings.json")
+		settingsPath := filepath.Join(configDir, brand.DirName, "settings.json")
 		if data, err := os.ReadFile(settingsPath); err == nil {
 			var settings struct {
 				FontFamily        string `json:"fontFamily"`

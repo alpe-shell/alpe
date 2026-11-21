@@ -20,7 +20,7 @@ def check(cond, msg):
 cfg = tempfile.mkdtemp()
 hypr = os.path.join(cfg, "hypr")
 os.makedirs(os.path.join(hypr, "user"))
-os.makedirs(os.path.join(cfg, "dms"))
+os.makedirs(os.path.join(cfg, "alpe"))
 files = {
     "hypridle.conf": "general {\n    lock_cmd = pidof hyprlock || hyprlock\n    before_sleep_cmd = loginctl lock-session\n}\n",
     "hyprland.conf": "exec-once = dms run\nexec-once = sleep 1 && hyprlock --immediate\nbind = SUPER, L, exec, hyprlock\n# hyprlock im Kommentar\nsource = ~/.config/hypr/hyprlock.conf\n",
@@ -29,7 +29,7 @@ files = {
 }
 for name, body in files.items():
     open(os.path.join(hypr, name), "w").write(body)
-open(os.path.join(cfg, "dms", "settings.json"), "w").write('{"x": 1}')
+open(os.path.join(cfg, "alpe", "settings.json"), "w").write('{"x": 1}')
 env = dict(os.environ, XDG_CONFIG_HOME=cfg)
 
 
@@ -53,7 +53,7 @@ check("# Alpe:" in conf and "exec-once = dms run" in conf, "Sperren beim Start a
 check("source = ~/.config/hypr/hyprlock.conf" in conf and "# hyprlock im Kommentar" in conf, "hyprlock.conf-Verweis und Kommentare unberührt")
 check('hl.exec("dms ipc call lock lock")' in lua and "-- Alpe:" in lua, "Lua: Aufruf ersetzt, exec_once auskommentiert")
 check(read("hyprlock.conf") == files["hyprlock.conf"], "hyprlock.conf selbst unberührt")
-check(json.load(open(os.path.join(cfg, "dms", "settings.json"))).get("lockAtStartup") is True, "lockAtStartup eingeschaltet, übrige Einstellungen bleiben")
+check(json.load(open(os.path.join(cfg, "alpe", "settings.json"))).get("lockAtStartup") is True, "lockAtStartup eingeschaltet, übrige Einstellungen bleiben")
 check(os.path.exists(os.path.join(hypr, "hyprland.conf.vor-alpe")), "Sicherung angelegt")
 
 second = run("apply")

@@ -17,14 +17,14 @@ WARN quickshell.service.powerprofiles: Could not connect to DBus. PowerProfiles 
 WARN quickshell.service.upower: Could not connect to DBus. UPower service will not work.
 WARN scene: @Modules/Settings/AlpeDeviceTab.qml[<Z>]: Unable to assign [undefined] to bool
 WARN scene: @Modules/Settings/DBarTab.qml[<Z>]: Unable to assign [undefined] to QString
-WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[<Z>]: Read of <TMP>/h/.local/state/dms/appusage.json failed: File does not exist.
-WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/dms/cache.json failed: File does not exist.
-WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/dms/launcher_cache.json failed: File does not exist.
-WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/dms/dms-colors.json failed: File does not exist.
-WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <TMP>/h/.local/state/dms/notepad-session.json failed: File does not exist.
+WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/appusage.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/launcher_cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/alpe/dms-colors.json failed: File does not exist.
+WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/notepad-session.json failed: File does not exist.
 WARN scene: QML FileView at @Services/PaletteInjectService.qml[<Z>]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
-WARN scene: QML QQuickImage* at @DCommon/Widgets/CachingImage.qml[<Z>]: Cannot open: file://<TMP>/h/.cache/dms/imagecache/<HASH>@1024x1024.png
-WARN scene: QML SportDaemon at file://<TMP>/h/.config/dms/plugins/alpeSport/SportDaemon.qml[<Z>]: Created graphical object was not placed in the graphics scene.
+WARN scene: QML QQuickImage* at @DCommon/Widgets/CachingImage.qml[<Z>]: Cannot open: file://<TMP>/h/.cache/alpe/imagecache/<HASH>@1024x1024.png
+WARN scene: QML SportDaemon at file://<TMP>/h/.config/alpe/plugins/alpeSport/SportDaemon.qml[<Z>]: Created graphical object was not placed in the graphics scene.
 WARN: <Unknown File>:<N>: Error: Cannot assign to non-existent property "requestedSearchQuery"
 WARN: Process failed to start, likely because the binary could not be found. Command: QList("khal", "printformats")
 WARN: Unrecognized pragma "DiskCache"

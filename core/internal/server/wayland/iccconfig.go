@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -22,7 +23,7 @@ type iccConfig struct {
 }
 
 func dmsConfigDir() string {
-	return filepath.Join(utils.XDGConfigHome(), "dms")
+	return filepath.Join(utils.XDGConfigHome(), brand.DirName)
 }
 
 func iccConfigPath() string {

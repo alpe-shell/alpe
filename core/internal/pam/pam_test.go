@@ -25,7 +25,7 @@ func (e *pamTestEnv) writePamFile(t *testing.T, name string, content string) {
 
 func (e *pamTestEnv) writeSettings(t *testing.T, content string) {
 	t.Helper()
-	writeTestFile(t, filepath.Join(e.homeDir, ".config", "dms", "settings.json"), content)
+	writeTestFile(t, filepath.Join(e.homeDir, ".config", "alpe", "settings.json"), content)
 }
 
 func readFileString(t *testing.T, path string) string {

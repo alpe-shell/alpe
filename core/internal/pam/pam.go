@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"slices"
@@ -157,7 +158,7 @@ func IsNixOS() bool {
 }
 
 func ReadAuthSettings(homeDir string) (AuthSettings, error) {
-	settingsPath := filepath.Join(homeDir, ".config", "dms", "settings.json")
+	settingsPath := filepath.Join(homeDir, ".config", brand.DirName, "settings.json")
 	data, err := os.ReadFile(settingsPath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -807,7 +808,7 @@ session  required    pam_deny.so
 `
 
 func UserLockscreenPamDir() string {
-	return filepath.Join(utils.XDGStateHome(), "dms", "pam")
+	return filepath.Join(utils.XDGStateHome(), brand.DirName, "pam")
 }
 
 // WriteUserLockscreenPamConfig resolves the distro's real auth stack into a

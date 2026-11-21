@@ -1344,7 +1344,7 @@ func checkAdwGtk3() checkResult {
 func checkConfigurationFiles() []checkResult {
 	configDir, _ := os.UserConfigDir()
 	cacheDir, _ := os.UserCacheDir()
-	dmsDir := "dms"
+	dmsDir := brand.DirName
 
 	configFiles := []struct{ name, path string }{
 		{"settings.json", filepath.Join(configDir, dmsDir, "settings.json")},
@@ -1779,7 +1779,7 @@ func checkFonts() []checkResult {
 	displayFontFamily := defaultDoctorDisplayFamily
 
 	if configDir, err := os.UserConfigDir(); err == nil {
-		settingsPath := filepath.Join(configDir, "dms", "settings.json")
+		settingsPath := filepath.Join(configDir, brand.DirName, "settings.json")
 		if data, err := os.ReadFile(settingsPath); err == nil {
 			var settings struct {
 				FontFamily        string `json:"fontFamily"`

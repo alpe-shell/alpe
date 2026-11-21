@@ -11,11 +11,11 @@
 #   - hypridle: lock_cmd = dms ipc call lock lock
 #   - Aufrufe von hyprlock (Tastenkürzel usw.), auch «pidof hyprlock || hyprlock»: dms ipc call lock lock
 #   - Sperren beim Start (exec-once … hyprlock): Zeile auskommentiert; stattdessen sperrt die Shell
-#     selbst nach der Anmeldung (Einstellung lockAtStartup in ~/.config/dms/settings.json)
+#     selbst nach der Anmeldung (Einstellung lockAtStartup in ~/.config/alpe/settings.json)
 # hyprlock.conf und das Paket hyprlock bleiben unberührt; «undo» stellt alles wieder her.
 set -euo pipefail
 HYPR="${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
-SETTINGS="${XDG_CONFIG_HOME:-$HOME/.config}/dms/settings.json"
+SETTINGS="${XDG_CONFIG_HOME:-$HOME/.config}/alpe/settings.json"
 MODE="${1:-check}"
 
 [ -d "$HYPR" ] || { echo "kein $HYPR – läuft hier Hyprland?"; exit 1; }

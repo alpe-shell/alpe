@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,7 +41,7 @@ func getPluginsDir() string {
 		log.Error("failed to get user config dir", "err", err)
 		return ""
 	}
-	path := filepath.Join(configDir, "dms", "plugins")
+	path := filepath.Join(configDir, brand.DirName, "plugins")
 	if resolved, err := filepath.EvalSymlinks(path); err == nil {
 		return resolved
 	}
@@ -56,7 +57,7 @@ func getPluginLockPath() string {
 		log.Error("failed to get user config dir", "err", err)
 		return ""
 	}
-	return filepath.Join(configDir, "dms", "plugins.lock.json")
+	return filepath.Join(configDir, brand.DirName, "plugins.lock.json")
 }
 
 func (m *Manager) findInstalledPath(pluginID string) (string, error) {

@@ -2,6 +2,7 @@ package screenshot
 
 import (
 	"encoding/json"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path"
 	"path/filepath"
@@ -16,7 +17,7 @@ func getStateFilePath() string {
 	if err != nil {
 		cacheDir = path.Join(os.Getenv("HOME"), ".cache")
 	}
-	return filepath.Join(cacheDir, "dms", "screenshot-state.json")
+	return filepath.Join(cacheDir, brand.DirName, "screenshot-state.json")
 }
 
 func LoadState() (*PersistentState, error) {

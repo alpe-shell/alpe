@@ -131,7 +131,7 @@ cmd_doctor() {
     say "Werkzeuge"
     for t in python3 ffmpeg git; do have "$t" && ok "$t" || warn "$t fehlt"; done
     python3 -c 'import h5py' 2>/dev/null && ok "h5py (Radar)" || warn "h5py fehlt (Radar)"
-    sport="${XDG_CONFIG_HOME:-$HOME/.config}/dms/plugins/alpeSport/sport"
+    sport="${XDG_CONFIG_HOME:-$HOME/.config}/alpe/plugins/alpeSport/sport"
     if [ -x "$sport" ]; then
         if out="$(timeout 60 "$sport" selftest --text 2>&1)"; then ok "Sport: alle Quellen erreichbar"
         else warn "Sport: nicht alle Quellen erreichbar"; fi

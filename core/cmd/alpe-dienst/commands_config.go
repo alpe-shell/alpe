@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -78,7 +79,7 @@ func runResolveInclude(cmd *cobra.Command, args []string) {
 func checkHyprlandInclude(filename string) (IncludeResult, error) {
 	configDir := filepath.Join(utils.XDGConfigHome(), "hypr")
 
-	targetPath := filepath.Join(configDir, "dms", filename)
+	targetPath := filepath.Join(configDir, brand.DirName, filename)
 	result := IncludeResult{}
 
 	if _, err := os.Stat(targetPath); err == nil {

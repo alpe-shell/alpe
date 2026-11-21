@@ -1817,7 +1817,7 @@ def plugin_settings():
     """Einstellungen des Plugins (Favoriten usw.), wie die Shell sie speichert."""
     config = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.path.expanduser("~"), ".config")
     try:
-        with open(os.path.join(config, "dms", "plugin_settings.json"), encoding="utf-8") as handle:
+        with open(os.path.join(config, "alpe", "plugin_settings.json"), encoding="utf-8") as handle:
             data = json.load(handle).get("alpeSport") or {}
         return data if isinstance(data, dict) else {}
     except (OSError, ValueError, AttributeError):

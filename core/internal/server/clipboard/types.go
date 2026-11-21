@@ -2,6 +2,7 @@ package clipboard
 
 import (
 	"encoding/json"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"sync"
@@ -41,7 +42,7 @@ func getConfigPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(configDir, "dms", "clsettings.json"), nil
+	return filepath.Join(configDir, brand.DirName, "clsettings.json"), nil
 }
 
 func LoadConfig() Config {

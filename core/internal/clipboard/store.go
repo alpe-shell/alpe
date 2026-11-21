@@ -1,6 +1,7 @@
 package clipboard
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 )
@@ -15,26 +16,9 @@ func GetDBPath() (string, error) {
 		cacheDir = filepath.Join(homeDir, ".cache")
 	}
 
-	newDir := filepath.Join(cacheDir, "dms", "clipboard")
+	// Den Verlauf aus ~/.cache/dms/clipboard holt «alpe umzug» (Plan 7.2); hier wird nichts verschoben.
+	newDir := filepath.Join(cacheDir, brand.DirName, "clipboard")
 	newPath := filepath.Join(newDir, "db")
-
-	if _, err := os.Stat(newPath); err == nil {
-		return newPath, nil
-	}
-
-	oldDir := filepath.Join(cacheDir, "dms-clipboard")
-	oldPath := filepath.Join(oldDir, "db")
-
-	if _, err := os.Stat(oldPath); err == nil {
-		if err := os.MkdirAll(newDir, 0o700); err != nil {
-			return "", err
-		}
-		if err := os.Rename(oldPath, newPath); err != nil {
-			return "", err
-		}
-		os.Remove(oldDir)
-		return newPath, nil
-	}
 
 	if err := os.MkdirAll(newDir, 0o700); err != nil {
 		return "", err

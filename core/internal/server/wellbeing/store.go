@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"runtime/debug"
@@ -22,7 +23,7 @@ var (
 )
 
 func DBPath() string {
-	return filepath.Join(utils.XDGStateHome(), "dms", "wellbeing", "db")
+	return filepath.Join(utils.XDGStateHome(), brand.DirName, "wellbeing", "db")
 }
 
 func openDB(path string) (*bolt.DB, error) {

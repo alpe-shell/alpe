@@ -2,6 +2,7 @@ package wallpaper
 
 import (
 	"encoding/json"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"time"
@@ -15,7 +16,7 @@ type persistentState struct {
 }
 
 func stateFilePath() string {
-	return filepath.Join(utils.XDGCacheHome(), "dms", "wallpaper-schedule.json")
+	return filepath.Join(utils.XDGCacheHome(), brand.DirName, "wallpaper-schedule.json")
 }
 
 func loadLastFires() map[string]time.Time {

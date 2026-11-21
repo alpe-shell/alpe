@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
@@ -2049,7 +2050,7 @@ func (m *Manager) EntryToFile(entry *Entry) string {
 		if err != nil {
 			return ""
 		}
-		clipDir := filepath.Join(cacheDir, "dms", "clipboard")
+		clipDir := filepath.Join(cacheDir, brand.DirName, "clipboard")
 		if err := os.MkdirAll(clipDir, 0o755); err != nil {
 			return ""
 		}

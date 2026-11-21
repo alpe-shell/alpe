@@ -1,5 +1,5 @@
 // Package brand hält die Namen, unter denen Alpe nach aussen auftritt, an einer Stelle
-// (Plan 2.2, D1). Pfade folgen in D2, App-ID und D-Bus-Namen in D3.
+// (Plan 2.2, D1/D2). App-ID und D-Bus-Namen folgen in D3.
 package brand
 
 const (
@@ -11,6 +11,8 @@ const (
 	// EnvPrefix steht vor allen Umgebungsvariablen des Dienstes und der Oberfläche
 	// (ALPE_SOCKET, ALPE_SHELL_DIR, ALPE_EXECUTABLE, ALPE_POLICY_* …).
 	EnvPrefix = "ALPE"
+	// DirName ist der Ordner unter ~/.config, ~/.local/state, ~/.cache (Plan 2.2, D2).
+	DirName = "alpe"
 	// Unit ist die systemd-Benutzereinheit; der Dienst startet sie nie selbst (Plan 6.8).
 	Unit = "alpe.service"
 )

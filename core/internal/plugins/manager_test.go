@@ -27,7 +27,7 @@ func TestGetPluginsDir(t *testing.T) {
 		configHome := t.TempDir()
 		t.Setenv("XDG_CONFIG_HOME", configHome)
 
-		assert.Equal(t, filepath.Join(configHome, "dms", "plugins"), getPluginsDir())
+		assert.Equal(t, filepath.Join(configHome, "alpe", "plugins"), getPluginsDir())
 	})
 
 	t.Run("falls back to home directory", func(t *testing.T) {
@@ -35,7 +35,7 @@ func TestGetPluginsDir(t *testing.T) {
 		t.Setenv("XDG_CONFIG_HOME", "")
 		t.Setenv("HOME", home)
 
-		assert.Equal(t, filepath.Join(home, ".config", "dms", "plugins"), getPluginsDir())
+		assert.Equal(t, filepath.Join(home, ".config", "alpe", "plugins"), getPluginsDir())
 	})
 }
 

@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"io"
 	"os"
 	"path/filepath"
@@ -11,7 +12,7 @@ import (
 	"time"
 )
 
-const dirName = "dms"
+const dirName = brand.DirName
 
 func ConfigDir() (string, error) {
 	configDir, err := os.UserConfigDir()

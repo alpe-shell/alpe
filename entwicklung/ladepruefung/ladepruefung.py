@@ -151,8 +151,8 @@ if /usr/bin/systemctl --user show-environment >/dev/null 2>&1; then
     echo "echter systemd-Benutzerdienst erreichbar" > "$base/abbruch"; exit 3
 fi
 # 2. Design und Plugins wie bei einer frischen Installation, ohne Dienst und kglobalaccel.
-mkdir -p "$XDG_CONFIG_HOME/dms/plugins" "$XDG_STATE_HOME" "$XDG_CACHE_HOME" "$XDG_DATA_HOME"
-cp -r {repo}/plugins/. "$XDG_CONFIG_HOME/dms/plugins/"
+mkdir -p "$XDG_CONFIG_HOME/alpe/plugins" "$XDG_STATE_HOME" "$XDG_CACHE_HOME" "$XDG_DATA_HOME"
+cp -r {repo}/plugins/. "$XDG_CONFIG_HOME/alpe/plugins/"
 {{
     python3 {repo}/tools/activate-plugins.py
     ALPE_DESIGN_NO_SERVICE=1 ALPE_SHELL_DIR={shell} python3 {repo}/tools/design.py apply --ja --variante kde --bilder nein </dev/null

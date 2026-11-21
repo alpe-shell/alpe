@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"math"
 	"os"
 	"os/exec"
@@ -717,7 +718,7 @@ output_path = '%s'
 		}
 	}
 
-	userPluginConfigDir := filepath.Join(opts.ConfigDir, "matugen", "dms", "configs")
+	userPluginConfigDir := filepath.Join(opts.ConfigDir, "matugen", brand.DirName, "configs")
 	if entries, err := os.ReadDir(userPluginConfigDir); err == nil {
 		for _, entry := range entries {
 			if !strings.HasSuffix(entry.Name(), ".toml") {

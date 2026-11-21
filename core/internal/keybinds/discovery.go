@@ -2,6 +2,7 @@ package keybinds
 
 import (
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,14 +19,14 @@ func DefaultDiscoveryConfig() *DiscoveryConfig {
 
 	configDir, err := os.UserConfigDir()
 	if err == nil && configDir != "" {
-		searchPaths = append(searchPaths, filepath.Join(configDir, "dms", "cheatsheets"))
+		searchPaths = append(searchPaths, filepath.Join(configDir, brand.DirName, "cheatsheets"))
 	}
 
 	configDirs := os.Getenv("XDG_CONFIG_DIRS")
 	if configDirs != "" {
 		for dir := range strings.SplitSeq(configDirs, ":") {
 			if dir != "" {
-				searchPaths = append(searchPaths, filepath.Join(dir, "dms", "cheatsheets"))
+				searchPaths = append(searchPaths, filepath.Join(dir, brand.DirName, "cheatsheets"))
 			}
 		}
 	}
