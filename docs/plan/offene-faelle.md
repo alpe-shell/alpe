@@ -113,8 +113,7 @@ nur «nicht gefunden».)
   ist aber die einzige Stelle, die auf einem frischen Hyprland-System `hypr/dms/*.lua` anlegt
   (Plan 7.4). Bleibt vorerst stehen; in E4/F2 entscheiden, ob `alpe` bzw. `get.sh` ihn für eine
   frische Mac-Installation nutzt oder ob er wegkommt.
-- `core/internal/log/filelogger.go` schreibt noch `duxinstall-*.log` (`DUXINSTALL_LOG_DIR`),
-  vermutlich tot seit C1; prüfen und entfernen.
+- ~~`core/internal/log/filelogger.go` (`duxinstall-*.log`)~~ ohne Aufrufer, entfernt in C6.
 - Theme-Kategorie «registry»: Die Auswahl ist weg, `Theme.qml` kennt die Kategorie aber noch
   (wer ein Register-Theme aktiv hatte, behält es als eigene Datei). Mit D6/D7 bereinigen.
 
@@ -220,11 +219,17 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   nur über die Aktionsdaten nachweisbar, darum nicht angefasst.
 - ~~`WorkspaceSwitcher.qml`: Zieh-Pfad zum Umsortieren (`workspaceReorderSupported`),
   Übersichts-Pille (`workspacesHiddenByOverview`).~~ Erledigt in C5. Übrig:
-  `CompositorService.toggleOverview` (leer, noch vom Dock-Launcher aufgerufen) und
-  `workspaceSecondaryAction` (leer, noch von Arbeitsflächen-Umschalter, Modell und Insel
-  aufgerufen) – nicht Teil von Entscheid 4.
-- `DBarBody.fullscreenAutoHide` ist konstant `false`; die Kette über DBar und IPC kann weg.
-- `KeybindsService._bindsStale` wird nie mehr gesetzt.
+  ~~`CompositorService.toggleOverview`, `workspaceSecondaryAction`~~ samt
+  `overviewActiveForScreen` erledigt in C6. Der Rechtsklick aufs Dock-Launcher-Symbol tut
+  weiterhin nichts (öffnete die niri-Übersicht); Vorschlag nach Phase A: Hyprland-Übersicht wie
+  beim Rechtsklick auf den Arbeitsflächen-Umschalter.
+- **Noch offen (nicht C6):** `CompositorService.overviewActiveOnScreen` ist ebenfalls konstant
+  `false`; daran hängen die Einstellungen `openOnOverview` (Leiste, Dock) und
+  `frameShowOnOverview`, die damit nichts bewirken. Entfernen hiesse sichtbare Optionen
+  streichen (mit D5/D6 und Migration) oder an die Hyprland-Übersicht hängen – Entscheid des
+  Maintainers.
+- ~~`DBarBody.fullscreenAutoHide`-Kette~~ erledigt in C6.
+- ~~`KeybindsService._bindsStale`~~ erledigt in C6 (die Zählung `addRef`/`removeRef` bleibt, wird aber nicht ausgewertet).
 - Allgemein genutzte Helfer mit niri im Namen umbenennen (Phase D):
   `OutputModel.niriIdentifier`, `formatNiriMode`; Bedingungsschlüssel
   `isHyprlandOrNiri`/`isNiriOrMango`, Eintrag `hyprlandNiriOnly`.
@@ -234,8 +239,10 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
 - `shell/translations/extract_settings_index.py` bricht ab, weil die Alpe-Seiten in
   `TAB_INDEX_MAP` fehlen; der Suchindex wurde in C2/C3 von Hand bereinigt (Einträge zu
   entfernten Einstellungen). Vor D6 nachrüsten.
-- `entwicklung/lint.sh` zeigt auf alte Pfade (`/home/claude/...`, `quickshell/`); erneuern
-  oder entfernen.
+- ~~`entwicklung/lint.sh`~~ und die Hand-Harnesse `pageharness/th.qml`, `td2.qml`, `tl2.qml`
+  (tote Pfade `/home/claude/...`) entfernt in C6. Übrig: `shell/Modules/Lock/Alpe/layout.js`
+  nennt als Herkunft `/home/claude/src/alpe/lockscreen/hyprlock.conf` (erzeugte Datei; mit E4
+  bzw. dem Export neu erzeugen).
 - `entwicklung/pageharness/qs/` enthält veraltete Kopien (`SettingsTabs.qml`,
   `CompositorService.qml`-Attrappe mit `isNiri`).
 - Übersetzungen (`shell/translations/*.json`, `poexports`) enthalten noch Texte entfernter
