@@ -2,6 +2,7 @@
 """Vorschau des Sport-Tabs ohne Shell: laedt eine Szene mit den Attrappen und speichert ein Bild.
 
     QML_XHR_ALLOW_FILE_READ=1 python3 shot.py scenes/tab_wide.qml out.png
+    ALPE_SPORT_FIXTURES=/pfad  Musterdaten von dort statt aus fixtures/ (so laufen die Tests)
 """
 import os, sys
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -14,6 +15,8 @@ here = os.path.dirname(os.path.abspath(__file__))
 app = QGuiApplication(sys.argv)
 view = QQuickView()
 view.engine().addImportPath(os.path.join(here, "mocks"))
+if os.environ.get("ALPE_SPORT_FIXTURES"):
+    view.rootContext().setContextProperty("fixturesUrl", QUrl.fromLocalFile(os.path.join(os.environ["ALPE_SPORT_FIXTURES"], "")).toString())
 problems = []
 # Szenen melden Pruefungsfehler mit console.error("Fehler: …")
 qInstallMessageHandler(lambda mode, ctx, msg: problems.append(msg) if "Fehler:" in msg else None)

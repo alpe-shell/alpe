@@ -36,10 +36,20 @@ fi
 
 step "Sport-Tab laden (QML, Musterdaten)"
 if python3 -c 'import PySide6' 2>/dev/null; then
+    # Musterdaten in einem Temp-Ordner neu erzeugen; die eingecheckten bleiben unverändert.
+    fixtures="$(mktemp -d)"
+    before="$(cd entwicklung/sportharness/fixtures && find . -type f -not -path './cache/*' -print0 | sort -z | xargs -0 sha256sum | sha256sum)"
+    cp -r entwicklung/sportharness/fixtures/. "$fixtures/"
+    rm -rf "$fixtures/cache"
+    export ALPE_SPORT_FIXTURES="$fixtures"
     python3 -c 'import PIL' 2>/dev/null && python3 entwicklung/sportharness/make_fixtures.py >/dev/null
     for scene in tab_wide tab_table tab_detail_narrow tab_hockey tab_nba card rail_closes_detail tab_nati query_supersede table_link league_stats nl_stats player_from_detail stream_chip bar_widget tab_grows; do
         run env QT_QPA_PLATFORM=offscreen SHOT_DELAY=1200 python3 entwicklung/sportharness/shot.py "entwicklung/sportharness/scenes/$scene.qml"
     done
+    unset ALPE_SPORT_FIXTURES
+    rm -rf "$fixtures"
+    after="$(cd entwicklung/sportharness/fixtures && find . -type f -not -path './cache/*' -print0 | sort -z | xargs -0 sha256sum | sha256sum)"
+    run test "$before" = "$after"   # eingecheckte Musterdaten unverändert
 else
     echo "PySide6 fehlt – übersprungen (pip install PySide6)"
 fi

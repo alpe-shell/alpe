@@ -1,5 +1,6 @@
 import QtQuick
-// Attrappe: liest statt des Hilfsprogramms eine Musterdatei aus ../../../fixtures.
+// Attrappe: liest statt des Hilfsprogramms eine Musterdatei aus ../../../fixtures oder, wenn shot.py
+// die Kontext-Eigenschaft fixturesUrl setzt (ALPE_SPORT_FIXTURES), aus jenem Ordner.
 QtObject {
     id: p
     property bool running: false
@@ -28,7 +29,8 @@ QtObject {
             p.stdout.streamFinished();
             p.exited(0);
         };
-        xhr.open("GET", Qt.resolvedUrl("../../../fixtures/" + name));
+        const base = typeof fixturesUrl !== "undefined" ? fixturesUrl : Qt.resolvedUrl("../../../fixtures/");
+        xhr.open("GET", base + name);
         xhr.send();
     }
 }

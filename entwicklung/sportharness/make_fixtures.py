@@ -4,12 +4,13 @@ durch das echte Hilfsprogramm geschickt (ohne Netz). Logos sind Platzhalter (Far
 Initiale), damit die Vorschau Bilder hat.
 
     python3 make_fixtures.py   -> fixtures/*.json, fixtures/logos/*.png
+    ALPE_SPORT_FIXTURES=/tmp/x python3 make_fixtures.py   -> dorthin (so laufen die Tests; das Repository bleibt unverändert)
 """
 import importlib.machinery, importlib.util, json, os, re, sys
 from datetime import date
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "fixtures")
+OUT = os.environ.get("ALPE_SPORT_FIXTURES") or os.path.join(HERE, "fixtures")
 os.makedirs(OUT, exist_ok=True)
 os.environ["XDG_CACHE_HOME"] = os.path.join(OUT, "cache")
 os.environ["ALPE_SPORT_TODAY"] = "2026-11-18"
