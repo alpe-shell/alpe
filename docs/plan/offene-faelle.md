@@ -277,6 +277,12 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Registrierung an `data` einer schon abgebauten Zeile) und lässt sich im QML nicht abfangen; da
   der Fehler sporadisch ist, beweist ein sauberer Lauf das Verschwinden nicht. Bei erneutem
   Auftreten hier nachtragen.
+- Seit D3 (`bca3795`) meldet Qt beim Anmelden am Portal `App info not found for
+  'io.github.alpe_shell.Alpe'` statt `Connection already associated with an application ID`: Zur
+  neuen App-ID gibt es noch keine Desktop-Datei. In beiden Fällen scheitert die Anmeldung, wie
+  bisher in der Testumgebung. Die Grundlinien sind entsprechend nachgeführt; mit der
+  Desktop-Datei aus dem Paket (E1) sollte die Zeile verschwinden – dann prüfen, ob Portale
+  (Dateiauswahl, Bildschirmfreigabe) die Shell richtig zuordnen.
 - Die Ladeprüfung läuft nur, wo `kwin_wayland` installiert ist (auch für Hyprland).
 
 ## Aufräumen (Entscheid 4, C5)
