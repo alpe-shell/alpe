@@ -1603,10 +1603,57 @@ Singleton {
         });
     }
 
+    // Alpe: «requires_dms» bezieht sich auf den Stand des Ursprungsprojekts (Brand.upstreamVersion).
     function checkPluginCompatibility(requiresDms) {
         if (!requiresDms)
             return true;
-        return ShellVersionService.checkVersionRequirement(requiresDms, ShellVersionService.getParsedShellVersion());
+        return _checkVersionRequirement(requiresDms, _parseVersion(Brand.upstreamVersion));
+    }
+
+    function _parseVersion(versionStr) {
+        if (!versionStr || typeof versionStr !== "string")
+            return {
+                major: 0,
+                minor: 0,
+                patch: 0
+            };
+        let v = versionStr.trim().replace(/^v/, "");
+        v = v.split("+")[0].split("-")[0];
+        const parts = v.split(".");
+        return {
+            major: parseInt(parts[0], 10) || 0,
+            minor: parseInt(parts[1], 10) || 0,
+            patch: parseInt(parts[2], 10) || 0
+        };
+    }
+
+    // Numeric core only; plugin requirements treat 1.7.0-beta as satisfying >=1.7.0.
+    function _compareVersions(v1, v2) {
+        if (v1.major !== v2.major)
+            return v1.major - v2.major;
+        if (v1.minor !== v2.minor)
+            return v1.minor - v2.minor;
+        return v1.patch - v2.patch;
+    }
+
+    function _checkVersionRequirement(requirementStr, currentVersion) {
+        if (!requirementStr || typeof requirementStr !== "string")
+            return true;
+        const match = requirementStr.trim().match(/^(>=|<=|>|<|=)?\s*(.*)$/);
+        const operator = match[1] || ">=";
+        const cmp = _compareVersions(currentVersion, _parseVersion(match[2]));
+        switch (operator) {
+        case ">":
+            return cmp > 0;
+        case "<=":
+            return cmp <= 0;
+        case "<":
+            return cmp < 0;
+        case "=":
+            return cmp === 0;
+        default:
+            return cmp >= 0;
+        }
     }
 
     function getIncompatiblePlugins() {

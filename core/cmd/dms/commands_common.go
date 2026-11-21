@@ -3,14 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 	"github.com/duxlabs-dev/dux-shell/core/internal/plugins"
 	"github.com/duxlabs-dev/dux-shell/core/internal/server"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/sysupdate"
-	"github.com/duxlabs-dev/dux-shell/core/internal/shellembed"
 	"github.com/duxlabs-dev/dux-shell/core/internal/site"
 	"github.com/spf13/cobra"
 )
@@ -216,60 +213,9 @@ func runVersion(cmd *cobra.Command, args []string) {
 	fmt.Printf("%s\n", formatVersion(Version))
 }
 
-// Git builds: dms (git) v0.6.2-XXXX
-// Stable releases: dms v0.6.2
+// Alpe: Die Version setzt das Makefile beim Bau aus shell/Common/Brand.qml (Plan 0.5 Nr. 2).
 func formatVersion(version string) string {
-	if n := sysupdate.GitBuildCount(version); n > 0 {
-		// Fedora COPR (0.0.git.2267.d430cae9) carries no real base version.
-		base, _, ok := strings.Cut(version, "+git")
-		if !ok {
-			base = getBaseVersion()
-		}
-		return fmt.Sprintf("dms (git) v%s-%d", strings.TrimPrefix(base, "v"), n)
-	}
-
-	// Stable release format: 0.6.2
-	re := regexp.MustCompile(`^([\d.]+)$`)
-	if matches := re.FindStringSubmatch(version); matches != nil {
-		return fmt.Sprintf("dms v%s", matches[1])
-	}
-
-	return fmt.Sprintf("dms %s", version)
-}
-
-var baseVersionRe = regexp.MustCompile(`^([\d.]+)`)
-
-// Installed UI trees, for builds without an embedded UI.
-var shellVersionPaths = []string{
-	"/usr/share/quickshell/dms/VERSION",
-	"/usr/local/share/quickshell/dms/VERSION",
-	"/etc/xdg/quickshell/dms/VERSION",
-}
-
-func getBaseVersion() string {
-	if ver := parseBaseVersion(shellembed.Version()); ver != "" {
-		return ver
-	}
-
-	for _, path := range shellVersionPaths {
-		content, err := os.ReadFile(path)
-		if err != nil {
-			continue
-		}
-		if ver := parseBaseVersion(string(content)); ver != "" {
-			return ver
-		}
-	}
-
-	return "1.0.2"
-}
-
-func parseBaseVersion(raw string) string {
-	matches := baseVersionRe.FindStringSubmatch(strings.TrimPrefix(strings.TrimSpace(raw), "v"))
-	if matches == nil {
-		return ""
-	}
-	return matches[1]
+	return "dms " + version
 }
 
 func startDebugServer() error {

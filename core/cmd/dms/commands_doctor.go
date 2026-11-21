@@ -732,17 +732,15 @@ func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver stri
 
 func getDMSShellVersion() (version, path string) {
 	if err := shellApp.ResolveConfig(nil, nil); err == nil && shellApp.ConfigPath() != "" {
-		versionFile := filepath.Join(shellApp.ConfigPath(), "VERSION")
-		if data, err := os.ReadFile(versionFile); err == nil {
-			return strings.TrimSpace(string(data)), shellApp.ConfigPath()
+		if version := brandVersion(shellApp.ConfigPath()); version != "" {
+			return version, shellApp.ConfigPath()
 		}
 		return "installed", shellApp.ConfigPath()
 	}
 
 	if dmsPath, err := config.LocateDMSConfig(); err == nil {
-		versionFile := filepath.Join(dmsPath, "VERSION")
-		if data, err := os.ReadFile(versionFile); err == nil {
-			return strings.TrimSpace(string(data)), dmsPath
+		if version := brandVersion(dmsPath); version != "" {
+			return version, dmsPath
 		}
 		return "installed", dmsPath
 	}

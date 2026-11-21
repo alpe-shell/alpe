@@ -121,7 +121,7 @@ Item {
                 title: `${Brand.name} ${Brand.version} «${Brand.codename}»`
                 subtitle: root.treeText()
                 iconName: "landscape"
-                trailingBadge: ShellVersionService.shellVersion
+                trailingBadge: "Basis " + Brand.upstreamVersion
             }
 
             SettingsRow {

@@ -14,7 +14,8 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SHELL_DIR="${ALPE_SHELL_DIR:-$HERE/shell}"
-WANT="$(tr -d 'v \n' < "$SHELL_DIR/VERSION" 2>/dev/null || true)"   # Stand des Dienstes, zu dem die Oberfläche passt, z. B. 2.1.2
+# Version der Oberfläche, die der passende Dienst meldet (einzige Quelle: Common/Brand.qml)
+WANT="$(sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' "$SHELL_DIR/Common/Brand.qml" 2>/dev/null | head -1 || true)"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
 DROPIN="$CONFIG/systemd/user/dms.service.d/alpe.conf"
 HYPR_MAIN="$CONFIG/hypr/hyprland.conf"
@@ -81,7 +82,7 @@ if have qs || have quickshell; then say "   Quickshell vorhanden"; else say "   
 # Ein selbst gebauter Dienst (tools/backend.sh) liegt in ~/.local/lib/alpe und passt immer zum
 # Shell-Code, weil er aus demselben Quellbaum entsteht.
 OWN="$HOME/.local/lib/alpe/alpe"
-version_of() { "$1" version 2>/dev/null | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -1 | sed 's/^v//'; }
+version_of() { "$1" version 2>/dev/null | grep -oE 'v?[0-9]+(\.[0-9]+)+' | head -1 | sed 's/^v//'; }
 DMS_BIN=""; installed=""
 if have dms; then DMS_BIN="$(PATH="$HOME/.local/bin:$PATH" command -v dms)"; installed="$(version_of "$DMS_BIN")"; fi
 if [ "$BUILD" = 1 ]; then
@@ -98,11 +99,10 @@ elif [ -z "$installed" ]; then
     say "          Entweder das Paket des Ursprungsprojekts installieren oder mit --build-backend selbst bauen."
     missing=1
 else
-    say "   ACHTUNG: dms ist Version $installed, der Shell-Code erwartet $WANT."
-    say "            Oberflaeche und Dienst muessen zusammenpassen. Drei Wege:"
-    say "            1. das Paket auf $WANT bringen, falls die Paketquelle diesen Stand fuehrt"
-    say "            2. bash $0 --build-backend   baut den passenden Dienst selbst (braucht go und make)"
-    say "            3. bash $0 --force           trotzdem fortfahren (nur bei kleinem Abstand sinnvoll)"
+    say "   ACHTUNG: dms ist Version $installed, der Shell-Code erwartet den Dienst von Alpe $WANT."
+    say "            Oberflaeche und Dienst muessen zusammenpassen. Zwei Wege:"
+    say "            1. bash $0 --build-backend   baut den passenden Dienst selbst (braucht go und make)"
+    say "            2. bash $0 --force           trotzdem fortfahren (nur bei kleinem Abstand sinnvoll)"
     [ "$FORCE" = 1 ] || missing=1
 fi
 [ "$missing" = 0 ] || { say "Abgebrochen: zuerst das Fehlende beheben. Veraendert wurde nichts."; exit 1; }

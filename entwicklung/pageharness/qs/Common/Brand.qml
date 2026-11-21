@@ -10,6 +10,7 @@ Singleton {
     readonly property string version: "1.3"
     readonly property string codename: "Zugerberg"
     readonly property string upstreamName: "Dux Modular Shell"
+    readonly property string upstreamVersion: "2.1.2"
     readonly property string upstreamUrl: "https://github.com/duxlabs-dev/dux-shell"
 
     // Wartungsbefehl für die Systemaktualisierung; gibt es ihn, ersetzt er den Weg über den Dienst.

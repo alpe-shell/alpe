@@ -1,0 +1,56 @@
+"""Prüft, dass die Version nur aus shell/Common/Brand.qml kommt (Plan 0.5 Nr. 2):
+das Makefile in core/ liest sie dort, und der damit gebaute Dienst meldet sie.
+
+    python3 tests/test_version.py
+
+Der Bau läuft über «make dev» in einen Temp-Ordner (ohne eingebettete Oberfläche, nichts im
+Quellbaum). Ohne go oder make, oder mit ALPE_SKIP_GO, wird nur das Makefile geprüft bzw. übersprungen.
+"""
+import os, re, shutil, subprocess, sys, tempfile
+
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CORE = os.path.join(HERE, "core")
+BRAND = os.path.join(HERE, "shell", "Common", "Brand.qml")
+checks = 0
+
+
+def expect(got, want, what):
+    global checks
+    assert got == want, "%s: %r statt %r" % (what, got, want)
+    checks += 1
+
+
+def make(*args, env=None):
+    out = subprocess.run(["make", "-s", "-C", CORE, *args], capture_output=True, text=True, env=env)
+    assert out.returncode == 0, "make %s: %s" % (" ".join(args), out.stderr)
+    return out.stdout.strip()
+
+
+brand = re.search(r'readonly property string version:\s*"([^"]+)"', open(BRAND, encoding="utf-8").read()).group(1)
+expect(bool(re.fullmatch(r"\d+(\.\d+)+", brand)), True, "Brand.qml trägt eine Versionsnummer")
+for gone in ("VERSION", "CODENAME"):
+    expect(os.path.exists(os.path.join(HERE, "shell", gone)), False, "shell/%s gibt es nicht mehr" % gone)
+
+if not shutil.which("make"):
+    print("make fehlt – übersprungen")
+    sys.exit(0)
+
+expect(make("print-version"), brand, "Makefile liest die Version aus Brand.qml")
+# Eine zufällig gesetzte Umgebungsvariable darf die Version nicht still ersetzen.
+expect(make("print-version", env=dict(os.environ, VERSION="9.9.9")), brand, "VERSION aus der Umgebung wirkt nicht")
+
+if os.environ.get("ALPE_SKIP_GO") or not shutil.which("go"):
+    print("go fehlt oder ALPE_SKIP_GO – Bau übersprungen; %d Prüfungen bestanden" % checks)
+    sys.exit(0)
+
+out_dir = tempfile.mkdtemp(prefix="alpe-version-")
+try:
+    env = dict(os.environ, CGO_ENABLED="0")
+    env.pop("GOFLAGS", None)
+    make("dev", "BUILD_DIR=" + out_dir, env=env)
+    got = subprocess.run([os.path.join(out_dir, "dms"), "version"], capture_output=True, text=True).stdout.strip()
+    expect(got, "dms " + brand, "«dms version» meldet die Version aus Brand.qml")
+finally:
+    shutil.rmtree(out_dir, ignore_errors=True)
+
+print("alle %d Prüfungen bestanden" % checks)

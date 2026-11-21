@@ -9,15 +9,17 @@ INSTALL_DIR=$(PREFIX)/bin
 GO=go
 GOFLAGS=-ldflags="-s -w"
 
-# Version and build info
-BASE_VERSION=$(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.0.0")
-COMMIT_COUNT=$(shell git rev-list --count HEAD 2>/dev/null || echo "0")
+# Alpe: Die Version steht allein in shell/Common/Brand.qml (Plan 0.5 Nr. 2); der Dienst
+# bekommt sie beim Bau. tests/test_version.py prüft, dass «dms version» sie meldet.
+BRAND_QML=$(SHELL_SRC)/Common/Brand.qml
+BRAND_VERSION=$(shell sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' $(BRAND_QML) | head -1)
 COMMIT_HASH=$(shell git rev-parse --short=8 HEAD 2>/dev/null || echo "unknown")
-VERSION?=$(BASE_VERSION)+git$(COMMIT_COUNT).$(COMMIT_HASH)
+VERSION=$(BRAND_VERSION)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 COMMIT?=$(COMMIT_HASH)
 
-BUILD_LDFLAGS=-ldflags='-s -w -X main.Version=$(VERSION) -X main.buildTime=$(BUILD_TIME) -X main.commit=$(COMMIT)'
+VERSION_LDFLAGS=-X main.Version=$(VERSION) -X main.buildTime=$(BUILD_TIME) -X main.commit=$(COMMIT)
+BUILD_LDFLAGS=-ldflags='-s -w $(VERSION_LDFLAGS)'
 
 # Architecture to build for dist target (amd64, arm64, or all)
 ARCH ?= all
@@ -103,7 +105,7 @@ deps:
 dev:
 	@echo "Building $(BINARY_NAME) for development..."
 	@mkdir -p $(BUILD_DIR)
-	$(GO) build -o $(BUILD_DIR)/$(BINARY_NAME) ./$(SOURCE_DIR)
+	$(GO) build -ldflags='$(VERSION_LDFLAGS)' -o $(BUILD_DIR)/$(BINARY_NAME) ./$(SOURCE_DIR)
 	@echo "Development build complete: $(BUILD_DIR)/$(BINARY_NAME)"
 
 check-go:

@@ -16,7 +16,7 @@ test("shell staging and archives exclude tests and preserve runtime assets", t =
     const excluded = ["tests/qml/layout.qml", "Common/tests/fixture.json", "Tests/test.qml", "testdata/settings.json",
         "Modules/__tests__/widget.qml", "harness/shell.qml", "harnesses/layout.qml", "Common/layout.test.mjs", "Common/layout.test.js",
         "Widgets/tst_button.qml", "Widgets/button_test.qml", "DCommon/tests/qml/slider.qml"];
-    const included = ["shell.qml", "VERSION", "Common/LayoutResolver.js", "scripts/gtk.sh", "scripts/qt.sh",
+    const included = ["shell.qml", "Common/Brand.qml", "Common/LayoutResolver.js", "scripts/gtk.sh", "scripts/qt.sh",
         "scripts/bluez-card-profile.lua", "DCommon/Widgets/DIcon.qml", "Widgets/LatestUpdate.qml"];
     mkdirSync(source);
     mkdirSync(common);

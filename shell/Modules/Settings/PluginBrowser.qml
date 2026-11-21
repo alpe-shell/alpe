@@ -659,7 +659,7 @@ RegistryBrowserWindow {
 
     function detailLinksMarkup(plugin) {
         const reportUrl = PluginRanking.issueReportUrl(plugin, {
-            "dms": ShellVersionService.shellVersion || DMSService.cliVersion,
+            "dms": Brand.upstreamVersion,
             "compositor": rankingCompositor()
         });
         const links = [];

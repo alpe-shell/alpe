@@ -124,7 +124,8 @@ cmd_doctor() {
     else bad "Shell läuft nicht"; fi
     if b="$(backend)"; then
         v="$("$b" version 2>/dev/null | head -1)"
-        case "$v" in *"$(tr -d 'v \n' < "$SHELL_DIR/VERSION" 2>/dev/null)"*) ok "Hintergrunddienst passt: $v" ;; *) warn "Hintergrunddienst: $v (Oberfläche $(cat "$SHELL_DIR/VERSION" 2>/dev/null)) – bash $ALPE_DIR/tools/backend.sh status" ;; esac
+        want="$(sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' "$SHELL_DIR/Common/Brand.qml" 2>/dev/null | head -1)"
+        case "$v" in "dms $want"|"alpe-dienst $want") ok "Hintergrunddienst passt: $v" ;; *) warn "Hintergrunddienst: $v (Oberfläche $want) – bash $ALPE_DIR/tools/backend.sh status" ;; esac
     else bad "kein Hintergrunddienst gefunden"; fi
     say ""
     say "Werkzeuge"

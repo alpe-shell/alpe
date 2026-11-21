@@ -25,7 +25,7 @@ function service({ enabled = true, type = "widget" } = {}) {
         Paths: { toFileUrl: path => path.startsWith("file://") ? path : "file://" + path },
         SettingsData: { getPluginSetting: () => enabled, setPluginSetting() {} },
         DMSService: { update: (id, callback) => requests.push(callback), installedPlugins: [] },
-        ShellVersionService: { checkVersionRequirement: requirement => !requirement.startsWith(">=99"), getParsedShellVersion: () => ({}) },
+        Brand: { upstreamVersion: "2.1.2" },
         Component: { Error: 3, PreferSynchronous: 0 },
         I18n: { tr: text => Object.assign(new String(text), { arg: value => text.replace("%1", value) }) },
         ToastService: { showError() {} },
@@ -274,4 +274,16 @@ test("a stale directory listing explains that the shell needs a restart", () => 
         assert.equal(errors.at(-1).title, message);
         assert.match(String(errors.at(-1).details), details);
     }
+});
+
+test("requires_dms is checked against the upstream base version in Brand", () => {
+    const { context } = service();
+    assert.equal(context.checkPluginCompatibility(""), true);
+    assert.equal(context.checkPluginCompatibility(">=2.1"), true);
+    assert.equal(context.checkPluginCompatibility(">=2.1.2"), true);
+    assert.equal(context.checkPluginCompatibility(">2.1.2"), false);
+    assert.equal(context.checkPluginCompatibility(">=2.2"), false);
+    assert.equal(context.checkPluginCompatibility("<3"), true);
+    assert.equal(context.checkPluginCompatibility("=2.1.2"), true);
+    assert.equal(context.checkPluginCompatibility("2.0"), true);
 });

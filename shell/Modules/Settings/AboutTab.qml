@@ -86,7 +86,7 @@ Item {
             SettingsRow {
                 iconName: "fork_right"
                 title: "Herkunft"
-                subtitle: `${Brand.name} ${Brand.version} «${Brand.codename}» baut auf ${Brand.upstreamName} ${ShellVersionService.semverVersion} auf (MIT-Lizenz).`
+                subtitle: `${Brand.name} ${Brand.version} «${Brand.codename}» baut auf ${Brand.upstreamName} ${Brand.upstreamVersion} auf (MIT-Lizenz).`
             }
 
             SettingsLinkRow {

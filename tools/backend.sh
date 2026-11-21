@@ -30,7 +30,6 @@ die() { say "FEHLER: $*"; exit 1; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
 brand_version() { sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' "$UI/Common/Brand.qml" 2>/dev/null | head -1; }
-base_version() { tr -d 'v \n' < "$UI/VERSION" 2>/dev/null; }
 version_of() { [ -x "$1" ] && "$1" version 2>/dev/null | head -1; }
 
 uses_systemd() { systemctl --user cat dms.service >/dev/null 2>&1 && systemctl --user is-enabled --quiet dms.service 2>/dev/null; }
@@ -49,16 +48,16 @@ build)
     have go || die "go fehlt (CachyOS: sudo pacman -S --needed go; Fedora: sudo dnf install golang)"
     have make || die "make fehlt"
     [ -d "$CORE" ] || die "$CORE fehlt – der Alpe-Ordner ist unvollständig"
-    version="$(base_version)-alpe$(brand_version)"
+    version="$(brand_version)"   # setzt das Makefile selbst aus Brand.qml
     say "== Baue den Hintergrunddienst $version"
     say "   Quelle: $HERE (Zweig $(git -C "$HERE" rev-parse --abbrev-ref HEAD 2>/dev/null), $(git -C "$HERE" rev-parse --short HEAD 2>/dev/null))"
     # Go lädt bei Bedarf die passende Toolchain und die Module selbst nach (GOTOOLCHAIN=auto).
-    GOTOOLCHAIN="${GOTOOLCHAIN:-auto}" make -C "$CORE" build VERSION="$version" COMMIT="$(git -C "$HERE" rev-parse --short=8 HEAD 2>/dev/null || echo unbekannt)" >/dev/null \
+    GOTOOLCHAIN="${GOTOOLCHAIN:-auto}" make -C "$CORE" build COMMIT="$(git -C "$HERE" rev-parse --short=8 HEAD 2>/dev/null || echo unbekannt)" >/dev/null \
         || die "Bau gescheitert (Ausgabe oben). Der bisherige Dienst bleibt unverändert."
     built="$CORE/bin/dms"
     [ -x "$built" ] || die "Kein Ergebnis in $built"
     got="$(version_of "$built")"
-    case "$got" in *"$version"*) ;; *) die "Der neue Bau meldet «$got» statt $version – nicht übernommen" ;; esac
+    case "$got" in "dms $version") ;; *) die "Der neue Bau meldet «$got» statt $version – nicht übernommen" ;; esac
     mkdir -p "$LIB"
     [ -x "$BIN" ] && cp -f "$BIN" "$BIN.prev"
     install -m755 "$built" "$BIN.new" && mv -f "$BIN.new" "$BIN"

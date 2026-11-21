@@ -82,7 +82,6 @@ Column {
     readonly property var pluginsWithUpdates: (DMSService.installedPlugins || []).filter(plugin => plugin.hasUpdate === true)
     readonly property var incompatiblePlugins: {
         PluginService.loadedPlugins;
-        ShellVersionService.semverVersion;
         return PluginService.getIncompatiblePlugins();
     }
 
