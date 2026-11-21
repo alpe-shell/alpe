@@ -199,15 +199,15 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
 - Hyprland: `[CompositorService] failed to update DMS window rule dms-floating-windows …
   hyprland.lua not found …; run dms setup …`; verweist auf `dms setup` (Befehl fällt mit C4 weg).
 
-- Sporadisch: `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null`
-  und `SettingsRow.qml: Cannot find member data`. Gesehen einmal unter Hyprland (vor C4) und
-  einmal unter KWin während C4 (Plugin-Register-Commit); der Wiederholungslauf mit demselben Code
-  war sauber. Nicht in die Grundlinie aufgenommen. Vermutete Ursache: Beim Abbau einer
-  `SettingsRow` setzt Qt die `Item`-Eigenschaft `target` von `SettingsSearchRegistration` auf
-  `null`, die Bindung `flickable: QmlUtils.findParentFlickable(target.parent)` wird danach noch
-  einmal ausgewertet. Vorschlag (eigener Commit): `target?.parent`, `sync()` und
-  `Component.onDestruction` gegen `target === null` absichern; prüfen, ob `unregisterCard`
-  dann trotzdem greift.
+- ~~Sporadisch: `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null`~~
+  Behoben (Commit «Einstellungssuche: abgebaute Karten»): Bindung und `sync()` prüfen `target`
+  auf null; `unregisterCard` ohne Karte entfernt nur einen Eintrag, dessen Karte schon weg ist,
+  nie den einer neueren Karte mit demselben Schlüssel (vorher möglich). Test
+  `shell/tests/settings-search-cards.test.mjs`. Die begleitende Meldung `SettingsRow.qml[139:5]:
+  Cannot find member data` stammt vermutlich aus derselben abgebrochenen Erzeugung (Qt hängt die
+  Registrierung an `data` einer schon abgebauten Zeile) und lässt sich im QML nicht abfangen; da
+  der Fehler sporadisch ist, beweist ein sauberer Lauf das Verschwinden nicht. Bei erneutem
+  Auftreten hier nachtragen.
 - Die Ladeprüfung läuft nur, wo `kwin_wayland` installiert ist (auch für Hyprland).
 
 ## Aufräumen (Entscheid 4, C5)

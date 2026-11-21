@@ -231,7 +231,12 @@ Singleton {
     function unregisterCard(settingKey, item) {
         if (!settingKey)
             return;
-        if (item && registeredCards[settingKey] && registeredCards[settingKey].item !== item)
+        // item ist null, wenn Qt die Karte schon abgebaut hat. Dann nur einen Eintrag ohne
+        // lebende Karte entfernen, nie den einer neueren Karte mit demselben Schlüssel.
+        const entry = registeredCards[settingKey];
+        if (!entry)
+            return;
+        if (entry.item && entry.item !== item)
             return;
         var cards = Object.assign({}, registeredCards);
         delete cards[settingKey];

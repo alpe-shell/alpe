@@ -8,11 +8,13 @@ QtObject {
     required property Item target
     property string settingKey: ""
 
-    readonly property Item flickable: QmlUtils.findParentFlickable(target.parent)
+    // Wird die Karte abgebaut (auch eine abgebrochene asynchrone Erzeugung), setzt Qt
+    // `target` auf null, während die Bindungen noch ausgewertet werden.
+    readonly property Item flickable: target ? QmlUtils.findParentFlickable(target.parent) : null
     readonly property bool pageVisible: flickable?.visible ?? false
 
     function sync() {
-        if (!settingKey)
+        if (!settingKey || !target)
             return;
         if (!pageVisible) {
             SettingsSearchService.unregisterCard(settingKey, target);
