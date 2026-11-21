@@ -277,6 +277,11 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Registrierung an `data` einer schon abgebauten Zeile) und lässt sich im QML nicht abfangen; da
   der Fehler sporadisch ist, beweist ein sauberer Lauf das Verschwinden nicht. Bei erneutem
   Auftreten hier nachtragen.
+  **Wieder aufgetreten** (allein, ohne den TypeError): KWin-Lauf zu `d3343e9` (Commit ändert
+  nur zwei unbenutzte SVG-Dateien im Dienst), 1 von 30 Läufen seit der Behebung. Bleibt eine
+  sporadische Meldung beim Abbau der Einstellungsseiten; nicht in der Grundlinie. Möglicher
+  nächster Schritt: Registrierung als Eigenschaft statt als Kind in `data` anhängen und über
+  viele Läufe vergleichen.
 - Seit D3 (`bca3795`) meldet Qt beim Anmelden am Portal `App info not found for
   'io.github.alpe_shell.Alpe'` statt `Connection already associated with an application ID`: Zur
   neuen App-ID gibt es noch keine Desktop-Datei. In beiden Fällen scheitert die Anmeldung, wie
