@@ -7,7 +7,6 @@ import (
 
 	"github.com/alpe-shell/alpe/core/internal/clipboard"
 	"github.com/alpe-shell/alpe/core/internal/log"
-	"github.com/alpe-shell/alpe/core/internal/utils"
 )
 
 var Version = "dev"
@@ -27,12 +26,6 @@ func main() {
 
 	if os.Geteuid() == 0 && !isReadOnlyCommand(os.Args) && !isRootHelper(os.Args) {
 		log.Fatal("This program should not be run as root. Exiting.")
-	}
-
-	if os.Geteuid() != 0 {
-		for _, err := range utils.MigrateLegacyDirs() {
-			log.Warnf("dms dir migration: %v", err)
-		}
 	}
 
 	os.Args = normalizeDmenuArgv(os.Args)
