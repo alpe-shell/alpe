@@ -6,7 +6,6 @@ import (
 	"encoding/binary"
 	"os"
 	"path/filepath"
-	"slices"
 	"strings"
 	"testing"
 )
@@ -465,60 +464,5 @@ func TestHyprlandDeprecatedConfigResults(t *testing.T) {
 		if got := hyprlandDeprecatedConfigResults([]byte(out)); len(got) != 0 {
 			t.Errorf("%q: got %+v, want nothing", out, got)
 		}
-	}
-}
-
-func TestCheckGreetdSession(t *testing.T) {
-	dir := t.TempDir()
-	wrapper := filepath.Join(dir, "dms-greeter")
-	if err := os.WriteFile(wrapper, []byte("#!/bin/sh\n"), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	hyprlang := filepath.Join(dir, "dms-hypr.conf")
-	if err := os.WriteFile(hyprlang, []byte("# see hl.dsp docs\nexec-once = waybar\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	luaConf := filepath.Join(dir, "lua-hypr.conf")
-	if err := os.WriteFile(luaConf, []byte("hl.config({ misc = { disable_hyprland_logo = true } })\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	for name, tc := range map[string]struct {
-		command string
-		warn    bool
-	}{
-		"pre-1.6 wrapper":           {wrapper + " --command niri", true},
-		"hyprlang greeter config":   {"dux-greeter --command hyprland -C " + hyprlang, true},
-		"hyprlang via --config=":    {"dux-greeter --command hyprland --config='" + hyprlang + "'", true},
-		"lua content in a .conf":    {"dux-greeter --command hyprland -C " + luaConf, false},
-		"lua greeter config":        {"dux-greeter --command hyprland -C /etc/greetd/dms-hypr.lua", false},
-		"unreadable greeter config": {"dux-greeter --command hyprland -C " + filepath.Join(dir, "missing.conf"), false},
-		"niri greeter":              {"dux-greeter --command niri -C /etc/greetd/niri.kdl", false},
-	} {
-		config := filepath.Join(t.TempDir(), "config.toml")
-		toml := "[terminal]\nvt = 1\n\n[default_session]\ncommand = \"" + tc.command + "\"\nuser = \"greeter\"\n"
-		if err := os.WriteFile(config, []byte(toml), 0o644); err != nil {
-			t.Fatal(err)
-		}
-		if got := checkGreetdSession(config); (len(got) == 1 && got[0].status == statusWarn) != tc.warn || (!tc.warn && len(got) != 0) {
-			t.Errorf("%s: got %+v, want warn=%v", name, got, tc.warn)
-		}
-	}
-}
-
-func TestRetiredGreeterPackagesInstalled(t *testing.T) {
-	tests := map[string]struct {
-		query string
-		want  []string
-	}{
-		"dux successor satisfying the retired names": {"dux-greeter-git 2.0.0.r165.g7cf13f1-1\ndux-greeter-git 2.0.0.r165.g7cf13f1-1\ndux-greeter-git 2.0.0.r165.g7cf13f1-1\n", nil},
-		"retired package still installed":            {"greetd-dms-greeter-git 1:1.6.2.r0.g0175be5-1\ngreetd-dms-greeter-git 1:1.6.2.r0.g0175be5-1\n", []string{"greetd-dms-greeter-git"}},
-		"nothing installed":                          {"", nil},
-	}
-	for name, tc := range tests {
-		t.Run(name, func(t *testing.T) {
-			if got := retiredGreeterPackagesInstalled(tc.query); !slices.Equal(got, tc.want) {
-				t.Fatalf("got %v, want %v", got, tc.want)
-			}
-		})
 	}
 }

@@ -15,10 +15,9 @@ FocusScope {
 
     required property WidgetEditLayer editLayer
     readonly property bool lockScreen: editLayer.lockScreen
-    readonly property bool greeter: editLayer.greeter
     property bool libraryOpen: false
     readonly property real fabReserved: fabBar.reservedHeight
-    readonly property var singletonTypes: ["lockAuth", "greeterSession"]
+    readonly property var singletonTypes: ["lockAuth"]
     readonly property var libraryWidgets: DesktopWidgetRegistry.getListWidgets(editLayer.listKey).filter(widget => {
         if (!lockScreen)
             return true;
@@ -29,14 +28,6 @@ FocusScope {
                 icon: widget.icon,
                 description: widget.description
             }))
-
-    readonly property string surfaceLabel: {
-        if (greeter)
-            return SettingsData.greeterFollowLockScreen ? I18n.tr("Editing the login screen, shared with the lock screen", "widget editor banner") : I18n.tr("Editing the login screen", "widget editor banner");
-        if (!lockScreen || !GreeterService.available)
-            return "";
-        return SettingsData.greeterFollowLockScreen && GreeterService.slotState !== "" ? I18n.tr("Editing the lock screen, the login screen follows it", "widget editor banner") : I18n.tr("Editing the lock screen", "widget editor banner");
-    }
 
     property string optionsInstanceId: ""
     readonly property string selectedInstanceId: editLayer.selectedInstanceId
@@ -76,10 +67,6 @@ FocusScope {
     }
 
     function resetLayout() {
-        if (greeter) {
-            SettingsData.resetGreeterWidgets();
-            return;
-        }
         if (lockScreen) {
             SettingsData.resetLockScreenWidgets();
             return;
@@ -140,40 +127,6 @@ FocusScope {
                 root.closeLibrary();
             }
             onDismissed: root.closeLibrary()
-        }
-    }
-
-    Rectangle {
-        visible: root.surfaceLabel !== "" && fabBar.shown
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: fabBar.reservedHeight + Theme.spacingL + (gridHint.visible ? gridHint.height + Theme.spacingS : 0)
-        width: surfaceRow.implicitWidth + Theme.spacingL * 2
-        height: Theme.buttonHeightM
-        radius: Theme.fullRadius(width, height)
-        color: Theme.readableSurface
-        border.width: Theme.layerOutlineWidth
-        border.color: Theme.outlineMedium
-
-        Row {
-            id: surfaceRow
-            anchors.centerIn: parent
-            spacing: Theme.spacingS
-
-            DIcon {
-                anchors.verticalCenter: parent.verticalCenter
-                name: root.greeter ? "login" : "lock"
-                size: Theme.iconSizeMedium
-                color: Theme.primary
-            }
-
-            StyledText {
-                anchors.verticalCenter: parent.verticalCenter
-                text: root.surfaceLabel
-                font.pixelSize: Theme.fontSizeMedium
-                font.weight: Theme.fontWeightMedium
-                color: Theme.surfaceText
-            }
         }
     }
 

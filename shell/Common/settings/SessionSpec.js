@@ -259,12 +259,6 @@ var LOCAL_SPEC = {
     builtInPluginState: {
         def: {}
     },
-    greeterSyncPending: {
-        def: false
-    },
-    greeterSyncBaseline: {
-        def: {}
-    },
     lastAppliedIconTheme: {
         def: ""
     },

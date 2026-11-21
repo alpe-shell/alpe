@@ -12,7 +12,6 @@ import (
 	"regexp"
 	"runtime"
 	"slices"
-	"strconv"
 	"strings"
 	"sync"
 
@@ -1496,137 +1495,7 @@ func checkSystemdServices() []checkResult {
 		}
 	}
 
-	greetdState := getServiceState("greetd", false)
-	switch {
-	case greetdState.exists:
-		status := statusOK
-		if greetdState.enabled == "disabled" {
-			status = statusInfo
-		}
-		results = append(results, checkResult{catServices, "greetd", status, greetdState.enabled, "", doctorDocsURL + "#services"})
-		results = append(results, checkGreetdSession("/etc/greetd/config.toml")...)
-		results = append(results, checkRetiredGreeterPackages()...)
-	case doctorVerbose:
-		results = append(results, checkResult{catServices, "greetd", statusInfo, "Not installed", "Optional greeter service", doctorDocsURL + "#services"})
-	}
-
 	return results
-}
-
-func greeterLuaHint() string {
-	return "Hyprland 0.57 only reads Lua; switch to the dux-greeter package and rerun `dms-greeter install`. " + greeterPackageInstallHint()
-}
-
-func checkGreetdSession(configPath string) []checkResult {
-	data, err := os.ReadFile(configPath)
-	if err != nil {
-		return nil
-	}
-	fields := strings.Fields(greetdDefaultSessionCommand(string(data)))
-	if len(fields) == 0 {
-		return nil
-	}
-	warn := func(message string) []checkResult {
-		return []checkResult{{catServices, "Greeter session", statusWarn, message, greeterLuaHint(), doctorDocsURL + "#services"}}
-	}
-	if bin, err := exec.LookPath(fields[0]); err == nil && isLegacyWrapperScript(bin) {
-		return warn("greetd runs a pre-1.6 greeter wrapper script")
-	}
-	if !strings.EqualFold(greeterFlagValue(fields, "--command"), "hyprland") {
-		return nil
-	}
-	cfg := strings.Trim(greeterFlagValue(fields, "-C", "--config"), `"'`)
-	if cfg == "" || strings.HasSuffix(cfg, ".lua") {
-		return nil
-	}
-	content, err := os.ReadFile(cfg)
-	if err != nil || greeterHyprlandLuaContent(content) {
-		return nil
-	}
-	return warn("Greeter Hyprland config is not Lua: " + cfg)
-}
-
-var greeterHyprlandLuaPattern = regexp.MustCompile(`(^|[^[:alnum:]_])hl\.`)
-
-// Mirrors dux-greeter's launcher.IsHyprlandLuaConfig content check.
-func greeterHyprlandLuaContent(content []byte) bool {
-	for line := range strings.Lines(string(content)) {
-		if strings.HasPrefix(strings.TrimSpace(line), "#") {
-			continue
-		}
-		if greeterHyprlandLuaPattern.MatchString(line) {
-			return true
-		}
-	}
-	return false
-}
-
-func greetdDefaultSessionCommand(configTOML string) string {
-	inDefault := false
-	for line := range strings.SplitSeq(configTOML, "\n") {
-		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "[") {
-			inDefault = line == "[default_session]"
-			continue
-		}
-		key, value, ok := strings.Cut(line, "=")
-		if !inDefault || !ok || strings.TrimSpace(key) != "command" {
-			continue
-		}
-		value = strings.TrimSpace(value)
-		if unquoted, err := strconv.Unquote(value); err == nil {
-			return unquoted
-		}
-		return strings.Trim(value, `'`)
-	}
-	return ""
-}
-
-func greeterFlagValue(fields []string, flags ...string) string {
-	for i, f := range fields {
-		for _, flag := range flags {
-			if f == flag && i+1 < len(fields) {
-				return fields[i+1]
-			}
-			if value, ok := strings.CutPrefix(f, flag+"="); ok {
-				return value
-			}
-		}
-	}
-	return ""
-}
-
-var retiredGreeterPackages = []string{"greetd-dms-greeter", "greetd-dms-greeter-bin", "greetd-dms-greeter-git"}
-
-func checkRetiredGreeterPackages() []checkResult {
-	if !utils.CommandExists("pacman") {
-		return nil
-	}
-	// pacman -Q exits non-zero when any name is missing but still lists the installed ones
-	out, _ := exec.Command("pacman", append([]string{"-Q"}, retiredGreeterPackages...)...).Output()
-	installed := retiredGreeterPackagesInstalled(string(out))
-	if len(installed) == 0 {
-		return nil
-	}
-	return []checkResult{{
-		catServices, "Greeter package", statusWarn,
-		"Retired package installed: " + strings.Join(installed, ", "),
-		greeterLuaHint(),
-		doctorDocsURL + "#services",
-	}}
-}
-
-// pacman -Q answers a missing name with any installed package that provides it,
-// so the dux-greeter successors come back under the retired names they provide.
-func retiredGreeterPackagesInstalled(pacmanQuery string) []string {
-	var installed []string
-	for line := range strings.SplitSeq(strings.TrimSpace(pacmanQuery), "\n") {
-		name, _, _ := strings.Cut(line, " ")
-		if slices.Contains(retiredGreeterPackages, name) && !slices.Contains(installed, name) {
-			installed = append(installed, name)
-		}
-	}
-	return installed
 }
 
 // Chromium, Electron and libadwaita follow light/dark through the settings

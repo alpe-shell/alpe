@@ -74,7 +74,6 @@ Custom IPC via unix socket (JSON API) for shell communication.
 - `dms brightness [list|set]` - Control display/monitor brightness
 - `dms color pick` - Native color picker (see below)
 - `dms update` - Update DMS and dependencies (disabled in distro packages)
-- `dms greeter` - Deprecated; forwards to the standalone [dms-greeter](https://github.com/duxlabs-dev/dux-greeter) binary
 
 ### Color Picker
 

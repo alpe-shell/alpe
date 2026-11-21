@@ -484,22 +484,6 @@ Singleton {
                     "icon": "brush",
                     "tabIndex": 105,
                     "hint": "Uhr, Datum, Bilder, Passwortfeld – mit Vorschau"
-                },
-                {
-                    "id": "greeter",
-                    "text": I18n.tr("Greeter", "noun, login screen settings page and greeter account badge"),
-                    "icon": "login",
-                    "tabIndex": 31,
-                    "greeterOnly": true,
-                    "hint": I18n.tr("Login screen appearance and authentication")
-                },
-                {
-                    "id": "greeter_auth",
-                    "hidden": true,
-                    "greeterOnly": true,
-                    "text": I18n.tr("Authentication"),
-                    "icon": "fingerprint",
-                    "tabIndex": 62
                 }
             ]
         },
@@ -931,10 +915,6 @@ Singleton {
         if (entry.pointerCapable && !CompositorService.supportsPointerConfig)
             return false;
         if (entry.clipboardOnly && (!DMSService.isConnected || DMSService.apiVersion < 23))
-            return false;
-        if (entry.greeterOnly)
-            GreeterService.ensureDetected();
-        if (entry.greeterOnly && !GreeterService.available)
             return false;
         if (entry.autostartOnly)
             DesktopService.ensureProbed();

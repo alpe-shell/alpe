@@ -20,7 +20,6 @@ FocusScope {
         inputRevealRequested(revealed);
     }
     property bool demoMode: false
-    property bool greeterPreview: false
     property var pam: demoPam
     property string screenName: ""
     property bool unlocking: false
@@ -160,7 +159,6 @@ FocusScope {
         focus: true
         screenName: root.screenName
         lockScreen: true
-        greeter: root.greeterPreview
         lockHost: root
         editMode: root.demoMode
         bottomInset: editorLoader.item?.fabReserved ?? 0

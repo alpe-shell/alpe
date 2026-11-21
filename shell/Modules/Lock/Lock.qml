@@ -103,14 +103,6 @@ Scope {
         IdleService.lockPowerOffRequested = false;
     }
 
-    // Avoid startup lock when using dms-greeter (#2952)
-    function freshGreeterLogin() {
-        const authTime = Number(Quickshell.env("DMS_GREETER_AUTH_TIME") || 0);
-        if (!authTime)
-            return false;
-        return (Date.now() / 1000 - authTime) < 120;
-    }
-
     function lockWithKde() {
         IdleService.lockPowerOffRequested = false;
         Quickshell.execDetached(["loginctl", "lock-session"]);
@@ -171,7 +163,7 @@ Scope {
                 syncKdeLockOnStart();
             return;
         }
-        if (SettingsData.lockAtStartup && !freshGreeterLogin()) {
+        if (SettingsData.lockAtStartup) {
             lock();
             return;
         }
@@ -353,12 +345,6 @@ Scope {
             if (shouldLock)
                 return;
             demoWindow.showDemo();
-        }
-
-        function onGreeterEditorRequested() {
-            if (shouldLock)
-                return;
-            demoWindow.showDemo(true);
         }
 
         function onLoginctlStateChanged() {

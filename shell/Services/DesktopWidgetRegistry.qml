@@ -66,7 +66,6 @@ Singleton {
             type: "builtin",
             component: "qs.Modules.BuiltinDesktopPlugins.DesktopClockWidget",
             settingsComponent: "qs.Modules.Settings.DesktopWidgetSettings.ClockSettings",
-            greeter: true,
             defaultConfig: getDefaultClockConfig(),
             defaultSize: {
                 width: 280,
@@ -91,40 +90,24 @@ Singleton {
     }
 
     function registerLockBuiltins() {
-        const lockWidget = (id, name, icon, greeter) => registerWidget({
+        const lockWidget = (id, name, icon) => registerWidget({
                 id: id,
                 name: name,
                 icon: icon,
                 description: "",
                 type: "builtin",
                 lockOnly: true,
-                greeter: greeter,
                 defaultConfig: Spec.SPEC.lockScreenWidgetInstances.def.find(inst => inst.widgetType === id)?.config ?? {},
                 defaultSize: {
                     width: 200,
                     height: 200
                 }
             });
-        lockWidget("lockDate", I18n.tr("Date"), "event", true);
-        lockWidget("lockAuth", I18n.tr("Password"), "lock", true);
-        lockWidget("lockNotifications", I18n.tr("Notifications"), "notifications", false);
-        lockWidget("lockStatus", I18n.tr("Status"), "wifi", true);
-        lockWidget("lockPower", I18n.tr("Power"), "power_settings_new", true);
-        registerWidget({
-            id: "greeterSession",
-            name: I18n.tr("Session", "greeter session picker widget"),
-            icon: "login",
-            description: "",
-            type: "builtin",
-            lockOnly: true,
-            greeterOnly: true,
-            greeter: true,
-            defaultConfig: Spec.greeterSessionDefault().config,
-            defaultSize: {
-                width: 200,
-                height: 48
-            }
-        });
+        lockWidget("lockDate", I18n.tr("Date"), "event");
+        lockWidget("lockAuth", I18n.tr("Password"), "lock");
+        lockWidget("lockNotifications", I18n.tr("Notifications"), "notifications");
+        lockWidget("lockStatus", I18n.tr("Status"), "wifi");
+        lockWidget("lockPower", I18n.tr("Power"), "power_settings_new");
     }
 
     function getDefaultClockConfig() {
@@ -295,19 +278,13 @@ Singleton {
     }
 
     function getLockWidgets() {
-        return registeredWidgetsList.filter(w => !w.greeterOnly);
-    }
-
-    function getGreeterWidgets() {
-        return registeredWidgetsList.filter(w => w.greeter);
+        return registeredWidgetsList;
     }
 
     function getListWidgets(listKey) {
         switch (listKey) {
         case "lockScreenWidgetInstances":
             return getLockWidgets();
-        case "greeterWidgetInstances":
-            return getGreeterWidgets();
         }
         return getDesktopWidgets();
     }

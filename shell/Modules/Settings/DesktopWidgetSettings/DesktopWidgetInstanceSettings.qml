@@ -12,7 +12,6 @@ Column {
     readonly property var cfg: instanceData?.config ?? {}
     readonly property string listKey: SettingsData.widgetInstanceListKey(instanceId)
     readonly property bool lockScreenInstance: listKey !== "desktopWidgetInstances"
-    readonly property bool greeterInstance: listKey === "greeterWidgetInstances"
     default property alias rows: optionsCard.content
 
     function updateConfig(key, value) {

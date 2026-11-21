@@ -11,11 +11,8 @@ Scope {
     readonly property var log: Log.scoped("LockScreenDemo")
 
     property bool demoActive: false
-    property bool greeterPreview: false
-
-    function showDemo(greeter = false): void {
-        log.debug("Showing lock screen demo", greeter ? "(greeter)" : "");
-        greeterPreview = greeter;
+    function showDemo(): void {
+        log.debug("Showing lock screen demo");
         demoActive = true;
     }
 
@@ -52,7 +49,6 @@ Scope {
             LockScreenContent {
                 anchors.fill: parent
                 demoMode: true
-                greeterPreview: root.greeterPreview
                 screenName: demoWindow.screen?.name ?? ""
                 onUnlockRequested: root.hideDemo()
             }

@@ -211,8 +211,6 @@ Item {
     width: implicitWidth
     height: parent.height
 
-    Component.onCompleted: GreeterService.refresh()
-
     DSearchField {
         id: searchField
 

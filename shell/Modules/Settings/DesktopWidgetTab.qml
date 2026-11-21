@@ -16,7 +16,6 @@ Item {
     readonly property string instanceId: SettingsUiState.selectedDesktopWidgetId
     readonly property string listKey: SettingsData.widgetInstanceListKey(instanceId)
     readonly property bool lockScreenInstance: listKey !== "desktopWidgetInstances"
-    readonly property bool greeterInstance: listKey === "greeterWidgetInstances"
     readonly property var instanceData: SettingsData.getDesktopWidgetInstance(instanceId)
     readonly property string widgetType: instanceData?.widgetType ?? ""
     readonly property var widgetDef: DesktopWidgetRegistry.getWidget(widgetType)

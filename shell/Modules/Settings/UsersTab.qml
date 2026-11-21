@@ -39,10 +39,6 @@ Item {
         id: adminToggleConfirm
     }
 
-    ConfirmModal {
-        id: greeterToggleConfirm
-    }
-
     SettingsPage {
         id: mainColumn
 
@@ -86,38 +82,11 @@ Item {
                     iconName: "account_circle"
                     title: modelData.username
                     subtitle: [modelData.gecos || "", "UID " + modelData.uid].filter(Boolean).join(" · ")
-                    trailingBadge: [modelData.isAdmin ? I18n.tr("admin", "noun, lowercase badge on a user account with admin rights") : "", modelData.isGreeter ? I18n.tr("Greeter") : ""].filter(Boolean).join(" · ")
+                    trailingBadge: modelData.isAdmin ? I18n.tr("admin", "noun, lowercase badge on a user account with admin rights") : ""
 
                     Row {
                         id: actionButtons
                         spacing: Theme.spacingS
-
-                        DActionButton {
-                            id: greeterToggleBtn
-                            readonly property bool actionBlocked: root.operationPending
-                            buttonSize: Theme.iconButtonSize
-                            iconSize: Theme.iconSizeMedium
-                            iconName: userRow.modelData.isGreeter ? "login" : "how_to_reg"
-                            iconColor: userRow.modelData.isGreeter ? Theme.secondary : Theme.surfaceVariantText
-                            enabled: !actionBlocked
-                            tooltipText: userRow.modelData.isGreeter ? I18n.tr("Remove greeter login access") : I18n.tr("Allow greeter login access")
-                            tooltipSide: "left"
-                            onClicked: {
-                                if (actionBlocked)
-                                    return;
-                                const enableGreeter = !userRow.modelData.isGreeter;
-                                greeterToggleConfirm.showWithOptions({
-                                    title: enableGreeter ? I18n.tr("Allow greeter access?") : I18n.tr("Remove greeter access?"),
-                                    message: enableGreeter ? I18n.tr("Add \"%1\" to the %2 group? They must log out and back in, then run %3 to publish their login-screen theme.", "confirm dialog message, %1 is the username, %2 is the group name, %3 a command").arg(userRow.modelData.username).arg(UsersService.greeterGroup).arg("dms-greeter sync --profile") : I18n.tr("Remove \"%1\" from the %2 group?").arg(userRow.modelData.username).arg(UsersService.greeterGroup),
-                                    confirmText: enableGreeter ? I18n.tr("Allow", "verb, confirm button granting a user greeter access") : I18n.tr("Remove"),
-                                    onConfirm: () => {
-                                        root.operationPending = true;
-                                        root.statusText = "";
-                                        UsersService.setGreeterAccess(userRow.modelData.username, enableGreeter, null);
-                                    }
-                                });
-                            }
-                        }
 
                         DActionButton {
                             id: adminToggleBtn

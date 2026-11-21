@@ -16,7 +16,6 @@ Item {
     property string pendingPassword: ""
     property string pendingConfirm: ""
     property bool pendingAdmin: false
-    property bool pendingGreeter: false
 
     Component.onCompleted: UsersService.refresh()
 
@@ -25,7 +24,6 @@ Item {
         pendingPassword = "";
         pendingConfirm = "";
         pendingAdmin = false;
-        pendingGreeter = false;
         usernameField.text = "";
         passwordField.text = "";
         confirmField.text = "";
@@ -165,15 +163,6 @@ Item {
                 onToggled: checked => root.pendingAdmin = checked
             }
 
-            SettingsToggleRow {
-                settingKey: "createUserGreeter"
-                tags: ["user", "greeter", "login", "sync"]
-                text: I18n.tr("Allow greeter login access")
-                description: I18n.tr("Adds them to the %1 group so they can run %2", "create user greeter toggle description, %1 is a group name, %2 a command").arg(UsersService.greeterGroup).arg("dms-greeter sync --profile")
-                checked: root.pendingGreeter
-                onToggled: checked => root.pendingGreeter = checked
-            }
-
             SettingsRow {
                 body: Row {
                     width: parent.width
@@ -188,7 +177,7 @@ Item {
                                 return;
                             root.operationPending = true;
                             root.statusText = "";
-                            UsersService.createUser(root.pendingUsername, root.pendingPassword, root.pendingAdmin, root.pendingGreeter, null);
+                            UsersService.createUser(root.pendingUsername, root.pendingPassword, root.pendingAdmin, null);
                         }
                     }
 

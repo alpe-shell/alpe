@@ -55,10 +55,6 @@ Singleton {
         function onAdminGroupChanged() {
             root._refreshTranslatedCache();
         }
-
-        function onGreeterGroupChanged() {
-            root._refreshTranslatedCache();
-        }
     }
 
     Connections {
@@ -85,7 +81,6 @@ Singleton {
             "networkAvailable": () => NetworkService.networkAvailable,
             "dmsConnected": () => DMSService.isConnected && DMSService.apiVersion >= 23,
             "matugenAvailable": () => Theme.matugenAvailable,
-            "greeterAvailable": () => GreeterService.available,
             "frameEnabled": () => SettingsData.frameEnabled,
             "islandEnabled": () => root.islandBarFor("islandEnabled") !== null,
             "islandFree": () => root.islandBarFor("islandFree") !== null,
@@ -384,7 +379,6 @@ Singleton {
             return "";
         switch (arg.property) {
         case "adminGroup":
-        case "greeterGroup":
             return UsersService[arg.property];
         default:
             return "";

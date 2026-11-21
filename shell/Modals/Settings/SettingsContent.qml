@@ -540,7 +540,6 @@ FocusScope {
             "alpe_pages": "AlpePagesTab.qml",
             "alpe_device": "AlpeDeviceTab.qml",
             "alpe_sport": "AlpeSportTab.qml",
-            "greeter": "GreeterTab.qml",
             "about": "AboutTab.qml",
             "typography": "TypographyMotionTab.qml",
             "sounds": "SoundsTab.qml",
@@ -560,7 +559,6 @@ FocusScope {
             "multiplexers": "MuxTab.qml",
             "users": "UsersTab.qml",
             "user_create": "CreateUserTab.qml",
-            "greeter_auth": "GreeterAuthTab.qml",
             "autostart": "AutoStartTab.qml",
             "battery": "BatteryTab.qml",
             "dank_dash": "DDashTab.qml",
@@ -570,7 +568,7 @@ FocusScope {
             "plugins_manage": "PluginsManageTab.qml"
         })
 
-    readonly property var pagesWithParentModal: ["dankbar_widgets", "window_rules", "notification_rules", "display_config", "users", "time_weather", "weather", "lock_screen", "greeter", "dank_dash", "wallpaper_cycling", "theme_schedule", "surface_shadows", "keybinds", "dankbar_settings", "dankbar_appearance", "bar_widget", "dock_general", "dock_widgets", "dock_appearance", "dock_advanced", "launcher", "theme", "theme_apps", "media_player", "desktop_widgets", "desktop_widget", "autostart", "compositor_layout", "updater", "display_gamma", "about", "alpe_desktop", "alpe_maintenance", "alpe_peripherals", "alpe_pages", "alpe_device", "power_sleep", "lock_design", "alpe_effects", "alpe_services", "alpe_performance"]
+    readonly property var pagesWithParentModal: ["dankbar_widgets", "window_rules", "notification_rules", "display_config", "users", "time_weather", "weather", "lock_screen", "dank_dash", "wallpaper_cycling", "theme_schedule", "surface_shadows", "keybinds", "dankbar_settings", "dankbar_appearance", "bar_widget", "dock_general", "dock_widgets", "dock_appearance", "dock_advanced", "launcher", "theme", "theme_apps", "media_player", "desktop_widgets", "desktop_widget", "autostart", "compositor_layout", "updater", "display_gamma", "about", "alpe_desktop", "alpe_maintenance", "alpe_peripherals", "alpe_pages", "alpe_device", "power_sleep", "lock_design", "alpe_effects", "alpe_services", "alpe_performance"]
 
     // The page scroller stops at the Loader edges; wheel over the header and gutters lands here instead
     WheelHandler {

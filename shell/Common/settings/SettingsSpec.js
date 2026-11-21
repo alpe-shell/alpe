@@ -7,18 +7,6 @@ function lockWidgetDefaults() {
     return Shared.lockWidgetDefaults();
 }
 
-function greeterWidgetsFromLock(lockInstances, previous) {
-    return Shared.greeterWidgetsFromLock(lockInstances, previous);
-}
-
-function greeterSessionDefault() {
-    return Shared.greeterSessionDefault();
-}
-
-function greeterWidgetDefaults() {
-    return Shared.greeterWidgetDefaults();
-}
-
 // Hyprland 0.57 turned scrolling:follow_focus from a bool into modes 0-2; stored bools stay readable
 function followFocusMode(v) {
     if (typeof v === "boolean")
@@ -831,17 +819,6 @@ var LOCAL_SPEC = {
     },
     clockDateFormat: {
         def: ""
-    },
-    greeterAutoLogin: {
-        def: false,
-        onChange: "scheduleGreeterAutoLoginSync"
-    },
-    greeterFollowLockScreen: {
-        def: true
-    },
-    greeterPamExternallyManaged: {
-        def: false,
-        onChange: "markGreeterSyncPending"
     },
     browserPickerViewMode: {
         def: "grid"

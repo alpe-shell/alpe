@@ -29,7 +29,6 @@ Item {
             id: host
 
             readonly property bool demoMode: true
-            readonly property bool greeterPreview: false
             readonly property var pam: null
             readonly property bool unlocking: false
             readonly property string pamState: ""

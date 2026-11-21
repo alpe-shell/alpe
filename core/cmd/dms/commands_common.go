@@ -775,7 +775,6 @@ func getCommonCommands() []*cobra.Command {
 		iccCmd,
 		dpmsCmd,
 		keybindsCmd,
-		greeterCmd,
 		setupCmd,
 		colorCmd,
 		qrCmd,
