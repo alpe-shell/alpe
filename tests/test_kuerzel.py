@@ -40,14 +40,14 @@ class Fake:
 fake = Fake([
     {"component": "kwin", "name": "KWin", "actions": [
         {"action": "Window Close", "name": "Fenster schliessen", "keys": [F4]},
-        {"action": "dms-processlist", "name": "Alpe: Systemmonitor", "keys": [kuerzel.key_code("Meta+Shift+M")]}]},
+        {"action": "alpe-processlist", "name": "Alpe: Systemmonitor", "keys": [kuerzel.key_code("Meta+Shift+M")]}]},
     {"component": "plasmashell", "name": "Plasma", "actions": [
         {"action": "manage activities", "name": "Aktivitäten", "keys": [Q, kuerzel.key_code("Meta+A")]}]},
 ])
 code = kuerzel.vorgaben(fake, 0)
 acts = {(c["component"], a["action"]): a["keys"] for c in fake.comps for a in c["actions"]}
 check(code == 0 and acts[("kwin", "Window Close")] == [F4, Q], "Meta+Q kommt zu Alt+F4 dazu")
-check(M in acts[("kwin", "dms-processlist")], "Systemmonitor bekommt Meta+M")
+check(M in acts[("kwin", "alpe-processlist")], "Systemmonitor bekommt Meta+M")
 check(acts[("plasmashell", "manage activities")] == [kuerzel.key_code("Meta+A")], "bisheriger Besitzer gibt nur Meta+Q ab")
 calls = len(fake.calls)
 kuerzel.vorgaben(fake, 0)

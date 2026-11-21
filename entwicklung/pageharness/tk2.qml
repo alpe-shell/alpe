@@ -16,7 +16,7 @@ Item {
         placement: "Smart", animation: "0.5", focusPolicy: "ClickToFocus" })
     property var sc: ({ available: true, components: [
         { component: "kwin", name: "KWin", actions: [{ action: "Window Close", name: "Fenster schliessen", keys: [134217812], defaults: [134217812] }, { action: "Overview", name: "Übersicht", keys: [], defaults: [268435543] }] },
-        { component: "dms", name: "Alpe", actions: [{ action: "dms-launcher", name: "Alpe: Starter", keys: [268435488], defaults: [] }] } ] })
+        { component: "dms", name: "Alpe", actions: [{ action: "alpe-launcher", name: "Alpe: Starter", keys: [268435488], defaults: [] }] } ] })
     property var sv: ({ available: true, services: [{ Id: "dms.service", ActiveState: "active", ActiveEnterTimestamp: "Tue 2026-11-17 18:00:00 CET", own: false, dropins: ["/x/dms.service.d/kwin.conf"], UnitFileState: "enabled" },
         { Id: "alpe-sync.service", Description: "Sync", ActiveState: "inactive", own: true, dropins: [], UnitFileState: "disabled" },
         { Id: "pipewire.service", Description: "PipeWire", ActiveState: "active", own: false, dropins: [], UnitFileState: "enabled" }] })

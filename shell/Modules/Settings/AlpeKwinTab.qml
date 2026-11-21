@@ -15,7 +15,7 @@ Item {
     property var parentModal: null
 
     // Kennung in kglobalshortcutsrc (Gruppe kwin) → Anzeigename und Symbol
-    readonly property var shortcutRows: [["dms-launcher", "Starter", "grid_view"], ["dms-clipboard", "Zwischenablage", "content_paste"], ["dms-processlist", "Systemmonitor", "monitoring"], ["dms-settings", "Einstellungen", "settings"], ["dms-notifications", "Benachrichtigungen", "notifications"], ["dms-control-center", "Kontrollzentrum", "tune"], ["dms-dash", "Dashboard", "space_dashboard"], ["dms-powermenu", "Energiemenü", "power_settings_new"], ["dms-notepad", "Notizblock", "edit_note"]]
+    readonly property var shortcutRows: [["alpe-launcher", "Starter", "grid_view"], ["alpe-clipboard", "Zwischenablage", "content_paste"], ["alpe-processlist", "Systemmonitor", "monitoring"], ["alpe-settings", "Einstellungen", "settings"], ["alpe-notifications", "Benachrichtigungen", "notifications"], ["alpe-control-center", "Kontrollzentrum", "tune"], ["alpe-dash", "Dashboard", "space_dashboard"], ["alpe-powermenu", "Energiemenü", "power_settings_new"], ["alpe-notepad", "Notizblock", "edit_note"]]
     property var shortcutKeys: ({})
     property bool shortcutsLoaded: false
 

@@ -9,7 +9,7 @@ import qs.Services
 
 // KWin backend. KWin exposes neither wlr-foreign-toplevel-management nor
 // ext-workspace, so windows and virtual desktops are mirrored by a KWin script
-// (Services/kwin/dms-bridge.js). The script pushes JSON snapshots as D-Bus
+// (Services/kwin/alpe-bridge.js). The script pushes JSON snapshots as D-Bus
 // method calls, read here through `busctl monitor`. Actions go the other way
 // as one-shot KWin scripts.
 Singleton {
@@ -150,8 +150,8 @@ Singleton {
         onTriggered: root.reloadBridge()
     }
 
-    readonly property string _bridgeName: "dms-bridge"
-    readonly property string _bridgePath: Quickshell.shellDir + "/Services/kwin/dms-bridge.js"
+    readonly property string _bridgeName: "alpe-bridge"
+    readonly property string _bridgePath: Quickshell.shellDir + "/Services/kwin/alpe-bridge.js"
     readonly property string _scripting: "busctl --user call org.kde.KWin /Scripting org.kde.kwin.Scripting"
 
     readonly property Component _toplevelComponent: Component {
@@ -264,8 +264,8 @@ Singleton {
     function _run(body) {
         if (!active)
             return;
-        const name = "dms-cmd-" + Date.now() + "-" + (++_cmdSerial);
-        const js = "(function(){try{" + body + "}catch(e){print('dms-kwin: '+e);}})();";
+        const name = "alpe-cmd-" + Date.now() + "-" + (++_cmdSerial);
+        const js = "(function(){try{" + body + "}catch(e){print('alpe-kwin: '+e);}})();";
         const sh = 'f="${XDG_RUNTIME_DIR:-/tmp}/$1.js"; printf "%s" "$2" > "$f" || exit 1; ' + 'id=$(' + _scripting + ' loadScript ss "$f" "$1" | cut -d" " -f2); ' + 'busctl --user call org.kde.KWin "/Scripting/Script$id" org.kde.kwin.Script run >/dev/null; ' + 'sleep 2; ' + _scripting + ' unloadScript s "$1" >/dev/null; rm -f "$f"';
         Quickshell.execDetached(["sh", "-c", sh, "sh", name, js]);
     }
@@ -311,15 +311,15 @@ Singleton {
 
     // Shortcut ids registered by the bridge script, mapped to this shell's IPC
     readonly property var _shortcutActions: ({
-            "dms-launcher": ["spotlight", "toggle"],
-            "dms-clipboard": ["clipboard", "toggle"],
-            "dms-processlist": ["processlist", "toggle"],
-            "dms-settings": ["settings", "toggle"],
-            "dms-notifications": ["notifications", "toggle"],
-            "dms-control-center": ["control-center", "toggle"],
-            "dms-dash": ["dash", "toggle", ""],
-            "dms-powermenu": ["powermenu", "toggle"],
-            "dms-notepad": ["notepad", "toggle"]
+            "alpe-launcher": ["spotlight", "toggle"],
+            "alpe-clipboard": ["clipboard", "toggle"],
+            "alpe-processlist": ["processlist", "toggle"],
+            "alpe-settings": ["settings", "toggle"],
+            "alpe-notifications": ["notifications", "toggle"],
+            "alpe-control-center": ["control-center", "toggle"],
+            "alpe-dash": ["dash", "toggle", ""],
+            "alpe-powermenu": ["powermenu", "toggle"],
+            "alpe-notepad": ["notepad", "toggle"]
         })
 
     function _handleShortcut(name) {

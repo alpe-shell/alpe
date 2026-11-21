@@ -7,7 +7,7 @@
 
 Vorgaben:
   Meta+Q   Fenster schliessen (KWin, zusätzlich zu Alt+F4)
-  Meta+M   Alpe-Systemmonitor (Aktion «dms-processlist» des KWin-Skripts der Shell)
+  Meta+M   Alpe-Systemmonitor (Aktion «alpe-processlist» des KWin-Skripts der Shell)
 
 Das KWin-Skript meldet seine Aktionen erst an, wenn die Shell läuft. Fehlt eine Aktion noch,
 wartet «vorgaben» bis zu --warten Sekunden (Vorgabe 15) und meldet sonst, was offen blieb.
@@ -22,7 +22,7 @@ SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path
 # (Komponente, Aktion, Tasten) – die Tasten kommen zu den vorhandenen dazu
 VORGABEN = [
     ("kwin", "Window Close", ["Meta+Q"]),
-    ("kwin", "dms-processlist", ["Meta+M"]),
+    ("kwin", "alpe-processlist", ["Meta+M"]),
 ]
 
 MODS = {"meta": 0x10000000, "ctrl": 0x04000000, "alt": 0x08000000, "shift": 0x02000000}

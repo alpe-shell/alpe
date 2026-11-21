@@ -1,4 +1,4 @@
-// DMS <-> KWin bridge. Loaded into KWin by KwinService.qml through
+// Alpe <-> KWin bridge. Loaded into KWin by KwinService.qml through
 // org.kde.kwin.Scripting. KWin exposes neither wlr-foreign-toplevel nor
 // ext-workspace, so this script mirrors windows and virtual desktops to the
 // shell: every change sends one full JSON snapshot as a D-Bus method call
@@ -6,7 +6,7 @@
 (function () {
     // Not org.kde.KWin: QtDBus short-circuits calls to the sender's own service, so they never reach the bus.
     var SERVICE = "org.freedesktop.systemd1";
-    var PATH = "/DmsBridge";
+    var PATH = "/AlpeBridge";
     var IFACE = "io.github.alpe_shell.Alpe.KwinBridge";
 
     var hooked = {};
@@ -1009,18 +1009,18 @@
     // Global shortcuts. KWin owns them (kglobalaccel), so they show up under
     // System Settings > Shortcuts > KWin and can be rebound there. A default
     // key that is already taken elsewhere is left unassigned by KWin.
-    // Alpe: Die Kennungen bleiben (an ihnen hängen die vergebenen Tasten), nur die Anzeigenamen
-    // tragen den eigenen Namen.
+    // Alpe: Kennungen alpe-* (bis 1.0 dms-*). An der Kennung hängen in kglobalaccel die
+    // vergebenen Tasten; die Tasten der alten dms-*-Aktionen überträgt der Umzug (alpe umzug).
     var shortcuts = [
-        ["dms-launcher", "Alpe: Starter", "Meta+Space"],
-        ["dms-clipboard", "Alpe: Zwischenablage", "Meta+Shift+V"],
-        ["dms-processlist", "Alpe: Systemmonitor", "Meta+M"],
-        ["dms-settings", "Alpe: Einstellungen", "Meta+,"],
-        ["dms-notifications", "Alpe: Benachrichtigungen", "Meta+N"],
-        ["dms-control-center", "Alpe: Kontrollzentrum", "Meta+Shift+C"],
-        ["dms-dash", "Alpe: Dashboard", "Meta+Shift+D"],
-        ["dms-powermenu", "Alpe: Energiemenü", "Meta+Shift+X"],
-        ["dms-notepad", "Alpe: Notizblock", ""]
+        ["alpe-launcher", "Alpe: Starter", "Meta+Space"],
+        ["alpe-clipboard", "Alpe: Zwischenablage", "Meta+Shift+V"],
+        ["alpe-processlist", "Alpe: Systemmonitor", "Meta+M"],
+        ["alpe-settings", "Alpe: Einstellungen", "Meta+,"],
+        ["alpe-notifications", "Alpe: Benachrichtigungen", "Meta+N"],
+        ["alpe-control-center", "Alpe: Kontrollzentrum", "Meta+Shift+C"],
+        ["alpe-dash", "Alpe: Dashboard", "Meta+Shift+D"],
+        ["alpe-powermenu", "Alpe: Energiemenü", "Meta+Shift+X"],
+        ["alpe-notepad", "Alpe: Notizblock", ""]
     ];
 
     function bindShortcut(entry) {
