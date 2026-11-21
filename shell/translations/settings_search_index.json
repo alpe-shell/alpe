@@ -6358,7 +6358,7 @@
     "icon": "tune"
   },
   {
-    "section": "dankLauncherV2BorderEnabled",
+    "section": "launcherBorderEnabled",
     "label": "Border",
     "tabIndex": 9,
     "category": "Launcher",
@@ -6430,7 +6430,7 @@
     "icon": "extension"
   },
   {
-    "section": "dankLauncherV2BorderColor",
+    "section": "launcherBorderColor",
     "label": "Color",
     "tabIndex": 9,
     "category": "Launcher",
@@ -6587,7 +6587,7 @@
     "description": "Record app usage and past queries. Turning this off clears what is stored."
   },
   {
-    "section": "dankLauncherV2IncludeFilesInAll",
+    "section": "launcherIncludeFilesInAll",
     "label": "Include files in All tab",
     "tabIndex": 9,
     "category": "Launcher",
@@ -6610,7 +6610,7 @@
     ]
   },
   {
-    "section": "dankLauncherV2IncludeFoldersInAll",
+    "section": "launcherIncludeFoldersInAll",
     "label": "Include folders in All tab",
     "tabIndex": 9,
     "category": "Launcher",
@@ -6859,7 +6859,7 @@
     "icon": "search"
   },
   {
-    "section": "dankLauncherV2ShowFooter",
+    "section": "launcherShowFooter",
     "label": "Show footer",
     "tabIndex": 9,
     "category": "Launcher",
@@ -6905,7 +6905,7 @@
     ]
   },
   {
-    "section": "dankLauncherV2ShowSourceBadges",
+    "section": "launcherShowSourceBadges",
     "label": "Show package source badges",
     "tabIndex": 9,
     "category": "Launcher",
@@ -6931,7 +6931,7 @@
     ]
   },
   {
-    "section": "dankLauncherV2Size",
+    "section": "launcherSize",
     "label": "Size",
     "tabIndex": 9,
     "category": "Launcher",
@@ -7016,7 +7016,7 @@
     ]
   },
   {
-    "section": "dankLauncherV2BorderThickness",
+    "section": "launcherBorderThickness",
     "label": "Thickness",
     "tabIndex": 9,
     "category": "Launcher",
@@ -7034,7 +7034,7 @@
     ]
   },
   {
-    "section": "dankLauncherV2UnloadOnClose",
+    "section": "launcherUnloadOnClose",
     "label": "Unload on close",
     "tabIndex": 9,
     "category": "Launcher",
@@ -15271,7 +15271,7 @@
     "description": "How far terminal colors shift toward the wallpaper color"
   },
   {
-    "section": "runDmsMatugenTemplates",
+    "section": "runMatugenTemplates",
     "label": "Run DMS templates",
     "tabIndex": 50,
     "category": "App theming",

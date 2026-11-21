@@ -140,7 +140,8 @@ check("AlfaSlabOne" in m["schriften"] and "Inter Variable" in m["schriften"] and
 b = home("neu")
 for app in ("kitty.desktop", "org.kde.dolphin.desktop"):
     write(os.path.join(b, "sys", "applications", app), "[Desktop Entry]\nName=x\nExec=x\n")
-write(os.path.join(b, ".config", "alpe", "settings.json"), {"fontFamily": "Noto Sans", "eigenerSchluessel": 1, "useAutoLocation": False})
+write(os.path.join(b, ".config", "alpe", "settings.json"), {"fontFamily": "Noto Sans", "eigenerSchluessel": 1, "useAutoLocation": False,
+                                                         "dankLauncherV2ShowFooter": False, "alpeLockStyle": "dms"})
 write(os.path.join(b, ".local", "state", "alpe", "session.json"), {"weatherLocation": "Bern"})
 write(os.path.join(b, ".config", "kwinrulesrc"), "[General]\nOrder=eigen\n\n[eigen]\nDescription=Firefox\nwmclass=firefox\n")
 out = run(b, "apply", "--ja")
@@ -148,6 +149,7 @@ check(out.returncode == 0 and "eingespielt" in out.stdout, "Einspielen läuft du
 base = os.path.join(b, ".local", "share", "alpe", "design")
 s2 = json.load(open(os.path.join(b, ".config", "alpe", "settings.json")))
 check(s2["fontFamily"] == "Inter Variable" and s2["eigenerSchluessel"] == 1, "Design gewinnt, eigene andere Einstellungen bleiben")
+check(s2.get("launcherShowFooter") is False and "dankLauncherV2ShowFooter" not in s2 and s2.get("alpeLockStyle") == "standard", "Schlüssel und Werte aus 1.0 unter den neuen Namen")
 check(s2["customThemeFile"] == os.path.join(base, "farben.json") and os.path.isfile(s2["customThemeFile"]), "Farbschema an Ort und Stelle")
 se2 = json.load(open(os.path.join(b, ".local", "state", "alpe", "session.json")))
 check(se2["wallpaperPath"] == os.path.join(base, "bilder", "berg.jpg") and os.path.isfile(se2["wallpaperPath"]), "Hintergrund eingespielt")

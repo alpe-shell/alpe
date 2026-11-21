@@ -134,18 +134,18 @@ Item {
                 readonly property var sizes: ["micro", "compact", "medium", "large"]
 
                 enabled: !root.spotlightIgnoresSize
-                settingKey: "dankLauncherV2Size"
+                settingKey: "launcherSize"
                 tags: ["launcher", "size", "micro", "compact", "medium", "large"]
                 text: I18n.tr("Size")
                 model: ["1", "2", "3", "4"]
                 currentIndex: {
-                    const index = sizes.indexOf(SettingsData.dankLauncherV2Size);
+                    const index = sizes.indexOf(SettingsData.launcherSize);
                     return index >= 0 ? index : 2;
                 }
                 onSelectionChanged: (index, selected) => {
                     if (!selected)
                         return;
-                    SettingsData.set("dankLauncherV2Size", sizes[index]);
+                    SettingsData.set("launcherSize", sizes[index]);
                 }
             }
 
@@ -161,20 +161,20 @@ Item {
             }
 
             SettingsToggleRow {
-                settingKey: "dankLauncherV2ShowFooter"
+                settingKey: "launcherShowFooter"
                 tags: ["launcher", "footer", "hints", "shortcuts", "modes", "filters"]
                 text: I18n.tr("Show footer")
-                checked: SettingsData.dankLauncherV2ShowFooter
-                enabled: SettingsData.dankLauncherV2Size !== "micro" && !root.fullLauncherUnused
-                onToggled: checked => SettingsData.set("dankLauncherV2ShowFooter", checked)
+                checked: SettingsData.launcherShowFooter
+                enabled: SettingsData.launcherSize !== "micro" && !root.fullLauncherUnused
+                onToggled: checked => SettingsData.set("launcherShowFooter", checked)
             }
 
             SettingsToggleRow {
-                settingKey: "dankLauncherV2ShowSourceBadges"
+                settingKey: "launcherShowSourceBadges"
                 tags: ["launcher", "appearance", "badge", "source", "flatpak", "snap", "appimage", "nix"]
                 text: I18n.tr("Show package source badges")
-                checked: SettingsData.dankLauncherV2ShowSourceBadges
-                onToggled: checked => SettingsData.set("dankLauncherV2ShowSourceBadges", checked)
+                checked: SettingsData.launcherShowSourceBadges
+                onToggled: checked => SettingsData.set("launcherShowSourceBadges", checked)
             }
 
             SettingsControlledBy {
@@ -209,34 +209,34 @@ Item {
             enabled: !root.fullLauncherUnused
             iconName: "border_style"
             title: I18n.tr("Border")
-            settingKey: "dankLauncherV2BorderEnabled"
+            settingKey: "launcherBorderEnabled"
             tags: ["launcher", "border", "outline"]
-            checked: SettingsData.dankLauncherV2BorderEnabled
-            onToggled: checked => SettingsData.set("dankLauncherV2BorderEnabled", checked)
+            checked: SettingsData.launcherBorderEnabled
+            onToggled: checked => SettingsData.set("launcherBorderEnabled", checked)
 
             SettingsSliderRow {
-                settingKey: "dankLauncherV2BorderThickness"
+                settingKey: "launcherBorderThickness"
                 tags: ["launcher", "border", "thickness"]
                 text: I18n.tr("Thickness")
                 minimum: 1
                 maximum: 6
-                value: SettingsData.dankLauncherV2BorderThickness
+                value: SettingsData.launcherBorderThickness
                 unit: "px"
-                onSliderValueChanged: newValue => SettingsData.set("dankLauncherV2BorderThickness", newValue)
+                onSliderValueChanged: newValue => SettingsData.set("launcherBorderThickness", newValue)
             }
 
             SettingsButtonGroupRow {
                 readonly property var colors: ["primary", "secondary", "outline", "surfaceText"]
 
-                settingKey: "dankLauncherV2BorderColor"
+                settingKey: "launcherBorderColor"
                 tags: ["launcher", "border", "color"]
                 text: I18n.tr("Color")
                 model: [I18n.tr("Primary", "primary color"), I18n.tr("Secondary", "secondary color"), I18n.tr("Outline", "outline color"), I18n.tr("Text", "text color")]
-                currentIndex: Math.max(0, colors.indexOf(SettingsData.dankLauncherV2BorderColor))
+                currentIndex: Math.max(0, colors.indexOf(SettingsData.launcherBorderColor))
                 onSelectionChanged: (index, selected) => {
                     if (!selected)
                         return;
-                    SettingsData.set("dankLauncherV2BorderColor", colors[index]);
+                    SettingsData.set("launcherBorderColor", colors[index]);
                 }
             }
         }
@@ -303,19 +303,19 @@ Item {
             }
 
             SettingsToggleRow {
-                settingKey: "dankLauncherV2IncludeFilesInAll"
+                settingKey: "launcherIncludeFilesInAll"
                 tags: ["launcher", "files", "dsearch", "all", "results", "indexed"]
                 text: I18n.tr("Include files in All tab")
-                checked: SettingsData.dankLauncherV2IncludeFilesInAll
-                onToggled: checked => SettingsData.set("dankLauncherV2IncludeFilesInAll", checked)
+                checked: SettingsData.launcherIncludeFilesInAll
+                onToggled: checked => SettingsData.set("launcherIncludeFilesInAll", checked)
             }
 
             SettingsToggleRow {
-                settingKey: "dankLauncherV2IncludeFoldersInAll"
+                settingKey: "launcherIncludeFoldersInAll"
                 tags: ["launcher", "folders", "dirs", "dsearch", "all", "results", "indexed"]
                 text: I18n.tr("Include folders in All tab")
-                checked: SettingsData.dankLauncherV2IncludeFoldersInAll
-                onToggled: checked => SettingsData.set("dankLauncherV2IncludeFoldersInAll", checked)
+                checked: SettingsData.launcherIncludeFoldersInAll
+                onToggled: checked => SettingsData.set("launcherIncludeFoldersInAll", checked)
             }
         }
 
@@ -573,8 +573,8 @@ Item {
 
             property var allLauncherPlugins: {
                 SettingsData.launcherPluginOrder;
-                SettingsData.dankLauncherV2IncludeFilesInAll;
-                SettingsData.dankLauncherV2IncludeFoldersInAll;
+                SettingsData.launcherIncludeFilesInAll;
+                SettingsData.launcherIncludeFoldersInAll;
                 var plugins = [];
                 var builtIn = AppSearchService.getBuiltInLauncherPlugins() || {};
                 for (var pluginId in builtIn) {
@@ -603,7 +603,7 @@ Item {
                         trigger: PluginService.getPluginTrigger(pluginId) || ""
                     });
                 }
-                if (SettingsData.dankLauncherV2IncludeFilesInAll) {
+                if (SettingsData.launcherIncludeFilesInAll) {
                     plugins.push({
                         id: "__files",
                         name: I18n.tr("Files"),
@@ -614,7 +614,7 @@ Item {
                         trigger: "/"
                     });
                 }
-                if (SettingsData.dankLauncherV2IncludeFoldersInAll) {
+                if (SettingsData.launcherIncludeFoldersInAll) {
                     plugins.push({
                         id: "__folders",
                         name: I18n.tr("Folders"),
@@ -669,9 +669,9 @@ Item {
                         checked: {
                             switch (pluginRow.modelData.id) {
                             case "__files":
-                                return SettingsData.dankLauncherV2IncludeFilesInAll;
+                                return SettingsData.launcherIncludeFilesInAll;
                             case "__folders":
-                                return SettingsData.dankLauncherV2IncludeFoldersInAll;
+                                return SettingsData.launcherIncludeFoldersInAll;
                             default:
                                 return SettingsData.getPluginAllowWithoutTrigger(pluginRow.modelData.id);
                             }
@@ -679,10 +679,10 @@ Item {
                         onToggled: isChecked => {
                             switch (pluginRow.modelData.id) {
                             case "__files":
-                                SettingsData.set("dankLauncherV2IncludeFilesInAll", isChecked);
+                                SettingsData.set("launcherIncludeFilesInAll", isChecked);
                                 return;
                             case "__folders":
-                                SettingsData.set("dankLauncherV2IncludeFoldersInAll", isChecked);
+                                SettingsData.set("launcherIncludeFoldersInAll", isChecked);
                                 return;
                             default:
                                 SettingsData.setPluginAllowWithoutTrigger(pluginRow.modelData.id, isChecked);
@@ -926,12 +926,12 @@ Item {
 
             SettingsToggleRow {
                 enabled: !root.spotlightIgnoresRows
-                settingKey: "dankLauncherV2UnloadOnClose"
+                settingKey: "launcherUnloadOnClose"
                 tags: ["launcher", "unload", "close", "memory", "vram"]
                 text: I18n.tr("Unload on close")
                 description: I18n.tr("Frees the launcher when closed and rebuilds it on open", "launcher unload on close toggle description")
-                checked: SettingsData.dankLauncherV2UnloadOnClose
-                onToggled: checked => SettingsData.set("dankLauncherV2UnloadOnClose", checked)
+                checked: SettingsData.launcherUnloadOnClose
+                onToggled: checked => SettingsData.set("launcherUnloadOnClose", checked)
             }
         }
     }

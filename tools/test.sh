@@ -16,6 +16,9 @@ run() { "$@" || { fails=$((fails + 1)); printf '\033[31m✗ fehlgeschlagen:\033[
 step "KWin-Brücke (node)"
 if command -v node >/dev/null; then run node tests/test_bridge.js; else echo "node fehlt – übersprungen"; fi
 
+step "Einstellungen: Migration (node)"
+if command -v node >/dev/null; then run node --test tests/test_einstellungen.mjs; else echo "node fehlt – übersprungen"; fi
+
 for t in tests/test_*.py; do
     step "$t"
     run python3 "$t"

@@ -151,7 +151,7 @@
   "spotlightSectionViewModes": {
     "apps": "list"
   },
-  "dankLauncherV2Size": "micro",
+  "launcherSize": "micro",
   "spotlightBarShowModeChips": true,
   "dashTabs": [
     {
@@ -372,7 +372,7 @@
       "trigger": "qrg"
     }
   },
-  "configVersion": 42,
+  "configVersion": 43,
   "lockScreenWidgetInstances": [
     {
       "id": "lock_clock",
@@ -696,8 +696,8 @@
   "matugenTemplateZenBrowser": true,
   "matugenTemplateZed": true,
   "syncModeWithPortal": false,
-  "dankLauncherV2BorderEnabled": false,
-  "dankLauncherV2BorderThickness": 5,
+  "launcherBorderEnabled": false,
+  "launcherBorderThickness": 5,
   "m3ElevationEnabled": false,
   "m3ElevationColorMode": "surfaceVariant",
   "lockAtStartup": true,

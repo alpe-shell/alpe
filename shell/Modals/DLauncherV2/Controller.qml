@@ -636,7 +636,7 @@ Item {
             }
         }
 
-        var filesInAll = searchMode === "all" && (SettingsData.dankLauncherV2IncludeFilesInAll || SettingsData.dankLauncherV2IncludeFoldersInAll);
+        var filesInAll = searchMode === "all" && (SettingsData.launcherIncludeFilesInAll || SettingsData.launcherIncludeFoldersInAll);
         if (searchMode !== "plugins" && (searchMode === "files" || query.startsWith("/") || filesInAll) && query.length > 0) {
             fileSearchDebounce.restart();
         }
@@ -666,7 +666,7 @@ Item {
         }
         modeChanged(mode, !isAutoSwitch && notPersist !== true);
         performSearch();
-        var filesInAll = mode === "all" && (SettingsData.dankLauncherV2IncludeFilesInAll || SettingsData.dankLauncherV2IncludeFoldersInAll) && searchQuery.length > 0;
+        var filesInAll = mode === "all" && (SettingsData.launcherIncludeFilesInAll || SettingsData.launcherIncludeFoldersInAll) && searchQuery.length > 0;
         if (mode === "files" || filesInAll) {
             fileSearchDebounce.restart();
         }
@@ -1692,8 +1692,8 @@ Item {
             return;
         var fileQuery = "";
         var effectiveType = fileSearchType || "all";
-        var includeFiles = SettingsData.dankLauncherV2IncludeFilesInAll;
-        var includeFolders = SettingsData.dankLauncherV2IncludeFoldersInAll;
+        var includeFiles = SettingsData.launcherIncludeFilesInAll;
+        var includeFolders = SettingsData.launcherIncludeFoldersInAll;
 
         if (searchQuery.startsWith("/")) {
             var prefixInfo = Utils.parseFileSearchPrefix(searchQuery);

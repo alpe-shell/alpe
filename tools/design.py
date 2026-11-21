@@ -54,6 +54,23 @@ SETTINGS_DROP = {
     "customPowerActionSuspend", "customPowerActionHibernate", "customPowerActionReboot",
     "customPowerActionPowerOff", "weatherLocation", "weatherCoordinates",
 }
+# settings.json: Schlüssel, die bis 1.0 den Namen des Ursprungs trugen (wie die Migration der
+# Shell auf Version 43, shell/Common/settings/SettingsStore.js). Ein Design aus 1.0 trifft so
+# beim Einspielen dieselben Schlüssel wie die Einstellungen des Nutzers.
+RENAMED_KEYS = {
+    "dankLauncherV2Size": "launcherSize",
+    "dankLauncherV2ShowSourceBadges": "launcherShowSourceBadges",
+    "dankLauncherV2BorderEnabled": "launcherBorderEnabled",
+    "dankLauncherV2BorderThickness": "launcherBorderThickness",
+    "dankLauncherV2BorderColor": "launcherBorderColor",
+    "dankLauncherV2ShowFooter": "launcherShowFooter",
+    "dankLauncherV2UnloadOnClose": "launcherUnloadOnClose",
+    "dankLauncherV2IncludeFilesInAll": "launcherIncludeFilesInAll",
+    "dankLauncherV2IncludeFoldersInAll": "launcherIncludeFoldersInAll",
+    "runDmsMatugenTemplates": "runMatugenTemplates",
+    "dmsWindowsFloatingSeeded": "shellWindowsFloatingSeeded",
+}
+RENAMED_VALUES = {"alpeLockStyle": {"dms": "standard"}, "alpeHyprBlurMode": {"dms": "standard"}}
 # Wer eine Leiste oder ein Dock für einen bestimmten Bildschirm hat, bekommt sie auf allen
 SCREEN_KEYS = {"screenPreferences": ["all"], "frameScreenPreferences": ["all"]}
 # settings.json: so beim neuen Nutzer, egal wie beim Exportierenden
@@ -301,6 +318,21 @@ def hyprlock_images(text, images):
     return "\n".join(out) + "\n"
 
 
+def renamed(settings):
+    """Alte Schlüssel und Werte (bis 1.0) unter den heutigen Namen; ein schon vorhandener neuer gewinnt."""
+    out = {}
+    for key, value in settings.items():
+        new = RENAMED_KEYS.get(key)
+        if new is None:
+            out[key] = value
+        elif new not in settings:
+            out[new] = value
+    for key, values in RENAMED_VALUES.items():
+        if isinstance(out.get(key), str) and out[key] in values:
+            out[key] = values[out[key]]
+    return out
+
+
 # ---------------------------------------------------------------- Export
 
 def export(variant, mode, ask=input):
@@ -311,7 +343,7 @@ def export(variant, mode, ask=input):
     images = Images(os.path.join(target, "bilder"), mode, ask)
     notes, dropped = [], []
 
-    settings = load_json(SETTINGS, {})
+    settings = renamed(load_json(SETTINGS, {}) or {})
     if not settings:
         say("   Keine Einstellungen gefunden (%s) – hier läuft Alpe noch nicht?" % SETTINGS.replace(HOME, "~"))
     out = {}
@@ -640,8 +672,8 @@ def write_design(variant, source, base):
         if os.path.isfile(os.path.join(source, "farben.json")):
             shutil.copy2(os.path.join(source, "farben.json"), os.path.join(base, "farben.json"))
 
-    settings = load_json(SETTINGS, {}) or {}
-    incoming = fill(load_json(os.path.join(source, "settings.json"), {}), base)
+    settings = renamed(load_json(SETTINGS, {}) or {})
+    incoming = renamed(fill(load_json(os.path.join(source, "settings.json"), {}), base))
     # Vorgaben wie «Wetter nach Standort» nur für den, der selbst noch nichts eingestellt hat
     for key in SETTINGS_FORCE:
         if key in settings:

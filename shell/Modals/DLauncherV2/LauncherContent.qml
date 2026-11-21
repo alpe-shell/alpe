@@ -285,7 +285,7 @@ FocusScope {
             id: footerBar
             readonly property bool _connectedBottomEmerge: (root.parentModal?.frameOwnsConnectedChrome ?? false) && (root.parentModal?.resolvedConnectedBarSide === "bottom")
             readonly property bool _connectedArcAtFooter: _connectedBottomEmerge && !(root.parentModal?.launcherArcExtenderActive ?? false)
-            readonly property bool showFooter: LauncherMetrics.footerShown(SettingsData.dankLauncherV2Size) && controller.searchMode !== "dmenu"
+            readonly property bool showFooter: LauncherMetrics.footerShown(SettingsData.launcherSize) && controller.searchMode !== "dmenu"
             readonly property int edgeInset: root.parentModal?.paintedBorderWidth ?? Theme.outlineWidth
             readonly property var modes: [
                 {

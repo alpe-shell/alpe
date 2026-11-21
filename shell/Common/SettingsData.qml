@@ -24,7 +24,7 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("SettingsData")
 
-    readonly property int settingsConfigVersion: 42
+    readonly property int settingsConfigVersion: 43
 
     enum Position {
         Top,
@@ -180,7 +180,7 @@ Singleton {
     property real floatingWindowTransparency: Spec.SPEC.floatingWindowTransparency.def
     property bool floatingWindowForegroundLayers: Spec.SPEC.floatingWindowForegroundLayers.def
     property real floatingWindowForegroundTransparency: Spec.SPEC.floatingWindowForegroundTransparency.def
-    property var dmsWindowsFloatingSeeded: Spec.SPEC.dmsWindowsFloatingSeeded.def
+    property var shellWindowsFloatingSeeded: Spec.SPEC.shellWindowsFloatingSeeded.def
     property string hostSurfaceColor: Spec.SPEC.hostSurfaceColor.def
     property string hostSurfaceCustomColor: Spec.SPEC.hostSurfaceCustomColor.def
     property string cardSurfaceColor: Spec.SPEC.cardSurfaceColor.def
@@ -472,15 +472,15 @@ Singleton {
     onSpotlightSectionViewModesChanged: saveSettings()
     property var appDrawerSectionViewModes: Spec.SPEC.appDrawerSectionViewModes.def
     onAppDrawerSectionViewModesChanged: saveSettings()
-    property string dankLauncherV2Size: Spec.SPEC.dankLauncherV2Size.def
-    property bool dankLauncherV2ShowSourceBadges: Spec.SPEC.dankLauncherV2ShowSourceBadges.def
-    property bool dankLauncherV2BorderEnabled: Spec.SPEC.dankLauncherV2BorderEnabled.def
-    property int dankLauncherV2BorderThickness: Spec.SPEC.dankLauncherV2BorderThickness.def
-    property string dankLauncherV2BorderColor: Spec.SPEC.dankLauncherV2BorderColor.def
-    property bool dankLauncherV2ShowFooter: Spec.SPEC.dankLauncherV2ShowFooter.def
-    property bool dankLauncherV2UnloadOnClose: Spec.SPEC.dankLauncherV2UnloadOnClose.def
-    property bool dankLauncherV2IncludeFilesInAll: Spec.SPEC.dankLauncherV2IncludeFilesInAll.def
-    property bool dankLauncherV2IncludeFoldersInAll: Spec.SPEC.dankLauncherV2IncludeFoldersInAll.def
+    property string launcherSize: Spec.SPEC.launcherSize.def
+    property bool launcherShowSourceBadges: Spec.SPEC.launcherShowSourceBadges.def
+    property bool launcherBorderEnabled: Spec.SPEC.launcherBorderEnabled.def
+    property int launcherBorderThickness: Spec.SPEC.launcherBorderThickness.def
+    property string launcherBorderColor: Spec.SPEC.launcherBorderColor.def
+    property bool launcherShowFooter: Spec.SPEC.launcherShowFooter.def
+    property bool launcherUnloadOnClose: Spec.SPEC.launcherUnloadOnClose.def
+    property bool launcherIncludeFilesInAll: Spec.SPEC.launcherIncludeFilesInAll.def
+    property bool launcherIncludeFoldersInAll: Spec.SPEC.launcherIncludeFoldersInAll.def
     property bool launcherUseOverlayLayer: Spec.SPEC.launcherUseOverlayLayer.def
     property string launcherStyle: Spec.SPEC.launcherStyle.def
     property string avatarRing: Spec.SPEC.avatarRing.def
@@ -761,7 +761,7 @@ Singleton {
     property string muxCustomCommand: Spec.SPEC.muxCustomCommand.def
     property string muxSessionFilter: Spec.SPEC.muxSessionFilter.def
 
-    property bool runDmsMatugenTemplates: Spec.SPEC.runDmsMatugenTemplates.def
+    property bool runMatugenTemplates: Spec.SPEC.runMatugenTemplates.def
     property bool matugenTemplateGtk: Spec.SPEC.matugenTemplateGtk.def
     property bool matugenTemplateHyprland: Spec.SPEC.matugenTemplateHyprland.def
     property bool matugenTemplateQt5ct: Spec.SPEC.matugenTemplateQt5ct.def
@@ -1661,7 +1661,7 @@ Singleton {
 
         Quickshell.execDetached(["sh", "-lc", script]);
 
-        if (!qtengineActive || !runDmsMatugenTemplates || !matugenTemplateQtengine)
+        if (!qtengineActive || !runMatugenTemplates || !matugenTemplateQtengine)
             return;
         Proc.runCommand("updateQtengineIconTheme", [Proc.dmsBin, "matugen", "qtengine", "--icon-theme", qtThemeName], () => {});
     }
@@ -1842,6 +1842,9 @@ Singleton {
             if (migrated) {
                 obj = migrated;
                 migrationRan = true;
+                // Alpe: Die Datei vor der Migration bleibt als settings.v<alt>.json liegen.
+                newerSettingsBackup.path = `${_configDir}/${Paths.appDir}/settings.v${oldVersion}.json`;
+                newerSettingsBackup.setText(JSON.stringify(JSON.parse(loadedSettings), null, 2));
             }
         }
         if (legacyPins) {
@@ -4009,6 +4012,7 @@ Singleton {
     }
 
     // Our first save drops the keys a newer shell wrote, so its settings are kept for going back.
+    // Alpe: Dasselbe für die Fassung vor einer Migration auf ein neueres Format.
     FileView {
         id: newerSettingsBackup
 

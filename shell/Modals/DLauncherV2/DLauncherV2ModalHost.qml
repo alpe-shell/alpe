@@ -72,7 +72,7 @@ Item {
     property bool _pendingInitialize: false
     property string _pendingQuery: ""
     property string _pendingMode: ""
-    readonly property bool unloadContentOnClose: !spotlight && SettingsData.dankLauncherV2UnloadOnClose
+    readonly property bool unloadContentOnClose: !spotlight && SettingsData.launcherUnloadOnClose
 
     property bool animationsEnabled: true
     property bool _motionActive: false
@@ -102,8 +102,8 @@ Item {
     readonly property bool _dmenuActive: spotlightContent?.controller?.searchMode === "dmenu"
     readonly property string _dmenuSizeOverride: _dmenuActive ? (spotlightContent.controller.dmenuSize || "") : ""
 
-    readonly property int baseWidth: LauncherMetrics.sizeWidth(_dmenuSizeOverride || SettingsData.dankLauncherV2Size)
-    readonly property int baseHeight: LauncherMetrics.sizeHeight(_dmenuSizeOverride || SettingsData.dankLauncherV2Size, paintedBorderWidth, !_dmenuActive && LauncherMetrics.footerShown(SettingsData.dankLauncherV2Size))
+    readonly property int baseWidth: LauncherMetrics.sizeWidth(_dmenuSizeOverride || SettingsData.launcherSize)
+    readonly property int baseHeight: LauncherMetrics.sizeHeight(_dmenuSizeOverride || SettingsData.launcherSize, paintedBorderWidth, !_dmenuActive && LauncherMetrics.footerShown(SettingsData.launcherSize))
     readonly property real _contentImplicitH: launcherContentLoader.item?.implicitHeight ?? LauncherMetrics.pillHeight
     readonly property int modalWidth: Math.min(spotlight ? (_dmenuSizeOverride ? LauncherMetrics.sizeWidth(_dmenuSizeOverride) : LauncherMetrics.spotlightWidth) : baseWidth, screenWidth - LauncherMetrics.screenMargin)
     readonly property int modalHeight: spotlight ? _contentImplicitH : Math.min(baseHeight, screenHeight - LauncherMetrics.screenMargin)
@@ -192,9 +192,9 @@ Item {
     readonly property real cornerRadius: connectedSurfaceOverride ? Theme.connectedSurfaceRadius : spotlight ? LauncherMetrics.spotlightRadius(modalWidth) : Theme.windowRadius
     readonly property real frameBottomRadius: spotlight && !connectedSurfaceOverride ? LauncherMetrics.spotlightBottomRadius(modalWidth, _contentImplicitH) : cornerRadius
     readonly property color borderColor: {
-        if (!SettingsData.dankLauncherV2BorderEnabled)
+        if (!SettingsData.launcherBorderEnabled)
             return Theme.outlineMedium;
-        switch (SettingsData.dankLauncherV2BorderColor) {
+        switch (SettingsData.launcherBorderColor) {
         case "primary":
             return Theme.primary;
         case "secondary":
@@ -207,7 +207,7 @@ Item {
             return Theme.primary;
         }
     }
-    readonly property int borderWidth: SettingsData.dankLauncherV2BorderEnabled && !spotlight ? SettingsData.dankLauncherV2BorderThickness : 0
+    readonly property int borderWidth: SettingsData.launcherBorderEnabled && !spotlight ? SettingsData.launcherBorderThickness : 0
     readonly property color effectiveBorderColor: connectedSurfaceOverride ? Theme.withAlpha(borderColor, 0) : borderColor
     readonly property int effectiveBorderWidth: connectedSurfaceOverride ? 0 : borderWidth
     readonly property int paintedBorderWidth: connected ? (frameOwnsConnectedChrome ? 0 : effectiveBorderWidth) : Math.max(borderWidth, BlurService.borderWidth)

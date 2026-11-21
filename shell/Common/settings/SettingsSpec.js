@@ -77,7 +77,7 @@ var LOCAL_SPEC = {
         def: 1.0,
         coerce: Util.percentToUnit
     },
-    dmsWindowsFloatingSeeded: {
+    shellWindowsFloatingSeeded: {
         def: []
     },
     hostSurfaceColor: {
@@ -154,9 +154,9 @@ var LOCAL_SPEC = {
         def: 15,
         onChange: "updateCompositorLayout"
     },
-    // Alpe: Feineinstellungen der Unschärfe unter Hyprland (mode: dms | tuned | off)
+    // Alpe: Feineinstellungen der Unschärfe unter Hyprland (mode: standard | tuned | off)
     alpeHyprBlurMode: {
-        def: "dms",
+        def: "standard",
         onChange: "updateCompositorLayout"
     },
     alpeHyprBlurNoise: {
@@ -851,31 +851,31 @@ var LOCAL_SPEC = {
     appDrawerSectionViewModes: {
         def: {}
     },
-    dankLauncherV2Size: {
+    launcherSize: {
         def: "compact"
     },
-    dankLauncherV2ShowSourceBadges: {
+    launcherShowSourceBadges: {
         def: true
     },
-    dankLauncherV2BorderEnabled: {
+    launcherBorderEnabled: {
         def: false
     },
-    dankLauncherV2BorderThickness: {
+    launcherBorderThickness: {
         def: 2
     },
-    dankLauncherV2BorderColor: {
+    launcherBorderColor: {
         def: "primary"
     },
-    dankLauncherV2ShowFooter: {
+    launcherShowFooter: {
         def: true
     },
-    dankLauncherV2UnloadOnClose: {
+    launcherUnloadOnClose: {
         def: false
     },
-    dankLauncherV2IncludeFilesInAll: {
+    launcherIncludeFilesInAll: {
         def: false
     },
-    dankLauncherV2IncludeFoldersInAll: {
+    launcherIncludeFoldersInAll: {
         def: false
     },
     launcherUseOverlayLayer: {
@@ -1205,7 +1205,7 @@ var LOCAL_SPEC = {
     muxSessionFilter: {
         def: ""
     },
-    runDmsMatugenTemplates: {
+    runMatugenTemplates: {
         def: true
     },
     matugenTemplateGtk: {
@@ -1351,7 +1351,7 @@ var LOCAL_SPEC = {
     windowGripEdges: {
         def: true
     },
-    // Alpe: Sperre unter Hyprland: "auto", "hyprlock", "alpe" (Shell, wie am PC) oder "dms"
+    // Alpe: Sperre unter Hyprland: "auto", "hyprlock", "alpe" (Shell, wie am PC) oder "standard" (Shell-Sperre im Design des Ursprungs)
     // "auto": hyprlock, wenn installiert, sonst die Shell-Sperre im Alpe-Design
     alpeLockStyle: {
         def: "auto"

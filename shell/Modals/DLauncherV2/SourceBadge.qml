@@ -18,7 +18,7 @@ Item {
 
     readonly property string assetPath: sourceAsset[source] || ""
 
-    visible: badgeVisible && SettingsData.dankLauncherV2ShowSourceBadges && assetPath.length > 0
+    visible: badgeVisible && SettingsData.launcherShowSourceBadges && assetPath.length > 0
     implicitWidth: glyphSize
     implicitHeight: glyphSize
 

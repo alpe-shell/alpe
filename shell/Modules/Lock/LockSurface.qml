@@ -46,7 +46,7 @@ FocusScope {
     }
 
     // Alpe: Sperrbildschirm im Alpe-Design (wie am PC) oder der des Ursprungsprojekts.
-    readonly property bool alpe: SettingsData.alpeLockStyle !== "dms"
+    readonly property bool alpe: SettingsData.alpeLockStyle !== "standard"
     readonly property var lockContent: contentLoader.item
 
     Loader {

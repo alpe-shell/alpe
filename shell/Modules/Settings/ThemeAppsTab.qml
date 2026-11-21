@@ -196,14 +196,14 @@ Item {
             SettingsToggleRow {
                 tab: "theme"
                 tags: ["matugen", "dms", "templates"]
-                settingKey: "runDmsMatugenTemplates"
+                settingKey: "runMatugenTemplates"
                 text: I18n.tr("Run DMS templates")
-                checked: SettingsData.runDmsMatugenTemplates
-                onToggled: checked => SettingsData.set("runDmsMatugenTemplates", checked)
+                checked: SettingsData.runMatugenTemplates
+                onToggled: checked => SettingsData.set("runMatugenTemplates", checked)
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "gtk", "template"]
                 settingKey: "matugenTemplateGtk"
@@ -215,7 +215,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "hyprland", "template"]
                 settingKey: "matugenTemplateHyprland"
@@ -227,7 +227,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "qt5ct", "template"]
                 settingKey: "matugenTemplateQt5ct"
@@ -239,7 +239,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "qt6ct", "template"]
                 settingKey: "matugenTemplateQt6ct"
@@ -251,7 +251,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "qtengine", "template", "qt"]
                 settingKey: "matugenTemplateQtengine"
@@ -263,7 +263,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "fcitx5", "input", "template"]
                 settingKey: "matugenTemplateFcitx5"
@@ -275,7 +275,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "firefox", "template"]
                 settingKey: "matugenTemplateFirefox"
@@ -287,7 +287,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "pywalfox", "template"]
                 settingKey: "matugenTemplatePywalfox"
@@ -299,7 +299,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "zenbrowser", "template"]
                 settingKey: "matugenTemplateZenBrowser"
@@ -311,7 +311,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "vesktop", "discord", "template"]
                 settingKey: "matugenTemplateVesktop"
@@ -323,7 +323,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "vencord", "discord", "template"]
                 settingKey: "matugenTemplateVencord"
@@ -335,7 +335,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "equibop", "discord", "template"]
                 settingKey: "matugenTemplateEquibop"
@@ -347,7 +347,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "ghostty", "terminal", "template"]
                 settingKey: "matugenTemplateGhostty"
@@ -359,7 +359,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "kitty", "terminal", "template"]
                 settingKey: "matugenTemplateKitty"
@@ -371,7 +371,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "foot", "terminal", "template"]
                 settingKey: "matugenTemplateFoot"
@@ -388,7 +388,7 @@ Item {
 
             SettingsToggleRow {
                 id: neovimThemeToggle
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "neovim", "terminal", "template"]
                 settingKey: "matugenTemplateNeovim"
@@ -463,7 +463,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "alacritty", "terminal", "template"]
                 settingKey: "matugenTemplateAlacritty"
@@ -475,7 +475,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "wezterm", "terminal", "template"]
                 settingKey: "matugenTemplateWezterm"
@@ -487,7 +487,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "dgop", "template"]
                 settingKey: "matugenTemplateDgop"
@@ -499,7 +499,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "kcolorscheme", "kde", "template"]
                 settingKey: "matugenTemplateKcolorscheme"
@@ -511,7 +511,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "emacs", "template"]
                 settingKey: "matugenTemplateEmacs"
@@ -523,7 +523,7 @@ Item {
             }
 
             SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
+                enabled: SettingsData.runMatugenTemplates
                 tab: "theme"
                 tags: ["matugen", "zed", "template"]
                 settingKey: "matugenTemplateZed"

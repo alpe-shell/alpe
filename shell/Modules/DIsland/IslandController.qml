@@ -389,7 +389,7 @@ QtObject {
 
     // The launcher stays loaded once built, so reopening never waits on a rebuild.
     function keepsVisuals(activityId) {
-        return activityId === "launcher" && !SettingsData.dankLauncherV2UnloadOnClose && destinationState[activityId].ready;
+        return activityId === "launcher" && !SettingsData.launcherUnloadOnClose && destinationState[activityId].ready;
     }
 
     function releaseIdleVisuals() {
@@ -538,9 +538,9 @@ QtObject {
     readonly property var mediaCompactTarget: pillTarget(mediaCompactLength, compactFaceThickness)
     readonly property var homeExpandedTarget: dashboardTargetFor("home")
     readonly property var mediaExpandedTarget: dashboardTargetFor("media")
-    readonly property real launcherMaxHeight: Math.min(dashboardAvailableHeight, LauncherMetrics.sizeHeight(SettingsData.dankLauncherV2Size, LauncherMetrics.islandEdgeInset, false))
+    readonly property real launcherMaxHeight: Math.min(dashboardAvailableHeight, LauncherMetrics.sizeHeight(SettingsData.launcherSize, LauncherMetrics.islandEdgeInset, false))
     readonly property real launcherContentHeight: destinationContentHeight("launcher")
-    readonly property var launcherExpandedTarget: sheetTarget(Math.min(dashboardAvailableWidth, LauncherMetrics.sizeWidth(SettingsData.dankLauncherV2Size)), launcherContentHeight > 0 ? Math.min(launcherMaxHeight, launcherContentHeight) : launcherMaxHeight)
+    readonly property var launcherExpandedTarget: sheetTarget(Math.min(dashboardAvailableWidth, LauncherMetrics.sizeWidth(SettingsData.launcherSize)), launcherContentHeight > 0 ? Math.min(launcherMaxHeight, launcherContentHeight) : launcherMaxHeight)
     readonly property var controlCenterExpandedTarget: sheetTarget(controlCenterSheetWidth + controlCenterSheetInset, controlCenterHeight)
     readonly property var systemCompactTarget: pillTarget(root.isVertical ? 240 : (SettingsData.osdAlwaysShowValue ? 330 : 282), compactFaceThickness)
     property real systemStateContentLength: 0

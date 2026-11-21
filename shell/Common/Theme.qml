@@ -1847,7 +1847,7 @@ Singleton {
 
         if (typeof SettingsData !== "undefined") {
             const skipTemplates = [];
-            if (!SettingsData.runDmsMatugenTemplates) {
+            if (!SettingsData.runMatugenTemplates) {
                 skipTemplates.push("gtk", "nvim", "qt5ct", "qt6ct", "qtengine", "fcitx5", "firefox", "pywalfox", "zenbrowser", "vesktop", "vencord", "equibop", "ghostty", "kitty", "foot", "alacritty", "wezterm", "dgop", "kcolorscheme", "emacs", "zed");
             } else {
                 if (!SettingsData.matugenTemplateGtk)

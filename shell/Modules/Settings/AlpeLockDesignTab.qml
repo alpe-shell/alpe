@@ -29,7 +29,7 @@ Item {
     property bool hyprlockFound: false
     readonly property string hyprConf: (Quickshell.env("XDG_CONFIG_HOME") || home + "/.config") + "/hypr/hyprlock.conf"
     readonly property string hyprScript: Quickshell.shellDir + "/scripts/alpe-hyprlock.py"
-    readonly property string mode: kde ? "kde" : SettingsData.alpeLockStyle === "dms" ? "dms" : SettingsData.alpeLockStyle === "alpe" ? "shell" : (hyprlockFound ? "hyprlock" : "shell")
+    readonly property string mode: kde ? "kde" : SettingsData.alpeLockStyle === "standard" ? "standard" : SettingsData.alpeLockStyle === "alpe" ? "shell" : (hyprlockFound ? "hyprlock" : "shell")
     readonly property bool hyprMode: mode === "hyprlock"
 
     // Arbeitskopie des Layouts und Zustand
@@ -160,7 +160,7 @@ Item {
         if (!kde) {
             const map = { "Layout": "alpeLockLayout", "Locale": "alpeLockLocale", "Style": "alpeLockStyle" };
             if (map[key])
-                SettingsData.set(map[key], key === "Style" ? (value === "hyprlock" ? "alpe" : "dms") : String(value));
+                SettingsData.set(map[key], key === "Style" ? (value === "hyprlock" ? "alpe" : "standard") : String(value));
             return;
         }
         if (value === "")
@@ -197,7 +197,7 @@ Item {
     Component.onCompleted: {
         if (kde)
             return;
-        lockStyle = SettingsData.alpeLockStyle === "dms" ? "dms" : "hyprlock";
+        lockStyle = SettingsData.alpeLockStyle === "standard" ? "standard" : "hyprlock";
         localeName = SettingsData.alpeLockLocale || "";
         Proc.runCommand("alpe-hyprlock-probe", ["sh", "-c", "command -v hyprlock >/dev/null"], (out, code) => {
             root.hyprlockFound = code === 0;

@@ -78,7 +78,7 @@ Singleton {
     }
 
     function footerShown(size) {
-        return size !== "micro" && SettingsData.dankLauncherV2ShowFooter;
+        return size !== "micro" && SettingsData.launcherShowFooter;
     }
 
     // edgeInset: the painted border lifts the footer, which would otherwise eat into the rows.

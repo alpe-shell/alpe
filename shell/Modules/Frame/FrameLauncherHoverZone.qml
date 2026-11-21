@@ -32,8 +32,8 @@ Variants {
             property bool _openedForCurrentHover: false
 
             // Hot zone dimensions centered on the emerge edge to cover the launcher footprint.
-            readonly property real _launcherBaseW: SettingsData.dankLauncherV2Size === "micro" ? 500 : (SettingsData.dankLauncherV2Size === "medium" ? 720 : (SettingsData.dankLauncherV2Size === "large" ? 860 : 620))
-            readonly property real _launcherBaseH: SettingsData.dankLauncherV2Size === "micro" ? 480 : (SettingsData.dankLauncherV2Size === "medium" ? 720 : (SettingsData.dankLauncherV2Size === "large" ? 860 : 600))
+            readonly property real _launcherBaseW: SettingsData.launcherSize === "micro" ? 500 : (SettingsData.launcherSize === "medium" ? 720 : (SettingsData.launcherSize === "large" ? 860 : 620))
+            readonly property real _launcherBaseH: SettingsData.launcherSize === "micro" ? 480 : (SettingsData.launcherSize === "medium" ? 720 : (SettingsData.launcherSize === "large" ? 860 : 600))
             readonly property real screenW: zoneLoader.modelData?.width ?? 0
             readonly property real screenH: zoneLoader.modelData?.height ?? 0
             readonly property real spanW: Math.round(Math.min(_launcherBaseW, screenW - 100) * 1.1)

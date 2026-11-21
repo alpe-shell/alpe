@@ -729,7 +729,7 @@ function migrateToVersion(obj, targetVersion) {
 
     if (currentVersion < 30 && targetVersion >= 30) {
         if (settings.dmsWindowsFloating === false)
-            settings.dmsWindowsFloatingSeeded = ["niri", "hyprland", "mango"];
+            settings.shellWindowsFloatingSeeded = ["niri", "hyprland", "mango"];
         delete settings.dmsWindowsFloating;
         settings.configVersion = 30;
     }
@@ -784,7 +784,43 @@ function migrateToVersion(obj, targetVersion) {
         settings.configVersion = 42;
     }
 
+    if (currentVersion < 43 && targetVersion >= 43) {
+        migrateAlpeNames(settings);
+        settings.configVersion = 43;
+    }
+
     return settings;
+}
+
+// Alpe (v43): Schlüssel und Werte mit den Namen des Ursprungs (DMS) tragen eigene Namen.
+var ALPE_RENAMED_KEYS = {
+    "dankLauncherV2Size": "launcherSize",
+    "dankLauncherV2ShowSourceBadges": "launcherShowSourceBadges",
+    "dankLauncherV2BorderEnabled": "launcherBorderEnabled",
+    "dankLauncherV2BorderThickness": "launcherBorderThickness",
+    "dankLauncherV2BorderColor": "launcherBorderColor",
+    "dankLauncherV2ShowFooter": "launcherShowFooter",
+    "dankLauncherV2UnloadOnClose": "launcherUnloadOnClose",
+    "dankLauncherV2IncludeFilesInAll": "launcherIncludeFilesInAll",
+    "dankLauncherV2IncludeFoldersInAll": "launcherIncludeFoldersInAll",
+    "runDmsMatugenTemplates": "runMatugenTemplates",
+    "dmsWindowsFloatingSeeded": "shellWindowsFloatingSeeded"
+};
+
+function migrateAlpeNames(settings) {
+    for (var oldKey in ALPE_RENAMED_KEYS) {
+        if (!(oldKey in settings))
+            continue;
+        var newKey = ALPE_RENAMED_KEYS[oldKey];
+        // Steht der neue Schlüssel schon da (von Hand oder aus einem Design), gewinnt er.
+        if (!(newKey in settings))
+            settings[newKey] = settings[oldKey];
+        delete settings[oldKey];
+    }
+    if (settings.alpeLockStyle === "dms")
+        settings.alpeLockStyle = "standard";
+    if (settings.alpeHyprBlurMode === "dms")
+        settings.alpeHyprBlurMode = "standard";
 }
 
 // v42: dock apps follow the dock's icon size and magnification instead of their own copies

@@ -1183,13 +1183,13 @@ Singleton {
     function seedDmsWindowFloatingRule() {
         if (!supportsWindowRules)
             return;
-        if (SettingsData.dmsWindowsFloatingSeeded.includes(compositor)) {
+        if (SettingsData.shellWindowsFloatingSeeded.includes(compositor)) {
             refreshDmsWindowFloatingRule(true);
             return;
         }
         const seeded = compositor;
         setDmsWindowFloatingRule(true, () => {
-            SettingsData.set("dmsWindowsFloatingSeeded", SettingsData.dmsWindowsFloatingSeeded.concat([seeded]));
+            SettingsData.set("shellWindowsFloatingSeeded", SettingsData.shellWindowsFloatingSeeded.concat([seeded]));
             refreshDmsWindowFloatingRule(true);
         });
     }
