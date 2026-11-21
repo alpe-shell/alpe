@@ -19,10 +19,10 @@ function sectionHeaderFor(includeLine) {
 function managedIncludePatternFor(includeLine) {
     const line = String(includeLine ?? "").trim();
     if (line.startsWith("require"))
-        return "require.*dms[.]";
+        return "require.*alpe[.]";
     if (line.startsWith("source"))
-        return "source.*dms/";
-    return "include.*dms/";
+        return "source.*alpe/";
+    return "include.*alpe/";
 }
 
 function activeLinesCommand(file) {
@@ -80,8 +80,8 @@ const fragmentExtensions = {
 };
 
 const luaInclude = name => ({
-            grepPattern: `dms.${name}`,
-            includeLine: `require("dms.${name}")`
+            grepPattern: `alpe.${name}`,
+            includeLine: `require("alpe.${name}")`
         });
 
 const includeTable = {
@@ -132,7 +132,7 @@ function includePaths(kind, compositor, configDir, configName) {
     const dir = configDir + "/" + compositorDirs[compositor];
     return {
         configFile: dir + "/" + spec.configName,
-        fragmentFiles: spec.fragmentNames.map(name => dir + "/dms/" + name),
+        fragmentFiles: spec.fragmentNames.map(name => dir + "/alpe/" + name),
         includes: spec.includes
     };
 }

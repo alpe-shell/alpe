@@ -3,6 +3,7 @@ package providers
 import (
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -280,9 +281,9 @@ func (h *HyprlandProvider) ModKey() keybinds.ModKey {
 func (h *HyprlandProvider) GetOverridePath() string {
 	expanded, err := utils.ExpandPath(h.configPath)
 	if err != nil {
-		return filepath.Join(h.configPath, "dms", "binds-user.lua")
+		return filepath.Join(h.configPath, brand.DirName, "binds-user.lua")
 	}
-	return filepath.Join(expanded, "dms", "binds-user.lua")
+	return filepath.Join(expanded, brand.DirName, "binds-user.lua")
 }
 
 func (h *HyprlandProvider) validateAction(action string) error {
@@ -477,7 +478,7 @@ func hyprlandOverrideMapKey(key string) string {
 
 func (h *HyprlandProvider) getBindSortPriority(action string) int {
 	switch {
-	case strings.HasPrefix(action, "exec") && strings.Contains(action, "dms"):
+	case strings.HasPrefix(action, "exec") && (strings.Contains(action, brand.Binary) || strings.Contains(action, "dms")):
 		return 0
 	case strings.Contains(action, "workspace"):
 		return 1

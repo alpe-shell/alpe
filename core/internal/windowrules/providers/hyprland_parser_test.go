@@ -48,7 +48,7 @@ func TestHyprlandSetRuleLeavesConfOnlyInstallReadOnly(t *testing.T) {
 	if !strings.Contains(err.Error(), "dms setup") {
 		t.Fatalf("expected a run-dms-setup error, got %v", err)
 	}
-	if _, err := os.Stat(filepath.Join(tmpDir, "dms", "windowrules.lua")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(tmpDir, "alpe", "windowrules.lua")); !os.IsNotExist(err) {
 		t.Fatalf("expected no Lua windowrules file to be created for conf-only config, stat err=%v", err)
 	}
 }
@@ -111,7 +111,7 @@ func TestHyprlandReorderRules(t *testing.T) {
 
 func TestParseHyprlandLuaRequiresFragment(t *testing.T) {
 	tmpDir := t.TempDir()
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0755); err != nil {
 		t.Fatal(err)
 	}
@@ -126,7 +126,7 @@ hl.window_rule({ match = { class = "^test$" }, float = true })
 	}
 
 	if err := os.WriteFile(mainLua, []byte(`
-require("dms.windowrules")
+require("alpe.windowrules")
 `), 0644); err != nil {
 		t.Fatal(err)
 	}

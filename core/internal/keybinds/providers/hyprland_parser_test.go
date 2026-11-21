@@ -372,13 +372,13 @@ hl.bind("SUPER + H", hl.dsp.exec_cmd("app --help"))
 
 func TestHyprlandLuaBindsUserOverridesDefaults(t *testing.T) {
 	tmpDir := t.TempDir()
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(tmpDir, "hyprland.lua"), []byte(`
-require("dms.binds")
-require("dms.binds-user")
+require("alpe.binds")
+require("alpe.binds-user")
 `), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -457,13 +457,13 @@ hl.bind("SUPER + N", hl.dsp.exec_cmd("dms ipc call notepad toggle"))
 
 func TestParserDropsDMSDefaultsSuppressedByBindsUserUnbind(t *testing.T) {
 	tmpDir := t.TempDir()
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(tmpDir, "hyprland.lua"), []byte(`
-require("dms.binds")
-require("dms.binds-user")
+require("alpe.binds")
+require("alpe.binds-user")
 `), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -512,7 +512,7 @@ hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"))`,
 
 func TestHyprlandRemoveBindWritesNegativeOverrideForDefault(t *testing.T) {
 	tmpDir := hyprLuaTestDir(t)
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -557,7 +557,7 @@ func TestIsRawLuaActionText(t *testing.T) {
 
 func TestHyprlandSetBindPreservesRawLuaAction(t *testing.T) {
 	tmpDir := hyprLuaTestDir(t)
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -586,7 +586,7 @@ func TestHyprlandSetBindPreservesRawLuaAction(t *testing.T) {
 
 func TestHyprlandSetBindUpdatesSpacedLuaOverrideWithoutDuplicates(t *testing.T) {
 	tmpDir := hyprLuaTestDir(t)
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -625,7 +625,7 @@ hl.bind("SUPER + 1", hl.dsp.exec_cmd("hyprctl dispatch workspace 1"))
 
 func TestHyprlandSetBindTranslatesScrollWheelToMouse(t *testing.T) {
 	tmpDir := hyprLuaTestDir(t)
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -680,7 +680,7 @@ func readFile(t *testing.T, path string) string {
 
 func TestHyprlandRemoveBindReplacesExistingOverrideWithNegativeOverride(t *testing.T) {
 	tmpDir := hyprLuaTestDir(t)
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -710,7 +710,7 @@ hl.bind("SUPER + N", hl.dsp.exec_cmd("dms ipc call notepad toggle"))
 
 func TestHyprlandResetBindRevertsExistingOverrideToDefault(t *testing.T) {
 	tmpDir := hyprLuaTestDir(t)
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -737,13 +737,13 @@ hl.bind("SUPER + N", hl.dsp.exec_cmd("dms ipc call notepad toggle"))
 
 func TestHyprlandHasDefaultSetForOverrideOfDefaultKey(t *testing.T) {
 	tmpDir := t.TempDir()
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(tmpDir, "hyprland.lua"), []byte(`
-require("dms.binds")
-require("dms.binds-user")
+require("alpe.binds")
+require("alpe.binds-user")
 `), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -835,7 +835,7 @@ func TestHyprlandBindFlagsRoundTrip(t *testing.T) {
 
 func TestHyprlandSetBindKeepsDeviceTable(t *testing.T) {
 	tmpDir := hyprLuaTestDir(t)
-	dmsDir := filepath.Join(tmpDir, "dms")
+	dmsDir := filepath.Join(tmpDir, "alpe")
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -861,7 +861,7 @@ func TestHyprlandSetBindKeepsMainConfigDeviceTable(t *testing.T) {
 	if err := NewHyprlandProvider(tmpDir).SetBind("SUPER+X", "togglefloating", "", map[string]any{"flags": "k"}); err != nil {
 		t.Fatal(err)
 	}
-	if got := readFile(t, filepath.Join(tmpDir, "dms", "binds-user.lua")); !strings.Contains(got, device) {
+	if got := readFile(t, filepath.Join(tmpDir, "alpe", "binds-user.lua")); !strings.Contains(got, device) {
 		t.Fatalf("expected the main config device table on the override, got:\n%s", got)
 	}
 }
@@ -880,7 +880,7 @@ func TestHyprlandSetBindLeavesConfOnlyInstallReadOnly(t *testing.T) {
 	if !strings.Contains(err.Error(), "dms setup") {
 		t.Fatalf("expected a run-dms-setup error, got %v", err)
 	}
-	if _, err := os.Stat(filepath.Join(tmpDir, "dms", "binds-user.lua")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(tmpDir, "alpe", "binds-user.lua")); !os.IsNotExist(err) {
 		t.Fatalf("expected no Lua override to be created for conf-only config, stat err=%v", err)
 	}
 }

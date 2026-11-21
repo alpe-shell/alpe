@@ -14,7 +14,7 @@ const plain = value => JSON.parse(JSON.stringify(value));
 test("includePaths joins the compositor directory, with hypr for hyprland", () => {
     const hyprland = resolve.includePaths("layout", "hyprland", "/home/u/.config");
     assert.equal(hyprland.configFile, "/home/u/.config/hypr/hyprland.lua");
-    assert.deepEqual(plain(hyprland.fragmentFiles), ["/home/u/.config/hypr/dms/layout.lua"]);
+    assert.deepEqual(plain(hyprland.fragmentFiles), ["/home/u/.config/hypr/alpe/layout.lua"]);
     assert.equal(resolve.includePaths("colors", "kwin", "/home/u/.config"), null, "no spec, no paths");
 });
 

@@ -16,7 +16,7 @@ Singleton {
     readonly property var log: Log.scoped("HyprlandService")
 
     readonly property string configDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation))
-    readonly property string hyprDmsDir: configDir + "/hypr/dms"
+    readonly property string hyprDmsDir: configDir + "/hypr/alpe"
     readonly property string outputsPath: hyprDmsDir + "/outputs.lua"
     readonly property string layoutPath: hyprDmsDir + "/layout.lua"
     readonly property string cursorPath: hyprDmsDir + "/cursor.lua"
@@ -478,7 +478,7 @@ Singleton {
             return;
         _layoutXrayLoading = true;
         const configDir = Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation));
-        Proc.runCommand("hypr-read-layout-xray", ["cat", configDir + "/hypr/dms/layout.lua"], (output, exitCode) => {
+        Proc.runCommand("hypr-read-layout-xray", ["cat", hyprDmsDir + "/layout.lua"], (output, exitCode) => {
             _layoutXrayLoading = false;
             if (!_layoutXrayLoaded) {
                 const content = exitCode === 0 ? output : "";

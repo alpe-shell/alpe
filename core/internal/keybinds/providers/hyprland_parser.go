@@ -1,6 +1,7 @@
 package providers
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/configfrag"
 	"os"
 	"path/filepath"
@@ -354,7 +355,7 @@ type HyprlandParseResult struct {
 }
 
 var hyprlandBindsMessages = configfrag.Messages{
-	Missing:     "dms/binds.lua does not exist",
+	Missing:     "alpe/binds.lua does not exist",
 	NotIncluded: "dms binds are not loaded from Hyprland config (require)",
 	Overridden:  "Some DMS binds may be overridden by config binds",
 	Active:      "DMS binds are active",
@@ -415,7 +416,7 @@ func (p *HyprlandParser) ParseWithDMS() (*HyprlandSection, error) {
 		return nil, err
 	}
 
-	dmsBindsPath := filepath.Join(expandedDir, "dms", "binds.lua")
+	dmsBindsPath := filepath.Join(expandedDir, brand.DirName, "binds.lua")
 	if _, err := os.Stat(dmsBindsPath); err == nil {
 		p.dmsBindsExists = true
 	}
@@ -1448,13 +1449,13 @@ func isDMSBindsSourcePath(p string) bool {
 
 func isDMSBindsUserOverridePath(p string) bool {
 	p = filepath.ToSlash(strings.TrimSpace(p))
-	return p == "dms/binds-user.lua" || p == "./dms/binds-user.lua" ||
-		strings.HasSuffix(p, "/dms/binds-user.lua")
+	return p == "alpe/binds-user.lua" || p == "./alpe/binds-user.lua" ||
+		strings.HasSuffix(p, "/alpe/binds-user.lua")
 }
 
 func isDMSBindsPrimarySourcePath(p string) bool {
 	p = filepath.ToSlash(strings.TrimSpace(p))
-	return strings.Contains(p, "/dms/binds.lua") || strings.HasSuffix(p, "dms/binds.lua")
+	return strings.Contains(p, "/alpe/binds.lua") || strings.HasSuffix(p, "alpe/binds.lua")
 }
 
 func hyprlandMainConfigPath(dir string) (string, error) {

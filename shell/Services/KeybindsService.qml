@@ -262,7 +262,7 @@ Singleton {
             root.lastError = "";
             root.dmsBindsIncluded = true;
             root.dmsBindsFixed();
-            ToastService.showInfo(I18n.tr("Binds include added"), I18n.tr("%1 is now included in config", "keybinds toast, %1 is the binds file path").arg("dms/" + root.includePaths.fragmentFiles[0].split("/").pop()), "", "keybinds");
+            ToastService.showInfo(I18n.tr("Binds include added"), I18n.tr("%1 is now included in config", "keybinds toast, %1 is the binds file path").arg("alpe/" + root.includePaths.fragmentFiles[0].split("/").pop()), "", "keybinds");
             Qt.callLater(root.forceReload);
         }
     }

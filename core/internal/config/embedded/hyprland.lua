@@ -15,7 +15,7 @@ hl.config({
 		kb_layout = "",
 		numlock_by_default = true,
 		follow_mouse = 0,
-		-- dms/input.lua is required later and wins per key
+		-- alpe/input.lua is required later and wins per key
 		touchpad = {
 			tap_to_click = true,
 			natural_scroll = true,
@@ -81,11 +81,11 @@ hl.window_rule({ match = { class = "^(zoom)$" }, float = true })
 hl.layer_rule({ match = { namespace = "^(quickshell)$" }, no_anim = true })
 hl.layer_rule({ match = { namespace = "^dms:.*" }, no_anim = true })
 
-require("dms.colors")
-require("dms.outputs")
-require("dms.layout")
-require("dms.cursor")
-require("dms.input")
-require("dms.binds")
-require("dms.binds-user")
-require("dms.windowrules")
+require("alpe.colors")
+require("alpe.outputs")
+require("alpe.layout")
+require("alpe.cursor")
+require("alpe.input")
+require("alpe.binds")
+require("alpe.binds-user")
+require("alpe.windowrules")

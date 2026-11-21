@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/alpe-shell/alpe/core/internal/log"
-	"github.com/alpe-shell/alpe/core/internal/screenshot"
 	"github.com/alpe-shell/alpe/core/internal/utils"
 )
 
@@ -43,7 +42,6 @@ func resolveICCProfile(name string) string {
 
 // Only the ICC fields persist, the shell pushes the night light state.
 func LoadConfig() Config {
-	migrateLegacyICCConfig()
 
 	cfg := DefaultConfig()
 	data, err := os.ReadFile(iccConfigPath())
@@ -109,79 +107,3 @@ func stageICCProfile(dir, src string) (string, error) {
 	}
 }
 
-// !TODO: drop once master users have moved off <compositor>/dms/wayland.json
-func migrateLegacyICCConfig() {
-	if _, err := os.Stat(iccConfigPath()); !errors.Is(err, fs.ErrNotExist) {
-		return
-	}
-	legacyDir := legacyICCDir()
-	if legacyDir == "" {
-		return
-	}
-	legacyPath := filepath.Join(legacyDir, "wayland.json")
-	data, err := os.ReadFile(legacyPath)
-	if err != nil {
-		return
-	}
-	var cfg iccConfig
-	if err := json.Unmarshal(data, &cfg); err != nil {
-		log.Warnf("icc: cannot migrate %s: %v", legacyPath, err)
-		return
-	}
-
-	profilesDir := ICCProfilesDir()
-	legacyProfilesDir := filepath.Join(legacyDir, "icc")
-	moved := make(map[string]string)
-	entries, _ := os.ReadDir(legacyProfilesDir)
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		src := filepath.Join(legacyProfilesDir, entry.Name())
-		name, err := stageICCProfile(profilesDir, src)
-		if err != nil {
-			log.Warnf("icc: cannot move %s: %v", src, err)
-			continue
-		}
-		moved[src] = name
-	}
-
-	for output, path := range cfg.ICCProfiles {
-		if name, ok := moved[filepath.Clean(path)]; ok {
-			cfg.ICCProfiles[output] = name
-			continue
-		}
-		name, err := stageICCProfile(profilesDir, path)
-		if err != nil {
-			log.Warnf("icc: keeping %s for %s: %v", path, output, err)
-			continue
-		}
-		cfg.ICCProfiles[output] = name
-	}
-
-	if err := SaveICCConfig(Config{ICCProfiles: cfg.ICCProfiles, OutputTemps: cfg.OutputTemps}); err != nil {
-		log.Warnf("icc: cannot migrate %s: %v", legacyPath, err)
-		return
-	}
-	if err := os.Remove(legacyPath); err != nil {
-		log.Warnf("icc: failed to remove %s: %v", legacyPath, err)
-	}
-	for src := range moved {
-		if err := os.Remove(src); err != nil {
-			log.Warnf("icc: failed to remove %s: %v", src, err)
-		}
-	}
-	_ = os.Remove(legacyProfilesDir)
-	log.Infof("icc: moved %s to %s", legacyPath, iccConfigPath())
-}
-
-func legacyICCDir() string {
-	compositorDir := ""
-	switch screenshot.DetectCompositor() {
-	case screenshot.CompositorHyprland:
-		compositorDir = "hypr"
-	default:
-		return ""
-	}
-	return filepath.Join(utils.XDGConfigHome(), compositorDir, "dms")
-}

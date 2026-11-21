@@ -26,7 +26,7 @@ Item {
     property var externalRules: []
     property var activeWindows: getActiveWindows()
     property string expandedExternalId: ""
-    readonly property string dmsRulesFileName: "dms/" + (ConfigIncludeResolve.includeSpec("windowrules", CompositorService.compositor)?.fragmentNames[0] ?? "windowrules.lua")
+    readonly property string dmsRulesFileName: "alpe/" + (ConfigIncludeResolve.includeSpec("windowrules", CompositorService.compositor)?.fragmentNames[0] ?? "windowrules.lua")
 
     Component.onDestruction: SettingsSearchService.unregisterCard("windowRules")
 

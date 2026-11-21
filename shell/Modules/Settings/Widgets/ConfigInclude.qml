@@ -18,7 +18,7 @@ QtObject {
     readonly property bool compositorSupported: ConfigIncludeResolve.includeSpec(includeKind, CompositorService.compositor) !== null
     readonly property bool included: status.included === true
     readonly property bool readOnly: CompositorService.isHyprland && !HyprlandService.luaConfigActive
-    readonly property string fragmentLabel: "dms/" + includeKind
+    readonly property string fragmentLabel: "alpe/" + includeKind
 
     signal fixed
 

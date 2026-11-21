@@ -46,10 +46,10 @@ func TestParserShowsUnbindRebindOverrideFromUserModule(t *testing.T) {
 	tmpDir := t.TempDir()
 	writeHyprlandConfig(t, tmpDir, map[string]string{
 		"hyprland.lua": `
-require("dms.binds")
+require("alpe.binds")
 require("mybinds")
 `,
-		"dms/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })
 hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"), { description = "Terminal" })`,
 		"mybinds.lua": `hl.unbind("SUPER + V")
 hl.bind("SUPER + V", hl.dsp.togglefloating(), { description = "float toggle" })`,
@@ -88,10 +88,10 @@ func TestParserStillReportsConflictWithoutUnbind(t *testing.T) {
 	tmpDir := t.TempDir()
 	writeHyprlandConfig(t, tmpDir, map[string]string{
 		"hyprland.lua": `
-require("dms.binds")
+require("alpe.binds")
 require("mybinds")
 `,
-		"dms/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })`,
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })`,
 		"mybinds.lua":   `hl.bind("SUPER + V", hl.dsp.togglefloating(), { description = "float toggle" })`,
 	})
 
@@ -115,15 +115,15 @@ require("mybinds")
 }
 
 // An unbind without a rebind stays a plain removal, from a user module as well
-// as from dms/binds-user.lua.
+// as from alpe/binds-user.lua.
 func TestParserUnbindWithoutRebindStillRemoves(t *testing.T) {
 	tmpDir := t.TempDir()
 	writeHyprlandConfig(t, tmpDir, map[string]string{
 		"hyprland.lua": `
-require("dms.binds")
+require("alpe.binds")
 require("mybinds")
 `,
-		"dms/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"))
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"))
 hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"))`,
 		"mybinds.lua": `hl.unbind("SUPER + V")`,
 	})
@@ -142,19 +142,19 @@ hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"))`,
 	}
 }
 
-// dms/binds-user.lua is what the settings modal writes, and it writes an unbind
+// alpe/binds-user.lua is what the settings modal writes, and it writes an unbind
 // followed by a bind. Recording that unbind must not delete the rebind that
 // comes with it.
 func TestParserKeepsBindsUserRebindAfterItsOwnUnbind(t *testing.T) {
 	tmpDir := t.TempDir()
 	writeHyprlandConfig(t, tmpDir, map[string]string{
 		"hyprland.lua": `
-require("dms.binds")
-require("dms.binds-user")
+require("alpe.binds")
+require("alpe.binds-user")
 `,
-		"dms/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })
 hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"), { description = "Terminal" })`,
-		"dms/binds-user.lua": `hl.unbind("SUPER + V")
+		"alpe/binds-user.lua": `hl.unbind("SUPER + V")
 hl.bind("SUPER + V", hl.dsp.togglefloating(), { description = "float toggle" })`,
 	})
 

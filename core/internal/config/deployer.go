@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -422,7 +423,7 @@ func (cd *ConfigDeployer) deployHyprlandConfig(terminalCommand string, useSystem
 		return result, result.Error
 	}
 
-	dmsDir := filepath.Join(configDir, "dms")
+	dmsDir := filepath.Join(configDir, brand.DirName)
 	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
 		result.Error = fmt.Errorf("failed to create dms directory: %w", err)
 		return result, result.Error
@@ -492,7 +493,7 @@ func backupHyprlandConfigFile(dst string, data []byte) (string, error) {
 // Keeping hyprland.lua must not leave the DMS-owned binds.lua stale; the user's
 // binds live in binds-user.lua, which is never overwritten.
 func (cd *ConfigDeployer) RefreshHyprlandDMSBinds(terminalCommand string) (DeploymentResult, bool) {
-	bindsPath := filepath.Join(HyprlandConfigDir(), "dms", "binds.lua")
+	bindsPath := filepath.Join(HyprlandConfigDir(), brand.DirName, "binds.lua")
 	result := DeploymentResult{ConfigType: BindsConfigType, Path: bindsPath}
 	if _, err := os.Stat(bindsPath); err != nil {
 		if os.IsNotExist(err) {
@@ -513,7 +514,7 @@ func (cd *ConfigDeployer) RefreshHyprlandDMSBinds(terminalCommand string) (Deplo
 // WriteHyprlandStockBinds replaces dms/binds.lua with the stock set. Hand edits are
 // never lost: a copy that differs from stock goes to .dms-backups first.
 func WriteHyprlandStockBinds(configDir, terminalCommand string) (backupPath string, written bool, err error) {
-	path := filepath.Join(configDir, "dms", "binds.lua")
+	path := filepath.Join(configDir, brand.DirName, "binds.lua")
 	stock := strings.ReplaceAll(DMSBindsLuaConfig, "{{TERMINAL_COMMAND}}", terminalCommand)
 	existing, err := os.ReadFile(path)
 	if err != nil && !os.IsNotExist(err) {
@@ -523,7 +524,7 @@ func WriteHyprlandStockBinds(configDir, terminalCommand string) (backupPath stri
 		return "", false, nil
 	}
 	if len(existing) > 0 {
-		dst := filepath.Join(configDir, hyprlandBackupDirName, time.Now().Format("2006-01-02_15-04-05"), "dms", "binds.lua")
+		dst := filepath.Join(configDir, hyprlandBackupDirName, time.Now().Format("2006-01-02_15-04-05"), brand.DirName, "binds.lua")
 		if backupPath, err = backupHyprlandConfigFile(dst, existing); err != nil {
 			return "", false, fmt.Errorf("failed to back up binds.lua: %w", err)
 		}

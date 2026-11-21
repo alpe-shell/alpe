@@ -146,7 +146,7 @@ Singleton {
         const legacy = SettingsData.displayProfiles || {};
         const configDir = Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation));
         const compositorDirs = {
-            "hyprland": configDir + "/hypr/dms/profiles"
+            "hyprland": configDir + "/hypr/alpe/profiles"
         };
         const compositorExts = {
             "hyprland": ".conf"

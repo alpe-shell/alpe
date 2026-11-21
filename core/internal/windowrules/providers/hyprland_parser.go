@@ -3,6 +3,7 @@ package providers
 import (
 	"errors"
 	"fmt"
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -53,7 +54,7 @@ func (p *HyprlandRulesParser) Parse() ([]HyprlandWindowRule, error) {
 		return nil, err
 	}
 
-	p.dmsPrimaryPath = filepath.Join(expandedDir, "dms", "windowrules.lua")
+	p.dmsPrimaryPath = filepath.Join(expandedDir, brand.DirName, "windowrules.lua")
 	if _, err := os.Stat(p.dmsPrimaryPath); err == nil {
 		p.dmsRulesExists = true
 	}
@@ -119,8 +120,8 @@ func (p *HyprlandRulesParser) HasDMSRulesIncluded() bool {
 }
 
 var hyprlandRulesMessages = configfrag.Messages{
-	Missing:     "dms/windowrules.lua does not exist",
-	NotIncluded: "dms window rules are not loaded (missing require for dms/windowrules)",
+	Missing:     "alpe/windowrules.lua does not exist",
+	NotIncluded: "alpe window rules are not loaded (missing require for alpe/windowrules)",
 	Overridden:  "Some DMS rules may be overridden by config rules",
 	Active:      "DMS window rules are active",
 }
@@ -176,7 +177,7 @@ func (p *HyprlandWritableProvider) Name() string {
 
 func (p *HyprlandWritableProvider) GetOverridePath() string {
 	expanded, _ := utils.ExpandPath(p.configDir)
-	return filepath.Join(expanded, "dms", "windowrules.lua")
+	return filepath.Join(expanded, brand.DirName, "windowrules.lua")
 }
 
 func (p *HyprlandWritableProvider) GetRuleSet() (*windowrules.RuleSet, error) {
@@ -537,7 +538,7 @@ func hyprlandMainConfigPath(dir string) (string, error) {
 
 func isDMSWindowRulesSourcePath(sourcePath string) bool {
 	p := filepath.ToSlash(strings.TrimSpace(sourcePath))
-	return p == "dms/windowrules.lua" || p == "./dms/windowrules.lua" || strings.HasSuffix(p, "/dms/windowrules.lua")
+	return p == "alpe/windowrules.lua" || p == "./alpe/windowrules.lua" || strings.HasSuffix(p, "/alpe/windowrules.lua")
 }
 
 func isDMSWindowRulesRequireModule(mod string) bool {
