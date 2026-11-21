@@ -40,7 +40,6 @@ const (
 	TemplateKindNormal TemplateKind = iota
 	TemplateKindTerminal
 	TemplateKindGTK
-	TemplateKindVSCode
 	TemplateKindEmacs
 )
 
@@ -76,7 +75,6 @@ var templateRegistry = []TemplateDef{
 	{ID: "nvim", Commands: []string{"nvim"}, ConfigFile: "neovim.toml", Kind: TemplateKindTerminal},
 	{ID: "dgop", Commands: []string{"dgop"}, ConfigFile: "dgop.toml"},
 	{ID: "kcolorscheme", ConfigFile: "kcolorscheme.toml", RunUnconditionally: true},
-	{ID: "vscode", Kind: TemplateKindVSCode},
 	{ID: "emacs", Commands: []string{"emacs"}, ConfigFile: "emacs.toml", Kind: TemplateKindEmacs},
 	{ID: "zed", Commands: []string{"zed", "zeditor", "zedit"}, ConfigFile: "zed.toml"},
 }
@@ -680,7 +678,6 @@ output_path = '%s'
 		return nil
 	}
 
-	homeDir, _ := os.UserHomeDir()
 	for _, tmpl := range templateRegistry {
 		if opts.ShouldSkipTemplate(tmpl.ID) {
 			continue
@@ -694,10 +691,6 @@ output_path = '%s'
 			appendConfig(opts, cfgFile, nil, nil, nil, "gtk.toml")
 		case TemplateKindTerminal:
 			appendTerminalConfig(opts, cfgFile, tmpDir, tmpl.Commands, tmpl.Flatpaks, tmpl.ConfigFile)
-		case TemplateKindVSCode:
-			for _, editor := range vscodeEditors {
-				appendVSCodeConfig(cfgFile, editor.name, editor.extensionsDir(homeDir), opts.ShellDir)
-			}
 		case TemplateKindEmacs:
 			if utils.EmacsConfigDir() != "" {
 				appendConfig(opts, cfgFile, tmpl.Commands, tmpl.Flatpaks, tmpl.ConfigDirs, tmpl.ConfigFile)
@@ -919,52 +912,6 @@ func appExists(checker utils.AppChecker, checkCmd []string, checkFlatpaks []stri
 		return true
 	}
 	return false
-}
-
-type vscodeEditor struct {
-	name    string
-	dataDir string
-}
-
-var vscodeEditors = []vscodeEditor{
-	{"vscode", ".vscode"},
-	{"codium", ".vscode-oss"},
-	{"cursor", ".cursor"},
-	{"windsurf", ".windsurf"},
-	{"positron", ".positron"},
-	{"antigravity", ".antigravity-ide"},
-	{"vscode-insiders", ".vscode-insiders"},
-}
-
-func (e vscodeEditor) extensionsDir(homeDir string) string {
-	return filepath.Join(homeDir, e.dataDir, "extensions")
-}
-
-func appendVSCodeConfig(cfgFile *os.File, name, extBaseDir, shellDir string) {
-	pattern := filepath.Join(extBaseDir, "danklinux.dms-theme-*")
-	matches, err := filepath.Glob(pattern)
-	if err != nil || len(matches) == 0 {
-		return
-	}
-
-	extDir := matches[0]
-	templateDir := filepath.Join(shellDir, "matugen", "templates")
-	fmt.Fprintf(cfgFile, `[templates.dms%sdefault]
-input_path = '%s/vscode-color-theme-default.json'
-output_path = '%s/themes/dankshell-default.json'
-
-[templates.dms%sdark]
-input_path = '%s/vscode-color-theme-dark.json'
-output_path = '%s/themes/dankshell-dark.json'
-
-[templates.dms%slight]
-input_path = '%s/vscode-color-theme-light.json'
-output_path = '%s/themes/dankshell-light.json'
-
-`, name, templateDir, extDir,
-		name, templateDir, extDir,
-		name, templateDir, extDir)
-	log.Infof("Added %s theme config (extension found at %s)", name, extDir)
 }
 
 func substituteVars(content, shellDir string) string {
@@ -1613,7 +1560,6 @@ func CheckTemplates(checker utils.AppChecker) []TemplateCheck {
 		checker = utils.DefaultAppChecker{}
 	}
 
-	homeDir, _ := os.UserHomeDir()
 	checks := make([]TemplateCheck, 0, len(templateRegistry)+1)
 
 	for _, tmpl := range templateRegistry {
@@ -1622,8 +1568,6 @@ func CheckTemplates(checker utils.AppChecker) []TemplateCheck {
 		switch {
 		case tmpl.RunUnconditionally:
 			detected = true
-		case tmpl.Kind == TemplateKindVSCode:
-			detected = checkVSCodeExtension(homeDir)
 		case tmpl.Kind == TemplateKindEmacs:
 			detected = appExists(checker, tmpl.Commands, tmpl.Flatpaks) && utils.EmacsConfigDir() != ""
 		default:
@@ -1639,14 +1583,4 @@ func CheckTemplates(checker utils.AppChecker) []TemplateCheck {
 	checks = append(checks, TemplateCheck{ID: "qtengine", Detected: QtengineActive()})
 
 	return checks
-}
-
-func checkVSCodeExtension(homeDir string) bool {
-	for _, editor := range vscodeEditors {
-		pattern := filepath.Join(editor.extensionsDir(homeDir), "danklinux.dms-theme-*")
-		if matches, err := filepath.Glob(pattern); err == nil && len(matches) > 0 {
-			return true
-		}
-	}
-	return false
 }

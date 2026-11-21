@@ -63,7 +63,6 @@ Code
   core/pkg/ipp/                       Apache License 2.0 (LICENSE im Ordner)
   core/internal/proto/*               Wayland-Protokollbindungen; MIT-artige Lizenzen der
                                       Protokollautoren, im Kopf jeder Datei
-  shell/matugen/vsix-build/           MIT, Copyright (c) 2025 DankLinux
   core/internal/matugen/sourcecolor.go  Gewichtungen der Farbwahl nach caelestia-cli, dort
                                       ursprünglich aus Material Color Utilities (Google,
                                       Apache License 2.0); übernommen sind nur Zahlenwerte

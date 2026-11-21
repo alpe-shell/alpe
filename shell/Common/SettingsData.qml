@@ -782,7 +782,6 @@ Singleton {
     property bool matugenTemplateWezterm: Spec.SPEC.matugenTemplateWezterm.def
     property bool matugenTemplateDgop: Spec.SPEC.matugenTemplateDgop.def
     property bool matugenTemplateKcolorscheme: Spec.SPEC.matugenTemplateKcolorscheme.def
-    property bool matugenTemplateVscode: Spec.SPEC.matugenTemplateVscode.def
     property bool matugenTemplateEmacs: Spec.SPEC.matugenTemplateEmacs.def
     property bool matugenTemplateZed: Spec.SPEC.matugenTemplateZed.def
 

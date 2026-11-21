@@ -1268,9 +1268,6 @@ var LOCAL_SPEC = {
     matugenTemplateKcolorscheme: {
         def: true
     },
-    matugenTemplateVscode: {
-        def: true
-    },
     matugenTemplateEmacs: {
         def: true
     },

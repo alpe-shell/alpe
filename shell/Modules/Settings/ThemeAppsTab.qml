@@ -513,18 +513,6 @@ Item {
             SettingsToggleRow {
                 enabled: SettingsData.runDmsMatugenTemplates
                 tab: "theme"
-                tags: ["matugen", "vscode", "code", "template"]
-                settingKey: "matugenTemplateVscode"
-                text: "VS Code"
-                description: root.getTemplateDescription("vscode", I18n.tr("Requires the DMS Theme extension from the editor marketplace", "vscode matugen template description"))
-                descriptionColor: root.getTemplateDescriptionColor("vscode")
-                checked: SettingsData.matugenTemplateVscode
-                onToggled: checked => SettingsData.set("matugenTemplateVscode", checked)
-            }
-
-            SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
-                tab: "theme"
                 tags: ["matugen", "emacs", "template"]
                 settingKey: "matugenTemplateEmacs"
                 text: "Emacs"
