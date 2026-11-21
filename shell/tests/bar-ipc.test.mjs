@@ -76,10 +76,6 @@ test("toggleReveal only works on auto hide bars and unhides first", () => {
     assert.equal(context.toggleReveal("id", "hidden"), "BAR_TUCK_SUCCESS");
     assert.deepEqual(reveals.slice(1), [["toggle", "hidden"], ["toggle", "hidden"]]);
     bars[2].visible = false;
-
-    const fullscreen = shell(bars, [true], { main: { fullscreenAutoHide: true } });
-    assert.equal(fullscreen.context.toggleReveal("id", "main"), "BAR_REVEAL_SUCCESS");
-    assert.deepEqual(fullscreen.reveals, [["toggle", "main"]]);
 });
 
 const ipcBarBody = source.slice(source.indexOf("    function getPreferredBar("), source.indexOf("    readonly property var defaultAppMimeTypes"));

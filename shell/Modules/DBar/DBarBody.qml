@@ -24,7 +24,6 @@ Item {
     readonly property bool barRevealed: inputMask.showing
     readonly property bool autoHideActive: topBarCore.autoHide
     // Vollbild-Ausblenden gab es nur unter niri; die Kette über DBar und IPC bleibt bestehen.
-    readonly property bool fullscreenAutoHide: false
 
     readonly property bool isIsland: barConfig?.island === true
     // Resolver-owned so the body, the frame and the dismiss window agree during the frame latch.
@@ -988,7 +987,7 @@ Item {
         anchors.fill: parent
         layer.enabled: false
 
-        readonly property bool autoHide: ((!barWindow.isIsland || barWindow.islandOverlay) && (barConfig?.autoHide ?? false)) || barWindow.fullscreenAutoHide
+        readonly property bool autoHide: ((!barWindow.isIsland || barWindow.islandOverlay) && (barConfig?.autoHide ?? false))
         onAutoHideChanged: {
             if (!autoHide)
                 SettingsData.setBarIpcReveal(barConfig?.id ?? "", false);
@@ -1090,9 +1089,6 @@ Item {
             const inOverviewWithShow = CompositorService.overviewActiveOnScreen(barWindow.screenName) && barWindow.effectiveOpenOnOverview;
             if (inOverviewWithShow)
                 return true;
-
-            if (barWindow.fullscreenAutoHide)
-                return hoverReveal || popoutPinsReveal || revealSticky || ipcReveal;
 
             const showOnWindowsSetting = barConfig?.showOnWindowsOpen ?? false;
             if (showOnWindowsSetting && autoHide && CompositorService.windowOverlapSupported) {
