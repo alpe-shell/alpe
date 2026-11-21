@@ -81,7 +81,7 @@ Antworten auf Abschnitt 12:
 | 2 | App-ID `io.github.alpe_shell.Alpe` |
 | 3 | `phase-a` auf `origin/main` gesetzt (erledigt), alle URLs auf `alpe-shell/alpe`; `main` und `v1.0` bleiben unberührt |
 | 4 | Übersetzungen nur de + en |
-| 5 | Greeter weg; Aktualisierung/Changelog/Willkommen des Ursprungs weg; Plugin- und Theme-Browser **inklusive `internal/registries` ganz entfernen** (eigener Commit, lokales Laden von Plugins bleibt); vsix weg; **Tailscale: noch offen** (Rückfrage vor C4) |
+| 5 | Greeter weg; Aktualisierung/Changelog/Willkommen des Ursprungs weg; Plugin- und Theme-Browser **inklusive `internal/registries` ganz entfernen** (eigener Commit, lokales Laden von Plugins bleibt); vsix weg; **Tailscale weg** (QML-Service, `internal/server/tailscale`, Abhängigkeit `tailscale.com`, Einstellungen, Leisten-Widget) |
 | 6 | D7 als letzte Etappe mit eigenem Halt, nur bei grüner Ladeprüfung der ganzen Shell; bei Problemen D7 verwerfen und interne Namen auf die Ausnahmeliste |
 | 7 | Eigenes COPR `alpe-shell/alpe` mit selbst gebautem Quickshell (Vorlage: errornointernet), bei Bedarf matugen. Mac-Ausgaben inkl. `getconf PAGESIZE` folgen |
 | 8 | Hyprland startet über `exec-once = alpe start` |
@@ -90,9 +90,9 @@ Antworten auf Abschnitt 12:
 | 11 | Alte Ordner bleiben bis `alpe umzug aufraeumen`; `alpe doctor` erinnert daran |
 | 12 | `~/alpe` am Mac bleibt |
 | 13 | Archiv aus c988364 bauen, `gh release upload`-Befehl dem Maintainer geben |
-| 14 | **offen** (Bestätigung der Bilder) |
+| 14 | Bilder bestätigt: `wallpaper.jpg`, `wall.png`, `jagged-peaks-wolkenzug.mp4` sind selbst erstellt bzw. frei weitergebbar und bleiben |
 | 15 | Herkunftsvermerk in NOTICE genügt |
-| 16 | **offen** – ohne eindeutigen MIT-Beleg Halt vor B2 |
+| 16 | KWin-Patch v1–v4: vom Maintainer mit Claude vom 15. bis 17.11.2026 gegen DMS v2.1.2 geschrieben, kein fremder Code; in NOTICE als Teil von Alpe (MIT) |
 | 17 | `dux-gop` zum Entfernen anbieten (zuerst `--print`) |
 
 Änderungen am Plan:
@@ -108,6 +108,13 @@ Antworten auf Abschnitt 12:
 - `CLAUDE.md` wird committet, neutral formuliert.
 - **Fremde Plugins** (alles ausser `alpe*`) und `.repos` fassen weder der Umzug noch
   `alpe entfernen --alles` an.
+- **Sport-Musterdaten:** Der Testlauf darf eingecheckte Dateien nie verändern; `make_fixtures.py`
+  bzw. die Szenen schreiben in ein Temp-Verzeichnis. Eigener Commit in C1.
+- B3 ist in zwei Commits geteilt: Schicht 0001 übernehmen (Baumvergleich), dann Schichten
+  auflösen und Werkzeuge/Tests/CI auf den eigenen Baum umstellen (`ALPE_SHELL_DIR` = Verzeichnis
+  mit `shell.qml`, Vorgabe `shell/`).
+- Gearbeitet wird im Worktree `~/alpe-phase-a`; `~/alpe` bleibt bis zum Ende von Phase A auf
+  eacdaa4 (dort hängt die laufende 1.0-Einrichtung).
 - **Halte:** nach A1, nach B3 (Baumvergleich), nach C4, nach D6, nach E4, nach F2, dann D7
   separat, zuletzt G1 – jeweils mit Zusammenfassung und Diffstat.
 
