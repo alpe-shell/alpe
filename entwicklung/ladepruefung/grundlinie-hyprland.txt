@@ -1,23 +1,23 @@
 # Grundlinie der Ladeprüfung (hyprland): Warnungen und Fehler eines Laufs mit dem ausgelieferten
 # Design, vereint über 3 Läufe. Neu schreiben: ladepruefung.py hyprland --grundlinie
-ERROR qml: [KeybindsService:200] Failed to parse binds: SyntaxError: JSON.parse: Parse error
+ERROR qml: [KeybindsService:<Z>] Failed to parse binds: SyntaxError: JSON.parse: Parse error
 ERROR quickshell.service.pipewire.loop: Failed to connect pipewire context. Errno: 112
 WARN  go: [Tailscale] IPN bus subscribe failed: Failed to connect to local Tailscale daemon for /localapi/v0/watch-ipn-bus; not running? Error: dial unix /var/run/tailscale/tailscaled.sock: connect: no such file or directory
-WARN qml: [CompositorService:1514] failed to update DMS window rule dms-floating-windows 1 {"success":false,"error":"hyprland.lua not found in <TMP>/h/.config/hypr; run `dms setup` to migrate before editing window rules: stat <TMP>/h/.config/hypr/hyprland.lua: no such file or directory"}
-WARN qml: [DSearchService:33] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
-WARN qml: [KeybindsService:210] Load process failed with code: 1
-WARN qml: [Proc:139] runCommand callback error for command: ["sh","-c","for b in /sys/class/power_supply/*; do [ \"$(cat $b/type 2>/dev/null)\" = Battery ] && [ -f $b/charge_control_end_threshold ] && { echo \"charge=$(cat $b/charge_control_end_threshold)\"; break; }; done; [ -f /etc/alpe/ladegrenze ] && echo persist=1; for k in HandleLidSwitch HandleLidSwitchExternalPower HandleLidSwitchDocked; do printf \"%s=\" $k; busctl --json=short get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager $k 2>/dev/null || printf \"{}\"; echo; done"] Error: TypeError: Cannot read property 'lid' of null
-WARN qml: [ProcessListModal:40] dgop is not available
-WARN qml: [Theme:2374] Theme worker:   INFO  go: Building theme: image <TMP>/h/.cache/dms/video-wallpaper/<HASH>.jpg (dark)
-WARN qml: [Theme:2374] Theme worker:   INFO  go: Done
-WARN qml: [Theme:2374] Theme worker:   INFO  go: Running matugen hex with dank16 injection
-WARN qml: [Theme:2374] Theme worker:   INFO  go: Seed color: <TMP>/h/.cache/dms/video-wallpaper/<HASH>.jpg -> #c3b9c0
-WARN qml: [Theme:2374] Theme worker:   INFO  go: Server unavailable, running synchronously
-WARN qml: [Theme:2374] Theme worker:   INFO  go: Using dynamic theme from image: <TMP>/h/.cache/dms/video-wallpaper/<HASH>.jpg
-WARN qml: [Theme:2374] Theme worker: ✖ The <TMP>/h/.config/dgop folder doesnt exist, trying to create...
-WARN qml: [Theme:2374] Theme worker: ✖ The <TMP>/h/.config/gtk-3.0 folder doesnt exist, trying to create...
-WARN qml: [Theme:2374] Theme worker: ✖ The <TMP>/h/.config/gtk-4.0 folder doesnt exist, trying to create...
-WARN qml: [Theme:2374] Theme worker: ✖ The <TMP>/h/.local/share/color-schemes folder doesnt exist, trying to create...
+WARN qml: [CompositorService:<Z>] failed to update DMS window rule dms-floating-windows 1 {"success":false,"error":"hyprland.lua not found in <TMP>/h/.config/hypr; run `dms setup` to migrate before editing window rules: stat <TMP>/h/.config/hypr/hyprland.lua: no such file or directory"}
+WARN qml: [DSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
+WARN qml: [KeybindsService:<Z>] Load process failed with code: 1
+WARN qml: [Proc:<Z>] runCommand callback error for command: ["sh","-c","for b in /sys/class/power_supply/*; do [ \"$(cat $b/type 2>/dev/null)\" = Battery ] && [ -f $b/charge_control_end_threshold ] && { echo \"charge=$(cat $b/charge_control_end_threshold)\"; break; }; done; [ -f /etc/alpe/ladegrenze ] && echo persist=1; for k in HandleLidSwitch HandleLidSwitchExternalPower HandleLidSwitchDocked; do printf \"%s=\" $k; busctl --json=short get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager $k 2>/dev/null || printf \"{}\"; echo; done"] Error: TypeError: Cannot read property 'lid' of null
+WARN qml: [ProcessListModal:<Z>] dgop is not available
+WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Building theme: image <TMP>/h/.cache/dms/video-wallpaper/<HASH>.jpg (dark)
+WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Done
+WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Running matugen hex with dank16 injection
+WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Seed color: <TMP>/h/.cache/dms/video-wallpaper/<HASH>.jpg -> #c3b9c0
+WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Server unavailable, running synchronously
+WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Using dynamic theme from image: <TMP>/h/.cache/dms/video-wallpaper/<HASH>.jpg
+WARN qml: [Theme:<Z>] Theme worker: ✖ The <TMP>/h/.config/dgop folder doesnt exist, trying to create...
+WARN qml: [Theme:<Z>] Theme worker: ✖ The <TMP>/h/.config/gtk-3.0 folder doesnt exist, trying to create...
+WARN qml: [Theme:<Z>] Theme worker: ✖ The <TMP>/h/.config/gtk-4.0 folder doesnt exist, trying to create...
+WARN qml: [Theme:<Z>] Theme worker: ✖ The <TMP>/h/.local/share/color-schemes folder doesnt exist, trying to create...
 WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
 WARN qt.qpa.theme.gnome: dbus reply error: [ "org.freedesktop.DBus.Error.UnknownMethod" ] "Keine derartige Schnittstelle »org.freedesktop.portal.Settings« des Objekts im Pfad /org/freedesktop/portal/desktop"
 WARN quickshell.bluetooth: Could not connect to DBus. Bluetooth integration is not available.
@@ -26,16 +26,16 @@ WARN quickshell.service.polkit.listener: failed to register listener: Zeitübers
 WARN quickshell.service.polkit: failed to register listener on path "/org/quickshell/PolkitAgent"
 WARN quickshell.service.powerprofiles: Could not connect to DBus. PowerProfiles services will not work.
 WARN quickshell.service.upower: Could not connect to DBus. UPower service will not work.
-WARN scene: @Modules/Settings/AlpeDeviceTab.qml[330:21]: Unable to assign [undefined] to bool
-WARN scene: @Modules/Settings/DBarTab.qml[442:13]: Unable to assign [undefined] to QString
-WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[122:5]: Read of <TMP>/h/.local/state/dms/appusage.json failed: File does not exist.
-WARN scene: QML FileView at @Common/CacheData.qml[276:5]: Read of <TMP>/h/.cache/dms/launcher_cache.json failed: File does not exist.
-WARN scene: QML FileView at @Common/CacheData.qml[286:5]: Read of <TMP>/h/.cache/dms/cache.json failed: File does not exist.
-WARN scene: QML FileView at @Common/Theme.qml[2450:5]: Read of <TMP>/h/.cache/dms/dms-colors.json failed: File does not exist.
-WARN scene: QML FileView at @Services/NotepadStorageService.qml[74:5]: Read of <TMP>/h/.local/state/dms/notepad-session.json failed: File does not exist.
-WARN scene: QML FileView at @Services/PaletteInjectService.qml[119:5]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
-WARN scene: QML QQuickImage* at @DCommon/Widgets/CachingImage.qml[76:5]: Cannot open: file://<TMP>/h/.cache/dms/imagecache/<HASH>@1024x1024.png
-WARN scene: QML SportDaemon at file://<TMP>/h/.config/dms/plugins/alpeSport/SportDaemon.qml[17:1]: Created graphical object was not placed in the graphics scene.
+WARN scene: @Modules/Settings/AlpeDeviceTab.qml[<Z>]: Unable to assign [undefined] to bool
+WARN scene: @Modules/Settings/DBarTab.qml[<Z>]: Unable to assign [undefined] to QString
+WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[<Z>]: Read of <TMP>/h/.local/state/dms/appusage.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/dms/cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/dms/launcher_cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/dms/dms-colors.json failed: File does not exist.
+WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <TMP>/h/.local/state/dms/notepad-session.json failed: File does not exist.
+WARN scene: QML FileView at @Services/PaletteInjectService.qml[<Z>]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
+WARN scene: QML QQuickImage* at @DCommon/Widgets/CachingImage.qml[<Z>]: Cannot open: file://<TMP>/h/.cache/dms/imagecache/<HASH>@1024x1024.png
+WARN scene: QML SportDaemon at file://<TMP>/h/.config/dms/plugins/alpeSport/SportDaemon.qml[<Z>]: Created graphical object was not placed in the graphics scene.
 WARN: Process failed to start, likely because the binary could not be found. Command: QList("khal", "printformats")
 WARN: Unrecognized pragma "DiskCache"
 WARN: Unrecognized pragma "RenderControl"

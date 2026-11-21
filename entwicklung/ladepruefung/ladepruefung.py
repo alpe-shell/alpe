@@ -316,6 +316,9 @@ def normalize(line, base):
     # Hashes aus dem zufälligen Temp-Pfad (Bild-Cache, Standbild eines Video-Hintergrunds)
     line = re.sub(r"imagecache/[0-9a-f]{8}@", "imagecache/<HASH>@", line)
     line = re.sub(r"video-wallpaper/[0-9a-f]{32}\.", "video-wallpaper/<HASH>.", line)
+    # Zeilennummern verschieben sich bei jeder Änderung am Code; verglichen wird der Wortlaut.
+    line = re.sub(r"(\.(?:qml|js))\[-?\d+:-?\d+\]", r"\1[<Z>]", line)
+    line = re.sub(r"\[([A-Za-z_]\w*):\d+\]", r"[\1:<Z>]", line)
     return line.strip()
 
 

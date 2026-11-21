@@ -5,9 +5,9 @@ ERROR quickshell.service.pipewire.loop: Failed to connect pipewire context. Errn
 WARN  go: Failed to initialize evdev manager: insufficient permissions to access input devices. Add your user to the 'input' group: `sudo usermod -a -G input $USER` or run `dms setup`
 WARN  go: Wayland manager unavailable: ErrUnknown: compositor does not support gamma control
 WARN  go: [Tailscale] IPN bus subscribe failed: Failed to connect to local Tailscale daemon for /localapi/v0/watch-ipn-bus; not running? Error: dial unix /var/run/tailscale/tailscaled.sock: connect: no such file or directory
-WARN qml: [DSearchService:33] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
-WARN qml: [Proc:139] runCommand callback error for command: ["sh","-c","for b in /sys/class/power_supply/*; do [ \"$(cat $b/type 2>/dev/null)\" = Battery ] && [ -f $b/charge_control_end_threshold ] && { echo \"charge=$(cat $b/charge_control_end_threshold)\"; break; }; done; [ -f /etc/alpe/ladegrenze ] && echo persist=1; for k in HandleLidSwitch HandleLidSwitchExternalPower HandleLidSwitchDocked; do printf \"%s=\" $k; busctl --json=short get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager $k 2>/dev/null || printf \"{}\"; echo; done"] Error: TypeError: Cannot read property 'lid' of null
-WARN qml: [WlrOutputService:88] Received empty outputs list
+WARN qml: [DSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
+WARN qml: [Proc:<Z>] runCommand callback error for command: ["sh","-c","for b in /sys/class/power_supply/*; do [ \"$(cat $b/type 2>/dev/null)\" = Battery ] && [ -f $b/charge_control_end_threshold ] && { echo \"charge=$(cat $b/charge_control_end_threshold)\"; break; }; done; [ -f /etc/alpe/ladegrenze ] && echo persist=1; for k in HandleLidSwitch HandleLidSwitchExternalPower HandleLidSwitchDocked; do printf \"%s=\" $k; busctl --json=short get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager $k 2>/dev/null || printf \"{}\"; echo; done"] Error: TypeError: Cannot read property 'lid' of null
+WARN qml: [WlrOutputService:<Z>] Received empty outputs list
 WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
 WARN qt.qpa.theme.gnome: dbus reply error: [ "org.freedesktop.DBus.Error.NoReply" ] "Did not receive a reply. Possible causes include: the remote application did not send a reply, the message bus security policy blocked the reply, the reply timeout expired, or the network connection was broken."
 WARN quickshell.bluetooth: Could not connect to DBus. Bluetooth integration is not available.
@@ -16,16 +16,16 @@ WARN quickshell.service.polkit.listener: failed to register listener: Zeitübers
 WARN quickshell.service.polkit: failed to register listener on path "/org/quickshell/PolkitAgent"
 WARN quickshell.service.powerprofiles: Could not connect to DBus. PowerProfiles services will not work.
 WARN quickshell.service.upower: Could not connect to DBus. UPower service will not work.
-WARN scene: @Modules/Settings/AlpeDeviceTab.qml[330:21]: Unable to assign [undefined] to bool
-WARN scene: @Modules/Settings/DBarTab.qml[442:13]: Unable to assign [undefined] to QString
-WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[122:5]: Read of <TMP>/h/.local/state/dms/appusage.json failed: File does not exist.
-WARN scene: QML FileView at @Common/CacheData.qml[276:5]: Read of <TMP>/h/.cache/dms/launcher_cache.json failed: File does not exist.
-WARN scene: QML FileView at @Common/CacheData.qml[286:5]: Read of <TMP>/h/.cache/dms/cache.json failed: File does not exist.
-WARN scene: QML FileView at @Common/Theme.qml[2450:5]: Read of <TMP>/h/.cache/dms/dms-colors.json failed: File does not exist.
-WARN scene: QML FileView at @Services/NotepadStorageService.qml[74:5]: Read of <TMP>/h/.local/state/dms/notepad-session.json failed: File does not exist.
-WARN scene: QML FileView at @Services/PaletteInjectService.qml[119:5]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
-WARN scene: QML QQuickImage* at @DCommon/Widgets/CachingImage.qml[76:5]: Cannot open: file://<TMP>/h/.cache/dms/imagecache/<HASH>@1024x1024.png
-WARN scene: QML SportDaemon at file://<TMP>/h/.config/dms/plugins/alpeSport/SportDaemon.qml[17:1]: Created graphical object was not placed in the graphics scene.
+WARN scene: @Modules/Settings/AlpeDeviceTab.qml[<Z>]: Unable to assign [undefined] to bool
+WARN scene: @Modules/Settings/DBarTab.qml[<Z>]: Unable to assign [undefined] to QString
+WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[<Z>]: Read of <TMP>/h/.local/state/dms/appusage.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/dms/cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/dms/launcher_cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/dms/dms-colors.json failed: File does not exist.
+WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <TMP>/h/.local/state/dms/notepad-session.json failed: File does not exist.
+WARN scene: QML FileView at @Services/PaletteInjectService.qml[<Z>]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
+WARN scene: QML QQuickImage* at @DCommon/Widgets/CachingImage.qml[<Z>]: Cannot open: file://<TMP>/h/.cache/dms/imagecache/<HASH>@1024x1024.png
+WARN scene: QML SportDaemon at file://<TMP>/h/.config/dms/plugins/alpeSport/SportDaemon.qml[<Z>]: Created graphical object was not placed in the graphics scene.
 WARN: <Unknown File>:<N>: Error: Cannot assign to non-existent property "requestedSearchQuery"
 WARN: Process failed to start, likely because the binary could not be found. Command: QList("khal", "printformats")
 WARN: Unrecognized pragma "DiskCache"
