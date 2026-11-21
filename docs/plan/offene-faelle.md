@@ -127,7 +127,7 @@ nur «nicht gefunden».)
   `alpe-dienst` umschreiben.** Mac-Test bis dahin: Kürzel der Testshell über
   `alpe-dienst ipc call …` im Terminal prüfen; die eingebauten Hyprland-Kürzel erreichen sie
   nicht.
-- `tools/maclock.py` (bzw. der Hyprland-Sperr-Teil der Werkzeuge) schreibt noch
+- `tools/maclock.sh` schreibt noch
   `dms ipc call lock lock` in `hypridle.conf` und die Hyprland-Kürzel (`tests/test_maclock.py`).
   Mit E4 auf `alpe-dienst` umstellen, der Umzug schreibt bestehende Zeilen um.
 - `tools/alpe`, `tools/backend.sh`, `bootstrap.sh`, `get.sh` kennen noch `/usr/bin/dms` und
