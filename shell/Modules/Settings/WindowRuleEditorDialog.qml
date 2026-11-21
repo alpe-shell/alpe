@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import "../../Common/WindowRuleSize.js" as WindowRuleSize
 import "../../Common/WindowRuleMerge.js" as WindowRuleMerge
 import qs.Services
 import qs.DCommon.Widgets
@@ -17,37 +16,16 @@ DDialog {
     property bool submitting: false
     property bool applying: false
     readonly property bool isEditMode: editingRule !== null
-    // niri und Mango sind entfernt; ihre Felder im Dialog bleiben bis zum Aufräumen ausgeblendet.
-    readonly property bool isNiri: false
     readonly property bool isHyprland: CompositorService.isHyprland
-    readonly property bool isMango: false
-    readonly property bool niriConfigNext: false
     readonly property bool fieldsEnabled: !submitting
     readonly property bool halfPair: isHyprland && (!!moveXInput.text.trim() !== !!moveYInput.text.trim() || !!sizeWInput.text.trim() !== !!sizeHInput.text.trim())
 
-    property int floatingTri: 0
     property var openingFlags: []
-    property var dynamicFlags: []
     property var hyprFlags: []
-    property var mangoFlags: []
     property bool opacityOn: false
     property int opacityValue: 100
-    property bool scrollFactorOn: false
-    property int scrollFactorValue: 100
-    property bool pinchOn: false
-    property int pinchValue: 100
-    property string xdgActivateValue: ""
     property bool cornerRadiusOn: false
     property int cornerRadiusValue: 12
-    property bool noiseOn: false
-    property int noiseValue: 5
-    property bool saturationOn: false
-    property int saturationValue: 100
-    property string blockOutValue: ""
-    property string columnDisplayValue: ""
-    property string floatingRelativeValue: "top-left"
-    property string columnWidthUnit: WindowRuleSize.PIXELS
-    property string windowHeightUnit: WindowRuleSize.PIXELS
     property var storedMatch: ({})
     property var storedActions: ({})
     property var hyprEffectFlags: []
@@ -107,60 +85,20 @@ DDialog {
         }
     ].filter(option => !option.needs || HyprlandService.hyprSupports(option.needs))
     readonly property var hyprEffectOptions: root.hyprFocusOptions.concat(root.hyprPointerOptions, root.hyprRenderOptions)
-    readonly property var blockOutOptions: ["", "screencast", "screen-capture"]
-    readonly property var columnDisplayOptions: ["", "tabbed"]
-    readonly property var xdgActivateOptions: ["", "ignore", "set-urgent", "focus"]
-    readonly property var anchorOptions: ["top-left", "top-right", "bottom-left", "bottom-right", "top", "bottom", "left", "right"]
-    readonly property var openingOptions: {
-        const options = [];
-        if (!isNiri)
-            options.push({
-                "label": I18n.tr("Float"),
-                "value": "float"
-            });
-        if (!isMango)
-            options.push({
-                "label": I18n.tr("Maximize", "verb, window rule action to open the window maximized"),
-                "value": "maximize"
-            });
-        options.push({
+    readonly property var openingOptions: [
+        {
+            "label": I18n.tr("Float"),
+            "value": "float"
+        },
+        {
+            "label": I18n.tr("Maximize", "verb, window rule action to open the window maximized"),
+            "value": "maximize"
+        },
+        {
             "label": I18n.tr("Fullscreen", "window rule action, open the window fullscreen"),
             "value": "fullscreen"
-        });
-        if (isNiri) {
-            options.push({
-                "label": I18n.tr("Max edges", "window rule action, open maximized to screen edges"),
-                "value": "maxEdges"
-            });
-            options.push({
-                "label": I18n.tr("Focus", "verb, window rule action to focus the window when it opens"),
-                "value": "focus"
-            });
         }
-        return options;
-    }
-    readonly property var dynamicOptions: [
-        {
-            "label": I18n.tr("VRR On-Demand"),
-            "value": "vrr"
-        },
-        {
-            "label": I18n.tr("VRR Fullscreen Only"),
-            "value": "vrrFullscreen"
-        },
-        {
-            "label": I18n.tr("Clip to Geometry"),
-            "value": "clip"
-        },
-        {
-            "label": I18n.tr("Tiled State"),
-            "value": "tiled"
-        },
-        {
-            "label": I18n.tr("Border with Background"),
-            "value": "borderBg"
-        }
-    ].filter(option => option.value !== "vrrFullscreen" || root.niriConfigNext)
+    ]
     readonly property var hyprOptions: [
         {
             "label": I18n.tr("Tile"),
@@ -203,28 +141,6 @@ DDialog {
             "value": "opaque"
         }
     ]
-    readonly property var mangoOptions: [
-        {
-            "label": I18n.tr("No blur"),
-            "value": "noblur"
-        },
-        {
-            "label": I18n.tr("No border"),
-            "value": "noborder"
-        },
-        {
-            "label": I18n.tr("No shadow"),
-            "value": "noshadow"
-        },
-        {
-            "label": I18n.tr("No Rounding"),
-            "value": "norounding"
-        },
-        {
-            "label": I18n.tr("No anim"),
-            "value": "noanim"
-        }
-    ]
 
     signal ruleSubmitted
     signal ruleApplied
@@ -248,12 +164,12 @@ DDialog {
         resetForm();
         if (targetWindow?.appId) {
             nameInput.text = targetWindow.appId;
-            appIdInput.text = isMango ? targetWindow.appId : "^" + targetWindow.appId + "$";
+            appIdInput.text = "^" + targetWindow.appId + "$";
         }
         // Alpe: mit «Fenster wählen» angeklickt, Titel gleich mit übernehmen (wie KDE)
         if (targetWindow?.alpePicked && targetWindow.title) {
             const t = String(targetWindow.title).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-            titleInput.text = isMango ? targetWindow.title : "^" + t + "$";
+            titleInput.text = "^" + t + "$";
         }
         present();
     }
@@ -295,15 +211,6 @@ DDialog {
         return next;
     }
 
-    function toggleDynamic(value, selected) {
-        const exclusive = {
-            "vrr": "vrrFullscreen",
-            "vrrFullscreen": "vrr"
-        }[value];
-        const flags = selected ? dynamicFlags.filter(flag => flag !== exclusive) : dynamicFlags;
-        dynamicFlags = flagSet(flags, value, selected);
-    }
-
     function triFromBool(value) {
         if (value === true)
             return 1;
@@ -319,28 +226,8 @@ DDialog {
             target[key] = false;
     }
 
-    function blockOutLabel(value) {
-        return value === "" ? I18n.tr("None") : value;
-    }
-
-    function columnDisplayLabel(value) {
-        return value === "" ? I18n.tr("Normal") : value;
-    }
-
     function defaultLabel(value) {
         return value === "" ? I18n.tr("Default") : value;
-    }
-
-    function xdgActivateLabel(value) {
-        switch (value) {
-        case "ignore":
-            return I18n.tr("Ignore", "verb, window rule on-activation choice, niri ignores the activation request");
-        case "set-urgent":
-            return I18n.tr("Mark urgent", "window rule on-activation choice, mark the window urgent instead of focusing it");
-        case "focus":
-            return I18n.tr("Focus", "verb, window rule action to focus the window when it opens");
-        }
-        return defaultLabel(value);
     }
 
     // A value written by hand that the list does not know must still show and save.
@@ -355,31 +242,12 @@ DDialog {
         extraMatchModel.clear();
         for (const cond of matchConditions)
             cond.triState = 0;
-        floatingTri = 0;
         openingFlags = [];
-        dynamicFlags = [];
         hyprFlags = [];
-        mangoFlags = [];
         opacityOn = false;
         opacityValue = 100;
-        scrollFactorOn = false;
-        scrollFactorValue = 100;
-        pinchOn = false;
-        pinchValue = 100;
-        xdgActivateValue = "";
         cornerRadiusOn = false;
         cornerRadiusValue = 12;
-        noiseOn = false;
-        noiseValue = 5;
-        saturationOn = false;
-        saturationValue = 100;
-        blockOutValue = "";
-        columnDisplayValue = "";
-        floatingRelativeValue = "top-left";
-        columnWidthUnit = WindowRuleSize.PIXELS;
-        windowHeightUnit = WindowRuleSize.PIXELS;
-        blurCond.triState = 0;
-        xrayCond.triState = 0;
         storedMatch = {};
         storedActions = {};
         hyprEffectFlags = [];
@@ -392,7 +260,7 @@ DDialog {
         fullscreenClientValue = -1;
         hyprMatchCard.expanded = false;
         hyprEffectsCard.expanded = false;
-        for (const field of [outputInput, workspaceInput, columnWidthInput, windowHeightInput, floatingXInput, floatingYInput, minWidthInput, maxWidthInput, minHeightInput, maxHeightInput, moveXInput, moveYInput, sizeWInput, sizeHInput, monitorInput, hyprWorkspaceInput, mangoTagsInput, mangoMonitorInput, mangoSizeInput, initialClassInput, initialTitleInput, matchTagInput, xdgTagInput, matchWorkspaceInput, borderColorInput, suppressEventInput])
+        for (const field of [moveXInput, moveYInput, sizeWInput, sizeHInput, monitorInput, hyprWorkspaceInput, initialClassInput, initialTitleInput, matchTagInput, xdgTagInput, matchWorkspaceInput, borderColorInput, suppressEventInput])
             field.text = "";
     }
 
@@ -424,66 +292,18 @@ DDialog {
         const actions = rule.actions || {};
         storedActions = actions;
         const flags = [];
-        if (!isNiri && actions.openFloating)
+        if (actions.openFloating)
             flags.push("float");
         if (actions.openMaximized)
             flags.push("maximize");
         if (actions.openFullscreen)
             flags.push("fullscreen");
-        if (actions.openMaximizedToEdges)
-            flags.push("maxEdges");
-        if (actions.openFocused)
-            flags.push("focus");
         openingFlags = flags;
-        floatingTri = triFromBool(actions.openFloating);
-
-        const dynamic = [];
-        if (actions.variableRefreshRate)
-            dynamic.push("vrr");
-        if (niriConfigNext && actions.vrrFullscreenOnly)
-            dynamic.push("vrrFullscreen");
-        if (actions.clipToGeometry)
-            dynamic.push("clip");
-        if (actions.tiledState)
-            dynamic.push("tiled");
-        if (actions.drawBorderWithBackground)
-            dynamic.push("borderBg");
-        dynamicFlags = dynamic;
 
         opacityOn = actions.opacity !== undefined && actions.opacity !== null;
         opacityValue = opacityOn ? Math.round(actions.opacity * 100) : 100;
-        scrollFactorOn = actions.scrollFactor !== undefined && actions.scrollFactor !== null;
-        scrollFactorValue = scrollFactorOn ? Math.round(actions.scrollFactor * 100) : 100;
-        pinchOn = actions.pinchSensitivity !== undefined && actions.pinchSensitivity !== null;
-        pinchValue = pinchOn ? Math.round(actions.pinchSensitivity * 100) : 100;
-        xdgActivateValue = actions.onXdgActivate || "";
         cornerRadiusOn = actions.cornerRadius !== undefined && actions.cornerRadius !== null;
         cornerRadiusValue = cornerRadiusOn ? actions.cornerRadius : 12;
-        noiseOn = actions.backgroundNoise !== undefined && actions.backgroundNoise !== null;
-        noiseValue = noiseOn ? Math.round(actions.backgroundNoise * 100) : 5;
-        saturationOn = actions.backgroundSaturation !== undefined && actions.backgroundSaturation !== null;
-        saturationValue = saturationOn ? Math.round(actions.backgroundSaturation * 100) : 100;
-        blockOutValue = actions.blockOutFrom || "";
-        columnDisplayValue = actions.defaultColumnDisplay || "";
-        blurCond.triState = triFromBool(actions.backgroundBlur);
-        xrayCond.triState = triFromBool(actions.backgroundXray);
-
-        outputInput.text = actions.openOnOutput || "";
-        workspaceInput.text = actions.openOnWorkspace || "";
-        const columnWidth = WindowRuleSize.parse(actions.defaultColumnWidth);
-        const windowHeight = WindowRuleSize.parse(actions.defaultWindowHeight);
-        columnWidthUnit = columnWidth.unit;
-        windowHeightUnit = windowHeight.unit;
-        columnWidthInput.text = columnWidth.amount;
-        windowHeightInput.text = windowHeight.amount;
-        floatingXInput.text = (actions.defaultFloatingX !== undefined && actions.defaultFloatingX !== null) ? String(actions.defaultFloatingX) : "";
-        floatingYInput.text = (actions.defaultFloatingY !== undefined && actions.defaultFloatingY !== null) ? String(actions.defaultFloatingY) : "";
-        floatingRelativeValue = actions.defaultFloatingRelativeTo || "top-left";
-        minWidthInput.text = actions.minWidth !== undefined ? String(actions.minWidth) : "";
-        maxWidthInput.text = actions.maxWidth !== undefined ? String(actions.maxWidth) : "";
-        minHeightInput.text = actions.minHeight !== undefined ? String(actions.minHeight) : "";
-        maxHeightInput.text = actions.maxHeight !== undefined ? String(actions.maxHeight) : "";
-
         hyprFlags = hyprOptions.map(option => option.value).filter(value => actions[value]);
         moveXInput.text = actions.moveX || "";
         moveYInput.text = actions.moveY || "";
@@ -501,10 +321,6 @@ DDialog {
         suppressEventInput.text = actions.suppressEvent || "";
         hyprEffectsCard.expanded = hyprEffectFlags.length > 0 || focusOnActivateTri !== 0 || scrollingWidthOn || !!tonemapValue || !!borderColorInput.text || !!suppressEventInput.text;
 
-        mangoFlags = mangoOptions.map(option => option.value).filter(value => actions[value]);
-        mangoTagsInput.text = actions.workspace || "";
-        mangoMonitorInput.text = actions.monitor || "";
-        mangoSizeInput.text = (actions.sizeWidth && actions.sizeHeight) ? actions.sizeWidth + "x" + actions.sizeHeight : "";
     }
 
     function collectMatches() {
@@ -538,21 +354,6 @@ DDialog {
         const matches = [];
         if (Object.keys(matchCriteria).length > 0)
             matches.push(matchCriteria);
-        if (!isNiri)
-            return {
-                matchCriteria,
-                matches
-            };
-        for (let i = 0; i < extraMatchModel.count; i++) {
-            const row = extraMatchModel.get(i);
-            const extra = WindowRuleMerge.carry(JSON.parse(row.rowStored || "{}"), ["appId", "title"]);
-            if ((row.rowAppId || "").trim())
-                extra.appId = row.rowAppId.trim();
-            if ((row.rowTitle || "").trim())
-                extra.title = row.rowTitle.trim();
-            if (Object.keys(extra).length > 0)
-                matches.push(extra);
-        }
         return {
             matchCriteria,
             matches
@@ -561,15 +362,8 @@ DDialog {
 
     function ownedActionKeys() {
         const keys = ["opacity", "openFloating", "openMaximized", "openFullscreen", "cornerRadius"];
-        // Without the capability these stay hidden and are carried through untouched.
-        if (niriConfigNext)
-            keys.push("vrrFullscreenOnly", "onXdgActivate", "pinchSensitivity");
-        if (isNiri)
-            return keys.concat(["openMaximizedToEdges", "openFocused", "openOnOutput", "openOnWorkspace", "minWidth", "maxWidth", "minHeight", "maxHeight", "defaultColumnWidth", "defaultWindowHeight", "variableRefreshRate", "clipToGeometry", "tiledState", "drawBorderWithBackground", "blockOutFrom", "defaultColumnDisplay", "scrollFactor", "backgroundBlur", "backgroundXray", "backgroundNoise", "backgroundSaturation", "defaultFloatingX", "defaultFloatingY", "defaultFloatingRelativeTo"]);
         if (isHyprland)
             return keys.concat(hyprOptions.map(option => option.value), hyprEffectOptions.map(option => option.value), ["sizeWidth", "sizeHeight", "moveX", "moveY", "monitor", "workspace", "focusOnActivate", "scrollingWidth", "tonemap", "borderColor", "suppressEvent"]);
-        if (isMango)
-            return keys.concat(mangoOptions.map(option => option.value), ["workspace", "monitor", "sizeWidth", "sizeHeight"]);
         return keys;
     }
 
@@ -578,82 +372,14 @@ DDialog {
         const has = value => openingFlags.includes(value);
         if (opacityOn)
             actions.opacity = opacityValue / 100;
-        if (isNiri)
-            applyCond(actions, "openFloating", floatingTri);
-        else if (has("float"))
+        if (has("float"))
             actions.openFloating = true;
         if (has("maximize"))
             actions.openMaximized = true;
-        if (has("maxEdges") && isNiri)
-            actions.openMaximizedToEdges = true;
         if (has("fullscreen"))
             actions.openFullscreen = true;
-        if (has("focus") && isNiri)
-            actions.openFocused = true;
-        if (isNiri && outputInput.text.trim())
-            actions.openOnOutput = outputInput.text.trim();
-        if (isNiri && workspaceInput.text.trim())
-            actions.openOnWorkspace = workspaceInput.text.trim();
         if (cornerRadiusOn)
             actions.cornerRadius = cornerRadiusValue;
-
-        const minW = parseInt(minWidthInput.text);
-        const maxW = parseInt(maxWidthInput.text);
-        const minH = parseInt(minHeightInput.text);
-        const maxH = parseInt(maxHeightInput.text);
-        if (isNiri) {
-            if (!isNaN(minW))
-                actions.minWidth = minW;
-            if (!isNaN(maxW))
-                actions.maxWidth = maxW;
-            if (!isNaN(minH))
-                actions.minHeight = minH;
-            if (!isNaN(maxH))
-                actions.maxHeight = maxH;
-        }
-
-        if (isNiri) {
-            const columnWidth = WindowRuleSize.format(columnWidthUnit, columnWidthInput.text);
-            const windowHeight = WindowRuleSize.format(windowHeightUnit, windowHeightInput.text);
-            if (columnWidth)
-                actions.defaultColumnWidth = columnWidth;
-            if (windowHeight)
-                actions.defaultWindowHeight = windowHeight;
-            if (dynamicFlags.includes("vrr"))
-                actions.variableRefreshRate = true;
-            if (niriConfigNext && dynamicFlags.includes("vrrFullscreen"))
-                actions.vrrFullscreenOnly = true;
-            if (niriConfigNext && pinchOn)
-                actions.pinchSensitivity = pinchValue / 100;
-            if (niriConfigNext && xdgActivateValue)
-                actions.onXdgActivate = xdgActivateValue;
-            if (dynamicFlags.includes("clip"))
-                actions.clipToGeometry = true;
-            if (dynamicFlags.includes("tiled"))
-                actions.tiledState = true;
-            if (dynamicFlags.includes("borderBg"))
-                actions.drawBorderWithBackground = true;
-            if (blockOutValue)
-                actions.blockOutFrom = blockOutValue;
-            if (columnDisplayValue)
-                actions.defaultColumnDisplay = columnDisplayValue;
-            if (scrollFactorOn)
-                actions.scrollFactor = scrollFactorValue / 100;
-            applyCond(actions, "backgroundBlur", blurCond.triState);
-            applyCond(actions, "backgroundXray", xrayCond.triState);
-            if (noiseOn)
-                actions.backgroundNoise = noiseValue / 100;
-            if (saturationOn)
-                actions.backgroundSaturation = saturationValue / 100;
-            const floatX = parseInt(floatingXInput.text);
-            const floatY = parseInt(floatingYInput.text);
-            if (!isNaN(floatX) && !isNaN(floatY)) {
-                actions.defaultFloatingX = floatX;
-                actions.defaultFloatingY = floatY;
-                if (floatingRelativeValue !== "top-left")
-                    actions.defaultFloatingRelativeTo = floatingRelativeValue;
-            }
-        }
 
         if (isHyprland) {
             for (const flag of hyprFlags)
@@ -683,19 +409,6 @@ DDialog {
                 actions.suppressEvent = suppressEventInput.text.trim();
         }
 
-        if (isMango) {
-            for (const flag of mangoFlags)
-                actions[flag] = true;
-            if (mangoTagsInput.text.trim())
-                actions.workspace = mangoTagsInput.text.trim();
-            if (mangoMonitorInput.text.trim())
-                actions.monitor = mangoMonitorInput.text.trim();
-            const parts = mangoSizeInput.text.trim().split(/x/i);
-            if (mangoSizeInput.text.trim() && parts.length === 2) {
-                actions.sizeWidth = parts[0].trim();
-                actions.sizeHeight = parts[1].trim();
-            }
-        }
         return actions;
     }
 
@@ -712,8 +425,6 @@ DDialog {
             actions: collectActions(),
             enabled: true
         };
-        if (isNiri && extraMatchModel.count > 0)
-            ruleData.matches = matches;
         // No exclude editor yet; carry existing excludes through so an edit doesn't delete them (#2996)
         if (isEditMode && (editingRule.excludes?.length ?? 0) > 0)
             ruleData.excludes = editingRule.excludes;
@@ -818,36 +529,7 @@ DDialog {
         onAccepted: root.submit()
     }
 
-    component SizeField: Field {
-        id: sizeField
-
-        property string unit: WindowRuleSize.PIXELS
-        property string pixelsPlaceholder: ""
-
-        signal unitSelected(string unit)
-
-        placeholderText: unit === WindowRuleSize.PERCENT ? "50" : pixelsPlaceholder
-        rightAccessoryWidth: unitPicker.width + Theme.spacingS
-
-        DButtonGroup {
-            id: unitPicker
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.spacingS
-            y: sizeField.containerTop + (sizeField.containerHeight - height) / 2
-            size: "small"
-            checkEnabled: false
-            arrowKeysSelect: false
-            enabled: sizeField.enabled
-            model: [I18n.tr("px"), WindowRuleSize.PERCENT]
-            currentIndex: sizeField.unit === WindowRuleSize.PERCENT ? 1 : 0
-            onSelectionChanged: (index, selected) => {
-                if (selected)
-                    sizeField.unitSelected(index === 1 ? WindowRuleSize.PERCENT : WindowRuleSize.PIXELS);
-            }
-        }
-    }
-
-    readonly property var matchConditions: [condFloating, condActive, condFocused, condActiveInColumn, condCastTarget, condUrgent, condAtStartup, condXwayland, condFullscreen, condPinned, condGroup, condModal]
+    readonly property var matchConditions: [condFloating, condFocused, condXwayland, condFullscreen, condPinned, condGroup, condModal]
 
     actions: [
         DButton {
@@ -888,32 +570,13 @@ DDialog {
 
     SettingsCard {
         title: I18n.tr("Match Criteria")
-        headerActions: DButton {
-            visible: root.isNiri
-            text: I18n.tr("Add match")
-            iconName: "add"
-            buttonHeight: Theme.buttonHeightXS
-            variant: "text"
-            enabled: root.fieldsEnabled
-            onClicked: extraMatchModel.append({
-                "rowAppId": "",
-                "rowTitle": "",
-                "rowStored": "{}"
-            })
-        }
-
-        SettingsRow {
-            visible: root.isNiri
-            subtitle: I18n.tr("The rule applies to any window matching one of these.")
-        }
-
         SettingsRow {
             body: DTextField {
                 id: appIdInput
                 width: parent.width
                 outlined: true
                 leftIconName: "apps"
-                labelText: root.isMango ? I18n.tr("App ID (e.g. firefox)") : root.isHyprland ? I18n.tr("Class regex (e.g. ^firefox$)") : I18n.tr("App ID regex (e.g. ^firefox$)")
+                labelText: root.isHyprland ? I18n.tr("Class regex (e.g. ^firefox$)") : I18n.tr("App ID regex (e.g. ^firefox$)")
                 enabled: root.fieldsEnabled
                 onAccepted: root.submit()
             }
@@ -924,7 +587,7 @@ DDialog {
                 id: titleInput
                 width: parent.width - (addTitle.visible ? addTitle.width + parent.spacing : 0)
                 leftIconName: "title"
-                labelText: root.isMango ? I18n.tr("Title (optional)") : I18n.tr("Title regex (optional)")
+                labelText: I18n.tr("Title regex (optional)")
             }
 
             DActionButton {
@@ -933,7 +596,7 @@ DDialog {
                 iconName: "add"
                 visible: !root.isEditMode && !!root.targetWindow?.title
                 tooltipText: I18n.tr("Add Title")
-                onClicked: titleInput.text = root.isMango ? root.targetWindow.title : "^" + root.targetWindow.title + "$"
+                onClicked: titleInput.text = "^" + root.targetWindow.title + "$"
             }
         }
 
@@ -976,7 +639,7 @@ DDialog {
 
     SettingsCard {
         title: I18n.tr("Match Conditions")
-        visible: root.isNiri || root.isHyprland
+        visible: root.isHyprland
 
         SettingsRow {
             subtitle: I18n.tr("Optional state-based conditions applied to the first match.")
@@ -993,40 +656,10 @@ DDialog {
                     label: I18n.tr("Floating", "adjective, window rule match condition for floating windows")
                 }
                 MatchCond {
-                    id: condActive
-                    key: "isActive"
-                    label: I18n.tr("Active")
-                    visible: root.isNiri
-                }
-                MatchCond {
                     id: condFocused
                     key: "isFocused"
                     label: I18n.tr("Focused", "adjective, window rule match condition for the focused window")
-                    visible: root.isNiri || root.isHyprland
-                }
-                MatchCond {
-                    id: condActiveInColumn
-                    key: "isActiveInColumn"
-                    label: I18n.tr("Active in column")
-                    visible: root.isNiri
-                }
-                MatchCond {
-                    id: condCastTarget
-                    key: "isWindowCastTarget"
-                    label: I18n.tr("Cast target")
-                    visible: root.isNiri
-                }
-                MatchCond {
-                    id: condUrgent
-                    key: "isUrgent"
-                    label: I18n.tr("Urgent", "adjective, window rule match condition for windows requesting attention")
-                    visible: root.isNiri
-                }
-                MatchCond {
-                    id: condAtStartup
-                    key: "atStartup"
-                    label: I18n.tr("At startup")
-                    visible: root.isNiri
+                    visible: root.isHyprland
                 }
                 MatchCond {
                     id: condXwayland
@@ -1144,19 +777,6 @@ DDialog {
     SettingsCard {
         title: I18n.tr("Window Opening")
 
-        SettingsButtonGroupRow {
-            visible: root.isNiri
-            text: I18n.tr("Float")
-            description: I18n.tr("Default leaves it to niri, which floats dialogs and fixed-size windows and tiles the rest", "window rule float option, explains the Default choice")
-            model: root.triLabels
-            currentIndex: root.floatingTri
-            enabled: root.fieldsEnabled
-            onSelectionChanged: (index, selected) => {
-                if (selected)
-                    root.floatingTri = index;
-            }
-        }
-
         SettingsRow {
             body: DFilterChips {
                 width: parent.width
@@ -1168,60 +788,11 @@ DDialog {
                 onSelectionToggled: (index, selected) => root.openingFlags = root.flagSet(root.openingFlags, root.openingOptions[index].value, selected)
             }
         }
-
-        FieldRow {
-            visible: root.isNiri
-
-            Field {
-                id: outputInput
-                leftIconName: "monitor"
-                labelText: I18n.tr("Output", "noun, display output a window opens on, window rule field")
-                placeholderText: "HDMI-A-1"
-            }
-
-            Field {
-                id: workspaceInput
-                leftIconName: "view_module"
-                labelText: I18n.tr("Workspace")
-                placeholderText: "chat"
-            }
-        }
-
-        SettingsDropdownRow {
-            visible: root.niriConfigNext
-            text: I18n.tr("On activation", "window rule option, what niri does when the window asks to be activated")
-            options: root.xdgActivateOptions.map(root.xdgActivateLabel)
-            currentValue: root.xdgActivateLabel(root.xdgActivateValue)
-            enabled: root.fieldsEnabled
-            onValueChanged: value => root.xdgActivateValue = root.xdgActivateOptions.find(option => root.xdgActivateLabel(option) === value) ?? ""
-        }
-
-        FieldRow {
-            visible: root.isNiri
-
-            SizeField {
-                id: columnWidthInput
-                leftIconName: "width"
-                labelText: I18n.tr("Column Width")
-                pixelsPlaceholder: "800"
-                unit: root.columnWidthUnit
-                onUnitSelected: unit => root.columnWidthUnit = unit
-            }
-
-            SizeField {
-                id: windowHeightInput
-                leftIconName: "height"
-                labelText: I18n.tr("Window Height")
-                pixelsPlaceholder: "600"
-                unit: root.windowHeightUnit
-                onUnitSelected: unit => root.windowHeightUnit = unit
-            }
-        }
     }
 
     SettingsCard {
         title: I18n.tr("Dynamic Properties")
-        visible: root.isNiri || root.isHyprland
+        visible: root.isHyprland
 
         SettingsToggleSliderRow {
             text: I18n.tr("Opacity")
@@ -1243,183 +814,6 @@ DDialog {
             enabled: root.fieldsEnabled
             onToggled: checked => root.cornerRadiusOn = checked
             onSliderValueChanged: newValue => root.cornerRadiusValue = newValue
-        }
-
-        SettingsToggleSliderRow {
-            visible: root.isNiri
-            text: I18n.tr("Scroll Factor")
-            checked: root.scrollFactorOn
-            value: root.scrollFactorValue
-            minimum: 10
-            maximum: 200
-            unit: "%"
-            enabled: root.fieldsEnabled
-            onToggled: checked => root.scrollFactorOn = checked
-            onSliderValueChanged: newValue => root.scrollFactorValue = newValue
-        }
-
-        SettingsToggleSliderRow {
-            visible: root.niriConfigNext
-            text: I18n.tr("Pinch sensitivity", "touchpad slider, how strongly pinch gestures zoom in apps")
-            checked: root.pinchOn
-            value: root.pinchValue
-            minimum: 10
-            maximum: 200
-            unit: "%"
-            enabled: root.fieldsEnabled
-            onToggled: checked => root.pinchOn = checked
-            onSliderValueChanged: newValue => root.pinchValue = newValue
-        }
-
-        SettingsRow {
-            visible: root.isNiri
-
-            body: DFilterChips {
-                width: parent.width
-                multiSelect: true
-                showCounts: false
-                enabled: root.fieldsEnabled
-                model: root.dynamicOptions
-                selectedValues: root.dynamicFlags
-                onSelectionToggled: (index, selected) => root.toggleDynamic(root.dynamicOptions[index].value, selected)
-            }
-        }
-
-        SettingsDropdownRow {
-            visible: root.isNiri
-            text: I18n.tr("Block Out From")
-            options: root.blockOutOptions.map(root.blockOutLabel)
-            currentValue: root.blockOutLabel(root.blockOutValue)
-            enabled: root.fieldsEnabled
-            onValueChanged: value => root.blockOutValue = root.blockOutOptions.find(option => root.blockOutLabel(option) === value) ?? ""
-        }
-
-        SettingsDropdownRow {
-            visible: root.isNiri
-            text: I18n.tr("Column Display")
-            options: root.columnDisplayOptions.map(root.columnDisplayLabel)
-            currentValue: root.columnDisplayLabel(root.columnDisplayValue)
-            enabled: root.fieldsEnabled
-            onValueChanged: value => root.columnDisplayValue = root.columnDisplayOptions.find(option => root.columnDisplayLabel(option) === value) ?? ""
-        }
-    }
-
-    SettingsCard {
-        title: I18n.tr("Background Effect")
-        visible: root.isNiri
-
-        SettingsRow {
-            subtitle: I18n.tr("Xray blurs only the wallpaper (efficient) and is the default when Blur is on. Set Xray to Off for regular full blur of everything beneath the window (more expensive).")
-        }
-
-        SettingsRow {
-            body: Flow {
-                width: parent.width
-                spacing: Theme.spacingS
-
-                MatchCond {
-                    id: blurCond
-                    label: I18n.tr("Blur", "noun, background blur effect option")
-                    unsetLabel: I18n.tr("Inherit")
-                }
-
-                MatchCond {
-                    id: xrayCond
-                    label: I18n.tr("X-Ray", "window rule background xray effect option")
-                    unsetLabel: I18n.tr("Inherit")
-                }
-            }
-        }
-
-        SettingsToggleSliderRow {
-            text: I18n.tr("Noise", "window rule background noise effect checkbox")
-            checked: root.noiseOn
-            value: root.noiseValue
-            unit: "%"
-            enabled: root.fieldsEnabled
-            onToggled: checked => root.noiseOn = checked
-            onSliderValueChanged: newValue => root.noiseValue = newValue
-        }
-
-        SettingsToggleSliderRow {
-            text: I18n.tr("Saturation", "window rule background color saturation checkbox")
-            checked: root.saturationOn
-            value: root.saturationValue
-            maximum: 200
-            unit: "%"
-            enabled: root.fieldsEnabled
-            onToggled: checked => root.saturationOn = checked
-            onSliderValueChanged: newValue => root.saturationValue = newValue
-        }
-    }
-
-    SettingsCard {
-        title: I18n.tr("Floating Position")
-        visible: root.isNiri
-
-        SettingsRow {
-            subtitle: I18n.tr("Initial position for floating windows. Set both X and Y; anchor controls which corner/edge they're relative to.")
-        }
-
-        FieldRow {
-            Field {
-                id: floatingXInput
-                leftIconName: "open_with"
-                labelText: "X"
-                placeholderText: "px"
-            }
-
-            Field {
-                id: floatingYInput
-                leftIconName: "open_with"
-                labelText: "Y"
-                placeholderText: "px"
-            }
-        }
-
-        SettingsDropdownRow {
-            text: I18n.tr("Anchor", "noun, screen corner or edge a floating window position is relative to")
-            options: root.anchorOptions
-            currentValue: root.floatingRelativeValue
-            enabled: root.fieldsEnabled
-            onValueChanged: value => root.floatingRelativeValue = value
-        }
-    }
-
-    SettingsCard {
-        title: I18n.tr("Size Constraints")
-        visible: root.isNiri
-
-        FieldRow {
-            Field {
-                id: minWidthInput
-                leftIconName: "width"
-                labelText: I18n.tr("Min W")
-                placeholderText: "px"
-            }
-
-            Field {
-                id: maxWidthInput
-                leftIconName: "width"
-                labelText: I18n.tr("Max W")
-                placeholderText: "px"
-            }
-        }
-
-        FieldRow {
-            Field {
-                id: minHeightInput
-                leftIconName: "height"
-                labelText: I18n.tr("Min H")
-                placeholderText: "px"
-            }
-
-            Field {
-                id: maxHeightInput
-                leftIconName: "height"
-                labelText: I18n.tr("Max H")
-                placeholderText: "px"
-            }
         }
     }
 
@@ -1583,49 +977,6 @@ DDialog {
                 leftIconName: "block"
                 labelText: I18n.tr("Suppress events")
                 placeholderText: "maximize fullscreen"
-            }
-        }
-    }
-
-    SettingsCard {
-        title: I18n.tr("Mango Options")
-        visible: root.isMango
-
-        SettingsRow {
-            body: DFilterChips {
-                width: parent.width
-                multiSelect: true
-                showCounts: false
-                enabled: root.fieldsEnabled
-                model: root.mangoOptions
-                selectedValues: root.mangoFlags
-                onSelectionToggled: (index, selected) => root.mangoFlags = root.flagSet(root.mangoFlags, root.mangoOptions[index].value, selected)
-            }
-        }
-
-        FieldRow {
-            Field {
-                id: mangoTagsInput
-                leftIconName: "view_module"
-                labelText: I18n.tr("Tags", "noun, mango compositor workspace tags field in window rule editor")
-                placeholderText: "1"
-            }
-
-            Field {
-                id: mangoMonitorInput
-                leftIconName: "monitor"
-                labelText: I18n.tr("Monitor")
-                placeholderText: "HDMI-A-1"
-            }
-        }
-
-        FieldRow {
-            Field {
-                id: mangoSizeInput
-                shares: 1
-                leftIconName: "aspect_ratio"
-                labelText: I18n.tr("Size")
-                placeholderText: "800x600"
             }
         }
     }
