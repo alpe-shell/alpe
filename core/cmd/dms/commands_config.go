@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/luaconfig"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/luaconfig"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/spf13/cobra"
 )
 

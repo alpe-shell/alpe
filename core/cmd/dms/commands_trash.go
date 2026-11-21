@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/duxlabs-dev/dux-go/trash"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 	"github.com/spf13/cobra"
 )
 

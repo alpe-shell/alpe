@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 )
 
 func AcquireQueueSlot(onWait func()) (release func(), err error) {

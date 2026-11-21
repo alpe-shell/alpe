@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/lowprio"
+	"github.com/alpe-shell/alpe/core/internal/plugins"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
 	coreweather "github.com/duxlabs-dev/dux-go/weather"
-	"github.com/duxlabs-dev/dux-shell/core/internal/lowprio"
-	"github.com/duxlabs-dev/dux-shell/core/internal/plugins"
 )
 
 func HandleRequest(ctx context.Context, conn *ipc.ConnWriter, req ipc.Request) {

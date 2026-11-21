@@ -5,10 +5,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/geolocation"
+	"github.com/alpe-shell/alpe/core/internal/server/loginctl"
+	"github.com/alpe-shell/alpe/core/internal/server/wayland"
 	"github.com/duxlabs-dev/dux-go/syncmap"
-	"github.com/duxlabs-dev/dux-shell/core/internal/geolocation"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/loginctl"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/wayland"
 )
 
 const (

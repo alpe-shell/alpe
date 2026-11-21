@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_output_management"
+	"github.com/alpe-shell/alpe/core/internal/server/models"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_output_management"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
 )
 
 type HeadConfig struct {

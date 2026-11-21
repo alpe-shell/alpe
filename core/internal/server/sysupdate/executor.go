@@ -11,7 +11,7 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/privesc"
+	"github.com/alpe-shell/alpe/core/internal/privesc"
 )
 
 type RunOptions struct {

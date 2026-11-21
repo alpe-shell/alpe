@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/lowprio"
+	"github.com/alpe-shell/alpe/core/internal/lowprio"
 )
 
 var (

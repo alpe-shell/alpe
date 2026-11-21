@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/config"
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
+	"github.com/alpe-shell/alpe/core/internal/config"
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 )
 
 func isAuthError(err error) bool {

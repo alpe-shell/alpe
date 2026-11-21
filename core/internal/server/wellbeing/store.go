@@ -9,8 +9,8 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	bolt "go.etcd.io/bbolt"
 	berrors "go.etcd.io/bbolt/errors"
 )

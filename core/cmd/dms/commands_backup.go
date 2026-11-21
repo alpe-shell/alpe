@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/backup"
+	"github.com/alpe-shell/alpe/core/internal/backup"
 	"github.com/spf13/cobra"
 )
 

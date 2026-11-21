@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/netfetch"
+	"github.com/alpe-shell/alpe/core/internal/netfetch"
 	"github.com/spf13/cobra"
 )
 

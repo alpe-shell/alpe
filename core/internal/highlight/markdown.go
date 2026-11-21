@@ -5,7 +5,7 @@ import (
 
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/formatters/html"
-	"github.com/duxlabs-dev/dux-shell/core/internal/highlight/lexers"
+	"github.com/alpe-shell/alpe/core/internal/highlight/lexers"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"

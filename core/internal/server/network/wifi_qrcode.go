@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/qrcode"
+	"github.com/alpe-shell/alpe/core/internal/qrcode"
 )
 
 const qrCodeTmpPrefix = "/tmp/dank-wifi-qrcode-"

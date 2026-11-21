@@ -18,11 +18,11 @@ import (
 	"github.com/stretchr/testify/require"
 	bolt "go.etcd.io/bbolt"
 
+	mocks_wlcontext "github.com/alpe-shell/alpe/core/internal/mocks/wlcontext"
+	"github.com/alpe-shell/alpe/core/internal/server/models"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
 	"github.com/duxlabs-dev/dux-go/wayland/ext_data_control"
-	mocks_wlcontext "github.com/duxlabs-dev/dux-shell/core/internal/mocks/wlcontext"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
 )
 
 type clipboardTestConn struct {

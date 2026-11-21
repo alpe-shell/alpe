@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/server/bluez"
+	"github.com/alpe-shell/alpe/core/internal/server/network"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/bluez"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/network"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/icc"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/server/wayland"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/icc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/wayland"
 	"github.com/spf13/cobra"
 )
 

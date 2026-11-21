@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 	"github.com/duxlabs-dev/dux-go/syncmap"
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
 )
 
 type CUPSState struct {

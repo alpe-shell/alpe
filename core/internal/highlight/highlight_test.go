@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/alecthomas/chroma/v2/formatters/html"
-	"github.com/duxlabs-dev/dux-shell/core/internal/highlight/styles"
+	"github.com/alpe-shell/alpe/core/internal/highlight/styles"
 	"github.com/yuin/goldmark"
 )
 

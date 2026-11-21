@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/configfrag"
-	"github.com/duxlabs-dev/dux-shell/core/internal/luaconfig"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
-	"github.com/duxlabs-dev/dux-shell/core/internal/windowrules"
+	"github.com/alpe-shell/alpe/core/internal/configfrag"
+	"github.com/alpe-shell/alpe/core/internal/luaconfig"
+	"github.com/alpe-shell/alpe/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/windowrules"
 )
 
 type HyprlandWindowRule struct {

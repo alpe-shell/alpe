@@ -3,9 +3,9 @@ package wlroutput
 import (
 	"sync"
 
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_output_management"
 	"github.com/duxlabs-dev/dux-go/syncmap"
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_output_management"
 )
 
 type OutputMode struct {

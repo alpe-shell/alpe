@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/deps"
+	"github.com/alpe-shell/alpe/core/internal/deps"
 )
 
 // dms.service is wanted by the compositor's own session unit rather than enabled

@@ -8,10 +8,10 @@ import (
 	"slices"
 	"strconv"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/keybinds"
-	"github.com/duxlabs-dev/dux-shell/core/internal/keybinds/providers"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/wayland/keymap"
+	"github.com/alpe-shell/alpe/core/internal/keybinds"
+	"github.com/alpe-shell/alpe/core/internal/keybinds/providers"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/wayland/keymap"
 	"github.com/spf13/cobra"
 )
 

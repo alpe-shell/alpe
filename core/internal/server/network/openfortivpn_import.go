@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/Wifx/gonetworkmanager/v2"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
 // openfortivpnConfig holds the parts of an openfortivpn config file that map

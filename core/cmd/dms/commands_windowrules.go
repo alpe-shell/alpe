@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
-	"github.com/duxlabs-dev/dux-shell/core/internal/windowrules"
-	"github.com/duxlabs-dev/dux-shell/core/internal/windowrules/providers"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/windowrules"
+	"github.com/alpe-shell/alpe/core/internal/windowrules/providers"
 	"github.com/spf13/cobra"
 )
 

@@ -3,10 +3,10 @@ package cups_test
 import (
 	"testing"
 
-	mocks_cups "github.com/duxlabs-dev/dux-shell/core/internal/mocks/cups"
-	mocks_pkhelper "github.com/duxlabs-dev/dux-shell/core/internal/mocks/cups_pkhelper"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/cups"
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
+	mocks_cups "github.com/alpe-shell/alpe/core/internal/mocks/cups"
+	mocks_pkhelper "github.com/alpe-shell/alpe/core/internal/mocks/cups_pkhelper"
+	"github.com/alpe-shell/alpe/core/internal/server/cups"
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

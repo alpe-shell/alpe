@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
 // Default ctrl_interface directory on FreeBSD and minimal Linux setups; see

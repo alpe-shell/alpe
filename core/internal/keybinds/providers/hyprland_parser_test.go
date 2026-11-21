@@ -1,13 +1,13 @@
 package providers
 
 import (
-	"github.com/duxlabs-dev/dux-shell/core/internal/luaconfig"
+	"github.com/alpe-shell/alpe/core/internal/luaconfig"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/keybinds"
+	"github.com/alpe-shell/alpe/core/internal/keybinds"
 )
 
 func TestHyprlandAutogenerateComment(t *testing.T) {

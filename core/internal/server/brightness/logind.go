@@ -3,7 +3,7 @@ package brightness
 import (
 	"fmt"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/godbus/dbus/v5"
 )
 

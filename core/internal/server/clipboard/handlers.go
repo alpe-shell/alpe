@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"math"
 
+	clipboardstore "github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/server/models"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	clipboardstore "github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
 )
 
 const maxSearchLimit = 5000

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/dank16"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/dank16"
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/spf13/cobra"
 )
 

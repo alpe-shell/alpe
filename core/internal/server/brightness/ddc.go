@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"golang.org/x/sys/unix"
 )
 

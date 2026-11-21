@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
 // devd(8) publishes device events on this SOCK_SEQPACKET socket, one

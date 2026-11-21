@@ -8,11 +8,11 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/errdefs"
+	"github.com/alpe-shell/alpe/core/internal/geolocation"
+	"github.com/alpe-shell/alpe/core/internal/icc"
 	"github.com/duxlabs-dev/dux-go/syncmap"
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/errdefs"
-	"github.com/duxlabs-dev/dux-shell/core/internal/geolocation"
-	"github.com/duxlabs-dev/dux-shell/core/internal/icc"
 	"github.com/godbus/dbus/v5"
 )
 

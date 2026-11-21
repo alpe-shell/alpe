@@ -5,12 +5,12 @@ import (
 	"math"
 	"sync"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_screencopy"
+	"github.com/alpe-shell/alpe/core/internal/proto/wp_color_management"
+	"github.com/alpe-shell/alpe/core/internal/utils"
+	wlhelpers "github.com/alpe-shell/alpe/core/internal/wayland/client"
 	"github.com/duxlabs-dev/dux-go/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_screencopy"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wp_color_management"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
-	wlhelpers "github.com/duxlabs-dev/dux-shell/core/internal/wayland/client"
 )
 
 type WaylandOutput struct {

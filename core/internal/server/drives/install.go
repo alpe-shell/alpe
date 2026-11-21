@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/osinfo"
+	"github.com/alpe-shell/alpe/core/internal/osinfo"
 )
 
 // Alpe: nur die Paketverwaltungen der unterstützten Systeme (Plan 0.5 Nr. 1).

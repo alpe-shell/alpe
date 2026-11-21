@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/errdefs"
+	"github.com/alpe-shell/alpe/core/internal/errdefs"
 	"github.com/godbus/dbus/v5"
 )
 

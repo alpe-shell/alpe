@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/dmenuipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/qsipc"
+	"github.com/alpe-shell/alpe/core/internal/dmenuipc"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/qsipc"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )

@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/lowprio"
 	"github.com/duxlabs-dev/dux-go/syncmap"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/lowprio"
 )
 
 const (

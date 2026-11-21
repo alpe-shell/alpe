@@ -5,7 +5,7 @@
 package mocks_geolocation
 
 import (
-	"github.com/duxlabs-dev/dux-shell/core/internal/geolocation"
+	"github.com/alpe-shell/alpe/core/internal/geolocation"
 	mock "github.com/stretchr/testify/mock"
 )
 

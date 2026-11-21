@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 )
 
 type SubscriptionManager struct {

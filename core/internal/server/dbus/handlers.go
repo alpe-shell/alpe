@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/alpe-shell/alpe/core/internal/server/models"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
 )
 
 type objectParams struct {

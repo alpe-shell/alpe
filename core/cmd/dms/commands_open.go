@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 	"github.com/spf13/cobra"
 )
 

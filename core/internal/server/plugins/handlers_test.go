@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/alpe-shell/alpe/core/internal/mocks/net"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/mocks/net"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

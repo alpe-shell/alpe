@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/lowprio"
+	"github.com/alpe-shell/alpe/core/internal/plugins"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
 	corelyrics "github.com/duxlabs-dev/dux-go/lyrics"
-	"github.com/duxlabs-dev/dux-shell/core/internal/lowprio"
-	"github.com/duxlabs-dev/dux-shell/core/internal/plugins"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
 )
 
 func HandleRequest(conn *ipc.ConnWriter, req ipc.Request) {

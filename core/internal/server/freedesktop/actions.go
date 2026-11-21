@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/godbus/dbus/v5"
 )
 

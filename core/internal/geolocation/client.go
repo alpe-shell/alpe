@@ -1,6 +1,6 @@
 package geolocation
 
-import "github.com/duxlabs-dev/dux-shell/core/internal/log"
+import "github.com/alpe-shell/alpe/core/internal/log"
 
 func NewClient() Client {
 	geoclueClient, err := newGeoClueClient()

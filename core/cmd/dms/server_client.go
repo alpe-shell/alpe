@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/server"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
 )
 
 // maxIPCMessageSize allows room for a 50 MB clipboard entry plus JSON/base64

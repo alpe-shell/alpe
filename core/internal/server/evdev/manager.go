@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/duxlabs-dev/dux-go/syncmap"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 	"github.com/fsnotify/fsnotify"
 	evdev "github.com/holoplot/go-evdev"
 )

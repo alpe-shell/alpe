@@ -1,9 +1,9 @@
 package apppicker
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/duxlabs-dev/dux-go/desktop"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 )
 
 func HandleRequest(conn *ipc.ConnWriter, req ipc.Request, manager *Manager) {

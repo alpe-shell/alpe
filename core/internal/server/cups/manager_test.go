@@ -6,8 +6,8 @@ import (
 	"sync"
 	"testing"
 
-	mocks_cups "github.com/duxlabs-dev/dux-shell/core/internal/mocks/cups"
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
+	mocks_cups "github.com/alpe-shell/alpe/core/internal/mocks/cups"
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -5,9 +5,9 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/colorpicker"
-	"github.com/duxlabs-dev/dux-shell/core/internal/site"
+	"github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/colorpicker"
+	"github.com/alpe-shell/alpe/core/internal/site"
 	"github.com/spf13/cobra"
 )
 

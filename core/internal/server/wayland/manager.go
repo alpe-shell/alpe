@@ -18,12 +18,12 @@ import (
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
 	"github.com/godbus/dbus/v5"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/errdefs"
-	"github.com/duxlabs-dev/dux-shell/core/internal/geolocation"
-	"github.com/duxlabs-dev/dux-shell/core/internal/icc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_gamma_control"
-	"github.com/duxlabs-dev/dux-shell/core/internal/wayland/shm"
+	"github.com/alpe-shell/alpe/core/internal/errdefs"
+	"github.com/alpe-shell/alpe/core/internal/geolocation"
+	"github.com/alpe-shell/alpe/core/internal/icc"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_gamma_control"
+	"github.com/alpe-shell/alpe/core/internal/wayland/shm"
 )
 
 const animKelvinStep = 25

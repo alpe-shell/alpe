@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/matugen"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/matugen"
 )
 
 type MatugenQueueResult struct {

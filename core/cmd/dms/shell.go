@@ -13,9 +13,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/qsipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/site"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/qsipc"
+	"github.com/alpe-shell/alpe/core/internal/site"
 )
 
 type ipcTargets map[string]map[string][]string

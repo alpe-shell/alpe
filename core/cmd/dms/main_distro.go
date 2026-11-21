@@ -5,9 +5,9 @@ package main
 import (
 	"os"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 )
 
 var Version = "dev"

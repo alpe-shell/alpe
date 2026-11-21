@@ -8,9 +8,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipolicy"
-	"github.com/duxlabs-dev/dux-shell/core/internal/osinfo"
-	"github.com/duxlabs-dev/dux-shell/core/internal/privesc"
+	"github.com/alpe-shell/alpe/core/internal/clipolicy"
+	"github.com/alpe-shell/alpe/core/internal/osinfo"
+	"github.com/alpe-shell/alpe/core/internal/privesc"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )

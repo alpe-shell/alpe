@@ -33,13 +33,13 @@ import (
 	bolt "go.etcd.io/bbolt"
 	berrors "go.etcd.io/bbolt/errors"
 
+	clipboardstore "github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/proto/virtual_keyboard"
+	"github.com/alpe-shell/alpe/core/internal/server/wlcontext"
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
 	"github.com/duxlabs-dev/dux-go/wayland/ext_data_control"
 	"github.com/duxlabs-dev/dux-go/wlclipboard"
-	clipboardstore "github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/virtual_keyboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/wlcontext"
 )
 
 var errEntryNotFound = errors.New("entry not found")

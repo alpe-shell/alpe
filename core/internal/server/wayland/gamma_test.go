@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/icc"
+	"github.com/alpe-shell/alpe/core/internal/icc"
 )
 
 func TestGenerateGammaRamp(t *testing.T) {

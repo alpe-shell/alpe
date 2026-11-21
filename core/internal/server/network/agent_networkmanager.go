@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/errdefs"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/errdefs"
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/godbus/dbus/v5"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"

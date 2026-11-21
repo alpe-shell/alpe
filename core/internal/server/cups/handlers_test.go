@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
+	mocks_cups "github.com/alpe-shell/alpe/core/internal/mocks/cups"
+	"github.com/alpe-shell/alpe/core/internal/server/models"
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	mocks_cups "github.com/duxlabs-dev/dux-shell/core/internal/mocks/cups"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

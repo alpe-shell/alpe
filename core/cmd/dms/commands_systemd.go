@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/config"
-	"github.com/duxlabs-dev/dux-shell/core/internal/deps"
+	"github.com/alpe-shell/alpe/core/internal/config"
+	"github.com/alpe-shell/alpe/core/internal/deps"
 	"github.com/spf13/cobra"
 )
 

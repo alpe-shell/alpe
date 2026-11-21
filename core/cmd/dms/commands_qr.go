@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/qrcode"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/qrcode"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )

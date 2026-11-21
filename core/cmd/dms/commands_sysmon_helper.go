@@ -16,9 +16,9 @@ import (
 	"syscall"
 	"time"
 
+	serverDgop "github.com/alpe-shell/alpe/core/internal/server/dgop"
+	"github.com/alpe-shell/alpe/core/internal/server/drives"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	serverDgop "github.com/duxlabs-dev/dux-shell/core/internal/server/dgop"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/drives"
 	"github.com/spf13/cobra"
 )
 

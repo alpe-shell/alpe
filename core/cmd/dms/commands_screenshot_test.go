@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/screenshot"
+	"github.com/alpe-shell/alpe/core/internal/screenshot"
 )
 
 func thumbnailTestBuffer(t testing.TB, width, height int) *screenshot.ShmBuffer {

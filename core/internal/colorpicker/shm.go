@@ -1,6 +1,6 @@
 package colorpicker
 
-import "github.com/duxlabs-dev/dux-shell/core/internal/wayland/shm"
+import "github.com/alpe-shell/alpe/core/internal/wayland/shm"
 
 type ShmBuffer = shm.Buffer
 

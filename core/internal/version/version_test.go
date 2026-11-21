@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	mocks_version "github.com/duxlabs-dev/dux-shell/core/internal/mocks/version"
+	mocks_version "github.com/alpe-shell/alpe/core/internal/mocks/version"
 )
 
 func TestCompareVersions(t *testing.T) {

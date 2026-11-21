@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/configfrag"
+	"github.com/alpe-shell/alpe/core/internal/configfrag"
 )
 
 func marshalKeys(t *testing.T, v any) map[string]json.RawMessage {

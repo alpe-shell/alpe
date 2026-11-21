@@ -13,7 +13,7 @@ import (
 
 	bolt "go.etcd.io/bbolt"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
 var bucketName = []byte("clipboard")

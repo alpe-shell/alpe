@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
+	mockdbus "github.com/alpe-shell/alpe/core/internal/mocks/github.com/godbus/dbus/v5"
+	"github.com/alpe-shell/alpe/core/internal/server/models"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	mockdbus "github.com/duxlabs-dev/dux-shell/core/internal/mocks/github.com/godbus/dbus/v5"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
 	"github.com/godbus/dbus/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

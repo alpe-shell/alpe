@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/Wifx/gonetworkmanager/v2"
-	"github.com/duxlabs-dev/dux-shell/core/internal/errdefs"
-	mock_gonetworkmanager "github.com/duxlabs-dev/dux-shell/core/internal/mocks/github.com/Wifx/gonetworkmanager/v2"
+	"github.com/alpe-shell/alpe/core/internal/errdefs"
+	mock_gonetworkmanager "github.com/alpe-shell/alpe/core/internal/mocks/github.com/Wifx/gonetworkmanager/v2"
 	"github.com/stretchr/testify/assert"
 )
 

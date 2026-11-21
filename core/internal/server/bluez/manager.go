@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/duxlabs-dev/dux-go/dbusutil"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 	"github.com/godbus/dbus/v5"
 )
 

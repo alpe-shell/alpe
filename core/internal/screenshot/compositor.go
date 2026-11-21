@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"sync"
 
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_output_management"
+	wlhelpers "github.com/alpe-shell/alpe/core/internal/wayland/client"
 	"github.com/duxlabs-dev/dux-go/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_output_management"
-	wlhelpers "github.com/duxlabs-dev/dux-shell/core/internal/wayland/client"
 )
 
 type Compositor int

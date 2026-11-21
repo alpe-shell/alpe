@@ -9,13 +9,13 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/clipolicy"
+	"github.com/alpe-shell/alpe/core/internal/gpu"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/server"
+	"github.com/alpe-shell/alpe/core/internal/shellembed"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/duxlabs-dev/dux-go/shellapp"
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipolicy"
-	"github.com/duxlabs-dev/dux-shell/core/internal/gpu"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server"
-	"github.com/duxlabs-dev/dux-shell/core/internal/shellembed"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
 	"github.com/spf13/afero"
 )
 

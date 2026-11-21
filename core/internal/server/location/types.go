@@ -3,8 +3,8 @@ package location
 import (
 	"sync"
 
+	"github.com/alpe-shell/alpe/core/internal/geolocation"
 	"github.com/duxlabs-dev/dux-go/syncmap"
-	"github.com/duxlabs-dev/dux-shell/core/internal/geolocation"
 )
 
 type State struct {

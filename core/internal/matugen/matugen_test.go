@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
+	mocks_utils "github.com/alpe-shell/alpe/core/internal/mocks/utils"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	matcolor "github.com/duxlabs-dev/dux-go/material/color"
-	mocks_utils "github.com/duxlabs-dev/dux-shell/core/internal/mocks/utils"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
 	"github.com/stretchr/testify/assert"
 )
 

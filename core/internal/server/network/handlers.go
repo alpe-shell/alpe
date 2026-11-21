@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/server/models"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
 )
 
 func HandleRequest(conn *ipc.ConnWriter, req ipc.Request, manager *Manager) {

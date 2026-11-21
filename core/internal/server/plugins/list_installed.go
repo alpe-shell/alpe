@@ -3,8 +3,8 @@ package plugins
 import (
 	"fmt"
 
+	"github.com/alpe-shell/alpe/core/internal/plugins"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/plugins"
 )
 
 // HandleListInstalled meldet die Plugins im Benutzer- und im Systemordner. Name, Version und

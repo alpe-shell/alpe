@@ -1,7 +1,7 @@
 package providers
 
 import (
-	"github.com/duxlabs-dev/dux-shell/core/internal/windowrules"
+	"github.com/alpe-shell/alpe/core/internal/windowrules"
 )
 
 func newTestWindowRule(id, name, appID string) windowrules.WindowRule {

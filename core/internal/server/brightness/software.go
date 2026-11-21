@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/wayland"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/server/wayland"
 )
 
 const softwareIDPrefix = "software:"

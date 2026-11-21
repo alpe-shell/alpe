@@ -3,9 +3,9 @@ package clipboard
 import (
 	"fmt"
 
+	"github.com/alpe-shell/alpe/core/internal/proto/virtual_keyboard"
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
 	"github.com/duxlabs-dev/dux-go/wayland/ext_data_control"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/virtual_keyboard"
 )
 
 type session struct {

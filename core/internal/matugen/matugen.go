@@ -17,9 +17,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/dank16"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/dank16"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/godbus/dbus/v5"
 	"github.com/lucasb-eyer/go-colorful"
 )

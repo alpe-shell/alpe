@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	sharedpam "github.com/duxlabs-dev/dux-shell/core/internal/pam"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	sharedpam "github.com/alpe-shell/alpe/core/internal/pam"
 	"github.com/spf13/cobra"
 )
 

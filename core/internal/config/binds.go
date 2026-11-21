@@ -1,6 +1,6 @@
 package config
 
-import "github.com/duxlabs-dev/dux-shell/core/internal/deps"
+import "github.com/alpe-shell/alpe/core/internal/deps"
 
 // BindsConfigType is the replaceConfigs key choosing stock DMS binds over the user's.
 const BindsConfigType = "Keybinds"

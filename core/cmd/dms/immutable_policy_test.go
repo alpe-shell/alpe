@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipolicy"
+	"github.com/alpe-shell/alpe/core/internal/clipolicy"
 )
 
 func TestDefaultImmutablePolicyBlocksNothing(t *testing.T) {

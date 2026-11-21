@@ -5,15 +5,15 @@ import (
 	"math"
 	"sync"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/proto/keyboard_shortcuts_inhibit"
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_layer_shell"
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_screencopy"
+	"github.com/alpe-shell/alpe/core/internal/proto/wp_cursor_shape"
+	"github.com/alpe-shell/alpe/core/internal/proto/wp_viewporter"
+	wlhelpers "github.com/alpe-shell/alpe/core/internal/wayland/client"
+	"github.com/alpe-shell/alpe/core/internal/wayland/keymap"
 	"github.com/duxlabs-dev/dux-go/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/keyboard_shortcuts_inhibit"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_layer_shell"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_screencopy"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wp_cursor_shape"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wp_viewporter"
-	wlhelpers "github.com/duxlabs-dev/dux-shell/core/internal/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/wayland/keymap"
 )
 
 type resizeHandle int

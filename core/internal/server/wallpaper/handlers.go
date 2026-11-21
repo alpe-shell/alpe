@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/alpe-shell/alpe/core/internal/server/models"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
 )
 
 func HandleRequest(ctx context.Context, conn *ipc.ConnWriter, req ipc.Request, manager *Manager) {

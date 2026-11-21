@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/errdefs"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/errdefs"
+	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
 // Event strings per WPA_EVENT_* in contrib/wpa/src/common/wpa_ctrl.h

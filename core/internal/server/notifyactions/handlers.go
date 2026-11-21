@@ -3,9 +3,9 @@ package notifyactions
 import (
 	"os"
 
+	"github.com/alpe-shell/alpe/core/internal/notify"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	"github.com/duxlabs-dev/dux-shell/core/internal/notify"
 )
 
 func HandleRequest(conn *ipc.ConnWriter, req ipc.Request, manager *Manager) {

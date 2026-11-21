@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/plugins"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server"
-	"github.com/duxlabs-dev/dux-shell/core/internal/site"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/plugins"
+	"github.com/alpe-shell/alpe/core/internal/server"
+	"github.com/alpe-shell/alpe/core/internal/site"
 	"github.com/spf13/cobra"
 )
 

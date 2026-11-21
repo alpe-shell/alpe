@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/errdefs"
+	"github.com/alpe-shell/alpe/core/internal/log"
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/errdefs"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 )
 
 type WaylandContext interface {

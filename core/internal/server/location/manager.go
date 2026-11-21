@@ -3,8 +3,8 @@ package location
 import (
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/geolocation"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/geolocation"
+	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
 func NewManager(client geolocation.Client) (*Manager, error) {

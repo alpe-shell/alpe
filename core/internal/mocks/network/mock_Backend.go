@@ -5,7 +5,7 @@
 package mocks_network
 
 import (
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/network"
+	"github.com/alpe-shell/alpe/core/internal/server/network"
 	mock "github.com/stretchr/testify/mock"
 )
 

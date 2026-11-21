@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/deps"
-	"github.com/duxlabs-dev/dux-shell/core/internal/version"
+	"github.com/alpe-shell/alpe/core/internal/deps"
+	"github.com/alpe-shell/alpe/core/internal/version"
 )
 
 const hyprlandBackupDirName = ".dms-backups"

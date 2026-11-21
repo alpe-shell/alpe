@@ -11,10 +11,10 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/notify"
-	"github.com/duxlabs-dev/dux-shell/core/internal/qsipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/screenshot"
+	"github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/notify"
+	"github.com/alpe-shell/alpe/core/internal/qsipc"
+	"github.com/alpe-shell/alpe/core/internal/screenshot"
 	"github.com/spf13/cobra"
 )
 

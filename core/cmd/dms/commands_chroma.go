@@ -10,9 +10,9 @@ import (
 
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/formatters/html"
-	"github.com/duxlabs-dev/dux-shell/core/internal/highlight"
-	"github.com/duxlabs-dev/dux-shell/core/internal/highlight/lexers"
-	"github.com/duxlabs-dev/dux-shell/core/internal/highlight/styles"
+	"github.com/alpe-shell/alpe/core/internal/highlight"
+	"github.com/alpe-shell/alpe/core/internal/highlight/lexers"
+	"github.com/alpe-shell/alpe/core/internal/highlight/styles"
 	"github.com/spf13/cobra"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"

@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/proto/linux_dmabuf"
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/linux_dmabuf"
 	"golang.org/x/sys/unix"
 )
 

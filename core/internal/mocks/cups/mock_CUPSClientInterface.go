@@ -7,7 +7,7 @@ package mocks_cups
 import (
 	"io"
 
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 	mock "github.com/stretchr/testify/mock"
 )
 

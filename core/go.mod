@@ -1,4 +1,4 @@
-module github.com/duxlabs-dev/dux-shell/core
+module github.com/alpe-shell/alpe/core
 
 go 1.27.3
 

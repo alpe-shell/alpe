@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/deps"
+	"github.com/alpe-shell/alpe/core/internal/deps"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

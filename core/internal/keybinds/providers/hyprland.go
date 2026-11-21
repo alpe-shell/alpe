@@ -11,9 +11,9 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/config"
-	"github.com/duxlabs-dev/dux-shell/core/internal/keybinds"
-	"github.com/duxlabs-dev/dux-shell/core/internal/utils"
+	"github.com/alpe-shell/alpe/core/internal/config"
+	"github.com/alpe-shell/alpe/core/internal/keybinds"
+	"github.com/alpe-shell/alpe/core/internal/utils"
 )
 
 type HyprlandProvider struct {

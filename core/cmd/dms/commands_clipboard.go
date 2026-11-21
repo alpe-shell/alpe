@@ -30,11 +30,11 @@ import (
 	_ "golang.org/x/image/tiff"
 	_ "golang.org/x/image/webp"
 
+	"github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/log"
+	serverclipboard "github.com/alpe-shell/alpe/core/internal/server/clipboard"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/wlclipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/clipboard"
-	"github.com/duxlabs-dev/dux-shell/core/internal/log"
-	serverclipboard "github.com/duxlabs-dev/dux-shell/core/internal/server/clipboard"
 	"github.com/spf13/cobra"
 )
 

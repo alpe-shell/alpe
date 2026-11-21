@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/alpe-shell/alpe/core/internal/server/models"
+	"github.com/alpe-shell/alpe/core/internal/systemd"
 	"github.com/duxlabs-dev/dux-go/ipc"
-	"github.com/duxlabs-dev/dux-shell/core/internal/server/models"
-	"github.com/duxlabs-dev/dux-shell/core/internal/systemd"
 	"github.com/stretchr/testify/require"
 )
 

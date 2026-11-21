@@ -15,9 +15,9 @@ import (
 
 	wlclient "github.com/duxlabs-dev/dux-go/wayland/client"
 
-	"github.com/duxlabs-dev/dux-shell/core/internal/icc"
-	mocks_wlclient "github.com/duxlabs-dev/dux-shell/core/internal/mocks/wlclient"
-	"github.com/duxlabs-dev/dux-shell/core/internal/proto/wlr_gamma_control"
+	"github.com/alpe-shell/alpe/core/internal/icc"
+	mocks_wlclient "github.com/alpe-shell/alpe/core/internal/mocks/wlclient"
+	"github.com/alpe-shell/alpe/core/internal/proto/wlr_gamma_control"
 )
 
 func TestManager_ActorSerializesOutputStateAccess(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/duxlabs-dev/dux-shell/core/pkg/ipp"
+	"github.com/alpe-shell/alpe/core/pkg/ipp"
 )
 
 var validProtocols = map[string]bool{
