@@ -42,6 +42,9 @@ Der Maintainer arbeitet auf dem PC, auf dem du läufst, und Alpe ist seine aktiv
 - Lesen von `~/.config/dms`, `~/.local/state/dms`, `~/.config/alpe`, `~/.config/kwinrulesrc`
   ist erlaubt (für Migrationstests: Kopie in ein Temp-`$HOME` ziehen und dort arbeiten).
 - Tests laufen mit eigenem `HOME`/`XDG_*` in einem Temp-Verzeichnis, nie gegen das echte.
+- Kein `pkill`, `killall` oder `pkill -f`, auch nicht mit Pfadmustern: Die echte Shell läuft unter
+  denselben Programmnamen (`qs`/`quickshell`, `dms`/`alpe`). Prozesse der Ladeprüfung nur über ihren
+  Scope beenden (`systemctl --user stop alpe-ladepruefung-<zeit>.scope`).
 - Den echten Installationstest macht der Maintainer in der VM (CachyOS-VM mit Snapshot «frisch») und am Mac.
 
 ## Prüfen vor jedem Commit

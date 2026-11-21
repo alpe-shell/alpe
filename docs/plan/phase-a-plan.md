@@ -463,6 +463,32 @@ schreibt dort das erzeugte `layout.js` und die Bilder hinein. Ein Paket unter
 aus `~/.config/alpe`, oder bewusst erzeugte Nutzerkopie) mit Folgen für Umzug,
 `design apply/export` und `alpe entfernen` folgt vor E1.
 
+### 6.8 `alpe-dienst` startet nie eine systemd-Unit (D1)
+
+Heute leitet der Dienst `dms restart` über den Haken `TryManagedRestart` (`core/cmd/dms/shellapp.go:34`
+→ `systemd_restart.go`) an systemd weiter: Ist `dms.service` aktiv, ruft er
+`systemctl --user restart dms.service` auf; sonst unter Umständen `systemctl --user start dms.service`
+(`trySystemdStart`). Ausgelöst wird das durch `dms restart`: Energiemenü «Neu starten»
+(`SessionService.qml:692`), Neustart nach Systemaktualisierung (`SystemUpdateService.qml:436`),
+Prozessliste (`ProcessActions.qml:240`), `dms update` (`commands_features.go:117`). Ein von Hand oder in
+einem Test gestarteter Dienst kann so die Unit des laufenden Systems neu starten.
+
+Ab D1:
+- `alpe-dienst` ruft nie `systemctl start/stop/restart` auf und nutzt keinen Haken, der das tut
+  (`TryManagedRestart` entfällt, ebenso `trySystemdStart`; `runSystemctl` bleibt nur für lesende
+  Abfragen in `doctor`).
+- `alpe-dienst restart` startet nur die eigene Instanz neu (wie der Weg ohne systemd heute). Läuft der
+  Dienst unter systemd (`INVOCATION_ID`/`NOTIFY_SOCKET` gesetzt), meldet `alpe-dienst restart`, dass die
+  Unit über `alpe restart` neu zu starten ist, und ändert nichts. Läuft er nicht unter systemd, meldet er
+  das beim Start einmal im Log und läuft normal weiter.
+- Den bewussten Neustart der Unit übernimmt allein die CLI `alpe restart` (Benutzerhandlung). Die
+  Aufrufer in der Oberfläche (Energiemenü, Aktualisierung, Prozessliste) rufen künftig `alpe restart`
+  statt `dms restart` auf.
+- Test (`core/cmd/alpe-dienst/…_test.go`): `runSystemctl` wird durch eine Attrappe ersetzt, die jeden
+  Aufruf protokolliert; `restart` mit und ohne systemd-Umgebung darf kein `start`, `stop` oder
+  `restart` erzeugen; ohne systemd erscheint die Log-Meldung und der Dienst läuft weiter. Zusätzlich
+  meldet die Ladeprüfung jeden abgefangenen `start`/`stop`/`restart` in `stubs.log`.
+
 ---
 
 ## 7. Umzug 1.0 → 1.1 (`tools/umzug.py`, Befehl `alpe umzug`)
@@ -623,7 +649,7 @@ Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 
 | C2 | niri entfernt | QML + Go + Assets + Tests |
 | C3 | mango, sway, scroll, miracle, labwc, umbriel, river entfernt | dito; CompositorService auf Hyprland + KWin |
 | C4 | Grenzfälle entfernt | nach Entscheid des Maintainers (4.3), je Thema ein Commit |
-| D1 | Go: Modulpfad, Binary `alpe-dienst`, Socket, Umgebungsvariablen | zentrale Konstanten in `core/internal/brand` |
+| D1 | Go: Modulpfad, Binary `alpe-dienst`, Socket, Umgebungsvariablen; **kein Neustart von systemd-Units** (6.8) | zentrale Konstanten in `core/internal/brand`; Test zu 6.8 |
 | D2 | Go/QML: Pfade `~/.config|state|cache/alpe`, System-Plugins, hypr-Ordner | zentrale Stellen `Paths.qml`/`brand` statt verstreuter Literale |
 | D3 | App-ID, Desktop-Dateien, D-Bus-Namen, Icon | |
 | D4 | KWin-Brücke `alpe-bridge`, Aktionen `alpe-*` | Test test_bridge.js angepasst |
