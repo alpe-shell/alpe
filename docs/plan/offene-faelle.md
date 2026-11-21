@@ -1,12 +1,19 @@
 # Phase A – offene Fälle
 
-Stand: 21. November 2026, nach C3 (`2c92ce4`). Ergänzt `docs/plan/phase-a-plan.md`
+Stand: 21. November 2026, nach C3 (`2c92ce4`), ergänzt mit den Entscheiden 0.5. Ergänzt `docs/plan/phase-a-plan.md`
 (Abschnitt «Stand»). Erledigte Fälle werden gestrichen, nicht gelöscht.
 
 ## Entscheide des Maintainers
 
-Die Punkte 1–4 (distros, VERSION/CODENAME, Bildschirmfreigabe-Symbol, abgeschaltete
-Zweige) stehen mit Vorschlägen im Plan unter «Stand → Entscheide nach C3». Noch offen.
+~~Die Punkte 1–4 (distros, VERSION/CODENAME, Bildschirmfreigabe-Symbol, abgeschaltete
+Zweige) stehen mit Vorschlägen im Plan unter «Stand → Entscheide nach C3». Noch offen.~~
+Entschieden am 21.11.2026, siehe Plan 0.5.
+
+## Bildschirmfreigabe-Symbol (nach 1.1)
+
+Das Symbol im Kontrollzentrum und auf dem Sperrbildschirm zeigte nur unter niri etwas und ist
+seit C2 immer aus. Bleibt in Phase A unverändert (Plan 0.5 Nr. 3). Vorschlag für nach 1.1: an
+`PrivacyService.screensharingActive` hängen.
 
 ## Mac-Test (ausstehend)
 
@@ -74,6 +81,24 @@ grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Una
 Gehören in Abschnitt 9 (Node-Tests in `tools/test.sh` aufnehmen) bzw. in einen eigenen Commit.
 
 ## Ladeprüfung
+
+Meldungen der Shell in den Grundlinien (`entwicklung/ladepruefung/grundlinie-*.txt`), die auf
+echte Fehler im QML hindeuten (Umgebungsmeldungen wie fehlendes D-Bus, PipeWire, `dsearch`
+oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fall noch offen:
+
+- beide: `AlpeDeviceTab.qml: Unable to assign [undefined] to bool`,
+  `DBarTab.qml: Unable to assign [undefined] to QString`.
+- beide: `[Proc] runCommand callback error … TypeError: Cannot read property 'lid' of null`
+  (Ladegrenze/Deckel-Abfrage; im Test fehlt logind, die Auswertung fängt das nicht ab).
+- beide: `SportDaemon … Created graphical object was not placed in the graphics scene`.
+- KWin: `Error: Cannot assign to non-existent property "requestedSearchQuery"` (ohne Datei).
+- **KWin: leere Bildschirmliste** – `[WlrOutputService] Received empty outputs list`. Unter
+  KWin kommen die Bildschirme über kscreen, nicht wlr-output-management; zu klären, ob die
+  Anzeige-Seite unter KWin trotzdem Bildschirme zeigt oder ob nur die Meldung stört.
+- Hyprland: `[KeybindsService] Failed to parse binds: SyntaxError: JSON.parse` und
+  `Load process failed with code: 1` (Kürzel-Auslesen scheitert im Testprofil).
+- Hyprland: `[CompositorService] failed to update DMS window rule dms-floating-windows …
+  hyprland.lua not found …; run dms setup …`; verweist auf `dms setup` (Befehl fällt mit C4 weg).
 
 - Einmal flüchtig unter Hyprland (Code identisch mit der Grundlinie), danach nicht wieder:
   `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null` und

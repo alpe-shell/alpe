@@ -30,7 +30,7 @@ Von 4.1 vorerst **nicht** entfernt: `core/internal/distros`, `shell/VERSION`, `s
 
 ### Entscheide nach C3 (Punkte 1–4)
 
-Stand: **noch offen**, Entscheid des Maintainers ausstehend. Vorschläge:
+Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 
 1. `core/internal/distros` (genutzt von `doctor`, `update`, `migrate`, `setup`, `switch`;
    hält `deps.WindowManagerNiri`/`WindowManagerMango` am Leben) – Vorschlag: in C4 entfernen
@@ -49,8 +49,8 @@ Stand: **noch offen**, Entscheid des Maintainers ausstehend. Vorschläge:
 ### Als Nächstes
 
 - Mac-Test des Stands nach C3 (Anleitung in `docs/plan/offene-faelle.md`, Fall «Mac-Test»).
-- Entscheide 1–4, dann **C4** (Grenzfälle nach 4.3, je Thema ein Commit; Halt nach C4,
-  zusätzlich Halt wegen Tailscale).
+- **C4** (Grenzfälle nach 0.4/4.3 und 0.5, je Thema ein Commit), **C5** (Aufräumen), Halt nach C5.
+  Der Halt wegen Tailscale entfällt: entschieden in 0.4 Nr. 5 (Tailscale weg).
 - Danach D1 ff. nach Abschnitt 10.
 
 ---
@@ -163,8 +163,18 @@ Antworten auf Abschnitt 12:
   mit `shell.qml`, Vorgabe `shell/`).
 - Gearbeitet wird im Worktree `~/alpe-phase-a`; `~/alpe` bleibt bis zum Ende von Phase A auf
   eacdaa4 (dort hängt die laufende 1.0-Einrichtung).
-- **Halte:** nach A1, nach B3 (Baumvergleich), nach C4, nach D6, nach E4, nach F2, dann D7
+- **Halte:** nach A1, nach B3 (Baumvergleich), nach C4 (seit 0.5: nach C5), nach D6, nach E4, nach F2, dann D7
   separat, zuletzt G1 – jeweils mit Zusammenfassung und Diffstat.
+
+### 0.5 Entscheide nach C3 (21.11.2026)
+
+| # | Entscheid |
+|---|---|
+| 1 | **C4** = Grenzfälle nach 0.4/4.3, zusätzlich: `core/internal/distros` samt den Befehlen `update`, `migrate`, `setup` und `switch` weg. Vorher prüfen, ob Oberfläche oder `tools/` einen davon aufrufen; wenn ja, bleibt genau dieser und kommt auf die Liste für D. `doctor` bleibt, ohne Distributionsprüfung (`GetOSInfo` als kleines eigenes Paket). Damit dürfen `deps.WindowManagerNiri`/`WindowManagerMango` weg. |
+| 2 | `shell/VERSION` und `CODENAME` samt `ShellVersionService` weg. **Einzige Quelle der Version ist `Brand.qml`.** `bootstrap.sh` und `commands_common.go` lesen sie daraus; das Makefile setzt sie beim Bau des Go-Dienstes per `-ldflags` aus `Brand.qml`. Ein Test prüft, dass `dms version` (später `alpe-dienst version`) und `Brand.qml` übereinstimmen. |
+| 3 | Bildschirmfreigabe-Symbol: **nicht in Phase A**, bleibt unverändert; in `offene-faelle.md` mit dem Vorschlag, es nach 1.1 an `PrivacyService.screensharingActive` zu hängen. |
+| 4 | **C5** = Aufräumen der abgeschalteten Zweige (Fensterregel- und Kürzel-Editor, Zieh-Pfad zum Umsortieren der Arbeitsflächen, Übersichts-Pille). Nur nachweislich toten Code entfernen, Ladeprüfung unter KWin und Hyprland. |
+| 5 | Weiterhin ein Thema pro Commit. **Halt nach C5** (statt nach C4). |
 
 ---
 
@@ -697,6 +707,7 @@ Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 
 | C2 | niri entfernt | QML + Go + Assets + Tests |
 | C3 | mango, sway, scroll, miracle, labwc, umbriel, river entfernt | dito; CompositorService auf Hyprland + KWin |
 | C4 | Grenzfälle entfernt | nach Entscheid des Maintainers (4.3), je Thema ein Commit |
+| C5 | Abgeschaltete Zweige aufgeräumt | 0.5 Nr. 4: nur nachweislich toter Code; Ladeprüfung KWin + Hyprland |
 | D1 | Go: Modulpfad, Binary `alpe-dienst`, Socket, Umgebungsvariablen; **kein Neustart von systemd-Units** (6.8) | zentrale Konstanten in `core/internal/brand`; Test zu 6.8 |
 | D2 | Go/QML: Pfade `~/.config|state|cache/alpe`, System-Plugins, hypr-Ordner | zentrale Stellen `Paths.qml`/`brand` statt verstreuter Literale |
 | D3 | App-ID, Desktop-Dateien, D-Bus-Namen, Icon | |
@@ -713,7 +724,7 @@ Jeder Commit: `bash tools/test.sh` grün (ab C3 zusätzlich Ladeprüfung, ab C8 
 | G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
-(Baumvergleich), nach C4, nach D6, nach E4, nach F2, D7 separat, zuletzt G1. Vor B2 zusätzlich,
+(Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D6, nach E4, nach F2, D7 separat, zuletzt G1. Vor B2 zusätzlich,
 falls die Herkunft des KWin-Patches nicht als MIT belegt ist; vor C4 wegen Tailscale; vor E1 mit
 der Vorlage 6.7.
 
