@@ -71,8 +71,6 @@ Singleton {
 
     property var notepadSlideouts: []
 
-    property string pendingThemeInstall: ""
-    property string pendingPluginInstall: ""
     property string pendingWallpaperInstall: ""
 
     // Deferred unload: keep popouts warm while the session is active and reclaim them on lock/monitors-off.

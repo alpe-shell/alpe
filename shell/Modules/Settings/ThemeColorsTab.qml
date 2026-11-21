@@ -31,39 +31,7 @@ Item {
     onMatugenPreviewKeyChanged: MatugenPreviewService.refresh()
     onMatugenAvailableChanged: MatugenPreviewService.refresh()
     readonly property var log: Log.scoped("ThemeColorsTab")
-    property var installedRegistryThemes: []
-    readonly property var activeRegistryTheme: {
-        const file = SettingsData.customThemeFile;
-        if (Theme.currentThemeCategory !== "registry" || Theme.currentTheme !== Theme.custom || !file)
-            return null;
-        return installedRegistryThemes.find(t => file.endsWith((t.sourceDir || t.id) + "/theme.json")) ?? null;
-    }
-
-    function registryThemeDir(theme) {
-        return Quickshell.env("HOME") + "/.config/dms/themes/" + (theme.sourceDir || theme.id);
-    }
-    Component.onCompleted: {
-        if (DMSService.dmsAvailable)
-            DMSService.listInstalledThemes();
-        if (PopoutService.pendingThemeInstall)
-            Qt.callLater(() => showThemeBrowser());
-        MatugenPreviewService.refresh();
-    }
-
-    Connections {
-        target: DMSService
-        function onInstalledThemesReceived(themes) {
-            themeColorsTab.installedRegistryThemes = themes;
-        }
-    }
-
-    Connections {
-        target: PopoutService
-        function onPendingThemeInstallChanged() {
-            if (PopoutService.pendingThemeInstall)
-                showThemeBrowser();
-        }
-    }
+    Component.onCompleted: MatugenPreviewService.refresh()
 
     SettingsPage {
         id: mainColumn
@@ -81,12 +49,7 @@ Item {
                     spacing: Theme.spacingS
 
                     StyledText {
-                        readonly property string registryThemeName: themeColorsTab.activeRegistryTheme?.name ?? ""
-                        text: {
-                            if (Theme.currentThemeCategory === "registry" && registryThemeName)
-                                return I18n.tr("Current Theme: %1", "current theme label").arg(registryThemeName);
-                            return I18n.tr("Current Theme: %1", "current theme label").arg(Theme.currentThemeLabel);
-                        }
+                        text: I18n.tr("Current Theme: %1", "current theme label").arg(Theme.currentThemeLabel)
                         font.pixelSize: Theme.fontSizeMedium
                         color: Theme.surfaceText
                         font.weight: Theme.fontWeightMedium
@@ -97,8 +60,6 @@ Item {
                         text: {
                             if (Theme.currentTheme === Theme.dynamic)
                                 return I18n.tr("Material colors generated from wallpaper", "dynamic theme description");
-                            if (Theme.currentThemeCategory === "registry")
-                                return I18n.tr("Color theme from DMS registry", "registry theme description");
                             if (Theme.currentTheme === Theme.custom)
                                 return I18n.tr("Custom theme loaded from JSON file", "custom theme description");
                             return I18n.tr("Material Design inspired color themes", "generic theme description");
@@ -132,11 +93,8 @@ Item {
                             buttonPadding: parent.width < 420 ? Theme.spacingS : Theme.spacingL
                             minButtonWidth: parent.width < 420 ? 44 : 64
                             textSize: parent.width < 420 ? Theme.fontSizeSmall : Theme.fontSizeMedium
-                            property bool isRegistryTheme: Theme.currentThemeCategory === "registry"
                             property int pendingIndex: -1
                             property int computedIndex: {
-                                if (isRegistryTheme)
-                                    return 3;
                                 if (Theme.currentTheme === Theme.dynamic)
                                     return 1;
                                 if (Theme.currentThemeName === "custom")
@@ -144,7 +102,7 @@ Item {
                                 return 0;
                             }
 
-                            model: DMSService.dmsAvailable ? [I18n.tr("Generic", "theme category option"), I18n.tr("Auto", "theme category option"), I18n.tr("Custom", "theme category option"), I18n.tr("Browse", "theme category option")] : [I18n.tr("Generic", "theme category option"), I18n.tr("Auto", "theme category option"), I18n.tr("Custom", "theme category option")]
+                            model: [I18n.tr("Generic", "theme category option"), I18n.tr("Auto", "theme category option"), I18n.tr("Custom", "theme category option")]
                             currentIndex: pendingIndex >= 0 ? pendingIndex : computedIndex
                             selectionMode: "single"
                             onSelectionChanged: (index, selected) => {
@@ -173,9 +131,6 @@ Item {
                                     break;
                                 case 2:
                                     Theme.switchThemeCategory("custom", "custom");
-                                    break;
-                                case 3:
-                                    Theme.switchThemeCategory("registry", "");
                                     break;
                                 }
                             }
@@ -509,77 +464,6 @@ Item {
             }
 
             SettingsRow {
-                visible: Theme.currentThemeCategory === "registry"
-                body: Column {
-                    width: parent.width
-                    spacing: Theme.spacingM
-
-                    SettingsSwatchGrid {
-                        minTileWidth: SettingsMetrics.previewTileMinWidth
-                        visible: themeColorsTab.installedRegistryThemes.length > 0
-                        currentValue: themeColorsTab.activeRegistryTheme?.id ?? ""
-                        options: themeColorsTab.installedRegistryThemes.map(theme => ({
-                                    "value": theme.id,
-                                    "label": theme.name,
-                                    "deletable": true
-                                }))
-                        resolveOption: option => {
-                            const theme = themeColorsTab.installedRegistryThemes.find(t => t.id === option.value);
-                            if (!theme)
-                                return {};
-                            const mode = Theme.isLightMode ? "light" : "dark";
-                            const variant = theme.hasVariants ? SettingsData.getRegistryThemeVariant(theme.id, theme.variants?.default || "") : "";
-                            const palette = ThemePalette.pick((Theme.isLightMode ? theme.light : theme.dark) ?? theme.dark) ?? {};
-                            const variantCount = theme.variants?.type === "multi" ? theme.variants?.accents?.length : theme.variants?.options?.length;
-                            return {
-                                "preview": themeColorsTab.registryThemeDir(theme) + "/preview-" + (variant ? variant + "-" : "") + mode + ".svg",
-                                "primary": palette.primary ?? Theme.primary.toString(),
-                                "secondary": palette.secondary,
-                                "tertiary": palette.tertiary,
-                                "badge": theme.hasVariants && variantCount ? String(variantCount) : ""
-                            };
-                        }
-                        onSelected: value => {
-                            const theme = themeColorsTab.installedRegistryThemes.find(t => t.id === value);
-                            if (!theme)
-                                return;
-                            SettingsData.set("customThemeFile", themeColorsTab.registryThemeDir(theme) + "/theme.json");
-                            Theme.switchTheme("custom", true, true);
-                        }
-                        onDeleteRequested: value => {
-                            const theme = themeColorsTab.installedRegistryThemes.find(t => t.id === value);
-                            if (!theme)
-                                return;
-                            uninstallThemeConfirm.showWithOptions({
-                                "title": I18n.tr("Uninstall"),
-                                "message": I18n.tr("Uninstall %1?", "plugin removal confirmation").arg(theme.name),
-                                "confirmText": I18n.tr("Uninstall"),
-                                "danger": true,
-                                "onConfirm": () => themeColorsTab.uninstallRegistryTheme(theme)
-                            });
-                        }
-                    }
-
-                    StyledText {
-                        text: I18n.tr("No themes installed. Browse themes to install from the registry.", "no registry themes installed hint")
-                        font.pixelSize: Theme.fontSizeSmall
-                        color: Theme.surfaceVariantText
-                        wrapMode: Text.WordWrap
-                        width: parent.width
-                        visible: themeColorsTab.installedRegistryThemes.length === 0
-                        horizontalAlignment: Text.AlignHCenter
-                    }
-
-                    DButton {
-                        text: I18n.tr("Browse Themes", "browse themes button")
-                        iconName: "store"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        onClicked: showThemeBrowser()
-                    }
-                }
-            }
-
-            SettingsRow {
                 visible: variantSelector.hasVariants
                 body: Column {
                     id: variantSelector
@@ -589,8 +473,6 @@ Item {
 
                     property string activeThemeId: {
                         switch (Theme.currentThemeCategory) {
-                        case "registry":
-                            return themeColorsTab.activeRegistryTheme?.id ?? "";
                         case "custom":
                             return Theme.currentThemeId || "";
                         default:
@@ -601,8 +483,6 @@ Item {
                         if (!activeThemeId)
                             return null;
                         switch (Theme.currentThemeCategory) {
-                        case "registry":
-                            return themeColorsTab.activeRegistryTheme?.hasVariants ? themeColorsTab.activeRegistryTheme.variants : null;
                         case "custom":
                             return Theme.currentThemeVariants || null;
                         default:
@@ -828,39 +708,6 @@ Item {
         }
     }
 
-    LazyLoader {
-        id: themeBrowserLoader
-        active: false
-
-        ThemeBrowser {
-            id: themeBrowserItem
-            parentModal: themeColorsTab.parentModal
-        }
-    }
-
-    property bool _themeBrowserShowQueued: false
-
-    Connections {
-        target: themeBrowserLoader
-
-        function onItemChanged() {
-            if (!themeColorsTab._themeBrowserShowQueued || !themeBrowserLoader.item)
-                return;
-            themeColorsTab._themeBrowserShowQueued = false;
-            themeBrowserLoader.item.show();
-        }
-    }
-
-    function showThemeBrowser() {
-        themeBrowserLoader.active = true;
-        if (themeBrowserLoader.item) {
-            themeBrowserLoader.item.show();
-            return;
-        }
-        // LazyLoader can't incubate on its first event-loop tick; show once item lands
-        _themeBrowserShowQueued = true;
-    }
-
     FileView {
         id: extractSaveFileView
         blockWrites: true
@@ -881,22 +728,5 @@ Item {
     function saveExtractedTheme(json, outputPath) {
         extractSaveFileView.path = outputPath;
         extractSaveFileView.setText(json);
-    }
-
-    function uninstallRegistryTheme(theme) {
-        ToastService.showInfo(I18n.tr("Uninstalling: %1", "uninstallation progress").arg(theme.name));
-        DMSService.uninstallTheme(theme.id, response => {
-            if (response.error) {
-                ToastService.showError(I18n.tr("Uninstall failed: %1", "uninstallation error").arg(response.error));
-                return;
-            }
-            ToastService.showInfo(I18n.tr("Uninstalled: %1", "uninstallation success").arg(theme.name));
-            DMSService.listInstalledThemes();
-        });
-    }
-
-    ConfirmDialogOverlay {
-        id: uninstallThemeConfirm
-        parent: themeColorsTab.parentModal?.modalFocusScope ?? themeColorsTab
     }
 }

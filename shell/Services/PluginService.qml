@@ -7,7 +7,6 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import "../Common/PluginRanking.js" as PluginRanking
 
 Singleton {
     id: root
@@ -26,7 +25,6 @@ Singleton {
 
     property bool pluginDirectoryExists: false
     property string systemPluginDirectory: "/etc/xdg/quickshell/dms-plugins"
-    readonly property string previewApiBase: Site.api + "/previews/"
 
     property var knownManifests: ({})
     property var pathToPluginId: ({})
@@ -52,7 +50,6 @@ Singleton {
     signal pluginLoadFailed(string pluginId, string error)
     signal pluginDataChanged(string pluginId)
     signal pluginStateChanged(string pluginId)
-    signal registryInstallFinished(string pluginId, bool success)
     signal pluginListUpdated
     signal globalVarChanged(string pluginId, string varName)
     signal requestLauncherUpdate(string pluginId)
@@ -437,7 +434,7 @@ Singleton {
             _loadPluginTranslations(manifest.id, dir);
             const isPureDesktop = surfaces.length === 1 && surfaces[0] === "desktop";
             const enabled = isPureDesktop || SettingsData.getPluginSetting(manifest.id, "enabled", false);
-            if (enabled && !info.loaded && !installingPlugins[manifest.id])
+            if (enabled && !info.loaded)
                 runStartupGate(manifest.id);
             pluginListUpdated();
         } else {
@@ -481,24 +478,6 @@ Singleton {
             return false;
         _invalidatePluginComponents(pluginId);
         return true;
-    }
-
-    function updatePlugin(pluginId, callback) {
-        // Installed entries carry the registry's requires_dms, i.e. the version an update would fetch
-        const installed = (DMSService.installedPlugins || []).find(plugin => plugin.id === pluginId);
-        if (installed?.requires_dms && !checkPluginCompatibility(installed.requires_dms)) {
-            if (callback)
-                callback({
-                    error: I18n.tr("Requires DMS %1", "plugin incompatibility notice, %1 is the required DMS version").arg(installed.requires_dms)
-                });
-            return;
-        }
-        DMSService.update(pluginId, response => {
-            if (!response.error)
-                forceRescanPlugin(pluginId);
-            if (callback)
-                callback(response);
-        });
     }
 
     function loadPlugin(pluginId, bustCache) {
@@ -1293,316 +1272,6 @@ Singleton {
     }
 
     // The directory ignores the query; it keys the on-disk thumbnail cache so an updated plugin gets a fresh render.
-    function previewVersion(plugin) {
-        var stamp = plugin.updated_at || plugin.version || "";
-        return stamp ? "?v=" + encodeURIComponent(stamp) : "";
-    }
-
-    function previewUrl(plugin) {
-        if (!plugin)
-            return "";
-        if (plugin.previewUrl)
-            return plugin.previewUrl;
-        if (plugin.id)
-            return previewApiBase + plugin.id + previewVersion(plugin);
-        return plugin.screenshot || "";
-    }
-
-    // 16:10 screenshot-only render; the full preview card bakes in title text the card already shows
-    function thumbUrl(plugin) {
-        if (!plugin)
-            return "";
-        if (plugin.thumbUrl)
-            return plugin.thumbUrl;
-        if (plugin.id)
-            return previewApiBase + plugin.id + "/thumb" + previewVersion(plugin);
-        return "";
-    }
-
-    function heroUrl(plugin) {
-        if (!plugin)
-            return "";
-        return plugin.screenshot || previewUrl(plugin);
-    }
-
-    function statusTone(status) {
-        switch (status) {
-        case "broken":
-            return "error";
-        case "unmaintained":
-            return "warning";
-        case "reviewed":
-            return "info";
-        default:
-            return "outline";
-        }
-    }
-
-    function statusLabel(status) {
-        switch (status) {
-        case "broken":
-            return I18n.tr("broken", "plugin status");
-        case "unmaintained":
-            return I18n.tr("unmaintained", "plugin status");
-        case "deprecated":
-            return I18n.tr("deprecated", "plugin status");
-        case "reviewed":
-            return I18n.tr("reviewed", "plugin status");
-        default:
-            return status;
-        }
-    }
-
-    function badgeTone(tone) {
-        switch (tone) {
-        case "secondary":
-            return Theme.secondary;
-        case "warning":
-            return Theme.warning;
-        case "error":
-            return Theme.error;
-        case "info":
-            return Theme.info;
-        case "outline":
-            return Theme.outline;
-        default:
-            return Theme.primary;
-        }
-    }
-
-    function badgeModel(plugin) {
-        if (!plugin || (!plugin.id && !plugin.name))
-            return [];
-        var badges = [];
-        if (plugin.featured)
-            badges.push({
-                label: I18n.tr("featured", "adjective, lowercase plugin badge"),
-                icon: "star",
-                tone: "secondary"
-            });
-        if (plugin.firstParty)
-            badges.push({
-                label: I18n.tr("official", "adjective, lowercase first party plugin or registry badge"),
-                icon: "verified",
-                tone: "primary"
-            });
-        else
-            badges.push({
-                label: I18n.tr("3rd party"),
-                icon: "",
-                tone: "warning"
-            });
-        var recency = PluginRanking.recency(plugin);
-        if (recency)
-            badges.push({
-                label: recency === "new" ? I18n.tr("new", "adjective, lowercase plugin badge, recently added") : I18n.tr("updated", "adjective, lowercase plugin badge, recently updated"),
-                icon: recency === "new" ? "fiber_new" : "update",
-                tone: "secondary"
-            });
-        var status = plugin.status || [];
-        for (var i = 0; i < status.length; i++)
-            badges.push({
-                label: statusLabel(status[i]),
-                icon: "",
-                tone: statusTone(status[i])
-            });
-        return badges;
-    }
-
-    property var installingPlugins: ({})
-
-    // The plugin removed last ({id, name, wasEnabled}), kept a few seconds so the plugins page can offer to put it back.
-    property var lastUninstalledPlugin: null
-
-    Timer {
-        id: undoUninstallTimer
-        interval: 8000
-        onTriggered: root.lastUninstalledPlugin = null
-    }
-
-    // Only a registry plugin (one with a repo in the installed list) can be put back:
-    // a plugin the registry does not know would otherwise be swapped for another one.
-    function noteUninstalled(pluginId, pluginName, wasEnabled, repo) {
-        if (!repo) {
-            undoUninstallTimer.stop();
-            lastUninstalledPlugin = null;
-            return;
-        }
-        lastUninstalledPlugin = {
-            id: pluginId,
-            name: pluginName || pluginId,
-            wasEnabled: wasEnabled === true
-        };
-        undoUninstallTimer.restart();
-    }
-
-    function undoUninstall() {
-        const plugin = lastUninstalledPlugin;
-        if (!plugin)
-            return;
-        undoUninstallTimer.stop();
-        lastUninstalledPlugin = null;
-        installFromRegistry(plugin.id, plugin.name, plugin.wasEnabled);
-    }
-
-    // Plugin id -> id of the user's own +1 reaction on the registry issue, once a click has found or created it.
-    property var upvotedPlugins: ({})
-    // Plugin id -> what this session changed on top of the registry count (+1, 0 or -1).
-    property var upvoteDeltas: ({})
-    property var upvotingPlugins: ({})
-
-    function upvoteCount(plugin) {
-        return PluginRanking.upvoteCount(plugin.upvotes, upvoteDeltas[plugin.id]);
-    }
-
-    function _setUpvote(pluginId, reactionId, delta) {
-        const voted = Object.assign({}, upvotedPlugins);
-        if (reactionId)
-            voted[pluginId] = reactionId;
-        else
-            delete voted[pluginId];
-        upvotedPlugins = voted;
-        upvoteDeltas = Object.assign({}, upvoteDeltas, {
-            [pluginId]: delta
-        });
-    }
-
-    function _setUpvoting(pluginId, active) {
-        const pending = Object.assign({}, upvotingPlugins);
-        if (active)
-            pending[pluginId] = true;
-        else
-            delete pending[pluginId];
-        upvotingPlugins = pending;
-    }
-
-    // One click: a thumbs-up on the plugin's GitHub issue through the gh CLI when
-    // it is installed and signed in, otherwise the issue opens in the browser.
-    // One click votes, a second click on a vote takes it back. GitHub keeps one +1 per account.
-    function upvotePlugin(plugin) {
-        if (!plugin || !plugin.issueUrl || upvotingPlugins[plugin.id])
-            return;
-        const path = PluginRanking.issueReactionsPath(plugin.issueUrl);
-        if (!path) {
-            if (/^https:\/\//.test(plugin.issueUrl))
-                Qt.openUrlExternally(plugin.issueUrl);
-            return;
-        }
-        const pluginId = plugin.id;
-        const issueUrl = plugin.issueUrl;
-        const delta = upvoteDeltas[pluginId] || 0;
-        const ownReaction = upvotedPlugins[pluginId];
-        _setUpvoting(pluginId, true);
-        if (ownReaction) {
-            Proc.runCommand("plugin-upvote-" + pluginId, ["gh", "api", "--method", "DELETE", path + "/" + ownReaction], (output, exitCode) => {
-                _setUpvoting(pluginId, false);
-                if (exitCode !== 0) {
-                    root.log.warn("gh upvote removal failed", pluginId, exitCode);
-                    ToastService.showInfo(I18n.tr("Opening GitHub to remove the upvote", "plugin upvote toast, shown when the GitHub CLI is missing or signed out"));
-                    Qt.openUrlExternally(issueUrl);
-                    return;
-                }
-                _setUpvote(pluginId, 0, PluginRanking.nextUpvoteDelta(delta, true, false));
-                ToastService.showInfo(I18n.tr("Upvote removed", "plugin upvote toast"));
-            }, 0, 15000);
-            return;
-        }
-        Proc.runCommand("plugin-upvote-" + pluginId, ["gh", "api", "--include", "--method", "POST", path, "-f", "content=+1"], (output, exitCode) => {
-            _setUpvoting(pluginId, false);
-            const reactionId = exitCode === 0 ? PluginRanking.reactionId(output) : 0;
-            if (!reactionId) {
-                root.log.warn("gh upvote failed", pluginId, exitCode);
-                ToastService.showInfo(I18n.tr("Opening GitHub to upvote", "plugin upvote toast, shown when the GitHub CLI is missing or signed out"));
-                Qt.openUrlExternally(issueUrl);
-                return;
-            }
-            const added = /^HTTP\/\S+ 201/.test(output || "");
-            _setUpvote(pluginId, reactionId, PluginRanking.nextUpvoteDelta(delta, false, added));
-            ToastService.showInfo(added ? I18n.tr("Upvoted on GitHub", "plugin upvote toast") : I18n.tr("Already upvoted, click again to remove", "plugin upvote toast"));
-        }, 0, 15000);
-    }
-
-    Component {
-        id: installedPluginWaiter
-        Timer {
-            id: waiter
-            required property string pluginId
-            required property var done
-            interval: 10000
-            running: true
-
-            function complete() {
-                if (!root.availablePlugins[pluginId])
-                    return;
-                stop();
-                root.enablePlugin(pluginId, ok => {
-                    if (!ok) {
-                        const error = root.pluginLoadErrors[pluginId];
-                        const message = error ? [error.title, error.details].filter(Boolean).join("\n") : I18n.tr("Failed to enable plugin: %1", "plugin error message, %1 is the plugin name or id").arg(pluginId);
-                        done(false, message);
-                        destroy();
-                        return;
-                    }
-                    const plugin = root.availablePlugins[pluginId];
-                    if (plugin?.type === "desktop") {
-                        const config = DesktopWidgetRegistry.getDefaultConfig(pluginId);
-                        SettingsData.createDesktopWidgetInstance(pluginId, plugin.name || pluginId, config);
-                    }
-                    done(true, "");
-                    destroy();
-                });
-            }
-
-            onTriggered: {
-                done(false, I18n.tr("Installed plugin could not be loaded: %1", "plugin manifest unavailable after installation").arg(pluginId));
-                destroy();
-            }
-            Component.onCompleted: complete()
-            property Connections pluginChanges: Connections {
-                target: root
-                function onPluginListUpdated() {
-                    if (waiter.running)
-                        waiter.complete();
-                }
-            }
-        }
-    }
-
-    function installFromRegistry(pluginId, pluginName, enableAfterInstall, onDone) {
-        if (installingPlugins[pluginId])
-            return;
-        installingPlugins = Object.assign({}, installingPlugins, {
-            [pluginId]: true
-        });
-        const finish = (success, error) => {
-            const pending = Object.assign({}, installingPlugins);
-            delete pending[pluginId];
-            installingPlugins = pending;
-            registryInstallFinished(pluginId, success);
-            if (onDone) {
-                onDone(success, error);
-                return;
-            }
-            if (!success)
-                ToastService.showError(error);
-        };
-        DMSService.install(pluginId, response => {
-            if (response.error) {
-                finish(false, I18n.tr("Install failed: %1", "installation error").arg(response.error));
-                return;
-            }
-            scanPlugins();
-            if (!enableAfterInstall) {
-                finish(true, "");
-                return;
-            }
-            installedPluginWaiter.createObject(root, {
-                pluginId: pluginId,
-                done: finish
-            });
-        });
-    }
-
     // Alpe: «requires_dms» bezieht sich auf den Stand des Ursprungsprojekts (Brand.upstreamVersion).
     function checkPluginCompatibility(requiresDms) {
         if (!requiresDms)

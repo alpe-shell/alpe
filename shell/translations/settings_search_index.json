@@ -7910,13 +7910,10 @@
     "keywords": [
       "addon",
       "addons",
-      "browse",
       "extend",
       "extensions",
-      "install",
       "manage",
       "plugins",
-      "registries",
       "widgets"
     ],
     "icon": "extension",
@@ -11855,7 +11852,7 @@
     "section": "pluginDirectory",
     "label": "Directory",
     "tabIndex": 28,
-    "category": "Manage Registries",
+    "category": "Plugin-Ordner",
     "keywords": [
       "addon",
       "addons",
@@ -11866,7 +11863,6 @@
       "manage",
       "path",
       "plugins",
-      "registries",
       "widgets"
     ],
     "parentLabel": "Plugins",
@@ -11874,9 +11870,9 @@
   },
   {
     "section": "_tab_28",
-    "label": "Manage Registries",
+    "label": "Plugin-Ordner",
     "tabIndex": 28,
-    "category": "Manage Registries",
+    "category": "Plugin-Ordner",
     "keywords": [
       "addon",
       "addons",
@@ -11886,34 +11882,11 @@
       "manage",
       "plugin",
       "plugins",
-      "registries",
       "widgets"
     ],
     "icon": "folder_open",
     "parentLabel": "Plugins",
     "description": "Plugin directory and registries"
-  },
-  {
-    "section": "pluginRegistries",
-    "label": "Registries",
-    "tabIndex": 28,
-    "category": "Manage Registries",
-    "keywords": [
-      "addon",
-      "addons",
-      "extend",
-      "extensions",
-      "git",
-      "manage",
-      "plugins",
-      "registries",
-      "registry",
-      "sources",
-      "themes",
-      "widgets"
-    ],
-    "parentLabel": "Plugins",
-    "icon": "cloud_download"
   },
   {
     "section": "_tab_29",

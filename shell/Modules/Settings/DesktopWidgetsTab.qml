@@ -66,12 +66,6 @@ Item {
             widgetBrowserLoader.item.show();
     }
 
-    function showDesktopPluginBrowser() {
-        desktopPluginBrowserLoader.active = true;
-        if (desktopPluginBrowserLoader.item)
-            desktopPluginBrowserLoader.item.show();
-    }
-
     LazyLoader {
         id: widgetBrowserLoader
         active: false
@@ -81,16 +75,6 @@ Item {
             onWidgetAdded: widgetType => {
                 ToastService.showInfo(I18n.tr("Widget added"));
             }
-        }
-    }
-
-    LazyLoader {
-        id: desktopPluginBrowserLoader
-        active: false
-
-        PluginBrowser {
-            parentModal: root.parentModal
-            typeFilters: ["desktop-widget"]
         }
     }
 
@@ -271,13 +255,6 @@ Item {
         }
 
         SettingsFabBar {
-            DFab {
-                text: I18n.tr("Browse plugins")
-                iconName: "store"
-                colorRole: "secondaryContainer"
-                onClicked: root.showDesktopPluginBrowser()
-            }
-
             DFab {
                 text: I18n.tr("Edit widgets")
                 iconName: "edit"

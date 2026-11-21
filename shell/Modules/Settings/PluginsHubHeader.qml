@@ -15,24 +15,20 @@ Column {
     id: root
 
     property var parentModal: null
-    property bool _pluginBrowserShowQueued: false
 
     property string searchQuery: ""
     property string filterOverride: ""
-    readonly property var filterKeys: ["all", "enabled", "disabled", "updates"]
+    readonly property var filterKeys: ["all", "enabled", "disabled"]
     readonly property int filterIndex: filterKeys.indexOf(filterOverride || CacheData.pluginViewFilter)
     property string actionError: ""
-    readonly property bool checkingUpdates: DMSService.checkingPluginUpdates
     readonly property var sortKeys: ["name", "author", "modified"]
     readonly property int sortIndex: sortKeys.indexOf(CacheData.pluginViewSort.by)
     readonly property bool descending: CacheData.pluginViewSort.descending
     property var uninstalling: ({})
     property var uninstallErrors: ({})
-    property var updateErrors: ({})
-    property string updatingPluginId: ""
     readonly property string pendingRevealPluginId: PluginService.pendingSettingsRevealPluginId
     readonly property var sortOptions: [I18n.tr("Name"), I18n.tr("Author", "installed plugins sort option, plugin author"), I18n.tr("Last modified", "plugin directory modification time")]
-    readonly property var filterOptions: [I18n.tr("All"), I18n.tr("Enabled"), I18n.tr("Disabled"), I18n.tr("Update available", "plugin row badge")]
+    readonly property var filterOptions: [I18n.tr("All"), I18n.tr("Enabled"), I18n.tr("Disabled")]
 
     FontMetrics {
         id: pluginTitleMetrics
@@ -52,8 +48,6 @@ Column {
         if (filterIndex === 1 && !loaded)
             return false;
         if (filterIndex === 2 && loaded)
-            return false;
-        if (filterIndex === 3 && !hasUpdate(row))
             return false;
         const plugin = PluginService.availablePlugins[row.pluginId];
         return [row.text, row.hint, plugin?.author, row.pluginId].join(" ").toLowerCase().includes(searchQuery.trim().toLowerCase());
@@ -75,11 +69,6 @@ Column {
     })
 
     readonly property var plugins: SettingsTabs.pluginHubRows
-    readonly property var updateCheckErrors: (DMSService.installedPlugins || []).filter(plugin => plugin.updateError).reduce((errors, plugin) => {
-        errors[plugin.id] = plugin.updateError;
-        return errors;
-    }, {})
-    readonly property var pluginsWithUpdates: (DMSService.installedPlugins || []).filter(plugin => plugin.hasUpdate === true)
     readonly property var incompatiblePlugins: {
         PluginService.loadedPlugins;
         return PluginService.getIncompatiblePlugins();
@@ -98,10 +87,6 @@ Column {
 
     Component.onCompleted: {
         revealTimer.restart();
-        if (DMSService.dmsAvailable && DMSService.apiVersion >= 8)
-            DMSService.listInstalled();
-        if (PopoutService.pendingPluginInstall)
-            Qt.callLater(showPluginBrowser);
     }
 
     function revealPlugin(pluginId) {
@@ -120,7 +105,7 @@ Column {
         id: revealTimer
         interval: 0
         onTriggered: {
-            if (!root.visible || !root.pendingRevealPluginId || pluginBrowserLoader.item?.visible)
+            if (!root.visible || !root.pendingRevealPluginId)
                 return;
             if (!PluginService.availablePlugins[root.pendingRevealPluginId])
                 return;
@@ -134,65 +119,6 @@ Column {
             entry.item.focusTarget.forceActiveFocus(Qt.TabFocusReason);
             PluginService.pendingSettingsRevealPluginId = "";
         }
-    }
-
-    function requestUpdate(row) {
-        if (updatingPluginId || pluginUpdatesDialogItem.isUpdating || uninstalling[row.pluginId])
-            return;
-        const plugin = DMSService.installedPlugins.find(plugin => plugin.id === row.pluginId || plugin.name === row.text);
-        confirmUpdates([plugin || {
-                id: row.pluginId,
-                name: row.text
-            }]);
-    }
-
-    function confirmUpdates(plugins) {
-        if (!plugins.length || updatingPluginId || pluginUpdatesDialogItem.isUpdating || Object.keys(uninstalling).length)
-            return;
-        const single = plugins.length === 1;
-        updateConfirm.showWithOptions({
-            title: single ? I18n.tr("Update %1?", "plugin update confirmation").arg(plugins[0].name) : I18n.tr("Update All"),
-            message: I18n.tr("Plugin updates can change the code running in your session. Review the changes before updating.", "plugin update audit reminder"),
-            reviewUrl: single ? plugins[0].diffUrl || plugins[0].repo || "" : "",
-            confirmText: single ? I18n.tr("Update") : I18n.tr("Update All"),
-            onConfirm: () => {
-                if (single) {
-                    updatePlugin({
-                        pluginId: plugins[0].id,
-                        text: plugins[0].name
-                    });
-                    return;
-                }
-                pluginUpdatesDialogItem.updatePlugins(plugins);
-            }
-        });
-    }
-
-    ConfirmDialogOverlay {
-        id: updateConfirm
-        parent: root.parentModal?.modalFocusScope ?? root.parent
-    }
-
-    function updatePlugin(row) {
-        if (updatingPluginId || pluginUpdatesDialogItem.isUpdating || uninstalling[row.pluginId])
-            return;
-        const id = row.pluginId;
-        updatingPluginId = id;
-        updateErrors = Object.assign({}, updateErrors, {
-            [id]: ""
-        });
-        PluginService.updatePlugin(id, response => {
-            updatingPluginId = "";
-            if (response.error) {
-                updateErrors = Object.assign({}, updateErrors, {
-                    [id]: response.error
-                });
-                revealPlugin(id);
-                return;
-            }
-            pluginUpdatesDialogItem.updatesList = pluginUpdatesDialogItem.updatesList.filter(plugin => plugin.id !== id);
-            revealPlugin(id);
-        });
     }
 
     function setSort(index) {
@@ -209,15 +135,8 @@ Column {
         return PluginService.directoryModifiedTimes[directory] || 0;
     }
 
-    function checkUpdates() {
-        if (!DMSService.dmsAvailable || DMSService.apiVersion < 8)
-            return;
-        actionError = "";
-        DMSService.listInstalled(undefined, true);
-    }
-
     function requestUninstall(row) {
-        if (uninstalling[row.pluginId] || updatingPluginId || pluginUpdatesDialogItem.isUpdating)
+        if (uninstalling[row.pluginId])
             return;
         uninstallConfirm.showWithOptions({
             title: I18n.tr("Uninstall"),
@@ -230,8 +149,6 @@ Column {
 
     function uninstall(row) {
         const id = row.pluginId;
-        const wasEnabled = PluginService.isPluginLoaded(id);
-        const repo = DMSService.installedPlugins.find(entry => entry.id === id)?.repo ?? "";
         uninstalling = Object.assign({}, uninstalling, {
             [id]: true
         });
@@ -249,26 +166,12 @@ Column {
                 return;
             }
             PluginService.scanPlugins();
-            PluginService.noteUninstalled(id, row.text, wasEnabled, repo);
         });
     }
 
     ConfirmDialogOverlay {
         id: uninstallConfirm
         parent: root.parentModal?.modalFocusScope ?? root.parent
-    }
-
-    function showPluginBrowser() {
-        pluginBrowserLoader.active = true;
-        if (pluginBrowserLoader.item) {
-            pluginBrowserLoader.item.show();
-            return;
-        }
-        _pluginBrowserShowQueued = true;
-    }
-
-    function hasUpdate(row) {
-        return pluginsWithUpdates.some(plugin => plugin.id === row.pluginId || plugin.name === row.text);
     }
 
     function setEnabled(row, enabled) {
@@ -289,63 +192,9 @@ Column {
     Connections {
         target: PluginService
 
-        function onRegistryInstallFinished(pluginId, success) {
-            if (success || PluginService.availablePlugins[pluginId])
-                root.revealPlugin(pluginId);
-        }
-
         function onPluginListUpdated() {
             revealTimer.restart();
         }
-    }
-
-    Connections {
-        target: PopoutService
-
-        function onPendingPluginInstallChanged() {
-            if (PopoutService.pendingPluginInstall)
-                root.showPluginBrowser();
-        }
-    }
-
-    Connections {
-        target: pluginBrowserLoader.item
-        function onVisibleChanged() {
-            if (!pluginBrowserLoader.item.visible)
-                revealTimer.restart();
-        }
-    }
-
-    Connections {
-        target: pluginBrowserLoader
-
-        function onItemChanged() {
-            if (!root._pluginBrowserShowQueued || !pluginBrowserLoader.item)
-                return;
-            root._pluginBrowserShowQueued = false;
-            pluginBrowserLoader.item.show();
-        }
-    }
-
-    LazyLoader {
-        id: pluginBrowserLoader
-        active: false
-
-        PluginBrowser {
-            id: pluginBrowserItem
-
-            Component.onCompleted: {
-                pluginBrowserItem.parentModal = root.parentModal;
-            }
-        }
-    }
-
-    PluginUpdatesDialog {
-        id: pluginUpdatesDialogItem
-        width: parent.width
-        operationsBlocked: Object.keys(root.uninstalling).length > 0 || root.updatingPluginId !== ""
-        onUpdatesRequested: plugins => root.confirmUpdates(plugins)
-        onPluginUpdated: pluginId => root.revealPlugin(pluginId)
     }
 
     SettingsCard {
@@ -376,42 +225,12 @@ Column {
         spacing: Theme.spacingS
         visible: root.plugins.length > 0
 
-        Flow {
+        Item {
             Layout.fillWidth: true
-            Layout.preferredHeight: implicitHeight
-            spacing: Theme.spacingS
-
-            DButton {
-                text: root.pluginsWithUpdates.length ? I18n.tr("Update All") + " (" + root.pluginsWithUpdates.length + ")" : I18n.tr("Check for updates")
-                iconName: root.pluginsWithUpdates.length ? "download" : "refresh"
-                busy: root.checkingUpdates || pluginUpdatesDialogItem.isUpdating
-                variant: "tonal"
-                maximumWidth: parent.width
-                wrapText: true
-                enabled: DMSService.dmsAvailable && !pluginUpdatesDialogItem.isUpdating && !root.updatingPluginId && Object.keys(root.uninstalling).length === 0
-                Accessible.description: root.checkingUpdates ? I18n.tr("Checking for updates...") : ""
-                onClicked: {
-                    if (root.checkingUpdates)
-                        return;
-                    if (root.pluginsWithUpdates.length) {
-                        pluginUpdatesDialogItem.show(root.pluginsWithUpdates);
-                        return;
-                    }
-                    root.checkUpdates();
-                }
-            }
-            DIconButton {
-                iconName: "refresh"
-                widthMode: "narrow"
-                tooltipText: I18n.tr("Check for updates")
-                visible: root.pluginsWithUpdates.length > 0
-                enabled: DMSService.dmsAvailable && !root.checkingUpdates && !pluginUpdatesDialogItem.isUpdating && !root.updatingPluginId
-                onClicked: root.checkUpdates()
-            }
         }
 
         DButton {
-            text: I18n.tr("Manage Registries", "plugin registry management")
+            text: "Plugin-Ordner"
             buttonHeight: Theme.buttonHeightXS
             horizontalPadding: Theme.spacingS
             variant: "text"
@@ -426,39 +245,9 @@ Column {
     StyledText {
         width: parent.width
         visible: text !== ""
-        text: [root.actionError, DMSService.pluginUpdateCheckError].filter(Boolean).join("\n")
+        text: root.actionError
         color: Theme.error
         wrapMode: Text.Wrap
-    }
-
-    DCard {
-        color: SettingsMetrics.rowColor
-        width: parent.width
-        implicitHeight: undoRow.implicitHeight + pad * 2
-        visible: PluginService.lastUninstalledPlugin !== null && DMSService.dmsAvailable
-        pad: Theme.spacingS
-
-        RowLayout {
-            id: undoRow
-            width: parent.width
-            spacing: Theme.spacingM
-
-            StyledText {
-                Layout.fillWidth: true
-                Layout.leftMargin: Theme.spacingS
-                text: I18n.tr("%1 uninstalled", "plugin removed notice, %1 is the plugin name").arg(PluginService.lastUninstalledPlugin?.name ?? "")
-                color: Theme.surfaceText
-                elide: Text.ElideRight
-            }
-
-            DButton {
-                text: I18n.tr("Undo", "reinstall the plugin that was just uninstalled")
-                buttonHeight: Theme.buttonHeightXS
-                horizontalPadding: Theme.spacingS
-                variant: "text"
-                onClicked: PluginService.undoUninstall()
-            }
-        }
     }
 
     DCard {
@@ -475,13 +264,13 @@ Column {
             spacing: Theme.spacingM
 
             DIcon {
-                name: "store"
+                name: "extension"
                 size: Theme.iconSizeLarge
                 color: storeCard.accentColor
             }
             StyledText {
                 Layout.fillWidth: true
-                text: I18n.tr("Explore Plugins")
+                text: "Noch keine Plugins"
                 font.pixelSize: Theme.fontSizeLarge
                 font.weight: Theme.fontWeightMedium
                 color: storeCard.contentColor
@@ -489,7 +278,7 @@ Column {
             }
             StyledText {
                 Layout.fillWidth: true
-                text: I18n.tr("Extend %1 with powerful plugins for widgets, launchers, and more", "plugins hub description, %1 is the product name").arg("Dux Modular Shell")
+                text: "Plugins liegen als Ordner mit einer plugin.json im Plugin-Ordner."
                 color: storeCard.mutedColor
                 wrapMode: Text.Wrap
             }
@@ -499,17 +288,8 @@ Column {
                 spacing: Theme.spacingS
 
                 DButton {
-                    text: I18n.tr("Browse")
-                    iconName: "store"
-                    maximumWidth: parent.width
-                    wrapText: true
-                    enabled: DMSService.dmsAvailable
-                    onClicked: root.showPluginBrowser()
-                }
-                DButton {
-                    text: I18n.tr("Manage Registries", "plugin registry management")
-                    backgroundColor: "transparent"
-                    textColor: storeCard.accentColor
+                    text: "Plugin-Ordner"
+                    iconName: "folder_open"
                     maximumWidth: parent.width
                     wrapText: true
                     onClicked: keyboard => root.parentModal?.navigateTo("plugins_manage", keyboard)
@@ -527,7 +307,6 @@ Column {
             width: parent.width
             text: root.searchQuery
             placeholderText: I18n.tr("Search plugins...", "plugin search placeholder")
-            // matches MAX_QUERY_LENGTH in PluginRanking.js
             maximumLength: 100
             onTextEdited: root.searchQuery = text
         }
@@ -631,7 +410,7 @@ Column {
                 readonly property var plugin: PluginService.availablePlugins[modelData.pluginId] || ({})
                 readonly property var loadError: PluginService.pluginLoadErrors[modelData.pluginId]
                 readonly property bool compatible: PluginService.checkPluginCompatibility(plugin.requires_dms)
-                readonly property string problem: root.uninstallErrors[modelData.pluginId] || root.updateErrors[modelData.pluginId] || root.updateCheckErrors[modelData.pluginId] || (loadError ? [loadError.title, loadError.details].filter(Boolean).join("\n") : !compatible ? I18n.tr("Requires %1", "version requirement").arg(plugin.requires_dms) : "")
+                readonly property string problem: root.uninstallErrors[modelData.pluginId] || (loadError ? [loadError.title, loadError.details].filter(Boolean).join("\n") : !compatible ? I18n.tr("Requires %1", "version requirement").arg(plugin.requires_dms) : "")
                 Layout.fillWidth: true
                 Layout.minimumWidth: 0
                 Layout.preferredWidth: (installedGrid.width - installedGrid.columnSpacing * (installedGrid.columns - 1)) / installedGrid.columns
@@ -729,7 +508,7 @@ Column {
                         }
                         DToggle {
                             Layout.alignment: Qt.AlignTop
-                            enabled: !root.updatingPluginId && !pluginUpdatesDialogItem.isUpdating && !root.uninstalling[installedCard.modelData.pluginId]
+                            enabled: !root.uninstalling[installedCard.modelData.pluginId]
                             checked: installedCard.loaded
                             Accessible.name: installedCard.modelData.text
                             onToggled: value => root.setEnabled(installedCard.modelData, value)
@@ -791,34 +570,16 @@ Column {
                             spacing: Theme.spacingXS
 
                             DIconButton {
-                                iconName: "download"
-                                variant: "tonal"
-                                tooltipText: root.updatingPluginId === installedCard.modelData.pluginId ? I18n.tr("Updating...", "plugin update button tooltip while the update runs") : I18n.tr("Update available", "plugin row badge")
-                                visible: root.hasUpdate(installedCard.modelData) || root.updatingPluginId === installedCard.modelData.pluginId
-                                enabled: DMSService.dmsAvailable && !root.checkingUpdates && !pluginUpdatesDialogItem.isUpdating && !root.updatingPluginId && !root.uninstalling[installedCard.modelData.pluginId]
-                                onClicked: root.requestUpdate(installedCard.modelData)
-                            }
-                            DIconButton {
                                 iconName: "delete"
                                 Accessible.name: I18n.tr("Uninstall")
                                 visible: installedCard.plugin.source !== "system"
-                                enabled: DMSService.dmsAvailable && !pluginUpdatesDialogItem.isUpdating && !root.updatingPluginId && !root.uninstalling[installedCard.modelData.pluginId]
+                                enabled: DMSService.dmsAvailable && !root.uninstalling[installedCard.modelData.pluginId]
                                 onClicked: root.requestUninstall(installedCard.modelData)
                             }
                         }
                     }
                 }
             }
-        }
-    }
-
-    SettingsFabBar {
-        shown: root.plugins.length > 0 && DMSService.dmsAvailable
-
-        DFab {
-            text: I18n.tr("Browse")
-            iconName: "store"
-            onClicked: root.showPluginBrowser()
         }
     }
 }

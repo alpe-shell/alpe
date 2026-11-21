@@ -61,7 +61,7 @@ Custom IPC via unix socket (JSON API) for shell communication.
 
 ### Plugin System
 
-- Plugin registry integration
+- Local plugin management (list, uninstall)
 - Plugin lifecycle management
 - Settings persistence
 

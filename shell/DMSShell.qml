@@ -876,22 +876,6 @@ Item {
     Connections {
         target: DMSService
         function onOpenUrlRequested(url) {
-            if (url.startsWith("dms://theme/install/")) {
-                const themeId = url.replace("dms://theme/install/", "").split(/[?#]/)[0];
-                if (themeId) {
-                    PopoutService.pendingThemeInstall = themeId;
-                    PopoutService.openSettingsWithTab("theme");
-                }
-                return;
-            }
-            if (url.startsWith("dms://plugin/install/")) {
-                const pluginId = url.replace("dms://plugin/install/", "").split(/[?#]/)[0];
-                if (pluginId) {
-                    PopoutService.pendingPluginInstall = pluginId;
-                    PopoutService.openSettingsWithTab("plugins");
-                }
-                return;
-            }
             if (url.startsWith("dms://wallpaper/install/")) {
                 const payload = url.replace("dms://wallpaper/install/", "").split(/[?#]/)[0];
                 if (payload) {

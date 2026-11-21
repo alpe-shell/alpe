@@ -15,7 +15,7 @@ var Version = "dev"
 func init() {
 	authCmd.AddCommand(authSyncCmd, authResolveLockCmd, authListServicesCmd, authValidateCmd)
 	setupCmd.AddCommand(setupHeadlessCmd, setupBindsCmd, setupLayoutCmd, setupColorsCmd, setupOutputsCmd, setupCursorCmd, setupWindowrulesCmd)
-	pluginsCmd.AddCommand(pluginsBrowseCmd, pluginsListCmd, pluginsInstallCmd, pluginsUninstallCmd, pluginsUpdateCmd, pluginsLockCmd, pluginsRestoreCmd)
+	pluginsCmd.AddCommand(pluginsListCmd, pluginsUninstallCmd)
 	rootCmd.AddCommand(getCommonCommands()...)
 	rootCmd.AddCommand(authCmd)
 

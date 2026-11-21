@@ -21,7 +21,6 @@ type File struct {
 	ImmutableSystem       *bool     `json:"immutable_system"`
 	BlockedCommands       *[]string `json:"blocked_commands"`
 	Message               *string   `json:"message"`
-	DisableRegistries     *bool     `json:"disable_registries"`
 	DisableLockIPCUnlock  *bool     `json:"disable_lock_ipc_unlock"`
 	DisableLogindUnlock   *bool     `json:"disable_logind_unlock"`
 	DisableCustomLockPAM  *bool     `json:"disable_custom_lock_pam"`
@@ -102,16 +101,6 @@ func flag(policies []*File, value func(*File) *bool) bool {
 		}
 	}
 	return set
-}
-
-// RegistriesDisabled reports whether the policy turns off the plugin and theme
-// registries. An explicit value in AdminPath overrides PackagedPath.
-func RegistriesDisabled(fs afero.Fs) (bool, error) {
-	policies, err := load(fs)
-	if err != nil {
-		return false, err
-	}
-	return flag(policies, func(p *File) *bool { return p.DisableRegistries }), nil
 }
 
 // LogindUnlockDisabled reports whether a logind Unlock must leave a lock in

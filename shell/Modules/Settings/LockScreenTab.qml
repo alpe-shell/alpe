@@ -274,11 +274,6 @@ Item {
         lockWidgetBrowserLoader.item?.show();
     }
 
-    function showPluginBrowser() {
-        lockPluginBrowserLoader.active = true;
-        lockPluginBrowserLoader.item?.show();
-    }
-
     LazyLoader {
         id: lockWidgetBrowserLoader
         active: false
@@ -288,16 +283,6 @@ Item {
             listKey: "lockScreenWidgetInstances"
             title: I18n.tr("Add widget")
             onWidgetAdded: ToastService.showInfo(I18n.tr("Widget added"))
-        }
-    }
-
-    LazyLoader {
-        id: lockPluginBrowserLoader
-        active: false
-
-        PluginBrowser {
-            parentModal: root.parentModal
-            typeFilters: ["desktop-widget"]
         }
     }
 
@@ -919,13 +904,6 @@ Item {
         }
 
         SettingsFabBar {
-            DFab {
-                text: I18n.tr("Browse plugins")
-                iconName: "store"
-                colorRole: "secondaryContainer"
-                onClicked: root.showPluginBrowser()
-            }
-
             DFab {
                 text: I18n.tr("Edit widgets")
                 iconName: "edit"

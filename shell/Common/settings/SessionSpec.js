@@ -162,15 +162,6 @@ var LOCAL_SPEC = {
     recentColors: {
         def: []
     },
-    showThirdPartyPlugins: {
-        def: false
-    },
-    pluginBrowserInstalledFirst: {
-        def: false
-    },
-    pluginBrowserSortMode: {
-        def: "default"
-    },
     lastBrightnessDevice: {
         def: ""
     },

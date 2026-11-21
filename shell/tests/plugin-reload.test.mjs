@@ -24,7 +24,7 @@ function service({ enabled = true, type = "widget" } = {}) {
         log: { error() {}, warn() {} },
         Paths: { toFileUrl: path => path.startsWith("file://") ? path : "file://" + path },
         SettingsData: { getPluginSetting: () => enabled, setPluginSetting() {} },
-        DMSService: { update: (id, callback) => requests.push(callback), installedPlugins: [] },
+        DMSService: { installedPlugins: [] },
         Brand: { upstreamVersion: "2.1.2" },
         Component: { Error: 3, PreferSynchronous: 0 },
         I18n: { tr: text => Object.assign(new String(text), { arg: value => text.replace("%1", value) }) },
@@ -56,59 +56,6 @@ function service({ enabled = true, type = "widget" } = {}) {
     context._onManifestParsed("/plugins/fixture/plugin.json", manifest, "user", 1);
     return { context, files, requests, pending, failures, manifest, destroyed };
 }
-
-test("successful updates replace cached components and reread the manifest", () => {
-    const { context, files, requests, pending, manifest } = service();
-    assert.equal(context.pluginWidgetComponents.fixture.value, 12);
-    files.set("file:///plugins/fixture/Widget.qml", 16);
-    manifest.version = "2.0.0";
-    let response;
-    context.updatePlugin("fixture", value => response = value);
-    const result = { result: { success: true } };
-    requests.shift()(result);
-    assert.equal(response, result);
-    assert.equal(pending.length, 1);
-    pending.shift()();
-    assert.equal(context.pluginWidgetComponents.fixture.value, 16);
-    assert.equal(context.availablePlugins.fixture.version, "2.0.0");
-});
-
-test("an update whose registry entry needs a newer shell is refused before the download", () => {
-    const { context, requests, pending } = service();
-    context.DMSService.installedPlugins = [{ id: "fixture", requires_dms: ">=99.0.0" }];
-    let response;
-    context.updatePlugin("fixture", value => response = value);
-    assert.equal(requests.length, 0);
-    assert.equal(pending.length, 0);
-    assert.match(response.error, /99\.0\.0/);
-    context.DMSService.installedPlugins = [{ id: "fixture", requires_dms: ">=1.0.0" }];
-    context.updatePlugin("fixture");
-    assert.equal(requests.length, 1);
-});
-
-test("failed updates preserve the running plugin and forward the error", () => {
-    const { context, requests, pending } = service();
-    const component = context.pluginWidgetComponents.fixture;
-    let response;
-    context.updatePlugin("fixture", value => response = value);
-    requests.shift()({ error: "download failed" });
-    assert.equal(response.error, "download failed");
-    assert.equal(pending.length, 0);
-    assert.equal(context.pluginWidgetComponents.fixture, component);
-});
-
-test("updating a disabled plugin keeps it disabled and its next load is fresh", () => {
-    const { context, files, requests, pending } = service({ enabled: false });
-    context.loadPlugin("fixture");
-    context.unloadPlugin("fixture");
-    files.set("file:///plugins/fixture/Widget.qml", 18);
-    context.updatePlugin("fixture");
-    requests.shift()({});
-    pending.shift()();
-    assert.equal(context.isPluginLoaded("fixture"), false);
-    context.loadPlugin("fixture");
-    assert.equal(context.pluginWidgetComponents.fixture.value, 18);
-});
 
 test("reload and rescan retain fresh components across disable and enable", () => {
     const { context, files, pending } = service();

@@ -17,18 +17,7 @@ Singleton {
     property int apiVersion: 0
     property string cliVersion: ""
     readonly property int expectedApiVersion: 1
-    property var availablePlugins: []
     property var installedPlugins: []
-    property bool checkingPluginUpdates: false
-    property string pluginUpdateCheckError: ""
-    property double pluginUpdatesCheckedAt: 0
-    readonly property int pluginUpdatesCacheAge: 5 * 60 * 1000
-    property int pluginInventoryRevision: 0
-    property var pluginUpdateCallbacks: []
-    property var registries: []
-    property var availableThemes: []
-    property var installedThemes: []
-    property bool installedThemesLoaded: false
     property bool isConnected: false
     readonly property bool isConnecting: requestSocket.connected && !requestSocket.linkUp
     property bool subscribeConnected: false
@@ -43,12 +32,7 @@ Singleton {
     property int requestIdCounter: 0
     property bool shownOutdatedError: false
 
-    signal pluginsListReceived(var plugins)
     signal installedPluginsReceived(var plugins)
-    signal searchResultsReceived(var plugins)
-    signal themesListReceived(var themes)
-    signal installedThemesReceived(var themes)
-    signal themeSearchResultsReceived(var themes)
     signal operationSuccess(string message)
     signal operationError(string error)
     signal connectionStateChanged
@@ -451,96 +435,15 @@ Singleton {
         }
     }
 
-    function listPlugins(callback, refresh = false) {
-        sendRequest("plugins.list", refresh ? {
-            "refresh": true
-        } : null, response => {
-            if (response.result) {
-                availablePlugins = response.result;
-                pluginsListReceived(response.result);
-            }
-            if (callback) {
-                callback(response);
-            }
-        });
-    }
-
-    function listInstalled(callback, force = false) {
-        if (callback)
-            pluginUpdateCallbacks.push(callback);
-        if (checkingPluginUpdates)
-            return;
-        if (!force && pluginUpdatesCheckedAt > 0 && Date.now() - pluginUpdatesCheckedAt < pluginUpdatesCacheAge) {
-            finishPluginUpdateCheck({
-                result: installedPlugins
-            });
-            return;
-        }
-        checkingPluginUpdates = true;
-        pluginUpdateCheckError = "";
-        const revision = pluginInventoryRevision;
+    // Alpe: Ohne Plugin-Register (Plan 0.4 Nr. 5) kennt der Dienst nur die lokal installierten Plugins.
+    function listInstalled(callback) {
         sendRequest("plugins.listInstalled", null, response => {
-            checkingPluginUpdates = false;
-            if (revision !== pluginInventoryRevision && dmsAvailable) {
-                listInstalled(undefined, true);
-                return;
+            if (response.result) {
+                installedPlugins = response.result;
+                installedPluginsReceived(installedPlugins);
             }
-            if (response.error) {
-                pluginUpdateCheckError = response.error;
-                finishPluginUpdateCheck(response);
-                return;
-            }
-            const previous = new Map(installedPlugins.map(plugin => [plugin.id, plugin]));
-            installedPlugins = (response.result || []).map(plugin => {
-                const known = previous.get(plugin.id);
-                if (!plugin.updateError || !known)
-                    return plugin;
-                return Object.assign({}, plugin, {
-                    hasUpdate: known.hasUpdate,
-                    diffUrl: known.diffUrl
-                });
-            });
-            pluginUpdatesCheckedAt = Date.now();
-            installedPluginsReceived(installedPlugins);
-            finishPluginUpdateCheck({
-                result: installedPlugins
-            });
-        }, 120000);
-    }
-
-    function finishPluginUpdateCheck(response) {
-        const callbacks = pluginUpdateCallbacks;
-        pluginUpdateCallbacks = [];
-        for (const callback of callbacks)
-            callback(response);
-    }
-
-    function pluginOperationFinished(pluginName, removed) {
-        pluginInventoryRevision++;
-        pluginUpdatesCheckedAt = 0;
-        if (removed) {
-            installedPlugins = installedPlugins.filter(plugin => plugin.id !== pluginName);
-        } else {
-            const known = installedPlugins.find(plugin => plugin.id === pluginName) || availablePlugins.find(plugin => plugin.id === pluginName);
-            if (known)
-                installedPlugins = installedPlugins.filter(plugin => plugin.id !== pluginName).concat([Object.assign({}, known, {
-                        hasUpdate: false,
-                        updateError: ""
-                    })]);
-        }
-        installedPluginsReceived(installedPlugins);
-    }
-
-    function install(pluginName, callback) {
-        sendRequest("plugins.install", {
-            "name": pluginName
-        }, response => {
-            if (!response.error)
-                pluginOperationFinished(pluginName, false);
             if (callback)
                 callback(response);
-            if (!response.error)
-                listInstalled();
         });
     }
 
@@ -548,114 +451,10 @@ Singleton {
         sendRequest("plugins.uninstall", {
             "name": pluginName
         }, response => {
-            if (!response.error)
-                pluginOperationFinished(pluginName, true);
             if (callback)
                 callback(response);
             if (!response.error)
                 listInstalled();
-        });
-    }
-
-    function update(pluginName, callback) {
-        sendRequest("plugins.update", {
-            "name": pluginName
-        }, response => {
-            if (!response.error)
-                pluginOperationFinished(pluginName, false);
-            if (callback)
-                callback(response);
-            if (!response.error)
-                listInstalled();
-        });
-    }
-
-    function listRegistries(callback) {
-        sendRequest("registries.list", null, response => {
-            if (response.result) {
-                registries = response.result;
-            }
-            if (callback) {
-                callback(response);
-            }
-        });
-    }
-
-    function addRegistry(name, url, callback) {
-        sendRequest("registries.add", {
-            "name": name,
-            "url": url
-        }, response => {
-            if (callback) {
-                callback(response);
-            }
-            if (!response.error) {
-                listRegistries();
-            }
-        });
-    }
-
-    function removeRegistry(name, callback) {
-        sendRequest("registries.remove", {
-            "name": name
-        }, response => {
-            if (callback) {
-                callback(response);
-            }
-            if (!response.error) {
-                listRegistries();
-            }
-        });
-    }
-
-    function listThemes(callback) {
-        sendRequest("themes.list", null, response => {
-            if (response.result) {
-                availableThemes = response.result;
-                themesListReceived(response.result);
-            }
-            if (callback) {
-                callback(response);
-            }
-        });
-    }
-
-    function listInstalledThemes(callback) {
-        sendRequest("themes.listInstalled", null, response => {
-            if (response.result) {
-                installedThemes = response.result;
-                installedThemesLoaded = true;
-                installedThemesReceived(response.result);
-            }
-            if (callback) {
-                callback(response);
-            }
-        });
-    }
-
-    function installTheme(themeName, callback) {
-        sendRequest("themes.install", {
-            "name": themeName
-        }, response => {
-            if (callback) {
-                callback(response);
-            }
-            if (!response.error) {
-                listInstalledThemes();
-            }
-        });
-    }
-
-    function uninstallTheme(themeName, callback) {
-        sendRequest("themes.uninstall", {
-            "name": themeName
-        }, response => {
-            if (callback) {
-                callback(response);
-            }
-            if (!response.error) {
-                listInstalledThemes();
-            }
         });
     }
 

@@ -678,17 +678,17 @@ Singleton {
             "id": "plugins",
             "text": I18n.tr("Plugins"),
             "icon": "extension",
-            "hint": I18n.tr("Browse, install, registries"),
+            "hint": "Installierte Plugins verwalten",
             "tabIndex": 12,
             "hubHeader": "PluginsHubHeader",
             "children": [
                 {
                     "id": "plugins_manage",
                     "hidden": true,
-                    "text": I18n.tr("Manage Registries", "plugin registry management"),
+                    "text": "Plugin-Ordner",
                     "icon": "folder_open",
                     "tabIndex": 28,
-                    "hint": I18n.tr("Plugin directory and registries")
+                    "hint": "Ordner und Suche nach Plugins"
                 }
             ]
         },
