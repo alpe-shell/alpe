@@ -1,5 +1,5 @@
 // Package brand hält die Namen, unter denen Alpe nach aussen auftritt, an einer Stelle
-// (Plan 2.2, D1/D2). App-ID und D-Bus-Namen folgen in D3.
+// (Plan 2.2, D1–D3).
 package brand
 
 const (
@@ -15,6 +15,11 @@ const (
 	DirName = "alpe"
 	// SystemPluginDir enthält die mit dem Paket ausgelieferten Plugins (Plan 6.1).
 	SystemPluginDir = "/usr/share/alpe/plugins"
+	// AppID ist App-ID, Name der Desktop-Datei und Wayland-app_id der Shell (Plan 0.4 Nr. 2, D3);
+	// davon abgeleitet die D-Bus-Namen.
+	AppID = "io.github.alpe_shell.Alpe"
+	// NMAgentID meldet den Dienst bei NetworkManager als Geheimnis-Agent an.
+	NMAgentID = AppID + ".NMAgent"
 	// Unit ist die systemd-Benutzereinheit; der Dienst startet sie nie selbst (Plan 6.8).
 	Unit = "alpe.service"
 )

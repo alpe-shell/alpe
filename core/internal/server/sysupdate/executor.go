@@ -1,6 +1,7 @@
 package sysupdate
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"bufio"
 	"context"
 	"errors"
@@ -138,7 +139,7 @@ func findTerminal(override string) string {
 }
 
 func wrapInTerminal(term, title, shellCmd string, extraArgs []string) []string {
-	const appID = "dev.duxlabs.shell"
+	const appID = brand.AppID
 	banner := fmt.Sprintf(
 		`printf '\033[1;36m=== %s ===\033[0m\n'; printf '\033[2m$ %s\033[0m\n'; printf '\033[33mYou may be prompted for your sudo password to apply system updates.\033[0m\n\n'`,
 		title, shellCmd,

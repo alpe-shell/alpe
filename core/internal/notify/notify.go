@@ -1,6 +1,7 @@
 package notify
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"fmt"
 	"os"
 	"os/exec"
@@ -14,7 +15,7 @@ import (
 )
 
 const (
-	AppID = "dev.duxlabs.shell"
+	AppID = brand.AppID
 
 	appName = "DMS"
 

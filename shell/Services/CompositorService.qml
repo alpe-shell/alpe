@@ -1220,7 +1220,7 @@ Singleton {
     }
 
     function dmsRuleMatchesCurrentAppId(rule) {
-        return (rule.matchCriteria?.appId || "").includes("duxlabs");
+        return (rule.matchCriteria?.appId || "").includes("alpe_shell");
     }
 
     function syncDmsWindowFloatingRule(rules, onDone) {
@@ -1259,7 +1259,7 @@ Singleton {
         setDmsRule(dmsFloatingRuleId, enabled ? {
             "name": "DMS Floating Windows",
             "matchCriteria": {
-                "appId": "^(dev\\.duxlabs\\.shell|com\\.danklinux\\.dms)$"
+                "appId": "^io\\.github\\.alpe_shell\\.Alpe$"
             },
             "actions": {
                 "openFloating": true
@@ -1284,7 +1284,7 @@ Singleton {
         setDmsRule(dmsOpaqueRuleId, {
             "name": "DMS Window Opaque",
             "matchCriteria": {
-                "appId": "^(dev\\.duxlabs\\.shell|com\\.danklinux\\.dms)$"
+                "appId": "^io\\.github\\.alpe_shell\\.Alpe$"
             },
             "actions": actions
         });

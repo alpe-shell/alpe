@@ -272,9 +272,9 @@ func TestWrapInTerminal(t *testing.T) {
 		term       string
 		wantPrefix []string
 	}{
-		{"kitty", []string{"kitty", "--class", "dev.duxlabs.shell", "-T", "Title"}},
+		{"kitty", []string{"kitty", "--class", "io.github.alpe_shell.Alpe", "-T", "Title"}},
 		{"gnome-terminal", []string{"gnome-terminal", "--wait", "--title=Title"}},
-		{"foot", []string{"foot", "--app-id=dev.duxlabs.shell", "--title=Title"}},
+		{"foot", []string{"foot", "--app-id=io.github.alpe_shell.Alpe", "--title=Title"}},
 	}
 	for _, tt := range tests {
 		got := wrapInTerminal(tt.term, "Title", "echo hi", nil)

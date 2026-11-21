@@ -149,7 +149,7 @@ DModal {
         // NoDisplay handlers stay hidden like in the launcher, except the shell's own (notepad)
         for (const rawId of mimeMatchedRawIds) {
             const normId = _normAppId(rawId);
-            if (!normId.startsWith("dev.duxlabs.shell.") || listedIds.has(normId))
+            if (!normId.startsWith(Brand.appId.toLowerCase() + ".") || listedIds.has(normId))
                 continue;
             const desktopId = rawId.replace(/\.desktop$/, "");
             const entry = DesktopEntries.byId(desktopId) || DesktopEntries.heuristicLookup(desktopId);

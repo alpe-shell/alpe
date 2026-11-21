@@ -1,6 +1,7 @@
 package geolocation
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"fmt"
 	"sync"
 
@@ -111,7 +112,7 @@ func (c *GeoClueClient) setupClient() error {
 	}
 
 	clientObj := c.dbusConn.Object(dbusGeoClueService, c.clientPath)
-	if err := clientObj.SetProperty(dbusGeoClueClientDesktopId, "dms"); err != nil {
+	if err := clientObj.SetProperty(dbusGeoClueClientDesktopId, brand.AppID); err != nil {
 		return fmt.Errorf("failed to set desktop ID: %w", err)
 	}
 

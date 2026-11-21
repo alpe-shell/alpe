@@ -7,6 +7,8 @@ import Quickshell
 // bootstrap.sh und tools/ lesen sie ebenfalls hier.
 Singleton {
     readonly property string name: "Alpe"
+    // App-ID, Desktop-Datei und Wayland-app_id (Plan 0.4 Nr. 2; im Dienst brand.AppID).
+    readonly property string appId: "io.github.alpe_shell.Alpe"
     readonly property string version: "1.0"
     readonly property string codename: "Zugerberg"
     // Öffentliches Repository (Installation, Fehler melden)

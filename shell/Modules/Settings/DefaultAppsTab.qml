@@ -65,7 +65,7 @@ Item {
 
     // NoDisplay handlers stay hidden like in the launcher, except the shell's own (notepad)
     function isShellOwn(appId) {
-        return stripDesktopSuffix(appId).startsWith("dev.duxlabs.shell.");
+        return stripDesktopSuffix(appId).startsWith(Brand.appId.toLowerCase() + ".");
     }
 
     function getAppDisplayName(appId) {

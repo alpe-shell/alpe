@@ -1,6 +1,7 @@
 package network
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"context"
 	"errors"
 	"fmt"
@@ -21,7 +22,7 @@ const (
 	nmAgentManagerIface = "org.freedesktop.NetworkManager.AgentManager"
 	nmSecretAgentIface  = "org.freedesktop.NetworkManager.SecretAgent"
 	agentObjectPath     = "/org/freedesktop/NetworkManager/SecretAgent"
-	agentIdentifier     = "dev.duxlabs.NMAgent"
+	agentIdentifier     = brand.NMAgentID
 )
 
 const (

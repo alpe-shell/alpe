@@ -23,7 +23,7 @@ import (
 var shellApp = shellapp.New(shellapp.Config{
 	ID:                     brand.ID,
 	EnvPrefix:              brand.EnvPrefix,
-	QSAppID:                "dev.duxlabs.shell",
+	QSAppID:                brand.AppID,
 	Version:                Version,
 	Embedded:               embeddedShell{},
 	Boot:                   bootBackend,

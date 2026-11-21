@@ -473,7 +473,7 @@ Singleton {
 
     Process {
         id: busMonitor
-        command: ["busctl", "--user", "monitor", "--json=short", "--match=type='method_call',interface='dev.duxlabs.KwinBridge'"]
+        command: ["busctl", "--user", "monitor", "--json=short", "--match=type='method_call',interface='io.github.alpe_shell.Alpe.KwinBridge'"]
         running: root.active
         stdout: SplitParser {
             onRead: line => root._handleLine(line)

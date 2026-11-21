@@ -7,7 +7,7 @@
     // Not org.kde.KWin: QtDBus short-circuits calls to the sender's own service, so they never reach the bus.
     var SERVICE = "org.freedesktop.systemd1";
     var PATH = "/DmsBridge";
-    var IFACE = "dev.duxlabs.KwinBridge";
+    var IFACE = "io.github.alpe_shell.Alpe.KwinBridge";
 
     var hooked = {};
     var hookedDesktops = {};

@@ -163,7 +163,7 @@ Singleton {
         return desktopIconResolver(appId);
     }
 
-    readonly property var dmsAppIds: ["org.quickshell", "dev.duxlabs.shell", "com.danklinux.dms"]
+    readonly property var dmsAppIds: ["org.quickshell", Brand.appId]
 
     function isDmsAppId(appId: string): bool {
         return dmsAppIds.includes(appId);
