@@ -153,8 +153,6 @@ RegistryBrowserWindow {
     }
 
     function rankingCompositor() {
-        if (CompositorService.isNiri)
-            return "niri";
         if (CompositorService.isHyprland)
             return "hyprland";
         if (CompositorService.isSway)

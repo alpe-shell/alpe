@@ -1343,12 +1343,6 @@ Item {
                 }
 
                 Variants {
-                    model: (SettingsData.osdTouchpadEnabled && CompositorService.isNiri) ? root.legacySystemLevelOsdScreens : []
-
-                    delegate: TouchpadOSD {}
-                }
-
-                Variants {
                     model: SettingsData.osdAudioOutputEnabled ? SettingsData.getFilteredScreens("osd") : []
 
                     delegate: AudioOutputOSD {}
@@ -1360,14 +1354,6 @@ Item {
                     delegate: WorkspaceOSD {}
                 }
             }
-        }
-    }
-
-    LazyLoader {
-        id: niriOverviewOverlayLoader
-        active: CompositorService.isNiri && SettingsData.niriOverviewOverlayEnabled
-        component: NiriOverviewOverlay {
-            id: niriOverviewOverlay
         }
     }
 

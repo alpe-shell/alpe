@@ -12,7 +12,6 @@ Rectangle {
 
     property var filteredOutputs: {
         void (DisplayConfigState.pendingHyprlandChanges);
-        void (DisplayConfigState.pendingNiriChanges);
         const all = DisplayConfigState.allOutputs || {};
         const keys = Object.keys(all);
         return keys.filter(k => {
@@ -21,8 +20,6 @@ Rectangle {
             if (!isConnected)
                 return SettingsData.displayShowDisconnected;
             if (CompositorService.isHyprland && DisplayConfigState.getHyprlandSetting(od, k, "disabled", false))
-                return false;
-            if (CompositorService.isNiri && DisplayConfigState.getNiriSetting(od, k, "disabled", false))
                 return false;
             return true;
         });

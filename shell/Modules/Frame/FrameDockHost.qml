@@ -73,7 +73,7 @@ Item {
             readonly property alias body: dockBody
 
             anchors.fill: parent
-            visible: (slot.config?.enabled ?? false) || ((slot.config?.openOnOverview ?? false) && CompositorService.isNiri)
+            visible: slot.config?.enabled ?? false
 
             onVisibleChanged: dockRepeater.revision++
             Component.onCompleted: dockRepeater.revision++

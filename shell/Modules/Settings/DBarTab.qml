@@ -313,7 +313,7 @@ Item {
 
             SettingsToggleRow {
                 settingKey: "barOpenOnOverview"
-                tags: ["bar", "overview", "niri", "show"]
+                tags: ["bar", "overview", "show"]
                 visible: CompositorService.supportsNativeOverview && !bar.islandOwnsSelectedBarTop && !bar.selectedBarFrameStyled
                 text: I18n.tr("Show on overview")
                 checked: bar.selectedBarConfig?.openOnOverview ?? false
@@ -379,7 +379,7 @@ Item {
 
             SettingsToggleRow {
                 settingKey: "frameShowOnOverview"
-                tags: ["frame", "overview", "show", "hide", "niri"]
+                tags: ["frame", "overview", "show", "hide"]
                 text: I18n.tr("Show on overview")
                 visible: CompositorService.supportsNativeOverview
                 checked: SettingsData.frameShowOnOverview
@@ -632,20 +632,6 @@ Item {
                     });
                     bar.notifyHorizontalBarChange();
                 }
-            }
-
-            SettingsToggleRow {
-                settingKey: "barHideOnFullscreen"
-                resetStore: bar
-                resetKeys: ["hideOnFullscreen"]
-                tags: ["bar", "fullscreen", "hide", "visibility"]
-                visible: CompositorService.isNiri && !bar.islandOwnsSelectedBarTop && (bar.selectedBarConfig?.useOverlayLayer ?? false)
-                text: I18n.tr("Hide bar on fullscreen", "bar visibility toggle")
-                description: I18n.tr("Slide the bar away over fullscreen applications. Move the pointer to the screen edge to reveal it.", "bar fullscreen auto-hide description")
-                checked: bar.selectedBarConfig?.hideOnFullscreen ?? false
-                onToggled: toggled => SettingsData.updateBarConfig(bar.selectedBarId, {
-                        hideOnFullscreen: toggled
-                    })
             }
 
             SettingsToggleRow {

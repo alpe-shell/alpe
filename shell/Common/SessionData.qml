@@ -293,7 +293,6 @@ Singleton {
 
     property string notepadLastMode: ""
 
-    property var niriOutputSettings: ({})
     property var hyprlandOutputSettings: ({})
     property var activeDisplayProfile: ({})
     property var activeDisplayProfileModes: ({})
@@ -313,7 +312,6 @@ Singleton {
     property string launcherLastQuery: ""
     property var launcherQueryHistory: []
     property string appDrawerLastMode: "apps"
-    property string niriOverviewLastMode: "apps"
     property bool showConfigReloadToast: true
 
     Component.onCompleted: {
@@ -526,26 +524,6 @@ Singleton {
             log.info("Imported machine-specific state from settings.json");
             saveSettings();
         }
-    }
-
-    function getNiriOutputSetting(outputId, key, defaultValue) {
-        if (!niriOutputSettings[outputId])
-            return defaultValue;
-        return niriOutputSettings[outputId][key] !== undefined ? niriOutputSettings[outputId][key] : defaultValue;
-    }
-
-    function setNiriOutputSetting(outputId, key, value) {
-        const updated = JSON.parse(JSON.stringify(niriOutputSettings));
-        if (!updated[outputId])
-            updated[outputId] = {};
-        updated[outputId][key] = value;
-        niriOutputSettings = updated;
-        saveSettings();
-    }
-
-    function getNiriOutputSettings(outputId) {
-        const settings = niriOutputSettings[outputId];
-        return settings ? JSON.parse(JSON.stringify(settings)) : {};
     }
 
     function getHyprlandOutputSetting(outputId, key, defaultValue) {
@@ -1754,11 +1732,6 @@ Singleton {
 
     function setAppDrawerLastMode(mode) {
         appDrawerLastMode = mode;
-        saveSettings();
-    }
-
-    function setNiriOverviewLastMode(mode) {
-        niriOverviewLastMode = mode;
         saveSettings();
     }
 

@@ -192,7 +192,7 @@ SettingsCard {
         borderThicknessKey: "workspaceUnfocusedMonitorBorderThickness"
     }
 
-    readonly property var namedWorkspaces: NiriService.getNamedWorkspaces().concat(CompositorService.specialWorkspaceNames)
+    readonly property var namedWorkspaces: CompositorService.specialWorkspaceNames
 
     SettingsRow {
         visible: root.namedWorkspaces.length > 0

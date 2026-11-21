@@ -14,7 +14,6 @@ Singleton {
     // Compositors can't restart in place; "restart" reloads their config. Empty entries have no reload command.
     readonly property var reloadCommands: ({
             "hyprland": [],
-            "niri": ["niri", "msg", "action", "load-config-file"],
             "sway": ["swaymsg", "reload"],
             "scroll": ["scrollmsg", "reload"],
             "mango": [],

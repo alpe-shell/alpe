@@ -17,10 +17,11 @@ DDialog {
     property bool submitting: false
     property bool applying: false
     readonly property bool isEditMode: editingRule !== null
-    readonly property bool isNiri: CompositorService.isNiri
+    // niri ist entfernt; die niri-Felder des Dialogs bleiben bis zum Aufräumen ausgeblendet.
+    readonly property bool isNiri: false
     readonly property bool isHyprland: CompositorService.isHyprland
     readonly property bool isMango: CompositorService.isMango
-    readonly property bool niriConfigNext: isNiri && NiriService.configNextSupported
+    readonly property bool niriConfigNext: false
     readonly property bool fieldsEnabled: !submitting
     readonly property bool halfPair: isHyprland && (!!moveXInput.text.trim() !== !!moveYInput.text.trim() || !!sizeWInput.text.trim() !== !!sizeHInput.text.trim())
 

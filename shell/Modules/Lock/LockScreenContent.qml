@@ -220,8 +220,7 @@ FocusScope {
     LockPowerMenu {
         id: powerMenu
         expressive: true
-        // niri ignores quit while locked
-        showLogout: !CompositorService.isNiri
+        showLogout: true
         onClosed: {
             if (!demoMode)
                 Qt.callLater(() => root.focusPasswordField());

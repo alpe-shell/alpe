@@ -14,10 +14,6 @@ const PROGRAM_ICONS = [
         logo: "hyprland.svg"
     },
     {
-        programs: ["niri"],
-        logo: "niri.svg"
-    },
-    {
         programs: ["sway", "scroll"],
         logo: "sway.svg"
     },

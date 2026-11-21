@@ -19,13 +19,10 @@ Column {
     readonly property bool isConnected: outputData?.connected ?? false
     readonly property bool isDisabled: {
         void (DisplayConfigState.pendingHyprlandChanges);
-        void (DisplayConfigState.pendingNiriChanges);
         if (!root.isConnected)
             return false;
         if (CompositorService.isHyprland)
             return DisplayConfigState.getHyprlandSetting(root.outputData, root.outputName, "disabled", false);
-        if (CompositorService.isNiri)
-            return DisplayConfigState.getNiriSetting(root.outputData, root.outputName, "disabled", false);
         return false;
     }
     readonly property bool isActive: isConnected && !isDisabled
@@ -204,7 +201,7 @@ Column {
         }
 
         SettingsToggleRow {
-            visible: root.isActive && root.vrrSupported && !CompositorService.isHyprland && !CompositorService.isNiri
+            visible: root.isActive && root.vrrSupported && !CompositorService.isHyprland
             text: I18n.tr("Variable refresh rate")
             checked: {
                 const pendingVrr = DisplayConfigState.getPendingValue(root.outputName, "vrr");
@@ -236,24 +233,6 @@ Column {
                 return modeLabels[mode === undefined ? 0 : Math.min(mode, 2) + 1];
             }
             onValueChanged: value => DisplayConfigState.setHyprlandVrrMode(root.outputData, root.outputName, modeLabels.indexOf(value) - 1)
-        }
-
-        SettingsDropdownRow {
-            visible: root.isActive && root.vrrSupported && CompositorService.isNiri
-            text: I18n.tr("Variable refresh rate")
-            options: [I18n.tr("Off"), I18n.tr("On"), I18n.tr("On-demand", "variable refresh rate option on niri")]
-            currentValue: {
-                void (DisplayConfigState.pendingNiriChanges);
-                if (DisplayConfigState.getNiriSetting(root.outputData, root.outputName, "vrrOnDemand", false))
-                    return I18n.tr("On-demand");
-                const pendingVrr = DisplayConfigState.getPendingValue(root.outputName, "vrr");
-                const vrrEnabled = pendingVrr !== undefined ? pendingVrr : (DisplayConfigState.outputs[root.outputName]?.vrr_enabled ?? false);
-                return vrrEnabled ? I18n.tr("On") : I18n.tr("Off");
-            }
-            onValueChanged: value => {
-                DisplayConfigState.setPendingChange(root.outputName, "vrr", value !== I18n.tr("Off"));
-                DisplayConfigState.setNiriSetting(root.outputData, root.outputName, "vrrOnDemand", value === I18n.tr("On-demand") || null);
-            }
         }
 
         SettingsRow {
@@ -321,8 +300,6 @@ Column {
     Loader {
         readonly property string compositorSettingsSource: {
             switch (CompositorService.compositor) {
-            case "niri":
-                return "NiriOutputSettings.qml";
             case "hyprland":
                 return "HyprlandOutputSettings.qml";
             default:

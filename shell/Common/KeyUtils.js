@@ -161,8 +161,8 @@ const SHIFTED_US_FALLBACK = {
 };
 
 // Numpad (keypad) keys. Qt reuses the same Qt::Key_* values for the numpad and
-// the main rows/nav cluster; only Qt.KeypadModifier distinguishes them. niri and
-// the other compositors bind against the xkb KP_* keysym names, so we must emit
+// the main rows/nav cluster; only Qt.KeypadModifier distinguishes them. The
+// compositors bind against the xkb KP_* keysym names, so we must emit
 // those instead of the collapsed twin. With NumLock off the numpad sends the
 // navigation keysyms (KP_Home, KP_End, ...); with NumLock on it sends KP_0..KP_9
 // (handled by the digit range in xkbKeyFromQtKey). Operators/Enter are the same
@@ -313,7 +313,7 @@ function isScrollTrigger(key) {
     return trigger.startsWith("wheelscroll") || trigger.startsWith("touchpadscroll");
 }
 
-// niri only passes keyboard binds through to the focused window.
+// Keyboard binds, as opposed to mouse, wheel, touchpad and tablet triggers.
 function isKeyboardTrigger(key) {
     const trigger = triggerName(key);
     return !["mouse", "wheelscroll", "touchpadscroll", "tabletstylusbutton"].some(prefix => trigger.startsWith(prefix));
@@ -389,7 +389,7 @@ const MODIFIER_KEYSYMS = {
     "super_r": "super"
 };
 
-// Mirrors core normalizeNiriBindKey, so Shift+Alt equals Alt+Shift.
+// Order-independent form of a combo, so Shift+Alt equals Alt+Shift.
 function normalizeKeyCombo(keyCombo, modKey, modSymbol) {
     if (!keyCombo)
         return "";
@@ -436,7 +436,7 @@ function comboTrigger(keyCombo) {
     return combo.slice(combo.lastIndexOf("+") + 1).trim();
 }
 
-// Mirrors core niriBindsConflict: Alt also takes Alt_L and Alt_R, which stay distinct.
+// Alt also takes Alt_L and Alt_R, which stay distinct.
 function keyCombosConflict(a, b, modKey, modSymbol) {
     const na = normalizeKeyCombo(a, modKey, modSymbol);
     const nb = normalizeKeyCombo(b, modKey, modSymbol);

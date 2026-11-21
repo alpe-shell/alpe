@@ -110,7 +110,7 @@ Item {
             }
 
             SettingsTextFieldRow {
-                visible: CompositorService.isNiri || CompositorService.isHyprland
+                visible: CompositorService.isHyprland
                 resetKeys: ["keyboardKeymapFile"]
                 leftIconName: "description"
                 text: I18n.tr("Keymap file")
@@ -127,20 +127,6 @@ Item {
             title: I18n.tr("Behavior")
             settingKey: "keyboardBehaviorSettings"
             iconName: "settings"
-
-            SettingsButtonGroupRow {
-                visible: CompositorService.isNiri
-                tags: ["keyboard", "track", "layout"]
-                settingKey: "keyboardTrackLayout"
-                text: I18n.tr("Remember layout")
-                model: [I18n.tr("Globally", "adverb, remember keyboard layout option, opposite of per window"), I18n.tr("Per window")]
-                currentIndex: SettingsData.keyboardTrackLayout === "window" ? 1 : 0
-                onSelectionChanged: (index, selected) => {
-                    if (!selected)
-                        return;
-                    SettingsData.set("keyboardTrackLayout", index === 1 ? "window" : "global");
-                }
-            }
 
             SettingsToggleRow {
                 tags: ["keyboard", "numlock", "startup"]

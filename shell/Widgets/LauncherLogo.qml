@@ -50,8 +50,6 @@ Item {
     }
     readonly property string compositorSource: {
         switch (CompositorService.compositor) {
-        case "niri":
-            return "file://" + Theme.shellDir + "/assets/niri.svg";
         case "hyprland":
             return "file://" + Theme.shellDir + "/assets/hyprland.svg";
         case "mango":

@@ -317,16 +317,6 @@ const DMS_ACTIONS = [
         label: "Color Picker: Close"
     },
     {
-        id: "spawn dms ipc call keybinds toggle niri",
-        label: "Keybinds Cheatsheet: Toggle",
-        compositor: "niri"
-    },
-    {
-        id: "spawn dms ipc call keybinds open niri",
-        label: "Keybinds Cheatsheet: Open",
-        compositor: "niri"
-    },
-    {
         id: "spawn dms ipc call keybinds close",
         label: "Keybinds Cheatsheet: Close"
     },
@@ -590,297 +580,6 @@ const DMS_ACTIONS = [
         label: "Workspace: Rename"
     }
 ];
-
-const NIRI_ACTIONS = {
-    "Window": [
-        {
-            id: "close-window",
-            label: "Close Window"
-        },
-        {
-            id: "fullscreen-window",
-            label: "Fullscreen"
-        },
-        {
-            id: "maximize-column",
-            label: "Maximize Column"
-        },
-        {
-            id: "center-column",
-            label: "Center Column"
-        },
-        {
-            id: "center-visible-columns",
-            label: "Center Visible Columns"
-        },
-        {
-            id: "toggle-window-floating",
-            label: "Toggle Floating"
-        },
-        {
-            id: "switch-focus-between-floating-and-tiling",
-            label: "Switch Floating/Tiling Focus"
-        },
-        {
-            id: "switch-preset-column-width",
-            label: "Cycle Column Width"
-        },
-        {
-            id: "switch-preset-window-height",
-            label: "Cycle Window Height"
-        },
-        {
-            id: "set-column-width",
-            label: "Set Column Width"
-        },
-        {
-            id: "set-window-height",
-            label: "Set Window Height"
-        },
-        {
-            id: "reset-window-height",
-            label: "Reset Window Height"
-        },
-        {
-            id: "expand-column-to-available-width",
-            label: "Expand to Available Width"
-        },
-        {
-            id: "consume-or-expel-window-left",
-            label: "Consume/Expel Left"
-        },
-        {
-            id: "consume-or-expel-window-right",
-            label: "Consume/Expel Right"
-        },
-        {
-            id: "toggle-column-tabbed-display",
-            label: "Toggle Tabbed"
-        },
-        {
-            id: "toggle-window-rule-opacity",
-            label: "Toggle Window Opacity"
-        }
-    ],
-    "Focus": [
-        {
-            id: "focus-column-left",
-            label: "Focus Left"
-        },
-        {
-            id: "focus-column-right",
-            label: "Focus Right"
-        },
-        {
-            id: "focus-window-down",
-            label: "Focus Down"
-        },
-        {
-            id: "focus-window-up",
-            label: "Focus Up"
-        },
-        {
-            id: "focus-column-first",
-            label: "Focus First Column"
-        },
-        {
-            id: "focus-column-last",
-            label: "Focus Last Column"
-        }
-    ],
-    "Move": [
-        {
-            id: "move-column-left",
-            label: "Move Left"
-        },
-        {
-            id: "move-column-right",
-            label: "Move Right"
-        },
-        {
-            id: "move-window-down",
-            label: "Move Down"
-        },
-        {
-            id: "move-window-up",
-            label: "Move Up"
-        },
-        {
-            id: "move-column-to-first",
-            label: "Move to First"
-        },
-        {
-            id: "move-column-to-last",
-            label: "Move to Last"
-        }
-    ],
-    "Workspace": [
-        {
-            id: "focus-workspace-down",
-            label: "Focus Workspace Down"
-        },
-        {
-            id: "focus-workspace-up",
-            label: "Focus Workspace Up"
-        },
-        {
-            id: "focus-workspace-previous",
-            label: "Focus Previous Workspace"
-        },
-        {
-            id: "focus-workspace",
-            label: "Focus Workspace (by index)"
-        },
-        {
-            id: "move-column-to-workspace-down",
-            label: "Move to Workspace Down"
-        },
-        {
-            id: "move-column-to-workspace-up",
-            label: "Move to Workspace Up"
-        },
-        {
-            id: "move-column-to-workspace",
-            label: "Move to Workspace (by index)"
-        },
-        {
-            id: "move-workspace-down",
-            label: "Move Workspace Down"
-        },
-        {
-            id: "move-workspace-up",
-            label: "Move Workspace Up"
-        }
-    ],
-    "Monitor": [
-        {
-            id: "focus-monitor-left",
-            label: "Focus Monitor Left"
-        },
-        {
-            id: "focus-monitor-right",
-            label: "Focus Monitor Right"
-        },
-        {
-            id: "focus-monitor-down",
-            label: "Focus Monitor Down"
-        },
-        {
-            id: "focus-monitor-up",
-            label: "Focus Monitor Up"
-        },
-        {
-            id: "move-column-to-monitor-left",
-            label: "Move Column to Monitor Left"
-        },
-        {
-            id: "move-column-to-monitor-right",
-            label: "Move Column to Monitor Right"
-        },
-        {
-            id: "move-column-to-monitor-down",
-            label: "Move Column to Monitor Down"
-        },
-        {
-            id: "move-column-to-monitor-up",
-            label: "Move Column to Monitor Up"
-        },
-        {
-            id: "move-workspace-to-monitor-left",
-            label: "Move Workspace to Monitor Left"
-        },
-        {
-            id: "move-workspace-to-monitor-right",
-            label: "Move Workspace to Monitor Right"
-        },
-        {
-            id: "move-workspace-to-monitor-down",
-            label: "Move Workspace to Monitor Down"
-        },
-        {
-            id: "move-workspace-to-monitor-up",
-            label: "Move Workspace to Monitor Up"
-        },
-        {
-            id: "move-workspace-to-monitor-next",
-            label: "Move Workspace to Next Monitor"
-        },
-        {
-            id: "move-workspace-to-monitor-previous",
-            label: "Move Workspace to Previous Monitor"
-        }
-    ],
-    "Screenshot": [
-        {
-            id: "screenshot",
-            label: "Screenshot (Interactive)"
-        },
-        {
-            id: "screenshot-screen",
-            label: "Screenshot Screen"
-        },
-        {
-            id: "screenshot-window",
-            label: "Screenshot Window"
-        }
-    ],
-    "System": [
-        {
-            id: "toggle-overview",
-            label: "Toggle Overview"
-        },
-        {
-            id: "show-hotkey-overlay",
-            label: "Show Hotkey Overlay"
-        },
-        {
-            id: "do-screen-transition",
-            label: "Screen Transition"
-        },
-        {
-            id: "power-off-monitors",
-            label: "Power Off Monitors"
-        },
-        {
-            id: "power-on-monitors",
-            label: "Power On Monitors"
-        },
-        {
-            id: "toggle-keyboard-shortcuts-inhibit",
-            label: "Toggle Shortcuts Inhibit"
-        },
-        {
-            id: "toggle-touchpad",
-            label: "Toggle Touchpad"
-        },
-        {
-            id: "quit",
-            label: "Quit niri"
-        },
-        {
-            id: "suspend",
-            label: "Suspend"
-        }
-    ],
-    "Alt-Tab": [
-        {
-            id: "next-window",
-            label: "Next Window"
-        },
-        {
-            id: "previous-window",
-            label: "Previous Window"
-        },
-        {
-            id: "next-window filter=\"app-id\"",
-            label: "Next Window (Same Application)"
-        },
-        {
-            id: "previous-window filter=\"app-id\"",
-            label: "Previous Window (Same Application)"
-        }
-    ]
-};
 
 const MANGOWC_ACTIONS = {
     "Window": [
@@ -1891,132 +1590,11 @@ const HYPRLAND_ACTIONS = {
 };
 
 const COMPOSITOR_ACTIONS = {
-    niri: NIRI_ACTIONS,
     mangowc: MANGOWC_ACTIONS,
     hyprland: HYPRLAND_ACTIONS
 };
 
 const CATEGORY_ORDER = ["DMS", "Execute", "Workspace", "Tags", "Window", "Move/Resize", "Focus", "Move", "Layout", "Groups", "Monitor", "Scratchpad", "Screenshot", "System", "Pass-through", "Overview", "Alt-Tab", "Other"];
-
-const NIRI_ACTION_ARGS = {
-    "quit": {
-        args: [
-            {
-                name: "skip-confirmation",
-                type: "bool",
-                label: "Skip confirmation"
-            }
-        ]
-    },
-    "do-screen-transition": {
-        args: [
-            {
-                name: "delay-ms",
-                type: "number",
-                label: "Delay (ms)",
-                placeholder: "250"
-            }
-        ]
-    },
-    "set-column-width": {
-        args: [
-            {
-                name: "value",
-                type: "text",
-                label: "Width",
-                placeholder: "+10%, -10%, 50%"
-            }
-        ]
-    },
-    "set-window-height": {
-        args: [
-            {
-                name: "value",
-                type: "text",
-                label: "Height",
-                placeholder: "+10%, -10%, 50%"
-            }
-        ]
-    },
-    "focus-workspace": {
-        args: [
-            {
-                name: "index",
-                type: "number",
-                label: "Workspace",
-                placeholder: "1, 2, 3..."
-            }
-        ]
-    },
-    "move-column-to-workspace": {
-        args: [
-            {
-                name: "index",
-                type: "number",
-                label: "Workspace",
-                placeholder: "1, 2, 3..."
-            },
-            {
-                name: "focus",
-                type: "bool",
-                label: "Follow focus",
-                default: false
-            }
-        ]
-    },
-    "move-column-to-workspace-down": {
-        args: [
-            {
-                name: "focus",
-                type: "bool",
-                label: "Follow focus",
-                default: false
-            }
-        ]
-    },
-    "move-column-to-workspace-up": {
-        args: [
-            {
-                name: "focus",
-                type: "bool",
-                label: "Follow focus",
-                default: false
-            }
-        ]
-    },
-    "screenshot": {
-        args: [
-            {
-                name: "show-pointer",
-                type: "bool",
-                label: "Show pointer"
-            }
-        ]
-    },
-    "screenshot-screen": {
-        args: [
-            {
-                name: "show-pointer",
-                type: "bool",
-                label: "Show pointer"
-            },
-            {
-                name: "write-to-disk",
-                type: "bool",
-                label: "Save to disk"
-            }
-        ]
-    },
-    "screenshot-window": {
-        args: [
-            {
-                name: "write-to-disk",
-                type: "bool",
-                label: "Save to disk"
-            }
-        ]
-    }
-};
 
 const MANGOWC_ACTION_ARGS = {
     "view": {
@@ -2784,7 +2362,6 @@ const HYPRLAND_ACTION_ARGS = {
 };
 
 const ACTION_ARGS = {
-    niri: NIRI_ACTION_ARGS,
     mangowc: MANGOWC_ACTION_ARGS,
     hyprland: HYPRLAND_ACTION_ARGS
 };
@@ -2969,7 +2546,7 @@ function getDmsActionArgs() {
     return DMS_ACTION_ARGS;
 }
 
-function getDmsActions(isNiri, isHyprland) {
+function getDmsActions(isHyprland) {
     const result = [];
     for (let i = 0; i < DMS_ACTIONS.length; i++) {
         const action = DMS_ACTIONS[i];
@@ -2978,10 +2555,6 @@ function getDmsActions(isNiri, isHyprland) {
             continue;
         }
         switch (action.compositor) {
-        case "niri":
-            if (isNiri)
-                result.push(action);
-            break;
         case "hyprland":
             if (isHyprland)
                 result.push(action);
@@ -3218,50 +2791,6 @@ function findDmsArgKey(action) {
     return best;
 }
 
-// same splitting as core's niri action parser: double quotes group, backslash escapes
-function splitNiriActionArgs(text) {
-    var parts = [];
-    var current = "";
-    var quoted = false;
-    var inQuote = false;
-    var escaped = false;
-    for (var i = 0; i < text.length; i++) {
-        var ch = text[i];
-        if (escaped) {
-            current += ch;
-            escaped = false;
-        } else if (ch === "\\") {
-            escaped = true;
-        } else if (ch === '"') {
-            quoted = true;
-            inQuote = !inQuote;
-        } else if (ch === " " && !inQuote) {
-            if (current || quoted)
-                parts.push({
-                    value: current,
-                    quoted: quoted
-                });
-            current = "";
-            quoted = false;
-        } else {
-            current += ch;
-        }
-    }
-    if (current || quoted)
-        parts.push({
-            value: current,
-            quoted: quoted
-        });
-    return parts;
-}
-
-function quoteNiriActionArg(value) {
-    var text = String(value);
-    if (text !== "" && !/[\s"\\]/.test(text))
-        return text;
-    return '"' + text.replace(/[\\"]/g, "\\$&") + '"';
-}
-
 function parseCompositorActionArgs(compositor, action) {
     if (!action)
         return {
@@ -3284,47 +2813,6 @@ function parseCompositorActionArgs(compositor, action) {
     var argParts = parts.slice(1);
 
     switch (compositor) {
-    case "niri":
-        var tokens = splitNiriActionArgs(action.slice(base.length));
-        switch (base) {
-        case "move-column-to-workspace":
-            for (var i = 0; i < tokens.length; i++) {
-                if (!tokens[i].quoted && (tokens[i].value === "focus=true" || tokens[i].value === "focus=false")) {
-                    args.focus = tokens[i].value === "focus=true";
-                } else if (!args.index) {
-                    args.index = tokens[i].value;
-                }
-            }
-            break;
-        case "move-column-to-workspace-down":
-        case "move-column-to-workspace-up":
-            for (var k = 0; k < tokens.length; k++) {
-                if (!tokens[k].quoted && (tokens[k].value === "focus=true" || tokens[k].value === "focus=false"))
-                    args.focus = tokens[k].value === "focus=true";
-            }
-            break;
-        default:
-            var firstArg = argConfig.args && argConfig.args[0];
-            var positional = firstArg && (firstArg.type === "text" || firstArg.type === "number") ? firstArg.name : "value";
-            for (var j = 0; j < tokens.length; j++) {
-                var kv = tokens[j].quoted ? [] : tokens[j].value.split("=");
-                if (kv.length === 2) {
-                    switch (kv[1]) {
-                    case "true":
-                        args[kv[0]] = true;
-                        break;
-                    case "false":
-                        args[kv[0]] = false;
-                        break;
-                    default:
-                        args[kv[0]] = kv[1];
-                    }
-                } else {
-                    args[positional] = args[positional] ? (args[positional] + " " + tokens[j].value) : tokens[j].value;
-                }
-            }
-        }
-        break;
     case "mangowc":
         if (argConfig.args && argConfig.args.length > 0 && argParts.length > 0) {
             var paramStr = argParts.join(" ");
@@ -3453,40 +2941,6 @@ function buildCompositorAction(compositor, base, args) {
         return base;
 
     switch (compositor) {
-    case "niri":
-        switch (base) {
-        case "move-column-to-workspace":
-            if (args.index)
-                parts.push(quoteNiriActionArg(args.index));
-            if (args.focus === false)
-                parts.push("focus=false");
-            break;
-        case "move-column-to-workspace-down":
-        case "move-column-to-workspace-up":
-            if (args.focus === false)
-                parts.push("focus=false");
-            break;
-        default:
-            if (args.value)
-                parts.push(quoteNiriActionArg(args.value));
-            else if (args.index)
-                parts.push(quoteNiriActionArg(args.index));
-            for (var prop in args) {
-                switch (prop) {
-                case "value":
-                case "index":
-                    continue;
-                }
-                var val = args[prop];
-                if (val === true)
-                    parts.push(prop + "=true");
-                else if (val === false)
-                    parts.push(prop + "=false");
-                else if (val !== undefined && val !== null && val !== "")
-                    parts.push(prop + "=" + val);
-            }
-        }
-        break;
     case "mangowc":
         var compositorArgs = ACTION_ARGS.mangowc;
         if (compositorArgs && compositorArgs[base] && compositorArgs[base].args) {

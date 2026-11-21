@@ -73,27 +73,19 @@ function buildRepairScript(options) {
 }
 
 const compositorDirs = {
-    niri: "niri",
     hyprland: "hypr",
     mango: "mango"
 };
 
 const configNames = {
-    niri: "config.kdl",
     hyprland: "hyprland.lua",
     mango: "config.conf"
 };
 
 const fragmentExtensions = {
-    niri: "kdl",
     hyprland: "lua",
     mango: "conf"
 };
-
-const kdlInclude = name => ({
-            grepPattern: `include.*"dms/${name}.kdl"`,
-            includeLine: `include "dms/${name}.kdl"`
-        });
 
 const luaInclude = name => ({
             grepPattern: `dms.${name}`,
@@ -113,32 +105,26 @@ const tomlInclude = fragment => ({
 
 const includeTable = {
     outputs: {
-        niri: [kdlInclude("outputs")],
         hyprland: [luaInclude("outputs")],
         mango: [confInclude("outputs")]
     },
     layout: {
-        niri: [kdlInclude("layout")],
         hyprland: [luaInclude("layout")],
         mango: [confInclude("layout")]
     },
     input: {
-        niri: [kdlInclude("input")],
         hyprland: [luaInclude("input")],
         mango: [confInclude("input")]
     },
     windowrules: {
-        niri: [kdlInclude("windowrules")],
         hyprland: [luaInclude("windowrules")],
         mango: [confInclude("windowrules", "dms/windowrules.conf")]
     },
     cursor: {
-        niri: [kdlInclude("cursor")],
         hyprland: [luaInclude("cursor")],
         mango: [confInclude("cursor")]
     },
     binds: {
-        niri: [kdlInclude("binds")],
         hyprland: [luaInclude("binds"), luaInclude("binds-user")],
         mango: [confInclude("binds", undefined, "source = ./dms/binds.conf")]
     }

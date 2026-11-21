@@ -232,7 +232,7 @@ Singleton {
         return resolveIpcWidget(widgetId)?.item ?? null;
     }
 
-    readonly property bool focusedScreenDetectionSupported: CompositorService.isHyprland || CompositorService.isNiri || CompositorService.isMango || CompositorService.isSway || CompositorService.isScroll || CompositorService.isMiracle || CompositorService.isUmbriel
+    readonly property bool focusedScreenDetectionSupported: CompositorService.isHyprland || CompositorService.isMango || CompositorService.isSway || CompositorService.isScroll || CompositorService.isMiracle || CompositorService.isUmbriel
 
     function getFocusedScreenName() {
         return CompositorService.getFocusedScreenName();

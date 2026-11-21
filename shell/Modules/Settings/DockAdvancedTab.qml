@@ -40,15 +40,6 @@ Item {
                 onToggled: checked => dock.setOption("showOnFullscreen", checked)
             }
 
-            SettingsToggleRow {
-                settingKey: "dockOpenOnOverview"
-                tags: ["dock", "overview", "niri"]
-                text: I18n.tr("Show on overview")
-                visible: CompositorService.isNiri
-                checked: dock.config?.openOnOverview ?? false
-                onToggled: checked => dock.setOption("openOnOverview", checked)
-            }
-
             SettingsSliderRow {
                 settingKey: "dockExclusiveZone"
                 tags: ["exclusive", "zone", "reserved", "offset"]

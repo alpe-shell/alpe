@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 
@@ -67,9 +66,6 @@ func (cd *ConfigDeployer) deployConfigurationsInternal(_ context.Context, wm dep
 
 	// Primary config file paths used to detect fresh installs.
 	configPrimaryPaths := map[string][]string{
-		"Niri": {
-			filepath.Join(os.Getenv("HOME"), ".config", "niri", "config.kdl"),
-		},
 		"Hyprland": {
 			filepath.Join(HyprlandConfigDir(), "hyprland.lua"),
 		},
@@ -115,30 +111,6 @@ func (cd *ConfigDeployer) deployConfigurationsInternal(_ context.Context, wm dep
 		cd.replaceBinds = replaceConfigs[BindsConfigType]
 	}
 	switch wm {
-	case deps.WindowManagerNiri:
-		if shouldReplaceConfig("Niri") {
-			result, err := cd.deployNiriConfig(terminalCommand, useSystemd)
-			results = append(results, result)
-			if err != nil {
-				return results, fmt.Errorf("failed to deploy Niri config: %w", err)
-			}
-		} else if cd.replaceBinds {
-			bindsPath := filepath.Join(os.Getenv("HOME"), ".config", "niri", "dms", "binds.kdl")
-			if err := os.MkdirAll(filepath.Dir(bindsPath), 0o755); err != nil {
-				return results, fmt.Errorf("failed to create niri binds directory: %w", err)
-			}
-			stockBinds := strings.ReplaceAll(NiriBindsConfig, "{{TERMINAL_COMMAND}}", terminalCommand)
-			err := cd.deployBindsFile(bindsPath, stockBinds)
-			results = append(results, DeploymentResult{
-				ConfigType: BindsConfigType,
-				Path:       bindsPath,
-				Deployed:   err == nil,
-				Error:      err,
-			})
-			if err != nil {
-				return results, fmt.Errorf("failed to deploy Niri keybinds: %w", err)
-			}
-		}
 	case deps.WindowManagerHyprland:
 		for _, dep := range installedDeps {
 			if dep.Name == "hyprland" && cd.hyprlandVersion == "" {
@@ -199,8 +171,6 @@ func (cd *ConfigDeployer) deployConfigurationsInternal(_ context.Context, wm dep
 
 func (cd *ConfigDeployer) DeployCompositor(wm deps.WindowManager, terminalCommand string, useSystemd bool) (DeploymentResult, error) {
 	switch wm {
-	case deps.WindowManagerNiri:
-		return cd.deployNiriConfig(terminalCommand, useSystemd)
 	case deps.WindowManagerHyprland:
 		return cd.deployHyprlandConfig(terminalCommand, useSystemd)
 	case deps.WindowManagerMango:
@@ -221,81 +191,6 @@ func (cd *ConfigDeployer) DeployTerminal(terminal deps.Terminal) ([]DeploymentRe
 	default:
 		return nil, fmt.Errorf("unsupported terminal")
 	}
-}
-
-func (cd *ConfigDeployer) deployNiriConfig(terminalCommand string, useSystemd bool) (DeploymentResult, error) {
-	result := DeploymentResult{
-		ConfigType: "Niri",
-		Path:       filepath.Join(os.Getenv("HOME"), ".config", "niri", "config.kdl"),
-	}
-
-	configDir := filepath.Dir(result.Path)
-	if err := os.MkdirAll(configDir, 0o755); err != nil {
-		result.Error = fmt.Errorf("failed to create config directory: %w", err)
-		return result, result.Error
-	}
-
-	dmsDir := filepath.Join(configDir, "dms")
-	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
-		result.Error = fmt.Errorf("failed to create dms directory: %w", err)
-		return result, result.Error
-	}
-
-	var existingConfig string
-	if _, err := os.Stat(result.Path); err == nil {
-		cd.log("Found existing Niri configuration")
-
-		existingData, err := os.ReadFile(result.Path)
-		if err != nil {
-			result.Error = fmt.Errorf("failed to read existing config: %w", err)
-			return result, result.Error
-		}
-		existingConfig = string(existingData)
-
-		timestamp := time.Now().Format("2006-01-02_15-04-05")
-		result.BackupPath = result.Path + ".backup." + timestamp
-		if err := os.WriteFile(result.BackupPath, existingData, 0o644); err != nil {
-			result.Error = fmt.Errorf("failed to create backup: %w", err)
-			return result, result.Error
-		}
-		cd.log(fmt.Sprintf("Backed up existing config to %s", result.BackupPath))
-	}
-
-	newConfig := strings.ReplaceAll(NiriConfig, "{{TERMINAL_COMMAND}}", terminalCommand)
-
-	autostart := cd.systemdAutostart(deps.WindowManagerNiri, useSystemd)
-	if !autostart {
-		newConfig = cd.transformNiriConfigForNonSystemd(newConfig, terminalCommand)
-	}
-
-	if existingConfig != "" {
-		mergedConfig, err := cd.mergeNiriOutputSections(newConfig, existingConfig, dmsDir)
-		if err != nil {
-			cd.log(fmt.Sprintf("Warning: Failed to merge output sections: %v", err))
-		} else {
-			newConfig = mergedConfig
-			cd.log("Successfully merged existing output sections")
-		}
-	}
-
-	// niri reloads config.kdl as soon as it changes, so its includes must already exist.
-	if err := cd.deployNiriDmsConfigs(dmsDir, terminalCommand); err != nil {
-		result.Error = fmt.Errorf("failed to deploy dms configs: %w", err)
-		return result, result.Error
-	}
-
-	if err := os.WriteFile(result.Path, []byte(newConfig), 0o644); err != nil {
-		result.Error = fmt.Errorf("failed to write config: %w", err)
-		return result, result.Error
-	}
-
-	if autostart {
-		cd.startInLiveSession(deps.WindowManagerNiri)
-	}
-
-	result.Deployed = true
-	cd.log("Successfully deployed Niri configuration")
-	return result, nil
 }
 
 // deployBindsFile writes stock binds when the file is missing or empty. An
@@ -326,40 +221,6 @@ func (cd *ConfigDeployer) deployBindsFile(path, stock string) error {
 		return fmt.Errorf("failed to write %s: %w", name, err)
 	}
 	cd.log("Deployed DMS stock " + name)
-	return nil
-}
-
-func (cd *ConfigDeployer) deployNiriDmsConfigs(dmsDir, terminalCommand string) error {
-	stockBinds := strings.ReplaceAll(NiriBindsConfig, "{{TERMINAL_COMMAND}}", terminalCommand)
-	if err := cd.deployBindsFile(filepath.Join(dmsDir, "binds.kdl"), stockBinds); err != nil {
-		return err
-	}
-	configs := []struct {
-		name    string
-		content string
-	}{
-		{"colors.kdl", NiriColorsConfig},
-		{"layout.kdl", NiriLayoutConfig},
-		{"alttab.kdl", NiriAlttabConfig},
-		{"input.kdl", NiriInputConfig},
-		{"outputs.kdl", ""},
-		{"cursor.kdl", ""},
-		{"windowrules.kdl", ""},
-	}
-
-	for _, cfg := range configs {
-		path := filepath.Join(dmsDir, cfg.name)
-		// Skip if file already exists and is not empty to preserve user modifications
-		if info, err := os.Stat(path); err == nil && info.Size() > 0 {
-			cd.log(fmt.Sprintf("Skipping %s (already exists)", cfg.name))
-			continue
-		}
-		if err := os.WriteFile(path, []byte(cfg.content), 0o644); err != nil {
-			return fmt.Errorf("failed to write %s: %w", cfg.name, err)
-		}
-		cd.log(fmt.Sprintf("Deployed %s", cfg.name))
-	}
-
 	return nil
 }
 
@@ -557,60 +418,6 @@ func (cd *ConfigDeployer) deployAlacrittyConfig() ([]DeploymentResult, error) {
 	return results, nil
 }
 
-func (cd *ConfigDeployer) mergeNiriOutputSections(newConfig, existingConfig, dmsDir string) (string, error) {
-	outputRegex := regexp.MustCompile(`(?m)^(/-)?\s*output\s+"[^"]+"\s*\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}`)
-	var existingOutputs []string
-	for _, output := range outputRegex.FindAllString(existingConfig, -1) {
-		if strings.Contains(NiriConfig, output) {
-			continue
-		}
-		existingOutputs = append(existingOutputs, output)
-	}
-
-	if len(existingOutputs) == 0 {
-		return newConfig, nil
-	}
-
-	outputsPath := filepath.Join(dmsDir, "outputs.kdl")
-	if _, err := os.Stat(outputsPath); err != nil {
-		var outputsContent strings.Builder
-		for _, output := range existingOutputs {
-			outputsContent.WriteString(output)
-			outputsContent.WriteString("\n\n")
-		}
-		if err := os.WriteFile(outputsPath, []byte(outputsContent.String()), 0o644); err != nil {
-			cd.log(fmt.Sprintf("Warning: Failed to migrate outputs to %s: %v", outputsPath, err))
-		} else {
-			cd.log("Migrated output sections to dms/outputs.kdl")
-		}
-	}
-
-	exampleOutputRegex := regexp.MustCompile(`(?m)^/-output "eDP-2" \{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}`)
-	mergedConfig := exampleOutputRegex.ReplaceAllString(newConfig, "")
-
-	inputEndRegex := regexp.MustCompile(`(?m)^}$`)
-	inputMatches := inputEndRegex.FindAllStringIndex(newConfig, -1)
-
-	if len(inputMatches) < 1 {
-		return "", fmt.Errorf("could not find insertion point for output sections")
-	}
-
-	insertPos := inputMatches[0][1]
-
-	var builder strings.Builder
-	builder.WriteString(mergedConfig[:insertPos])
-	builder.WriteString("\n// Outputs from existing configuration\n")
-
-	for _, output := range existingOutputs {
-		builder.WriteString(output)
-		builder.WriteString("\n")
-	}
-
-	builder.WriteString(mergedConfig[insertPos:])
-
-	return builder.String(), nil
-}
-
 func (cd *ConfigDeployer) deployHyprlandConfig(terminalCommand string, useSystemd bool) (DeploymentResult, error) {
 	result := DeploymentResult{
 		ConfigType: "Hyprland",
@@ -787,28 +594,4 @@ func (cd *ConfigDeployer) deployHyprlandDmsConfigs(dmsDir string, terminalComman
 	}
 
 	return nil
-}
-
-func (cd *ConfigDeployer) transformNiriConfigForNonSystemd(config, terminalCommand string) string {
-	envVars := fmt.Sprintf(`environment {
-  XDG_CURRENT_DESKTOP "niri"
-  QT_QPA_PLATFORM "wayland;xcb"
-  ELECTRON_OZONE_PLATFORM_HINT "auto"
-  QT_QPA_PLATFORMTHEME "gtk3"
-  QT_QPA_PLATFORMTHEME_QT6 "gtk3"
-  TERMINAL "%s"
-}`, terminalCommand)
-
-	config = regexp.MustCompile(`environment \{[^}]*\}`).ReplaceAllString(config, envVars)
-
-	spawnDms := `spawn-at-startup "dms" "run"`
-	if !strings.Contains(config, spawnDms) {
-		// Insert spawn-at-startup for dms after the environment block
-		envBlockEnd := regexp.MustCompile(`environment \{[^}]*\}`)
-		if loc := envBlockEnd.FindStringIndex(config); loc != nil {
-			config = config[:loc[1]] + "\n" + spawnDms + config[loc[1]:]
-		}
-	}
-
-	return config
 }

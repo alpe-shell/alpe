@@ -293,14 +293,6 @@ Row {
         visible: NetworkService.networkAvailable || (BluetoothService.available && BluetoothService.enabled) || (AudioService.sink && AudioService.sink.audio)
 
         DIcon {
-            name: "screen_record"
-            size: Theme.iconSizeSmall
-            color: NiriService.hasActiveCast ? root.contentColor : root.dimColor
-            anchors.verticalCenter: parent.verticalCenter
-            visible: NiriService.hasCasts
-        }
-
-        DIcon {
             id: networkIcon
             name: {
                 if (NetworkService.wifiToggling)

@@ -920,7 +920,7 @@ Singleton {
             return false;
         if (entry.soundsOnly && MultimediaService.unavailable)
             return false;
-        if (entry.hyprlandNiriOnly && !CompositorService.isNiri && !CompositorService.isHyprland && !CompositorService.isMango)
+        if (entry.hyprlandNiriOnly && !CompositorService.isHyprland && !CompositorService.isMango)
             return false;
         if (entry.windowRulesCapable && !CompositorService.supportsWindowRules && !CompositorService.isKwin)
             return false;

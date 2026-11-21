@@ -27,14 +27,6 @@ test("mango monitor changes invalidate cached toplevels", () => {
     assert.equal(context._toplevelListEquivalent([window], [{ ...window, mangoMonitor: "HDMI-A-1" }]), false);
 });
 
-function niriState(scenario) {
-    const s = fixture("niri")[scenario];
-    const toplevels = s.toplevels.map(t => ({ ...t }));
-    const window = id => s.windows.find(w => w.id === id);
-    const sorted = s.sortedToplevels.map(st => ({ niriWindowId: st.niriWindowId, niriWorkspaceId: st.niriWorkspaceId, appId: window(st.niriWindowId).app_id, title: window(st.niriWindowId).title, sourceToplevel: st.toplevel === undefined ? undefined : toplevels[st.toplevel] }));
-    return { ...s, toplevels, sorted, screens: fixture("niri").screens };
-}
-
 function filterCurrentDisplay(list, name) {
     return list.filter(t => !t.screens || t.screens.includes(name));
 }
@@ -46,42 +38,18 @@ function facade(compositor, globals) {
         _edgePositions: { top: Position.Top, bottom: Position.Bottom, left: Position.Left, right: Position.Right },
         sortedToplevels: [],
         ToplevelManager: { activeToplevel: null, toplevels: { values: [] } },
-        NiriService: {},
         Hyprland: {},
         MangoService: {},
         filterCurrentDisplay,
         ...globals
     });
-    for (const name of ["_windowAlive", "_fallbackActiveWindow", "_retainedWindow", "activeWindowForScreen", "windowPid", "windowOnActiveWorkspace", "windowsHideBar", "windowsOverlapDock", "maximizedWindowOnScreen", "specialWorkspaceName"])
+    for (const name of ["_windowAlive", "_retainedWindow", "activeWindowForScreen", "windowPid", "windowOnActiveWorkspace", "windowsHideBar", "windowsOverlapDock", "maximizedWindowOnScreen", "specialWorkspaceName"])
         lift(compositorService, name, context);
     return context;
 }
 
 function presentable(toplevel) {
     return !!toplevel && !!(toplevel.title || toplevel.appId);
-}
-
-function focusedAppNiri(state, screenName, includeLastFocused, activeToplevel, previous) {
-    const context = facade("niri", {
-        sortedToplevels: state.sorted,
-        NiriService: { windows: state.windows, allWorkspaces: state.allWorkspaces, currentOutput: state.currentOutput, lastFocusedWindowId: state.lastFocusedWindowId },
-        ToplevelManager: { activeToplevel, toplevels: { values: state.toplevels } }
-    });
-    const activeWindow = context.activeWindowForScreen(screenName, previous, includeLastFocused);
-    const index = state.toplevels.indexOf(activeWindow);
-    return { activeWindow: activeWindow === null ? null : index >= 0 ? index : "foreign", onActiveWorkspace: presentable(activeWindow) && context.windowOnActiveWorkspace(screenName ?? "", activeWindow, includeLastFocused), pid: context.windowPid(activeWindow) };
-}
-
-function barHideNiri(state, screenName, position) {
-    const context = facade("niri", { NiriService: { windows: state.windows, allWorkspaces: state.allWorkspaces } });
-    const screen = state.screens[screenName];
-    return context.windowsHideBar(screenName, Position[position], 48 + 4, screen?.width ?? 0, screen?.height ?? 0);
-}
-
-function dockOverlapNiri(state, screenName, position) {
-    const context = facade("niri", { NiriService: { windows: state.windows, allWorkspaces: state.allWorkspaces } });
-    const screen = state.screens[screenName];
-    return context.windowsOverlapDock(screenName, Position[position], 60, screen?.width ?? 0, screen?.height ?? 0);
 }
 
 function hyprlandState() {
@@ -113,50 +81,6 @@ function mangoOverlap(s, screenName, position) {
 function mangoMaximized(s, screenName) {
     return facade("mango", { MangoService: { windows: s.windows, outputs: s.outputs } }).maximizedWindowOnScreen(screenName);
 }
-
-test("niri active window: focused window on the bar's screen wins, foreign active toplevels keep an alive previous window", () => {
-    const s = niriState("twoScreens");
-    assert.deepEqual(focusedAppNiri(s, "DP-1", false, null, null), { activeWindow: 0, onActiveWorkspace: true, pid: 100 });
-    assert.deepEqual(focusedAppNiri(s, "HDMI-A-1", false, null, null), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    assert.deepEqual(focusedAppNiri(s, null, false, null, null), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    assert.deepEqual(focusedAppNiri(s, "HDMI-A-1", false, s.toplevels[1], null), { activeWindow: 1, onActiveWorkspace: true, pid: 102 });
-    assert.deepEqual(focusedAppNiri(s, "DP-1", false, s.toplevels[2], null), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    assert.deepEqual(focusedAppNiri(s, "DP-1", false, s.toplevels[2], s.toplevels[0]), { activeWindow: 0, onActiveWorkspace: true, pid: 100 });
-    assert.deepEqual(focusedAppNiri(s, "HDMI-A-1", false, null, s.toplevels[1]), { activeWindow: 1, onActiveWorkspace: true, pid: 102 });
-    assert.deepEqual(focusedAppNiri(s, "HDMI-A-1", false, null, { appId: "dead", title: "dead" }), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    assert.deepEqual(focusedAppNiri(s, "DP-3", false, s.toplevels[3], null), { activeWindow: 3, onActiveWorkspace: true, pid: 0 });
-});
-
-test("niri last-focused fallback applies only while the popout is open, ghosts on empty workspaces are dropped", () => {
-    const unfocused = niriState("unfocused");
-    assert.deepEqual(focusedAppNiri(unfocused, "DP-1", false, null, null), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    assert.deepEqual(focusedAppNiri(unfocused, "DP-1", true, null, null), { activeWindow: 1, onActiveWorkspace: true, pid: 0 });
-    const sorted = niriState("unfocusedSorted");
-    assert.deepEqual(focusedAppNiri(sorted, "DP-1", true, null, null), { activeWindow: 2, onActiveWorkspace: true, pid: 101 });
-    assert.deepEqual(focusedAppNiri(sorted, "HDMI-A-1", true, null, null), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    const empty = niriState("emptyWorkspace");
-    assert.deepEqual(focusedAppNiri(empty, "DP-1", true, null, null), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    assert.deepEqual(focusedAppNiri(empty, "DP-1", false, null, empty.toplevels[0]), { activeWindow: null, onActiveWorkspace: false, pid: 0 });
-    const noActive = niriState("noActiveWorkspace");
-    assert.deepEqual(focusedAppNiri(noActive, "DP-3", false, null, null), { activeWindow: 0, onActiveWorkspace: true, pid: 104 });
-});
-
-test("niri edges: the bar hides for any tiled window, the dock only when geometry crosses its edge", () => {
-    const two = niriState("twoScreens");
-    assert.deepEqual(positions.map(p => barHideNiri(two, "DP-1", p)), [true, true, true, true]);
-    assert.deepEqual(positions.map(p => dockOverlapNiri(two, "DP-1", p)), [true, true, true, true]);
-    assert.deepEqual(positions.map(p => barHideNiri(two, "HDMI-A-1", p)), [true, true, true, true]);
-    assert.deepEqual(positions.map(p => dockOverlapNiri(two, "HDMI-A-1", p)), [false, false, false, false]);
-    assert.deepEqual(positions.map(p => barHideNiri(two, "DP-3", p)), [false, false, false, false]);
-    const floating = niriState("floatingAtEdge");
-    assert.deepEqual(positions.map(p => barHideNiri(floating, "DP-1", p)), [false, true, false, false]);
-    assert.deepEqual(positions.map(p => dockOverlapNiri(floating, "DP-1", p)), [false, true, false, false]);
-    const tiledNoGeometry = niriState("tiledNoGeometry");
-    assert.deepEqual([barHideNiri(tiledNoGeometry, "DP-1", "Top"), dockOverlapNiri(tiledNoGeometry, "DP-1", "Top")], [true, true]);
-    const floatingNoGeometry = niriState("floatingNoGeometry");
-    assert.deepEqual([barHideNiri(floatingNoGeometry, "DP-1", "Top"), dockOverlapNiri(floatingNoGeometry, "DP-1", "Top")], [false, false]);
-    assert.equal(barHideNiri(niriState("emptyWorkspace"), "DP-1", "Top"), false);
-});
 
 test("hyprland: workspace membership against the focused workspace, pid from the ipc object, special workspace names", () => {
     const hypr = hyprlandState();

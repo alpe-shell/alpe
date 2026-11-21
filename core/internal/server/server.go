@@ -12,7 +12,6 @@ import (
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/syncmap"
 	"github.com/duxlabs-dev/dux-shell/core/internal/clipolicy"
-	"github.com/duxlabs-dev/dux-shell/core/internal/config"
 	"github.com/duxlabs-dev/dux-shell/core/internal/geolocation"
 	"github.com/duxlabs-dev/dux-shell/core/internal/log"
 	"github.com/duxlabs-dev/dux-shell/core/internal/matugen"
@@ -521,13 +520,8 @@ func getCapabilities() Capabilities {
 		caps = append(caps, "files")
 	}
 
-	caps = append(caps, niriCapabilities()...)
-
 	return Capabilities{Capabilities: caps}
 }
-
-// Probed once per process, so these never change after the first getServerInfo.
-var niriCapabilities = config.NiriCapabilities
 
 func getServerInfo() ServerInfo {
 	return ServerInfo{

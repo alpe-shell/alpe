@@ -19,7 +19,6 @@ test("includePaths joins the compositor directory, with hypr for hyprland", () =
 });
 
 test("resolveIncludeArgs spells mango as mangowc and names the fragment", () => {
-    assert.deepEqual(plain(resolve.resolveIncludeArgs("outputs", "niri")), ["niri", "outputs.kdl"]);
     assert.deepEqual(plain(resolve.resolveIncludeArgs("windowrules", "mango")), ["mangowc", "windowrules.conf"]);
     assert.equal(resolve.resolveIncludeArgs("colors", "mango"), null, "no spec, no args");
 });
@@ -27,7 +26,7 @@ test("resolveIncludeArgs spells mango as mangowc and names the fragment", () => 
 test("repair preserves config and fragments, backs up, and adds live includes only once", t => {
     const directory = mkdtempSync(join(tmpdir(), "dms-includes-"));
     t.after(() => rmSync(directory, { recursive: true, force: true }));
-    for (const [compositor, kind, prefix] of [["niri", "outputs", "//"], ["hyprland", "binds", "--"], ["mango", "binds", "#"]]) {
+    for (const [compositor, kind, prefix] of [["hyprland", "binds", "--"], ["mango", "binds", "#"]]) {
         const configDir = join(directory, compositor + " space's");
         const paths = resolve.includePaths(kind, compositor, configDir);
         mkdirSync(dirname(paths.configFile), { recursive: true });

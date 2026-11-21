@@ -202,9 +202,6 @@ Singleton {
     property string radiusMode: Spec.SPEC.radiusMode.def
     property int fixedRadius: Spec.SPEC.fixedRadius.def
     readonly property real cornerRadius: Shape.radius("m", Shape.scaleForStrength(radiusStrength), radiusMode === "fixed" ? fixedRadius : -1)
-    property int niriLayoutGapsOverride: Spec.SPEC.niriLayoutGapsOverride.def
-    property int niriLayoutRadiusOverride: Spec.SPEC.niriLayoutRadiusOverride.def
-    property int niriLayoutBorderSize: Spec.SPEC.niriLayoutBorderSize.def
     property int hyprlandLayoutGapsOverride: Spec.SPEC.hyprlandLayoutGapsOverride.def
     property int hyprlandLayoutGapsOutOverride: Spec.SPEC.hyprlandLayoutGapsOutOverride.def
     property int hyprlandLayoutRadiusOverride: Spec.SPEC.hyprlandLayoutRadiusOverride.def
@@ -369,8 +366,6 @@ Singleton {
     property real focusRingWidth: Spec.SPEC.focusRingWidth.def
     property string focusRingColor: Spec.SPEC.focusRingColor.def
     property string wallpaperFillMode: Spec.SPEC.wallpaperFillMode.def
-    property bool blurredWallpaperLayer: Spec.SPEC.blurredWallpaperLayer.def
-    property bool blurWallpaperOnOverview: Spec.SPEC.blurWallpaperOnOverview.def
     property string wallpaperBackgroundColorMode: Spec.SPEC.wallpaperBackgroundColorMode.def
     property string wallpaperBackgroundCustomColor: Spec.SPEC.wallpaperBackgroundCustomColor.def
     readonly property color effectiveWallpaperBackgroundColor: wallpaperBackgroundColorFor(wallpaperBackgroundColorMode)
@@ -478,7 +473,6 @@ Singleton {
     property string appPickerViewMode: Spec.SPEC.appPickerViewMode.def
     property bool sortAppsAlphabetically: Spec.SPEC.sortAppsAlphabetically.def
     property int appLauncherGridColumns: Spec.SPEC.appLauncherGridColumns.def
-    property bool closeNiriOverviewOnWindowFocus: Spec.SPEC.closeNiriOverviewOnWindowFocus.def
     property bool rememberLastQuery: Spec.SPEC.rememberLastQuery.def
     property bool launcherHistoryEnabled: Spec.SPEC.launcherHistoryEnabled.def
     property string launcherEnterAction: Spec.SPEC.launcherEnterAction.def
@@ -487,8 +481,6 @@ Singleton {
     onSpotlightSectionViewModesChanged: saveSettings()
     property var appDrawerSectionViewModes: Spec.SPEC.appDrawerSectionViewModes.def
     onAppDrawerSectionViewModesChanged: saveSettings()
-    property bool niriOverviewOverlayEnabled: Spec.SPEC.niriOverviewOverlayEnabled.def
-    property string niriOverviewLauncherStyle: Spec.SPEC.niriOverviewLauncherStyle.def
     property string dankLauncherV2Size: Spec.SPEC.dankLauncherV2Size.def
     property bool dankLauncherV2ShowSourceBadges: Spec.SPEC.dankLauncherV2ShowSourceBadges.def
     property bool dankLauncherV2BorderEnabled: Spec.SPEC.dankLauncherV2BorderEnabled.def
@@ -697,9 +689,6 @@ Singleton {
         if (notepadUseCompositorGap) {
             var g = -1;
             switch (activeCompositor) {
-            case "niri":
-                g = niriLayoutGapsOverride;
-                break;
             case "hyprland":
                 g = hyprlandLayoutGapsOverride;
                 break;
@@ -786,7 +775,6 @@ Singleton {
 
     property bool runDmsMatugenTemplates: Spec.SPEC.runDmsMatugenTemplates.def
     property bool matugenTemplateGtk: Spec.SPEC.matugenTemplateGtk.def
-    property bool matugenTemplateNiri: Spec.SPEC.matugenTemplateNiri.def
     property bool matugenTemplateHyprland: Spec.SPEC.matugenTemplateHyprland.def
     property bool matugenTemplateMangowc: Spec.SPEC.matugenTemplateMangowc.def
     property bool matugenTemplateQt5ct: Spec.SPEC.matugenTemplateQt5ct.def
@@ -1177,7 +1165,6 @@ Singleton {
     property bool osdNumLockEnabled: Spec.SPEC.osdNumLockEnabled.def
     property bool osdKeyboardLayoutEnabled: Spec.SPEC.osdKeyboardLayoutEnabled.def
     property bool osdInputMethodEnabled: Spec.SPEC.osdInputMethodEnabled.def
-    property bool osdTouchpadEnabled: Spec.SPEC.osdTouchpadEnabled.def
     property bool osdPowerProfileEnabled: Spec.SPEC.osdPowerProfileEnabled.def
     property bool osdAudioOutputEnabled: Spec.SPEC.osdAudioOutputEnabled.def
     property bool osdWorkspaceEnabled: Spec.SPEC.osdWorkspaceEnabled.def

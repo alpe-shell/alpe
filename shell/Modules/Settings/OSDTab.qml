@@ -65,11 +65,6 @@ Item {
             "shown": SettingsData.osdInputMethodEnabled && Fcitx5Service.available
         },
         {
-            "value": "touchpad",
-            "label": I18n.tr("Touchpad"),
-            "shown": SettingsData.osdTouchpadEnabled && CompositorService.isNiri
-        },
-        {
             "value": "powerProfile",
             "label": I18n.tr("Power profile"),
             "shown": SettingsData.osdPowerProfileEnabled
@@ -226,14 +221,6 @@ Item {
                 text: I18n.tr("Input method", "OSD toggle for the IME (fcitx5) indicator")
                 checked: SettingsData.osdInputMethodEnabled
                 onToggled: checked => SettingsData.set("osdInputMethodEnabled", checked)
-            }
-
-            SettingsToggleRow {
-                settingKey: "osdTouchpadEnabled"
-                visible: CompositorService.isNiri
-                text: I18n.tr("Touchpad")
-                checked: SettingsData.osdTouchpadEnabled
-                onToggled: checked => SettingsData.set("osdTouchpadEnabled", checked)
             }
 
             SettingsToggleRow {

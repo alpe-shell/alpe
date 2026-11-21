@@ -20,7 +20,6 @@ Singleton {
 
     readonly property bool available: {
         switch (CompositorService.compositor) {
-        case "niri":
         case "mango":
         case "hyprland":
         case "sway":
@@ -34,8 +33,6 @@ Singleton {
 
     readonly property var layoutNames: {
         switch (CompositorService.compositor) {
-        case "niri":
-            return NiriService.keyboardLayoutNames || [];
         case "hyprland":
             return _polledNames;
         default:
@@ -45,8 +42,6 @@ Singleton {
 
     readonly property string currentLayout: {
         switch (CompositorService.compositor) {
-        case "niri":
-            return NiriService.getCurrentKeyboardLayoutName();
         case "mango":
             return MangoService.currentKeyboardLayout;
         case "hyprland":
@@ -70,8 +65,6 @@ Singleton {
 
     readonly property int layoutCount: {
         switch (CompositorService.compositor) {
-        case "niri":
-            return NiriService.keyboardLayoutNames.length;
         case "hyprland":
             return _polledCount;
         default:
@@ -133,9 +126,6 @@ Singleton {
 
     function cycle() {
         switch (CompositorService.compositor) {
-        case "niri":
-            NiriService.cycleKeyboardLayout();
-            return;
         case "hyprland":
             Quickshell.execDetached(["hyprctl", "switchxkblayout", _hyprlandKeyboard, "next"]);
             _pollHyprland();

@@ -68,10 +68,6 @@ Singleton {
             return false;
         }
 
-        if (CompositorService.isNiri && NiriService.hasActiveCast) {
-            return true;
-        }
-
         if (!AudioService.pipewireReady) {
             return false;
         }
@@ -132,19 +128,11 @@ Singleton {
         const nodeName = (node.name || "").toLowerCase();
         const mediaName = (node.properties && node.properties["media.name"] || "").toLowerCase();
         const combined = appName + " " + nodeName + " " + mediaName;
-        return /xdg-desktop-portal|xdpw|screencast|screen-cast|screen|gnome shell|kwin|obs|niri/.test(combined);
+        return /xdg-desktop-portal|xdpw|screencast|screen-cast|screen|gnome shell|kwin|obs/.test(combined);
     }
 
     function screencastSourceIds() {
         const ids = [];
-
-        if (CompositorService.isNiri) {
-            for (const cast of NiriService.casts) {
-                if (cast && cast.is_active) {
-                    ids.push("niri:" + cast.stream_id);
-                }
-            }
-        }
 
         if (!AudioService.pipewireReady) {
             return ids;

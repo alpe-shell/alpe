@@ -33,7 +33,7 @@ Item {
             iconName: "mouse"
 
             SettingsToggleRow {
-                // Only Hyprland can report the live mode; untouched niri and Mango show their defaults
+                // Only Hyprland can report the live mode; untouched Mango shows its default
                 readonly property int inheritedMode: CompositorService.isHyprland ? HyprlandService.followMouseMode : CompositorService.isMango ? 1 : 0
                 visible: CompositorService.supportsInputConfig && (!CompositorService.isHyprland || HyprlandService.hyprSupports("input:follow_mouse"))
                 enabled: inputInclude.included && (!CompositorService.isHyprland || (HyprlandService.luaConfigActive && HyprlandService.followMouseMode >= 0))
@@ -137,7 +137,7 @@ Item {
             }
 
             SettingsToggleRow {
-                visible: CompositorService.isNiri || CompositorService.isMango
+                visible: CompositorService.isMango
                 tags: ["mouse", "middle", "click", "emulation"]
                 settingKey: "mouseMiddleEmulation"
                 text: I18n.tr("Middle click emulation")
@@ -194,20 +194,6 @@ Item {
                 maximum: 30
                 step: 1
                 onSliderValueChanged: newValue => SettingsData.set("touchpadScrollFactor", newValue / 10.0)
-            }
-
-            SettingsSliderRow {
-                visible: CompositorService.isNiri && NiriService.configNextSupported
-                tags: ["touchpad", "pinch", "zoom", "gesture", "sensitivity"]
-                settingKey: "touchpadPinchSensitivity"
-                text: I18n.tr("Pinch sensitivity", "touchpad slider, how strongly pinch gestures zoom in apps")
-                value: Math.round(SettingsData.touchpadPinchSensitivity * 10)
-                unit: "×"
-                decimals: 1
-                minimum: 1
-                maximum: 30
-                step: 1
-                onSliderValueChanged: newValue => SettingsData.set("touchpadPinchSensitivity", newValue / 10.0)
             }
 
             SettingsToggleRow {
@@ -292,7 +278,7 @@ Item {
             }
 
             SettingsToggleRow {
-                visible: CompositorService.isNiri || CompositorService.isMango
+                visible: CompositorService.isMango
                 tags: ["touchpad", "disable", "external", "mouse"]
                 settingKey: "touchpadDisableOnExternalMouse"
                 text: I18n.tr("Disable with external mouse")

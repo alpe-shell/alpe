@@ -14,12 +14,9 @@ import (
 
 // dms.service is wanted by the compositor's own session unit rather than enabled
 // for graphical-session.target, so it never starts under GNOME or KDE on the same user.
-const (
-	HyprlandSessionTarget = "hyprland-session.target"
-	NiriSessionUnit       = "niri.service"
-)
+const HyprlandSessionTarget = "hyprland-session.target"
 
-var sessionUnits = []string{HyprlandSessionTarget, NiriSessionUnit, mangoconf.SessionTarget}
+var sessionUnits = []string{HyprlandSessionTarget, mangoconf.SessionTarget}
 
 var systemctlUser = func(args ...string) error {
 	output, err := exec.Command("systemctl", append([]string{"--user"}, args...)...).CombinedOutput()
@@ -37,8 +34,6 @@ func SessionUnitName(wm deps.WindowManager) string {
 	switch wm {
 	case deps.WindowManagerHyprland:
 		return HyprlandSessionTarget
-	case deps.WindowManagerNiri:
-		return NiriSessionUnit
 	case deps.WindowManagerMango:
 		return mangoconf.SessionTarget
 	}
@@ -54,8 +49,6 @@ func SessionUnit(wm deps.WindowManager) (string, error) {
 			return "", fmt.Errorf("write %s: %w", HyprlandSessionTarget, err)
 		}
 		return HyprlandSessionTarget, nil
-	case deps.WindowManagerNiri:
-		return NiriSessionUnit, nil
 	case deps.WindowManagerMango:
 		if !mangoSessionTargetInstalled() {
 			return "", nil
@@ -119,8 +112,6 @@ func RunningCompositor() (deps.WindowManager, bool) {
 	switch {
 	case os.Getenv("HYPRLAND_INSTANCE_SIGNATURE") != "":
 		return deps.WindowManagerHyprland, true
-	case os.Getenv("NIRI_SOCKET") != "":
-		return deps.WindowManagerNiri, true
 	case os.Getenv("MANGO_INSTANCE_SIGNATURE") != "":
 		return deps.WindowManagerMango, true
 	}

@@ -9,9 +9,7 @@ const KNOWN_CYCLES = [
     ["Paths", "SettingsData"],
     ["SessionData", "SessionService"],
     ["CompositorService", "HyprlandService"],
-    ["CompositorService", "MangoService"],
-    ["CompositorService", "NiriService"],
-    ["CompositorService", "NiriService", "Theme"]
+    ["CompositorService", "MangoService"]
 ].map(members => members.join(","));
 
 function stripLiterals(source) {

@@ -553,31 +553,6 @@ func TestHyprlandEndToEndWriterOrderAndKeys(t *testing.T) {
 	}
 }
 
-func TestNiriEndToEndOpaqueLast(t *testing.T) {
-	provider := NewNiriWritableProvider(t.TempDir())
-	opaque := newTestWindowRule(windowrules.OpaqueRuleID, "Opaque", ".*")
-	opaque.Actions.Opacity = new(1.0)
-	user := newTestWindowRule("user1", "User 1", "^a$")
-	user.Actions.OpenFloating = new(true)
-
-	for _, r := range []windowrules.WindowRule{opaque, user} {
-		if err := provider.SetRule(r); err != nil {
-			t.Fatalf("SetRule %s: %v", r.ID, err)
-		}
-	}
-	b, err := os.ReadFile(provider.GetOverridePath())
-	if err != nil {
-		t.Fatal(err)
-	}
-	content := string(b)
-	if !strings.Contains(content, "opacity 1.00") {
-		t.Errorf("missing opacity 1.00 in:\n%s", content)
-	}
-	if strings.Index(content, "^a$") > strings.Index(content, "opacity 1.00") {
-		t.Errorf("opaque rule not last in:\n%s", content)
-	}
-}
-
 func TestHyprlandLuaRoundTripCatalogKeys(t *testing.T) {
 	tests := []struct {
 		name  string

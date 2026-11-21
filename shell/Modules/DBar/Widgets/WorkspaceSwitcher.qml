@@ -714,18 +714,6 @@ BasePill {
 
                     onReleased: mouse => {
                         const wasDragging = dragHandler.dragging;
-                        const didReorder = wasDragging && root.dragTargetIndex >= 0 && root.dragTargetIndex !== root.dragSourceIndex;
-
-                        if (didReorder) {
-                            const sourceWs = root.recordOf(root.workspaceList[root.dragSourceIndex]);
-                            const targetWs = root.recordOf(root.workspaceList[root.dragTargetIndex]);
-
-                            if (sourceWs && targetWs && sourceWs.id !== undefined && targetWs.idx !== undefined) {
-                                root.suppressShiftAnimation = true;
-                                CompositorService.moveWorkspace(sourceWs, targetWs);
-                                Qt.callLater(() => root.suppressShiftAnimation = false);
-                            }
-                        }
 
                         mousePressed = false;
                         dragHandler.dragging = false;

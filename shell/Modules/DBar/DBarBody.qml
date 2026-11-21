@@ -23,7 +23,8 @@ Item {
 
     readonly property bool barRevealed: inputMask.showing
     readonly property bool autoHideActive: topBarCore.autoHide
-    readonly property bool fullscreenAutoHide: !barWindow.isIsland && !usesFrameBarChrome && (barConfig?.hideOnFullscreen ?? false) && hostWindow?.dBarLayer === WlrLayer.Overlay && CompositorService.isNiri && !CompositorService.overviewActiveOnScreen(screenName) && CompositorService.visibleNiriFullscreenToplevelOnScreen(screen)
+    // Vollbild-Ausblenden gab es nur unter niri; die Kette über DBar und IPC bleibt bestehen.
+    readonly property bool fullscreenAutoHide: false
 
     readonly property bool isIsland: barConfig?.island === true
     // Resolver-owned so the body, the frame and the dismiss window agree during the frame latch.

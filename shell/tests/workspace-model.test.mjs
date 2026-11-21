@@ -9,17 +9,6 @@ const fixture = name => JSON.parse(readFileSync(new URL(`fixtures/workspaces/${n
 const plain = value => JSON.parse(JSON.stringify(value));
 const pick = (records, key) => Array.from(records, record => record[key]);
 
-function niri(scenario) {
-    const s = fixture("niri")[scenario];
-    const focused = s.allWorkspaces.findIndex(ws => ws.id === s.focusedWorkspaceId);
-    return {
-        allWorkspaces: s.allWorkspaces,
-        currentOutputWorkspaces: s.currentOutput ? s.allWorkspaces.filter(ws => ws.output === s.currentOutput) : s.allWorkspaces,
-        focusedIdx: focused >= 0 ? s.allWorkspaces[focused].idx : 1,
-        windows: s.windows
-    };
-}
-
 function hyprland(scenario) {
     const s = fixture("hyprland")[scenario];
     const monitors = s.monitors.map(monitor => ({ name: monitor.name, description: monitor.description ?? "" }));
@@ -48,72 +37,6 @@ test("neighbor stepping stops at the ends", () => {
     const list = ["a", "b", "c"];
     assert.equal(model.neighbor(list, 0, 1), "b");
     assert.equal(model.neighbor(list, 2, 1), null);
-});
-
-test("niri workspaces follow the bar screen, focus and occupied filter", () => {
-    const raw = niri("twoScreens");
-    const screen = model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, false, {});
-    assert.deepEqual(pick(screen, "id"), [5, 6, 7]);
-    assert.deepEqual(pick(screen, "idx"), [1, 2, 3]);
-    assert.deepEqual(pick(screen, "active"), [true, false, false]);
-    assert.deepEqual(pick(screen, "output"), ["HDMI-A-1", "HDMI-A-1", "HDMI-A-1"]);
-    assert.deepEqual(pick(model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, true, {}), "id"), [5, 6]);
-    const followed = model.niriWorkspacesForScreen(raw, "HDMI-A-1", true, false, {});
-    assert.deepEqual(pick(followed, "id"), [1, 2]);
-    assert.deepEqual(pick(followed, "name"), ["", "web"]);
-    assert.deepEqual(pick(model.niriWorkspacesForScreen(raw, "", false, false, {}), "id"), [1, 2]);
-    assert.deepEqual(pick(model.niriWorkspacesForScreen(raw, "DP-9", false, true, {}), "id"), [2]);
-    assert.equal(model.niriCurrentIdx(raw, "HDMI-A-1", false), 1);
-    assert.equal(model.niriCurrentIdx(raw, "HDMI-A-1", true), 2);
-    assert.equal(model.niriCurrentIdx(raw, "", false), 2);
-    assert.equal(model.niriCurrentIdx(raw, "DP-9", false), 1);
-});
-
-test("niri empty backend keeps both placeholder workspaces, unfiltered", () => {
-    const raw = niri("empty");
-    for (const occupiedOnly of [false, true]) {
-        const list = model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, occupiedOnly, {});
-        assert.deepEqual(plain(list), [
-            { id: 1, idx: 0, name: "", output: "", active: false, placeholder: false },
-            { id: 2, idx: 1, name: "", output: "", active: false, placeholder: false }
-        ]);
-    }
-    assert.equal(model.niriCurrentIdx(raw, "HDMI-A-1", true), 1);
-    assert.equal(model.niriActiveWorkspace(raw, "DP-1"), null);
-});
-
-test("niri records keep identity until a field changes and drop closed workspaces", () => {
-    const raw = niri("twoScreens");
-    const cache = {};
-    const first = model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, false, cache);
-    const second = model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, true, cache);
-    assert.equal(second[0], first[0]);
-    assert.equal(second[1], first[1]);
-    raw.allWorkspaces = raw.allWorkspaces.map(ws => ({ ...ws }));
-    assert.equal(model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, false, cache)[1], first[1]);
-    raw.allWorkspaces = raw.allWorkspaces.map(ws => ws.id === 6 ? { ...ws, is_active: true } : ws);
-    const changed = model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, false, cache);
-    assert.equal(changed[0], first[0]);
-    assert.notEqual(changed[1], first[1]);
-    assert.equal(changed[1].active, true);
-    raw.allWorkspaces = raw.allWorkspaces.filter(ws => ws.id !== 6);
-    model.niriWorkspacesForScreen(raw, "HDMI-A-1", false, false, cache);
-    assert.deepEqual(Object.keys(cache).includes("6"), false);
-});
-
-test("niri active workspace, windows, occupancy and urgency", () => {
-    const raw = niri("twoScreens");
-    assert.deepEqual(plain(model.niriActiveWorkspace(raw, "HDMI-A-1")), { id: 5, idx: 1, name: "", output: "HDMI-A-1", active: true, placeholder: false });
-    assert.equal(model.niriActiveWorkspace(raw, "DP-1").name, "web");
-    assert.equal(model.niriActiveWorkspace(raw, "").id, 5);
-    assert.deepEqual(pick(model.niriWindowsOnWorkspace(raw.windows, { id: 6 }), "id"), [11, 12]);
-    assert.deepEqual(plain(model.niriWindowsOnWorkspace(raw.windows, { id: 7 })), []);
-    assert.equal(model.niriWorkspaceOccupied(raw.windows, { id: 6 }), true);
-    assert.equal(model.niriWorkspaceOccupied(raw.windows, { id: 7 }), false);
-    assert.equal(model.niriWorkspaceUrgent(raw.windows, { id: 6 }), true);
-    assert.equal(model.niriWorkspaceUrgent(raw.windows, { id: 2 }), false);
-    assert.equal(model.niriWorkspaceActive(raw.allWorkspaces, { id: 5 }), true);
-    assert.equal(model.niriWorkspaceActive(raw.allWorkspaces, { id: 6 }), false);
 });
 
 test("hyprland lists skip special workspaces and fall back per monitor", () => {

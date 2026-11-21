@@ -17,23 +17,6 @@ func writeConfigFile(t *testing.T, path, content string) {
 	}
 }
 
-func TestNiriFindIncludeNestedRelativeToIncludingFile(t *testing.T) {
-	dir := t.TempDir()
-	writeConfigFile(t, filepath.Join(dir, "config.kdl"), "include \"dms/dms.kdl\"\n")
-	writeConfigFile(t, filepath.Join(dir, "dms", "dms.kdl"), "include \"binds.kdl\"\ninclude \"./outputs.kdl\"\n")
-
-	for _, name := range []string{"binds.kdl", "outputs.kdl"} {
-		target := filepath.Join(dir, "dms", name)
-		if !niriFindInclude(filepath.Join(dir, "config.kdl"), target, map[string]bool{}) {
-			t.Errorf("%s included through dms/dms.kdl not detected", name)
-		}
-	}
-
-	if niriFindInclude(filepath.Join(dir, "config.kdl"), filepath.Join(dir, "dms", "layout.kdl"), map[string]bool{}) {
-		t.Error("layout.kdl reported included without an include line")
-	}
-}
-
 func TestMangowcFindIncludeResolvesLikeMango(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)

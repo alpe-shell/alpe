@@ -56,7 +56,6 @@ DFloatingWindow {
         if (visible && !backingWindowVisible) {
             visible = false;
         }
-        CompositorService.closeNiriOverviewOnWindowFocus();
         if (!shouldBeVisible && isCompactMode)
             menuVisible = true;
         shouldBeVisible = true;

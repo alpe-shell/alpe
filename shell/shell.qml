@@ -62,12 +62,6 @@ ShellRoot {
         sourceComponent: Scope {
             WallpaperBackground {}
             LockPlacementPreparer {}
-
-            Loader {
-                active: SettingsData.blurredWallpaperLayer && CompositorService.isNiri
-                asynchronous: false
-                sourceComponent: BlurredWallpaperBackground {}
-            }
         }
     }
 

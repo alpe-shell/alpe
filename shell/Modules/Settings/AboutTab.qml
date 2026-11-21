@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Effects
 import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
@@ -68,19 +67,11 @@ Item {
                 url: "https://github.com/noctalia-dev/umbriel",
                 label: "Umbriel"
             };
-        case CompositorService.isNiri:
-            return {
-                logo: "niri.svg",
-                url: "https://github.com/niri-wm/niri",
-                label: I18n.tr("niri GitHub"),
-                matrixUrl: "https://matrix.to/#/#niri:matrix.org",
-                redditUrl: "https://reddit.com/r/niri"
-            };
         default:
             return {
-                logo: "niri.svg",
-                url: "https://github.com/niri-wm/niri",
-                label: I18n.tr("niri GitHub")
+                logo: "",
+                url: "",
+                label: ""
             };
         }
     }
@@ -155,7 +146,7 @@ Item {
                 subtitle: root.host(root.compositor.url)
                 url: root.compositor.url
                 leading: LogoImage {
-                    source: root.assetsDir + root.compositor.logo
+                    source: root.compositor.logo ? root.assetsDir + root.compositor.logo : ""
                 }
             }
 
@@ -175,32 +166,6 @@ Item {
                 url: root.compositor.discordUrl ?? ""
                 leading: LogoImage {
                     source: root.assetsDir + "discord.svg"
-                }
-            }
-
-            SettingsLinkRow {
-                visible: (root.compositor.matrixUrl ?? "") !== ""
-                title: I18n.tr("niri Matrix chat")
-                subtitle: "matrix.org"
-                url: root.compositor.matrixUrl ?? ""
-                leading: LogoImage {
-                    source: root.assetsDir + "matrix-logo-white.svg"
-                    sourceSize: Qt.size(28, 18)
-                    layer.enabled: true
-                    layer.effect: MultiEffect {
-                        colorization: 1
-                        colorizationColor: Theme.surfaceText
-                    }
-                }
-            }
-
-            SettingsLinkRow {
-                visible: (root.compositor.redditUrl ?? "") !== ""
-                title: I18n.tr("r/niri subreddit")
-                subtitle: root.host(root.compositor.redditUrl ?? "")
-                url: root.compositor.redditUrl ?? ""
-                leading: LogoImage {
-                    source: root.assetsDir + "reddit.svg"
                 }
             }
 

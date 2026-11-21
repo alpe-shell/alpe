@@ -24,7 +24,7 @@ test("IME commit sink follows Qt's first requested input-context module", () => 
     assert.equal(keys.compositorTextInputSelected(";;", "wayland"), true, "empty QT_IM_MODULES entries fall back to QT_IM_MODULE");
 });
 
-test("conflict normalization ignores modifier order like niri does", () => {
+test("conflict normalization ignores modifier order", () => {
     const same = [
         ["Shift+Alt+T", "Alt+Shift+T"],
         ["Mod+Shift+Ctrl+Q", "Ctrl+Super+Shift+Q"],
@@ -37,7 +37,7 @@ test("conflict normalization ignores modifier order like niri does", () => {
     assert.notEqual(norm("Mod"), norm("Mod+T"));
 });
 
-test("a bare modifier conflicts with its sided keysyms like niri's conflicts_with", () => {
+test("a bare modifier conflicts with its sided keysyms", () => {
     const cases = [
         ["Alt", "Alt_L", true],
         ["Alt_R", "Alt", true],
@@ -67,7 +67,7 @@ test("a lone modifier capture becomes a bare-modifier trigger", () => {
     assert.equal(keys.bareModifierToken(keys.heldModifiers(shift, altMask, alt), "Super", "Mod"), "Alt+Shift");
 });
 
-test("release and pass-through follow niri's trigger rules", () => {
+test("release and pass-through follow the trigger rules", () => {
     const cases = [
         ["Mod+T", true, false],
         ["Mod", true, false],

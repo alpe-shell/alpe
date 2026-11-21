@@ -12,8 +12,6 @@ const GAP_FILL_STEP = 6;
 const GAP_FILL_CLEARANCE = 4;
 const LOGICAL_PIXEL_TOLERANCE = 0.01;
 const FALLBACK_SCALE_PRESETS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3];
-const NIRI_TRANSFORMS = ["normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270"];
-const NIRI_MAX_BPC = [6, 8, 10, 12, 14, 16];
 
 function transformName(index) {
     if (!Number.isInteger(index))
@@ -24,11 +22,6 @@ function transformName(index) {
 function transformIndex(name) {
     const index = TRANSFORM_NAMES.indexOf(name);
     return index < 0 ? 0 : index;
-}
-
-function niriTransform(name) {
-    const index = TRANSFORM_NAMES.indexOf(name);
-    return index < 0 ? "normal" : NIRI_TRANSFORMS[index];
 }
 
 function isRotated(name) {
@@ -62,8 +55,6 @@ function profileIdentifier(output, name, displayNameMode, compositor) {
     if (displayNameMode !== "model" || !output?.make || !output?.model)
         return name;
     switch (compositor) {
-    case "niri":
-        return niriIdentifier(output, name, displayNameMode);
     case "hyprland":
         return [output.make, output.model, output.serial].filter(p => p).join(" ");
     default:
@@ -91,116 +82,6 @@ function migrateHyprlandProfileKeys(configEntry, outputs, displayNameMode) {
         changed = true;
     }
     return changed;
-}
-
-// index just past the string starting at i, or -1; raw strings (r#"…"#, #"…"#) have no escapes
-function kdlStringEnd(text, i) {
-    const ch = text[i];
-    if (ch !== '"' && ch !== "r" && ch !== "#")
-        return -1;
-    // a raw string only starts a value, never mid-identifier
-    if (ch !== '"' && i > 0 && !/[\s=(){};]/.test(text[i - 1]))
-        return -1;
-    const opener = /(r?)(#*)"/y;
-    opener.lastIndex = i;
-    const raw = opener.exec(text);
-    if (!raw)
-        return -1;
-    if (raw[1] || raw[2]) {
-        const close = text.indexOf('"' + raw[2], i + raw[0].length);
-        return close < 0 ? text.length : close + 1 + raw[2].length;
-    }
-    let j = i + 1;
-    while (j < text.length && text[j] !== '"')
-        j += text[j] === "\\" ? 2 : 1;
-    return j + 1;
-}
-
-// a /- slashdash comments out the whole output node, so its body is skipped but not kept
-function extractNiriOutputBlocks(content) {
-    const blocks = [];
-    const headerRegex = /(\/-\s*)?\boutput\s+"([^"]+)"\s*\{/g;
-    let match;
-    while ((match = headerRegex.exec(content)) !== null) {
-        const start = headerRegex.lastIndex;
-        let depth = 1;
-        let i = start;
-        while (i < content.length && depth > 0) {
-            const ch = content[i];
-            const stringEnd = kdlStringEnd(content, i);
-            if (stringEnd > 0) {
-                i = stringEnd;
-                continue;
-            }
-            if (ch === '{')
-                depth++;
-            else if (ch === '}')
-                depth--;
-            i++;
-        }
-        if (!match[1])
-            blocks.push({
-                "name": match[2],
-                "body": content.slice(start, i - 1)
-            });
-        headerRegex.lastIndex = i;
-    }
-    return blocks;
-}
-
-// blanks comments in place, keeping strings and line breaks; KDL block comments nest
-function stripKdlComments(text) {
-    let out = "";
-    let i = 0;
-    while (i < text.length) {
-        let end = kdlStringEnd(text, i);
-        if (end > 0) {
-            out += text.slice(i, end);
-            i = end;
-            continue;
-        }
-        if (text.startsWith("//", i)) {
-            end = text.indexOf("\n", i);
-            if (end < 0)
-                end = text.length;
-        } else if (text.startsWith("/*", i)) {
-            let depth = 0;
-            end = i;
-            do {
-                if (text.startsWith("/*", end)) {
-                    depth++;
-                    end += 2;
-                } else if (text.startsWith("*/", end)) {
-                    depth--;
-                    end += 2;
-                } else {
-                    end++;
-                }
-            } while (depth > 0 && end < text.length)
-        } else {
-            out += text[i];
-            i++;
-            continue;
-        }
-        out += text.slice(i, end).replace(/[^\n]/g, " ");
-        i = end;
-    }
-    return out;
-}
-
-// KDL also ends a node at ';', which the anchored matches need on its own line
-function niriTopLevelNodes(body) {
-    return stripNestedBlocks(body).replace(/;/g, "\n");
-}
-
-function stripNestedBlocks(body) {
-    let stripped = body;
-    let prev;
-    do {
-        prev = stripped;
-        stripped = stripped.replace(/[\w-]+\s*\{[^{}]*\}/g, "");
-    } while (stripped !== prev)
-    return stripped;
 }
 
 function hyprLuaField(line, field) {
@@ -234,47 +115,6 @@ function parsedMode(width, height, refresh) {
         "height": parseInt(height),
         "refresh_rate": Math.round(parseFloat(refresh) * 1000)
     };
-}
-
-function parseNiriOutputs(content) {
-    const result = {};
-    for (const block of extractNiriOutputBlocks(stripKdlComments(content))) {
-        const name = block.name;
-        const body = block.body;
-        const topLevel = niriTopLevelNodes(body);
-
-        // top-level off only, nested hot-corners { off } must not count (#2966)
-        const disabled = /^\s*off\s*$/m.test(topLevel);
-        const modeMatch = body.match(/mode\s+"(\d+)x(\d+)@([\d.]+)"/);
-        const posMatch = body.match(/position\s+x=(-?\d+)\s+y=(-?\d+)/);
-        const scaleMatch = body.match(/scale\s+([\d.]+)/);
-        const transformMatch = body.match(/transform\s+"([^"]+)"/);
-        const vrrMatch = body.match(/variable-refresh-rate/);
-        const vrrOnDemandMatch = body.match(/variable-refresh-rate\s+on-demand=true/);
-        const maxBpcMatch = topLevel.match(/^\s*max-bpc\s+(\d+)\s*$/m);
-
-        result[name] = {
-            "name": name,
-            "disabled": disabled,
-            "logical": {
-                "x": posMatch ? parseInt(posMatch[1]) : 0,
-                "y": posMatch ? parseInt(posMatch[2]) : 0,
-                "scale": scaleMatch ? parseFloat(scaleMatch[1]) : 1.0,
-                "transform": transformMatch ? transformMatch[1] : "Normal"
-            },
-            "modes": modeMatch ? [parsedMode(modeMatch[1], modeMatch[2], modeMatch[3])] : [],
-            "current_mode": 0,
-            "vrr_enabled": !!vrrMatch,
-            "vrr_on_demand": !!vrrOnDemandMatch,
-            "vrr_supported": true,
-            "max_bpc": maxBpcMatch ? niriMaxBpc(parseInt(maxBpcMatch[1])) : undefined
-        };
-    }
-    return result;
-}
-
-function niriMaxBpc(value) {
-    return NIRI_MAX_BPC.includes(value) ? value : undefined;
 }
 
 function hyprLuaSettings(line, disabled, vrrMode) {
@@ -642,7 +482,7 @@ function outputsFromWlr(wlrOutputs, liveMonitors) {
     return map;
 }
 
-function outputNeutralConfig(outputName, outputData, niriSettings, hyprlandSettings, displayNameMode, compositor) {
+function outputNeutralConfig(outputName, outputData, hyprlandSettings, displayNameMode, compositor) {
     const modeData = (outputData.modes && outputData.current_mode !== undefined) ? outputData.modes[outputData.current_mode] : null;
     const modeStr = modeData ? modeData.width + "x" + modeData.height + "@" + (modeData.refresh_rate / 1000).toFixed(3) : null;
     const cfg = {
@@ -657,13 +497,6 @@ function outputNeutralConfig(outputName, outputData, niriSettings, hyprlandSetti
         "disabled": false
     };
     switch (compositor) {
-    case "niri":
-        cfg.niri = Object.assign({}, niriSettings?.[niriIdentifier(outputData, outputName, displayNameMode)] || {});
-        if (cfg.niri.disabled) {
-            delete cfg.niri.disabled;
-            cfg.disabled = true;
-        }
-        return cfg;
     case "hyprland":
         cfg.hyprland = Object.assign({}, hyprlandSettings?.[hyprlandIdentifier(outputData, outputName, displayNameMode)] || {});
         if (outputData.mirror)
@@ -890,13 +723,7 @@ function physicalSize(output) {
 }
 
 function roundLogical(value, compositor) {
-    switch (compositor) {
-    case "niri":
-        // niri rounds the placed output, smithay's Space ceils mapped ones, only ceil never overlaps in either order (#3875)
-        return Math.ceil(value);
-    default:
-        return Math.round(value);
-    }
+    return Math.round(value);
 }
 
 function logicalSize(output, compositor) {
@@ -1132,7 +959,6 @@ function scaleFromNumerator(numerator) {
 
 function scaleNumeratorStep(compositor) {
     switch (compositor) {
-    case "niri":
     case "hyprland":
         return 1;
     default:
@@ -1307,12 +1133,6 @@ function restoreModeValue(mode, backend) {
 
 function outputVrrEnabled(output) {
     return output.vrr_enabled === true || output.adaptiveSync === 1;
-}
-
-function niriCurrentMode(output) {
-    if (!output || !output.modes || output.current_mode === undefined)
-        return null;
-    return output.modes[output.current_mode] || null;
 }
 
 function batteryRefreshMode(output, currentMode, backend, target, tolerance) {

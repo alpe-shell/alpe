@@ -1,4 +1,3 @@
-import QtCore
 import QtQuick
 import qs.Common
 import qs.Services
@@ -14,32 +13,11 @@ Item {
     LayoutMirroring.enabled: I18n.isRtl
     LayoutMirroring.childrenInherit: true
 
-    property string xrayConflictSource: ""
-
     ConfigInclude {
         id: layoutInclude
         includeKind: "layout"
         onFixed: SettingsData.updateCompositorLayout()
     }
-
-    function checkXrayConflicts() {
-        if (!CompositorService.isNiri)
-            return;
-        const configDir = Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation));
-        const script = `cd "${configDir}/niri" 2>/dev/null || exit 0
-files="config.kdl"
-for f in $(sed -nE 's/^[[:space:]]*include[[:space:]]+"([^"]+)".*/\\1/p' config.kdl 2>/dev/null); do
-    case "$f" in dms/*|/*dms/*) continue ;; esac
-    [ -f "$f" ] && files="$files $f"
-done
-awk '$1 == "xray" { print FILENAME ":" FNR; exit }' $files 2>/dev/null`;
-
-        Proc.runCommand("check-xray-conflict", ["sh", "-c", script], (output, exitCode) => {
-            xrayConflictSource = exitCode === 0 ? output.trim() : "";
-        });
-    }
-
-    Component.onCompleted: checkXrayConflicts()
 
     SettingsPage {
         id: layoutColumn
@@ -49,137 +27,13 @@ awk '$1 == "xray" { print FILENAME ":" FNR; exit }' $files 2>/dev/null`;
             visibleCondition: layoutInclude.compositorSupported
         }
 
-        StyledRect {
-            width: parent.width
-            height: xrayConflictRow.implicitHeight + Theme.spacingL * 2
-            radius: Theme.cornerRadius
-            color: Theme.withAlpha(Theme.primary, 0.15)
-            border.color: Theme.withAlpha(Theme.primary, 0.3)
-            border.width: Theme.outlineWidth
-            visible: root.xrayConflictSource !== ""
-
-            Row {
-                id: xrayConflictRow
-                anchors.fill: parent
-                anchors.margins: Theme.spacingL
-                spacing: Theme.spacingM
-
-                DIcon {
-                    name: "warning"
-                    size: Theme.iconSize
-                    color: Theme.primary
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                StyledText {
-                    width: parent.width - Theme.iconSize - Theme.spacingM
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: I18n.tr("An xray rule at %1 may conflict with the Xray settings below", "compositor layout warning, %1 is a config location").arg(root.xrayConflictSource)
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: Theme.surfaceVariantText
-                    wrapMode: Text.WordWrap
-                }
-            }
-        }
-
-        SettingsCard {
-            width: parent.width
-            tags: ["niri", "layout", "gaps", "radius", "window", "border"]
-            title: I18n.tr("Layout overrides")
-            settingKey: "niriLayout"
-            iconName: "layers"
-            visible: CompositorService.isNiri
-
-            SettingsButtonGroupRow {
-                tags: ["niri", "gaps", "override", "unmanaged"]
-                settingKey: "niriLayoutGapsMode"
-                resetKeys: ["niriLayoutGapsOverride"]
-                text: I18n.tr("Gaps", "noun, window gaps mode in compositor layout settings")
-                description: I18n.tr("Auto follows bar spacing, Off keeps your %1 config", "gaps mode description, %1 is the compositor name").arg("niri")
-                model: [I18n.tr("Auto"), I18n.tr("Custom"), I18n.tr("Off")]
-                currentIndex: {
-                    if (SettingsData.niriLayoutGapsOverride === -2)
-                        return 2;
-                    return SettingsData.niriLayoutGapsOverride >= 0 ? 1 : 0;
-                }
-                onSelectionChanged: (index, selected) => {
-                    if (!selected)
-                        return;
-                    switch (index) {
-                    case 1:
-                        SettingsData.set("niriLayoutGapsOverride", Math.max(4, (SettingsData.getPrimaryBarConfig()?.spacing ?? 4)));
-                        return;
-                    case 2:
-                        SettingsData.set("niriLayoutGapsOverride", -2);
-                        return;
-                    default:
-                        SettingsData.set("niriLayoutGapsOverride", -1);
-                    }
-                }
-            }
-
-            SettingsSliderRow {
-                tags: ["niri", "gaps", "override"]
-                settingKey: "niriLayoutGapsOverride"
-                resetKeys: []
-                text: I18n.tr("Window gaps")
-                visible: SettingsData.niriLayoutGapsOverride >= 0
-                value: Math.max(0, SettingsData.niriLayoutGapsOverride)
-                minimum: 0
-                maximum: 50
-                unit: "px"
-                onSliderValueChanged: newValue => SettingsData.set("niriLayoutGapsOverride", newValue)
-            }
-
-            SettingsControlledBy {
-                target: "surfaces"
-                parentModal: root.parentModal
-                section: "windowRadius"
-                settingLabel: I18n.tr("Window radius")
-                reason: Math.round(Theme.windowRadius) + "px"
-            }
-
-            SettingsToggleSliderRow {
-                tags: ["niri", "border", "override", "focus-ring"]
-                settingKey: "niriLayoutBorderSizeEnabled"
-                text: I18n.tr("Override border size")
-                checked: SettingsData.niriLayoutBorderSize >= 0
-                value: Math.max(0, SettingsData.niriLayoutBorderSize)
-                minimum: 0
-                maximum: 10
-                unit: "px"
-                onToggled: checked => SettingsData.set("niriLayoutBorderSize", checked ? 2 : -1)
-                onSliderValueChanged: newValue => SettingsData.set("niriLayoutBorderSize", newValue)
-            }
-
-            SettingsToggleRow {
-                visible: CompositorService.isNiri
-                tags: ["niri", "xray", "blur", "background-effect", "performance"]
-                settingKey: "niriLayoutXrayEnabled"
-                text: I18n.tr("Xray blur")
-                description: I18n.tr("Blurred surfaces show the wallpaper, not the windows beneath")
-                checked: NiriService.layoutXrayEnabled
-                onToggled: checked => NiriService.setLayoutXray(checked)
-            }
-
-            SettingsToggleRow {
-                visible: CompositorService.isNiri && !SettingsData.connectedFrameModeActive
-                tags: ["niri", "xray", "bar", "frame", "performance"]
-                settingKey: "niriLayoutBarXrayEnabled"
-                text: SettingsData.frameEnabled ? I18n.tr("Frame xray") : I18n.tr("Bar xray")
-                description: I18n.tr("Blur against the wallpaper even with xray off")
-                checked: NiriService.layoutBarXrayEnabled
-                onToggled: checked => NiriService.setLayoutBarXray(checked)
-            }
-        }
-
         SettingsCard {
             width: parent.width
             tags: ["compositor", "toast"]
             title: I18n.tr("Notifications")
             settingKey: "compositorNotifications"
             iconName: "notifications"
-            visible: CompositorService.isNiri || CompositorService.isMango
+            visible: CompositorService.isMango
 
             SettingsToggleRow {
                 tags: ["compositor", "toast", "reload"]
@@ -187,24 +41,6 @@ awk '$1 == "xray" { print FILENAME ":" FNR; exit }' $files 2>/dev/null`;
                 text: I18n.tr("Show \"config reloaded\" toast")
                 checked: SessionData.showConfigReloadToast
                 onToggled: checked => SessionData.showConfigReloadToast = checked
-            }
-        }
-
-        SettingsCard {
-            width: parent.width
-            tags: ["niri", "overview", "window", "focus", "launch", "launcher", "dock", "settings"]
-            title: I18n.tr("Overview")
-            settingKey: "niriOverview"
-            iconName: "overview"
-            visible: CompositorService.isNiri
-
-            SettingsToggleRow {
-                tags: ["niri", "overview", "window", "focus", "launch", "launcher", "dock", "settings"]
-                settingKey: "closeNiriOverviewOnWindowFocus"
-                text: I18n.tr("Close on window focus")
-                description: I18n.tr("Leaves the overview when DMS launches an app or focuses a window", "niri overview close on window focus toggle description")
-                checked: SettingsData.closeNiriOverviewOnWindowFocus
-                onToggled: checked => SettingsData.set("closeNiriOverviewOnWindowFocus", checked)
             }
         }
 

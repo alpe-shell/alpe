@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Effects
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
@@ -17,8 +16,7 @@ Variants {
     // after a wl_output rebind, not at initial startup.
     property var _seenScreens: ({})
     readonly property bool desktopMenuEnabled: CompositorService.desktopContextMenuEnabled
-    // niri skips place-within-backdrop surfaces when hit-testing, so the wallpaper never sees clicks there.
-    readonly property bool desktopMenuOnWallpaper: desktopMenuEnabled && !CompositorService.isNiri
+    readonly property bool desktopMenuOnWallpaper: desktopMenuEnabled
     model: SettingsData.getFilteredScreens("wallpaper")
 
     PanelWindow {
@@ -56,30 +54,6 @@ Variants {
             onClicked: mouse => PopoutService.desktopContextMenu?.open(wallpaperWindow.screen, mouse.x, mouse.y, false)
         }
 
-        Loader {
-            active: variants.desktopMenuEnabled && CompositorService.isNiri
-
-            sourceComponent: PanelWindow {
-                screen: wallpaperWindow.screen
-                color: "transparent"
-
-                WlrLayershell.namespace: "dms:desktop-input"
-                WlrLayershell.layer: WlrLayer.Background
-                WlrLayershell.exclusionMode: ExclusionMode.Ignore
-
-                anchors.top: true
-                anchors.bottom: true
-                anchors.left: true
-                anchors.right: true
-
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.RightButton
-                    onClicked: mouse => PopoutService.desktopContextMenu?.open(wallpaperWindow.screen, mouse.x, mouse.y, false)
-                }
-            }
-        }
-
         Item {
             id: root
             anchors.fill: parent
@@ -114,9 +88,9 @@ Variants {
             property int currentWorkspaceIndex: 0
             property int totalWorkspaces: 1
             // Also requires the image to overflow on the compositor's scroll
-            // axis — niri scrolls Y, Hyprland scrolls X — otherwise the
+            // axis (Hyprland scrolls X), otherwise the
             // currentWallpaper Fill fallback handles it.
-            property bool effectiveScrolling: scrollingEnabled && totalWorkspaces > 1 && (!imageMetrics.ready || (CompositorService.isNiri && imageMetrics.nativeWidth / imageMetrics.nativeHeight < root.textureWidth / root.textureHeight - 0.01) || (CompositorService.isHyprland && imageMetrics.nativeWidth / imageMetrics.nativeHeight > root.textureWidth / root.textureHeight + 0.01))
+            property bool effectiveScrolling: scrollingEnabled && totalWorkspaces > 1 && (!imageMetrics.ready || (CompositorService.isHyprland && imageMetrics.nativeWidth / imageMetrics.nativeHeight > root.textureWidth / root.textureHeight + 0.01))
 
             Connections {
                 target: SessionData
@@ -126,15 +100,6 @@ Variants {
                     const newSource = SessionData.getMonitorWallpaper(modelData.name) || "";
                     if (newSource !== root.wallpaperSource)
                         root.wallpaperSource = newSource;
-                }
-            }
-
-            Connections {
-                target: CompositorService.isNiri ? NiriService : null
-                enabled: CompositorService.isNiri && root.scrollingEnabled
-
-                function onAllWorkspacesChanged() {
-                    root.updateWorkspaceData();
                 }
             }
 
@@ -181,16 +146,15 @@ Variants {
             property string currentSource: ""
             property bool frozenValid: false
             property int _freezeWaitFrames: 0
-            readonly property bool overviewBlurActive: CompositorService.isNiri && SettingsData.blurWallpaperOnOverview && NiriService.inOverview && (currentSource !== "" || showsBackdrop)
             readonly property var backingWindow: Window.window
             readonly property bool showsBackdrop: !source || isColorSource || currentWallpaper.status === Image.Error
             readonly property bool backdropBusy: showsBackdrop && !(backdropLoader.item?.ready ?? false)
-            readonly property bool renderActive: backdropBusy || effectActive || overviewBlurActive || pendingWallpaper !== "" || _deferredSource !== "" || changePending || _freezeWaitFrames > 0 || frameAnim.running || currentWallpaper.status === Image.Loading || nextWallpaper.status === Image.Loading || parallaxImage.status === Image.Loading || lockScrollSampler.busy || videoRendering
+            readonly property bool renderActive: backdropBusy || effectActive || pendingWallpaper !== "" || _deferredSource !== "" || changePending || _freezeWaitFrames > 0 || frameAnim.running || currentWallpaper.status === Image.Loading || nextWallpaper.status === Image.Loading || parallaxImage.status === Image.Loading || lockScrollSampler.busy || videoRendering
             property int _settleFrames: 3
 
             readonly property bool fullscreenOnScreen: isVideoSource && CompositorService.fullscreenToplevelOnScreen(modelData)
             // Nothing decodes while the video cannot be seen.
-            readonly property bool videoShouldPlay: isVideoSource && wallpaperWindow.visible && !IdleService.isShellLocked && !IdleService.monitorsOff && !overviewBlurActive && !fullscreenOnScreen
+            readonly property bool videoShouldPlay: isVideoSource && wallpaperWindow.visible && !IdleService.isShellLocked && !IdleService.monitorsOff && !fullscreenOnScreen
             readonly property bool videoRendering: videoLoader.item?.rendering ?? false
 
             function invalidate() {
@@ -379,15 +343,6 @@ Variants {
             }
 
             Connections {
-                target: NiriService
-                function onDisplayScalesChanged() {
-                    root._recheckScreenScale();
-                    root.invalidate();
-                    root._onOutputRebind();
-                }
-            }
-
-            Connections {
                 target: WlrOutputService
                 function onWlrOutputAvailableChanged() {
                     root._recheckScreenScale();
@@ -436,17 +391,7 @@ Variants {
                 let newTargetX = 50.0;
                 let newTargetY = 50.0;
 
-                if (CompositorService.isNiri) {
-                    const outputWorkspaces = NiriService.allWorkspaces.filter(ws => ws.output === modelData.name);
-                    totalWorkspaces = outputWorkspaces.length;
-
-                    const activeWs = outputWorkspaces.find(ws => ws.is_active);
-                    currentWorkspaceIndex = activeWs ? activeWs.idx : 0;
-
-                    const scrollPercent = totalWorkspaces > 1 ? ((currentWorkspaceIndex - 1) / (totalWorkspaces - 1)) * 100.0 : 0.0;
-
-                    newTargetY = scrollPercent;
-                } else if (CompositorService.isHyprland) {
+                if (CompositorService.isHyprland) {
                     const workspaces = Hyprland.workspaces?.values || [];
                     const monitorWorkspaces = workspaces.filter(ws => ws.monitor?.name === modelData.name).sort((a, b) => a.id - b.id);
 
@@ -475,8 +420,8 @@ Variants {
                 property real targetX: 0.0
                 property real targetY: 0.0
 
-                property real damping: CompositorService.isNiri ? 63.25 : 89.44
-                property real stiffness: CompositorService.isNiri ? 1000.0 : 2000.0
+                property real damping: 89.44
+                property real stiffness: 2000.0
                 property real mass: 1.0
 
                 function springPositionJS(t, from, to) {
@@ -521,8 +466,8 @@ Variants {
                         stiffness = 8000.0;
                     } else {
                         // Restore normal spring parameters
-                        damping = CompositorService.isNiri ? 63.25 : 89.44;
-                        stiffness = CompositorService.isNiri ? 1000.0 : 2000.0;
+                        damping = 89.44;
+                        stiffness = 2000.0;
                     }
 
                     startX = currentX;
@@ -653,10 +598,6 @@ Variants {
                         _deferredSource = formattedSource;
                         return;
                     }
-                    setWallpaperImmediate(formattedSource);
-                    return;
-                }
-                if (CompositorService.isNiri && SessionData.isSwitchingMode) {
                     setWallpaperImmediate(formattedSource);
                     return;
                 }
@@ -1280,21 +1221,6 @@ Variants {
                     property: "shouldPlay"
                     value: root.videoShouldPlay
                     when: videoLoader.item !== null
-                }
-            }
-
-            Loader {
-                id: overviewBlurLoader
-                anchors.fill: parent
-                active: root.overviewBlurActive
-
-                sourceComponent: MultiEffect {
-                    anchors.fill: parent
-                    source: root.showsBackdrop ? backdropLoader.item : (effectLoader.active ? effectLoader.item : (parallaxLoader.active ? parallaxLoader.item : srcCurrent))
-                    blurEnabled: true
-                    blur: 0.8
-                    blurMax: 75
-                    autoPaddingEnabled: false
                 }
             }
         }

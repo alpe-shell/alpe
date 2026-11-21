@@ -368,9 +368,7 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 let url = Site.docs + "/dms/keybinds-ipc";
-                                if (CompositorService.isNiri)
-                                    url = Site.docs + "/dms/compositors#dms-keybindings";
-                                else if (CompositorService.isHyprland)
+                                if (CompositorService.isHyprland)
                                     url = Site.docs + "/dms/compositors#dms-keybindings-1";
                                 else if (CompositorService.isMango)
                                     url = Site.docs + "/dms/compositors#dms-keybindings-2";
@@ -463,7 +461,7 @@ Item {
                         width: (parent.width - Theme.spacingS) / 2
                         iconName: "keyboard"
                         title: I18n.tr("Keybinds", "greeter settings link")
-                        description: I18n.tr("niri shortcuts config", "greeter keybinds niri description")
+                        description: I18n.tr("Shortcuts config", "greeter keybinds description")
                         visible: KeybindsService.available
                         onClicked: PopoutService.openSettingsWithTab("keybinds")
                     }

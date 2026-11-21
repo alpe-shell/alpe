@@ -49,7 +49,7 @@ func (o *WaylandOutput) effectiveScale() float64 {
 	return scale
 }
 
-// Hyprland >= 0.57 (901881c9f) sends screencopy frames in logical orientation; wlroots and niri send the native framebuffer.
+// Hyprland >= 0.57 (901881c9f) sends screencopy frames in logical orientation; wlroots sends the native framebuffer.
 // !TODO: drop the version fallback once every distro ships hyprland >= 0.57
 func FrameInLogicalOrientation(transform, outW, outH int32, frameW, frameH int) bool {
 	switch transform {
@@ -239,13 +239,6 @@ func (s *Screenshoter) captureRegion() (*CaptureResult, error) {
 }
 
 func (s *Screenshoter) captureWindow() (*CaptureResult, error) {
-	if DetectCompositor() == CompositorNiri {
-		if s.config.Geometry {
-			return nil, fmt.Errorf("window geometry mode is not supported on niri")
-		}
-		return s.captureNiriWindow()
-	}
-
 	geom, err := GetActiveWindow()
 	if err != nil {
 		return nil, err

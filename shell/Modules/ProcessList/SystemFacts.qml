@@ -17,7 +17,6 @@ v() { command -v "$1" >/dev/null 2>&1; }
 p() { printf '%s=%s\\n' "$1" "$(printf '%s' "$2" | head -n1 | tr -d '\\r')"; }
 p qs "$(qs --version 2>/dev/null)"
 v hyprctl && p wm.hyprland "$(hyprctl version 2>/dev/null)"
-v niri && p wm.niri "$(niri --version 2>/dev/null)"
 v sway && p wm.sway "$(sway --version 2>/dev/null)"
 v scroll && p wm.scroll "$(scroll --version 2>/dev/null)"
 v labwc && p wm.labwc "$(labwc --version 2>/dev/null)"

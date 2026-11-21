@@ -216,13 +216,6 @@ Column {
         }
 
         SettingsToggleRow {
-            text: I18n.tr("Drag to reorder")
-            visible: CompositorService.isNiri
-            checked: root.page.value("workspaceDragReorder")
-            onToggled: checked => root.page.set("workspaceDragReorder", checked)
-        }
-
-        SettingsToggleRow {
             text: I18n.tr("Show all tags")
             visible: CompositorService.isMango
             checked: root.page.value("dwlShowAllTags")

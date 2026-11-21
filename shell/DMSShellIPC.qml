@@ -1938,7 +1938,7 @@ Item {
         }
 
         function open(): string {
-            if (!CompositorService.isNiri && !CompositorService.isHyprland && !CompositorService.isMango)
+            if (!CompositorService.isHyprland && !CompositorService.isMango)
                 return "WINDOW_RULES_UNSUPPORTED_COMPOSITOR";
             root.windowRuleModalLoaderRef.active = true;
             if (root.windowRuleModalLoaderRef.item) {
@@ -1957,7 +1957,7 @@ Item {
         }
 
         function toggle(): string {
-            if (!CompositorService.isNiri && !CompositorService.isHyprland && !CompositorService.isMango)
+            if (!CompositorService.isHyprland && !CompositorService.isMango)
                 return "WINDOW_RULES_UNSUPPORTED_COMPOSITOR";
             root.windowRuleModalLoaderRef.active = true;
             if (root.windowRuleModalLoaderRef.item) {
@@ -1975,10 +1975,6 @@ Item {
     }
 
     IpcHandler {
-        function cycle(): string {
-            return NiriService.cycleSingleOutput();
-        }
-
         function listProfiles(): string {
             const profiles = DisplayConfigState.validatedProfiles;
             const activeId = SessionData.getActiveDisplayProfile(CompositorService.compositor);

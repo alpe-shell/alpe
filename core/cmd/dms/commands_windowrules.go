@@ -28,7 +28,7 @@ var windowrulesListCmd = &cobra.Command{
 	Args:  cobra.MaximumNArgs(1),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if len(args) == 0 {
-			return []string{"hyprland", "niri", "mango"}, cobra.ShellCompDirectiveNoFileComp
+			return []string{"hyprland", "mango"}, cobra.ShellCompDirectiveNoFileComp
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	},
@@ -42,7 +42,7 @@ var windowrulesAddCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if len(args) == 0 {
-			return []string{"hyprland", "niri", "mango"}, cobra.ShellCompDirectiveNoFileComp
+			return []string{"hyprland", "mango"}, cobra.ShellCompDirectiveNoFileComp
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	},
@@ -56,7 +56,7 @@ var windowrulesUpdateCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(3),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if len(args) == 0 {
-			return []string{"hyprland", "niri", "mango"}, cobra.ShellCompDirectiveNoFileComp
+			return []string{"hyprland", "mango"}, cobra.ShellCompDirectiveNoFileComp
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	},
@@ -70,7 +70,7 @@ var windowrulesRemoveCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if len(args) == 0 {
-			return []string{"hyprland", "niri", "mango"}, cobra.ShellCompDirectiveNoFileComp
+			return []string{"hyprland", "mango"}, cobra.ShellCompDirectiveNoFileComp
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	},
@@ -84,7 +84,7 @@ var windowrulesReorderCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if len(args) == 0 {
-			return []string{"hyprland", "niri", "mango"}, cobra.ShellCompDirectiveNoFileComp
+			return []string{"hyprland", "mango"}, cobra.ShellCompDirectiveNoFileComp
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	},
@@ -116,9 +116,6 @@ func getCompositor(args []string) string {
 	if len(args) > 0 {
 		return strings.ToLower(args[0])
 	}
-	if os.Getenv("NIRI_SOCKET") != "" {
-		return "niri"
-	}
 	if os.Getenv("HYPRLAND_INSTANCE_SIGNATURE") != "" {
 		return "hyprland"
 	}
@@ -144,45 +141,12 @@ func writeRuleSuccess(id, path string) {
 func runWindowrulesList(cmd *cobra.Command, args []string) {
 	compositor := getCompositor(args)
 	if compositor == "" {
-		log.Fatalf("Could not detect compositor. Please specify: hyprland, niri, or mango")
+		log.Fatalf("Could not detect compositor. Please specify: hyprland or mango")
 	}
 
 	var result WindowRulesListResult
 
 	switch compositor {
-	case "niri":
-		configDir := filepath.Join(utils.XDGConfigHome(), "niri")
-
-		parseResult, err := providers.ParseNiriWindowRules(configDir)
-		if err != nil {
-			log.Fatalf("Failed to parse niri window rules: %v", err)
-		}
-
-		allRules := providers.ConvertNiriRulesToWindowRules(parseResult.Rules)
-
-		provider := providers.NewNiriWritableProvider(configDir)
-		dmsRulesPath := provider.GetOverridePath()
-		dmsRules, _ := provider.LoadDMSRules()
-
-		dmsRuleMap := make(map[int]windowrules.WindowRule)
-		for i, dr := range dmsRules {
-			dmsRuleMap[i] = dr
-		}
-
-		dmsIdx := 0
-		for i, r := range allRules {
-			if r.Source == dmsRulesPath {
-				if dmr, ok := dmsRuleMap[dmsIdx]; ok {
-					allRules[i].ID = dmr.ID
-					allRules[i].Name = dmr.Name
-				}
-				dmsIdx++
-			}
-		}
-
-		result.Rules = allRules
-		result.DMSStatus = parseResult.DMSStatus
-
 	case "hyprland":
 		configDir := filepath.Join(utils.XDGConfigHome(), "hypr")
 
@@ -345,9 +309,6 @@ func runWindowrulesReorder(cmd *cobra.Command, args []string) {
 
 func getWindowRulesProvider(compositor string) windowrules.WritableProvider {
 	switch compositor {
-	case "niri":
-		configDir := filepath.Join(utils.XDGConfigHome(), "niri")
-		return providers.NewNiriWritableProvider(configDir)
 	case "hyprland":
 		configDir := filepath.Join(utils.XDGConfigHome(), "hypr")
 		return providers.NewHyprlandWritableProvider(configDir)

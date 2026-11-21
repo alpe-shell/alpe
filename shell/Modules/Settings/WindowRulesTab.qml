@@ -204,7 +204,7 @@ Item {
 
     function loadWindowRules() {
         const compositor = CompositorService.compositor;
-        if (compositor !== "niri" && compositor !== "hyprland" && compositor !== "mango") {
+        if (compositor !== "hyprland" && compositor !== "mango") {
             windowRulesInclude.checking = false;
             windowRules = [];
             externalRules = [];
@@ -239,7 +239,7 @@ Item {
             return;
         }
         const compositor = CompositorService.compositor;
-        if (compositor !== "niri" && compositor !== "hyprland" && compositor !== "mango")
+        if (compositor !== "hyprland" && compositor !== "mango")
             return;
 
         Proc.runCommand("remove-windowrule", [Proc.dmsBin, "config", "windowrules", "remove", compositor, ruleId], (output, exitCode) => {
@@ -259,7 +259,7 @@ Item {
             return;
         }
         const compositor = CompositorService.compositor;
-        if (compositor !== "niri" && compositor !== "hyprland" && compositor !== "mango")
+        if (compositor !== "hyprland" && compositor !== "mango")
             return;
         const previous = windowRules;
         const reordered = indices.map(index => previous[index]);

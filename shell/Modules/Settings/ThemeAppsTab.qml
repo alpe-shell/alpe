@@ -217,18 +217,6 @@ Item {
             SettingsToggleRow {
                 enabled: SettingsData.runDmsMatugenTemplates
                 tab: "theme"
-                tags: ["matugen", "niri", "template"]
-                settingKey: "matugenTemplateNiri"
-                text: "niri"
-                description: root.getTemplateDescription("niri", "")
-                descriptionColor: root.getTemplateDescriptionColor("niri")
-                checked: SettingsData.matugenTemplateNiri
-                onToggled: checked => SettingsData.set("matugenTemplateNiri", checked)
-            }
-
-            SettingsToggleRow {
-                enabled: SettingsData.runDmsMatugenTemplates
-                tab: "theme"
                 tags: ["matugen", "hyprland", "template"]
                 settingKey: "matugenTemplateHyprland"
                 text: "Hyprland"

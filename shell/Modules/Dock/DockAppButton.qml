@@ -147,9 +147,7 @@ Item {
     function isToplevelFocused(toplevel) {
         if (!toplevel)
             return false;
-        if (toplevel.activated)
-            return true;
-        return CompositorService.overviewFocusedToplevel([toplevel]) !== null;
+        return !!toplevel.activated;
     }
 
     function restoreSpecialWorkspaceWindow(waylandToplevel) {

@@ -465,41 +465,6 @@ func TestCheckMangoConfigReadsOverviewBindsFromToml(t *testing.T) {
 	}
 }
 
-func TestCheckNiriConfig(t *testing.T) {
-	dir := t.TempDir()
-	if err := os.MkdirAll(filepath.Join(dir, "dms"), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	write := func(name, content string) {
-		if err := os.WriteFile(filepath.Join(dir, name), []byte(content), 0o644); err != nil {
-			t.Fatal(err)
-		}
-	}
-	write("config.kdl", `debug {
-    keep-max-bpc-unchanged
-}
-/-debug {
-    keep-max-bpc-unchanged
-}
-// keep-max-bpc-unchanged
-/* debug {
-    keep-max-bpc-unchanged
-} */
-debug { /-keep-max-bpc-unchanged; render-drm-device r#"/dev/dri/renderD128"# }
-include optional=true "dms/binds.kdl"
-`)
-	write("dms/binds.kdl", "binds {\n    Mod+O { toggle-overview; }\n}\n")
-
-	var got []string
-	for _, r := range checkNiriConfig(dir) {
-		got = append(got, r.message)
-	}
-	want := []string{"config.kdl:2 sets keep-max-bpc-unchanged"}
-	if !slices.Equal(got, want) {
-		t.Fatalf("got %q", got)
-	}
-}
-
 func TestMangoLacksSnakeCase(t *testing.T) {
 	for ver, want := range map[string]bool{
 		"0.17.5": true,

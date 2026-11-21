@@ -27,7 +27,7 @@ var resolveIncludeCmd = &cobra.Command{
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		switch len(args) {
 		case 0:
-			return []string{"hyprland", "niri", "mangowc"}, cobra.ShellCompDirectiveNoFileComp
+			return []string{"hyprland", "mangowc"}, cobra.ShellCompDirectiveNoFileComp
 		case 1:
 			return []string{
 				"binds.lua",
@@ -38,11 +38,6 @@ var resolveIncludeCmd = &cobra.Command{
 				"cursor.lua",
 				"input.lua",
 				"windowrules.lua",
-				"cursor.kdl",
-				"layout.kdl",
-				"outputs.kdl",
-				"binds.kdl",
-				"input.kdl",
 				"cursor.conf",
 				"input.conf",
 				"layout.conf",
@@ -97,8 +92,6 @@ func runResolveInclude(cmd *cobra.Command, args []string) {
 	switch compositor {
 	case "hyprland":
 		result, err = checkHyprlandInclude(filename)
-	case "niri":
-		result, err = checkNiriInclude(filename)
 	case "mangowc", "mango":
 		result, err = checkMangoWCInclude(filename)
 	default:
@@ -136,82 +129,6 @@ func checkHyprlandInclude(filename string) (IncludeResult, error) {
 	return result, nil
 }
 
-func checkNiriInclude(filename string) (IncludeResult, error) {
-	configDir := filepath.Join(utils.XDGConfigHome(), "niri")
-
-	targetPath := filepath.Join(configDir, "dms", filename)
-	result := IncludeResult{}
-
-	if _, err := os.Stat(targetPath); err == nil {
-		result.Exists = true
-	}
-
-	mainConfig := filepath.Join(configDir, "config.kdl")
-	if _, err := os.Stat(mainConfig); os.IsNotExist(err) {
-		return result, nil
-	}
-
-	targetAbs, err := filepath.Abs(targetPath)
-	if err != nil {
-		return result, err
-	}
-
-	processed := make(map[string]bool)
-	result.Included = niriFindInclude(mainConfig, targetAbs, processed)
-	return result, nil
-}
-
-func niriFindInclude(filePath, target string, processed map[string]bool) bool {
-	absPath, err := filepath.Abs(filePath)
-	if err != nil {
-		return false
-	}
-
-	if processed[absPath] {
-		return false
-	}
-	processed[absPath] = true
-
-	data, err := os.ReadFile(absPath)
-	if err != nil {
-		return false
-	}
-
-	baseDir := filepath.Dir(absPath)
-	content := string(data)
-
-	for line := range strings.SplitSeq(content, "\n") {
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "//") || trimmed == "" {
-			continue
-		}
-
-		if !strings.HasPrefix(trimmed, "include") {
-			continue
-		}
-
-		startQuote := strings.Index(trimmed, "\"")
-		if startQuote == -1 {
-			continue
-		}
-		endQuote := strings.LastIndex(trimmed, "\"")
-		if endQuote <= startQuote {
-			continue
-		}
-
-		fullPath, err := resolveSourcePath(baseDir, trimmed[startQuote+1:endQuote])
-		if err != nil {
-			continue
-		}
-
-		if fullPath == target || niriFindInclude(fullPath, target, processed) {
-			return true
-		}
-	}
-
-	return false
-}
-
 func checkMangoWCInclude(filename string) (IncludeResult, error) {
 	configDir := mangoconf.Dir()
 	targetPath := filepath.Join(configDir, "dms", filename)
@@ -223,15 +140,4 @@ func checkMangoWCInclude(filename string) (IncludeResult, error) {
 		result.Included = result.Included || (e.IsSource() && e.Value == targetPath)
 	})
 	return result, nil
-}
-
-func resolveSourcePath(baseDir, raw string) (string, error) {
-	expanded, err := utils.ExpandPath(raw)
-	if err != nil {
-		return "", err
-	}
-	if !filepath.IsAbs(expanded) {
-		expanded = filepath.Join(baseDir, expanded)
-	}
-	return filepath.Abs(expanded)
 }

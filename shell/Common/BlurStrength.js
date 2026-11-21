@@ -2,14 +2,11 @@
 
 // One shell-wide blur reach in logical px, per-compositor
 var HYPRLAND_DEFAULT = 48;
-var NIRI_DEFAULT = 42;
 
 function defaultReach(compositor) {
     switch (compositor) {
     case "hyprland":
         return HYPRLAND_DEFAULT;
-    case "niri":
-        return NIRI_DEFAULT;
     default:
         return 0;
     }
@@ -29,10 +26,3 @@ function hyprlandBlur(reach) {
     };
 }
 
-// Same kawase family; offset is free on the GPU while passes are not, so passes stay at niri's default 3
-function niriBlur(reach) {
-    return {
-        offset: Math.round(reach / 14 * 10) / 10,
-        passes: 3
-    };
-}

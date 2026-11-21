@@ -62,17 +62,17 @@ test("the shell field reads and writes the backslash escaping core uses", () => 
     ];
     for (const [command, action] of cases) {
         assert.equal(Actions.parseShellCommand(action), command, action);
-        assert.equal(Actions.buildShellAction("niri", command, "sh"), action, command);
-        assert.equal(Actions.getActionLabel(action, "niri"), command, action);
+        assert.equal(Actions.buildShellAction("hyprland", command, "sh"), action, command);
+        assert.equal(Actions.getActionLabel(action, "hyprland"), command, action);
     }
 });
 
 test("the cheatsheet loads a custom config path when one is given", () => {
-    const ctx = vm.createContext({ cheatsheetProvider: "niri", cheatsheetLoading: false, cheatsheetProcess: { running: false, command: [] } });
+    const ctx = vm.createContext({ cheatsheetProvider: "hyprland", cheatsheetLoading: false, cheatsheetProcess: { running: false, command: [] } });
     vm.runInContext(extract("loadCheatsheet"), ctx);
     for (const [provider, path, expected] of [
         ["sway", "/etc/sway/config", ["dms", "keybinds", "show", "sway", "--path", "/etc/sway/config"]],
-        ["", "", ["dms", "keybinds", "show", "niri"]]
+        ["", "", ["dms", "keybinds", "show", "hyprland"]]
     ]) {
         ctx.cheatsheetProcess.running = false;
         ctx.loadCheatsheet(provider, path);
@@ -80,15 +80,3 @@ test("the cheatsheet loads a custom config path when one is given", () => {
     }
 });
 
-test("niri argument fields keep quoted workspace names and land edits in the field they came from", () => {
-    const Actions = loadScript(new URL("../Common/KeybindActions.js", import.meta.url));
-    const edit = (action, changes) => {
-        const parsed = Actions.parseCompositorActionArgs("niri", action);
-        return Actions.buildCompositorAction("niri", parsed.base, Object.assign({}, parsed.args, changes));
-    };
-    assert.equal(edit('move-column-to-workspace "my work"', { focus: false }), 'move-column-to-workspace "my work" focus=false');
-    assert.equal(edit("focus-workspace 3", { index: "my work" }), 'focus-workspace "my work"');
-    assert.equal(edit('focus-workspace "a\\"b"', {}), 'focus-workspace "a\\"b"');
-    assert.equal(edit("set-column-width -10%", {}), "set-column-width -10%");
-    assert.deepEqual(Object.assign({}, Actions.parseCompositorActionArgs("niri", 'move-column-to-workspace "focus=false"').args), { index: "focus=false" });
-});

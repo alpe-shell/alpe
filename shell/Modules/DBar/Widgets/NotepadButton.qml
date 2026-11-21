@@ -9,7 +9,7 @@ import qs.Widgets
 BasePill {
     id: root
 
-    readonly property string focusedScreenName: (CompositorService.isHyprland && typeof Hyprland !== "undefined" && Hyprland.focusedMonitor ? (Hyprland.focusedMonitor.name || "") : CompositorService.isNiri && typeof NiriService !== "undefined" && NiriService.currentOutput ? NiriService.currentOutput : "")
+    readonly property string focusedScreenName: (CompositorService.isHyprland && typeof Hyprland !== "undefined" && Hyprland.focusedMonitor ? (Hyprland.focusedMonitor.name || "") : "")
     readonly property string targetScreenName: parentScreen?.name || focusedScreenName
 
     function resolveNotepadInstance() {

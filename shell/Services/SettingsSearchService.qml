@@ -70,7 +70,6 @@ Singleton {
     }
 
     readonly property var conditionMap: ({
-            "isNiri": () => CompositorService.isNiri,
             "pointerCapable": () => CompositorService.supportsPointerConfig,
             "inputCapable": () => CompositorService.supportsInputConfig,
             "isHyprland": () => CompositorService.isHyprland,
@@ -78,8 +77,8 @@ Singleton {
             "nativeOverviewCapable": () => CompositorService.supportsNativeOverview,
             "smartDockCapable": () => CompositorService.supportsSmartDock,
             "workspaceFollowFocusCapable": () => CompositorService.supportsWorkspaceFollowFocus,
-            "isHyprlandOrNiri": () => CompositorService.isHyprland || CompositorService.isNiri,
-            "isNiriOrMango": () => CompositorService.isNiri || CompositorService.isMango,
+            "isHyprlandOrNiri": () => CompositorService.isHyprland,
+            "isNiriOrMango": () => CompositorService.isMango,
             "windowRulesCapable": () => CompositorService.supportsWindowRules,
             "layoutCapable": () => CompositorService.supportsLayoutConfig,
             "keybindsAvailable": () => KeybindsService.available,

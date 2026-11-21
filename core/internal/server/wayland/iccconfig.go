@@ -114,6 +114,9 @@ func migrateLegacyICCConfig() {
 		return
 	}
 	legacyDir := legacyICCDir()
+	if legacyDir == "" {
+		return
+	}
 	legacyPath := filepath.Join(legacyDir, "wayland.json")
 	data, err := os.ReadFile(legacyPath)
 	if err != nil {
@@ -172,12 +175,14 @@ func migrateLegacyICCConfig() {
 }
 
 func legacyICCDir() string {
-	compositorDir := "niri"
+	compositorDir := ""
 	switch screenshot.DetectCompositor() {
 	case screenshot.CompositorHyprland:
 		compositorDir = "hypr"
 	case screenshot.CompositorMango:
 		compositorDir = "mango"
+	default:
+		return ""
 	}
 	return filepath.Join(utils.XDGConfigHome(), compositorDir, "dms")
 }

@@ -325,7 +325,8 @@ BasePill {
     function isGroupVisible(groupId) {
         switch (groupId) {
         case "screenSharing":
-            return root.showScreenSharingIcon && NiriService.hasCasts;
+            // Die Freigabe-Erkennung gab es nur unter niri.
+            return false;
         case "network":
             return root.showNetworkIcon && NetworkService.networkAvailable;
         case "vpn":
@@ -516,8 +517,6 @@ BasePill {
                             size: root.vIconSize
                             color: {
                                 switch (verticalGroupItem.modelData.id) {
-                                case "screenSharing":
-                                    return NiriService.hasActiveCast ? Theme.primary : Theme.surfaceText;
                                 case "network":
                                     return root.getNetworkIconColor();
                                 case "vpn":
@@ -701,8 +700,6 @@ BasePill {
                             size: root.getControlCenterIconSize()
                             color: {
                                 switch (horizontalGroupItem.modelData.id) {
-                                case "screenSharing":
-                                    return NiriService.hasActiveCast ? Theme.primary : Theme.surfaceText;
                                 case "network":
                                     return root.getNetworkIconColor();
                                 case "vpn":

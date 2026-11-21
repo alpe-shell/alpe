@@ -79,8 +79,6 @@ Item {
 
     function bindsFileLabel() {
         switch (KeybindsService.currentProvider) {
-        case "niri":
-            return "dms/binds.kdl";
         case "hyprland":
             return "dms/binds-user.lua";
         default:

@@ -17,7 +17,7 @@ var systemdCmd = &cobra.Command{
 	Long: `Manage dms.service for the compositor session.
 
 enable makes the compositor's own session unit want dms.service, so DMS starts
-with that compositor only: hyprland-session.target, niri.service or
+with that compositor only: hyprland-session.target or
 mango-session.target. The compositor is the running one, or --compositor.`,
 }
 
@@ -118,16 +118,14 @@ func systemdCompositor() (deps.WindowManager, error) {
 	switch strings.ToLower(systemdCompositorFlag) {
 	case "hyprland":
 		return deps.WindowManagerHyprland, nil
-	case "niri":
-		return deps.WindowManagerNiri, nil
 	case "mango", "mangowc":
 		return deps.WindowManagerMango, nil
 	}
-	return 0, fmt.Errorf("unknown compositor %q (hyprland, niri or mango)", systemdCompositorFlag)
+	return 0, fmt.Errorf("unknown compositor %q (hyprland or mango)", systemdCompositorFlag)
 }
 
 func init() {
-	systemdEnableCmd.Flags().StringVar(&systemdCompositorFlag, "compositor", "", "hyprland, niri or mango (default: the running one)")
+	systemdEnableCmd.Flags().StringVar(&systemdCompositorFlag, "compositor", "", "hyprland or mango (default: the running one)")
 	systemdEnableCmd.Flags().Bool("now", false, "Also start dms.service")
 	systemdDisableCmd.Flags().Bool("now", false, "Also stop dms.service")
 	systemdCmd.AddCommand(systemdEnableCmd, systemdDisableCmd, systemdStatusCmd, systemdLifecycleCmd("start"), systemdLifecycleCmd("stop"), systemdLifecycleCmd("restart"))

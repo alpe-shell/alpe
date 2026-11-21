@@ -34,25 +34,25 @@ test("widget normalization preserves metadata, defaults and positional occurrenc
 test("focus discovery keeps compositor names separate from first-screen fallback", () => {
     const source = read("Services/CompositorService.qml");
     const context = vm.createContext({
-        isHyprland: false, isNiri: false, isSway: false, isScroll: false, isMiracle: false, isMango: false, isUmbriel: false,
+        isHyprland: false, isSway: false, isScroll: false, isMiracle: false, isMango: false, isUmbriel: false,
         Hyprland: { focusedMonitor: { name: "second" } },
-        NiriService: { currentOutput: "second" }, I3: { workspaces: { values: [{ focused: true, monitor: { name: "second" } }] } },
+        I3: { workspaces: { values: [{ focused: true, monitor: { name: "second" } }] } },
         MangoService: { activeOutput: "second" }, Quickshell: { screens: [{ name: "first" }, { name: "second" }] }
     });
     vm.runInContext(method(source, "getFocusedScreenName") + method(source, "getFocusedScreen"), context);
     assert.equal(context.getFocusedScreenName(), "");
     assert.equal(context.getFocusedScreen().name, "first");
-    for (const compositor of ["isHyprland", "isNiri", "isSway", "isScroll", "isMiracle", "isMango"]) {
+    for (const compositor of ["isHyprland", "isSway", "isScroll", "isMiracle", "isMango"]) {
         context[compositor] = true;
         assert.equal(context.getFocusedScreenName(), "second", compositor);
         assert.equal(context.getFocusedScreen().name, "second", compositor);
         context[compositor] = false;
     }
-    context.isNiri = true;
-    context.NiriService.currentOutput = "unmapped";
+    context.isMango = true;
+    context.MangoService.activeOutput = "unmapped";
     assert.equal(context.getFocusedScreenName(), "unmapped");
     assert.equal(context.getFocusedScreen().name, "first");
-    context.isNiri = false;
+    context.isMango = false;
     context.Quickshell.screens = [];
     assert.equal(context.getFocusedScreen(), null);
 });

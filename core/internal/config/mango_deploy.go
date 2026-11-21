@@ -24,8 +24,6 @@ func (cd *ConfigDeployer) SetReplaceBinds(replace bool) {
 // is absent on purpose: its binds.lua is DMS-owned and user binds sit in binds-user.lua.
 func ExistingBinds(wm deps.WindowManager) (string, bool) {
 	switch wm {
-	case deps.WindowManagerNiri:
-		return nonEmptyFile(filepath.Join(os.Getenv("HOME"), ".config", "niri", "dms", "binds.kdl"))
 	case deps.WindowManagerMango:
 		return MangoExistingBinds()
 	}
@@ -148,7 +146,7 @@ func (cd *ConfigDeployer) deployMangoConfig(terminalCommand string, useSystemd b
 	return result, nil
 }
 
-// Like niri, fragments the user or the shell already filled are left alone; the
+// Fragments the user or the shell already filled are left alone; the
 // replaced config.conf hands its binds, monitor and window rules to empty ones.
 func (cd *ConfigDeployer) deployMangoDmsConfigs(dmsDir, terminalCommand, oldMain, timestamp string) error {
 	stockBinds := strings.ReplaceAll(MangoBindsConfig, "{{TERMINAL_COMMAND}}", terminalCommand)

@@ -1848,12 +1848,10 @@ Singleton {
         if (typeof SettingsData !== "undefined") {
             const skipTemplates = [];
             if (!SettingsData.runDmsMatugenTemplates) {
-                skipTemplates.push("gtk", "nvim", "niri", "qt5ct", "qt6ct", "qtengine", "fcitx5", "firefox", "pywalfox", "zenbrowser", "vesktop", "vencord", "equibop", "ghostty", "kitty", "foot", "alacritty", "wezterm", "dgop", "kcolorscheme", "vscode", "emacs", "zed");
+                skipTemplates.push("gtk", "nvim", "qt5ct", "qt6ct", "qtengine", "fcitx5", "firefox", "pywalfox", "zenbrowser", "vesktop", "vencord", "equibop", "ghostty", "kitty", "foot", "alacritty", "wezterm", "dgop", "kcolorscheme", "vscode", "emacs", "zed");
             } else {
                 if (!SettingsData.matugenTemplateGtk)
                     skipTemplates.push("gtk");
-                if (!SettingsData.matugenTemplateNiri)
-                    skipTemplates.push("niri");
                 if (!SettingsData.matugenTemplateHyprland)
                     skipTemplates.push("hyprland");
                 if (!SettingsData.matugenTemplateMangowc)
@@ -2588,7 +2586,7 @@ Singleton {
         onTriggered: root._executeThemeGeneration()
     }
 
-    // These timers are for screen transitions, since sometimes QML still beats the niri call
+    // These timers are for screen transitions, since sometimes QML still beats the compositor call
     Timer {
         id: themeTransitionTimer
         interval: 50

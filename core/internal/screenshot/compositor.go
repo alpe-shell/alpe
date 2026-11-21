@@ -18,7 +18,6 @@ const (
 	CompositorUnknown Compositor = iota
 	CompositorHyprland
 	CompositorSway
-	CompositorNiri
 	CompositorScroll
 	CompositorMiracle
 	CompositorMango
@@ -39,7 +38,6 @@ func DetectCompositor() Compositor {
 	}{
 		{os.Getenv("MANGO_INSTANCE_SIGNATURE"), true, CompositorMango},
 		{os.Getenv("UMBRIEL_SOCKET"), true, CompositorUmbriel},
-		{os.Getenv("NIRI_SOCKET"), true, CompositorNiri},
 		{os.Getenv("SCROLLSOCK"), true, CompositorScroll},
 		{os.Getenv("MIRACLESOCK"), true, CompositorMiracle},
 		{os.Getenv("SWAYSOCK"), true, CompositorSway},
@@ -82,7 +80,7 @@ func GetActiveWindow() (*WindowGeometry, error) {
 	case CompositorMango:
 		return getMangoActiveWindow()
 	default:
-		return nil, fmt.Errorf("window capture requires Hyprland, Mango, or niri")
+		return nil, fmt.Errorf("window capture requires Hyprland or Mango")
 	}
 }
 
@@ -367,30 +365,6 @@ func getMangoActiveWindow() (*WindowGeometry, error) {
 	return nil, fmt.Errorf("no focused window")
 }
 
-type niriWorkspace struct {
-	Output    string `json:"output"`
-	IsFocused bool   `json:"is_focused"`
-}
-
-func getNiriFocusedMonitor() string {
-	output, err := exec.Command("niri", "msg", "-j", "workspaces").Output()
-	if err != nil {
-		return ""
-	}
-
-	var workspaces []niriWorkspace
-	if err := json.Unmarshal(output, &workspaces); err != nil {
-		return ""
-	}
-
-	for _, ws := range workspaces {
-		if ws.IsFocused {
-			return ws.Output
-		}
-	}
-	return ""
-}
-
 type umbrielWorkspace struct {
 	Output  string `json:"output"`
 	Focused bool   `json:"focused"`
@@ -425,8 +399,6 @@ func GetFocusedMonitor() string {
 		return getScrollFocusedMonitor()
 	case CompositorMiracle:
 		return getMiracleFocusedMonitor()
-	case CompositorNiri:
-		return getNiriFocusedMonitor()
 	case CompositorMango:
 		return getMangoFocusedMonitor()
 	case CompositorUmbriel:

@@ -9,13 +9,6 @@ var hyprlandBinds = Messages{
 	Active:      "DMS binds are active",
 }
 
-var niriBinds = Messages{
-	Missing:     "dms/binds.kdl does not exist",
-	NotIncluded: "dms/binds.kdl is not included in config.kdl",
-	Overridden:  "Some DMS binds may be overridden by config binds",
-	Active:      "DMS binds are active",
-}
-
 var mangoBinds = Messages{
 	Missing:     "dms/binds.conf does not exist",
 	NotIncluded: "dms/binds.conf is not sourced in config",
@@ -30,19 +23,10 @@ var hyprlandRules = Messages{
 	Active:      "DMS window rules are active",
 }
 
-var niriRules = Messages{
-	Missing:     "dms/windowrules.kdl does not exist",
-	NotIncluded: "dms/windowrules.kdl is not included in config.kdl",
-	Overridden:  "Some DMS rules may be overridden by config rules",
-	Active:      "DMS window rules are active",
-}
-
 var allDomains = map[string]Messages{
 	"hyprland binds": hyprlandBinds,
-	"niri binds":     niriBinds,
 	"mango binds":    mangoBinds,
 	"hyprland rules": hyprlandRules,
-	"niri rules":     niriRules,
 }
 
 func TestMissingFragmentIsNotEffective(t *testing.T) {

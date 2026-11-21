@@ -19,9 +19,7 @@ Item {
     readonly property bool spotlightIgnoresRows: SettingsData.launcherStyle === "spotlight" && !SettingsData.connectedFrameModeActive
     // Spotlight and island have no footer or border.
     readonly property bool fullLauncherUnused: SettingsData.launcherStyle !== "full" && !SettingsData.connectedFrameModeActive
-    // The niri overview launcher still uses size and footer when it is set to the full style.
-    readonly property bool niriOverviewUsesFull: CompositorService.isNiri && SettingsData.niriOverviewOverlayEnabled && SettingsData.niriOverviewLauncherStyle !== "spotlight"
-    readonly property bool spotlightIgnoresSize: spotlightIgnoresRows && !niriOverviewUsesFull
+    readonly property bool spotlightIgnoresSize: spotlightIgnoresRows
     readonly property var builtInPluginIds: ["dms_settings", "dms_notepad", "dms_sysmon", "dms_colorpicker", "dms_settings_search", "dms_clipboard_search", "dms_power", "dms_vpn", "dms_qr_generator"]
 
     function openKeybindsSearch(query) {
@@ -127,38 +125,6 @@ Item {
 
         SettingsCard {
             width: parent.width
-            iconName: "overview_key"
-            title: I18n.tr("Overview")
-            settingKey: "launcherNiriOverview"
-            tags: ["launcher", "niri", "overview", "overlay"]
-            visible: CompositorService.isNiri
-
-            SettingsToggleRow {
-                settingKey: "niriOverviewOverlayEnabled"
-                tags: ["launcher", "niri", "overview", "overlay", "enable"]
-                text: I18n.tr("Overlay")
-                description: I18n.tr("Typing in the overview opens the launcher")
-                checked: SettingsData.niriOverviewOverlayEnabled
-                onToggled: checked => SettingsData.set("niriOverviewOverlayEnabled", checked)
-            }
-
-            SettingsButtonGroupRow {
-                visible: SettingsData.niriOverviewOverlayEnabled
-                settingKey: "niriOverviewLauncherStyle"
-                tags: ["launcher", "niri", "overview", "overlay", "style", "spotlight", "full"]
-                text: I18n.tr("Opens")
-                model: [I18n.tr("Full"), I18n.tr("Spotlight")]
-                currentIndex: SettingsData.niriOverviewLauncherStyle === "spotlight" ? 1 : 0
-                onSelectionChanged: (index, selected) => {
-                    if (!selected)
-                        return;
-                    SettingsData.set("niriOverviewLauncherStyle", index === 1 ? "spotlight" : "full");
-                }
-            }
-        }
-
-        SettingsCard {
-            width: parent.width
             iconName: "tune"
             title: I18n.tr("Appearance")
             settingKey: "dankLauncherV2Appearance"
@@ -199,7 +165,7 @@ Item {
                 tags: ["launcher", "footer", "hints", "shortcuts", "modes", "filters"]
                 text: I18n.tr("Show footer")
                 checked: SettingsData.dankLauncherV2ShowFooter
-                enabled: SettingsData.dankLauncherV2Size !== "micro" && (!root.fullLauncherUnused || root.niriOverviewUsesFull)
+                enabled: SettingsData.dankLauncherV2Size !== "micro" && !root.fullLauncherUnused
                 onToggled: checked => SettingsData.set("dankLauncherV2ShowFooter", checked)
             }
 

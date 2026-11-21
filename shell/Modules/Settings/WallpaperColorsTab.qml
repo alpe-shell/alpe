@@ -214,10 +214,7 @@ Column {
 
     function setCursorHideTimeout(value) {
         const updated = JSON.parse(JSON.stringify(SettingsData.cursorSettings));
-        if (CompositorService.isNiri) {
-            updated.niri = updated.niri || {};
-            updated.niri.hideAfterInactiveMs = value;
-        } else if (CompositorService.isHyprland) {
+        if (CompositorService.isHyprland) {
             updated.hyprland = updated.hyprland || {};
             updated.hyprland.inactiveTimeout = value;
         } else {
@@ -636,15 +633,6 @@ Column {
             }
         }
 
-        SettingsToggleRow {
-            tab: "wallpaper"
-            tags: ["blur", "overview", "niri"]
-            settingKey: "blurWallpaperOnOverview"
-            visible: CompositorService.isNiri
-            text: I18n.tr("Blur on overview")
-            checked: SettingsData.blurWallpaperOnOverview
-            onToggled: checked => SettingsData.set("blurWallpaperOnOverview", checked)
-        }
     }
 
     SettingsCard {
@@ -1013,18 +1001,13 @@ Column {
             tags: ["cursor", "hide", "typing", "keyboard"]
             settingKey: "cursorHideWhenTyping"
             text: I18n.tr("Hide cursor when typing")
-            visible: CompositorService.isNiri || CompositorService.isHyprland
+            visible: CompositorService.isHyprland
             modified: checked
-            checked: CompositorService.isNiri ? (SettingsData.cursorSettings.niri?.hideWhenTyping || false) : (SettingsData.cursorSettings.hyprland?.hideOnKeyPress || false)
+            checked: SettingsData.cursorSettings.hyprland?.hideOnKeyPress || false
             onToggled: checked => {
                 const updated = JSON.parse(JSON.stringify(SettingsData.cursorSettings));
-                if (CompositorService.isNiri) {
-                    updated.niri = updated.niri || {};
-                    updated.niri.hideWhenTyping = checked;
-                } else {
-                    updated.hyprland = updated.hyprland || {};
-                    updated.hyprland.hideOnKeyPress = checked;
-                }
+                updated.hyprland = updated.hyprland || {};
+                updated.hyprland.hideOnKeyPress = checked;
                 SettingsData.set("cursorSettings", updated);
             }
         }
@@ -1072,15 +1055,13 @@ Column {
             minimumLabel: I18n.tr("Off")
             visible: CompositorService.supportsCursorConfig
             value: {
-                if (CompositorService.isNiri)
-                    return SettingsData.cursorSettings.niri?.hideAfterInactiveMs || 0;
                 if (CompositorService.isHyprland)
                     return SettingsData.cursorSettings.hyprland?.inactiveTimeout || 0;
                 return SettingsData.cursorSettings.mango?.cursorHideTimeout || 0;
             }
             minimum: 0
-            maximum: CompositorService.isNiri ? 5000 : 10
-            unit: CompositorService.isNiri ? "ms" : "s"
+            maximum: 10
+            unit: "s"
             modified: value !== 0
             onResetRequested: root.setCursorHideTimeout(0)
             onSliderValueChanged: newValue => root.setCursorHideTimeout(newValue)
@@ -1112,16 +1093,6 @@ Column {
             }
         }
 
-        SettingsToggleRow {
-            tab: "wallpaper"
-            tags: ["blur", "duplicate", "layer", "compositor", "niri", "blurwallpaper"]
-            settingKey: "blurredWallpaperLayer"
-            visible: CompositorService.isNiri
-            text: I18n.tr("Blur layer")
-            description: I18n.tr("Layer namespace %1, needs a niri blur rule", "blur layer toggle description, %1 is the layer namespace").arg("dms:blurwallpaper")
-            checked: SettingsData.blurredWallpaperLayer
-            onToggled: checked => SettingsData.set("blurredWallpaperLayer", checked)
-        }
     }
 
     ConfirmModal {

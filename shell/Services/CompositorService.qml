@@ -11,14 +11,12 @@ import qs.DCommon.Common as DCommon
 import qs.Services
 import "../Common/WorkspaceModel.js" as WorkspaceModel
 import "../Common/WindowModel.js" as WindowModel
-import "NiriFullscreen.js" as NiriFullscreen
 
 Singleton {
     id: root
     readonly property var log: Log.scoped("CompositorService")
 
     property bool isHyprland: false
-    property bool isNiri: false
     property bool isMango: false
     property bool isSway: false
     property bool isScroll: false
@@ -29,10 +27,10 @@ Singleton {
     property string compositor: "unknown"
     property bool compositorDetected: false
     property bool outputPowerAvailable: false
-    readonly property bool genericPowerBackend: compositorDetected && !isNiri && !isHyprland && !isMango && !isSway && !isScroll && !isMiracle && !isLabwc && !isUmbriel
+    readonly property bool genericPowerBackend: compositorDetected && !isHyprland && !isMango && !isSway && !isScroll && !isMiracle && !isLabwc && !isUmbriel
     onGenericPowerBackendChanged: probeOutputPower()
 
-    readonly property bool inOverview: (isHyprland && HyprlandService.inOverview) || (isNiri && NiriService.inOverview) || (isMango && MangoService.inOverview)
+    readonly property bool inOverview: (isHyprland && HyprlandService.inOverview) || (isMango && MangoService.inOverview)
 
     function probeOutputPower() {
         outputPowerAvailable = false;
@@ -69,16 +67,14 @@ Singleton {
             root.refreshHyprlandMonitorLayout();
         }
     }
-    readonly property bool frameCompositorLayoutReady: (!isNiri || NiriService.frameLayoutReady) && (!isHyprland || HyprlandService.frameLayoutReady)
+    readonly property bool frameCompositorLayoutReady: (!isHyprland || HyprlandService.frameLayoutReady)
     readonly property bool useHyprlandFocusGrab: isHyprland && Quickshell.env("DMS_HYPRLAND_EXCLUSIVE_FOCUS") !== "1"
 
     readonly property string hyprlandSignature: Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
-    readonly property string niriSocket: Quickshell.env("NIRI_SOCKET")
     readonly property string swaySocket: Quickshell.env("SWAYSOCK")
     readonly property string miracleSocket: Quickshell.env("MIRACLESOCK")
     readonly property string labwcPid: Quickshell.env("LABWC_PID")
     readonly property string mangoSignature: Quickshell.env("MANGO_INSTANCE_SIGNATURE")
-    property bool useNiriSorting: isNiri && NiriService
     property bool useMangoSorting: isMango && MangoService
 
     property var randrScales: ({})
@@ -105,7 +101,6 @@ Singleton {
 
     readonly property bool hasWorkspaceIpc: {
         switch (compositor) {
-        case "niri":
         case "hyprland":
         case "mango":
         case "sway":
@@ -120,7 +115,6 @@ Singleton {
     readonly property bool ephemeralWorkspaces: isHyprland
     readonly property bool windowOverlapSupported: {
         switch (compositor) {
-        case "niri":
         case "hyprland":
         case "mango":
             return true;
@@ -128,18 +122,20 @@ Singleton {
             return false;
         }
     }
-    readonly property bool workspaceReorderSupported: isNiri
+
+    // Umsortieren per Ziehen konnte nur niri; der Zieh-Pfad in WorkspaceSwitcher bleibt dadurch aus.
+    readonly property bool workspaceReorderSupported: false
 
     readonly property bool isKnownCompositor: configKey !== ""
-    readonly property bool supportsWindowRules: isNiri || isHyprland || isMango
+    readonly property bool supportsWindowRules: isHyprland || isMango
     readonly property string dmsFloatingRuleId: "dms-floating-windows"
     property bool dmsWindowFloatingActive: false
     readonly property string dmsOpaqueRuleId: "dms-window-opaque"
-    readonly property bool supportsLayoutConfig: isNiri || isHyprland || isMango
-    readonly property bool supportsCursorConfig: isNiri || isHyprland || isMango
-    readonly property bool supportsDisplayConfig: isNiri || isHyprland || isMango
-    readonly property bool supportsBarAutoHideReveal: isNiri || isHyprland || isMango
-    readonly property bool supportsWorkspaces: isNiri || isHyprland || isMango || isUmbriel
+    readonly property bool supportsLayoutConfig: isHyprland || isMango
+    readonly property bool supportsCursorConfig: isHyprland || isMango
+    readonly property bool supportsDisplayConfig: isHyprland || isMango
+    readonly property bool supportsBarAutoHideReveal: isHyprland || isMango
+    readonly property bool supportsWorkspaces: isHyprland || isMango || isUmbriel
     // compositors where a workspace that does not exist yet is still a valid switch target
     readonly property bool supportsPersistentWorkspaces: isHyprland || isMango || isSway || isScroll || isMiracle
     readonly property bool supportsWorkspaceUrgency: isKnownCompositor && !isLabwc
@@ -156,15 +152,13 @@ Singleton {
             return !reservesDesktopInput;
         }
     }
-    readonly property bool supportsSmartDock: isNiri || isHyprland || isMango
-    readonly property bool supportsNativeOverview: isNiri
-    readonly property bool supportsPointerConfig: isNiri || isHyprland || isMango
-    readonly property bool supportsInputConfig: isNiri || isHyprland || isMango
+    readonly property bool supportsSmartDock: isHyprland || isMango
+    readonly property bool supportsNativeOverview: false
+    readonly property bool supportsPointerConfig: isHyprland || isMango
+    readonly property bool supportsInputConfig: isHyprland || isMango
 
     readonly property string displayName: {
         switch (compositor) {
-        case "niri":
-            return "niri";
         case "hyprland":
             return "Hyprland";
         case "mango":
@@ -188,7 +182,6 @@ Singleton {
 
     readonly property string configKey: {
         switch (compositor) {
-        case "niri":
         case "hyprland":
         case "mango":
         case "sway":
@@ -203,25 +196,6 @@ Singleton {
     }
 
     property var _workspaceRecords: ({})
-
-    Connections {
-        target: NiriService
-        enabled: root.isNiri
-        function onAllWorkspacesChanged() {
-            root.workspaceStateChanged();
-        }
-        function onWindowUrgentChanged() {
-            root.workspaceStateChanged();
-        }
-        function onWindowsChanged() {
-            if (NiriService.titleOnlyWindowsUpdate)
-                return;
-            root.workspaceStateChanged();
-        }
-        function onCurrentOutputChanged() {
-            root.workspaceStateChanged();
-        }
-    }
 
     Connections {
         target: root.isHyprland ? Hyprland.workspaces : null
@@ -270,15 +244,9 @@ Singleton {
         return supportsMinimize && toplevel && toplevel.minimized !== undefined;
     }
 
-    function closeNiriOverviewOnWindowFocus() {
-        if (SettingsData.closeNiriOverviewOnWindowFocus && isNiri && NiriService.inOverview)
-            NiriService.closeOverview();
-    }
-
     function activateToplevel(toplevel) {
         if (!toplevel)
             return;
-        closeNiriOverviewOnWindowFocus();
         if (canMinimize(toplevel) && toplevel.minimized)
             toplevel.minimized = false;
         toplevel.activate();
@@ -349,12 +317,6 @@ Singleton {
         if (randrScale !== undefined && randrScale > 0)
             return fractionalScale(randrScale);
 
-        if (isNiri && screen) {
-            const niriScale = NiriService.displayScales[screen.name];
-            if (niriScale !== undefined)
-                return niriScale;
-        }
-
         if (isHyprland && screen) {
             const hyprlandMonitor = Hyprland.monitors.values.find(m => m.name === screen.name);
             if (hyprlandMonitor?.scale !== undefined)
@@ -376,8 +338,6 @@ Singleton {
     function windowKey(toplevel) {
         if (!toplevel)
             return "";
-        if (toplevel.niriWindowId !== undefined)
-            return "niri:" + toplevel.niriWindowId;
         if (toplevel.mangoWindowId !== undefined)
             return "mango:" + toplevel.mangoWindowId;
         const known = _windowKeys.find(entry => entry.toplevel === toplevel);
@@ -401,8 +361,6 @@ Singleton {
     function getFocusedScreenName() {
         if (isHyprland && Hyprland.focusedMonitor)
             return Hyprland.focusedMonitor.name;
-        if (isNiri && NiriService.currentOutput)
-            return NiriService.currentOutput;
         if (isSway || isScroll || isMiracle) {
             const focusedWs = I3.workspaces?.values?.find(ws => ws.focused === true);
             return focusedWs?.monitor?.name || "";
@@ -453,12 +411,12 @@ Singleton {
                 continue;
             if (!x || !y)
                 return false;
-            // Only niri/mango enriched snapshots support value comparison
-            const xKey = x.niriWindowId !== undefined ? x.niriWindowId : x.mangoWindowId;
-            const yKey = y.niriWindowId !== undefined ? y.niriWindowId : y.mangoWindowId;
+            // Only mango enriched snapshots support value comparison
+            const xKey = x.mangoWindowId;
+            const yKey = y.mangoWindowId;
             if (xKey === undefined || yKey === undefined)
                 return false;
-            if (xKey !== yKey || x.niriWorkspaceId !== y.niriWorkspaceId || x.mangoMonitor !== y.mangoMonitor || x.appId !== y.appId || x.title !== y.title || !!x.activated !== !!y.activated || !!x.fullscreen !== !!y.fullscreen || !!x.maximized !== !!y.maximized || !!x.minimized !== !!y.minimized)
+            if (xKey !== yKey || x.mangoMonitor !== y.mangoMonitor || x.appId !== y.appId || x.title !== y.title || !!x.activated !== !!y.activated || !!x.fullscreen !== !!y.fullscreen || !!x.maximized !== !!y.maximized || !!x.minimized !== !!y.minimized)
                 return false;
         }
         return true;
@@ -517,13 +475,6 @@ Singleton {
             }
         }
     }
-    Connections {
-        target: NiriService
-        enabled: root.isNiri
-        function onWindowsChanged() {
-            root.scheduleSort();
-        }
-    }
 
     Component.onCompleted: {
         fetchRandrData();
@@ -547,9 +498,6 @@ Singleton {
     function computeSortedToplevels() {
         if (!DToplevels.toplevels || !DToplevels.toplevels.values)
             return [];
-
-        if (useNiriSorting)
-            return NiriService.sortToplevels(DToplevels.toplevels.values);
 
         if (useMangoSorting)
             return MangoService.sortToplevels(DToplevels.toplevels.values);
@@ -795,8 +743,6 @@ Singleton {
     }
 
     function filterCurrentWorkspace(toplevels, screen) {
-        if (useNiriSorting)
-            return NiriService.filterCurrentWorkspace(toplevels, screen);
         if (useMangoSorting)
             return MangoService.filterCurrentWorkspace(toplevels, screen);
         if (isHyprland)
@@ -808,8 +754,6 @@ Singleton {
 
     readonly property string toplevelKey: {
         switch (compositor) {
-        case "niri":
-            return "niriWindowId";
         case "mango":
             return "mangoWindowId";
         default:
@@ -823,13 +767,6 @@ Singleton {
                 "workspace": "",
                 "output": ""
             };
-        if (useNiriSorting) {
-            const workspace = NiriService.allWorkspaces.find(w => w.id === toplevel.niriWorkspaceId);
-            return {
-                "workspace": String(workspace?.name || workspace?.idx || ""),
-                "output": workspace?.output ?? ""
-            };
-        }
         if (useMangoSorting)
             return {
                 "workspace": (toplevel.mangoTags || []).join(", "),
@@ -862,28 +799,9 @@ Singleton {
         return false;
     }
 
-    function visibleNiriFullscreenToplevelOnScreen(screenOrName) {
-        if (!isNiri || !NiriService.hasInitialConnection)
-            return false;
-        return NiriFullscreen.isFullscreenOnScreen(_screenName(screenOrName), NiriService.allWorkspaces, NiriService.windows, DToplevels.toplevels?.values);
-    }
-
     function filterCurrentDisplay(toplevels, screenName) {
         if (!toplevels || toplevels.length === 0 || !screenName)
             return toplevels;
-        if (useNiriSorting) {
-            const active = DToplevels.activeToplevel;
-            if (active && toplevels.length === 1 && toplevels[0] === active) {
-                if (NiriService.currentOutput !== screenName)
-                    return [];
-                const focusedWin = NiriService.windows.find(nw => nw.is_focused);
-                if (!focusedWin)
-                    return [];
-                const screenWsIds = new Set(NiriService.allWorkspaces.filter(ws => ws.output === screenName).map(ws => ws.id));
-                return screenWsIds.has(focusedWin.workspace_id) ? toplevels : [];
-            }
-            return NiriService.filterCurrentDisplay(toplevels, screenName);
-        }
         if (useMangoSorting)
             return MangoService.filterCurrentDisplay(toplevels, screenName);
         if (isHyprland)
@@ -1047,7 +965,7 @@ Singleton {
     }
 
     function overviewActiveOnScreen(screenOrName) {
-        return isNiri && NiriService.inOverview;
+        return false;
     }
 
     function usesConnectedFrameChromeForScreen(screenOrName) {
@@ -1164,28 +1082,14 @@ Singleton {
         return !!alive && Array.from(alive).some(t => t === toplevel);
     }
 
-    function _fallbackActiveWindow(screenName, includeLastFocused) {
-        switch (compositor) {
-        case "niri":
-            return WindowModel.niriActiveWindow(NiriService.windows, NiriService.allWorkspaces, sortedToplevels || [], Array.from(DToplevels.toplevels?.values || []), screenName ?? "", NiriService.lastFocusedWindowId, includeLastFocused);
-        default:
-            return null;
-        }
-    }
-
     function _retainedWindow(screenName, previous) {
         if (!_windowAlive(previous))
             return null;
-        switch (compositor) {
-        case "niri":
-            return WindowModel.niriActiveWorkspaceOccupied(NiriService.windows, NiriService.allWorkspaces, screenName ?? "") ? previous : null;
-        default:
-            return previous;
-        }
+        return previous;
     }
 
     function activeWindowForScreen(screenName, previous, includeLastFocused) {
-        const active = DToplevels.activeToplevel || _fallbackActiveWindow(screenName, includeLastFocused);
+        const active = DToplevels.activeToplevel;
         if (!active)
             return _retainedWindow(screenName, previous);
         if (!screenName || filterCurrentDisplay([active], screenName)?.length > 0)
@@ -1197,8 +1101,6 @@ Singleton {
         if (!toplevel)
             return 0;
         switch (compositor) {
-        case "niri":
-            return WindowModel.niriWindowPid(NiriService.windows, WindowModel.sortedWindowFor(sortedToplevels || [], toplevel));
         case "hyprland":
             return WindowModel.hyprlandWindowPid(Array.from(Hyprland.toplevels?.values || []), toplevel);
         case "mango":
@@ -1210,8 +1112,6 @@ Singleton {
 
     function windowOnActiveWorkspace(screenName, toplevel, includeLastFocused) {
         switch (compositor) {
-        case "niri":
-            return WindowModel.niriWindowOnActiveWorkspace(NiriService.windows, NiriService.allWorkspaces, screenName, NiriService.currentOutput, WindowModel.niriFocusedWindow(NiriService.windows, NiriService.lastFocusedWindowId, includeLastFocused));
         case "hyprland":
             if (!Hyprland.toplevels)
                 return false;
@@ -1227,8 +1127,6 @@ Singleton {
 
     function windowsHideBar(screenName, position, thickness, screenWidth, screenHeight) {
         switch (compositor) {
-        case "niri":
-            return WindowModel.niriBarHideForWindows(NiriService.windows, NiriService.allWorkspaces, screenName, position, thickness, screenWidth, screenHeight, _edgePositions);
         case "hyprland":
         case "mango":
             return filterCurrentWorkspace(sortedToplevels, screenName).length > 0;
@@ -1239,8 +1137,6 @@ Singleton {
 
     function windowsOverlapDock(screenName, position, thickness, screenWidth, screenHeight) {
         switch (compositor) {
-        case "niri":
-            return WindowModel.niriDockOverlap(NiriService.windows, NiriService.allWorkspaces, screenName, position, thickness, screenWidth, screenHeight, _edgePositions);
         case "hyprland":
             return _hyprlandDockOverlap(screenName, position, thickness, screenWidth, screenHeight);
         case "mango":
@@ -1257,21 +1153,9 @@ Singleton {
         case "mango":
             return WindowModel.mangoMaximizedOnScreen(MangoService.windows || [], MangoService.outputs[screenName], screenName);
         case "hyprland":
-        case "niri":
             return filterCurrentWorkspace(sortedToplevels, screenName).some(t => t?.maximized);
         default:
             return false;
-        }
-    }
-
-    function overviewFocusedToplevel(toplevels) {
-        switch (compositor) {
-        case "niri":
-            if (!NiriService.inOverview || NiriService.lastFocusedWindowId === null)
-                return null;
-            return toplevels.find(t => t.niriWindowId === NiriService.lastFocusedWindowId) ?? null;
-        default:
-            return null;
         }
     }
 
@@ -1400,8 +1284,6 @@ Singleton {
 
     function _compositorNameFromComm(comm) {
         switch (comm) {
-        case "niri":
-            return "niri";
         case "hyprland":
             return "hyprland";
         case "sway":
@@ -1425,7 +1307,6 @@ Singleton {
 
     function _applyCompositor(name) {
         isHyprland = name === "hyprland";
-        isNiri = name === "niri";
         isMango = name === "mango";
         isSway = name === "sway";
         isScroll = name === "scroll";
@@ -1435,8 +1316,6 @@ Singleton {
         isKwin = name === "kwin";
         compositor = name;
         compositorDetected = true;
-        if (isNiri)
-            NiriService.generateNiriBlurrule();
         Qt.callLater(seedDmsWindowFloatingRule);
     }
 
@@ -1494,9 +1373,7 @@ Singleton {
     }
 
     function reloadAfterWindowRuleWrite() {
-        if (isNiri)
-            NiriService.validate();
-        else if (isMango)
+        if (isMango)
             MangoService.reloadConfig();
         else if (isHyprland)
             HyprlandService.reloadConfig();
@@ -1543,10 +1420,6 @@ Singleton {
             actions = {
                 "opaque": true
             };
-        else if (isNiri)
-            actions = {
-                "opacity": 1.0
-            };
         else
             return;
         setDmsRule(dmsOpaqueRuleId, {
@@ -1577,12 +1450,6 @@ Singleton {
                 present: !!umbrielSocket,
                 test: ["test", "-S", umbrielSocket],
                 detail: "UMBRIEL_SOCKET " + umbrielSocket
-            },
-            {
-                name: "niri",
-                present: !!niriSocket,
-                test: ["test", "-S", niriSocket],
-                detail: "NIRI_SOCKET " + niriSocket
             },
             {
                 name: "miracle",
@@ -1645,8 +1512,6 @@ Singleton {
     }
 
     function powerOffMonitors() {
-        if (isNiri)
-            return NiriService.powerOffMonitors();
         if (isHyprland)
             return HyprlandService.dpmsOff();
         if (isMango)
@@ -1676,8 +1541,6 @@ Singleton {
     }
 
     function powerOnMonitors() {
-        if (isNiri)
-            return NiriService.powerOnMonitors();
         if (isHyprland)
             return HyprlandService.dpmsOn();
         if (isMango)
@@ -1718,23 +1581,6 @@ Singleton {
                 I3.dispatch(`workspace "${escapeSwayWorkspaceName(ws.name)}"`);
             }
         } catch (_) {}
-    }
-
-    function _niriWorkspaceState() {
-        return {
-            get allWorkspaces() {
-                return NiriService.allWorkspaces;
-            },
-            get currentOutputWorkspaces() {
-                return NiriService.getCurrentOutputWorkspaces();
-            },
-            get focusedIdx() {
-                return NiriService.getCurrentWorkspaceNumber();
-            },
-            get windows() {
-                return NiriService.windows;
-            }
-        };
     }
 
     function _hyprlandWorkspaceState() {
@@ -1794,8 +1640,6 @@ Singleton {
 
     function _workspaceKey(record) {
         switch (compositor) {
-        case "niri":
-            return record.idx;
         case "hyprland":
             return WorkspaceModel.hyprlandKey(record);
         default:
@@ -1805,8 +1649,6 @@ Singleton {
 
     function workspacesForScreen(screenName, followFocus, options) {
         switch (compositor) {
-        case "niri":
-            return WorkspaceModel.niriWorkspacesForScreen(_niriWorkspaceState(), screenName, followFocus, options.occupiedOnly, _workspaceRecords);
         case "hyprland":
             return WorkspaceModel.hyprlandWorkspacesForScreen(_hyprlandWorkspaceState(), screenName, followFocus, options.occupiedOnly, options.minCount, options.showSpecial);
         case "mango":
@@ -1827,8 +1669,6 @@ Singleton {
 
     function currentWorkspaceKey(screenName, followFocus) {
         switch (compositor) {
-        case "niri":
-            return WorkspaceModel.niriCurrentIdx(_niriWorkspaceState(), screenName, followFocus);
         case "hyprland":
             return WorkspaceModel.hyprlandCurrentId(_hyprlandWorkspaceState(), screenName, followFocus);
         case "mango":
@@ -1859,8 +1699,6 @@ Singleton {
 
     function activeWorkspaceForScreen(screenName) {
         switch (compositor) {
-        case "niri":
-            return WorkspaceModel.niriActiveWorkspace(_niriWorkspaceState(), screenName);
         case "hyprland":
             return WorkspaceModel.hyprlandActiveWorkspace(_hyprlandWorkspaceState(), screenName);
         case "mango":
@@ -1880,8 +1718,6 @@ Singleton {
         if (!record || record.placeholder)
             return [];
         switch (compositor) {
-        case "niri":
-            return WorkspaceModel.niriWindowsOnWorkspace(NiriService.windows || [], record);
         case "hyprland":
             return WorkspaceModel.hyprlandWindowsOnWorkspace(sortedToplevels, record, Array.from(Hyprland.toplevels?.values || []));
         case "mango":
@@ -1901,8 +1737,6 @@ Singleton {
         if (!record || record.placeholder)
             return false;
         switch (compositor) {
-        case "niri":
-            return WorkspaceModel.niriWorkspaceOccupied(NiriService.windows, record);
         case "hyprland":
             return WorkspaceModel.hyprlandWorkspaceOccupied(Array.from(Hyprland.toplevels?.values || []), record);
         case "mango":
@@ -1915,8 +1749,6 @@ Singleton {
 
     function workspaceAppsActive(record, currentKey) {
         switch (compositor) {
-        case "niri":
-            return WorkspaceModel.niriWorkspaceActive(NiriService.allWorkspaces, record);
         case "mango":
             return record.active === true;
         case "sway":
@@ -1932,7 +1764,6 @@ Singleton {
 
     function workspaceUrgent(record, loadedUrgent) {
         switch (compositor) {
-        case "niri":
         case "sway":
         case "scroll":
         case "miracle":
@@ -1945,8 +1776,6 @@ Singleton {
 
     function loadWorkspaceUrgent(record) {
         switch (compositor) {
-        case "niri":
-            return WorkspaceModel.niriWorkspaceUrgent(NiriService.windows, record);
         case "umbriel":
             return WorkspaceModel.umbrielWorkspaceUrgent(UmbrielService.windows, record);
         default:
@@ -1958,9 +1787,6 @@ Singleton {
         if (!record || record.placeholder)
             return;
         switch (compositor) {
-        case "niri":
-            NiriService.switchToWorkspace(record.id);
-            return;
         case "hyprland":
             if (record.special === true) {
                 // togglespecialworkspace acts on the focused monitor, so a pill on another monitor's bar focuses that monitor first
@@ -2000,12 +1826,6 @@ Singleton {
 
     function scrollWorkspace(screenName, followFocus, showAllTags, direction) {
         switch (compositor) {
-        case "niri":
-            {
-                const state = _niriWorkspaceState();
-                stepWorkspace(WorkspaceModel.niriWorkspacesForScreen(state, screenName, followFocus, false, _workspaceRecords), WorkspaceModel.niriCurrentIdx(state, screenName, followFocus), direction);
-                return;
-            }
         case "hyprland":
             {
                 const state = _hyprlandWorkspaceState();
@@ -2037,8 +1857,6 @@ Singleton {
 
     function overviewActiveForScreen(screenName) {
         switch (compositor) {
-        case "niri":
-            return NiriService.inOverview;
         case "mango":
             return MangoService.isOutputInOverview(screenName);
         default:
@@ -2057,9 +1875,6 @@ Singleton {
 
     function toggleOverview(screenName) {
         switch (compositor) {
-        case "niri":
-            NiriService.toggleOverview();
-            return;
         case "mango":
             if (MangoService.getOutputState(screenName))
                 MangoService.dispatchOnOutput(screenName, "toggleoverview");
@@ -2071,9 +1886,6 @@ Singleton {
 
     function workspaceSecondaryAction(record, screenName) {
         switch (compositor) {
-        case "niri":
-            toggleOverview(screenName);
-            return;
         case "mango":
             if (record)
                 MangoService.toggleTag(screenName, record.id);
@@ -2081,16 +1893,10 @@ Singleton {
         }
     }
 
-    readonly property bool canStepWindowFocus: compositor === "niri" || compositor === "hyprland" || compositor === "mango"
+    readonly property bool canStepWindowFocus: compositor === "hyprland" || compositor === "mango"
 
     function stepWindowFocus(screenName, direction) {
         switch (compositor) {
-        case "niri":
-            if (direction > 0)
-                NiriService.focusColumnRight(screenName);
-            else
-                NiriService.focusColumnLeft(screenName);
-            return true;
         case "hyprland":
             if (screenName && screenName !== Hyprland.focusedMonitor?.name)
                 HyprlandService.focusMonitor(screenName);
@@ -2115,22 +1921,11 @@ Singleton {
         case "hyprland":
             HyprlandService.focusWindow(windowId);
             return true;
-        case "niri":
-            NiriService.focusWindow(windowId);
-            return true;
         case "umbriel":
             UmbrielService.action("window-focus", String(windowId));
             return true;
         default:
             return false;
-        }
-    }
-
-    function moveWorkspace(record, target) {
-        switch (compositor) {
-        case "niri":
-            NiriService.moveWorkspaceToIndex(record.id, target.idx);
-            return;
         }
     }
 
@@ -2144,8 +1939,6 @@ Singleton {
         target: SettingsData
 
         function onCompositorLayoutRefreshNeeded(frame) {
-            if (root.isNiri && typeof NiriService !== "undefined")
-                NiriService.generateNiriLayoutConfig(frame);
             if (root.isHyprland && typeof HyprlandService !== "undefined")
                 HyprlandService.generateLayoutConfig(frame);
             if (!frame && root.isMango && typeof MangoService !== "undefined")
@@ -2157,8 +1950,6 @@ Singleton {
         }
 
         function onCompositorInputRefreshNeeded() {
-            if (root.isNiri && typeof NiriService !== "undefined")
-                NiriService.generateNiriInputConfig();
             if (root.isHyprland && typeof HyprlandService !== "undefined")
                 HyprlandService.generateInputConfig();
             if (root.isMango && typeof MangoService !== "undefined")
@@ -2166,10 +1957,6 @@ Singleton {
         }
 
         function onCompositorCursorRefreshNeeded() {
-            if (root.isNiri && typeof NiriService !== "undefined") {
-                NiriService.generateNiriCursorConfig();
-                return;
-            }
             if (root.isHyprland && typeof HyprlandService !== "undefined") {
                 HyprlandService.generateCursorConfig();
                 return;

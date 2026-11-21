@@ -238,9 +238,6 @@ var LOCAL_SPEC = {
     notepadLastMode: {
         def: ""
     },
-    niriOutputSettings: {
-        def: {}
-    },
     hyprlandOutputSettings: {
         def: {}
     },
@@ -284,9 +281,6 @@ var LOCAL_SPEC = {
         def: []
     },
     appDrawerLastMode: {
-        def: "apps"
-    },
-    niriOverviewLastMode: {
         def: "apps"
     },
     showConfigReloadToast: {

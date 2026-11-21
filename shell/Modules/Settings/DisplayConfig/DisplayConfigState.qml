@@ -33,14 +33,12 @@ Singleton {
     readonly property bool fixingInclude: include.fixing
 
     property var pendingChanges: ({})
-    property var pendingNiriChanges: ({})
     property var pendingHyprlandChanges: ({})
-    property var originalNiriSettings: null
     property var originalHyprlandSettings: null
     property var originalOutputs: null
     property string originalDisplayNameMode: ""
     property bool formatChanged: originalDisplayNameMode !== "" && originalDisplayNameMode !== SettingsData.displayNameMode
-    property bool hasPendingChanges: Object.keys(pendingChanges).length > 0 || Object.keys(pendingNiriChanges).length > 0 || Object.keys(pendingHyprlandChanges).length > 0 || formatChanged
+    property bool hasPendingChanges: Object.keys(pendingChanges).length > 0 || Object.keys(pendingHyprlandChanges).length > 0 || formatChanged
 
     property bool validatingConfig: false
     property var _cancelOutputWrite: null
@@ -148,13 +146,11 @@ Singleton {
         const legacy = SettingsData.displayProfiles || {};
         const configDir = Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation));
         const compositorDirs = {
-            "niri": configDir + "/niri/dms/profiles",
             "hyprland": configDir + "/hypr/dms/profiles",
             "dwl": configDir + "/mango/dms/profiles",
             "mango": configDir + "/mango/dms/profiles"
         };
         const compositorExts = {
-            "niri": ".kdl",
             "hyprland": ".conf",
             "dwl": ".conf",
             "mango": ".conf"
@@ -213,9 +209,6 @@ Singleton {
                         }
                         let parsed;
                         switch (t.compositor) {
-                        case "niri":
-                            parsed = OutputModel.parseNiriOutputs(content);
-                            break;
                         case "hyprland":
                             parsed = OutputModel.parseHyprlandConfProfile(content);
                             break;
@@ -226,12 +219,11 @@ Singleton {
                         default:
                             parsed = {};
                         }
-                        const niriSettings = SessionData.niriOutputSettings || {};
                         const hyprSettings = SessionData.hyprlandOutputSettings || {};
                         const profileOutputs = {};
                         for (const outputName in parsed) {
                             const od = parsed[outputName];
-                            profileOutputs[outputName] = extractOutputNeutralConfig(outputName, od, niriSettings, hyprSettings);
+                            profileOutputs[outputName] = extractOutputNeutralConfig(outputName, od, hyprSettings);
                         }
                         if (Object.keys(profileOutputs).length > 0)
                             migrated.push({
@@ -327,7 +319,6 @@ Singleton {
             const profileName = match.entry.name;
             const existingOutputs = match.entry.outputs || {};
             const mergedAll = buildOutputsWithPendingChanges();
-            const niriSettings = buildMergedNiriSettings();
             const hyprlandSettings = buildMergedHyprlandSettings();
             const newOutputConfigs = {};
             for (const rawName of enabledRawNames) {
@@ -335,7 +326,7 @@ Singleton {
                 if (!od)
                     continue;
                 const outputId = getOutputIdentifier(od, rawName);
-                newOutputConfigs[outputId] = existingOutputs[outputId] || extractOutputNeutralConfig(rawName, od, niriSettings, hyprlandSettings);
+                newOutputConfigs[outputId] = existingOutputs[outputId] || extractOutputNeutralConfig(rawName, od, hyprlandSettings);
             }
             data.configurations[match.index] = {
                 "id": profileId,
@@ -359,8 +350,8 @@ Singleton {
         });
     }
 
-    function extractOutputNeutralConfig(outputName, outputData, niriSettings, hyprlandSettings) {
-        return OutputModel.outputNeutralConfig(outputName, outputData, niriSettings, hyprlandSettings, SettingsData.displayNameMode, CompositorService.compositor);
+    function extractOutputNeutralConfig(outputName, outputData, hyprlandSettings) {
+        return OutputModel.outputNeutralConfig(outputName, outputData, hyprlandSettings, SettingsData.displayNameMode, CompositorService.compositor);
     }
 
     function profileKeyMatchesOutput(outputId, output, name) {
@@ -369,19 +360,6 @@ Singleton {
 
     function generateOutputsDataFromConfig(configEntry) {
         return OutputModel.outputsDataFromConfigEntry(configEntry, outputs, SettingsData.displayNameMode, CompositorService.compositor);
-    }
-
-    function getNiriSettingsFromConfig(configEntry) {
-        const result = {};
-        for (const outputId in (configEntry.outputs || {})) {
-            const cfg = configEntry.outputs[outputId];
-            const settings = Object.assign({}, cfg.niri || {});
-            if (cfg.disabled)
-                settings.disabled = true;
-            if (Object.keys(settings).length > 0)
-                result[outputId] = settings;
-        }
-        return result;
     }
 
     function getHyprlandSettingsFromConfig(configEntry) {
@@ -399,8 +377,6 @@ Singleton {
 
     function backendSettingsFromConfig(configEntry) {
         switch (CompositorService.compositor) {
-        case "niri":
-            return getNiriSettingsFromConfig(configEntry);
         case "hyprland":
             return getHyprlandSettingsFromConfig(configEntry);
         default:
@@ -410,8 +386,6 @@ Singleton {
 
     function backendMergedSettings() {
         switch (CompositorService.compositor) {
-        case "niri":
-            return buildMergedNiriSettings();
         case "hyprland":
             return buildMergedHyprlandSettings();
         default:
@@ -715,13 +689,12 @@ Singleton {
 
     function buildCurrentOutputConfigs() {
         const mergedAll = buildOutputsWithPendingChanges();
-        const niriSettings = buildMergedNiriSettings();
         const hyprlandSettings = buildMergedHyprlandSettings();
         const outputConfigs = {};
         for (const name in outputs) {
             const od = mergedAll[name];
             if (od)
-                outputConfigs[getOutputIdentifier(od, name)] = extractOutputNeutralConfig(name, od, niriSettings, hyprlandSettings);
+                outputConfigs[getOutputIdentifier(od, name)] = extractOutputNeutralConfig(name, od, hyprlandSettings);
         }
         return outputConfigs;
     }
@@ -831,14 +804,6 @@ Singleton {
         }
     }
 
-    Connections {
-        target: NiriService
-        enabled: CompositorService.isNiri
-        function onConfigReloaded() {
-            root.include.check();
-        }
-    }
-
     Component.onCompleted: {
         outputs = buildOutputsMap();
         reloadSavedOutputs();
@@ -866,11 +831,6 @@ Singleton {
             if (CompositorService.isHyprland) {
                 initHyprlandSettingsFromConfig(parsed);
                 syncHyprlandDisabledFromConfig(parsed);
-            }
-            if (CompositorService.isNiri) {
-                syncNiriVrrFromConfig(parsed);
-                syncNiriDisabledFromConfig(parsed);
-                syncNiriMaxBpcFromConfig(parsed);
             }
         });
     }
@@ -906,27 +866,6 @@ Singleton {
         }
     }
 
-    function syncNiriVrrFromConfig(parsedOutputs) {
-        for (const outputName in parsedOutputs) {
-            const output = parsedOutputs[outputName];
-            const current = SessionData.getNiriOutputSetting(outputName, "vrrOnDemand", false);
-            const fromConfig = output.vrr_on_demand ?? false;
-            if (current === fromConfig)
-                continue;
-            SessionData.setNiriOutputSetting(outputName, "vrrOnDemand", fromConfig || undefined);
-        }
-    }
-
-    function syncNiriMaxBpcFromConfig(parsedOutputs) {
-        for (const outputName in parsedOutputs) {
-            const fromConfig = parsedOutputs[outputName].max_bpc;
-            // the dropdown stores null for Default
-            if ((SessionData.getNiriOutputSetting(outputName, "maxBpc", undefined) ?? undefined) === fromConfig)
-                continue;
-            SessionData.setNiriOutputSetting(outputName, "maxBpc", fromConfig);
-        }
-    }
-
     function syncHyprlandDisabledFromConfig(parsedOutputs) {
         const current = JSON.parse(JSON.stringify(SessionData.hyprlandOutputSettings));
         let changed = false;
@@ -950,25 +889,12 @@ Singleton {
         }
     }
 
-    function syncNiriDisabledFromConfig(parsedOutputs) {
-        for (const outputName in parsedOutputs) {
-            const output = parsedOutputs[outputName];
-            const fromConfig = output.disabled ?? false;
-            const current = SessionData.getNiriOutputSetting(outputName, "disabled", false);
-            if (current === fromConfig)
-                continue;
-            SessionData.setNiriOutputSetting(outputName, "disabled", fromConfig || undefined);
-        }
-    }
-
     function filterDisconnectedOnly(parsedOutputs) {
         return OutputModel.filterDisconnectedOnly(parsedOutputs, outputs, SettingsData.displayNameMode, CompositorService.compositor);
     }
 
     function parseOutputsConfig(content) {
         switch (CompositorService.compositor) {
-        case "niri":
-            return OutputModel.parseNiriOutputs(content);
         case "hyprland":
             return OutputModel.parseHyprlandOutputs(content);
         case "mango":
@@ -1038,18 +964,6 @@ Singleton {
         }
 
         switch (CompositorService.compositor) {
-        case "niri":
-            {
-                const niriSettings = hasExplicitSettings ? settings : buildMergedNiriSettings();
-                NiriService.generateOutputsConfig(outputsData, niriSettings, success => {
-                    if (!success) {
-                        finish(false);
-                        return;
-                    }
-                    reloadAndApplyNiriLiveOutputsConfig(outputsData, niriSettings, finish);
-                });
-                break;
-            }
         case "hyprland":
             {
                 if (readOnly) {
@@ -1081,84 +995,6 @@ Singleton {
                 break;
             }
         }
-    }
-
-    function getLiveNiriOutputName(outputName, outputData) {
-        if (outputs[outputName])
-            return outputName;
-        const targetId = getNiriOutputIdentifier(outputData, outputName);
-        for (const liveName in outputs) {
-            if (getNiriOutputIdentifier(outputs[liveName], liveName) === targetId)
-                return liveName;
-        }
-        return "";
-    }
-
-    function applyNiriLiveOutputsConfig(outputsData, niriSettings, callback) {
-        const names = Object.keys(outputsData || {});
-        let pending = 0;
-        let failed = false;
-
-        function done(success) {
-            if (callback)
-                callback(success);
-        }
-
-        for (const outputName of names) {
-            const output = outputsData[outputName];
-            if (!output)
-                continue;
-            const liveName = getLiveNiriOutputName(outputName, output);
-            if (!liveName)
-                continue;
-
-            const identifier = getNiriOutputIdentifier(output, outputName);
-            const settings = niriSettings?.[outputName] || niriSettings?.[identifier] || {};
-            const config = {};
-
-            if (settings.disabled === true)
-                config.disabled = true;
-            else if (settings.disabled === false)
-                config.disabled = false;
-
-            if (!config.disabled) {
-                if (output.current_mode !== undefined && output.modes && output.modes[output.current_mode]) {
-                    const mode = output.modes[output.current_mode];
-                    config.mode = mode.width + "x" + mode.height + "@" + (mode.refresh_rate / 1000).toFixed(3);
-                }
-                if (output.logical) {
-                    config.scale = output.logical.scale ?? 1.0;
-                    config.position = {
-                        "x": output.logical.x ?? 0,
-                        "y": output.logical.y ?? 0
-                    };
-                    config.transform = OutputModel.niriTransform(output.logical.transform);
-                }
-                if (settings.vrrOnDemand)
-                    config.vrrOnDemand = settings.vrrOnDemand;
-                else if (output.vrr_enabled !== undefined)
-                    config.vrr = output.vrr_enabled;
-            }
-
-            pending++;
-            NiriService.applyOutputConfig(liveName, config, success => {
-                failed = failed || !success;
-                pending--;
-                if (pending === 0) {
-                    WlrOutputService.requestState();
-                    done(!failed);
-                }
-            });
-        }
-
-        if (pending === 0)
-            done(true);
-    }
-
-    function reloadAndApplyNiriLiveOutputsConfig(outputsData, niriSettings, callback) {
-        Proc.runCommand("niri-reload-output-config", ["niri", "msg", "action", "load-config-file"], () => {
-            applyNiriLiveOutputsConfig(outputsData, niriSettings, callback);
-        });
     }
 
     function normalizeOutputPositions(outputsData) {
@@ -1282,38 +1118,6 @@ Singleton {
         return getOutputIdentifier(output, outputName);
     }
 
-    function getNiriOutputIdentifier(output, outputName) {
-        return OutputModel.niriIdentifier(output, outputName, SettingsData.displayNameMode);
-    }
-
-    function getNiriSetting(output, outputName, key, defaultValue) {
-        if (!CompositorService.isNiri)
-            return defaultValue;
-        const identifier = getNiriOutputIdentifier(output, outputName);
-        const pending = pendingNiriChanges[identifier];
-        if (pending && pending[key] !== undefined)
-            return pending[key];
-        return SessionData.getNiriOutputSetting(identifier, key, defaultValue);
-    }
-
-    function setNiriSetting(output, outputName, key, value) {
-        if (!CompositorService.isNiri)
-            return;
-        initOriginalNiriSettings();
-        const identifier = getNiriOutputIdentifier(output, outputName);
-        const newPending = JSON.parse(JSON.stringify(pendingNiriChanges));
-        if (!newPending[identifier])
-            newPending[identifier] = {};
-        newPending[identifier][key] = value;
-        pendingNiriChanges = newPending;
-    }
-
-    function initOriginalNiriSettings() {
-        if (originalNiriSettings)
-            return;
-        originalNiriSettings = JSON.parse(JSON.stringify(SessionData.niriOutputSettings));
-    }
-
     function getHyprlandOutputIdentifier(output, outputName) {
         return OutputModel.hyprlandIdentifier(output, outputName, SettingsData.displayNameMode);
     }
@@ -1420,7 +1224,7 @@ Singleton {
     // Prevents disabling all outputs and prevents disabling the only output
     // in a single-display configuration.
     function canDisableOutput() {
-        if (!CompositorService.isNiri && !CompositorService.isHyprland)
+        if (!CompositorService.isHyprland)
             return false;
         const totalOutputs = Object.keys(outputs).length;
         if (totalOutputs <= 1)
@@ -1428,9 +1232,7 @@ Singleton {
         let enabledCount = 0;
         for (const name in outputs) {
             let disabled = false;
-            if (CompositorService.isNiri)
-                disabled = getNiriSetting(outputs[name], name, "disabled", false);
-            else if (CompositorService.isHyprland)
+            if (CompositorService.isHyprland)
                 disabled = getHyprlandSetting(outputs[name], name, "disabled", false);
             if (!disabled)
                 enabledCount++;
@@ -1440,10 +1242,8 @@ Singleton {
 
     function clearPendingChanges() {
         pendingChanges = {};
-        pendingNiriChanges = {};
         pendingHyprlandChanges = {};
         originalOutputs = null;
-        originalNiriSettings = null;
         originalHyprlandSettings = null;
         originalDisplayNameMode = "";
     }
@@ -1489,20 +1289,6 @@ Singleton {
                 changeDescriptions.push(outputName + ": " + "VRR" + " → " + (changes.vrr ? I18n.tr("Enabled") : I18n.tr("Disabled")));
         }
 
-        for (const outputId in pendingNiriChanges) {
-            const changes = pendingNiriChanges[outputId];
-            if (changes.disabled !== undefined)
-                changeDescriptions.push(outputId + ": " + I18n.tr("Disabled") + " → " + (changes.disabled ? I18n.tr("Yes") : I18n.tr("No")));
-            if (changes.vrrOnDemand !== undefined)
-                changeDescriptions.push(outputId + ": " + I18n.tr("VRR On-Demand") + " → " + (changes.vrrOnDemand ? I18n.tr("Enabled") : I18n.tr("Disabled")));
-            if (changes.focusAtStartup !== undefined)
-                changeDescriptions.push(outputId + ": " + I18n.tr("Focus at startup") + " → " + (changes.focusAtStartup ? I18n.tr("Yes") : I18n.tr("No")));
-            if (changes.hotCorners !== undefined)
-                changeDescriptions.push(outputId + ": " + I18n.tr("Hot corners") + " → " + I18n.tr("Modified"));
-            if (changes.layout !== undefined)
-                changeDescriptions.push(outputId + ": " + I18n.tr("Layout") + " → " + I18n.tr("Modified"));
-        }
-
         for (const outputId in pendingHyprlandChanges) {
             const changes = pendingHyprlandChanges[outputId];
             if (changes.disabled !== undefined)
@@ -1523,11 +1309,6 @@ Singleton {
                 changeDescriptions.push(outputId + ": " + "VRR" + " → " + hyprlandVrrLabel(changes.vrr));
             if (changes.sdrEotf !== undefined)
                 changeDescriptions.push(outputId + ": " + I18n.tr("SDR transfer function") + " → " + (changes.sdrEotf || I18n.tr("Default")));
-        }
-
-        if (CompositorService.isNiri) {
-            validateAndApplyNiriConfig(changeDescriptions);
-            return;
         }
 
         const mergedOutputs = buildOutputsWithPendingChanges();
@@ -1551,73 +1332,6 @@ Singleton {
                 SettingsData.saveSettings();
             changesApplied(changeDescriptions);
         });
-    }
-
-    function validateAndApplyNiriConfig(changeDescriptions) {
-        validatingConfig = true;
-        validationError = "";
-
-        const mergedOutputs = buildOutputsWithPendingChanges();
-        const mergedNiriSettings = buildMergedNiriSettings();
-        const configContent = NiriService.buildOutputsConfig(mergedOutputs, mergedNiriSettings);
-
-        const configDir = Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation));
-        const tempFile = configDir + "/niri/dms/.outputs-validate-tmp.kdl";
-
-        Proc.runCommand("niri-validate-write-tmp", ["sh", "-c", `mkdir -p "$(dirname "${tempFile}")" && cat > "${tempFile}" << 'EOF'\n${configContent}EOF`], (output, writeExitCode) => {
-            if (writeExitCode !== 0) {
-                validatingConfig = false;
-                validationError = I18n.tr("Failed to write temp file for validation");
-                ToastService.showError(I18n.tr("Config validation failed"), validationError, "", "display-config");
-                return;
-            }
-            Proc.runCommand("niri-validate-config", ["sh", "-c", `niri validate -c "${tempFile}" 2>&1`], (validateOutput, validateExitCode) => {
-                validatingConfig = false;
-                Proc.runCommand("niri-validate-cleanup", ["rm", "-f", tempFile], () => {});
-                if (validateExitCode !== 0) {
-                    validationError = validateOutput.trim() || I18n.tr("Invalid configuration");
-                    ToastService.showError(I18n.tr("Config validation failed"), validationError, "", "display-config");
-                    return;
-                }
-                changesApplied(changeDescriptions);
-                if (formatChanged)
-                    SettingsData.saveSettings();
-                commitNiriSettingsChanges();
-                backendWriteOutputsConfig(mergedOutputs, mergedNiriSettings);
-            });
-        });
-    }
-
-    function buildMergedNiriSettings() {
-        const merged = JSON.parse(JSON.stringify(SessionData.niriOutputSettings));
-        for (const outputId in pendingNiriChanges) {
-            if (!merged[outputId])
-                merged[outputId] = {};
-            for (const key in pendingNiriChanges[outputId]) {
-                merged[outputId][key] = pendingNiriChanges[outputId][key];
-            }
-        }
-        // Never disable the only connected output — clear any stale flag
-        if (Object.keys(outputs).length <= 1) {
-            for (const id in merged)
-                delete merged[id].disabled;
-        }
-        return merged;
-    }
-
-    function commitNiriSettingsChanges() {
-        for (const outputId in pendingNiriChanges) {
-            for (const key in pendingNiriChanges[outputId]) {
-                SessionData.setNiriOutputSetting(outputId, key, pendingNiriChanges[outputId][key]);
-            }
-        }
-        // Clear stale disabled from SettingsData so NiriService reads clean state
-        if (Object.keys(outputs).length <= 1) {
-            for (const id in SessionData.niriOutputSettings) {
-                if (SessionData.niriOutputSettings[id]?.disabled)
-                    SessionData.setNiriOutputSetting(id, "disabled", null);
-            }
-        }
     }
 
     function hyprlandVrrLabel(mode) {
@@ -1707,15 +1421,9 @@ Singleton {
 
     function revertChanges() {
         const hadFormatChange = originalDisplayNameMode !== "";
-        const hadNiriChanges = originalNiriSettings !== null;
         const hadHyprlandChanges = originalHyprlandSettings !== null;
 
         restoreDisplayNameMode();
-
-        if (hadNiriChanges) {
-            SessionData.niriOutputSettings = JSON.parse(JSON.stringify(originalNiriSettings));
-            SessionData.saveSettings();
-        }
 
         if (hadHyprlandChanges) {
             SessionData.hyprlandOutputSettings = JSON.parse(JSON.stringify(originalHyprlandSettings));
@@ -1723,9 +1431,8 @@ Singleton {
         }
 
         pendingHyprlandChanges = {};
-        pendingNiriChanges = {};
 
-        if (!originalOutputs && !hadNiriChanges && !hadHyprlandChanges) {
+        if (!originalOutputs && !hadHyprlandChanges) {
             if (hadFormatChange)
                 backendWriteOutputsConfig(buildOutputsWithPendingChanges());
             clearPendingChanges();
@@ -1762,8 +1469,6 @@ Singleton {
             return false;
         if (CompositorService.isHyprland)
             return getHyprlandSetting(outputs[outputName], outputName, "disabled", false);
-        if (CompositorService.isNiri)
-            return getNiriSetting(outputs[outputName], outputName, "disabled", false);
         return false;
     }
 

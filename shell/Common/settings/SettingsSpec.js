@@ -138,18 +138,6 @@ var LOCAL_SPEC = {
     containerSaturation: {
         def: 100
     },
-    niriLayoutGapsOverride: {
-        def: -1,
-        onChange: "updateCompositorLayout"
-    },
-    niriLayoutRadiusOverride: {
-        def: -1,
-        onChange: "updateCompositorLayout"
-    },
-    niriLayoutBorderSize: {
-        def: -1,
-        onChange: "updateCompositorLayout"
-    },
     hyprlandLayoutGapsOverride: {
         def: -1,
         onChange: "updateCompositorLayout"
@@ -633,12 +621,6 @@ var LOCAL_SPEC = {
     focusRingColor: {
         def: "primary"
     },
-    blurredWallpaperLayer: {
-        def: false
-    },
-    blurWallpaperOnOverview: {
-        def: false
-    },
     systemTrayIconTintMode: {
         def: "none"
     },
@@ -889,9 +871,6 @@ var LOCAL_SPEC = {
     appLauncherGridColumns: {
         def: 4
     },
-    closeNiriOverviewOnWindowFocus: {
-        def: true
-    },
     rememberLastQuery: {
         def: false
     },
@@ -910,12 +889,6 @@ var LOCAL_SPEC = {
     },
     appDrawerSectionViewModes: {
         def: {}
-    },
-    niriOverviewOverlayEnabled: {
-        def: true
-    },
-    niriOverviewLauncherStyle: {
-        def: "full"
     },
     dankLauncherV2Size: {
         def: "compact"
@@ -1065,10 +1038,6 @@ var LOCAL_SPEC = {
         def: {
             theme: "System Default",
             size: 24,
-            niri: {
-                hideWhenTyping: false,
-                hideAfterInactiveMs: 0
-            },
             hyprland: {
                 hideOnKeyPress: false,
                 hideOnTouch: false,
@@ -1285,9 +1254,6 @@ var LOCAL_SPEC = {
         def: true
     },
     matugenTemplateGtk: {
-        def: true
-    },
-    matugenTemplateNiri: {
         def: true
     },
     matugenTemplateHyprland: {
@@ -1621,9 +1587,6 @@ var LOCAL_SPEC = {
         def: false
     },
     osdInputMethodEnabled: {
-        def: true
-    },
-    osdTouchpadEnabled: {
         def: true
     },
     osdPowerProfileEnabled: {

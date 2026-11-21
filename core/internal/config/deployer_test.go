@@ -36,104 +36,6 @@ func stubAddWants(t *testing.T, addWants error) *int {
 	return &calls
 }
 
-func TestMergeNiriOutputSections(t *testing.T) {
-	cd := &ConfigDeployer{}
-
-	tests := []struct {
-		name           string
-		newConfig      string
-		existingConfig string
-		wantError      bool
-		wantContains   []string
-	}{
-		{
-			name: "no existing outputs",
-			newConfig: `input {
-    keyboard {
-        xkb {
-        }
-    }
-}
-layout {
-    gaps 5
-}`,
-			existingConfig: `input {
-    keyboard {
-        xkb {
-        }
-    }
-}
-layout {
-    gaps 10
-}`,
-			wantError:    false,
-			wantContains: []string{"gaps 5"}, // Should keep new config
-		},
-		{
-			name: "merge multiple outputs",
-			newConfig: `input {
-    keyboard {
-        xkb {
-        }
-    }
-}
-/-output "eDP-2" {
-    mode "2560x1600@239.998993"
-    position x=2560 y=0
-}
-layout {
-    gaps 5
-}`,
-			existingConfig: `input {
-    keyboard {
-        xkb {
-        }
-    }
-}
-output "eDP-1" {
-    mode "1920x1080@60.000000"
-    position x=0 y=0
-    scale 1.0
-}
-/-output "HDMI-1" {
-    mode "1920x1080@60.000000"
-    position x=1920 y=0
-}
-layout {
-    gaps 10
-}`,
-			wantError: false,
-			wantContains: []string{
-				"gaps 5",                              // New config preserved
-				`output "eDP-1"`,                      // First existing output
-				`/-output "HDMI-1"`,                   // Second existing output (commented)
-				"1920x1080@60.000000",                 // Output details
-				"Outputs from existing configuration", // Comment added
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tmpDir := t.TempDir()
-			result, err := cd.mergeNiriOutputSections(tt.newConfig, tt.existingConfig, tmpDir)
-
-			if tt.wantError {
-				assert.Error(t, err)
-				return
-			}
-
-			require.NoError(t, err)
-
-			for _, want := range tt.wantContains {
-				assert.Contains(t, result, want, "merged config should contain: %s", want)
-			}
-
-			assert.NotContains(t, result, `/-output "eDP-2"`, "example output should be removed")
-		})
-	}
-}
-
 func TestConfigDeploymentFlow(t *testing.T) {
 	tempDir, err := os.MkdirTemp("", "duxinstall-test")
 	require.NoError(t, err)
@@ -394,9 +296,11 @@ func TestAlacrittyConfigDeployment(t *testing.T) {
 	})
 }
 
+// noCompositor deploys only the terminal config: these tests are about shouldReplaceConfig.
+const noCompositor = deps.WindowManager(-1)
+
 func TestShouldReplaceConfigDeployIfMissing(t *testing.T) {
 	allFalse := map[string]bool{
-		"Niri":      false,
 		"Hyprland":  false,
 		"Ghostty":   false,
 		"Kitty":     false,
@@ -417,7 +321,7 @@ func TestShouldReplaceConfigDeployIfMissing(t *testing.T) {
 
 		results, err := cd.DeployConfigurationsSelectiveWithReinstalls(
 			context.Background(),
-			deps.WindowManagerNiri,
+			noCompositor,
 			deps.TerminalGhostty,
 			nil, // installedDeps
 			nil, // replaceConfigs
@@ -450,7 +354,7 @@ func TestShouldReplaceConfigDeployIfMissing(t *testing.T) {
 
 		results, err := cd.DeployConfigurationsSelectiveWithReinstalls(
 			context.Background(),
-			deps.WindowManagerNiri,
+			noCompositor,
 			deps.TerminalGhostty,
 			nil,      // installedDeps
 			allFalse, // replaceConfigs — all false
@@ -485,19 +389,12 @@ func TestShouldReplaceConfigDeployIfMissing(t *testing.T) {
 		err = os.WriteFile(ghosttyPath, []byte("# existing ghostty config\n"), 0o644)
 		require.NoError(t, err)
 
-		// Also create the Niri primary config file
-		niriPath := filepath.Join(tempDir, ".config", "niri", "config.kdl")
-		err = os.MkdirAll(filepath.Dir(niriPath), 0o755)
-		require.NoError(t, err)
-		err = os.WriteFile(niriPath, []byte("// existing niri config\n"), 0o644)
-		require.NoError(t, err)
-
 		logChan := make(chan string, 100)
 		cd := NewConfigDeployer(logChan)
 
 		results, err := cd.DeployConfigurationsSelectiveWithReinstalls(
 			context.Background(),
-			deps.WindowManagerNiri,
+			noCompositor,
 			deps.TerminalGhostty,
 			nil,      // installedDeps
 			allFalse, // replaceConfigs — all false
@@ -505,7 +402,7 @@ func TestShouldReplaceConfigDeployIfMissing(t *testing.T) {
 		)
 		require.NoError(t, err)
 
-		// Both Niri and Ghostty config files exist, so with all false they should be skipped
+		// The Ghostty config file exists, so with all false they should be skipped
 		for _, r := range results {
 			assert.Fail(t, "expected no configs to be deployed", "got deployed config: %s", r.ConfigType)
 		}
@@ -531,7 +428,6 @@ func TestShouldReplaceConfigDeployIfMissing(t *testing.T) {
 		cd := NewConfigDeployer(logChan)
 
 		replaceConfigs := map[string]bool{
-			"Niri":      false,
 			"Hyprland":  false,
 			"Ghostty":   true, // explicitly true
 			"Kitty":     false,
@@ -540,7 +436,7 @@ func TestShouldReplaceConfigDeployIfMissing(t *testing.T) {
 
 		results, err := cd.DeployConfigurationsSelectiveWithReinstalls(
 			context.Background(),
-			deps.WindowManagerNiri,
+			noCompositor,
 			deps.TerminalGhostty,
 			nil,            // installedDeps
 			replaceConfigs, // Ghostty=true, rest=false
@@ -626,7 +522,6 @@ func TestDeployHyprlandStartsShellInLiveSession(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Setenv("HOME", t.TempDir())
 			t.Setenv("HYPRLAND_INSTANCE_SIGNATURE", tc.instance)
-			t.Setenv("NIRI_SOCKET", "")
 			t.Setenv("MANGO_INSTANCE_SIGNATURE", "")
 			started := false
 			prev := systemctlUser
@@ -650,32 +545,6 @@ func TestDeployHyprlandStartsShellInLiveSession(t *testing.T) {
 	}
 }
 
-func TestDeployNiriConfigSystemdAutostart(t *testing.T) {
-	cases := []struct {
-		name       string
-		useSystemd bool
-		addWants   error
-		wantSpawn  bool
-		wantCalls  int
-	}{
-		{"systemd", true, nil, false, 1},
-		{"add-wants fails", true, errors.New("no user bus"), true, 1},
-		{"no systemd", false, nil, true, 0},
-	}
-	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T) {
-			t.Setenv("HOME", t.TempDir())
-			calls := stubAddWants(t, tc.addWants)
-			result, err := NewConfigDeployer(nil).deployNiriConfig("kitty", tc.useSystemd)
-			require.NoError(t, err)
-			content, err := os.ReadFile(result.Path)
-			require.NoError(t, err)
-			assert.Equal(t, tc.wantSpawn, strings.Contains(string(content), `spawn-at-startup "dms" "run"`))
-			assert.Equal(t, tc.wantCalls, *calls)
-		})
-	}
-}
-
 func TestHyprlandLuaUnsupported(t *testing.T) {
 	for ver, refuse := range map[string]bool{
 		"0.54.2": true,
@@ -685,77 +554,6 @@ func TestHyprlandLuaUnsupported(t *testing.T) {
 		err := hyprlandLuaUnsupported(ver)
 		assert.Equal(t, refuse, err != nil, ver)
 	}
-}
-
-func TestNiriDeployBindsChoiceAlwaysBacksUp(t *testing.T) {
-	for _, replace := range []bool{false, true} {
-		home := t.TempDir()
-		t.Setenv("HOME", home)
-		dms := filepath.Join(home, ".config", "niri", "dms")
-		require.NoError(t, os.MkdirAll(dms, 0o755))
-		user := "binds {\n    Mod+X { close-window; }\n}\n"
-		require.NoError(t, os.WriteFile(filepath.Join(dms, "binds.kdl"), []byte(user), 0o644))
-
-		cd := NewConfigDeployer(nil)
-		cd.SetReplaceBinds(replace)
-		_, err := cd.DeployCompositor(deps.WindowManagerNiri, "kitty", false)
-		require.NoError(t, err)
-
-		backups, _ := filepath.Glob(filepath.Join(dms, "binds.kdl.backup.*"))
-		assert.Len(t, backups, 1, "replace=%v", replace)
-		got, err := os.ReadFile(filepath.Join(dms, "binds.kdl"))
-		require.NoError(t, err)
-		assert.Equal(t, !replace, string(got) == user, "replace=%v", replace)
-		if replace {
-			assert.Contains(t, string(got), "spawn \"kitty\"")
-		}
-	}
-}
-
-func TestNiriReplaceBindsKeepsMainConfig(t *testing.T) {
-	home := t.TempDir()
-	t.Setenv("HOME", home)
-	dmsDir := filepath.Join(home, ".config", "niri", "dms")
-	require.NoError(t, os.MkdirAll(dmsDir, 0o755))
-	mainPath := filepath.Join(filepath.Dir(dmsDir), "config.kdl")
-	main := "// user config\ninclude \"dms/binds.kdl\"\n"
-	require.NoError(t, os.WriteFile(mainPath, []byte(main), 0o644))
-	bindsPath := filepath.Join(dmsDir, "binds.kdl")
-	userBinds := "binds { Mod+X { close-window; } }\n"
-	require.NoError(t, os.WriteFile(bindsPath, []byte(userBinds), 0o644))
-	colorsPath := filepath.Join(dmsDir, "colors.kdl")
-	colors := "// user colors\n"
-	require.NoError(t, os.WriteFile(colorsPath, []byte(colors), 0o644))
-	kittyPath := filepath.Join(home, ".config", "kitty", "kitty.conf")
-	require.NoError(t, os.MkdirAll(filepath.Dir(kittyPath), 0o755))
-	require.NoError(t, os.WriteFile(kittyPath, []byte("# user terminal\n"), 0o644))
-
-	cd := NewConfigDeployer(nil)
-	results, err := cd.DeployConfigurationsSelectiveWithReinstallsAndSystemd(
-		context.Background(), deps.WindowManagerNiri, deps.TerminalKitty, nil,
-		map[string]bool{"Niri": false, "Kitty": false, BindsConfigType: true}, nil, false,
-	)
-	require.NoError(t, err)
-	got, err := os.ReadFile(bindsPath)
-	require.NoError(t, err)
-	assert.Equal(t, strings.ReplaceAll(NiriBindsConfig, "{{TERMINAL_COMMAND}}", "kitty"), string(got))
-	backups, err := filepath.Glob(bindsPath + ".backup.*")
-	require.NoError(t, err)
-	require.Len(t, backups, 1)
-	backup, err := os.ReadFile(backups[0])
-	require.NoError(t, err)
-	assert.Equal(t, userBinds, string(backup))
-	for path, want := range map[string]string{mainPath: main, colorsPath: colors} {
-		got, err := os.ReadFile(path)
-		require.NoError(t, err)
-		assert.Equal(t, want, string(got), path)
-	}
-	mainBackups, err := filepath.Glob(mainPath + ".backup.*")
-	require.NoError(t, err)
-	assert.Empty(t, mainBackups)
-	require.Len(t, results, 1)
-	assert.Equal(t, BindsConfigType, results[0].ConfigType)
-	assert.True(t, results[0].Deployed)
 }
 
 func TestHyprlandKeptConfigStillRefreshesDMSBinds(t *testing.T) {

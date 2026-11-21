@@ -340,66 +340,6 @@
     "icon": "dashboard"
   },
   {
-    "section": "blurredWallpaperLayer",
-    "label": "Blur layer",
-    "tabIndex": -1,
-    "category": "Wallpaper & colors",
-    "keywords": [
-      "background",
-      "bg",
-      "blur",
-      "blurwallpaper",
-      "colors",
-      "colour",
-      "colours",
-      "compositor",
-      "desktop",
-      "duplicate",
-      "hue",
-      "image",
-      "layer",
-      "namespace",
-      "needs",
-      "niri",
-      "palette",
-      "picture",
-      "rule",
-      "tint",
-      "wallpaper"
-    ],
-    "page": "personalization",
-    "description": "Layer namespace %1, needs a niri blur rule",
-    "descriptionArgs": [
-      "dms:blurwallpaper"
-    ],
-    "conditionKey": "isNiri"
-  },
-  {
-    "section": "blurWallpaperOnOverview",
-    "label": "Blur on overview",
-    "tabIndex": -1,
-    "category": "Wallpaper & colors",
-    "keywords": [
-      "background",
-      "bg",
-      "blur",
-      "colors",
-      "colour",
-      "colours",
-      "desktop",
-      "hue",
-      "image",
-      "niri",
-      "overview",
-      "palette",
-      "picture",
-      "tint",
-      "wallpaper"
-    ],
-    "page": "personalization",
-    "conditionKey": "isNiri"
-  },
-  {
     "section": "notificationPopupBodyInvokesAction",
     "label": "Body click runs default action",
     "tabIndex": -1,
@@ -1898,7 +1838,6 @@
       "hyprland",
       "interface",
       "mango",
-      "niri",
       "open",
       "rule",
       "settings",
@@ -1966,7 +1905,6 @@
       "match",
       "menu",
       "modal",
-      "niri",
       "override",
       "popout",
       "radius",
@@ -3868,39 +3806,6 @@
     "conditionKey": "frameEnabled"
   },
   {
-    "section": "barHideOnFullscreen",
-    "label": "Hide bar on fullscreen",
-    "tabIndex": 3,
-    "category": "General",
-    "keywords": [
-      "app",
-      "applications",
-      "apps",
-      "away",
-      "bar",
-      "edge",
-      "fullscreen",
-      "general",
-      "hide",
-      "move",
-      "over",
-      "panel",
-      "pointer",
-      "program",
-      "programs",
-      "reveal",
-      "screen",
-      "slide",
-      "statusbar",
-      "taskbar",
-      "topbar",
-      "visibility"
-    ],
-    "parentLabel": "Bar",
-    "description": "Slide the bar away over fullscreen applications. Move the pointer to the screen edge to reveal it.",
-    "conditionKey": "isNiri"
-  },
-  {
     "section": "islandHoverCloseDelay",
     "label": "Hide delay",
     "tabIndex": 3,
@@ -4552,7 +4457,6 @@
     "keywords": [
       "bar",
       "general",
-      "niri",
       "overview",
       "panel",
       "show",
@@ -4573,7 +4477,6 @@
       "frame",
       "general",
       "hide",
-      "niri",
       "overview",
       "panel",
       "show",
@@ -6854,75 +6757,6 @@
     ]
   },
   {
-    "section": "niriOverviewLauncherStyle",
-    "label": "Opens",
-    "tabIndex": 9,
-    "category": "Launcher",
-    "keywords": [
-      "app drawer",
-      "app menu",
-      "applications",
-      "drawer",
-      "full",
-      "launcher",
-      "menu",
-      "niri",
-      "opens",
-      "overlay",
-      "overview",
-      "spotlight",
-      "start",
-      "start menu",
-      "style"
-    ],
-    "conditionKey": "isNiri"
-  },
-  {
-    "section": "niriOverviewOverlayEnabled",
-    "label": "Overlay",
-    "tabIndex": 9,
-    "category": "Launcher",
-    "keywords": [
-      "app drawer",
-      "app menu",
-      "applications",
-      "drawer",
-      "enable",
-      "launcher",
-      "menu",
-      "niri",
-      "opens",
-      "overlay",
-      "overview",
-      "start",
-      "start menu",
-      "typing"
-    ],
-    "description": "Typing in the overview opens the launcher",
-    "conditionKey": "isNiri"
-  },
-  {
-    "section": "launcherNiriOverview",
-    "label": "Overview",
-    "tabIndex": 9,
-    "category": "Launcher",
-    "keywords": [
-      "app drawer",
-      "app menu",
-      "applications",
-      "drawer",
-      "launcher",
-      "menu",
-      "niri",
-      "overlay",
-      "overview",
-      "start",
-      "start menu"
-    ],
-    "icon": "overview_key",
-    "conditionKey": "isNiri"
-  },
-  {
     "section": "pluginVisibility",
     "label": "Plugin visibility",
     "tabIndex": 9,
@@ -9122,21 +8956,6 @@
       "screen",
       "show"
     ]
-  },
-  {
-    "section": "osdTouchpadEnabled",
-    "label": "Touchpad",
-    "tabIndex": 18,
-    "category": "On-screen displays",
-    "keywords": [
-      "displays",
-      "indicator",
-      "osd",
-      "popup",
-      "screen",
-      "touchpad"
-    ],
-    "conditionKey": "isNiri"
   },
   {
     "section": "osdVolumeEnabled",
@@ -13004,30 +12823,6 @@
     "conditionKey": "layoutCapable"
   },
   {
-    "section": "closeNiriOverviewOnWindowFocus",
-    "label": "Close on window focus",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "close",
-      "dock",
-      "focus",
-      "focuses",
-      "integrations",
-      "launch",
-      "launcher",
-      "launches",
-      "leaves",
-      "niri",
-      "overview",
-      "settings",
-      "system",
-      "window"
-    ],
-    "description": "Leaves the overview when DMS launches an app or focuses a window",
-    "conditionKey": "layoutCapable"
-  },
-  {
     "section": "hyprlandScrollingColumnWidth",
     "label": "Column Width",
     "tabIndex": 37,
@@ -13117,32 +12912,6 @@
     "conditionKey": "isHyprland"
   },
   {
-    "section": "niriLayoutBarXrayEnabled",
-    "label": "Frame xray",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "against",
-      "background",
-      "bar",
-      "bg",
-      "blur",
-      "desktop",
-      "even",
-      "frame",
-      "image",
-      "integrations",
-      "niri",
-      "performance",
-      "picture",
-      "system",
-      "wallpaper",
-      "xray"
-    ],
-    "description": "Blur against the wallpaper even with xray off",
-    "conditionKey": "isNiri"
-  },
-  {
     "section": "hyprlandScrollingFullscreenOneColumn",
     "label": "Fullscreen single column",
     "tabIndex": 37,
@@ -13207,38 +12976,6 @@
     "description": "Auto follows bar spacing, Off keeps your %1 config",
     "descriptionArgs": [
       "MangoWC"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
-    "section": "niriLayoutGapsMode",
-    "label": "Gaps",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "auto",
-      "config",
-      "follows",
-      "gap",
-      "gaps",
-      "integrations",
-      "keeps",
-      "margin",
-      "margins",
-      "niri",
-      "override",
-      "padding",
-      "panel",
-      "spacing",
-      "statusbar",
-      "system",
-      "taskbar",
-      "topbar",
-      "unmanaged"
-    ],
-    "description": "Auto follows bar spacing, Off keeps your %1 config",
-    "descriptionArgs": [
-      "niri"
     ],
     "conditionKey": "layoutCapable"
   },
@@ -13432,25 +13169,6 @@
     ],
     "icon": "crop_square",
     "conditionKey": "isMango"
-  },
-  {
-    "section": "niriLayout",
-    "label": "Layout overrides",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "border",
-      "gaps",
-      "integrations",
-      "layout",
-      "niri",
-      "overrides",
-      "radius",
-      "system",
-      "window"
-    ],
-    "icon": "layers",
-    "conditionKey": "isNiri"
   },
   {
     "section": "hyprlandMasterOrientation",
@@ -13647,42 +13365,6 @@
       "system"
     ],
     "conditionKey": "layoutCapable"
-  },
-  {
-    "section": "niriLayoutBorderSizeEnabled",
-    "label": "Override border size",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "border",
-      "focus-ring",
-      "integrations",
-      "niri",
-      "override",
-      "size",
-      "system"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
-    "section": "niriOverview",
-    "label": "Overview",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "dock",
-      "focus",
-      "integrations",
-      "launch",
-      "launcher",
-      "niri",
-      "overview",
-      "settings",
-      "system",
-      "window"
-    ],
-    "icon": "overview",
-    "conditionKey": "isNiri"
   },
   {
     "section": "hyprlandDwindlePreserveSplit",
@@ -13931,21 +13613,6 @@
     "conditionKey": "isHyprland"
   },
   {
-    "section": "niriLayoutGapsOverride",
-    "label": "Window gaps",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "gaps",
-      "integrations",
-      "niri",
-      "override",
-      "system",
-      "window"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
     "section": "hyprlandGroupbar",
     "label": "Window groups",
     "tabIndex": 37,
@@ -14114,34 +13781,6 @@
     ],
     "description": "Blurred surfaces show the wallpaper, not the windows beneath",
     "conditionKey": "isHyprland"
-  },
-  {
-    "section": "niriLayoutXrayEnabled",
-    "label": "Xray blur",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "background",
-      "background-effect",
-      "beneath",
-      "bg",
-      "blur",
-      "blurred",
-      "desktop",
-      "image",
-      "integrations",
-      "niri",
-      "performance",
-      "picture",
-      "show",
-      "surfaces",
-      "system",
-      "wallpaper",
-      "windows",
-      "xray"
-    ],
-    "description": "Blurred surfaces show the wallpaper, not the windows beneath",
-    "conditionKey": "isNiri"
   },
   {
     "section": "windowRules",
@@ -15205,23 +14844,6 @@
     "conditionKey": "pointerCapable"
   },
   {
-    "section": "touchpadPinchSensitivity",
-    "label": "Pinch sensitivity",
-    "tabIndex": 44,
-    "category": "Mouse & touchpad",
-    "keywords": [
-      "gesture",
-      "input",
-      "mouse",
-      "pinch",
-      "sensitivity",
-      "touchpad",
-      "zoom"
-    ],
-    "parentLabel": "Input",
-    "conditionKey": "isNiri"
-  },
-  {
     "section": "mouseAccelSpeed",
     "label": "Pointer speed",
     "tabIndex": 44,
@@ -15501,21 +15123,6 @@
     ],
     "parentLabel": "Input",
     "conditionKey": "inputCapable"
-  },
-  {
-    "section": "keyboardTrackLayout",
-    "label": "Remember layout",
-    "tabIndex": 45,
-    "category": "Keyboard",
-    "keywords": [
-      "input",
-      "keyboard",
-      "layout",
-      "remember",
-      "track"
-    ],
-    "parentLabel": "Input",
-    "conditionKey": "isNiri"
   },
   {
     "section": "keyboardRepeatDelay",
@@ -16497,33 +16104,6 @@
     "descriptionArgs": [
       "https://github.com/duxlabs-dev/base46"
     ],
-    "conditionKey": "matugenAvailable"
-  },
-  {
-    "section": "matugenTemplateNiri",
-    "label": "niri",
-    "tabIndex": 50,
-    "category": "App theming",
-    "keywords": [
-      "app",
-      "background",
-      "bg",
-      "colors",
-      "colour",
-      "colours",
-      "desktop",
-      "hue",
-      "image",
-      "matugen",
-      "niri",
-      "palette",
-      "picture",
-      "template",
-      "theming",
-      "tint",
-      "wallpaper"
-    ],
-    "parentLabel": "Wallpaper & colors",
     "conditionKey": "matugenAvailable"
   },
   {
@@ -18013,24 +17593,6 @@
     "parentLabel": "Dock",
     "description": "Clicking a window in a special workspace opens that workspace",
     "conditionKey": "isHyprland"
-  },
-  {
-    "section": "dockOpenOnOverview",
-    "label": "Show on overview",
-    "tabIndex": 59,
-    "category": "Advanced",
-    "keywords": [
-      "advanced",
-      "dock",
-      "launcher bar",
-      "niri",
-      "overview",
-      "panel",
-      "show",
-      "taskbar"
-    ],
-    "parentLabel": "Dock",
-    "conditionKey": "isNiri"
   },
   {
     "section": "dockUseOverlayLayer",

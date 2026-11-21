@@ -36,17 +36,13 @@ DFloatingWindow {
     }
 
     function focusedWorkspaceName() {
-        if (CompositorService.isNiri)
-            return NiriService.workspaces[NiriService.focusedWorkspaceId]?.name ?? "";
         if (CompositorService.isHyprland)
             return HyprlandService.focusedWorkspaceName();
         return "";
     }
 
     function renameWorkspace(name) {
-        if (CompositorService.isNiri) {
-            NiriService.renameWorkspace(name);
-        } else if (CompositorService.isHyprland) {
+        if (CompositorService.isHyprland) {
             HyprlandService.renameWorkspace(name);
         } else {
             log.warn("rename not supported for this compositor");

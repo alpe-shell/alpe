@@ -14,10 +14,8 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("KeybindsService")
 
-    property bool available: CompositorService.isNiri || CompositorService.isHyprland || CompositorService.isMango
+    property bool available: CompositorService.isHyprland || CompositorService.isMango
     property string currentProvider: {
-        if (CompositorService.isNiri)
-            return "niri";
         if (CompositorService.isHyprland)
             return "hyprland";
         if (CompositorService.isMango)
@@ -26,8 +24,6 @@ Singleton {
     }
 
     readonly property string cheatsheetProvider: {
-        if (CompositorService.isNiri)
-            return "niri";
         if (CompositorService.isHyprland)
             return "hyprland";
         if (CompositorService.isMango)
@@ -76,8 +72,6 @@ Singleton {
     readonly property string configDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation))
     readonly property string compositorConfigDir: {
         switch (currentProvider) {
-        case "niri":
-            return configDir + "/niri";
         case "hyprland":
             return configDir + "/hypr";
         case "mangowc":
@@ -105,7 +99,7 @@ Singleton {
     Connections {
         target: CompositorService
         function onCompositorChanged() {
-            if (!CompositorService.isNiri && !CompositorService.isMango)
+            if (!CompositorService.isMango)
                 return;
             Qt.callLater(root.loadBinds);
         }
@@ -124,18 +118,6 @@ Singleton {
 
     function removeRef() {
         _consumers = Math.max(0, _consumers - 1);
-    }
-
-    Connections {
-        target: NiriService
-        enabled: CompositorService.isNiri
-        function onConfigReloaded() {
-            if (root._consumers === 0) {
-                root._bindsStale = true;
-                return;
-            }
-            Qt.callLater(root.loadBinds, false);
-        }
     }
 
     Process {
@@ -354,14 +336,12 @@ Singleton {
             return true;
         const provider = currentProvider || cheatsheetProvider;
         const base = action.trim().split(/\s+/)[0];
-        if (provider === "niri" && (base === "next-window" || base === "previous-window"))
-            return false;
         // Mouse-drag dispatchers do nothing without a pointer, and exit would end the session.
         if (provider === "hyprland" && (action.trim() === "movewindow" || action.trim() === "resizewindow" || base === "exit"))
             return false;
         if (provider === "hyprland" && (!luaAction || !HyprlandService.luaConfigActive))
             return false;
-        return provider === "niri" || provider === "hyprland" || provider === "mangowc";
+        return provider === "hyprland" || provider === "mangowc";
     }
 
     function executeAction(action, luaAction) {
@@ -387,31 +367,6 @@ Singleton {
         }
 
         const provider = currentProvider || cheatsheetProvider;
-        if (provider === "niri") {
-            const parts = action.trim().split(/\s+/);
-            if (parts.length === 0 || parts[0] === "next-window" || parts[0] === "previous-window")
-                return false;
-
-            const cmdParts = [];
-            for (let i = 0; i < parts.length; i++) {
-                const part = parts[i];
-                const eqIdx = part.indexOf("=");
-                if (eqIdx !== -1) {
-                    const key = part.slice(0, eqIdx);
-                    const val = part.slice(eqIdx + 1).replace(/^["']|["']$/g, "");
-                    if (key === "skip-confirmation") {
-                        if (val === "true")
-                            cmdParts.push("--skip-confirmation");
-                    } else {
-                        cmdParts.push("--" + key + "=" + val);
-                    }
-                } else {
-                    cmdParts.push(part);
-                }
-            }
-            Quickshell.execDetached(["sh", "-c", "niri msg action " + cmdParts.join(" ")]);
-            return true;
-        }
         if (provider === "hyprland") {
             if (!luaAction || !HyprlandService.luaConfigActive)
                 return false;
@@ -631,14 +586,6 @@ Singleton {
             cmd.push("--no-inhibiting");
         if (bindData.flags)
             cmd.push("--flags", bindData.flags);
-        // --replace-key drops the old bind before core can keep its trigger, so the editor always sends it
-        if (currentProvider === "niri" && typeof bindData.trigger === "string") {
-            cmd.push("--trigger", bindData.trigger || "press");
-            if (bindData.trigger === "both")
-                cmd.push("--release-action", bindData.releaseAction || "");
-            if (typeof bindData.passThrough === "boolean")
-                cmd.push("--pass-through=" + bindData.passThrough);
-        }
         saveProcess.command = cmd;
         saveProcess.provider = currentProvider;
         saveProcess.savedKey = bindData.key;
@@ -710,7 +657,7 @@ Singleton {
     }
 
     function getDmsActions() {
-        const actions = Actions.getDmsActions(CompositorService.isNiri, CompositorService.isHyprland);
+        const actions = Actions.getDmsActions(CompositorService.isHyprland);
         if (!AdminPolicy.disableLockIpcUnlock)
             return actions;
         return actions.filter(action => action.id !== "spawn dms ipc call lock demo");

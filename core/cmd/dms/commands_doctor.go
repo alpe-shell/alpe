@@ -93,7 +93,6 @@ func (ds *DoctorStatus) OKCount() int {
 
 var (
 	quickshellVersionRegex = regexp.MustCompile(`(?i)quickshell (\d+\.\d+\.\d+)`)
-	niriVersionRegex       = regexp.MustCompile(`niri (\d+\.\d+)`)
 	swayVersionRegex       = regexp.MustCompile(`sway version (\d+\.\d+)`)
 	riverVersionRegex      = regexp.MustCompile(`river (\d+\.\d+)`)
 	wayfireVersionRegex    = regexp.MustCompile(`wayfire (\d+\.\d+)`)
@@ -870,7 +869,6 @@ func checkWindowManagers(qsVersion string) []checkResult {
 		commands                     []string
 	}{
 		{"Hyprland", "Hyprland", "--version", distros.ParseHyprlandVersion, []string{"hyprland", "Hyprland"}},
-		{"niri", "niri", "--version", firstSubmatch(niriVersionRegex), []string{"niri"}},
 		{"Sway", "sway", "--version", firstSubmatch(swayVersionRegex), []string{"sway"}},
 		{"River", "river", "-version", firstSubmatch(riverVersionRegex), []string{"river"}},
 		{"Wayfire", "wayfire", "--version", firstSubmatch(wayfireVersionRegex), []string{"wayfire"}},
@@ -918,9 +916,6 @@ func checkWindowManagers(qsVersion string) []checkResult {
 			results = append(results, checkHyprlandQuickshellFloor(ver, qsVersion)...)
 			results = append(results, checkHyprlandDeprecatedConfig()...)
 		}
-		if c.name == "niri" {
-			results = append(results, checkNiriConfig(filepath.Join(utils.XDGConfigHome(), "niri"))...)
-		}
 		if c.name == "mangowc" {
 			mangoVersion = ver
 		}
@@ -930,7 +925,7 @@ func checkWindowManagers(qsVersion string) []checkResult {
 		results = append(results, checkResult{
 			catCompositor, "Compositor", statusError,
 			"No supported Wayland compositor found",
-			"Install Hyprland, niri, Sway, River, Wayfire, labwc, mangowc, miracle-wm, Scroll, or Umbriel",
+			"Install Hyprland, Sway, River, Wayfire, labwc, mangowc, miracle-wm, Scroll, or Umbriel",
 			doctorDocsURL + "#compositor-checks",
 		})
 	}
@@ -1035,153 +1030,6 @@ func checkMangoConfig(mangoDir string) []checkResult {
 	return results
 }
 
-var niriKeepMaxBpc = regexp.MustCompile(`^\s*keep-max-bpc-unchanged\b`)
-
-// DMS never rewrites the user's config.kdl or binds.kdl, so name the line to fix by hand.
-func checkNiriConfig(niriDir string) []checkResult {
-	url := doctorDocsURL + "#compositor-checks"
-	paths, _ := filepath.Glob(filepath.Join(niriDir, "dms", "*.kdl"))
-	paths = append([]string{filepath.Join(niriDir, "config.kdl")}, paths...)
-
-	var results []checkResult
-	for _, path := range paths {
-		data, err := os.ReadFile(path)
-		if err != nil {
-			continue
-		}
-		rel, _ := filepath.Rel(niriDir, path)
-		for i, line := range strings.Split(kdlMaskInactive(string(data)), "\n") {
-			if !niriKeepMaxBpc.MatchString(line) {
-				continue
-			}
-			results = append(results, checkResult{catCompositor, "keep-max-bpc", statusWarn,
-				fmt.Sprintf("%s:%d sets keep-max-bpc-unchanged", rel, i+1),
-				"niri after 26.04 removed this debug flag and rejects the whole config. Delete the line; set max-bpc in the output section instead.", url})
-		}
-	}
-	return results
-}
-
-// Blanks comments and slashdash nodes, keeping newlines, so line checks only see what niri parses.
-func kdlMaskInactive(src string) string {
-	out := []byte(src)
-	blank := func(from, to int) {
-		for i := from; i < to; i++ {
-			if out[i] != '\n' {
-				out[i] = ' '
-			}
-		}
-	}
-	for i := 0; i < len(src); {
-		switch {
-		case strings.HasPrefix(src[i:], "//"):
-			end := kdlLineEnd(src, i)
-			blank(i, end)
-			i = end
-		case strings.HasPrefix(src[i:], "/*"):
-			end := kdlBlockCommentEnd(src, i)
-			blank(i, end)
-			i = end
-		case strings.HasPrefix(src[i:], "/-"):
-			end := kdlSlashdashEnd(src, i+2)
-			blank(i, end)
-			i = end
-		case src[i] == '"' || (src[i] == 'r' && kdlRawStringStart(src, i)):
-			i = kdlStringEnd(src, i)
-		default:
-			i++
-		}
-	}
-	return string(out)
-}
-
-func kdlLineEnd(src string, i int) int {
-	if end := strings.IndexByte(src[i:], '\n'); end >= 0 {
-		return i + end
-	}
-	return len(src)
-}
-
-func kdlBlockCommentEnd(src string, i int) int {
-	depth := 0
-	for i < len(src) {
-		switch {
-		case strings.HasPrefix(src[i:], "/*"):
-			depth++
-			i += 2
-		case strings.HasPrefix(src[i:], "*/"):
-			depth--
-			i += 2
-			if depth == 0 {
-				return i
-			}
-		default:
-			i++
-		}
-	}
-	return len(src)
-}
-
-// A slashdash node ends at its line or ';' unless it opened a block, which ends at the matching '}'.
-func kdlSlashdashEnd(src string, i int) int {
-	depth := 0
-	for i < len(src) {
-		switch c := src[i]; {
-		case strings.HasPrefix(src[i:], "//"):
-			i = kdlLineEnd(src, i)
-		case strings.HasPrefix(src[i:], "/*"):
-			i = kdlBlockCommentEnd(src, i)
-		case c == '"' || (c == 'r' && kdlRawStringStart(src, i)):
-			i = kdlStringEnd(src, i)
-		case c == '{':
-			depth++
-			i++
-		case c == '}':
-			depth--
-			i++
-			if depth <= 0 {
-				return i
-			}
-		case (c == '\n' || c == ';') && depth == 0:
-			return i
-		default:
-			i++
-		}
-	}
-	return len(src)
-}
-
-func kdlRawStringStart(src string, i int) bool {
-	j := i + 1
-	for j < len(src) && src[j] == '#' {
-		j++
-	}
-	return j < len(src) && src[j] == '"'
-}
-
-func kdlStringEnd(src string, i int) int {
-	if src[i] == 'r' {
-		hashes := 0
-		for src[i+1+hashes] == '#' {
-			hashes++
-		}
-		closer := "\"" + strings.Repeat("#", hashes)
-		if end := strings.Index(src[i+2+hashes:], closer); end >= 0 {
-			return i + 2 + hashes + end + len(closer)
-		}
-		return len(src)
-	}
-	for j := i + 1; j < len(src); j++ {
-		switch src[j] {
-		case '\\':
-			j++
-		case '"':
-			return j + 1
-		}
-	}
-	return len(src)
-}
-
 func checkCompositorBlurSupport() checkResult {
 	supported, err := blur.ProbeSupport()
 	if err != nil {
@@ -1274,8 +1122,6 @@ func detectRunningWM() string {
 	switch {
 	case os.Getenv("HYPRLAND_INSTANCE_SIGNATURE") != "":
 		return "Hyprland"
-	case os.Getenv("NIRI_SOCKET") != "":
-		return "niri"
 	case os.Getenv("MANGO_INSTANCE_SIGNATURE") != "":
 		return "MangoWC"
 	case os.Getenv("MIRACLESOCK") != "":
@@ -1368,7 +1214,7 @@ ShellRoot {
 		{"Polkit", "Authentication prompts"},
 		{"IdleMonitor", "Idle detection"},
 		{"IdleInhibitor", "Prevent idle/sleep"},
-		{"ShortcutInhibitor", "Allow shortcut management (niri)"},
+		{"ShortcutInhibitor", "Allow shortcut management"},
 		{"BackgroundBlur", "Background blur API support in Quickshell"},
 	}
 

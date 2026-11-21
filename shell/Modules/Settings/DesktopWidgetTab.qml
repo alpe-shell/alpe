@@ -103,20 +103,6 @@ Item {
             }
 
             SettingsToggleRow {
-                visible: CompositorService.isNiri && !root.lockScreenInstance
-                text: I18n.tr("Show on overview")
-                checked: root.cfg.showOnOverview ?? false
-                onToggled: checked => root.updateConfig("showOnOverview", checked)
-            }
-
-            SettingsToggleRow {
-                visible: CompositorService.isNiri && !root.lockScreenInstance
-                text: I18n.tr("Show on overview only")
-                checked: root.cfg.showOnOverviewOnly ?? false
-                onToggled: checked => root.updateConfig("showOnOverviewOnly", checked)
-            }
-
-            SettingsToggleRow {
                 visible: !root.lockScreenInstance
                 text: I18n.tr("Click through")
                 checked: root.cfg.clickThrough ?? false

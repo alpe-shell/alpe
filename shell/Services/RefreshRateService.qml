@@ -98,14 +98,6 @@ Singleton {
     }
 
     Connections {
-        target: NiriService
-        enabled: SettingsData.lowerDisplayRefreshRateOnBattery
-        function onOutputsChanged() {
-            root.requestSync("output-change");
-        }
-    }
-
-    Connections {
         target: WlrOutputService
         enabled: SettingsData.lowerDisplayRefreshRateOnBattery
         function onStateChanged() {
@@ -203,36 +195,6 @@ Singleton {
     }
 
     function applyConfiguredTargets(context, reason) {
-        if (CompositorService.isNiri) {
-            const outputs = NiriService.outputs || {};
-            const applied = [];
-            for (const name in outputs) {
-                const currentMode = OutputModel.niriCurrentMode(outputs[name]);
-                const target = computeTargetMode(name, outputs[name], "niri");
-                if (!target || !target.value)
-                    continue;
-                if (OutputModel.modeAlreadyCurrent(currentMode, target.mode, batteryRefreshRateTolerance)) {
-                    if (target.source === "previous")
-                        clearPreviousRefreshMode(name, outputs[name]);
-                    continue;
-                }
-                if (root._lastAppliedTargets[name] === target.value)
-                    continue;
-                root._lastAppliedTargets[name] = target.value;
-                cascadeGuard.restart();
-                NiriService.applyOutputConfig(name, {
-                    "mode": target.value
-                }, success => {
-                    if (success && target.source === "previous")
-                        clearPreviousRefreshMode(name, outputs[name]);
-                });
-                applied.push(name + " " + (OutputModel.modeRefresh(target.mode) / 1000).toFixed(0) + "Hz (" + target.source + ")");
-            }
-            if (applied.length > 0)
-                log.info("Updated display refresh rate: ", applied.join(", "), " (", context, ")");
-            return;
-        }
-
         if (!WlrOutputService.wlrOutputAvailable)
             return;
 
@@ -272,36 +234,6 @@ Singleton {
     }
 
     function applyBatteryTargets(reason) {
-        if (CompositorService.isNiri) {
-            const outputs = NiriService.outputs || {};
-            const applied = [];
-            for (const name in outputs) {
-                const output = outputs[name];
-                const currentMode = OutputModel.niriCurrentMode(output);
-                if (!currentMode)
-                    continue;
-                const currentRefresh = OutputModel.modeRefresh(currentMode);
-                if (currentRefresh <= batteryRefreshRateTarget + batteryRefreshRateTolerance)
-                    continue;
-                const target = OutputModel.batteryRefreshMode(output, currentMode, "niri", batteryRefreshRateTarget, batteryRefreshRateTolerance);
-                if (!target)
-                    continue;
-                const targetValue = OutputModel.formatNiriMode(target);
-                storePreviousRefreshMode(name, output, currentMode);
-                if (root._lastAppliedTargets[name] === targetValue)
-                    continue;
-                root._lastAppliedTargets[name] = targetValue;
-                cascadeGuard.restart();
-                NiriService.applyOutputConfig(name, {
-                    "mode": targetValue
-                });
-                applied.push(name + " " + (currentRefresh / 1000).toFixed(0) + "\u2192" + (OutputModel.modeRefresh(target) / 1000).toFixed(0) + "Hz");
-            }
-            if (applied.length > 0)
-                log.info("Updated display refresh rate: ", applied.join(", "), " (battery)");
-            return;
-        }
-
         if (!WlrOutputService.wlrOutputAvailable)
             return;
 
