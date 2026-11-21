@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Prüft quickshell/scripts/alpe-hypr-pick.py mit Attrappen für hyprctl und slurp."""
+"""Prüft shell/scripts/alpe-hypr-pick.py mit Attrappen für hyprctl und slurp."""
 import json
 import os
 import subprocess
 import sys
 import tempfile
 
-SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.expanduser("~"), "dux-shell")
-SCRIPT = os.path.join(SHELL, "quickshell", "scripts", "alpe-hypr-pick.py")
+SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
+SCRIPT = os.path.join(SHELL, "scripts", "alpe-hypr-pick.py")
 failures = 0
 if not os.path.exists(SCRIPT):
     print(f"{SCRIPT} fehlt – zuerst den Shell-Code auf Alpe bringen (bash ~/alpe/install.sh)")

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Alpe – eigener Hintergrunddienst.
 #
-# Die Shell besteht aus Oberfläche (QML, ~/dux-shell/quickshell) und einem Hintergrunddienst
+# Die Shell besteht aus Oberfläche (QML, shell/ im Alpe-Ordner) und einem Hintergrunddienst
 # (Go, Befehl "dms"). Beide müssen zueinander passen. Statt des Dienstes aus dem Paket des
 # Ursprungsprojekts baut dieses Skript ihn aus demselben Quellbaum wie die Oberfläche; danach
 # ist Alpe vom Paketstand unabhängig, und eine Paketaktualisierung kann nichts mehr verschieben.
@@ -17,8 +17,8 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
-UI="$SHELL_DIR/quickshell"
+UI="${ALPE_SHELL_DIR:-$HERE/shell}"
+CORE="$HERE/core"
 LIB="$HOME/.local/lib/alpe"
 BIN="$LIB/alpe"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
@@ -30,7 +30,7 @@ die() { say "FEHLER: $*"; exit 1; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
 brand_version() { sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' "$UI/Common/Brand.qml" 2>/dev/null | head -1; }
-base_version() { cat "$HERE/BASE" 2>/dev/null | sed 's/^v//'; }
+base_version() { tr -d 'v \n' < "$UI/VERSION" 2>/dev/null; }
 version_of() { [ -x "$1" ] && "$1" version 2>/dev/null | head -1; }
 
 uses_systemd() { systemctl --user cat dms.service >/dev/null 2>&1 && systemctl --user is-enabled --quiet dms.service 2>/dev/null; }
@@ -48,15 +48,14 @@ status)
 build)
     have go || die "go fehlt (CachyOS: sudo pacman -S --needed go; Fedora: sudo dnf install golang)"
     have make || die "make fehlt"
-    [ -d "$SHELL_DIR/core" ] || die "$SHELL_DIR/core fehlt – zuerst Alpe einrichten (install.sh oder bootstrap.sh)"
-    [ -e "$UI/DCommon/Widgets/DIcon.qml" ] || git -C "$SHELL_DIR" submodule update --init --depth 1
+    [ -d "$CORE" ] || die "$CORE fehlt – der Alpe-Ordner ist unvollständig"
     version="$(base_version)-alpe$(brand_version)"
     say "== Baue den Hintergrunddienst $version"
-    say "   Quelle: $SHELL_DIR (Zweig $(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD), $(git -C "$SHELL_DIR" rev-parse --short HEAD))"
+    say "   Quelle: $HERE (Zweig $(git -C "$HERE" rev-parse --abbrev-ref HEAD 2>/dev/null), $(git -C "$HERE" rev-parse --short HEAD 2>/dev/null))"
     # Go lädt bei Bedarf die passende Toolchain und die Module selbst nach (GOTOOLCHAIN=auto).
-    GOTOOLCHAIN="${GOTOOLCHAIN:-auto}" make -C "$SHELL_DIR/core" build VERSION="$version" COMMIT="$(git -C "$SHELL_DIR" rev-parse --short=8 HEAD)" >/dev/null \
+    GOTOOLCHAIN="${GOTOOLCHAIN:-auto}" make -C "$CORE" build VERSION="$version" COMMIT="$(git -C "$HERE" rev-parse --short=8 HEAD 2>/dev/null || echo unbekannt)" >/dev/null \
         || die "Bau gescheitert (Ausgabe oben). Der bisherige Dienst bleibt unverändert."
-    built="$SHELL_DIR/core/bin/dms"
+    built="$CORE/bin/dms"
     [ -x "$built" ] || die "Kein Ergebnis in $built"
     got="$(version_of "$built")"
     case "$got" in *"$version"*) ;; *) die "Der neue Bau meldet «$got» statt $version – nicht übernommen" ;; esac
@@ -64,7 +63,7 @@ build)
     [ -x "$BIN" ] && cp -f "$BIN" "$BIN.prev"
     install -m755 "$built" "$BIN.new" && mv -f "$BIN.new" "$BIN"
     # Der Bau legt eine Kopie der Oberfläche in den Quellbaum (von Git ignoriert); weg damit.
-    rm -rf "$SHELL_DIR/core/internal/shellembed/dist" "$SHELL_DIR/core/bin"
+    rm -rf "$CORE/internal/shellembed/dist" "$CORE/bin"
     say "   gebaut: $BIN ($got)"
     if [ -e "$DROPIN" ] || { [ -L "$LINKDIR/dms" ] && [ "$(readlink "$LINKDIR/dms")" = "$BIN" ]; }; then
         say "   wird bereits verwendet – mit dem nächsten Neustart der Shell aktiv"

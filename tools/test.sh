@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Alpe: alle Prüfungen auf einmal – dieselben wie auf GitHub (Actions) vor jedem Push.
 #
-#   bash tools/test.sh          Tests gegen ~/dux-shell (oder $ALPE_SHELL_DIR)
+#   bash tools/test.sh          Tests gegen shell/ und core/ im Repository (Oberfläche anderswo: $ALPE_SHELL_DIR)
 #   alpe test                   dasselbe über den Befehl alpe
 #
 # Seitenladen (QML) läuft nur, wenn PySide6 da ist; Go-Test nur, wenn go da ist.
 set -uo pipefail
 ALPE_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
-export ALPE_SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
+export ALPE_SHELL_DIR="${ALPE_SHELL_DIR:-$ALPE_DIR/shell}"
 cd "$ALPE_DIR" || exit 1
 fails=0
 step() { printf '\n\033[1m== %s\033[0m\n' "$1"; }
@@ -47,10 +47,10 @@ fi
 step "Hintergrunddienst (go test)"
 if [ -n "${ALPE_SKIP_GO:-}" ]; then
     echo "ALPE_SKIP_GO gesetzt – übersprungen"
-elif command -v go >/dev/null && [ -d "$ALPE_SHELL_DIR/core" ]; then
-    run bash -c 'cd "$1" && go test ./internal/server -run TestReadAlpeOff -count=1' _ "$ALPE_SHELL_DIR/core"
+elif command -v go >/dev/null && [ -d "$ALPE_DIR/core" ]; then
+    run bash -c 'cd "$1" && go test ./internal/server -run TestReadAlpeOff -count=1' _ "$ALPE_DIR/core"
 else
-    echo "go oder $ALPE_SHELL_DIR/core fehlt – übersprungen"
+    echo "go oder $ALPE_DIR/core fehlt – übersprungen"
 fi
 
 echo

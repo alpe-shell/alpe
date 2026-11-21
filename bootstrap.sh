@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Alpe auf einem weiteren Rechner einrichten (Desktop oder Laptop, KWin oder Hyprland).
-# Holt den Shell-Code des Ursprungsprojekts im passenden Stand, legt die Alpe-Schichten
-# darauf und stellt den Start der Shell auf diesen Code um. Gefahrlos mehrfach ausfuehrbar.
+# Stellt den Start der Shell auf den Shell-Code im Alpe-Ordner (shell/) um und richtet Alpe
+# ein (install.sh). Gefahrlos mehrfach ausfuehrbar.
 #
 #   bash ~/alpe/bootstrap.sh --check          nur pruefen und zeigen, was getan wuerde
 #   bash ~/alpe/bootstrap.sh                  einrichten
@@ -13,10 +13,8 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
-UPSTREAM="${ALPE_UPSTREAM:-https://github.com/duxlabs-dev/dux-shell}"
-BASE="$(cat "$HERE/BASE")"                       # z. B. v2.1.2
-WANT="${BASE#v}"
+SHELL_DIR="${ALPE_SHELL_DIR:-$HERE/shell}"
+WANT="$(tr -d 'v \n' < "$SHELL_DIR/VERSION" 2>/dev/null || true)"   # Stand des Dienstes, zu dem die Oberfläche passt, z. B. 2.1.2
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
 DROPIN="$CONFIG/systemd/user/dms.service.d/alpe.conf"
 HYPR_MAIN="$CONFIG/hypr/hyprland.conf"
@@ -59,7 +57,6 @@ if [ "$UNDO" = 1 ]; then
         if [ "$CHECK" = 1 ]; then say "   wuerde: eigenen Hintergrunddienst abmelden"; else bash "$HERE/tools/backend.sh" use system | sed 's/^/   /'; fi
     fi
     say "Fertig. Shell neu starten (dms restart oder systemctl --user restart dms.service)."
-    say "Der Shell-Code in $SHELL_DIR bleibt liegen und stoert nicht."
     exit 0
 fi
 
@@ -110,42 +107,13 @@ else
 fi
 [ "$missing" = 0 ] || { say "Abgebrochen: zuerst das Fehlende beheben. Veraendert wurde nichts."; exit 1; }
 
-# ---------------------------------------------------------------- Shell-Code
-say "== Shell-Code in $SHELL_DIR"
-if [ ! -d "$SHELL_DIR/.git" ]; then
-    [ -e "$SHELL_DIR" ] && die "$SHELL_DIR gibt es schon, ist aber kein Git-Repository."
-    say "   hole $UPSTREAM im Stand $BASE"
-    run git -c advice.detachedHead=false clone --quiet --branch "$BASE" --depth 1 --recurse-submodules --shallow-submodules "$UPSTREAM" "$SHELL_DIR"
-    run git -C "$SHELL_DIR" checkout --quiet -b alpe
-else
-    branch="$(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD)"
-    if [ "$branch" = alpe ]; then
-        say "   vorhanden, Zweig alpe"
-    elif [ -z "$(git -C "$SHELL_DIR" status --porcelain --untracked-files=no)" ] && [ "$(git -C "$SHELL_DIR" describe --tags --exact-match 2>/dev/null)" = "$BASE" ]; then
-        say "   vorhanden im Stand $BASE; lege den Zweig alpe an"
-        run git -C "$SHELL_DIR" checkout --quiet -b alpe
-    else
-        die "Zweig '$branch' ist weder 'alpe' noch der unveraenderte Stand $BASE. Bitte selbst klaeren."
-    fi
-fi
-if [ "$CHECK" = 0 ]; then
-    [ -e "$SHELL_DIR/quickshell/DCommon/Widgets" ] || git -C "$SHELL_DIR" submodule update --quiet --init --depth 1 \
-        || die "Der Baustein dux-qml-common fehlt und liess sich nicht holen."
-    # 'git am' braucht einen Namen; ohne eigenen bekommt nur dieses Repository einen.
-    git -C "$SHELL_DIR" config user.name >/dev/null 2>&1 || git -C "$SHELL_DIR" config user.name "Alpe"
-    git -C "$SHELL_DIR" config user.email >/dev/null 2>&1 || git -C "$SHELL_DIR" config user.email "alpe@localhost"
-fi
-
-# ---------------------------------------------------------------- Schichten und Plugins
-if [ "$CHECK" = 1 ] && [ ! -d "$SHELL_DIR/.git" ]; then
-    say "== Alpe-Schichten: $(ls "$HERE"/schichten/*.patch | wc -l) Stueck wuerden eingespielt, dazu die Plugins"
-else
-    ALPE_SHELL_DIR="$SHELL_DIR" ALPE_NO_RESTART=1 bash "$HERE/install.sh" $([ "$CHECK" = 1 ] && printf -- '--check')
-fi
+# ---------------------------------------------------------------- Plugins und Einrichtung
+[ -f "$SHELL_DIR/shell.qml" ] || die "$SHELL_DIR/shell.qml fehlt – der Alpe-Ordner ist unvollständig."
+ALPE_SHELL_DIR="$SHELL_DIR" ALPE_NO_RESTART=1 bash "$HERE/install.sh" $([ "$CHECK" = 1 ] && printf -- '--check')
 
 # ---------------------------------------------------------------- Start umstellen
 say "== Start der Shell"
-UI="$SHELL_DIR/quickshell"
+UI="$SHELL_DIR"
 wired=0
 unit_exec="$(systemctl --user cat dms.service 2>/dev/null | sed -n 's/^ExecStart=//p' | grep -v '^$' | tail -1 || true)"
 # Alpe: Die Umlenkung gilt, sobald es den Dienst gibt – auch wenn er noch aus ist. Unter KDE schaltet

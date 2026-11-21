@@ -14,3 +14,11 @@ entwicklung/sportharness/fixtures/cache/
 KONTEXT.md
 # Zwischendateien des Design-Werkzeugs
 *.alpe-neu
+# Bau des Go-Dienstes (core/Makefile): Binärdateien und die für den Bau kopierte Oberfläche
+core/bin/
+core/dms
+core/internal/shellembed/dist/
+# Werkzeuge der QML-Entwicklung
+*.qmlc
+*.jsc
+.qmlls.ini

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Prüft scripts/alpe-kwin.py mit Attrappen für kwriteconfig6 und busctl.
 
-    python3 tests/test_kwin.py          nimmt ~/dux-shell (oder ALPE_SHELL_DIR)
+    python3 tests/test_kwin.py          nimmt shell/ im Repository (oder ALPE_SHELL_DIR)
 """
 import json
 import os
@@ -10,8 +10,8 @@ import sys
 import tempfile
 import textwrap
 
-SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.expanduser("~"), "dux-shell")
-SCRIPT = os.path.join(SHELL, "quickshell", "scripts", "alpe-kwin.py")
+SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
+SCRIPT = os.path.join(SHELL, "scripts", "alpe-kwin.py")
 failures = 0
 
 

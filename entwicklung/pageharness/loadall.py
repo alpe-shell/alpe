@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Lädt jede Alpe-Einstellungsseite mit den Attrappen dieses Ordners und meldet QML-Fehler.
 
-    ALPE_SHELL_DIR=~/dux-shell python3 loadall.py
+    ALPE_SHELL_DIR=/pfad/zur/shell python3 loadall.py
 
 Fängt Fehler, an denen eine Seite gar nicht erst entsteht (doppelte Handler, fehlende Typen,
 Syntax). Die Seiten werden vorher aus dem Shell-Code in einen
@@ -19,8 +19,8 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlComponent, QQmlEngine
 
 here = os.path.dirname(os.path.abspath(__file__))
-shell = os.environ.get("ALPE_SHELL_DIR") or os.path.expanduser("~/dux-shell")
-settings = os.path.join(shell, "quickshell", "Modules", "Settings")
+shell = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "shell")
+settings = os.path.join(shell, "Modules", "Settings")
 # In einen Wegwerf-Ordner kopieren: der Arbeitsbaum (git) bleibt sauber.
 pages = tempfile.mkdtemp(prefix="alpe-pages-")
 for f in glob.glob(os.path.join(settings, "Alpe*.qml")):

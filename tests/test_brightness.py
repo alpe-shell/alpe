@@ -1,11 +1,11 @@
 """Prüft scripts/alpe-brightness.py aus dem Shell-Code (Schicht 0010) gegen Attrappen.
 
-    python3 tests/test_brightness.py         sucht das Skript in ~/dux-shell
+    python3 tests/test_brightness.py         nimmt shell/ im Repository
 """
 import json, os, stat, subprocess, sys, tempfile
 
-SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.expanduser("~/dux-shell")
-SCRIPT = os.path.join(SHELL, "quickshell", "scripts", "alpe-brightness.py")
+SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
+SCRIPT = os.path.join(SHELL, "scripts", "alpe-brightness.py")
 if not os.path.exists(SCRIPT):
     print("übersprungen: %s fehlt" % SCRIPT); sys.exit(0)
 

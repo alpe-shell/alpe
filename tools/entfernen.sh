@@ -13,7 +13,7 @@
 set -uo pipefail
 
 HERE="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
-SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
+SHELL_DIR="${ALPE_SHELL_DIR:-$HERE/shell}"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
 STATE="${XDG_STATE_HOME:-$HOME/.local/state}"
 DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
@@ -88,7 +88,7 @@ fi
 if kde; then
     # Nach dem Zurückspielen: die Sicherung entstand erst nach install.sh (Titelleisten-Regel, Sperre beim Start)
     kwrite --file kscreenlockerrc --group Daemon --key LockOnStart --delete
-    if [ -f "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" ]; then
+    if [ -f "$SHELL_DIR/scripts/alpe-kwin.py" ]; then
         run env ALPE_SHELL_DIR="$SHELL_DIR" python3 "$HERE/tools/titelleisten.py" an | sed 's/^/   /'
         run env ALPE_SHELL_DIR="$SHELL_DIR" python3 "$HERE/tools/kuerzel.py" zurueck
     fi
@@ -111,7 +111,7 @@ run systemctl --user daemon-reload 2>/dev/null
 # ---------------------------------------------------------------- Dateien
 bold "Dateien von Alpe"
 gone "$DATA/applications/dev.duxlabs.shell.desktop" "$DATA/plasma/shells/org.alpe.desktop" \
-     "$DATA/alpe" "$HOME/.local/lib/alpe" "$SHELL_DIR"
+     "$DATA/alpe" "$HOME/.local/lib/alpe"
 for p in "$HERE"/plugins/*/; do gone "$CONFIG/dms/plugins/$(basename "$p")"; done
 if [ -L "$HOME/.local/bin/alpe" ]; then
     gone "$HOME/.local/bin/alpe"

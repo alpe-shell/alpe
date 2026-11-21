@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Prüft tools/design.py: Export lässt Persönliches weg, Einspielen ergibt dasselbe Aussehen.
 
-    python3 tests/test_design.py        nimmt ~/dux-shell (oder ALPE_SHELL_DIR) für alpe-kwin.py
+    python3 tests/test_design.py        nimmt shell/ im Repository (oder ALPE_SHELL_DIR) für alpe-kwin.py
 """
 import json
 import os
@@ -12,7 +12,7 @@ import tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOOL = os.path.join(os.path.dirname(HERE), "tools", "design.py")
 STUB = os.path.join(HERE, "data", "kwinstub")
-SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.expanduser("~"), "dux-shell")
+SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
 failures = 0
 
 

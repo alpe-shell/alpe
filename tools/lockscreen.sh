@@ -26,8 +26,8 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SOURCE="$HERE/lockscreen/org.alpe.desktop"
 # Ab 1.7 liegt die Ansicht (HyprlockView.qml, Vorlage, Schriften) im Shell-Code; sie wird
 # beim Einrichten ins Design kopiert. So nutzen KDE-Sperre, Shell-Sperre und Vorschau dieselbe.
-SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
-VIEW="$SHELL_DIR/quickshell/Modules/Lock/Alpe"
+SHELL_DIR="${ALPE_SHELL_DIR:-$HERE/shell}"
+VIEW="$SHELL_DIR/Modules/Lock/Alpe"
 SHELLS="${XDG_DATA_HOME:-$HOME/.local/share}/plasma/shells"
 TARGET="$SHELLS/org.alpe.desktop"
 ATTIC="${XDG_DATA_HOME:-$HOME/.local/share}/alpe/alte-shells"

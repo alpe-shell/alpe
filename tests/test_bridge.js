@@ -1,11 +1,11 @@
 // Prüft das KWin-Skript (Griffleisten, Tastenkürzel) in einer Attrappe der KWin-Skriptumgebung.
 //
-//     node tests/test_bridge.js                 nimmt ~/dux-shell
+//     node tests/test_bridge.js                 nimmt shell/ im Repository
 //     node tests/test_bridge.js /pfad/dms-bridge.js
 const fs = require("fs");
 const path = require("path");
-const shellDir = process.env.ALPE_SHELL_DIR || path.join(process.env.HOME || "", "dux-shell");
-const src = fs.readFileSync(process.argv[2] || path.join(shellDir, "quickshell", "Services", "kwin", "dms-bridge.js"), "utf8");
+const shellDir = process.env.ALPE_SHELL_DIR || path.join(__dirname, "..", "shell");
+const src = fs.readFileSync(process.argv[2] || path.join(shellDir, "Services", "kwin", "dms-bridge.js"), "utf8");
 function Signal() { const fns = []; return { connect: f => fns.push(f), disconnect: f => { const i = fns.indexOf(f); if (i < 0) throw new Error("not connected"); fns.splice(i, 1); }, emit: (...a) => fns.slice().forEach(f => f(...a)), count: () => fns.length }; }
 let nextId = 1;
 const desk = { id: "d1", name: "Eins", x11DesktopNumber: 1, nameChanged: Signal() };

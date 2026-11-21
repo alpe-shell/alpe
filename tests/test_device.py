@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Prüft quickshell/scripts/alpe-root.sh (Ladegrenze, Zuklappen) in einem Attrappen-Verzeichnis."""
+"""Prüft shell/scripts/alpe-root.sh (Ladegrenze, Zuklappen) in einem Attrappen-Verzeichnis."""
 import os
 import subprocess
 import sys
 import tempfile
 
-SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.expanduser("~"), "dux-shell")
-SCRIPT = os.path.join(SHELL, "quickshell", "scripts", "alpe-root.sh")
+SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
+SCRIPT = os.path.join(SHELL, "scripts", "alpe-root.sh")
 failures = 0
 
 

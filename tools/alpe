@@ -24,7 +24,7 @@
 set -uo pipefail
 
 ALPE_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
-SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
+SHELL_DIR="${ALPE_SHELL_DIR:-$ALPE_DIR/shell}"
 OWN="$HOME/.local/lib/alpe/alpe"
 DROPIN="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/dms.service.d/zz-alpe-backend.conf"
 
@@ -45,7 +45,7 @@ backend() {
 }
 
 alpe_version() {
-    sed -n 's/.*property string version: "\(.*\)".*/\1/p' "$SHELL_DIR/quickshell/Common/Brand.qml" 2>/dev/null | head -1
+    sed -n 's/.*property string version: "\(.*\)".*/\1/p' "$SHELL_DIR/Common/Brand.qml" 2>/dev/null | head -1
 }
 
 kde() { case "${XDG_CURRENT_DESKTOP:-}" in *KDE*|*kwin*|*KWIN*) return 0 ;; esac; return 1; }
@@ -53,13 +53,12 @@ kde() { case "${XDG_CURRENT_DESKTOP:-}" in *KDE*|*kwin*|*KWIN*) return 0 ;; esac
 cmd_version() {
     local b
     if [ "${1:-}" = "--short" ]; then
-        say "Alpe $(alpe_version || echo '?') «$(sed -n 's/.*property string codename: "\(.*\)".*/\1/p' "$SHELL_DIR/quickshell/Common/Brand.qml" 2>/dev/null | head -1)»"
+        say "Alpe $(alpe_version || echo '?') «$(sed -n 's/.*property string codename: "\(.*\)".*/\1/p' "$SHELL_DIR/Common/Brand.qml" 2>/dev/null | head -1)»"
         return 0
     fi
     say "Alpe $(alpe_version || echo '?') «Zugerberg»"
-    say "  Basis:     $(cat "$ALPE_DIR/BASE" 2>/dev/null || echo '?') (Dux Modular Shell)"
-    say "  Shell:     $SHELL_DIR ($(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null)@$(git -C "$SHELL_DIR" rev-parse --short HEAD 2>/dev/null))"
-    say "  Schichten: $(ls "$ALPE_DIR"/schichten/*.patch 2>/dev/null | wc -l)"
+    say "  Shell:     $SHELL_DIR"
+    git -C "$ALPE_DIR" rev-parse --short HEAD >/dev/null 2>&1 && say "  Stand:     $(git -C "$ALPE_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null)@$(git -C "$ALPE_DIR" rev-parse --short HEAD 2>/dev/null)"
     b="$(backend)" && say "  Dienst:    $b ($("$b" version 2>/dev/null | head -1))" || say "  Dienst:    nicht gefunden"
 }
 
@@ -110,13 +109,13 @@ cmd_doctor() {
     say "Alpe $(alpe_version || echo '?') – Prüfung"
     say ""
     say "Shell-Code"
-    if [ -d "$SHELL_DIR/.git" ]; then
-        ok "$SHELL_DIR, Zweig $(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD)"
-        missing="$(bash "$ALPE_DIR/install.sh" --check 2>/dev/null | grep -c 'wuerde einspielen\|passt nicht' || true)"
-        [ "${missing:-0}" = 0 ] && ok "alle Schichten eingespielt" || warn "$missing Schicht(en) fehlen – bash $ALPE_DIR/install.sh"
-        [ -z "$(git -C "$SHELL_DIR" status --porcelain --untracked-files=no)" ] && ok "keine ungesicherten Änderungen" || warn "ungesicherte Änderungen im Shell-Code (git -C $SHELL_DIR status)"
+    if [ -f "$SHELL_DIR/shell.qml" ]; then
+        ok "$SHELL_DIR"
+        if [ -d "$ALPE_DIR/.git" ]; then
+            [ -z "$(git -C "$ALPE_DIR" status --porcelain --untracked-files=no)" ] && ok "keine ungesicherten Änderungen" || warn "ungesicherte Änderungen in $ALPE_DIR (git -C $ALPE_DIR status)"
+        fi
     else
-        bad "$SHELL_DIR fehlt – bash $ALPE_DIR/bootstrap.sh"
+        bad "$SHELL_DIR/shell.qml fehlt – Alpe ist unvollständig"
     fi
     say ""
     say "Dienst"
@@ -125,7 +124,7 @@ cmd_doctor() {
     else bad "Shell läuft nicht"; fi
     if b="$(backend)"; then
         v="$("$b" version 2>/dev/null | head -1)"
-        case "$v" in *"$(cat "$ALPE_DIR/BASE" 2>/dev/null | tr -d v)"*) ok "Hintergrunddienst passt: $v" ;; *) warn "Hintergrunddienst: $v (Basis $(cat "$ALPE_DIR/BASE")) – bash $ALPE_DIR/tools/backend.sh status" ;; esac
+        case "$v" in *"$(tr -d 'v \n' < "$SHELL_DIR/VERSION" 2>/dev/null)"*) ok "Hintergrunddienst passt: $v" ;; *) warn "Hintergrunddienst: $v (Oberfläche $(cat "$SHELL_DIR/VERSION" 2>/dev/null)) – bash $ALPE_DIR/tools/backend.sh status" ;; esac
     else bad "kein Hintergrunddienst gefunden"; fi
     say ""
     say "Werkzeuge"
@@ -172,10 +171,10 @@ cmd_doctor() {
             ok "Sperre der Shell (Einstellungen → Sicherheit)"
         fi
     fi
-    if kde && [ -f "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" ]; then
+    if kde && [ -f "$SHELL_DIR/scripts/alpe-kwin.py" ]; then
         say ""
         say "KWin-Effekte"
-        python3 -I "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" state 2>/dev/null | python3 -I -c '
+        python3 -I "$SHELL_DIR/scripts/alpe-kwin.py" state 2>/dev/null | python3 -I -c '
 import json, sys
 try:
     s = json.load(sys.stdin)
@@ -196,7 +195,7 @@ for key, e in s.get("effects", {}).items():
     else:
         print("  · %s aus" % names[key])'
         print_fx_hint=0
-        python3 -I "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" state 2>/dev/null | grep -q '"installed": false' && print_fx_hint=1
+        python3 -I "$SHELL_DIR/scripts/alpe-kwin.py" state 2>/dev/null | grep -q '"installed": false' && print_fx_hint=1
         [ "$print_fx_hint" = 1 ] && say "    nachinstallieren: paru -S kwin-effects-better-blur-dx kwin-effect-rounded-corners, danach ab- und anmelden"
         say ""
         say "Tastenkürzel"

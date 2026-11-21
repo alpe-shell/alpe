@@ -3,7 +3,7 @@ BINARY_NAME_INSTALL=duxinstall
 SOURCE_DIR=cmd/dms
 SOURCE_DIR_INSTALL=cmd/duxinstall
 BUILD_DIR=bin
-SHELL_SRC=../quickshell
+SHELL_SRC=../shell
 EMBED_DIR=internal/shellembed/dist
 PREFIX ?= /usr/local
 INSTALL_DIR=$(PREFIX)/bin
@@ -38,10 +38,10 @@ endif
 all: build
 
 sync-shell:
-	@test -e $(SHELL_SRC)/DCommon/Widgets/DIcon.qml || { echo "DCommon missing: run git submodule update --init"; exit 1; }
+	@test -e $(SHELL_SRC)/DCommon/Widgets/DIcon.qml || { echo "DCommon missing in $(SHELL_SRC)"; exit 1; }
 	@rm -rf $(EMBED_DIR)
 	@mkdir -p $(EMBED_DIR)
-	@tar -C $(SHELL_SRC) --exclude=.qmlls.ini --exclude-from=../scripts/shell-test-excludes.txt -chf - . | tar -C $(EMBED_DIR) -xf -
+	@tar -C $(SHELL_SRC) --exclude=.qmlls.ini --exclude-from=shell-test-excludes.txt -chf - . | tar -C $(EMBED_DIR) -xf -
 	@rm -rf $(EMBED_DIR)/.git* $(EMBED_DIR)/.github
 	@rm -rf $(EMBED_DIR)/tests
 	@find $(EMBED_DIR) -type d \( -name .claude -o -name .vscode \) -prune -exec rm -rf {} +

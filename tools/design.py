@@ -32,7 +32,7 @@ CONFIG = os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config")
 STATE = os.environ.get("XDG_STATE_HOME") or os.path.join(HOME, ".local", "state")
 DATA = os.environ.get("XDG_DATA_HOME") or os.path.join(HOME, ".local", "share")
 ALPE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SHELL_DIR = os.environ.get("ALPE_SHELL_DIR") or os.path.join(HOME, "dux-shell")
+SHELL_DIR = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
 DESIGN_ROOT = os.environ.get("ALPE_DESIGN_DIR") or os.path.join(ALPE_DIR, "design")
 INSTALLED = os.path.join(DATA, "alpe", "design")       # Bilder des eingespielten Designs
 MARK = os.path.join(CONFIG, "alpe", "design-eingespielt")
@@ -105,7 +105,7 @@ def say(text=""):
 
 
 def kwin():
-    path = os.path.join(SHELL_DIR, "quickshell", "scripts", "alpe-kwin.py")
+    path = os.path.join(SHELL_DIR, "scripts", "alpe-kwin.py")
     spec = importlib.util.spec_from_file_location("alpe_kwin", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -532,7 +532,7 @@ def load_json_text(text):
 
 
 def alpe_version():
-    brand = os.path.join(SHELL_DIR, "quickshell", "Common", "Brand.qml")
+    brand = os.path.join(SHELL_DIR, "Common", "Brand.qml")
     try:
         m = re.search(r'version:\s*"([^"]+)"', open(brand, encoding="utf-8").read())
         return m.group(1) if m else ""
@@ -720,7 +720,7 @@ def write_design(variant, source, base):
 
 def bundled_font(family):
     """Schriften des Sperrbildschirms liefert Alpe selbst mit (Modules/Lock/Alpe/fonts)."""
-    folder = os.path.join(SHELL_DIR, "quickshell", "Modules", "Lock", "Alpe", "fonts")
+    folder = os.path.join(SHELL_DIR, "Modules", "Lock", "Alpe", "fonts")
     key = re.sub(r"[^a-z]", "", family.lower()).replace("nerdfont", "").replace("mono", "", 1)
     return any(key and key in re.sub(r"[^a-z]", "", f.lower()) for f in os.listdir(folder)) if os.path.isdir(folder) else False
 

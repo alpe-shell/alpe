@@ -18,13 +18,13 @@ import importlib.util
 import os
 import sys
 
-SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.expanduser("~"), "dux-shell")
+SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
 RULE_NAME = "Alpe: ohne Titelleiste"
 MATCHES = ("wmclassmatch", "titlematch", "windowrolematch", "clientmachinematch")
 
 
 def kwin():
-    path = os.path.join(SHELL, "quickshell", "scripts", "alpe-kwin.py")
+    path = os.path.join(SHELL, "scripts", "alpe-kwin.py")
     spec = importlib.util.spec_from_file_location("alpe_kwin", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

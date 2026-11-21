@@ -3,7 +3,7 @@
 ein Suchschritt muss schnell sein – vorher hielt die Suche die Shell fest (SettingsGroup legt jede
 Zeile einzeln neu aus).
 
-    ALPE_SHELL_DIR=~/dux-shell python3 kuerzel_last.py
+    ALPE_SHELL_DIR=/pfad/zur/shell python3 kuerzel_last.py
 """
 import glob
 import os
@@ -17,12 +17,12 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine, QQmlComponent
 
 here = os.path.dirname(os.path.abspath(__file__))
-shell = os.environ.get("ALPE_SHELL_DIR") or os.path.expanduser("~/dux-shell")
+shell = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "shell")
 work = tempfile.mkdtemp(prefix="alpe-kuerzel-")
 pages = os.path.join(work, "pages")
 os.makedirs(pages)
 for name in ("AlpeShortcutsTab.qml", "AlpeKwinBackend.qml"):
-    shutil.copy(os.path.join(shell, "quickshell", "Modules", "Settings", name), pages)
+    shutil.copy(os.path.join(shell, "Modules", "Settings", name), pages)
 
 SCENE = r'''
 import QtQuick

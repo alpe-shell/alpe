@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Prüft quickshell/scripts/alpe-hyprlock.py: hyprlock.conf -> Layout -> hyprlock.conf.
+"""Prüft shell/scripts/alpe-hyprlock.py: hyprlock.conf -> Layout -> hyprlock.conf.
 
-    python3 tests/test_hyprlock.py      nimmt ~/dux-shell (oder ALPE_SHELL_DIR)
+    python3 tests/test_hyprlock.py      nimmt shell/ im Repository (oder ALPE_SHELL_DIR)
 """
 import json
 import os
@@ -11,8 +11,8 @@ import sys
 import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.expanduser("~"), "dux-shell")
-SCRIPT = os.path.join(SHELL, "quickshell", "scripts", "alpe-hyprlock.py")
+SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
+SCRIPT = os.path.join(SHELL, "scripts", "alpe-hyprlock.py")
 TEMPLATE = os.path.join(HERE, "data", "hyprlock-beispiel.conf")
 failures = 0
 

@@ -80,8 +80,8 @@ def t_kopfleiste():
 
 def t_version_short():
     shell = tempfile.mkdtemp()
-    os.makedirs(os.path.join(shell, "quickshell", "Common"))
-    open(os.path.join(shell, "quickshell", "Common", "Brand.qml"), "w").write(
+    os.makedirs(os.path.join(shell, "Common"))
+    open(os.path.join(shell, "Common", "Brand.qml"), "w").write(
         'QtObject {\n    readonly property string version: "1.0"\n    readonly property string codename: "Zugerberg"\n}\n')
     out = subprocess.run(["bash", os.path.join(TOOLS, "alpe"), "version", "--short"], env=dict(os.environ, ALPE_SHELL_DIR=shell),
                          capture_output=True, text=True)
@@ -90,7 +90,7 @@ def t_version_short():
 
 def kwin_env(config):
     stub = os.path.join(HERE, "data", "kwinstub")
-    shell = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.expanduser("~"), "dux-shell")
+    shell = os.environ.get("ALPE_SHELL_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "shell")
     return dict(os.environ, XDG_CONFIG_HOME=config, ALPE_KWRITECONFIG=os.path.join(stub, "kwriteconfig6"),
                 ALPE_BUSCTL=os.path.join(stub, "busctl"), ALPE_SHELL_DIR=shell, ALPE_KWIN_VERSION=kwin_version)
 
@@ -132,7 +132,7 @@ def t_legacy_rules_stay():
     open(os.path.join(config, "kwinrulesrc"), "w").write(
         "[General]\ncount=1\n\n[1]\nDescription=Ohne Titelleiste\nnoborder=true\nnoborderrule=2\n")
     env = kwin_env(config)
-    script = os.path.join(env["ALPE_SHELL_DIR"], "quickshell", "scripts", "alpe-kwin.py")
+    script = os.path.join(env["ALPE_SHELL_DIR"], "scripts", "alpe-kwin.py")
     subprocess.run(["python3", script, "rule-set", json.dumps({"values": {"Description": "kitty", "wmclass": "kitty", "wmclassmatch": 1}})],
                    env=env, capture_output=True, text=True, check=True)
     assert "für alle Fenster" in titles(config, "status").stdout
@@ -162,7 +162,7 @@ def kwin68_read(config):
 
 def alpe_kwin(config, *args):
     env = kwin_env(config)
-    script = os.path.join(env["ALPE_SHELL_DIR"], "quickshell", "scripts", "alpe-kwin.py")
+    script = os.path.join(env["ALPE_SHELL_DIR"], "scripts", "alpe-kwin.py")
     out = subprocess.run(["python3", script] + list(args), env=env, capture_output=True, text=True, check=True)
     return json.loads(out.stdout) if out.stdout.strip() else None
 

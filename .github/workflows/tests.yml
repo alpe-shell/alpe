@@ -1,4 +1,4 @@
-# Alpe: Bei jedem Push die Schichten auf den Ursprungsstand (BASE) legen und alle Tests laufen lassen.
+# Alpe: Bei jedem Push alle Tests laufen lassen (Shell-Code in shell/, Dienst in core/).
 name: Tests
 
 on:
@@ -6,17 +6,10 @@ on:
   pull_request:
 
 jobs:
-  schichten-und-tests:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
-      - name: Ursprungsprojekt im Stand aus BASE holen und alle Schichten anwenden
-        run: |
-          git clone --quiet --branch "$(cat BASE)" --depth 1 --recurse-submodules --shallow-submodules \
-            https://github.com/duxlabs-dev/dux-shell "$RUNNER_TEMP/dux-shell"
-          git -C "$RUNNER_TEMP/dux-shell" -c user.name=ci -c user.email=ci@localhost am --quiet "$GITHUB_WORKSPACE"/schichten/*.patch
-          git -C "$RUNNER_TEMP/dux-shell" log --oneline -1
 
       - uses: actions/setup-node@v5
         with:
@@ -34,7 +27,6 @@ jobs:
 
       - name: Tests (wie lokal mit «alpe test»)
         env:
-          ALPE_SHELL_DIR: ${{ runner.temp }}/dux-shell
           QT_QPA_PLATFORM: offscreen
           ALPE_SKIP_GO: "1"   # der Go-Teil läuft unten im eigenen Schritt
         run: bash tools/test.sh
@@ -42,9 +34,9 @@ jobs:
       - name: Dienst (Go) bauen und testen
         uses: actions/setup-go@v6
         with:
-          go-version-file: ${{ runner.temp }}/dux-shell/core/go.mod
+          go-version-file: core/go.mod
           cache: false
 
       - name: Go-Tests der Alpe-Änderungen
-        working-directory: ${{ runner.temp }}/dux-shell/core
+        working-directory: core
         run: go test ./internal/server -run 'TestReadAlpeOff' -count=1

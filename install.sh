@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Alpe einspielen: Plugins kopieren, die Alpe-Schichten auf den Shell-Code legen, Shell neu starten.
+# Alpe einspielen: Plugins kopieren, Sperrbildschirm, Namen, Titelleisten, Befehl alpe; Shell neu starten.
 # Gefahrlos mehrfach ausfuehrbar. Braucht kein sudo.
 #
 #   bash ~/alpe/install.sh            alles
 #   bash ~/alpe/install.sh --check    nur zeigen, was getan wuerde
 #
-# Auf einem neuen Rechner zuerst:  bash ~/alpe/bootstrap.sh   (holt den Shell-Code, ruft dann dies)
+# Auf einem neuen Rechner zuerst:  bash ~/alpe/bootstrap.sh   (stellt den Start der Shell um, ruft dann dies)
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SHELL_DIR="${ALPE_SHELL_DIR:-$HOME/dux-shell}"
+SHELL_DIR="${ALPE_SHELL_DIR:-$HERE/shell}"
 PLUGIN_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/dms/plugins"
 CHECK=0
 [ "${1:-}" = "--check" ] && CHECK=1
@@ -29,56 +29,11 @@ done
 say "== Plugins einschalten"
 if [ "$CHECK" = 1 ]; then python3 "$HERE/tools/activate-plugins.py" --check; else python3 "$HERE/tools/activate-plugins.py"; fi
 
-say "== Shell-Schichten in $SHELL_DIR"
-if [ ! -d "$SHELL_DIR/.git" ]; then
-    say "   FEHLER: $SHELL_DIR ist kein Git-Repository."; exit 1
-fi
-branch="$(git -C "$SHELL_DIR" rev-parse --abbrev-ref HEAD)"
-if [ "$branch" != "alpe" ]; then
-    say "   FEHLER: Zweig ist '$branch', erwartet 'alpe'."; exit 1
-fi
-if [ -n "$(git -C "$SHELL_DIR" status --porcelain --untracked-files=no)" ]; then
-    say "   FEHLER: ungesicherte Aenderungen in $SHELL_DIR. Zuerst 'git status' ansehen."; exit 1
-fi
-start="$(git -C "$SHELL_DIR" rev-parse --short HEAD)"
-# Der Zweig alpe ist immer: Ursprungsstand (BASE) + alle Schichten aus shell/. Aufgebaut wird in
-# einem eigenen Arbeitsbaum; weicht das Ergebnis vom Zweig ab, springt der Zweig darauf. So geht
-# auch eine Neuordnung der Schichten glatt, und Titel spielen keine Rolle.
-BASE_TAG="$(cat "$HERE/BASE")"
-if ! git -C "$SHELL_DIR" rev-parse -q --verify "refs/tags/$BASE_TAG^{commit}" >/dev/null; then
-    git -C "$SHELL_DIR" fetch --quiet --depth 1 origin tag "$BASE_TAG" 2>/dev/null \
-        || { say "   FEHLER: Ursprungsstand $BASE_TAG fehlt in $SHELL_DIR und liess sich nicht holen."; exit 1; }
-fi
-work="$(mktemp -d)"
-cleanup_work() { git -C "$SHELL_DIR" worktree remove --force "$work/baum" >/dev/null 2>&1; rm -rf "$work"; git -C "$SHELL_DIR" worktree prune; }
-git -C "$SHELL_DIR" worktree add --quiet --detach "$work/baum" "$BASE_TAG" \
-    || { rm -rf "$work"; say "   FEHLER: Arbeitsbaum für $BASE_TAG liess sich nicht anlegen."; exit 1; }
-count=0
-for patch in "$HERE"/schichten/*.patch; do count=$((count + 1)); done
-if ! git -C "$work/baum" -c user.name=Alpe -c user.email=alpe@localhost am --quiet --committer-date-is-author-date "$HERE"/schichten/*.patch >/dev/null 2>&1; then
-    git -C "$work/baum" am --abort >/dev/null 2>&1
-    cleanup_work
-    say "   FEHLER: Die Schichten passen nicht auf $BASE_TAG – das Archiv ist unvollständig oder BASE stimmt nicht."
-    exit 1
-fi
-new="$(git -C "$work/baum" rev-parse HEAD)"
-cleanup_work
+# Der Shell-Code liegt im Alpe-Ordner selbst (shell/); er wird nicht mehr aus Schichten gebaut.
+[ -f "$SHELL_DIR/shell.qml" ] || { say "   FEHLER: $SHELL_DIR/shell.qml fehlt – der Alpe-Ordner ist unvollständig."; exit 1; }
 pending=0
-if [ "$(git -C "$SHELL_DIR" rev-parse "$new^{tree}")" = "$(git -C "$SHELL_DIR" rev-parse "HEAD^{tree}")" ]; then
-    say "   schon da:    alle $count Schichten ($BASE_TAG + Alpe)"
-elif [ "$CHECK" = 1 ]; then
-    say "   wuerde den Shell-Code auf den neuen Stand bringen: $(git -C "$SHELL_DIR" diff --shortstat HEAD "$new")"
-    pending=1
-else
-    git -C "$SHELL_DIR" reset --quiet --hard "$new"
-    for patch in "$HERE"/schichten/*.patch; do
-        say "   eingespielt: $(git mailinfo /dev/null /dev/null < "$patch" | sed -n 's/^Subject: //p' | head -1)"
-    done
-    pending=1
-fi
-[ "$pending" = 1 ] && [ "$CHECK" = 0 ] && say "   Stand davor: $start   (zurueck: git -C $SHELL_DIR reset --hard $start)"
 
-# Ab 1.7 braucht das KDE-Design die Ansicht aus dem Shell-Code: erst nach den Schichten.
+# Das KDE-Design braucht die Ansicht aus dem Shell-Code (Modules/Lock/Alpe).
 case "${XDG_CURRENT_DESKTOP:-}" in
     *KDE*|*kwin*|*KWIN*)
         say "== Sperrbildschirm (KDE)"
@@ -148,7 +103,7 @@ case "${XDG_CURRENT_DESKTOP:-}" in
         MARK="${XDG_CONFIG_HOME:-$HOME/.config}/alpe/titelleisten-eingerichtet-2"
         say "== Titelleisten (KWin)"
         if [ "$CHECK" = 1 ]; then say "   wuerde: kwinrulesrc ins Format von KWin 6.8 bringen (alpe-kwin.py migrate)"
-        else python3 -I "$SHELL_DIR/quickshell/scripts/alpe-kwin.py" migrate | python3 -I -c '
+        else python3 -I "$SHELL_DIR/scripts/alpe-kwin.py" migrate | python3 -I -c '
 import json, sys
 d = json.load(sys.stdin)
 print("   KWin %s: Fensterregeln %s" % (d.get("kwin") or "?", "ins neue Format gebracht (Order statt rules)" if d.get("migrated") else "im passenden Format"))'
