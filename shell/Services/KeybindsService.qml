@@ -90,14 +90,9 @@ Singleton {
     signal cheatsheetLoaded
 
     property int _consumers: 0
-    property bool _bindsStale: false
 
     function addRef() {
         _consumers++;
-        if (!_bindsStale)
-            return;
-        _bindsStale = false;
-        loadBinds(false);
     }
 
     function removeRef() {
