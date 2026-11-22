@@ -246,7 +246,7 @@
           "id": "gpuTemp",
           "enabled": true,
           "selectedGpuIndex": 0,
-          "pciId": "10de:2504"
+          "pciId": "1234:abcd"
         },
         {
           "id": "cpuUsage",

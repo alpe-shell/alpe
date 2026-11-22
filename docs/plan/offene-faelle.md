@@ -676,7 +676,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Oberfläche selbst (Qt/Quickshell) am Systembus. Einzelheiten in `dienst-systembus.md`, 5a.
 - **Ausgeliefertes Design nennt ein fremdes Plugin:** `design/kde/settings.json` führt links in
   der Leiste `sathiAi` (wird nicht mitgeliefert; auf einem frischen Rechner bleibt die Stelle
-  leer) und bei `gpuTemp` die Gerätekennung `pciId: 10de:2504`. `tests/test_werte.py` prüft die
+  leer) und bei `gpuTemp` die Gerätekennung einer Grafikkarte (`pciId`). `tests/test_werte.py` prüft die
   Widget-Kennungen des Designs gegen die registrierten Widgets und führt `sathiAi` als bekannte
   Ausnahme. Ob beides ins Design gehört, ist offen.
   **Erledigt (22.11.2026, Entscheid des Maintainers):** `sathiAi` und `pciId` sind aus
@@ -772,9 +772,10 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
 - ~~`extract_settings_index.py` bricht ab~~ erledigt in D6 (`eab4f12`): Alpe-Seiten werden
   ausdrücklich übersprungen (sie kommen zur Laufzeit dazu), Index neu erzeugt.
 - ~~`entwicklung/lint.sh`~~ und die Hand-Harnesse `pageharness/th.qml`, `td2.qml`, `tl2.qml`
-  (tote Pfade `/home/claude/...`) entfernt in C6. Übrig: `shell/Modules/Lock/Alpe/layout.js`
-  nennt als Herkunft `/home/claude/src/alpe/lockscreen/hyprlock.conf` (erzeugte Datei; mit E4
-  bzw. dem Export neu erzeugen).
+  (tote Pfade in ein fremdes Home-Verzeichnis) entfernt in C6. ~~Übrig:
+  `shell/Modules/Lock/Alpe/layout.js` nennt als Herkunft einen solchen Pfad~~ erledigt in
+  `56fcedd`: aus `lockscreen/hyprlock.conf` neu erzeugt, ohne Pfad und Datum; seither prüft
+  `tests/test_werte.py` das ganze Repo auf persönliche Werte.
 - `entwicklung/pageharness/qs/` enthält veraltete Kopien (`SettingsTabs.qml`,
   `CompositorService.qml`-Attrappe mit `isNiri`).
 - ~~Übersetzungen mit Texten entfernter Seiten~~ bereinigt in D6 (`f2a34f7`).

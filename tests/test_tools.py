@@ -4,7 +4,7 @@ import importlib.util, json, os, subprocess, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.join(HERE, "..", "tools")
 
-FABIAN = """{
+VORHER = """{
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     // Logo von früher
     "logo": { "source": "windows", "padding": { "top": 2, "left": 2 }, "color": { "1": "magenta", "2": "blue" } },
@@ -36,7 +36,7 @@ def t_fastfetch():
     config = tempfile.mkdtemp()
     os.makedirs(os.path.join(config, "fastfetch"))
     path = os.path.join(config, "fastfetch", "config.jsonc")
-    open(path, "w", encoding="utf-8").write(FABIAN)
+    open(path, "w", encoding="utf-8").write(VORHER)
     out = run_tool("fastfetch.py", [], config)
     assert out.returncode == 0, out.stdout + out.stderr
     data = json.load(open(path, encoding="utf-8"))
@@ -45,7 +45,7 @@ def t_fastfetch():
     line = data["modules"][2]
     assert line == {"type": "command", "key": "󰣇 OS     ", "text": "alpe version --short"}, line
     assert data["display"]["separator"] == " ➜  " and len(data["modules"]) == 5
-    assert open(path + ".vor-alpe", encoding="utf-8").read() == FABIAN          # Sicherung mit Kommentar
+    assert open(path + ".vor-alpe", encoding="utf-8").read() == VORHER          # Sicherung mit Kommentar
     assert "$1" in open(os.path.join(config, "fastfetch", "alpe-logo.txt"), encoding="utf-8").read()
     again = run_tool("fastfetch.py", [], config)
     assert "schon eingerichtet" in again.stdout, again.stdout

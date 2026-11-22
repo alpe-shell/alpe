@@ -843,7 +843,7 @@ an. Auf ein Auslaufen ist also kein Verlass. Beim ersten Start fragt der Dienst 
 `Get-Subscriptions` ab und kündigt nur Abonnements mit Besitzer `dms`, deren Ereignisliste und
 Zustellweg (`ippget` bzw. `dbus://`) denen des Dienstes entsprechen; danach eine Marke in
 `~/.local/state/alpe/` (0.8 Nr. 30; nicht unter `~/.config`). Befund am PC (22.11.2026, lesend über IPP): kein Abonnement mit Besitzer
-`dms`, eines von `fabian` (`dbus://`, Auftragsereignisse, 3600 s – nicht vom Dienst). Test mit
+`dms`, eines des angemeldeten Benutzers (`dbus://`, Auftragsereignisse, 3600 s – nicht vom Dienst). Test mit
 einer IPP-Attrappe.
 
 **Marken statt Zeileneinträge (0.8 Nr. 64).** Bereiche im Code, die zur Zeile «Lesen alter Namen
