@@ -16,12 +16,12 @@ Singleton {
     readonly property var log: Log.scoped("HyprlandService")
 
     readonly property string configDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation))
-    readonly property string hyprDmsDir: configDir + "/hypr/alpe"
-    readonly property string outputsPath: hyprDmsDir + "/outputs.lua"
-    readonly property string layoutPath: hyprDmsDir + "/layout.lua"
-    readonly property string cursorPath: hyprDmsDir + "/cursor.lua"
-    readonly property string inputPath: hyprDmsDir + "/input.lua"
-    readonly property string windowrulesPath: hyprDmsDir + "/windowrules.lua"
+    readonly property string hyprAppDir: configDir + "/hypr/alpe"
+    readonly property string outputsPath: hyprAppDir + "/outputs.lua"
+    readonly property string layoutPath: hyprAppDir + "/layout.lua"
+    readonly property string cursorPath: hyprAppDir + "/cursor.lua"
+    readonly property string inputPath: hyprAppDir + "/input.lua"
+    readonly property string windowrulesPath: hyprAppDir + "/windowrules.lua"
     readonly property bool luaConfigActive: CompositorService.isHyprland && (Hyprland.usingLua === true || luaConfigDetected)
 
     property bool inOverview: false
@@ -123,7 +123,7 @@ Singleton {
     function ensureWindowrulesConfig() {
         if (!canWriteLuaConfig("windowrules"))
             return;
-        Proc.runCommand("hypr-ensure-windowrules", ["sh", "-c", `mkdir -p "${hyprDmsDir}" && [ ! -f "${windowrulesPath}" ] && touch "${windowrulesPath}" || true`], (output, exitCode) => {
+        Proc.runCommand("hypr-ensure-windowrules", ["sh", "-c", `mkdir -p "${hyprAppDir}" && [ ! -f "${windowrulesPath}" ] && touch "${windowrulesPath}" || true`], (output, exitCode) => {
             if (exitCode !== 0)
                 log.warn("Failed to ensure windowrules.lua:", output);
         });
@@ -409,7 +409,7 @@ Singleton {
     }
 
     function writeOutputsConfig(content, callback, skipReload) {
-        Proc.runCommand("hypr-write-outputs", ["sh", "-c", `mkdir -p "${hyprDmsDir}" && cat > "${outputsPath}" << 'EOF'\n${content}EOF`], (output, exitCode) => {
+        Proc.runCommand("hypr-write-outputs", ["sh", "-c", `mkdir -p "${hyprAppDir}" && cat > "${outputsPath}" << 'EOF'\n${content}EOF`], (output, exitCode) => {
             if (exitCode !== 0) {
                 log.warn("Failed to write outputs config:", output);
                 if (callback)
@@ -478,7 +478,7 @@ Singleton {
             return;
         _layoutXrayLoading = true;
         const configDir = Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation));
-        Proc.runCommand("hypr-read-layout-xray", ["cat", hyprDmsDir + "/layout.lua"], (output, exitCode) => {
+        Proc.runCommand("hypr-read-layout-xray", ["cat", hyprAppDir + "/layout.lua"], (output, exitCode) => {
             _layoutXrayLoading = false;
             if (!_layoutXrayLoaded) {
                 const content = exitCode === 0 ? output : "";
@@ -539,7 +539,7 @@ Singleton {
         // Hyprland `xray = false` is still early-development; unset already samples real content, so only force xray=true
         // dms:frame only in separate mode — connected-mode frame blur overlaps windows via popouts/arcs
         const xrayNamespaces = ["dms:bar"];
-        if (typeof SettingsData !== "undefined" && SettingsData.dankIslandEnabled)
+        if (typeof SettingsData !== "undefined" && SettingsData.islandEnabled)
             xrayNamespaces.push("dms:dankisland");
         if (frameEnabled && SettingsData.frameMode !== "connected")
             xrayNamespaces.push("dms:frame");
@@ -606,7 +606,7 @@ hl.layer_rule({
 `;
         }
 
-        Proc.runCommand("hypr-write-layout", ["sh", "-c", `mkdir -p "${hyprDmsDir}" && cat > "${layoutPath}" << 'EOF'\n${content}EOF`], (output, exitCode) => {
+        Proc.runCommand("hypr-write-layout", ["sh", "-c", `mkdir -p "${hyprAppDir}" && cat > "${layoutPath}" << 'EOF'\n${content}EOF`], (output, exitCode) => {
             if (exitCode !== 0) {
                 log.warn("Failed to write layout config:", output);
                 // Best-effort ack so a failed write can't wedge frame transitions
@@ -773,7 +773,7 @@ hl.layer_rule({
 
         const settings = typeof SettingsData !== "undefined" ? SettingsData.cursorSettings : null;
         if (!settings) {
-            Proc.runCommand("hypr-write-cursor", ["sh", "-c", `mkdir -p "${hyprDmsDir}" && printf '%s\\n' "-- Von Alpe erzeugt – nicht von Hand ändern" "" > "${cursorPath}"`], (output, exitCode) => {
+            Proc.runCommand("hypr-write-cursor", ["sh", "-c", `mkdir -p "${hyprAppDir}" && printf '%s\\n' "-- Von Alpe erzeugt – nicht von Hand ändern" "" > "${cursorPath}"`], (output, exitCode) => {
                 if (exitCode !== 0)
                     log.warn("Failed to write cursor config:", output);
             });
@@ -798,7 +798,7 @@ hl.layer_rule({
         const hasCursorSettings = hideOnKeyPress || hideOnTouch || inactiveTimeout > 0 || writeWarp;
 
         if (!hasTheme && !hasNonDefaultSize && !hasCursorSettings) {
-            Proc.runCommand("hypr-write-cursor", ["sh", "-c", `mkdir -p "${hyprDmsDir}" && printf '%s\\n' "-- Von Alpe erzeugt – nicht von Hand ändern" "" > "${cursorPath}"`], (output, exitCode) => {
+            Proc.runCommand("hypr-write-cursor", ["sh", "-c", `mkdir -p "${hyprAppDir}" && printf '%s\\n' "-- Von Alpe erzeugt – nicht von Hand ändern" "" > "${cursorPath}"`], (output, exitCode) => {
                 if (exitCode !== 0)
                     log.warn("Failed to write cursor config:", output);
             });
@@ -833,7 +833,7 @@ hl.layer_rule({
         lines.push("");
         const content = lines.join("\n");
 
-        Proc.runCommand("hypr-write-cursor", ["sh", "-c", `mkdir -p "${hyprDmsDir}" && cat > "${cursorPath}" << 'EOF'\n${content}EOF`], (output, exitCode) => {
+        Proc.runCommand("hypr-write-cursor", ["sh", "-c", `mkdir -p "${hyprAppDir}" && cat > "${cursorPath}" << 'EOF'\n${content}EOF`], (output, exitCode) => {
             if (exitCode !== 0) {
                 log.warn("Failed to write cursor config:", output);
                 return;
@@ -877,7 +877,7 @@ hl.layer_rule({
             content += "\n" + devices.join("\n") + "\n";
 
         // Exit 3 = unchanged, so a shell start does not reload Hyprland for nothing
-        const script = `mkdir -p "${hyprDmsDir}" && cat > "${inputPath}.tmp" << 'EOF'\n${content}EOF\nif cmp -s "${inputPath}.tmp" "${inputPath}"; then rm -f "${inputPath}.tmp"; exit 3; fi\nmv -f "${inputPath}.tmp" "${inputPath}"`;
+        const script = `mkdir -p "${hyprAppDir}" && cat > "${inputPath}.tmp" << 'EOF'\n${content}EOF\nif cmp -s "${inputPath}.tmp" "${inputPath}"; then rm -f "${inputPath}.tmp"; exit 3; fi\nmv -f "${inputPath}.tmp" "${inputPath}"`;
         Proc.runCommand("hypr-write-input", ["sh", "-c", script], (output, exitCode) => {
             const finish = () => {
                 inputGenerationRunning = false;

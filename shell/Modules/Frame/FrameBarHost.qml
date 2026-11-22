@@ -32,8 +32,8 @@ Item {
             readonly property var layoutInstance: ShellLayout.instance(modelData)
             readonly property string edge: layoutInstance?.edge ?? "top"
             readonly property string barId: JSON.parse(modelData)[1]
-            readonly property var dankBarItem: BarWidgetService.dankBarItems[slot.barId] ?? null
-            readonly property var slotBarConfig: dankBarItem?.barConfig ?? SettingsData.getBarConfig(slot.barId)
+            readonly property var barItem: BarWidgetService.barItems[slot.barId] ?? null
+            readonly property var slotBarConfig: barItem?.barConfig ?? SettingsData.getBarConfig(slot.barId)
             readonly property int rowThickness: layoutInstance?.rowThickness ?? 0
             readonly property int rowOffset: layoutInstance?.rowOffset ?? 0
 
@@ -62,18 +62,18 @@ Item {
 
             Loader {
                 anchors.fill: parent
-                active: slot.dankBarItem !== null && slot.slotBarConfig !== null
+                active: slot.barItem !== null && slot.slotBarConfig !== null
 
                 sourceComponent: BarBody {
                     hostWindow: host.frameWindow
                     modelData: host.targetScreen
-                    rootWindow: slot.dankBarItem
+                    rootWindow: slot.barItem
                     barConfig: slot.slotBarConfig
                     hostOffsetX: slot.x
                     hostOffsetY: slot.y
-                    leftWidgetsModel: slot.dankBarItem?.leftWidgetsModel ?? null
-                    centerWidgetsModel: slot.dankBarItem?.centerWidgetsModel ?? null
-                    rightWidgetsModel: slot.dankBarItem?.rightWidgetsModel ?? null
+                    leftWidgetsModel: slot.barItem?.leftWidgetsModel ?? null
+                    centerWidgetsModel: slot.barItem?.centerWidgetsModel ?? null
+                    rightWidgetsModel: slot.barItem?.rightWidgetsModel ?? null
 
                     property string registeredScreen: ""
                     property string registeredBar: ""

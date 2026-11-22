@@ -111,7 +111,7 @@ fi
 
 targets=(
     "${quickshell_dir}/shell.qml"
-    "${quickshell_dir}/DMSShell.qml"
+    "${quickshell_dir}/ShellMain.qml"
 )
 
 qmllint_args=(

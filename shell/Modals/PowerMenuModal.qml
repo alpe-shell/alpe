@@ -54,10 +54,10 @@ AlpeModal {
             let targetX = parentBounds.x + (parentBounds.width - modalWidth) / 2;
             let targetY = parentBounds.y + (parentBounds.height - modalHeight) / 2;
 
-            const topChrome = Math.max(bar && barPosition === SettingsData.Position.Top ? barExclusionZone : 0, SettingsData.dankIslandEdgeOffset(parentScreen, "top"));
-            const bottomChrome = Math.max(bar && barPosition === SettingsData.Position.Bottom ? barExclusionZone : 0, SettingsData.dankIslandEdgeOffset(parentScreen, "bottom"));
-            const leftChrome = Math.max(bar && barPosition === SettingsData.Position.Left ? barExclusionZone : 0, SettingsData.dankIslandEdgeOffset(parentScreen, "left"));
-            const rightChrome = Math.max(bar && barPosition === SettingsData.Position.Right ? barExclusionZone : 0, SettingsData.dankIslandEdgeOffset(parentScreen, "right"));
+            const topChrome = Math.max(bar && barPosition === SettingsData.Position.Top ? barExclusionZone : 0, SettingsData.islandEdgeOffset(parentScreen, "top"));
+            const bottomChrome = Math.max(bar && barPosition === SettingsData.Position.Bottom ? barExclusionZone : 0, SettingsData.islandEdgeOffset(parentScreen, "bottom"));
+            const leftChrome = Math.max(bar && barPosition === SettingsData.Position.Left ? barExclusionZone : 0, SettingsData.islandEdgeOffset(parentScreen, "left"));
+            const rightChrome = Math.max(bar && barPosition === SettingsData.Position.Right ? barExclusionZone : 0, SettingsData.islandEdgeOffset(parentScreen, "right"));
             const minY = topChrome + margin;
             const maxY = screenH - modalHeight - bottomChrome - margin;
             const minX = leftChrome + margin;

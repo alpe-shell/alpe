@@ -47,11 +47,11 @@ MonitorPill {
                         "pciId": pciId
                     };
                     if (sectionId === "left") {
-                        SettingsData.setDankBarLeftWidgets(widgets);
+                        SettingsData.setBarLeftWidgets(widgets);
                     } else if (sectionId === "center") {
-                        SettingsData.setDankBarCenterWidgets(widgets);
+                        SettingsData.setBarCenterWidgets(widgets);
                     } else if (sectionId === "right") {
-                        SettingsData.setDankBarRightWidgets(widgets);
+                        SettingsData.setBarRightWidgets(widgets);
                     }
                     return;
                 }

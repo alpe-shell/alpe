@@ -299,10 +299,10 @@ Item {
         });
     }
 
-    Component.onCompleted: PopoutService.dankIslandRouter = root
+    Component.onCompleted: PopoutService.islandRouter = root
     Component.onDestruction: {
-        if (PopoutService.dankIslandRouter === root)
-            PopoutService.dankIslandRouter = null;
+        if (PopoutService.islandRouter === root)
+            PopoutService.islandRouter = null;
     }
 
     Variants {

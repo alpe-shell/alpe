@@ -210,10 +210,10 @@ PanelWindow {
                 break;
             }
         }
-        offsets.top = Math.max(offsets.top, SettingsData.dankIslandEdgeOffset(screen, "top"));
-        offsets.bottom = Math.max(offsets.bottom, SettingsData.dankIslandEdgeOffset(screen, "bottom"));
-        offsets.left = Math.max(offsets.left, SettingsData.dankIslandEdgeOffset(screen, "left"));
-        offsets.right = Math.max(offsets.right, SettingsData.dankIslandEdgeOffset(screen, "right"));
+        offsets.top = Math.max(offsets.top, SettingsData.islandEdgeOffset(screen, "top"));
+        offsets.bottom = Math.max(offsets.bottom, SettingsData.islandEdgeOffset(screen, "bottom"));
+        offsets.left = Math.max(offsets.left, SettingsData.islandEdgeOffset(screen, "left"));
+        offsets.right = Math.max(offsets.right, SettingsData.islandEdgeOffset(screen, "right"));
         return offsets;
     }
 

@@ -97,7 +97,7 @@ Item {
             settingKey: "launcherStyle"
 
             SettingsButtonGroupRow {
-                readonly property bool islandOffered: SettingsData.dankIslandEnabled || SettingsData.launcherStyle === "island"
+                readonly property bool islandOffered: SettingsData.islandEnabled || SettingsData.launcherStyle === "island"
                 readonly property bool spotlightOffered: !SettingsData.connectedFrameModeActive
 
                 settingKey: "launcherStyleSelector"
@@ -127,7 +127,7 @@ Item {
             width: parent.width
             iconName: "tune"
             title: I18n.tr("Appearance")
-            settingKey: "dankLauncherV2Appearance"
+            settingKey: "launcherAppearance"
             tags: ["launcher", "size", "grid", "columns", "footer", "badges", "darken"]
 
             SettingsButtonGroupRow {

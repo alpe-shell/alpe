@@ -390,15 +390,15 @@ test("hidden bars drop out of routing and hosted defaults keep popups and OSDs s
     assert.deepEqual(settings.activeIslandConfigsForScreen(screen), [], "a hidden host swallows nothing");
     byId("a").visible = true;
     assert.deepEqual(settings.activeIslandConfigsForScreen(screen), [byId("a")]);
-    assert.equal(settings.dankIslandHandlesSystemOsd(screen), true);
-    assert.equal(settings.dankIslandHandlesNotifications(screen), true);
+    assert.equal(settings.islandHandlesSystemOsd(screen), true);
+    assert.equal(settings.islandHandlesNotifications(screen), true);
     byId("a").islandSystemOsd = false;
-    assert.equal(settings.dankIslandHandlesSystemOsd(screen), true, "a flat island-mode key does not move the OSD");
+    assert.equal(settings.islandHandlesSystemOsd(screen), true, "a flat island-mode key does not move the OSD");
     settings.setIslandSettings("a", { islandSystemOsd: settings.islandDefaultsFor(byId("a")).islandSystemOsd, islandNotificationPopups: settings.islandDefaultsFor(byId("a")).islandNotificationPopups });
-    assert.equal(settings.dankIslandHandlesSystemOsd(screen), false, "hosted defaults keep OSDs standard");
-    assert.equal(settings.dankIslandHandlesNotifications(screen), false);
+    assert.equal(settings.islandHandlesSystemOsd(screen), false, "hosted defaults keep OSDs standard");
+    assert.equal(settings.islandHandlesNotifications(screen), false);
     routed[0] = "island";
-    assert.equal(settings.dankIslandHandlesSystemOsd(screen), true, "islands keep their OSDs by default");
+    assert.equal(settings.islandHandlesSystemOsd(screen), true, "islands keep their OSDs by default");
     byId("island").visible = false;
     assert.deepEqual(settings.activeIslandConfigsForScreen(screen), [], "a hidden island-layout bar swallows nothing either");
 });
@@ -412,29 +412,29 @@ test("shared launcher entry points bypass a previously loaded launcher and forwa
     const service = functions(source, "    ", vm.createContext({
         CompositorService: { getFocusedScreen: () => screen },
         SettingsData: { sharedShortcutsOverridden: () => overridden },
-        dankIslandRouter: {
+        islandRouter: {
             openLauncher: (...args) => { calls.push(["open", ...args]); return true; },
             toggleLauncher: (...args) => { calls.push(["toggle", ...args]); return true; }
         },
-        dankLauncherV2Modal: { show: () => fallbacks++, hide() {}, toggle: () => fallbacks++ }
+        launcherModal: { show: () => fallbacks++, hide() {}, toggle: () => fallbacks++ }
     }));
     service._sharedTriggerIsland = () => ({ screen, barId: "clicked-dot" });
-    service._setDankLauncherV2TriggerUsesOverlayLayer = () => {};
-    service._setDankLauncherV2EdgeHoverManaged = () => {};
+    service._setLauncherTriggerUsesOverlayLayer = () => {};
+    service._setLauncherEdgeHoverManaged = () => {};
     for (const [method, argument, action, query, mode] of [
-        ["openDankLauncherV2", undefined, "open", "", ""],
-        ["toggleDankLauncherV2", undefined, "toggle", "", ""],
-        ["openDankLauncherV2WithQuery", "firefox", "open", "firefox", ""],
-        ["toggleDankLauncherV2WithQuery", "firefox", "toggle", "firefox", ""],
-        ["openDankLauncherV2WithMode", "files", "open", "", "files"],
-        ["toggleDankLauncherV2WithMode", "files", "toggle", "", "files"]
+        ["openLauncher", undefined, "open", "", ""],
+        ["toggleLauncher", undefined, "toggle", "", ""],
+        ["openLauncherWithQuery", "firefox", "open", "firefox", ""],
+        ["toggleLauncherWithQuery", "firefox", "toggle", "firefox", ""],
+        ["openLauncherWithMode", "files", "open", "", "files"],
+        ["toggleLauncherWithMode", "files", "toggle", "", "files"]
     ]) {
         service[method](argument);
         assert.deepEqual(calls.at(-1), [action, query, mode, screen, "clicked-dot"]);
     }
     assert.equal(fallbacks, 0);
     overridden = false;
-    service.openDankLauncherV2();
+    service.openLauncher();
     assert.equal(fallbacks, 1, "normal routing preserves the configured launcher");
 });
 
@@ -443,7 +443,7 @@ test("an IPC close takes down every surface showing the activity", () => {
     let islandShowing = {};
     const closed = [];
     const service = functions(source, "    ", vm.createContext({
-        dankIslandRouter: {
+        islandRouter: {
             closeActivity: activity => {
                 if (!islandShowing[activity])
                     return false;
@@ -454,18 +454,18 @@ test("an IPC close takes down every surface showing the activity", () => {
         },
         controlCenterPopout: { close: () => closed.push("popout:controlcenter") },
         notificationCenterPopout: null,
-        dankLauncherV2Modal: { hide: () => closed.push("modal:launcher") }
+        launcherModal: { hide: () => closed.push("modal:launcher") }
     }));
     islandShowing = { controlcenter: true, launcher: true };
     service.closeControlCenter();
-    service.closeDankLauncherV2();
+    service.closeLauncher();
     assert.deepEqual(closed.splice(0), ["island:controlcenter", "popout:controlcenter", "island:launcher", "modal:launcher"], "island face and bar surface both close");
-    service.closeDankLauncherV2();
+    service.closeLauncher();
     assert.deepEqual(closed.splice(0), ["modal:launcher"], "a quiet island is skipped, the modal still hides");
 });
 
 test("control-center IPC hide and status agree on both surfaces", () => {
-    const ipcSource = readFileSync(new URL("../DMSShellIPC.qml", import.meta.url), "utf8");
+    const ipcSource = readFileSync(new URL("../ShellIpc.qml", import.meta.url), "utf8");
     const block = ipcSource.split('target: "control-center"')[0].split("IpcHandler {").pop();
     const calls = [];
     const popout = { shouldBeVisible: false, close: () => calls.push("popout:close") };
@@ -545,7 +545,7 @@ test("a saved keyboard layout slot keeps its position and visibility when editin
 
 test("power menu shortcuts open in the island before the modal", () => {
     const popoutSource = readFileSync(new URL("../Services/PopoutService.qml", import.meta.url), "utf8");
-    const ipcSource = readFileSync(new URL("../DMSShellIPC.qml", import.meta.url), "utf8");
+    const ipcSource = readFileSync(new URL("../ShellIpc.qml", import.meta.url), "utf8");
     const block = ipcSource.split('target: "powermenu"')[0].split("IpcHandler {").pop();
     const calls = [];
     const state = { routed: false };
@@ -555,7 +555,7 @@ test("power menu shortcuts open in the island before the modal", () => {
     const context = vm.createContext({
         powerMenuModalLoader: loader,
         powerMenuModal: null,
-        dankIslandRouter: {
+        islandRouter: {
             closeActivity: id => { calls.push("island:close:" + id); return true; }
         }
     });

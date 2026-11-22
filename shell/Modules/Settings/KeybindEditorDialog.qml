@@ -55,10 +55,10 @@ AlpeDialog {
     readonly property bool wideForm: actionWidth + padding * 2 >= maximumWidth
 
     readonly property var argConfig: Actions.getActionArgConfig(KeybindsService.currentProvider, editAction)
-    readonly property var dmsParsedArgs: argConfig?.type === "dms" ? Actions.parseDmsActionArgs(editAction) : null
-    readonly property var dmsArgDefs: dmsParsedArgs?.base ? (Actions.getDmsActionArgs()[dmsParsedArgs.base]?.args ?? []) : []
+    readonly property var shellParsedArgs: argConfig?.type === "shell-action" ? Actions.parseShellActionArgs(editAction) : null
+    readonly property var dmsArgDefs: shellParsedArgs?.base ? (Actions.getDmsActionArgs()[shellParsedArgs.base]?.args ?? []) : []
     readonly property var dmsFlagArgs: dmsArgDefs.filter(arg => arg.type === "flag")
-    readonly property bool showDmsArgs: actionType === "dms" && argConfig?.type === "dms"
+    readonly property bool showShellArgs: actionType === "shell-action" && argConfig?.type === "shell-action"
     readonly property bool showCompositorPicker: actionType === "compositor" && !useCustomCompositor
     readonly property var compositorParsedArgs: Actions.parseCompositorActionArgs(KeybindsService.currentProvider, editAction)
     readonly property var compositorArgDefs: argConfig?.config?.args ?? []
@@ -72,7 +72,7 @@ AlpeDialog {
     readonly property string saveTooltip: I18n.tr("Also saves the screenshot to disk", "keybind screenshot option tooltip")
 
     readonly property var typeTooltips: ({
-            "dms": I18n.tr("Alpe shell actions (launcher, clipboard, etc.)"),
+            "shell-action": I18n.tr("Alpe shell actions (launcher, clipboard, etc.)"),
             "compositor": I18n.tr("Compositor actions (focus, move, etc.)", "keybind action type tooltip"),
             "spawn": I18n.tr("Run a program (e.g., firefox, kitty)"),
             "shell": I18n.tr("Run a shell command (e.g., notify-send)")
@@ -186,10 +186,10 @@ AlpeDialog {
         if (readOnly || type === actionType)
             return;
         switch (type) {
-        case "dms":
+        case "shell-action":
             updateEdit({
-                "action": KeybindsService.dmsActions[0].id,
-                "desc": KeybindsService.dmsActions[0].label
+                "action": KeybindsService.shellActions[0].id,
+                "desc": KeybindsService.shellActions[0].label
             });
             return;
         case "compositor":
@@ -216,7 +216,7 @@ AlpeDialog {
 
     function typeLabel(type) {
         switch (type) {
-        case "dms":
+        case "shell-action":
             return "Alpe";
         case "compositor":
             return I18n.tr("Compositor");
@@ -346,22 +346,22 @@ AlpeDialog {
     }
 
     function setDmsArgs(changes) {
-        if (!dmsParsedArgs)
+        if (!shellParsedArgs)
             return;
-        const args = Object.assign({}, dmsParsedArgs.args, changes);
+        const args = Object.assign({}, shellParsedArgs.args, changes);
         updateEdit({
-            "action": Actions.buildDmsAction(dmsParsedArgs.base, args)
+            "action": Actions.buildDmsAction(shellParsedArgs.base, args)
         });
     }
 
     function commitDmsAmount(text) {
-        if (!dmsParsedArgs)
+        if (!shellParsedArgs)
             return;
         const oldAction = editAction;
-        const args = Object.assign({}, dmsParsedArgs.args, {
+        const args = Object.assign({}, shellParsedArgs.args, {
             "amount": text || "5"
         });
-        const newAction = Actions.buildDmsAction(dmsParsedArgs.base, args);
+        const newAction = Actions.buildDmsAction(shellParsedArgs.base, args);
         const changes = {
             "action": newAction
         };
@@ -423,7 +423,7 @@ AlpeDialog {
     }
 
     function dmsFlagChecked(flag) {
-        const set = dmsParsedArgs?.args[flag.name] === true;
+        const set = shellParsedArgs?.args[flag.name] === true;
         return flag.inverted ? !set : set;
     }
 
@@ -674,7 +674,7 @@ AlpeDialog {
     Binding {
         target: dashTabDropdown
         property: "currentValue"
-        value: root.dashTabLabel(root.dmsParsedArgs?.args?.tab || "")
+        value: root.dashTabLabel(root.shellParsedArgs?.args?.tab || "")
     }
 
     actions: [
@@ -919,7 +919,7 @@ AlpeDialog {
         }
 
         SettingsRow {
-            visible: root.actionType === "dms"
+            visible: root.actionType === "shell-action"
 
             body: AlpeDropdown {
                 id: dmsActionDropdown
@@ -1033,12 +1033,12 @@ AlpeDialog {
         }
 
         SettingsRow {
-            visible: root.showDmsArgs && root.dmsArgDefs.some(arg => arg.name === "amount")
+            visible: root.showShellArgs && root.dmsArgDefs.some(arg => arg.name === "amount")
 
             body: AlpeTextField {
                 id: amountField
 
-                readonly property string amount: root.dmsParsedArgs?.args?.amount || ""
+                readonly property string amount: root.shellParsedArgs?.args?.amount || ""
 
                 width: parent.width
                 outlined: true
@@ -1062,10 +1062,10 @@ AlpeDialog {
         }
 
         SettingsRow {
-            visible: root.showDmsArgs && root.dmsArgDefs.some(arg => arg.name === "device")
+            visible: root.showShellArgs && root.dmsArgDefs.some(arg => arg.name === "device")
 
             body: AlpeTextField {
-                readonly property string device: root.dmsParsedArgs?.args?.device || ""
+                readonly property string device: root.shellParsedArgs?.args?.device || ""
 
                 width: parent.width
                 outlined: true
@@ -1084,7 +1084,7 @@ AlpeDialog {
         }
 
         SettingsRow {
-            visible: root.showDmsArgs && root.dmsArgDefs.some(arg => arg.name === "tab")
+            visible: root.showShellArgs && root.dmsArgDefs.some(arg => arg.name === "tab")
             title: I18n.tr("Tab", "noun, keybind argument label for a dashboard tab")
 
             AlpeDropdown {
@@ -1098,7 +1098,7 @@ AlpeDialog {
         }
 
         SettingsRow {
-            visible: root.showDmsArgs && root.dmsFlagArgs.length > 0
+            visible: root.showShellArgs && root.dmsFlagArgs.length > 0
 
             body: AlpeFilterChips {
                 width: parent.width

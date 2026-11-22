@@ -583,7 +583,7 @@ def find_settings_components(content, filename, wrappers, tab_meta, hub_meta):
                     condition_key = "dockEnabled"
                 elif "selectedIslandDocked" in visible_raw or "!root.selectedIslandFree" in visible_raw:
                     condition_key = "islandDocked"
-                elif "selectedIslandFree" in visible_raw and "!dankBarTab.selectedIslandFree" not in visible_raw:
+                elif "selectedIslandFree" in visible_raw and "!barTab.selectedIslandFree" not in visible_raw:
                     condition_key = "islandFree"
             if filename in BAR_TAB_FILES and not condition_key:
                 if setting_key.startswith("frame"):

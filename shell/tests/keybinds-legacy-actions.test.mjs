@@ -13,7 +13,7 @@ test("legacy dms shell actions read as alpe-dienst actions", () => {
     ]) {
         const normalized = Actions.normalizeLegacyAction(legacy);
         assert.equal(normalized, current);
-        assert.ok(Actions.isDmsAction(normalized), normalized);
+        assert.ok(Actions.isShellAction(normalized), normalized);
         assert.equal(Actions.getActionLabel(normalized, "hyprland"), Actions.getActionLabel(current, "hyprland"));
     }
 });

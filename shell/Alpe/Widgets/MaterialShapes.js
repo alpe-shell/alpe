@@ -1,6 +1,6 @@
 .pragma library
 .import "MaterialShapeData.js" as Data
-.import "DLogoShape.js" as Logo
+.import "LogoShape.js" as Logo
 
 var catalog = Object.assign({
     dankLogo: Logo.cubics

@@ -11,7 +11,7 @@ Singleton {
 
     property var widgetRegistry: ({})
     property var onDemandWidgetIds: []
-    property var dankBarRepeater: null
+    property var barRepeater: null
 
     property var frameHostedBars: ({})
 
@@ -53,22 +53,22 @@ Singleton {
         return Object.keys(bars).sort((a, b) => (vertical(a) - vertical(b)) || (order.indexOf(a) - order.indexOf(b))).map(barId => bars[barId]);
     }
 
-    property var dankBarItems: ({})
+    property var barItems: ({})
 
-    function registerDankBarItem(barId, item) {
+    function registerBarItem(barId, item) {
         if (!barId || !item)
             return;
-        const next = Object.assign({}, dankBarItems);
+        const next = Object.assign({}, barItems);
         next[barId] = item;
-        dankBarItems = next;
+        barItems = next;
     }
 
-    function unregisterDankBarItem(barId, item) {
-        if (!barId || dankBarItems[barId] !== item)
+    function unregisterBarItem(barId, item) {
+        if (!barId || barItems[barId] !== item)
             return;
-        const next = Object.assign({}, dankBarItems);
+        const next = Object.assign({}, barItems);
         delete next[barId];
-        dankBarItems = next;
+        barItems = next;
     }
 
     signal widgetRegistered(string widgetId, string screenName)
@@ -152,7 +152,7 @@ Singleton {
         return select(registrationShown) ?? select(registrationLive) ?? (includeHidden ? select(entry => registrationLive(entry, true)) : null);
     }
 
-    // Matches getPreferredBar in DMSShellIPC: focused screen, then visible before hidden, then the last used bar.
+    // Matches getPreferredBar in ShellIpc: focused screen, then visible before hidden, then the last used bar.
     function resolveIpcWidget(widgetId) {
         const configs = SettingsData.barConfigs.concat(SettingsData.dockConfigs ?? []).map(config => config.id);
         const screens = Quickshell.screens.map(screen => screen.name);
@@ -303,7 +303,7 @@ Singleton {
             const instance = ShellLayout.forScreen(screenName)?.instances.find(instance => instance.barId === config.id);
             if (!instance || instance.kind === "island")
                 continue;
-            const item = instance.kind === "frame" ? frameHostedBars[screenName]?.[config.id] : dankBarItems[config.id]?.barVariants?.instances.find(bar => bar.modelData?.name === screenName);
+            const item = instance.kind === "frame" ? frameHostedBars[screenName]?.[config.id] : barItems[config.id]?.barVariants?.instances.find(bar => bar.modelData?.name === screenName);
             if (item)
                 bars.push(item);
         }

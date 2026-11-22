@@ -64,7 +64,7 @@ PluginComponent {
         PluginService.setGlobalVar("alpeSport", "openMatch", {
             "match": root.shown
         });
-        PopoutService.openDankDash("plugin_alpeSport", x, y, width, section, screen);
+        PopoutService.openDash("plugin_alpeSport", x, y, width, section, screen);
     }
 
     horizontalBarPill: Component {

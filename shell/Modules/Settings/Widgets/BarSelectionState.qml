@@ -42,7 +42,7 @@ Item {
         if (!selectedBarConfig || root.selectedBarIsIsland)
             return 0;
         const edge = SettingsData.positionToSide(selectedBarConfig.position ?? SettingsData.Position.Top);
-        return root.selectedBarScreens.filter(screen => SettingsData.dankIslandOwnsEdge(screen, edge)).length;
+        return root.selectedBarScreens.filter(screen => SettingsData.islandOwnsEdge(screen, edge)).length;
     }
     readonly property bool islandShadowsSelectedBar: root.islandShadowedScreenCount > 0 && root.islandShadowedScreenCount === root.selectedBarScreens.length
     readonly property bool islandOwnsSelectedBarTop: root.selectedBarIsIsland || root.islandShadowsSelectedBar

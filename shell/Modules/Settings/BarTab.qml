@@ -6,7 +6,7 @@ import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
-    id: dankBarTab
+    id: barTab
 
     LayoutMirroring.enabled: I18n.isRtl
     LayoutMirroring.childrenInherit: true
@@ -73,7 +73,7 @@ Item {
             SettingsButtonGroupRow {
                 settingKey: "islandFreeOrientation"
                 tags: ["island", "free", "orientation", "horizontal", "vertical"]
-                visible: dankBarTab.selectedIslandFree
+                visible: barTab.selectedIslandFree
                 text: I18n.tr("Orientation", "island settings: horizontal or vertical row for a free island")
                 model: [I18n.tr("Horizontal", "island settings: free island orientation"), I18n.tr("Vertical", "island settings: free island orientation")]
                 currentIndex: SettingsData.islandVertical(bar.selectedBarConfig) ? 1 : 0
@@ -88,7 +88,7 @@ Item {
 
             SettingsLayoutPicker {
                 edgePlacement: true
-                visible: !dankBarTab.selectedIslandFree
+                visible: !barTab.selectedIslandFree
                 choices: [SettingsData.Position.Top, SettingsData.Position.Bottom, SettingsData.Position.Left, SettingsData.Position.Right].map(position => ({
                             key: String(position),
                             label: bar.positionLabel(position),
@@ -111,7 +111,7 @@ Item {
                 resetKeys: ["islandFloating", "islandPlacement"]
                 text: I18n.tr("Placement", "island settings: docked, overlay or floating placement row")
                 model: [I18n.tr("Docked", "island settings: island reserves its edge strip"), I18n.tr("Overlay", "island settings: island floats over windows along its edge without reserving space"), I18n.tr("Floating", "island settings: island can be dragged anywhere on the display")]
-                currentIndex: dankBarTab.placementIndex
+                currentIndex: barTab.placementIndex
                 onSelectionChanged: (index, selected) => {
                     if (!selected)
                         return;
@@ -129,7 +129,7 @@ Item {
                 settingKey: "islandNotch"
                 tags: ["island", "notch", "pill", "shape", "style", "flush", "attached", "edge", "corners", "macbook"]
                 title: I18n.tr("Style")
-                visible: dankBarTab.selectedIslandDocked
+                visible: barTab.selectedIslandDocked
                 resetStore: bar
                 resetKeys: ["islandNotch"]
 
@@ -151,7 +151,7 @@ Item {
             }
 
             SettingsRow {
-                visible: dankBarTab.selectedIslandFree
+                visible: barTab.selectedIslandFree
                 body: StyledText {
                     width: parent.width
                     text: I18n.tr("Drag to move, click to open activities", "island settings: free placement hint")
@@ -164,7 +164,7 @@ Item {
             SettingsSliderRow {
                 settingKey: "islandFreeEdgeMargin"
                 tags: ["island", "free", "edge", "margin", "gap"]
-                visible: dankBarTab.selectedIslandFree
+                visible: barTab.selectedIslandFree
                 resetStore: bar
                 resetKeys: ["islandFreeEdgeMargin"]
                 text: I18n.tr("Edge margin", "island settings: gap kept from the display edge")
@@ -179,7 +179,7 @@ Item {
             SettingsSliderRow {
                 settingKey: "islandOuterGap"
                 tags: ["island", "placement", "gap", "top", "margin"]
-                visible: dankBarTab.selectedIslandDocked && !bar.islandSetting("islandNotch")
+                visible: barTab.selectedIslandDocked && !bar.islandSetting("islandNotch")
                 resetStore: bar
                 resetKeys: ["islandOuterGap"]
                 text: I18n.tr("Outer gap", "island settings: gap between screen edge and island")
@@ -194,7 +194,7 @@ Item {
             SettingsSliderRow {
                 settingKey: "islandAlongOffset"
                 tags: ["island", "placement", "horizontal", "vertical", "offset", "center"]
-                visible: dankBarTab.selectedIslandDocked
+                visible: barTab.selectedIslandDocked
                 resetStore: bar
                 resetKeys: ["islandAlongOffset"]
                 text: bar.selectedBarIsVertical ? I18n.tr("Vertical offset", "island settings: vertical offset slider") : I18n.tr("Horizontal offset", "island settings: horizontal offset slider")
@@ -209,7 +209,7 @@ Item {
             SettingsSliderRow {
                 settingKey: "islandReserveThickness"
                 tags: ["island", "placement", "reservation", "exclusive", "height", "width", "thickness"]
-                visible: dankBarTab.selectedIslandDocked
+                visible: barTab.selectedIslandDocked
                 resetStore: bar
                 resetKeys: ["islandReserveThickness"]
                 text: bar.selectedBarIsVertical ? I18n.tr("Reserved width", "island settings: reserved strip width slider") : I18n.tr("Reserved height", "island settings: reserved strip height slider")
@@ -239,9 +239,9 @@ Item {
                 showOnLastDisplay: bar.selectedBarConfig?.showOnLastDisplay ?? true
                 allowHideOnLastDisplay: true
                 hideOnLastDisplay: bar.selectedBarConfig?.hideOnLastDisplay ?? false
-                preferencesHandler: prefs => dankBarTab.setBarScreenPreferences(bar.selectedBarId, prefs)
-                onLastDisplayToggled: checked => dankBarTab.setBarShowOnLastDisplay(bar.selectedBarId, checked)
-                onHideOnLastDisplayToggled: checked => dankBarTab.setBarHideOnLastDisplay(bar.selectedBarId, checked)
+                preferencesHandler: prefs => barTab.setBarScreenPreferences(bar.selectedBarId, prefs)
+                onLastDisplayToggled: checked => barTab.setBarShowOnLastDisplay(bar.selectedBarId, checked)
+                onHideOnLastDisplayToggled: checked => barTab.setBarHideOnLastDisplay(bar.selectedBarId, checked)
             }
         }
 
@@ -251,7 +251,7 @@ Item {
             settingKey: "barVisibility"
             collapsible: true
             expanded: false
-            visible: (bar.selectedBarConfig?.enabled ?? false) && (!bar.selectedBarIsIsland || dankBarTab.selectedIslandOverlay)
+            visible: (bar.selectedBarConfig?.enabled ?? false) && (!bar.selectedBarIsIsland || barTab.selectedIslandOverlay)
 
             SettingsRow {
                 iconName: "info"
@@ -265,7 +265,7 @@ Item {
                 resetStore: bar
                 settingKey: "barAutoHide"
                 tags: ["autohide", "auto-hide", "reveal", "intellihide", "delay", "hide"]
-                visible: !bar.islandShadowsSelectedBar && (!bar.selectedBarIsIsland || dankBarTab.selectedIslandOverlay)
+                visible: !bar.islandShadowsSelectedBar && (!bar.selectedBarIsIsland || barTab.selectedIslandOverlay)
                 text: I18n.tr("Auto-hide", "toggle to automatically hide the bar or dock")
                 valueKeys: ["autoHideDelay"]
                 checked: bar.selectedBarConfig?.autoHide ?? false
@@ -286,7 +286,7 @@ Item {
 
             SettingsToggleRow {
                 settingKey: "barAutoHideStrict"
-                visible: (bar.selectedBarConfig?.autoHide ?? false) && !bar.islandShadowsSelectedBar && (!bar.selectedBarIsIsland || dankBarTab.selectedIslandOverlay)
+                visible: (bar.selectedBarConfig?.autoHide ?? false) && !bar.islandShadowsSelectedBar && (!bar.selectedBarIsIsland || barTab.selectedIslandOverlay)
                 tags: ["autohide", "strict", "popout"]
                 text: I18n.tr("Strict auto-hide", "Dank bar setting: hide the bar when the pointer leaves even if a menu or bar popover is still open")
                 description: I18n.tr("Hides even while a bar popout or menu is open", "bar strict auto-hide toggle description")
@@ -302,7 +302,7 @@ Item {
             SettingsToggleRow {
                 settingKey: "barHideWhenWindowsOpen"
                 tags: ["hide", "windows", "empty", "workspace"]
-                visible: (bar.selectedBarConfig?.autoHide ?? false) && !bar.islandShadowsSelectedBar && (!bar.selectedBarIsIsland || dankBarTab.selectedIslandOverlay) && CompositorService.supportsBarAutoHideReveal
+                visible: (bar.selectedBarConfig?.autoHide ?? false) && !bar.islandShadowsSelectedBar && (!bar.selectedBarIsIsland || barTab.selectedIslandOverlay) && CompositorService.supportsBarAutoHideReveal
                 text: I18n.tr("Hide when windows open")
                 description: I18n.tr("Stays visible while the workspace has no windows", "bar hide when windows open toggle description")
                 checked: bar.selectedBarConfig?.showOnWindowsOpen ?? false
@@ -340,13 +340,13 @@ Item {
 
         IslandBehaviorCard {
             store: bar.islandStore
-            docked: dankBarTab.selectedIslandDocked
-            visible: dankBarTab.selectedIslandEnabled
+            docked: barTab.selectedIslandDocked
+            visible: barTab.selectedIslandEnabled
         }
 
         IslandNotificationsCard {
             store: bar.islandStore
-            visible: dankBarTab.selectedIslandEnabled
+            visible: barTab.selectedIslandEnabled
         }
 
         SettingsCard {
@@ -645,7 +645,7 @@ Item {
 
             SettingsControlledBy {
                 visible: bar.selectedBarFrameStyled && (bar.selectedBarIsIsland || (!bar.islandOwnsSelectedBarTop && !SettingsData.connectedFrameModeActive))
-                parentModal: dankBarTab.parentModal
+                parentModal: barTab.parentModal
                 section: "frameBorder"
                 settingLabel: I18n.tr("Use overlay layer")
                 reason: I18n.tr("Disabled by Frame Mode")
@@ -665,7 +665,7 @@ Item {
 
             SettingsControlledBy {
                 visible: CompositorService.supportsBarAutoHideReveal && bar.selectedBarFrameStyled
-                parentModal: dankBarTab.parentModal
+                parentModal: barTab.parentModal
                 section: "frameBorder"
                 settingLabel: I18n.tr("Maximize detection")
                 reason: I18n.tr("Disabled by Frame Mode")
@@ -692,7 +692,7 @@ Item {
                 text: I18n.tr("Auto popup gaps")
                 description: I18n.tr("Gap between the bar and its popouts follows edge spacing", "bar auto popup gaps toggle description")
                 tags: ["popup", "gaps", "auto"]
-                visible: !dankBarTab.popupGapsZeroed
+                visible: !barTab.popupGapsZeroed
                 checked: bar.selectedBarConfig?.popupGapsAuto ?? true
                 onToggled: checked => SettingsData.updateBarConfig(bar.selectedBarId, {
                         popupGapsAuto: checked
@@ -700,7 +700,7 @@ Item {
             }
 
             SettingsSliderRow {
-                visible: !dankBarTab.popupGapsZeroed && !(bar.selectedBarConfig?.popupGapsAuto ?? true)
+                visible: !barTab.popupGapsZeroed && !(bar.selectedBarConfig?.popupGapsAuto ?? true)
                 text: I18n.tr("Gap size")
                 tags: ["popup", "gaps", "size"]
                 resetStore: bar
@@ -717,7 +717,7 @@ Item {
 
         IslandMotionCard {
             store: bar.islandStore
-            visible: dankBarTab.selectedIslandEnabled
+            visible: barTab.selectedIslandEnabled
         }
     }
 }

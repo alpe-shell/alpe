@@ -17,7 +17,7 @@ Item {
     readonly property string tooltipText: I18n.tr("Applications")
 
     function activate() {
-        PopoutService.toggleDankLauncherV2();
+        PopoutService.toggleLauncher();
     }
 
     MouseArea {

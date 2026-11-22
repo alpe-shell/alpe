@@ -51,7 +51,7 @@ ShellRoot {
         void IconThemeService.ready;
         // Start SNI registration even when no tray widget is visible.
         void SystemTray.items;
-        // Build the polkit agent here, outside incubation: first-touching it from a Connections target during DMSShell's async load crashed QQmlConnections::connectSignalsToMethods.
+        // Build the polkit agent here, outside incubation: first-touching it from a Connections target during ShellMain's async load crashed QQmlConnections::connectSignalsToMethods.
         void PolkitService.agent;
     }
 
@@ -69,7 +69,7 @@ ShellRoot {
         id: shellCoreLoader
         asynchronous: true
         source: "ShellCore.qml"
-        onLoaded: dmsShellLoader.setSource("DMSShell.qml", {
+        onLoaded: dmsShellLoader.setSource("ShellMain.qml", {
             core: item
         })
     }

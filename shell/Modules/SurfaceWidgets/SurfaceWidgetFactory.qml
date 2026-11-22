@@ -62,7 +62,7 @@ Item {
         if (loader.item)
             return loader.item;
 
-        const pairs = [[PopoutService.appDrawerLoader, PopoutService.appDrawerPopout], [PopoutService.batteryPopoutLoader, PopoutService.batteryPopout], [PopoutService.clipboardHistoryPopoutLoader, PopoutService.clipboardHistoryPopout], [PopoutService.controlCenterLoader, PopoutService.controlCenterPopout], [PopoutService.dankDashPopoutLoader, PopoutService.dankDashPopout], [PopoutService.notificationCenterLoader, PopoutService.notificationCenterPopout], [PopoutService.processListPopoutLoader, PopoutService.processListPopout], [PopoutService.systemUpdateLoader, PopoutService.systemUpdatePopout], [PopoutService.vpnPopoutLoader, PopoutService.vpnPopout], [PopoutService.colorPickerPopoutLoader, PopoutService.colorPickerPopout], [PopoutService.durationPopoutLoader, PopoutService.durationPopout], [PopoutService.powerMenuPopoutLoader, PopoutService.powerMenuPopout]];
+        const pairs = [[PopoutService.appDrawerLoader, PopoutService.appDrawerPopout], [PopoutService.batteryPopoutLoader, PopoutService.batteryPopout], [PopoutService.clipboardHistoryPopoutLoader, PopoutService.clipboardHistoryPopout], [PopoutService.controlCenterLoader, PopoutService.controlCenterPopout], [PopoutService.dashPopoutLoader, PopoutService.dashPopout], [PopoutService.notificationCenterLoader, PopoutService.notificationCenterPopout], [PopoutService.processListPopoutLoader, PopoutService.processListPopout], [PopoutService.systemUpdateLoader, PopoutService.systemUpdatePopout], [PopoutService.vpnPopoutLoader, PopoutService.vpnPopout], [PopoutService.colorPickerPopoutLoader, PopoutService.colorPickerPopout], [PopoutService.durationPopoutLoader, PopoutService.durationPopout], [PopoutService.powerMenuPopoutLoader, PopoutService.powerMenuPopout]];
         for (let i = 0; i < pairs.length; i++) {
             if (loader === pairs[i][0] && pairs[i][1])
                 return pairs[i][1];
@@ -411,7 +411,7 @@ Item {
                 const tabId = DashRegistry.isSelectable(DashRegistry.overviewId) ? DashRegistry.overviewId : DashRegistry.defaultTabId || DashRegistry.overviewId;
                 const section = root.getWidgetSection(parent) || "center";
                 root.openWidgetPopout({
-                    loader: PopoutService.dankDashPopoutLoader,
+                    loader: PopoutService.dashPopoutLoader,
                     widgetItem: clockWidget,
                     section,
                     useCenterSection: true,
@@ -432,7 +432,7 @@ Item {
             onClicked: {
                 const section = root.getWidgetSection(parent);
                 root.openWidgetPopout({
-                    loader: PopoutService.dankDashPopoutLoader,
+                    loader: PopoutService.dashPopoutLoader,
                     widgetItem: activityWidget,
                     section,
                     useCenterSection: true,
@@ -460,7 +460,7 @@ Item {
             onClicked: {
                 const section = root.getWidgetSection(parent) || "center";
                 root.openWidgetPopout({
-                    loader: PopoutService.dankDashPopoutLoader,
+                    loader: PopoutService.dashPopoutLoader,
                     widgetItem: mediaWidget,
                     section,
                     useCenterSection: true,
@@ -487,7 +487,7 @@ Item {
             onClicked: {
                 const section = root.getWidgetSection(parent) || "center";
                 root.openWidgetPopout({
-                    loader: PopoutService.dankDashPopoutLoader,
+                    loader: PopoutService.dashPopoutLoader,
                     widgetItem: weatherWidget,
                     section,
                     useCenterSection: true,

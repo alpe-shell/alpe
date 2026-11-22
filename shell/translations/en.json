@@ -716,7 +716,7 @@
   {
     "term": "%1 will be removed from your system.",
     "context": "%1 will be removed from your system.",
-    "reference": "DMSShell.qml:402",
+    "reference": "ShellMain.qml:402",
     "comment": "modal confirmation text for uninstalling an app",
     "tags": [
       "shell"
@@ -3982,7 +3982,7 @@
   {
     "term": "Cancel",
     "context": "Cancel",
-    "reference": "DMSShell.qml:377, DMSShell.qml:404, Modals/BluetoothPairingModal.qml:269, Modals/BluetoothPairingModal.qml:358, Modals/PolkitAuthContent.qml:173, Modals/WifiPasswordModal.qml:579, Modals/WorkspaceRenameModal.qml:86, Modules/ProcessList/ProcessActionDialog.qml:77, Modules/Settings/BarHubHeader.qml:162, Modules/Settings/DockHubHeader.qml:106, Modules/Settings/NetworkWifiTab.qml:921, Modules/Settings/NotificationRuleEditorDialog.qml:103, Modules/Settings/PrinterTab.qml:173, Modules/Settings/PrinterTab.qml:696, Modules/Settings/SoftwareUpdatesTab.qml:195, Modules/Settings/DisplayConfigTab.qml:225, Modules/Settings/DisplayConfigTab.qml:247, Modules/Settings/DisplayConfigTab.qml:295, Modules/Settings/WallpaperColorsTab.qml:155, Modules/Settings/WallpaperColorsTab.qml:185, Modules/Settings/WindowRuleEditorDialog.qml:536, Modules/Settings/KeybindEditorDialog.qml:689, Modules/SystemUpdate/SystemUpdatePanel.qml:414, Modules/Settings/Widgets/SettingsRenameDialog.qml:79, Alpe/Dash/Overview/CalendarEventEditor.qml:251, Alpe/Dash/Overview/CalendarOverviewCard.qml:808, Modules/ControlCenter/BuiltinPlugins/CupsWidget.qml:142, Modals/Clipboard/ClipboardEditor.qml:340, Modals/Common/ConfirmModal.qml:14, Modals/Common/ConfirmModal.qml:32, Modals/Common/InputModal.qml:17, Modals/Common/InputModal.qml:28, Modals/Common/InputModal.qml:41, Modals/Common/ConfirmDialogOverlay.qml:14, Modals/Common/ConfirmDialogOverlay.qml:50, Modals/Launcher/AppEditView.qml:264",
+    "reference": "ShellMain.qml:377, ShellMain.qml:404, Modals/BluetoothPairingModal.qml:269, Modals/BluetoothPairingModal.qml:358, Modals/PolkitAuthContent.qml:173, Modals/WifiPasswordModal.qml:579, Modals/WorkspaceRenameModal.qml:86, Modules/ProcessList/ProcessActionDialog.qml:77, Modules/Settings/BarHubHeader.qml:162, Modules/Settings/DockHubHeader.qml:106, Modules/Settings/NetworkWifiTab.qml:921, Modules/Settings/NotificationRuleEditorDialog.qml:103, Modules/Settings/PrinterTab.qml:173, Modules/Settings/PrinterTab.qml:696, Modules/Settings/SoftwareUpdatesTab.qml:195, Modules/Settings/DisplayConfigTab.qml:225, Modules/Settings/DisplayConfigTab.qml:247, Modules/Settings/DisplayConfigTab.qml:295, Modules/Settings/WallpaperColorsTab.qml:155, Modules/Settings/WallpaperColorsTab.qml:185, Modules/Settings/WindowRuleEditorDialog.qml:536, Modules/Settings/KeybindEditorDialog.qml:689, Modules/SystemUpdate/SystemUpdatePanel.qml:414, Modules/Settings/Widgets/SettingsRenameDialog.qml:79, Alpe/Dash/Overview/CalendarEventEditor.qml:251, Alpe/Dash/Overview/CalendarOverviewCard.qml:808, Modules/ControlCenter/BuiltinPlugins/CupsWidget.qml:142, Modals/Clipboard/ClipboardEditor.qml:340, Modals/Common/ConfirmModal.qml:14, Modals/Common/ConfirmModal.qml:32, Modals/Common/InputModal.qml:17, Modals/Common/InputModal.qml:28, Modals/Common/InputModal.qml:41, Modals/Common/ConfirmDialogOverlay.qml:14, Modals/Common/ConfirmDialogOverlay.qml:50, Modals/Launcher/AppEditView.qml:264",
     "comment": "cancel hotspot editing action",
     "tags": [
       "settings",
@@ -8198,7 +8198,7 @@
   {
     "term": "Empty",
     "context": "Empty",
-    "reference": "DMSShell.qml:376, Services/BatteryService.qml:731, Modules/Notepad/NotepadTextEditor.qml:1004",
+    "reference": "ShellMain.qml:376, Services/BatteryService.qml:731, Modules/Notepad/NotepadTextEditor.qml:1004",
     "comment": "battery status",
     "tags": [
       "shell"
@@ -8207,7 +8207,7 @@
   {
     "term": "Empty Trash",
     "context": "Empty Trash",
-    "reference": "DMSShell.qml:374, Modules/Dock/DockTrashContextMenu.qml:33",
+    "reference": "ShellMain.qml:374, Modules/Dock/DockTrashContextMenu.qml:33",
     "comment": "",
     "tags": [
       "shell"
@@ -17084,7 +17084,7 @@
   {
     "term": "Notepad",
     "context": "Notepad",
-    "reference": "DMSShell.qml:1035, Common/BarWidgetCatalog.qml:204, Services/AppSearchService.qml:206, Modules/Notepad/NotepadPopoutWindow.qml:26, Modules/Notepad/NotepadPopoutWindow.qml:53, Modules/Settings/DisplayWidgetsTab.qml:46",
+    "reference": "ShellMain.qml:1035, Common/BarWidgetCatalog.qml:204, Services/AppSearchService.qml:206, Modules/Notepad/NotepadPopoutWindow.qml:26, Modules/Notepad/NotepadPopoutWindow.qml:53, Modules/Settings/DisplayWidgetsTab.qml:46",
     "comment": "Notepad",
     "tags": [
       "settings",
@@ -17697,7 +17697,7 @@
   {
     "term": "Open with",
     "context": "Open with",
-    "reference": "DMSShell.qml:823, Modals/BrowserPickerModal.qml:13, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:249, Modals/Launcher/Controller.qml:1893",
+    "reference": "ShellMain.qml:823, Modals/BrowserPickerModal.qml:13, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:249, Modals/Launcher/Controller.qml:1893",
     "comment": "app picker title, followed by a list of apps | trash setting label, which file manager opens the trash",
     "tags": [
       "settings",
@@ -18642,7 +18642,7 @@
   {
     "term": "Permanently delete %1 item(s)? This cannot be undone.",
     "context": "Permanently delete %1 item(s)? This cannot be undone.",
-    "reference": "DMSShell.qml:375",
+    "reference": "ShellMain.qml:375",
     "comment": "empty trash confirmation message, %1 is a count",
     "tags": [
       "shell"
@@ -26195,7 +26195,7 @@
   {
     "term": "Uninstall",
     "context": "Uninstall",
-    "reference": "DMSShell.qml:403, Modules/Settings/PluginSettingsPage.qml:93, Modules/Settings/PluginSettingsPage.qml:95, Modules/Settings/PluginsHubHeader.qml:142, Modules/Settings/PluginsHubHeader.qml:144, Modules/Settings/PluginsHubHeader.qml:574, Modals/Launcher/LauncherContextMenu.qml:108",
+    "reference": "ShellMain.qml:403, Modules/Settings/PluginSettingsPage.qml:93, Modules/Settings/PluginSettingsPage.qml:95, Modules/Settings/PluginsHubHeader.qml:142, Modules/Settings/PluginsHubHeader.qml:144, Modules/Settings/PluginsHubHeader.qml:574, Modals/Launcher/LauncherContextMenu.qml:108",
     "comment": "confirm button label to proceed with uninstallation | context menu action to uninstall app",
     "tags": [
       "settings",
@@ -26205,7 +26205,7 @@
   {
     "term": "Uninstall %1?",
     "context": "Uninstall %1?",
-    "reference": "DMSShell.qml:401, Modules/Settings/PluginSettingsPage.qml:94, Modules/Settings/PluginsHubHeader.qml:143",
+    "reference": "ShellMain.qml:401, Modules/Settings/PluginSettingsPage.qml:94, Modules/Settings/PluginsHubHeader.qml:143",
     "comment": "modal title for app uninstallation | plugin removal confirmation",
     "tags": [
       "settings",

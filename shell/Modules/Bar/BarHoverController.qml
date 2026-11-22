@@ -288,15 +288,15 @@ Item {
                 prepare: popout => popout.activeTab = "recents"
             },
             clock: {
-                loader: "dankDashPopoutLoader",
+                loader: "dashPopoutLoader",
                 dashTab: "overview"
             },
             music: {
-                loader: "dankDashPopoutLoader",
+                loader: "dashPopoutLoader",
                 dashTab: "media"
             },
             weather: {
-                loader: "dankDashPopoutLoader",
+                loader: "dashPopoutLoader",
                 dashTab: "weather"
             },
             cpuUsage: {

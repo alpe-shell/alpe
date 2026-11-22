@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import test from "node:test";
 
-const source = readFileSync(new URL("../DMSShellIPC.qml", import.meta.url), "utf8");
+const source = readFileSync(new URL("../ShellIpc.qml", import.meta.url), "utf8");
 const barBlock = source.slice(source.indexOf("    function getBarConfig("), source.indexOf('        target: "bar"'));
 const functions = [...barBlock.matchAll(/^ {4,8}function (\w+)\(([^)]*)\)(?:: \w+)? \{\n[\s\S]*?^\s{4,8}\}$/gm)];
 const untyped = functions.map(match => match[0].replace(/\((.*?)\)(?:: \w+)? \{/, (_, params) => "(" + params.replace(/: \w+/g, "") + ") {"));
@@ -22,7 +22,7 @@ function shell(barConfigs, toggleResults = [], barItems = {}) {
             return toggleResults.shift();
         }
     };
-    const BarWidgetService = { dankBarItems: barItems };
+    const BarWidgetService = { barItems: barItems };
     const context = vm.createContext({ SettingsData, BarWidgetService });
     for (const body of untyped)
         vm.runInContext(body.replace(/^ {4}/gm, ""), context);
@@ -108,7 +108,7 @@ function ipcBarChoice(bars, { focused = "", lastUsed = {}, screens = ["A", "B"] 
         Quickshell: { screens: screens.map(name => ({ name })) },
         SettingsData: { barConfigs: windows.map(bar => bar.barConfig), dockConfigs: [], lastUsedBarByScreen: lastUsed, Position: { Top: 0, Bottom: 1, Left: 2, Right: 3 } },
         ShellLayout: { forScreen: name => ({ instances: windows.filter(bar => bar.modelData.name === name).map(bar => ({ barId: bar.id })) }) },
-        root: { dankBarRepeater: { count: windows.length, itemAt: i => ({ item: { barVariants: { instances: [windows[i]] } } }) } },
+        root: { barRepeater: { count: windows.length, itemAt: i => ({ item: { barVariants: { instances: [windows[i]] } } }) } },
         getFocusedScreenName: () => focused
     });
     for (const fn of serviceFunctions)

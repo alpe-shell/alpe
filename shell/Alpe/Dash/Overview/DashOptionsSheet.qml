@@ -55,7 +55,7 @@ CcSheetDialog {
         iconName: "settings"
         onClicked: {
             root.dismiss();
-            PopoutService.closeDankDash();
+            PopoutService.closeDash();
             PopoutService.openSettingsWithTab(root.settingsPages[root.entryId]);
         }
     }

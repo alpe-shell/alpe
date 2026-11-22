@@ -27,7 +27,7 @@ import qs.Services
 
 Item {
     id: root
-    readonly property var log: Log.scoped("DMSShell")
+    readonly property var log: Log.scoped("ShellMain")
     readonly property var _nightModeServiceRef: NightModeService
     readonly property var _brightnessServiceRef: BrightnessService
     readonly property var _refreshRateServiceRef: RefreshRateService
@@ -38,15 +38,15 @@ Item {
     property int pendingOsdResumeReloads: 0
     readonly property var notificationPopupScreens: {
         const screens = SettingsData.notificationFocusedMonitor ? ShellLayout.realScreens : SettingsData.getFilteredScreens("notifications");
-        if (!SettingsData.dankIslandEnabled)
+        if (!SettingsData.islandEnabled)
             return screens;
-        return screens.filter(screen => !SettingsData.dankIslandHandlesNotifications(screen));
+        return screens.filter(screen => !SettingsData.islandHandlesNotifications(screen));
     }
     readonly property var legacySystemLevelOsdScreens: {
         const screens = SettingsData.getFilteredScreens("osd");
-        if (!SettingsData.dankIslandEnabled)
+        if (!SettingsData.islandEnabled)
             return screens;
-        return screens.filter(screen => !SettingsData.dankIslandHandlesSystemOsd(screen));
+        return screens.filter(screen => !SettingsData.islandHandlesSystemOsd(screen));
     }
 
     function recreateOsdSurfaces() {
@@ -289,27 +289,27 @@ Item {
     }
 
     Loader {
-        id: dankDashPopoutLoader
+        id: dashPopoutLoader
 
         active: false
         asynchronous: false
 
         Component.onCompleted: {
-            PopoutService.dankDashPopoutLoader = dankDashPopoutLoader;
+            PopoutService.dashPopoutLoader = dashPopoutLoader;
         }
 
         onLoaded: {
             if (item) {
-                PopoutService.dankDashPopout = item;
-                PopoutService._onDankDashPopoutLoaded();
+                PopoutService.dashPopout = item;
+                PopoutService._onDashPopoutLoaded();
             }
         }
 
         sourceComponent: Component {
             DashPopout {
-                id: dankDashPopout
+                id: dashPopout
 
-                onPopoutClosed: PopoutService._scheduleUnload("dankDash")
+                onPopoutClosed: PopoutService._scheduleUnload("dash")
             }
         }
     }
@@ -725,20 +725,20 @@ Item {
     }
 
     LazyLoader {
-        id: dankLauncherV2ModalLoader
+        id: launcherModalLoader
 
         active: false
 
         Component.onCompleted: {
-            PopoutService.dankLauncherV2ModalLoader = dankLauncherV2ModalLoader;
+            PopoutService.launcherModalLoader = launcherModalLoader;
         }
 
         LauncherModal {
-            id: dankLauncherV2Modal
+            id: launcherModal
 
             Component.onCompleted: {
-                PopoutService.dankLauncherV2Modal = dankLauncherV2Modal;
-                PopoutService._onDankLauncherV2ModalLoaded();
+                PopoutService.launcherModal = launcherModal;
+                PopoutService._onLauncherModalLoaded();
             }
         }
     }
@@ -1211,13 +1211,13 @@ Item {
         }
     }
 
-    DMSShellIPC {
+    ShellIpc {
         processListModalLoaderRef: processListModalLoader
         controlCenterLoaderRef: controlCenterLoader
-        dankDashPopoutLoaderRef: dankDashPopoutLoader
+        dashPopoutLoaderRef: dashPopoutLoader
         notepadSlideoutVariantsRef: notepadSlideoutVariants
         hyprKeybindsModalLoaderRef: hyprKeybindsModalLoader
-        dankBarRepeater: root.core?.dankBarRepeater ?? null
+        barRepeater: root.core?.barRepeater ?? null
         hyprlandOverviewLoader: root.core?.hyprlandOverviewLoader ?? null
         workspaceRenameModalLoaderRef: workspaceRenameModalLoader
         windowRuleModalLoaderRef: windowRuleModalLoader

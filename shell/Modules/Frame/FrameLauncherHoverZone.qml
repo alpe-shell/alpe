@@ -28,7 +28,7 @@ Variants {
 
             readonly property bool vertical: zoneLoader.emergeSide === "left" || zoneLoader.emergeSide === "right"
             readonly property real triggerThickness: Math.max(6, SettingsData.frameThickness)
-            readonly property bool launcherOpen: (PopoutService.dankLauncherV2Modal?.spotlightOpen ?? false) || (PopoutService.dankIslandRouter?.launcherOpen ?? false)
+            readonly property bool launcherOpen: (PopoutService.launcherModal?.spotlightOpen ?? false) || (PopoutService.islandRouter?.launcherOpen ?? false)
             property bool _openedForCurrentHover: false
 
             // Hot zone dimensions centered on the emerge edge to cover the launcher footprint.
@@ -43,7 +43,7 @@ Variants {
                 if (launcherOpen || _openedForCurrentHover)
                     return;
                 _openedForCurrentHover = true;
-                PopoutService.openDankLauncherV2(false, true);
+                PopoutService.openLauncher(false, true);
             }
 
             screen: zoneLoader.modelData

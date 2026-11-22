@@ -798,12 +798,12 @@ Singleton {
         SettingsData.setPluginSetting(pluginId, "variants", newVariants);
 
         const fullId = pluginId + ":" + variantId;
-        removeWidgetFromDankBar(fullId);
+        removeWidgetFromBar(fullId);
 
         pluginDataChanged(pluginId);
     }
 
-    function removeWidgetFromDankBar(widgetId) {
+    function removeWidgetFromBar(widgetId) {
         function filterWidget(widget) {
             const id = typeof widget === "string" ? widget : widget.id;
             return id !== widgetId;
@@ -821,13 +821,13 @@ Singleton {
         const newRight = rightWidgets.filter(filterWidget);
 
         if (newLeft.length !== leftWidgets.length) {
-            SettingsData.setDankBarLeftWidgets(newLeft);
+            SettingsData.setBarLeftWidgets(newLeft);
         }
         if (newCenter.length !== centerWidgets.length) {
-            SettingsData.setDankBarCenterWidgets(newCenter);
+            SettingsData.setBarCenterWidgets(newCenter);
         }
         if (newRight.length !== rightWidgets.length) {
-            SettingsData.setDankBarRightWidgets(newRight);
+            SettingsData.setBarRightWidgets(newRight);
         }
     }
 

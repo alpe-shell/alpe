@@ -38,7 +38,7 @@ Item {
         return pos === SettingsData.Position.Left || pos === SettingsData.Position.Right;
     }
 
-    readonly property bool dankIslandOwnsSelectedBarCenter: {
+    readonly property bool islandOwnsSelectedBarCenter: {
         SettingsData.barConfigs;
         selectedBarId;
         return SettingsData.isIslandBarConfig(SettingsData.getBarConfig(selectedBarId));
@@ -267,7 +267,7 @@ Item {
     }
 
     function setWidgetsForSection(sectionId, widgets) {
-        if (sectionId === "center" && dankIslandOwnsSelectedBarCenter)
+        if (sectionId === "center" && islandOwnsSelectedBarCenter)
             return;
         switch (sectionId) {
         case "left":
@@ -314,7 +314,7 @@ Item {
     }
 
     function addWidgetToSection(widgetId, targetSection) {
-        if (targetSection === "center" && dankIslandOwnsSelectedBarCenter)
+        if (targetSection === "center" && islandOwnsSelectedBarCenter)
             return;
         SettingsData.addBarWidget(selectedBarId, targetSection, widgetId);
     }
@@ -371,7 +371,7 @@ Item {
     }
 
     function moveWidget(fromSection, toSection, movedId, toIndex, sourceIndex = -1) {
-        if (dankIslandOwnsSelectedBarCenter && (fromSection === "center" || toSection === "center"))
+        if (islandOwnsSelectedBarCenter && (fromSection === "center" || toSection === "center"))
             return;
         if (fromSection === toSection) {
             var arr = getWidgetsForSection(fromSection).slice();
@@ -438,7 +438,7 @@ Item {
     }
 
     function moveAcrossSections(sectionId, id, delta) {
-        var order = dankIslandOwnsSelectedBarCenter ? ["left", "right"] : ["left", "center", "right"];
+        var order = islandOwnsSelectedBarCenter ? ["left", "right"] : ["left", "center", "right"];
         var si = order.indexOf(sectionId);
         var ti = si + delta;
         if (si < 0 || ti < 0 || ti >= order.length)
@@ -687,7 +687,7 @@ Item {
                 title: I18n.tr("Home compact", "island settings: home face card title")
                 settingKey: "islandHomeLayout"
                 tags: ["island", "home", "compact", "layout", "groups", "order"]
-                visible: widgetsTab.dankIslandOwnsSelectedBarCenter
+                visible: widgetsTab.islandOwnsSelectedBarCenter
 
                 SettingsRow {
                     iconName: "info"
@@ -701,7 +701,7 @@ Item {
                     readonly property bool isSettingsRow: true
                     readonly property bool transparentSlot: true
                     height: item?.implicitHeight ?? 0
-                    active: widgetsTab.dankIslandOwnsSelectedBarCenter
+                    active: widgetsTab.islandOwnsSelectedBarCenter
                     sourceComponent: IslandHomeLayoutEditor {
                         settingKey: ""
                         barId: widgetsTab.selectedBarId
@@ -741,7 +741,7 @@ Item {
             WidgetsTabSection {
                 id: centerSection
                 width: parent.width
-                visible: !widgetsTab.dankIslandOwnsSelectedBarCenter
+                visible: !widgetsTab.islandOwnsSelectedBarCenter
                 title: selectedBarIsVertical ? I18n.tr("Middle section") : I18n.tr("Center section")
                 sectionId: "center"
                 barId: widgetsTab.selectedBarId

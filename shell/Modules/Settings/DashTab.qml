@@ -156,7 +156,7 @@ FocusScope {
                             Accessible.description: tabRow.modelData.text
                             visible: !tabRow.modelData.action
                             enabled: tabRow.available
-                            onClicked: PopoutService.openDankDashEditor(tabRow.modelData.id, root.Window.window?.screen)
+                            onClicked: PopoutService.openDashEditor(tabRow.modelData.id, root.Window.window?.screen)
                         }
 
                         AlpeToggle {

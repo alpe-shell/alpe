@@ -16,13 +16,13 @@ Item {
         const id = barConfig?.id ?? "";
         if (id === _registeredBarId)
             return;
-        BarWidgetService.unregisterDankBarItem(_registeredBarId, root);
+        BarWidgetService.unregisterBarItem(_registeredBarId, root);
         _registeredBarId = id;
-        BarWidgetService.registerDankBarItem(id, root);
+        BarWidgetService.registerBarItem(id, root);
     }
     onBarConfigChanged: registerBar()
     Component.onCompleted: registerBar()
-    Component.onDestruction: BarWidgetService.unregisterDankBarItem(_registeredBarId, root)
+    Component.onDestruction: BarWidgetService.unregisterBarItem(_registeredBarId, root)
 
     property alias barVariants: barVariants
     property var hyprlandOverviewLoader: null

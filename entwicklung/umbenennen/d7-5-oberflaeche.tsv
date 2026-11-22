@@ -1,0 +1,99 @@
+# D7.5 (Plan 2.3.2/2.3.5): Oberfläche – ShellMain/ShellIpc, Bezeichner Bar/Dash/Island/Launcher, Kürzel-Aktionen.
+# Alte Einstellungsschlüssel (Migration, Testdaten) und die Weiterleitungs-Module bleiben.
+ohne	entwicklung/umbenennen/*,docs/plan/*,tests/test_umbenennen.py,shell/Modules/DankBar/*,shell/Modules/DankDash/*,shell/Common/settings/SettingsStore.js,tests/data/*,tests/test_einstellungen.mjs,tests/test_design.py,tools/design.py,tools/namen-ausnahmen.txt
+wort	DMSShellIPC	ShellIpc
+wort	DMSShell	ShellMain
+wort	_setDankLauncherV2TriggerUsesOverlayLayer	_setLauncherTriggerUsesOverlayLayer
+wort	_dankLauncherV2TriggerUsesOverlayLayer	_launcherTriggerUsesOverlayLayer
+wort	_setDankLauncherV2EdgeHoverManaged	_setLauncherEdgeHoverManaged
+wort	_dankLauncherV2EdgeHoverManaged	_launcherEdgeHoverManaged
+wort	dankIslandOwnsSelectedBarCenter	islandOwnsSelectedBarCenter
+wort	dankIslandHandlesNotifications	islandHandlesNotifications
+wort	toggleDankLauncherV2WithQuery	toggleLauncherWithQuery
+wort	_onDankLauncherV2ModalLoaded	_onLauncherModalLoaded
+wort	toggleDankLauncherV2WithMode	toggleLauncherWithMode
+wort	_dankLauncherV2PendingQuery	_launcherPendingQuery
+wort	onForceDankBarLayoutRefresh	onForceBarLayoutRefresh
+wort	openDankLauncherV2WithQuery	openLauncherWithQuery
+wort	_dankLauncherV2PendingMode	_launcherPendingMode
+wort	_dankLauncherV2WantsToggle	_launcherWantsToggle
+wort	dankIslandHandlesSystemOsd	islandHandlesSystemOsd
+wort	openDankLauncherV2WithMode	openLauncherWithMode
+wort	dankLauncherV2ModalLoader	launcherModalLoader
+wort	forceDankBarLayoutRefresh	forceBarLayoutRefresh
+wort	_dankLauncherV2WantsOpen	_launcherWantsOpen
+wort	dankLauncherV2Appearance	launcherAppearance
+wort	_dankDashPendingSection	_dashPendingSection
+wort	_onDankDashPopoutLoaded	_onDashPopoutLoaded
+wort	dankDashPopoutLoaderRef	dashPopoutLoaderRef
+wort	removeWidgetFromDankBar	removeWidgetFromBar
+wort	setDankBarCenterWidgets	setBarCenterWidgets
+wort	_dankDashPendingScreen	_dashPendingScreen
+wort	_storeDankDashPosition	_storeDashPosition
+wort	setDankBarRightWidgets	setBarRightWidgets
+wort	_dankDashPendingWidth	_dashPendingWidth
+wort	setDankBarLeftWidgets	setBarLeftWidgets
+wort	unregisterDankBarItem	unregisterBarItem
+wort	_dankDashHasPosition	_dashHasPosition
+wort	_dankDashWantsToggle	_dashWantsToggle
+wort	dankDashPopoutLoader	dashPopoutLoader
+wort	dankIslandEdgeOffset	islandEdgeOffset
+wort	toggleDankLauncherV2	toggleLauncher
+wort	unloadDankLauncherV2	unloadLauncher
+wort	_dankDashPendingTab	_dashPendingTab
+wort	_showDankDashEditor	_showDashEditor
+wort	closeDankLauncherV2	closeLauncher
+wort	dankLauncherV2Modal	launcherModal
+wort	registerDankBarItem	registerBarItem
+wort	_dankDashWantsEdit	_dashWantsEdit
+wort	_dankDashWantsOpen	_dashWantsOpen
+wort	dankIslandOwnsEdge	islandOwnsEdge
+wort	openDankDashEditor	openDashEditor
+wort	openDankLauncherV2	openLauncher
+wort	_dankDashPendingX	_dashPendingX
+wort	_dankDashPendingY	_dashPendingY
+wort	dankIslandEnabled	islandEnabled
+wort	dankIslandRouter	islandRouter
+wort	dankBarRepeater	barRepeater
+wort	dankDashPopout	dashPopout
+wort	toggleDankDash	toggleDash
+wort	closeDankDash	closeDash
+wort	dankBarItems	barItems
+wort	dankBarScale	barScale
+wort	openDankDash	openDash
+wort	dankBarItem	barItem
+wort	DankIsland	Island
+wort	dankBarTab	barTab
+wort	dankDash	dash
+wort	DankBar	Bar
+wort	DankDot	Dot
+wort	isDmsAction	isShellAction
+wort	dmsActions	shellActions
+wort	DMS_ACTION_ARGS	SHELL_ACTION_ARGS
+wort	parseDmsActionArgs	parseShellActionArgs
+wort	findDmsArgKey	findShellArgKey
+wort	showDmsArgs	showShellArgs
+wort	dmsParsedArgs	shellParsedArgs
+wort	hyprDmsDir	hyprAppDir
+wort	dmsKey	shellKey
+# geprüft: die bestehenden Namen liegen in anderen Objekten (Island, ShellIpc, SettingsSearchService, Tests) und werden qualifiziert aufgerufen
+erlaubt	toggleLauncher
+erlaubt	closeLauncher
+erlaubt	openLauncher
+erlaubt	islandEnabled
+erlaubt	toggleDash
+erlaubt	closeDash
+erlaubt	barItems
+erlaubt	openDash
+erlaubt	Island
+erlaubt	dash
+erlaubt	Bar
+erlaubt	Dot
+# Aktionsart "dms" → "shell-action" ("shell" ist schon die Art für spawn_shell)
+regex	(id: |return |type: )"dms"	\1"shell-action"	shell/Common/KeybindActions.js
+regex	(=== |case )"dms"	\1"shell-action"	shell/Modules/Settings/KeybindEditorDialog.qml
+regex	(\s)"dms": I18n	\1"shell-action": I18n	shell/Modules/Settings/KeybindEditorDialog.qml
+datei	shell/DMSShell.qml	shell/ShellMain.qml
+datei	shell/DMSShellIPC.qml	shell/ShellIpc.qml
+datei	shell/Alpe/Widgets/DLogoShape.js	shell/Alpe/Widgets/LogoShape.js
+text	"DLogoShape.js"	"LogoShape.js"	shell/Alpe/Widgets/MaterialShapes.js

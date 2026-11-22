@@ -2,7 +2,7 @@
 
 const ACTION_TYPES = [
     {
-        id: "dms",
+        id: "shell-action",
         label: "Alpe Action",
         icon: "widgets"
     },
@@ -38,87 +38,87 @@ const DMS_ACTIONS = [
     },
     {
         id: "spawn alpe-dienst ipc call island toggle home",
-        label: "DankIsland: Toggle"
+        label: "Island: Toggle"
     },
     {
         id: "spawn alpe-dienst ipc call island open home",
-        label: "DankIsland: Open Clock"
+        label: "Island: Open Clock"
     },
     {
         id: "spawn alpe-dienst ipc call island open media",
-        label: "DankIsland: Open Media"
+        label: "Island: Open Media"
     },
     {
         id: "spawn alpe-dienst ipc call island toggle media",
-        label: "DankIsland: Toggle Media"
+        label: "Island: Toggle Media"
     },
     {
         id: "spawn alpe-dienst ipc call island open launcher",
-        label: "DankIsland: Open Launcher"
+        label: "Island: Open Launcher"
     },
     {
         id: "spawn alpe-dienst ipc call island open controlcenter",
-        label: "DankIsland: Open Control Center"
+        label: "Island: Open Control Center"
     },
     {
         id: "spawn alpe-dienst ipc call island open wallpaper",
-        label: "DankIsland: Open Wallpapers"
+        label: "Island: Open Wallpapers"
     },
     {
         id: "spawn alpe-dienst ipc call island open weather",
-        label: "DankIsland: Open Weather"
+        label: "Island: Open Weather"
     },
     {
         id: "spawn alpe-dienst ipc call island open notificationcenter",
-        label: "DankIsland: Open Notification Center"
+        label: "Island: Open Notification Center"
     },
     {
         id: "spawn alpe-dienst ipc call island cycle",
-        label: "DankIsland: Cycle Activity"
+        label: "Island: Cycle Activity"
     },
     {
         id: "spawn alpe-dienst ipc call island close",
-        label: "DankIsland: Close"
+        label: "Island: Close"
     },
     {
         id: "spawn alpe-dienst ipc call dot toggle home",
-        label: "DankDot: Toggle"
+        label: "Dot: Toggle"
     },
     {
         id: "spawn alpe-dienst ipc call dot open home",
-        label: "DankDot: Open Clock"
+        label: "Dot: Open Clock"
     },
     {
         id: "spawn alpe-dienst ipc call dot open media",
-        label: "DankDot: Open Media"
+        label: "Dot: Open Media"
     },
     {
         id: "spawn alpe-dienst ipc call dot open launcher",
-        label: "DankDot: Open Launcher"
+        label: "Dot: Open Launcher"
     },
     {
         id: "spawn alpe-dienst ipc call dot open controlcenter",
-        label: "DankDot: Open Control Center"
+        label: "Dot: Open Control Center"
     },
     {
         id: "spawn alpe-dienst ipc call dot open wallpaper",
-        label: "DankDot: Open Wallpapers"
+        label: "Dot: Open Wallpapers"
     },
     {
         id: "spawn alpe-dienst ipc call dot open weather",
-        label: "DankDot: Open Weather"
+        label: "Dot: Open Weather"
     },
     {
         id: "spawn alpe-dienst ipc call dot open notificationcenter",
-        label: "DankDot: Open Notification Center"
+        label: "Dot: Open Notification Center"
     },
     {
         id: "spawn alpe-dienst ipc call dot cycle",
-        label: "DankDot: Cycle Activity"
+        label: "Dot: Cycle Activity"
     },
     {
         id: "spawn alpe-dienst ipc call dot close",
-        label: "DankDot: Close"
+        label: "Dot: Close"
     },
     {
         id: "spawn alpe-dienst ipc call defaultApp browser",
@@ -1820,7 +1820,7 @@ const SCREENSHOT_FLAGS = [
     }
 ];
 
-const DMS_ACTION_ARGS = {
+const SHELL_ACTION_ARGS = {
     "audio increment": {
         base: "spawn alpe-dienst ipc call audio increment",
         args: [
@@ -1959,7 +1959,7 @@ const DMS_AMOUNT_LABELS = {
 };
 
 function getDmsAmountLabel(action) {
-    var parsed = parseDmsActionArgs(action);
+    var parsed = parseShellActionArgs(action);
     var label = DMS_AMOUNT_LABELS[parsed.base];
     if (!label)
         return null;
@@ -1974,7 +1974,7 @@ function getActionTypes() {
 }
 
 function getDmsActionArgs() {
-    return DMS_ACTION_ARGS;
+    return SHELL_ACTION_ARGS;
 }
 
 function getDmsActions(isHyprland) {
@@ -2047,8 +2047,8 @@ function getActionLabel(action, compositor) {
     if (dmsAct)
         return dmsAct.label;
 
-    var dmsKey = findDmsArgKey(action);
-    var baseAct = dmsKey ? findDmsAction(DMS_ACTION_ARGS[dmsKey].base) : null;
+    var shellKey = findShellArgKey(action);
+    var baseAct = shellKey ? findDmsAction(SHELL_ACTION_ARGS[shellKey].base) : null;
     if (baseAct)
         return baseAct.label;
 
@@ -2080,8 +2080,8 @@ function getActionLabel(action, compositor) {
 function getActionType(action) {
     if (!action)
         return "compositor";
-    if (isDmsAction(action))
-        return "dms";
+    if (isShellAction(action))
+        return "shell-action";
     if (/^spawn \w+ -c /.test(action) || action.startsWith("spawn_shell ") || action.startsWith("spawn-sh "))
         return "shell";
     if (action.startsWith("spawn "))
@@ -2089,7 +2089,7 @@ function getActionType(action) {
     return "compositor";
 }
 
-function isDmsAction(action) {
+function isShellAction(action) {
     if (!action)
         return false;
     return action.startsWith("spawn alpe-dienst ipc call ") || /^spawn alpe-dienst screenshot( |$)/.test(action);
@@ -2205,24 +2205,24 @@ function getActionArgConfig(compositor, action) {
             config: compositorArgs[baseAction]
         };
 
-    var dmsKey = findDmsArgKey(action);
-    if (dmsKey)
+    var shellKey = findShellArgKey(action);
+    if (shellKey)
         return {
-            type: "dms",
-            base: dmsKey,
-            config: DMS_ACTION_ARGS[dmsKey]
+            type: "shell-action",
+            base: shellKey,
+            config: SHELL_ACTION_ARGS[shellKey]
         };
 
     return null;
 }
 
-function findDmsArgKey(action) {
+function findShellArgKey(action) {
     var best = null;
-    for (var key in DMS_ACTION_ARGS) {
-        var base = DMS_ACTION_ARGS[key].base;
+    for (var key in SHELL_ACTION_ARGS) {
+        var base = SHELL_ACTION_ARGS[key].base;
         if (action !== base && !action.startsWith(base + " "))
             continue;
-        if (!best || base.length > DMS_ACTION_ARGS[best].base.length)
+        if (!best || base.length > SHELL_ACTION_ARGS[best].base.length)
             best = key;
     }
     return best;
@@ -2417,21 +2417,21 @@ function buildCompositorAction(compositor, base, args) {
     return parts.join(" ");
 }
 
-function parseDmsActionArgs(action) {
+function parseShellActionArgs(action) {
     if (!action)
         return {
             base: "",
             args: {}
         };
 
-    var key = findDmsArgKey(action);
+    var key = findShellArgKey(action);
     if (!key)
         return {
             base: action,
             args: {}
         };
 
-    var config = DMS_ACTION_ARGS[key];
+    var config = SHELL_ACTION_ARGS[key];
     var rest = action.slice(config.base.length).trim();
     var result = {
         base: key,
@@ -2486,7 +2486,7 @@ function parseDmsActionArgs(action) {
 }
 
 function buildDmsAction(baseKey, args) {
-    var config = DMS_ACTION_ARGS[baseKey];
+    var config = SHELL_ACTION_ARGS[baseKey];
     if (!config)
         return "";
 

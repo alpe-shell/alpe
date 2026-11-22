@@ -893,7 +893,7 @@ Singleton {
         barConfigs;
         return (barConfigs || []).filter(cfg => isIslandBarConfig(cfg));
     }
-    readonly property bool dankIslandEnabled: (barConfigs || []).some(cfg => (cfg.enabled ?? false) && hostsIsland(cfg))
+    readonly property bool islandEnabled: (barConfigs || []).some(cfg => (cfg.enabled ?? false) && hostsIsland(cfg))
     readonly property var enabledIslandBarConfigs: (barConfigs || []).filter(cfg => cfg?.island === true && (cfg.enabled ?? false))
     // Session-only: which bar, island or dot last-used shared shortcuts follow on each screen.
     property var lastUsedBarByScreen: ({})
@@ -1399,7 +1399,7 @@ Singleton {
         saveSettings();
     }
 
-    signal forceDankBarLayoutRefresh
+    signal forceBarLayoutRefresh
     signal forceDockLayoutRefresh
     signal widgetDataChanged
     signal workspaceIconsUpdated
@@ -3014,19 +3014,19 @@ Singleton {
         return _islandFeedHost(screen, cfg => islandSetting(cfg, "islandSystemOsd"));
     }
 
-    function dankIslandHandlesNotifications(screen) {
+    function islandHandlesNotifications(screen) {
         return islandNotificationHost(screen) !== null;
     }
 
-    function dankIslandHandlesSystemOsd(screen) {
+    function islandHandlesSystemOsd(screen) {
         return islandSystemOsdHost(screen) !== null;
     }
 
-    function dankIslandOwnsEdge(screen, edge) {
+    function islandOwnsEdge(screen, edge) {
         return islandConfigForEdge(screen, edge) !== null;
     }
 
-    function dankIslandEdgeOffset(screen, edge) {
+    function islandEdgeOffset(screen, edge) {
         return ShellLayout.edge(screen, edge)?.islandThickness ?? 0;
     }
 
@@ -3219,7 +3219,7 @@ Singleton {
         return env;
     }
 
-    function setDankBarLeftWidgets(order) {
+    function setBarLeftWidgets(order) {
         const defaultBar = getPrimaryBarConfig();
         if (defaultBar) {
             updateBarConfig(defaultBar.id, {
@@ -3229,7 +3229,7 @@ Singleton {
         }
     }
 
-    function setDankBarCenterWidgets(order) {
+    function setBarCenterWidgets(order) {
         const defaultBar = getPrimaryBarConfig();
         if (defaultBar) {
             updateBarConfig(defaultBar.id, {
@@ -3239,7 +3239,7 @@ Singleton {
         }
     }
 
-    function setDankBarRightWidgets(order) {
+    function setBarRightWidgets(order) {
         const defaultBar = getPrimaryBarConfig();
         if (defaultBar) {
             updateBarConfig(defaultBar.id, {

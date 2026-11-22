@@ -80,7 +80,7 @@ Singleton {
     readonly property string mainConfigPath: includePaths?.configFile ?? ""
     readonly property bool readOnly: currentProvider === "hyprland" && CompositorService.isHyprland && !HyprlandService.luaConfigActive
     readonly property var actionTypes: Actions.getActionTypes()
-    readonly property var dmsActions: getDmsActions()
+    readonly property var shellActions: getDmsActions()
 
     signal bindsLoaded
     signal bindSaved(string key)
@@ -410,7 +410,7 @@ Singleton {
                 if (currentProvider === "hyprland" && bind.action && bind.action.startsWith("exec "))
                     bind.action = "spawn " + bind.action.slice(5);
                 bind.action = Actions.normalizeLegacyAction(bind.action);
-                const targetCat = Actions.isDmsAction(bind.action) ? "Alpe" : cat;
+                const targetCat = Actions.isShellAction(bind.action) ? "Alpe" : cat;
                 if (!processed[targetCat])
                     processed[targetCat] = [];
                 processed[targetCat].push(bind);

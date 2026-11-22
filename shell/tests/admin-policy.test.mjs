@@ -59,7 +59,7 @@ test("the user plugin switch keeps the user tree out of a scan and a resync", ()
 });
 
 function settingsIpcHandlers() {
-    const source = readFileSync(new URL("../DMSShellIPC.qml", import.meta.url), "utf8");
+    const source = readFileSync(new URL("../ShellIpc.qml", import.meta.url), "utf8");
     const block = source.slice(source.indexOf("        function get(key: string)"), source.indexOf('        target: "settings"'));
     return [...block.matchAll(/^ {8}function \w+\([^)]*\)(?:: \w+)? \{\n[\s\S]*?^ {8}\}$/gm)].map(match => match[0].replace(/\((.*?)\)(?:: \w+)? \{/, (_, params) => "(" + params.replace(/: \w+/g, "") + ") {"));
 }

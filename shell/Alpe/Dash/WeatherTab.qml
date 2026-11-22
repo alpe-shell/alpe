@@ -30,7 +30,7 @@ Item {
             label: I18n.tr("Settings"),
             iconName: "settings",
             action: () => {
-                PopoutService.closeDankDash();
+                PopoutService.closeDash();
                 PopoutService.openSettingsWithTab("weather");
             }
         }
@@ -325,7 +325,7 @@ Item {
                 text: I18n.tr("Settings")
                 iconName: "settings"
                 onClicked: {
-                    PopoutService.closeDankDash();
+                    PopoutService.closeDash();
                     PopoutService.openSettingsWithTab("weather");
                 }
             }

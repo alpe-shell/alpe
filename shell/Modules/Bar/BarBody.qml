@@ -181,7 +181,7 @@ Item {
             triggerControlCenter();
             return true;
         case "spotlight":
-            PopoutService.toggleDankLauncherV2();
+            PopoutService.toggleLauncher();
             return true;
         case "close-window":
             Toplevels.activeToplevel?.close();
@@ -250,7 +250,7 @@ Item {
     }
 
     function triggerDashTab(tabId, position) {
-        const loader = PopoutService.dankDashPopoutLoader;
+        const loader = PopoutService.dashPopoutLoader;
         if (!loader)
             return false;
         loader.active = true;
@@ -843,11 +843,11 @@ Item {
     Connections {
         target: PluginService
         function onPluginLoaded(pluginId) {
-            log.info("DankBar: Plugin loaded:", pluginId);
+            log.info("Bar: Plugin loaded:", pluginId);
             SettingsData.widgetDataChanged();
         }
         function onPluginUnloaded(pluginId) {
-            log.info("DankBar: Plugin unloaded:", pluginId);
+            log.info("Bar: Plugin unloaded:", pluginId);
             SettingsData.widgetDataChanged();
         }
     }

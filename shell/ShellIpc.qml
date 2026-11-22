@@ -11,14 +11,14 @@ import qs.Modules.Settings.DisplayConfig
 
 Item {
     id: root
-    readonly property var log: Log.scoped("DMSShellIPC")
+    readonly property var log: Log.scoped("ShellIpc")
 
     required property var processListModalLoaderRef
     required property var controlCenterLoaderRef
-    required property var dankDashPopoutLoaderRef
+    required property var dashPopoutLoaderRef
     required property var notepadSlideoutVariantsRef
     required property var hyprKeybindsModalLoaderRef
-    required property var dankBarRepeater
+    required property var barRepeater
     required property var hyprlandOverviewLoader
     required property var workspaceRenameModalLoaderRef
     required property var windowRuleModalLoaderRef
@@ -27,9 +27,9 @@ Item {
         const focusedScreenName = BarWidgetService.getFocusedScreenName();
 
         const bars = [];
-        if (root.dankBarRepeater) {
-            for (let i = 0; i < root.dankBarRepeater.count; i++)
-                bars.push(...(root.dankBarRepeater.itemAt(i)?.item?.barVariants?.instances || []));
+        if (root.barRepeater) {
+            for (let i = 0; i < root.barRepeater.count; i++)
+                bars.push(...(root.barRepeater.itemAt(i)?.item?.barVariants?.instances || []));
         }
         for (const screenName in BarWidgetService.frameHostedBars)
             bars.push(...BarWidgetService.frameBarsForScreen(screenName));
@@ -376,7 +376,7 @@ Item {
         if (!bar)
             return false;
 
-        const dash = root.dankDashPopoutLoaderRef.item;
+        const dash = root.dashPopoutLoaderRef.item;
         if (dash && dash.shouldBeVisible && dash.triggerScreen?.name === bar.screen?.name) {
             if (position && bar.positionDash)
                 bar.positionDash(dash, position);
@@ -390,8 +390,8 @@ Item {
     }
 
     function toggleDash(tab, position) {
-        if (root.dankDashPopoutLoaderRef.item?.dashVisible) {
-            root.dankDashPopoutLoaderRef.item.dashVisible = false;
+        if (root.dashPopoutLoaderRef.item?.dashVisible) {
+            root.dashPopoutLoaderRef.item.dashVisible = false;
             return true;
         }
 
@@ -420,9 +420,9 @@ Item {
 
         function close(): string {
             const islandClosed = [...SettingsData.islandDashActivities, "wellbeing"].filter(activity => PopoutService.closeIslandActivity(activity)).length > 0;
-            if (root.dankDashPopoutLoaderRef.item)
-                root.dankDashPopoutLoaderRef.item.dashVisible = false;
-            return islandClosed || root.dankDashPopoutLoaderRef.item ? "DASH_CLOSE_SUCCESS" : "DASH_CLOSE_FAILED";
+            if (root.dashPopoutLoaderRef.item)
+                root.dashPopoutLoaderRef.item.dashVisible = false;
+            return islandClosed || root.dashPopoutLoaderRef.item ? "DASH_CLOSE_SUCCESS" : "DASH_CLOSE_FAILED";
         }
 
         function toggle(tab: string): string {
@@ -1473,41 +1473,41 @@ Item {
     // ! spotlight and launcher should be synonymous for backwards compat
     IpcHandler {
         function open(): string {
-            PopoutService.openDankLauncherV2();
+            PopoutService.openLauncher();
             return "LAUNCHER_OPEN_SUCCESS";
         }
 
         function close(): string {
-            PopoutService.closeDankLauncherV2();
+            PopoutService.closeLauncher();
             return "LAUNCHER_CLOSE_SUCCESS";
         }
 
         function toggle(): string {
-            PopoutService.toggleDankLauncherV2();
+            PopoutService.toggleLauncher();
             return "LAUNCHER_TOGGLE_SUCCESS";
         }
 
         function openWith(mode: string): string {
             if (!mode)
                 return "LAUNCHER_OPEN_FAILED: No mode specified";
-            PopoutService.openDankLauncherV2WithMode(mode);
+            PopoutService.openLauncherWithMode(mode);
             return `LAUNCHER_OPEN_SUCCESS: ${mode}`;
         }
 
         function toggleWith(mode: string): string {
             if (!mode)
                 return "LAUNCHER_TOGGLE_FAILED: No mode specified";
-            PopoutService.toggleDankLauncherV2WithMode(mode);
+            PopoutService.toggleLauncherWithMode(mode);
             return `LAUNCHER_TOGGLE_SUCCESS: ${mode}`;
         }
 
         function openQuery(query: string): string {
-            PopoutService.openDankLauncherV2WithQuery(query);
+            PopoutService.openLauncherWithQuery(query);
             return "LAUNCHER_OPEN_QUERY_SUCCESS";
         }
 
         function toggleQuery(query: string): string {
-            PopoutService.toggleDankLauncherV2WithQuery(query);
+            PopoutService.toggleLauncherWithQuery(query);
             return "LAUNCHER_TOGGLE_QUERY_SUCCESS";
         }
 
@@ -1517,41 +1517,41 @@ Item {
     // ! spotlight and launcher should be synonymous for backwards compat
     IpcHandler {
         function open(): string {
-            PopoutService.openDankLauncherV2();
+            PopoutService.openLauncher();
             return "SPOTLIGHT_OPEN_SUCCESS";
         }
 
         function close(): string {
-            PopoutService.closeDankLauncherV2();
+            PopoutService.closeLauncher();
             return "SPOTLIGHT_CLOSE_SUCCESS";
         }
 
         function toggle(): string {
-            PopoutService.toggleDankLauncherV2();
+            PopoutService.toggleLauncher();
             return "SPOTLIGHT_TOGGLE_SUCCESS";
         }
 
         function openWith(mode: string): string {
             if (!mode)
                 return "SPOTLIGHT_OPEN_FAILED: No mode specified";
-            PopoutService.openDankLauncherV2WithMode(mode);
+            PopoutService.openLauncherWithMode(mode);
             return `SPOTLIGHT_OPEN_SUCCESS: ${mode}`;
         }
 
         function toggleWith(mode: string): string {
             if (!mode)
                 return "SPOTLIGHT_TOGGLE_FAILED: No mode specified";
-            PopoutService.toggleDankLauncherV2WithMode(mode);
+            PopoutService.toggleLauncherWithMode(mode);
             return `SPOTLIGHT_TOGGLE_SUCCESS: ${mode}`;
         }
 
         function openQuery(query: string): string {
-            PopoutService.openDankLauncherV2WithQuery(query);
+            PopoutService.openLauncherWithQuery(query);
             return "SPOTLIGHT_OPEN_QUERY_SUCCESS";
         }
 
         function toggleQuery(query: string): string {
-            PopoutService.toggleDankLauncherV2WithQuery(query);
+            PopoutService.toggleLauncherWithQuery(query);
             return "SPOTLIGHT_TOGGLE_QUERY_SUCCESS";
         }
 

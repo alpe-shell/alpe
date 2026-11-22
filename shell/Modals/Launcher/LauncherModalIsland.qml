@@ -14,7 +14,7 @@ Item {
     property bool _islandWasOpen: false
 
     readonly property var log: Log.scoped("LauncherModalIsland")
-    readonly property var router: PopoutService.dankIslandRouter
+    readonly property var router: PopoutService.islandRouter
     readonly property bool spotlightOpen: usingFallback ? fallback.spotlightOpen : (router?.launcherOpen ?? false)
     readonly property bool shouldBeVisible: usingFallback ? fallback.shouldBeVisible : false
     readonly property string layerNamespace: usingFallback ? fallback.layerNamespace : "dms:launcher"
