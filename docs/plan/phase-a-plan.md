@@ -193,6 +193,11 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      Die Nummer der Anfrage in `ipc error: id=…` wird beim Vergleich ausgeblendet. **Die eingecheckten
      Grundlinien sind damit bis zur Neumessung (Punkt 6) überholt;** unter KWin noch kein Lauf mit der neuen
      Richtlinie.
+     **Plan für den Dienst vorgelegt, nicht freigegeben:** `docs/plan/dienst-systembus.md` (vier Fragen
+     darin). Geklärt: Die Sperre, auf die Gamma wartete, ist `systemBusLck` von godbus in
+     `dbus.SystemBus()`, gehalten vom Loginctl-Manager in `Hello` (Goroutinen-Stapel). Eintrag in
+     `offene-faelle.md` berichtigt, drei offene Fälle dazu (stummer Compositor, Session-Bus,
+     gonetworkmanager/Abriss im Betrieb). **Hier angehalten; weiter erst nach der Freigabe.**
   2. Behebung im Dienst als eigener Commit mit Test und Eintrag in `offene-faelle.md` (Fehler aus der Zeit vor
      Phase A); Mac-Anleitung: Nachtlicht prüfen.
   3. Prüfen: `Connected` im Protokoll unter dem verschachtelten Hyprland, `cpuUsage` links in der Leiste.

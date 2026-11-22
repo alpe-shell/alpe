@@ -588,11 +588,33 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   available` und `Theme worker: Server unavailable, running synchronously` stehen seit jeher in
   der Hyprland-Grundlinie und nur dort. Gleich auf `ba4ddbc` und auf dem Endstand, also **kein
   Fehler aus D7**; aber die Ladeprüfung unter Hyprland hat alles, was den Dienst braucht
-  (Netzwerk, Systemmonitor, Plugins-Verwaltung, Farbschema über den Dienst), nie geprüft. Nicht
-  geklärt: ob `wayland.NewManager` nur im verschachtelten Hyprland hängt (dann Sache der
-  Prüfumgebung) oder ob dem Dienst dort eine Zeitgrenze fehlt (dann auch am Mac denkbar, wenn
-  die Gamma-Schnittstelle nicht antwortet). Entscheid des Maintainers nötig, bevor die
-  Hyprland-Grundlinien als Abnahme von D7 gelten.
+  (Netzwerk, Systemmonitor, Plugins-Verwaltung, Farbschema über den Dienst), nie geprüft.
+  **Berichtigt (22.11.2026): Die Ursache ist nicht Gamma und nicht der Compositor, sondern der
+  Systembus.** Der Ersatz-Systembus der Ladeprüfung erlaubte keine Antworten; der Dienst wartet
+  ohne Zeitgrenze auf die Antwort zu `Hello`. Belegt durch die Goroutinen-Stapel
+  (`ALPE_LP_STAPEL=1`): Der Loginctl-Manager steht in `Hello` und hält dabei `systemBusLck`, die
+  paketweite Sperre von godbus in `dbus.SystemBus()`; der Hauptablauf wartet in
+  `wayland.NewManager` → `setupDBusMonitor` (Ruhezustands-Überwachung von Gamma) auf genau diese
+  Sperre und erreicht `s.ipc.Serve` nie. Die Zeile zu Gamma ist nur die letzte Meldung davor.
+  Unter KWin scheitert Gamma schon vorher am Compositor, darum hingen dort nur Netzwerk-,
+  Loginctl- und Freedesktop-Manager still im Hintergrund. **Zwei Teile:** (1) Prüfumgebung
+  behoben in `439de4f` (Richtlinie erlaubt Antworten; ein Lauf ohne `Connected` gilt als
+  gescheitert, Plan 0.8 Nr. 81); Probelauf unter Hyprland meldet `Connected`. (2) Der Dienst
+  selbst – **ein Fehler aus der Zeit vor Phase A**, am Mac bei einem hängenden Systembus ebenso
+  denkbar – bekommt eine Zeitgrenze für alle Verbindungen zum Systembus: Plan
+  `docs/plan/dienst-systembus.md`, zur Freigabe vorgelegt, noch nicht umgesetzt (0.8 Nr. 82).
+  Die Grundlinien werden erst danach neu gemessen (0.8 Nr. 80).
+- **Offen, nicht belegt (22.11.2026): Kann der Wayland-Teil von Gamma bei einem stummen
+  Compositor hängen?** `wayland.NewManager` läuft synchron im Start des Dienstes, vor
+  `s.ipc.Serve` (Registry, Ausgaben, Gamma-Steuerung über die geteilte Wayland-Verbindung). Ob
+  dort ein Aufruf ohne Zeitgrenze auf den Compositor wartet, ist nicht untersucht; ein Hänger an
+  dieser Stelle ist nie beobachtet worden (der beobachtete lag am Systembus, siehe oben). Kein
+  Umbau jetzt (0.8 Nr. 82).
+- **Offen aus dem Plan zum Systembus (22.11.2026), je ohne Umbau jetzt:** (a) Der Session-Bus hat
+  dieselbe Bauart (`dbus.SessionBus()` mit `sessionBusLck`, 10 Stellen im Dienst), aber keinen
+  Befund. (b) `gonetworkmanager` ruft selbst `dbus.SystemBus()` auf und nimmt keine Verbindung
+  entgegen (Frage 1 im Plan). (c) Nach einem Abriss der Systembus-Verbindung im Betrieb werden
+  die Manager nicht neu aufgebaut (heute auch nicht).
 - **Ausgeliefertes Design nennt ein fremdes Plugin:** `design/kde/settings.json` führt links in
   der Leiste `sathiAi` (wird nicht mitgeliefert; auf einem frischen Rechner bleibt die Stelle
   leer) und bei `gpuTemp` die Gerätekennung `pciId: 10de:2504`. `tests/test_werte.py` prüft die
