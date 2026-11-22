@@ -553,6 +553,10 @@ def normalize(line, base):
     line = re.sub(r"\[([A-Za-z_]\w*):\d+\]", r"[\1:<Z>]", line)
     # Fehlermeldungen des Dienstes tragen die laufende Nummer der Anfrage; sie ist in jedem Lauf anders.
     line = re.sub(r"\bipc error: id=\d+", "ipc error: id=<ID>", line)
+    # Ein neuer Notizblock-Reiter heisst nach dem Zeitstempel seiner Entstehung.
+    line = re.sub(r"\buntitled-\d+\.txt", "untitled-<ID>.txt", line)
+    # Qt nummeriert QML-Typen in der Reihenfolge, in der sie geladen werden; die Nummer ist nicht stabil.
+    line = re.sub(r"_QMLTYPE_\d+", "_QMLTYPE_<N>", line)
     return line.strip()
 
 

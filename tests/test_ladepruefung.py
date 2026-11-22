@@ -9,6 +9,7 @@ nur diese Vorbereitung aus, in einem eigenen Temp-Ordner; die Shell startet er n
 import importlib.util
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -145,6 +146,16 @@ try:
     check(lp.normalize("ERROR  go: ipc error: id=1795378623798 method-error=loginctl manager not initialized", "/x")
           == lp.normalize("ERROR  go: ipc error: id=17 method-error=loginctl manager not initialized", "/x")
           == "ERROR  go: ipc error: id=<ID> method-error=loginctl manager not initialized", "Nummer der Anfrage in Fehlermeldungen des Dienstes wird ausgeblendet")
+    # Laufabhängige Nummern in sporadischen Meldungen: Zeitstempel im Namen eines Notizblock-Reiters, Nummer eines QML-Typs.
+    check(lp.normalize("WARN qml: [NotepadStorageService:196] Tab file does not exist: /x/.local/state/alpe/notepad-files/untitled-1795381314052.txt", "/x")
+          == "WARN qml: [NotepadStorageService:<Z>] Tab file does not exist: <TMP>/.local/state/alpe/notepad-files/untitled-<ID>.txt",
+          "Zeitstempel im Namen eines Notizblock-Reiters wird ausgeblendet")
+    check(lp.normalize("WARN scene: @Common/DeferredAction.qml[47:22]: TypeError: Property 'flush' of object DeferredAction_QMLTYPE_382(0x55aa) is not a function", "/x")
+          == "WARN scene: @Common/DeferredAction.qml[<Z>]: TypeError: Property 'flush' of object DeferredAction_QMLTYPE_<N>(0x…) is not a function",
+          "Nummer eines QML-Typs wird ausgeblendet")
+    for name in ("grundlinie-hyprland.txt", "grundlinie-hyprland-offen.txt", "grundlinie-kwin.txt", "grundlinie-kwin-offen.txt"):
+        text = open(os.path.join(os.path.dirname(lp.__file__), name), encoding="utf-8").read()
+        check(not re.search(r"untitled-\d|_QMLTYPE_\d", text), name + ": keine laufabhängigen Nummern")
     # Verbindung zum Dienst (Plan 0.8 Nr. 81): ohne «Connected» ist der Lauf gescheitert, unter beiden Compositors.
     for compositor in ("kwin", "hyprland"):
         ohne = lp.health(dict(gut, compositor=compositor, **{"shell.log": "Configuration Loaded\nbackend ready\n"}))

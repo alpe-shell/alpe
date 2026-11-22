@@ -1,0 +1,40 @@
+# Grundlinie der Ladeprüfung (kwin, Variante «offen»): Warnungen und Fehler eines Laufs mit dem ausgelieferten
+# Design, vereint über 3 Läufe. Neu schreiben: ladepruefung.py kwin --offen --grundlinie
+ERROR  go: Failed to initialize wayland manager: ErrUnknown: compositor does not support gamma control
+ERROR  go: ipc error: id=<ID> method-error=failed to get property: The name org.freedesktop.login1 was not provided by any .service files
+ERROR  go: ipc error: id=<ID> method-error=received error IPP response: ipp status: 1030, message: No destinations added.
+ERROR quickshell.service.pipewire.loop: Failed to connect pipewire context. Errno: 112
+WARN  go: Bluez manager unavailable: no bluetooth adapter found: The name org.bluez was not provided by any .service files
+WARN  go: Failed to initialize bluez manager: no bluetooth adapter found: The name org.bluez was not provided by any .service files
+WARN  go: Failed to initialize evdev manager: insufficient permissions to access input devices. Add your user to the 'input' group: `sudo usermod -a -G input $USER`
+WARN  go: Failed to initialize loginctl manager: failed to get session path: The name org.freedesktop.login1 was not provided by any .service files
+WARN  go: Failed to initialize network manager: no supported network backend found: No known network manager bus names found.
+WARN  go: GeoClue2 unavailable: failed to create GeoClue2 client: The name org.freedesktop.GeoClue2 was not provided by any .service files
+WARN  go: Loginctl manager unavailable: failed to get session path: The name org.freedesktop.login1 was not provided by any .service files
+WARN  go: No supported network backend present; skipping retries
+WARN  go: Wayland manager unavailable: ErrUnknown: compositor does not support gamma control
+WARN qml: [FileSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
+WARN qml: [WlrOutputService:<Z>] Received empty outputs list
+WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'io.github.alpe_shell.Alpe'")
+WARN qt.qpa.theme.gnome: dbus reply error: [ "org.freedesktop.DBus.Error.UnknownMethod" ] "Keine derartige Schnittstelle »org.freedesktop.portal.Settings« des Objekts im Pfad /org/freedesktop/portal/desktop"
+WARN quickshell.dbus.objectmanager: Failed to create DBusObjectManagerInterface for "org.bluez" "/" : QDBusError("", "")
+WARN quickshell.dbus: Could not launch service org.freedesktop.UPower.PowerProfiles: QDBusError(org.freedesktop.DBus.Error.ServiceUnknown, The name org.freedesktop.UPower.PowerProfiles was not provided by any .service files)
+WARN quickshell.dbus: Could not launch service org.freedesktop.UPower: QDBusError(org.freedesktop.DBus.Error.ServiceUnknown, The name org.freedesktop.UPower was not provided by any .service files)
+WARN quickshell.io.fileview: got operation finished from dropped operation qs::io::FileViewOperation(0x…)
+WARN quickshell.service.polkit.listener: failed to register listener: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+WARN quickshell.service.polkit: failed to register listener on path "/org/quickshell/PolkitAgent"
+WARN quickshell.service.powerprofiles: Could not start PowerProfilesDaemon. The PowerProfiles service will not work.
+WARN quickshell.service.upower: Could not start UPower. The UPower service will not work.
+WARN scene: @Modules/Settings/AlpeDeviceTab.qml[<Z>]: Unable to assign [undefined] to bool
+WARN scene: @Modules/Settings/BarTab.qml[<Z>]: Unable to assign [undefined] to QString
+WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/appusage.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/launcher_cache.json failed: File does not exist.
+WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/alpe/colors.json failed: File does not exist.
+WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/notepad-session.json failed: File does not exist.
+WARN scene: QML FileView at @Services/PaletteInjectService.qml[<Z>]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
+WARN scene: QML SportDaemon at file://<TMP>/h/.config/alpe/plugins/alpeSport/SportDaemon.qml[<Z>]: Created graphical object was not placed in the graphics scene.
+WARN: <Unknown File>:<N>: Error: Cannot assign to non-existent property "requestedSearchQuery"
+WARN: Process failed to start, likely because the binary could not be found. Command: QList("khal", "printformats")
+WARN: Unrecognized pragma "DiskCache"
+WARN: Unrecognized pragma "RenderControl"
