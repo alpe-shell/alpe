@@ -264,8 +264,9 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      Starter mit Alpe-Zeichen, drei Systemwerten (48°, 47°, 3 %), in der Mitte Uhr und Wetter,
      rechts Ton (stumm) und Mikrofon; Material-Vorlage mit grossem Alpe-Zeichen rechts. **Unten
      in der Mitte der Papierkorb mit richtigem Symbol, aber auf einem schwarzen, scharfkantigen
-     Quadrat statt in einem gerundeten Dock** – offener Fall mit Frist vor G1
-     (`offene-faelle.md`, «Ladeprüfung»), Gegenprobe am Mac.
+     Quadrat statt in einem gerundeten Dock** – offener Fall, **Frist jetzt vor E1**
+     (`offene-faelle.md`, «Ladeprüfung»; Gegenprobe mit Anheftungen im Punkt «Ergänzungen zu 6.7»
+     unten), Gegenprobe am Mac.
   4. `docs/plan/sie-form.md` und `docs/plan/uebersetzung-luecken.md`: **nicht freigegeben**; die
      drei Stilfragen beantwortet der Maintainer nach der Durchsicht. Bis dahin nichts in `de.json`.
   5. Der Worktree `/tmp/claude-1000/h7/wt-alt` (`ba4ddbc`) bleibt bis nach dem Mac-Test stehen.
@@ -273,14 +274,42 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   Systempaket unverändert, Eigenes nur in `kscreenlockerrc`; vier Fragen). **Nebenbefund daraus,
   nicht behoben (Entscheid nötig, Frage 3 der Vorlage):** `shell/Modules/Lock/Alpe/layout.js` enthält
   absolute Pfade in zwei Home-Verzeichnisse (seit `bfc7243`, laut lokalem Stand der Remote-Zweige
-  auch auf `origin/phase-a`); `tests/test_werte.py` prüft darauf nur `design/`.
-- **E1 beginnt erst** nach dem Entscheid zu 6.7 **und** dem Ergebnis des Mac-Tests (0.8 Nr. 6).
-  Bis dahin offen beim Maintainer: Mac-Test, Entscheid 6.7 (vier Fragen), Durchsicht der beiden
-  Übersetzungslisten. Kein Schritt wurde wegen fehlender Freigabe übersprungen; begonnen ist
-  nach 6.7 nichts.
-- Abschluss der Sitzung (22.11.2026, nachts): `1d91c2b` und `554fd44` je auf dem Commit im
-  Temp-Worktree mit `tools/test.sh` grün (32 Schritte); keine Läufe und keine Scopes der
-  Ladeprüfung mehr offen; Worktrees: nur der Arbeitsbaum und `wt-alt`.
+  auch auf `origin/phase-a`); `tests/test_werte.py` prüft darauf nur `design/`. **Inzwischen
+  behoben, siehe nächster Punkt;** die Geschichte ist unverändert.
+- **Ergänzungen des Maintainers zu 6.7 (22.11.2026, nachts), umgesetzt:**
+  - **Version des Sperrpakets (Frage 4): entschieden.** `metadata.json` bekommt die Version beim
+    Paketbau aus derselben Quelle wie `Brand.version`; **Umsetzung mit E1** (dazu Prüfung in
+    `tests/test_version.py`).
+  - **`layout.js` neutral (`56fcedd`):** aus `lockscreen/hyprlock.conf` neu erzeugt (drei Texte,
+    Passwortfeld, keine Bilder, kein Pfad mit `/home/`, kein Datum); der Umsetzer kennt dafür
+    `--quelle NAME`, `tests/test_hyprlock.py` vergleicht die eingecheckte Datei mit seiner Ausgabe.
+    Die Shell-Sperre zeigt damit ohne eigenes Layout die neutrale Vorlage.
+  - **Wo die Pfade liegen:** `bfc7243` ist **weder in `main` noch im Tag `v1.0`** (nur `phase-a`
+    und `origin/phase-a`). **Dieselben Pfade stehen aber schon in `v1.0` und `main`**, in
+    `shell/0001-Alpe-1.0-Zugerberg.patch` (acht Stellen); Einzelheiten in
+    `sperrbildschirm-dateien.md`, Abschnitt 2. Über die Geschichte entscheidet der Maintainer.
+  - **Prüfung auf persönliche Werte im ganzen Repo (`016d986`):** `tests/test_werte.py` durchsucht
+    alle versionierten Textdateien (2618) nach Pfaden in ein Home-Verzeichnis, Benutzer- und
+    Rechnernamen, IP- und MAC-Adressen, Gerätekennungen; Ausnahmeliste mit 11 Einträgen je Datei
+    und Art. Benutzer- und Rechnername kommen vom Rechner, auf dem der Test läuft (nicht im
+    Repo hinterlegt); Namen unter vier Zeichen und Allerweltsnamen werden nicht gesucht – **der
+    Rechnername des PCs ist dafür zu kurz, in der CI wird keiner der beiden gesucht.** Dabei
+    bereinigt: Pfad im Sport-Fixture, `pciId` in den Umzugs-Testdaten (jetzt erfunden), ein Name
+    als Bezeichner in `tests/test_tools.py`, zwei Stellen im Plan.
+  - **Dock (Frist jetzt vor E1):** Gegenprobe mit vier Anheftungen im Temp-HOME, Bild angesehen:
+    Mit Anheftungen gerundete dunkle Dock-Fläche um alle Symbole, der Papierkorb darin weiterhin
+    auf schwarzem Quadrat. Also: Das Quadrat gehört zum Papierkorb-Symbol und ist keine Folge von
+    `dockPins`; ohne Anheftungen fehlt aber die Dock-Fläche ganz, darum sieht ein neuer Nutzer nur
+    den Papierkorb auf dem Quadrat. Beides nicht behoben (`offene-faelle.md`, «Ladeprüfung»).
+  - `56fcedd` und `016d986` je auf dem Commit im Temp-Worktree mit `tools/test.sh` grün (32 Schritte).
+- **E1 beginnt erst** nach dem Entscheid zu 6.7 (offen: Fragen 1 und 2) **und** dem Ergebnis des
+  Mac-Tests (0.8 Nr. 6); davor ist ausserdem das Dock zu beheben.
+  Bis dahin offen beim Maintainer: Mac-Test, Entscheid 6.7 (Fragen 1 und 2), Entscheid zur
+  Geschichte mit den persönlichen Pfaden, Durchsicht der beiden Übersetzungslisten. Kein Schritt
+  wurde wegen fehlender Freigabe übersprungen; von E1 ist nichts begonnen.
+- **Angehalten (22.11.2026, nachts).** `1d91c2b`, `554fd44`, `e9c62c1`, `56fcedd`, `016d986` je
+  auf dem Commit im Temp-Worktree mit `tools/test.sh` grün (32 Schritte); keine Läufe und keine
+  Scopes der Ladeprüfung mehr offen; Worktrees: nur der Arbeitsbaum und `wt-alt`.
 
 ---
 
@@ -1187,7 +1216,10 @@ aus `~/.config/alpe`, oder bewusst erzeugte Nutzerkopie) mit Folgen für Umzug,
 **Vorgelegt am 22.11.2026, nicht entschieden: `docs/plan/sperrbildschirm-dateien.md`.** Berichtigung
 zum Absatz oben: Bilder schreibt `lockscreen.sh` nicht ins Paket (das Layout nennt sie mit
 absolutem Pfad); nutzerspezifisch ist dort allein `layout.js`, und nur mit einer eigenen
-`~/.config/alpe/hyprlock.conf`.
+`~/.config/alpe/hyprlock.conf`. **Entschieden (22.11.2026):** Frage 4 – die Version in
+`metadata.json` des Sperrpakets wird beim Paketbau aus derselben Quelle wie `Brand.version`
+gesetzt, umgesetzt mit E1; Frage 3 – neutrale `layout.js` und Prüfung des ganzen Repos sind
+erledigt (`56fcedd`, `016d986`). Offen: Fragen 1 und 2.
 
 ### 6.8 `alpe-dienst` startet nie eine systemd-Unit (D1)
 

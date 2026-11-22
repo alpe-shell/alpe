@@ -210,9 +210,10 @@ Neu seit D6 – bitte gezielt ansehen:
   ansehen: Papierkorb leer, dann eine Datei hineinlegen. Welches Symbolthema eingestellt ist,
   dazuschreiben. Findet das Thema das Symbol nicht, zeichnet `DockTrashButton.qml` ersatzweise
   ein Schriftsymbol (`delete`) – auch das ist kein Quadrat. Am PC zeigt das Bild der Ladeprüfung
-  (verschachteltes Hyprland, 22.11.2026) das richtige Symbol, aber auf einer schwarzen,
-  scharfkantigen Fläche statt auf einem gerundeten Dock – siehe «Ladeprüfung» unten; am Mac
-  darauf achten, ob das Dock dort ebenso aussieht.
+  (verschachteltes Hyprland, 22.11.2026) das richtige Symbol, aber auf einem schwarzen Quadrat,
+  mit und ohne Anheftungen; ohne Anheftungen fehlt zudem die Dock-Fläche – siehe «Ladeprüfung»
+  unten. Am Mac beides festhalten: Quadrat hinter dem Papierkorb ja/nein, Dock-Fläche ohne
+  Anheftungen ja/nein.
 - **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
 
 Die Ladeprüfung in den Varianten «gesperrt» und «offen» (Plan 0.8 Nr. 70) läuft nur am PC.
@@ -647,14 +648,24 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   die Zeitsteuerung laufen lassen; Deckel zu und wieder auf – die Farbtemperatur muss nach dem
   Aufwachen stimmen (die Überwachung des Ruhezustands hängt jetzt erst Augenblicke nach dem Start
   am Bus); WLAN-Liste, Bluetooth, Helligkeitstasten, Sperren beim Zuklappen.
-- **Offen (22.11.2026, Frist: vor G1): Dock ohne angeheftete Programme zeigt eine schwarze
-  Fläche.** Im Bild der Variante «offen» unter dem verschachtelten Hyprland (`1d91c2b`, Bild ohne
-  Hinweisbalken) steht unten in der Mitte nur der Papierkorb: das Symbol stimmt (grüner Eimer aus
-  dem Symbolthema), dahinter liegt aber ein schwarzes, scharfkantiges Quadrat von etwa 68 px
-  statt eines gerundeten, durchscheinenden Docks. Nicht untersucht: ob das am Dock mit nur einem
-  Eintrag liegt, an der Darstellung unter dem verschachtelten Hyprland (Unschärfe, Transparenz
-  der Ebene) oder am Stil des Designs. Gegenprobe am Mac steht in der Anleitung für den Stand
-  nach D7; unter KWin gibt es bisher kein Bild.
+- **Offen (22.11.2026, Frist: vor E1 – Entscheid des Maintainers, weil es das Erste ist, was ein
+  neuer Nutzer sieht): Dock ohne angeheftete Programme.** Im Bild der Variante «offen» unter dem
+  verschachtelten Hyprland (`1d91c2b`) steht unten in der Mitte nur der Papierkorb auf einem
+  schwarzen, scharfkantigen Quadrat von etwa 68 px. **Gegenprobe (22.11.2026, Stand `016d986`,
+  im Temp-HOME vier Programme angeheftet, sonst gleich; Lauf gültig, 39 gleich, nichts neu):** Mit
+  Anheftungen zeichnet das Dock eine gerundete, dunkle Fläche um alle Symbole; der Papierkorb
+  sitzt darin weiterhin auf seinem schwarzen Quadrat. Es sind also zwei Dinge:
+  (1) **Das schwarze Quadrat gehört zum Papierkorb-Symbol, nicht zum Dock,** und ist auch mit
+  Anheftungen da – es ist keine Folge des Entfernens von `dockPins`. Die anderen Symbole
+  (Systemeinstellungen, kitty, Konsole, Steam) haben keinen solchen Grund. Ob 1.0 es auch zeigt,
+  ist nicht geprüft (`DockTrashButton.qml` ist seit dem Einverleiben nur in D7.2b angefasst).
+  (2) **Ohne Anheftungen fehlt die Dock-Fläche ganz** (`dockBackground` ist nur sichtbar, wenn
+  `hasApps`, also `widgetStrip.preferredLength > 0`; mit dem Papierkorb allein offenbar nicht).
+  Das ist die Folge von `dockPins` weg: Übrig bleibt der Papierkorb ohne Dock, und damit fällt
+  sein schwarzes Quadrat erst auf. Ursachen beider Punkte nicht untersucht (beim Symbol
+  naheliegend: Bild aus dem Symbolthema ohne Transparenz oder die Darstellung mit `mipmap`
+  unter dem verschachtelten Compositor). Unter KWin gibt es kein Bild; Gegenprobe am Mac steht
+  in der Anleitung für den Stand nach D7.
 - **Hinweisbalken von Hyprland in der Ladeprüfung: erledigt (`1d91c2b`).** Die Testkonfiguration
   setzt `misc.disable_watchdog_warning`; das Bild danach zeigt keinen Balken mehr, der Lauf
   gegen die Grundlinie «offen» 39 gleich, nichts neu.

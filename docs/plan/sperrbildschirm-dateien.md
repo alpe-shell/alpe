@@ -59,8 +59,24 @@ und sucht auf jedem Rechner Bilder unter dem fremden Pfad. Die KDE-Sperre ist ni
 solange `lockscreen.sh install` lief (es überschreibt `layout.js` in der Nutzerkopie). **Mit dem
 Paket nach 6.1 würde genau diese Datei nach `/usr/share` ausgeliefert.**
 
-Nicht behoben, weil die Behebung das Aussehen der Vorgabe ändert und zur Entscheidung unten
-gehört (Frage 3). Die Geschichte umzuschreiben wäre Sache des Maintainers.
+**Behoben am 22.11.2026 (Auftrag des Maintainers):** `layout.js` ist in `56fcedd` aus
+`lockscreen/hyprlock.conf` neu erzeugt (`alpe-hyprlock.py … --quelle lockscreen/hyprlock.conf`:
+Name der Quelle statt absolutem Pfad, kein Datum), mit Test auf Gleichheit; `tests/test_werte.py`
+durchsucht seit `016d986` das ganze Repo.
+
+**Wo die Pfade in der Geschichte liegen (geprüft am 22.11.2026 am lokalen Stand):**
+
+- `bfc7243` ist **nicht in `main` und nicht im Tag `v1.0`**; der Commit liegt nur auf `phase-a`
+  und `origin/phase-a`.
+- **Dieselben Pfade stehen trotzdem schon in `v1.0`, `main` und `origin/main`:** in
+  `shell/0001-Alpe-1.0-Zugerberg.patch` (acht Stellen: sieben Bildpfade im eigenen
+  Home-Verzeichnis und der Quellpfad) – die Schicht, aus der `bfc7243` den Quellbaum gemacht hat.
+- Daneben in `v1.0`/`main` fünf Dateien mit Pfaden in ein Home-Verzeichnis einer Bauumgebung oder
+  mit Platzhalternamen: `entwicklung/lint.sh`, `entwicklung/pageharness/td2.qml`, `th.qml`,
+  `tl2.qml`, `entwicklung/sportharness/fixtures/match-nba-31.json`.
+
+Ein Umschreiben nur von `phase-a` entfernte die Pfade also nicht aus dem Veröffentlichten. Über
+die Geschichte entscheidet der Maintainer; hier ist nichts umgeschrieben.
 
 ## 3. Varianten
 
@@ -130,6 +146,9 @@ und den Greeter im Temp-`HOME` (schreibt nichts unter `plasma/shells`), Umzug mi
 eigene `hyprlock.conf`.
 
 ## 5. Fragen
+
+**Stand 22.11.2026:** Frage 3 ist erledigt (siehe Abschnitt 2), Frage 4 entschieden: ja, beim
+Paketbau aus derselben Quelle wie `Brand.version`, umgesetzt mit E1. Offen sind 1 und 2.
 
 1. **Variante A oder B?** (Empfehlung: A.)
 2. **Eigene `~/.config/alpe/hyprlock.conf` bei A:** (a) einmal übernehmen, wenn `Layout` leer ist,
