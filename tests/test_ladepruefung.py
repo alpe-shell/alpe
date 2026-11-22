@@ -116,6 +116,24 @@ try:
           "eine sporadische Meldung darf auftreten und ist nicht neu; eine fremde ist neu")
     check(lp.compare(set(), fest, sporadisch) == ([], ["WARN immer"], []), "eine feste Meldung, die fehlt, ist weg")
 
+    # Hyprland-IPC: zu langer Temp-Ordner wird abgelehnt, ein Lauf ohne Sockets gilt als gescheitert.
+    check(not lp.socket_path_too_long("/tmp") and not lp.socket_path_too_long("/tmp/claude-1000") and lp.socket_path_too_long("/tmp/claude-1000/h7/lp"),
+          "Länge des Socket-Pfads: /tmp und /tmp/claude-1000 gehen, ein tieferer Ordner nicht")
+    if shutil.which("kwin_wayland") and shutil.which("Hyprland"):
+        lang = subprocess.run([sys.executable, lp.__file__, "hyprland"], capture_output=True, text=True,
+                              env=dict(os.environ, ALPE_LP_TMP=os.path.join(tmp, "ein-langer-ordner")))
+        check(lang.returncode == 2 and "zu lang" in lang.stdout, "hyprland mit zu langem $ALPE_LP_TMP bricht vor dem Start ab")
+    gut = {"abbruch": "", "hung": False, "limit": 1, "shell.log": "Configuration Loaded\nbackend ready\n", "ipc.log": "--- bereit\nEnde nach Plan\n",
+           "compositor": "hyprland", "umgebung.log": "HYPRLAND_INSTANCE_SIGNATURE=abc_1_2\nXDG_RUNTIME_DIR=/r\nSocket .socket.sock da\nSocket .socket2.sock da\n"}
+    check(lp.health(gut) == [], "Lauf unter Hyprland mit Signatur und beiden Sockets ist in Ordnung")
+    check(len(lp.health(dict(gut, **{"umgebung.log": "HYPRLAND_INSTANCE_SIGNATURE=abc\nSocket .socket.sock da\nSocket .socket2.sock fehlt\n"}))) == 1,
+          "fehlender Socket beim Start der Shell: Lauf gescheitert")
+    check(len(lp.health(dict(gut, **{"umgebung.log": "HYPRLAND_INSTANCE_SIGNATURE=\nSocket .socket.sock fehlt\nSocket .socket2.sock fehlt\n"}))) == 2,
+          "fehlende Signatur: Lauf gescheitert")
+    check(len(lp.health(dict(gut, **{"shell.log": gut["shell.log"] + "WARN quickshell.hyprland.ipc: Error making request: QLocalSocket::ServerNotFoundError\n"}))) == 1,
+          "ServerNotFoundError der Shell: Lauf gescheitert, nichts für die Grundlinie")
+    check(lp.health(dict(gut, compositor="kwin", **{"umgebung.log": ""})) == [], "unter KWin spielt das keine Rolle")
+
     # Auswertung nach dem Lauf: erkennt eine umgezogene und eine nicht umgezogene Session.
     check(any(line.startswith("FEHLER") for line in lp.probe_report(home)), "Auswertung meldet eine Session, die nicht umgezogen ist")
     migrated = {"configVersion": 8, "materialWallpapers": {"": {"shared": {"preset": "alpe"}}},

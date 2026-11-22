@@ -38,7 +38,8 @@ activate-plugins.py für Nutzer einschaltet. So lädt jedes Plugin im Repo bei j
 Ergebnis: 0 = keine neuen Warnungen/Fehler gegenüber der Grundlinie, 1 = neue, 2 = Lauf gescheitert.
 Unix-Sockets dürfen höchstens ~107 Zeichen lang sein (Hyprlands Socket liegt unter
 $XDG_RUNTIME_DIR/hypr/<63 Zeichen>/); das Laufzeitverzeichnis ist darum der kurze Ordner lp-r direkt
-unter $ALPE_LP_TMP bzw. $TMPDIR bzw. /tmp.
+unter $ALPE_LP_TMP bzw. $TMPDIR bzw. /tmp. Ist dieser Ordner für Hyprland zu lang (mehr als 19 Zeichen),
+bricht der Lauf ab, statt ohne Hyprland-IPC zu prüfen; ebenso, wenn die Shell die Sockets nicht erreicht.
 """
 import os
 import re
@@ -227,6 +228,14 @@ sleep 1""".format(bild=q(bild), base=q(base), dienst=q(dienst)))
     return """#!/bin/sh
 # timeout -k: ein IPC-Aufruf, der TERM nicht beachtet, wird nach 2 s hart beendet.
 ipc() {{ timeout -k 2 8 {dienst} ipc call "$@" >> {base}/ipc.log 2>&1; }}
+# Was bei der Shell ankommt (unter Hyprland ausgewertet): Signatur, Laufzeitordner, Sockets vor dem Start.
+{{
+    echo "HYPRLAND_INSTANCE_SIGNATURE=${{HYPRLAND_INSTANCE_SIGNATURE:-}}"
+    echo "XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
+    for s in .socket.sock .socket2.sock; do
+        if [ -S "$XDG_RUNTIME_DIR/hypr/${{HYPRLAND_INSTANCE_SIGNATURE:-}}/$s" ]; then echo "Socket $s da"; else echo "Socket $s fehlt"; fi
+    done
+}} > {base}/umgebung.log
 {dienst} -c {shell} run > {base}/shell.log 2>&1 &
 pid=$!
 # Warten, bis die Oberfläche geladen ist und ihre IPC antwortet (höchstens 90 s + 30 s).
@@ -430,9 +439,10 @@ def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=
             except subprocess.TimeoutExpired:
                 say("   WARNUNG: systemd-run endet nicht – bitte prüfen: systemctl --user status %s" % unit)
     release_rundir(rundir)
-    result = {"base": base, "seconds": round(time.time() - started), "hung": hung, "limit": limit}
+    result = {"base": base, "seconds": round(time.time() - started), "hung": hung, "limit": limit, "compositor": compositor}
     result["probe"] = probe_report(home) if probe else []
-    for name in ("shell.log", "ipc.log", "stubs.log", "dienst.exit", "compositor.exit", "abbruch", "scope.log", "vorbereitung.log", "bild.log"):
+    for name in ("shell.log", "ipc.log", "stubs.log", "dienst.exit", "compositor.exit", "abbruch", "scope.log", "vorbereitung.log", "bild.log",
+                 "umgebung.log"):
         path = os.path.join(base, name)
         result[name] = open(path, errors="replace").read() if os.path.exists(path) else ""
     if not keep:
@@ -526,7 +536,25 @@ def health(result):
         problems.append("Ablauf nicht zu Ende gekommen")
     if re.search(r"(Segmentation fault|SIGSEGV|core dumped|Aborted)", log):
         problems.append("Absturz im Log")
+    if result.get("compositor") == "hyprland":
+        # Ohne Hyprlands Sockets läuft die Shell zwar, aber ohne Arbeitsflächen, Fenster und Ereignisse –
+        # der Lauf prüfte dann die Hyprland-Anbindung gar nicht (so geschehen mit einem zu langen $ALPE_LP_TMP).
+        umgebung = result.get("umgebung.log", "")
+        if "HYPRLAND_INSTANCE_SIGNATURE=\n" in umgebung or "HYPRLAND_INSTANCE_SIGNATURE=" not in umgebung:
+            problems.append("HYPRLAND_INSTANCE_SIGNATURE kommt bei der Shell nicht an")
+        if umgebung.count(" da\n") != 2:
+            problems.append("Hyprlands Sockets fehlen beim Start der Shell: " + ", ".join(l for l in umgebung.splitlines() if "fehlt" in l))
+        if "ServerNotFoundError" in log or "Unable to connect to hyprland event socket" in log:
+            problems.append("Shell erreicht die Hyprland-IPC nicht (ServerNotFoundError)")
     return problems
+
+
+HYPR_SOCKET_REST = len("/lp-r/hypr/") + 63 + len("/.socket2.sock")   # Signatur: 40 Zeichen Hash, Zeit, Zufallszahl
+
+
+def socket_path_too_long(root):
+    """Hyprland legt .socket2.sock unter <root>/lp-r/hypr/<Signatur>/ an; über 107 Zeichen gibt es keine IPC."""
+    return len(os.path.abspath(root)) + HYPR_SOCKET_REST > 107
 
 
 def main(argv):
@@ -556,6 +584,11 @@ def main(argv):
         if not shutil.which(need):
             say("übersprungen: %s nicht installiert" % need)
             return 0
+    root = os.environ.get("ALPE_LP_TMP") or tempfile.gettempdir()
+    if compositor == "hyprland" and socket_path_too_long(root):
+        say("FEHLER: %s ist für Hyprlands Socket zu lang (%d Zeichen, höchstens %d) – kürzeres $ALPE_LP_TMP wählen"
+            % (root, len(os.path.abspath(root)), 107 - HYPR_SOCKET_REST))
+        return 2
     running = active_scopes()
     if running:
         say("FEHLER: Es läuft schon eine Ladeprüfung: %s" % ", ".join(running))
