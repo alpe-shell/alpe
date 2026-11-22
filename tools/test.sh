@@ -66,6 +66,11 @@ else
     echo "PySide6 fehlt – übersprungen (pip install PySide6)"
 fi
 
+step "Plugin claudeCodeUsage (eigene Tests; Temp-HOME, curl als Attrappe)"
+for t in plugins/claudeCodeUsage/tests/test-*.sh; do
+    run bash "$t" >/dev/null
+done
+
 step "Hintergrunddienst (go test)"
 if [ -n "${ALPE_SKIP_GO:-}" ]; then
     echo "ALPE_SKIP_GO gesetzt – übersprungen"

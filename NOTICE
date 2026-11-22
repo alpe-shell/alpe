@@ -85,3 +85,8 @@ Teile Dritter in Alpe
   Alfa Slab One, JetBrains Mono       SIL Open Font License 1.1 (OFL-Dateien bei den Schriften)
   Wetterdaten und Radarbilder         MeteoSchweiz Open Data, Quellenangabe «MeteoSchweiz»
                                       in der Oberfläche
+
+Plugin claudeCodeUsage (plugins/claudeCodeUsage/)
+  Herkunft:  https://github.com/titeya/dms-claudecode, Version 1.3.6, angepasst für Alpe
+             (Widget-Typen, plugin.json, README; Änderungen im Kopf der Dateien vermerkt)
+  Lizenz:    MIT, Copyright (c) 2026 Nicolas Bellamy (plugins/claudeCodeUsage/LICENSE)
