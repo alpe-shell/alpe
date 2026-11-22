@@ -226,7 +226,9 @@ Abweichungen:
    Fähigkeit am Bus, `Warten` endet mit dem Context). Den ganzen Start prüft die Gegenprobe der
    Ladeprüfung – unter beiden Compositors bestanden (Hyprland 319 s, KWin 263 s; die Oberfläche meldet
    `Connected`, der Dienst den Ausfall genau einmal).
-4. **Kein Eintrag in `CHANGELOG.md`:** Dort gibt es noch keinen Abschnitt 1.1; der Hinweis kommt mit G1.
+4. **Kein Eintrag in `CHANGELOG.md`:** Dort gibt es noch keinen Abschnitt 1.1; der Eintrag kommt mit G1
+   (Plan 0.8 Nr. 85, Tabelle der Schritte bei G1): «Dienst hing bei stummem Systembus, Oberfläche verband
+   sich nie».
 5. **Zusätzlich:** `Halter.Erstversuch` (Ergebnis des ersten Versuchs abwarten, höchstens 3 s) für
    Manager, die auch ohne Systembus etwas leisten; Test-Helfer `internal/systembus/bustest` (eigener
    stummer oder echter Bus im Temp-Ordner, nie der Systembus des Rechners).
@@ -242,6 +244,11 @@ kein Patch der Bibliothek. (2) 3 s für den Aufbau, erneute Versuche ab 2 s verd
 Ende. (3) Gegenprobe mit Schalter für einen stummen Bus in der Ladeprüfung: einmal nach der Behebung
 unter beiden Compositors, danach nur bei Bedarf, nicht bei jedem Halt. (4) Abriss der Verbindung im
 Betrieb bleibt draussen und ist offener Fall.
+
+**Geändert am 22.11.2026 (Plan 0.8 Nr. 85), ersetzt (3):** Die Gegenprobe läuft bei jedem Halt einmal
+mit, unter einem Compositor. Grund: Der Go-Test prüft nur die Bausteine (5a Punkt 3); eine Rückkehr des
+Fehlers in der Startreihenfolge bliebe sonst unbemerkt. Für G1 vermerkt: Changelog-Eintrag 1.1 zur
+Behebung «Dienst hing bei stummem Systembus, Oberfläche verband sich nie» (5a Punkt 4).
 
 1. **gonetworkmanager:** Reicht «NetworkManager-Backend erst nach bereit» mit dem beschriebenen Rest
    (Vorschlag), oder soll die Bibliothek in diesem Schritt gepatcht/ersetzt werden, damit wörtlich kein

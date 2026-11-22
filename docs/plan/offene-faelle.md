@@ -605,8 +605,20 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   `docs/plan/dienst-systembus.md` (freigegeben, 0.8 Nr. 84), **behoben am 22.11.2026**: Paket
   `core/internal/systembus`, eine Verbindung für alle Manager, erneute Versuche im Hintergrund,
   Ruhezustands-Überwachung von Gamma nebenher. Gegenprobe mit stummem Ersatz-Systembus
-  (`ALPE_LP_STUMMER_BUS=1`) unter Hyprland und KWin bestanden. Die Grundlinien werden danach neu
-  gemessen (0.8 Nr. 80).
+  (`ALPE_LP_STUMMER_BUS=1`) unter Hyprland und KWin bestanden; sie läuft seither bei jedem Halt
+  einmal mit, unter einem Compositor (0.8 Nr. 85). Die Grundlinien sind danach neu gemessen
+  (`9685ebe`, 0.8 Nr. 80). **Für G1:** Changelog-Eintrag 1.1 zur Behebung «Dienst hing bei stummem
+  Systembus, Oberfläche verband sich nie».
+- **Sporadische Meldungen unter Hyprland aus der Neumessung (22.11.2026), nicht behoben:** je in
+  1 von 3 Läufen (a) `NotepadStorageService`: «Tab file does not exist …/untitled-<ID>.txt» samt
+  der zugehörigen `FileView`-Meldung (Variante «gesperrt»; der erste Reiter wird gelesen, bevor
+  seine Datei angelegt ist), (b) `DeferredAction.qml`: «Property 'flush' of object … is not a
+  function» (Variante «offen»; vermutlich feuert der Timer, während das Objekt abgebaut wird).
+  Beide Dateien sind seit `ba4ddbc` unverändert; in den sechs Gegenläufen auf `ba4ddbc` unter
+  Hyprland trat keine auf, unter KWin in zwölf Läufen keine. Sechs Gegenläufe schliessen bei
+  dieser Häufigkeit nicht aus, dass die Meldungen schon vorher auftraten – die Zuordnung «nicht
+  aus Phase A» stützt sich auf den unveränderten Code, nicht auf die Messung. In den Grundlinien
+  als `SPORADISCH 1/3` geführt. Ursache der beiden Wettläufe nicht untersucht.
   **Am Mac prüfen (zur Anleitung für den Stand nach D7):** Nachtlicht ein- und ausschalten und über
   die Zeitsteuerung laufen lassen; Deckel zu und wieder auf – die Farbtemperatur muss nach dem
   Aufwachen stimmen (die Überwachung des Ruhezustands hängt jetzt erst Augenblicke nach dem Start

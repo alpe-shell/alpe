@@ -88,12 +88,15 @@ Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `sh
 andere Zahl aus früheren Notizen gilt nicht). Bei jedem Halt vergleichen und jede neue Meldung einzeln
 einordnen (beheben oder mit Begründung in die Grundlinie; Plan 0.8 Nr. 63).
 
-Dienst und Systembus (Plan 0.8 Nr. 82, 84; `docs/plan/dienst-systembus.md`): Im Dienst ruft nichts
+Dienst und Systembus (Plan 0.8 Nr. 82, 84, 85; `docs/plan/dienst-systembus.md`): Im Dienst ruft nichts
 `dbus.SystemBus()` oder `dbus.ConnectSystemBus()` auf (`tests/test_werte.py` prüft das). Die eine
 Verbindung baut `core/internal/systembus` mit Zeitgrenze auf; Manager bekommen sie hereingereicht und
 schliessen sie nie. **Grundsatz: keine Sperre über einen Bus- oder Netzaufruf hinweg halten.**
-Die Gegenprobe der Ladeprüfung mit stummem Ersatz-Systembus (`ALPE_LP_STUMMER_BUS=1`) gehört nicht zur
-Haltprüfung; sie läuft nur bei Bedarf (Änderungen am Start des Dienstes oder an `internal/systembus`).
+Die Gegenprobe der Ladeprüfung mit stummem Ersatz-Systembus (`ALPE_LP_STUMMER_BUS=1`) **gehört zur
+Haltprüfung: bei jedem Halt einmal, unter einem Compositor** (Variante «gesperrt» genügt). Der Go-Test
+prüft nur die Bausteine; kehrt der Fehler in der Startreihenfolge des Dienstes zurück, zeigt ihn nur
+dieser Lauf. Er besteht, wenn die Oberfläche `Connected` meldet und der Dienst den Ausfall genau einmal
+meldet; mit der Grundlinie wird er nicht verglichen.
 
 Ebenfalls am Halt: `go vet ./...` in `core/` ohne Meldung. Attrappen unter `core/internal/mocks`
 nie von Hand ändern, sondern mit `make -C core mocks` neu erzeugen: genau **mockery v3.9.1**
