@@ -2,7 +2,7 @@
 # Design, vereint über 3 Läufe. Neu schreiben: ladepruefung.py hyprland --grundlinie
 ERROR qml: [KeybindsService:<Z>] Failed to parse binds: SyntaxError: JSON.parse: Parse error
 ERROR quickshell.service.pipewire.loop: Failed to connect pipewire context. Errno: 112
-WARN qml: [CompositorService:<Z>] failed to update DMS window rule dms-floating-windows 1 {"success":false,"error":"hyprland.lua not found in <TMP>/h/.config/hypr; run `dms setup` to migrate before editing window rules: stat <TMP>/h/.config/hypr/hyprland.lua: no such file or directory"}
+WARN qml: [CompositorService:<Z>] failed to update the shell window rule dms-floating-windows 1 {"success":false,"error":"hyprland.lua not found in <TMP>/h/.config/hypr; create it before editing window rules: stat <TMP>/h/.config/hypr/hyprland.lua: no such file or directory"}
 WARN qml: [DSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
 WARN qml: [KeybindsService:<Z>] Load process failed with code: 1
 WARN qml: [Proc:<Z>] runCommand callback error for command: ["sh","-c","for b in /sys/class/power_supply/*; do [ \"$(cat $b/type 2>/dev/null)\" = Battery ] && [ -f $b/charge_control_end_threshold ] && { echo \"charge=$(cat $b/charge_control_end_threshold)\"; break; }; done; [ -f /etc/alpe/ladegrenze ] && echo persist=1; for k in HandleLidSwitch HandleLidSwitchExternalPower HandleLidSwitchDocked; do printf \"%s=\" $k; busctl --json=short get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager $k 2>/dev/null || printf \"{}\"; echo; done"] Error: TypeError: Cannot read property 'lid' of null
