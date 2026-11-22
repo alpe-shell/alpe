@@ -10,8 +10,12 @@ einer Grundlinie vergleichen.
               --plugins ORDNER[,ORDNER…]  weitere Plugins mitladen (Kopien fremder Plugins, Plan 0.8 Nr. 29)
               --probe-zeichen             Logo-Modus "alpe" im Starter-Knopf, Material-Vorlage «Alpe» als
                                           Hintergrund, Session aus 1.0 (Plan 0.8 Nr. 41, 45)
-              --bild DATEI                Bildschirmfoto (PNG) des geladenen Schreibtischs, bevor etwas geöffnet
-                                          wird: mit grim, sonst mit «alpe-dienst screenshot» (Haltprüfung)
+              --offen                     Variante «offen»: ohne Sperre beim Start, Hintergrund leer und damit
+                                          Material-Vorlage sichtbar; eigene Grundlinie grundlinie-<c>-offen.txt.
+                                          Ohne --offen: Variante «gesperrt». Beide bei jedem Halt (0.8 Nr. 70)
+              --bild DATEI                nur mit --offen: Bildschirmfoto (PNG) des geladenen Schreibtischs,
+                                          bevor etwas geöffnet wird, mit «alpe-dienst screenshot full» (0.8 Nr. 71)
+              --grundlinie-datei DATEI    statt der eingecheckten Grundlinie (Messung auf einem anderen Stand)
 
 Jeder Lauf läuft in einem eigenen systemd-Scope (alpe-ladepruefung-<zeit>-<n>.scope). Aufgeräumt wird
 nur über diesen Scope (systemctl --user stop …), nie über Prozessnamen: Die echte Shell läuft unter
@@ -91,13 +95,13 @@ for name in sorted(os.listdir(plugin_dir)):
 save(settings_path, plugins)
 
 if entsperrt:
-    # Für das Bildschirmfoto (--bild): Das ausgelieferte Design sperrt beim Start (lockAtStartup); die
-    # Läufe ohne --bild bleiben so, damit sie mit der Grundlinie vergleichbar sind.
+    # Variante «offen» (--offen, Plan 0.8 Nr. 70): Das ausgelieferte Design sperrt beim Start
+    # (lockAtStartup) – das ist die Variante «gesperrt». Hier ohne Sperre.
     path = os.path.join(folder, "settings.json")
     settings = load(path)
     settings["lockAtStartup"] = False
     save(path, settings)
-    print("Bild: lockAtStartup für diesen Lauf ausgeschaltet")
+    print("Offen: lockAtStartup ausgeschaltet")
 
 if probe:
     # Starter-Knopf mit dem Alpe-Zeichen (Logo-Modus "alpe") in jeder Leiste, in der er steht.
@@ -129,6 +133,18 @@ if probe:
             layer.setdefault("fill", "primaryContainer")
     save(os.path.join(state, "alpe", "session.json"), session)
     print("Probe: Session aus 1.0 (Version %s), Vorlage %s" % (session.get("configVersion"), json.dumps(session.get("materialWallpapers"))))
+
+if entsperrt:
+    # Variante «offen»: kein Bild und keine Farbe als Hintergrund – nur dann zeichnet die Shell die
+    # Material-Vorlage, und die Einstellungsseite zeigt die Zeile «Material».
+    path = os.path.join(state, "alpe", "session.json")
+    session = load(path)
+    session["wallpaperPath"] = ""
+    for key in ("monitorWallpapers", "monitorWallpapersLight", "monitorWallpapersDark"):
+        if key in session:
+            session[key] = {}
+    save(path, session)
+    print("Offen: Hintergrund leer, Material-Vorlage %s" % json.dumps(session.get("materialWallpapers")))
 '''
 
 STUB = '#!/bin/sh\necho "{name} $*" >> "{log}"\nexit 1\n'
@@ -191,16 +207,12 @@ def session_script(base, dienst, bild=None):
     """Startet den Dienst mit der Oberfläche, öffnet Popouts und Einstellungsseiten, beendet den Dienst."""
     calls = []
     if bild:
-        # Bildschirmfoto des geladenen Schreibtischs, bevor etwas geöffnet wird (--bild): mit grim, wenn es
-        # installiert ist, sonst mit dem Bildschirmfoto des Dienstes. Welches Werkzeug lief, steht in bild.log.
-        calls.append("""if command -v grim >/dev/null 2>&1; then
-    grim {bild} >> {base}/bild.log 2>&1 && echo "grim: {bild}" >> {base}/bild.log
-else
-    mkdir -p {base}/bild
-    {dienst} screenshot full --no-clipboard --no-notify -d {base}/bild -f png >> {base}/bild.log 2>&1
-    f=$(ls {base}/bild/*.png 2>/dev/null | head -1)
-    [ -n "$f" ] && cp "$f" {bild} && echo "alpe-dienst screenshot (grim fehlt): {bild}" >> {base}/bild.log
-fi
+        # Bildschirmfoto des geladenen Schreibtischs, bevor etwas geöffnet wird (--bild): fester Weg ist das
+        # Bildschirmfoto des Dienstes (Plan 0.8 Nr. 71; grim wird nicht benutzt).
+        calls.append("""mkdir -p {base}/bild
+{dienst} screenshot full --no-clipboard --no-notify -d {base}/bild -f png >> {base}/bild.log 2>&1
+f=$(ls {base}/bild/*.png 2>/dev/null | head -1)
+[ -n "$f" ] && cp "$f" {bild} && echo "alpe-dienst screenshot full: {bild}" >> {base}/bild.log
 sleep 1""".format(bild=q(bild), base=q(base), dienst=q(dienst)))
     for target, func, *rest in POPOUTS:
         args = " ".join(q(a) for a in rest)
@@ -358,7 +370,7 @@ def probe_report(home):
     return lines
 
 
-def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=None):
+def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=None, offen=False):
     root = os.environ.get("ALPE_LP_TMP") or tempfile.gettempdir()
     base = tempfile.mkdtemp(prefix="alpe-lp-", dir=root)
     home, stubs = os.path.join(base, "h"), os.path.join(base, "s")
@@ -388,7 +400,7 @@ def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=
         hyprland_files(base, session)
     runner = os.path.join(base, "lauf.sh")
     with open(runner, "w") as handle:
-        handle.write(runner_script(base, compositor, sock, session, extra_plugins, probe, bool(bild)))
+        handle.write(runner_script(base, compositor, sock, session, extra_plugins, probe, offen))
     os.chmod(runner, 0o755)
     with open(os.path.join(base, "vorbereitung.py"), "w", encoding="utf-8") as handle:
         handle.write(VORBEREITUNG)
@@ -500,7 +512,11 @@ def main(argv):
         if not os.path.isfile(os.path.join(folder, "plugin.json")):
             say("FEHLER: %s ist kein Plugin-Ordner (plugin.json fehlt)" % folder)
             return 2
+    offen = "--offen" in args
     bild = os.path.abspath(args[args.index("--bild") + 1]) if "--bild" in args else None
+    if bild and not offen:
+        say("FEHLER: --bild gehört zur Variante «offen» (--offen); hinter der Sperre gäbe es nur den Sperrbildschirm")
+        return 2
     if write and (probe or extra_plugins or bild):
         say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins, --probe-zeichen und --bild")
         return 2
@@ -512,7 +528,9 @@ def main(argv):
     if running:
         say("FEHLER: Es läuft schon eine Ladeprüfung: %s" % ", ".join(running))
         return 2
-    baseline_path = os.path.join(HERE, "grundlinie-%s.txt" % compositor)
+    baseline_path = os.path.join(HERE, "grundlinie-%s%s.txt" % (compositor, "-offen" if offen else ""))
+    if "--grundlinie-datei" in args:  # Messung auf einem anderen Stand (Temp-Worktree) gegen eine eigene Datei
+        baseline_path = os.path.abspath(args[args.index("--grundlinie-datei") + 1])
     if "--dienst" in args:
         dienst = os.path.abspath(args[args.index("--dienst") + 1])
         tmpbin = None
@@ -527,13 +545,13 @@ def main(argv):
         for n in range(runs):
             unit = "%s%s-%s-%d.scope" % (UNIT_PREFIX, stamp, compositor, n + 1)
             say("== Lauf %d/%d unter %s (%s)" % (n + 1, runs, compositor, unit))
-            result = one_run(compositor, dienst, keep, unit, extra_plugins, probe, bild)
+            result = one_run(compositor, dienst, keep, unit, extra_plugins, probe, bild, offen)
             say("   %d s, Compositor-Exit %s, Dienst %s" % (result["seconds"], result["compositor.exit"].strip() or "?",
                                                          result["dienst.exit"].strip() or "?"))
             if keep:
                 say("   behalten: %s" % result["base"])
             for line in result["vorbereitung.log"].splitlines():
-                if line.startswith(("Plugin eingeschaltet", "Plugin kopiert", "Probe:")):
+                if line.startswith(("Plugin eingeschaltet", "Plugin kopiert", "Probe:", "Offen:")):
                     say("   " + line)
             for line in result["probe"]:
                 say("   Probe nach dem Lauf – " + line)

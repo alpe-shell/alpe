@@ -47,8 +47,9 @@ try:
     session_1_0 = os.path.join(REPO, "tests", "data", "einstellungen-1.0", "session.json")
     env = dict(os.environ, XDG_CONFIG_HOME=config, XDG_STATE_HOME=state)
 
-    def run(probe):
-        return subprocess.run([sys.executable, script, "-", fremd, "1" if probe else "0", session_1_0], env=env, capture_output=True, text=True)
+    def run(probe, offen=False):
+        return subprocess.run([sys.executable, script, "-", fremd, "1" if probe else "0", session_1_0, "1" if offen else "0"],
+                              env=env, capture_output=True, text=True)
 
     def read(*parts):
         with open(os.path.join(*parts), encoding="utf-8") as handle:
@@ -79,12 +80,33 @@ try:
     check(ebene["shape"] == "dankLogo" and all(k in ebene for k in ("x", "y", "size", "fill")), "Probe: eigenes Profil vollständig, Form noch die des Ursprungs")
     check(read(session_1_0)["wallpaperPath"] == "", "die Testdaten selbst bleiben unverändert")
 
-    # Auswertung nach dem Lauf: erkennt eine umgezogene und eine nicht umgezogene Session.
+    # Stand der Probe für die Auswertung weiter unten festhalten, bevor die Varianten die Dateien überschreiben.
     home = os.path.join(tmp, "home")
     os.makedirs(os.path.join(home, ".local", "state", "alpe"))
     os.makedirs(os.path.join(home, ".config", "alpe"))
     shutil.copy(os.path.join(config, "alpe", "settings.json"), os.path.join(home, ".config", "alpe", "settings.json"))
     shutil.copy(os.path.join(state, "alpe", "session.json"), os.path.join(home, ".local", "state", "alpe", "session.json"))
+
+    # Variante «offen» (Plan 0.8 Nr. 70): ohne Sperre beim Start, Hintergrund leer. «gesperrt» lässt beides stehen.
+    with open(os.path.join(config, "alpe", "settings.json"), "w") as handle:
+        json.dump({"lockAtStartup": True, "barConfigs": []}, handle)
+    with open(os.path.join(state, "alpe", "session.json"), "w") as handle:
+        json.dump({"wallpaperPath": "#101010", "monitorWallpapers": {"DP-1": "/bild.png"},
+                   "materialWallpapers": {"": {"shared": {"preset": "alpe"}}}}, handle)
+    out = run(False)
+    check(out.returncode == 0 and read(config, "alpe", "settings.json")["lockAtStartup"] is True
+          and read(state, "alpe", "session.json")["wallpaperPath"] == "#101010", "gesperrt: Sperre beim Start und Hintergrund bleiben")
+    out = run(False, offen=True)
+    session = read(state, "alpe", "session.json")
+    check(out.returncode == 0 and read(config, "alpe", "settings.json")["lockAtStartup"] is False, "offen: lockAtStartup ausgeschaltet")
+    check(session["wallpaperPath"] == "" and session["monitorWallpapers"] == {} and session["materialWallpapers"][""]["shared"]["preset"] == "alpe",
+          "offen: kein Bild und keine Farbe, die Material-Vorlage bleibt")
+    skript = lp.session_script("/b", "/d", "/b/x.png")
+    check("grim" not in skript and "screenshot full" in skript, "Bild: fester Weg alpe-dienst screenshot full, ohne grim (0.8 Nr. 71)")
+    aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)
+    check(aufruf.returncode == 2 and "--offen" in aufruf.stdout + aufruf.stderr, "--bild ohne --offen wird abgelehnt")
+
+    # Auswertung nach dem Lauf: erkennt eine umgezogene und eine nicht umgezogene Session.
     check(any(line.startswith("FEHLER") for line in lp.probe_report(home)), "Auswertung meldet eine Session, die nicht umgezogen ist")
     migrated = {"configVersion": 8, "materialWallpapers": {"": {"shared": {"preset": "alpe"}}},
                 "materialWallpaperProfiles": {"eigen": {"name": "dank", "layers": [{"shape": "alpeLogo"}]}}}
