@@ -6,10 +6,10 @@
     "%1 (+%2 more)": "%1 (+%2 weitere)"
   },
   "%1 DMS bind may be overridden by config binds that come after the include.": {
-    "%1 DMS bind may be overridden by config binds that come after the include.": "%1 DMS-Bindung wird möglicherweise durch Konfigurationsbindungen außer Kraft gesetzt, die nach dem Include stehen."
+    "%1 DMS bind may be overridden by config binds that come after the include.": "%1 DMS-Bindung wird möglicherweise durch Konfigurationsbindungen ausser Kraft gesetzt, die nach dem Include stehen."
   },
   "%1 DMS binds may be overridden by config binds that come after the include.": {
-    "%1 DMS binds may be overridden by config binds that come after the include.": "%1 DMS-Bindungen werden möglicherweise durch Konfigurationsbindungen außer Kraft gesetzt, die nach dem Include stehen."
+    "%1 DMS binds may be overridden by config binds that come after the include.": "%1 DMS-Bindungen werden möglicherweise durch Konfigurationsbindungen ausser Kraft gesetzt, die nach dem Include stehen."
   },
   "%1 Flatpak": {
     "%1 Flatpak": "%1 Flatpak"
@@ -291,7 +291,7 @@
     "50 uses Material shapes. Lower values reduce rounding; higher values increase it.": "50 verwendet Material-Formen. Niedrigere Werte reduzieren die Abrundung; höhere Werte erhöhen diese."
   },
   "A custom seed color overrides this": {
-    "A custom seed color overrides this": "Eine benutzerdefinierte Startwert-Farbe setzt dies außer Kraft"
+    "A custom seed color overrides this": "Eine benutzerdefinierte Startwert-Farbe setzt dies ausser Kraft"
   },
   "A floating companion that works alongside any bar layout": {
     "A floating companion that works alongside any bar layout": "Ein schwebendes Element, das zusammen mit jedem Leistenlayout funktioniert"
@@ -327,7 +327,7 @@
     "About": "Über"
   },
   "Absolute or ~/ path to a .xkb keymap file. Overrides layouts/variants above.": {
-    "Absolute or ~/ path to a .xkb keymap file. Overrides layouts/variants above.": "Absoluter oder ~/ Pfad zu einer .xkb-Keymap-Datei. Setzt die oben genannten Layouts/Varianten außer Kraft."
+    "Absolute or ~/ path to a .xkb keymap file. Overrides layouts/variants above.": "Absoluter oder ~/ Pfad zu einer .xkb-Keymap-Datei. Setzt die oben genannten Layouts/Varianten ausser Kraft."
   },
   "Acceleration profile": {
     "Acceleration profile": "Beschleunigungsprofil"
@@ -702,7 +702,7 @@
     "Apps and commands started with the session": "Apps und Befehle, die mit der Sitzung gestartet werden"
   },
   "Apps are ordered by usage frequency, then last used, then alphabetically.": {
-    "Apps are ordered by usage frequency, then last used, then alphabetically.": "Apps werden nach Nutzungshäufigkeit, dann nach letzter Nutzung und schließlich alphabetisch geordnet."
+    "Apps are ordered by usage frequency, then last used, then alphabetically.": "Apps werden nach Nutzungshäufigkeit, dann nach letzter Nutzung und schliesslich alphabetisch geordnet."
   },
   "Apps dock": {
     "Apps dock": "Apps-Dock"
@@ -975,7 +975,7 @@
     "Bar inset padding": "Innerer Leistenabstand"
   },
   "Bar size": {
-    "Bar size": "Leistengröße"
+    "Bar size": "Leistengrösse"
   },
   "Bar visibility": {
     "Bar visibility": "Leistensichtbarkeit"
@@ -1008,7 +1008,7 @@
     "Battery has charged to your set limit of %1%": "Akku ist bis zu dem von Ihnen festgelegten Limit von %1% aufgeladen"
   },
   "Battery is at %1% - Connect charger immediately!": {
-    "Battery is at %1% - Connect charger immediately!": "Akkustand beträgt %1% - Schließen Sie das Ladegerät sofort an!"
+    "Battery is at %1% - Connect charger immediately!": "Akkustand beträgt %1% - Schliessen Sie das Ladegerät sofort an!"
   },
   "Battery is at %1% - Consider charging soon": {
     "Battery is at %1% - Consider charging soon": "Akkustand beträgt %1% - Denken Sie darüber nach, bald aufzuladen"
@@ -1095,7 +1095,7 @@
     "Body click runs default action": "Klick auf den Körper führt Standardaktion aus"
   },
   "Body font size": {
-    "Body font size": "Schriftgröße des Textkörpers"
+    "Body font size": "Schriftgrösse des Textkörpers"
   },
   "Boot": {
     "Boot": "Boot"
@@ -1542,13 +1542,13 @@
     "Clocks, monitors, plugins": "Uhren, Monitore, Plugins"
   },
   "Close Active Window": {
-    "Close Active Window": "Aktives Fenster schließen"
+    "Close Active Window": "Aktives Fenster schliessen"
   },
   "Close All Windows": {
-    "Close All Windows": "Alle Fenster schließen"
+    "Close All Windows": "Alle Fenster schliessen"
   },
   "Close Window": {
-    "Close Window": "Fenster schließen"
+    "Close Window": "Fenster schliessen"
   },
   "Codec switched successfully": {
     "Codec switched successfully": "Codec erfolgreich gewechselt"
@@ -1584,7 +1584,7 @@
     "Color gamut": "Farbspektrum (Gamut)"
   },
   "Color override": {
-    "Color override": "Farb-Außerkraftsetzung"
+    "Color override": "Farb-Ausserkraftsetzung"
   },
   "Color previews unavailable": {
     "Color previews unavailable": "Farbvorschauen nicht verfügbar"
@@ -1620,7 +1620,7 @@
     "Comma-separated list of layout names. Leave empty to use the system keyboard settings.": "Durch Komma getrennte Liste von Layoutnamen. Lassen Sie das Feld leer, um die Tastatureinstellungen des Systems zu verwenden."
   },
   "Comma-separated list of session names to hide. Wrap in slashes for regex (e.g., /^_.*/).": {
-    "Comma-separated list of session names to hide. Wrap in slashes for regex (e.g., /^_.*/).": "Durch Komma getrennte Liste der auszublendenden Sitzungsnamen. Für Regex (reguläre Ausdrücke) mit Schrägstrichen umschließen (bspw. /^_.*/)."
+    "Comma-separated list of session names to hide. Wrap in slashes for regex (e.g., /^_.*/).": "Durch Komma getrennte Liste der auszublendenden Sitzungsnamen. Für Regex (reguläre Ausdrücke) mit Schrägstrichen umschliessen (bspw. /^_.*/)."
   },
   "Command": {
     "Command": "Befehl"
@@ -2013,7 +2013,7 @@
     "DMS chooser": "DMS-Auswahl"
   },
   "DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": {
-    "DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": "DMS ist eine moderne, hochgradig anpassbare Desktop-Shell, die direkt nach der Installation großartig aussieht, ohne dabei die Freiheit einzuschränken, sie ganz nach Ihren Wünschen zu gestalten.<br/><br/>Entwickelt mit %1 und %2, vereint sie Panels, Widgets, Systemsteuerungen und mehr zu einem stimmigen Desktop-Erlebnis."
+    "DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": "DMS ist eine moderne, hochgradig anpassbare Desktop-Shell, die direkt nach der Installation grossartig aussieht, ohne dabei die Freiheit einzuschränken, sie ganz nach Ihren Wünschen zu gestalten.<br/><br/>Entwickelt mit %1 und %2, vereint sie Panels, Widgets, Systemsteuerungen und mehr zu einem stimmigen Desktop-Erlebnis."
   },
   "DMS out of date": {
     "DMS out of date": "DMS ist veraltet"
@@ -2127,7 +2127,7 @@
     "Default apps": "Standard-Apps"
   },
   "Default selected action": {
-    "Default selected action": "Standardmäßig ausgewählte Aktion"
+    "Default selected action": "Standardmässig ausgewählte Aktion"
   },
   "Default task list": {
     "Default task list": "Standard-Taskliste"
@@ -2502,7 +2502,7 @@
     "Drop here": "Hier ablegen"
   },
   "Drop your override for %1 so the DMS default action re-applies?": {
-    "Drop your override for %1 so the DMS default action re-applies?": "Ihre Außerkraftsetzung für %1 aufheben, damit die DMS-Standardaktion wieder angewendet wird?"
+    "Drop your override for %1 so the DMS default action re-applies?": "Ihre Ausserkraftsetzung für %1 aufheben, damit die DMS-Standardaktion wieder angewendet wird?"
   },
   "Drops": {
     "Drops": "Tropfen"
@@ -2736,7 +2736,7 @@
     "Ethernet": "Ethernet"
   },
   "Evenly space tabs": {
-    "Evenly space tabs": "Tabs gleichmäßig verteilen"
+    "Evenly space tabs": "Tabs gleichmässig verteilen"
   },
   "Event title": {
     "Event title": "Ereignistitel"
@@ -2775,7 +2775,7 @@
     "Expand": "Erweitern"
   },
   "Expand by default": {
-    "Expand by default": "Standardmäßig erweitern"
+    "Expand by default": "Standardmässig erweitern"
   },
   "Expansion mode": {
     "Expansion mode": "Erweiterungsmodus"
@@ -3153,7 +3153,7 @@
     "Fingerprint reader detected, but no prints are enrolled yet. You can enable this now and enroll later.": "Fingerabdruckleser erkannt, aber es sind noch keine Abdrücke registriert. Sie können dies jetzt aktivieren und später registrieren."
   },
   "Finish": {
-    "Finish": "Abschließen"
+    "Finish": "Abschliessen"
   },
   "Fires even when an app inhibits shortcuts": {
     "Fires even when an app inhibits shortcuts": "Wird auch ausgelöst, wenn eine App Shortcuts unterbindet"
@@ -3306,7 +3306,7 @@
     "Font Family": "Schriftfamilie"
   },
   "Font Size": {
-    "Font Size": "Schriftgröße"
+    "Font Size": "Schriftgrösse"
   },
   "Font scale": {
     "Font scale": "Schriftskalierung"
@@ -3390,7 +3390,7 @@
     "Frame xray": "Frame-Xray"
   },
   "Frees the launcher when closed and rebuilds it on open": {
-    "Frees the launcher when closed and rebuilds it on open": "Gibt den Launcher beim Schließen frei und baut ihn beim Öffnen neu auf"
+    "Frees the launcher when closed and rebuilds it on open": "Gibt den Launcher beim Schliessen frei und baut ihn beim Öffnen neu auf"
   },
   "Freezing Drizzle": {
     "Freezing Drizzle": "Gefrierender Nieselregen"
@@ -3495,10 +3495,10 @@
     "Gap between the bar and its popouts follows edge spacing": "Lücke zwischen der Leiste und ihren Popouts folgt dem Randabstand"
   },
   "Gap between the bar ends and the outermost widgets": {
-    "Gap between the bar ends and the outermost widgets": "Lücke zwischen den Leistenenden und den äußersten Widgets"
+    "Gap between the bar ends and the outermost widgets": "Lücke zwischen den Leistenenden und den äussersten Widgets"
   },
   "Gap size": {
-    "Gap size": "Lückengröße"
+    "Gap size": "Lückengrösse"
   },
   "Gaps": {
     "Gaps": "Lücken"
@@ -3510,7 +3510,7 @@
     "Garden": "Garten"
   },
   "Gaussian": {
-    "Gaussian": "Gauß"
+    "Gaussian": "Gauss"
   },
   "General": {
     "General": "Allgemein"
@@ -3522,7 +3522,7 @@
     "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow DMS colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.": "Generieren Sie Baseline-Konfigurationen für GTK3/4, QT5/QT6 oder qtengine, um den DMS-Farben zu folgen (nur qt6ct benötigt qt6ct-kde). Nur einmal erforderlich.<br /><br />Es wird empfohlen, %1 zu konfigurieren, bevor GTK-Themes angewendet werden."
   },
   "Generate override": {
-    "Generate override": "Außerkraftsetzung generieren"
+    "Generate override": "Ausserkraftsetzung generieren"
   },
   "Generic": {
     "Generic": "Generisch"
@@ -3603,7 +3603,7 @@
     "Groups": "Gruppen"
   },
   "Grows or shrinks the space windows keep clear": {
-    "Grows or shrinks the space windows keep clear": "Vergrößert oder verkleinert den Raum, den Fenster freihalten"
+    "Grows or shrinks the space windows keep clear": "Vergrössert oder verkleinert den Raum, den Fenster freihalten"
   },
   "H": {
     "H": "H"
@@ -3759,7 +3759,7 @@
     "History cleared. %1 pinned entries kept.": "Historie gelöscht. %1 angeheftete Einträge beibehalten."
   },
   "History size, retention, paste behavior": {
-    "History size, retention, paste behavior": "Historie-Größe, Zurückbehaltung, Einfügeverhalten"
+    "History size, retention, paste behavior": "Historie-Grösse, Zurückbehaltung, Einfügeverhalten"
   },
   "Hold Ctrl, Alt or Super and press a key. Esc cancels.": {
     "Hold Ctrl, Alt or Super and press a key. Esc cancels.": "Halten Sie Strg-, Alt oder Super gedrückt und drücken Sie eine Taste. Mit Esc brechen Sie den Vorgang ab."
@@ -3873,13 +3873,13 @@
     "Icon scale": "Icon-Skalierung"
   },
   "Icon size": {
-    "Icon size": "Icon-Größe"
+    "Icon size": "Icon-Grösse"
   },
   "Icon spacing": {
     "Icon spacing": "Icon-Abstand"
   },
   "Icon theme changed outside DMS; switched to System Default": {
-    "Icon theme changed outside DMS; switched to System Default": "Icon-Theme außerhalb von DMS geändert; auf Systemvorgabe gewechselt"
+    "Icon theme changed outside DMS; switched to System Default": "Icon-Theme ausserhalb von DMS geändert; auf Systemvorgabe gewechselt"
   },
   "Icons": {
     "Icons": "Icons"
@@ -3903,7 +3903,7 @@
     "Idle opacity": "Leerlauf-Opazität"
   },
   "Idle size": {
-    "Idle size": "Leerlaufgröße"
+    "Idle size": "Leerlaufgrösse"
   },
   "Idle timeouts, power menu, custom actions": {
     "Idle timeouts, power menu, custom actions": "Leerlauf-Timeouts, Energiemenü, benutzerdefinierte Aktionen"
@@ -4170,7 +4170,7 @@
     "Keep clock with media": "Uhr bei Medien beibehalten"
   },
   "Keep fullscreen on close": {
-    "Keep fullscreen on close": "Vollbild beim Schließen beibehalten"
+    "Keep fullscreen on close": "Vollbild beim Schliessen beibehalten"
   },
   "Keep in Bar": {
     "Keep in Bar": "In Leiste behalten"
@@ -4236,7 +4236,7 @@
     "LED device": "LED-Gerät"
   },
   "Label overrides": {
-    "Label overrides": "Label-Außerkraftsetzungen"
+    "Label overrides": "Label-Ausserkraftsetzungen"
   },
   "Language": {
     "Language": "Sprache"
@@ -4251,10 +4251,10 @@
     "Laptop": "Laptop"
   },
   "Large": {
-    "Large": "Groß"
+    "Large": "Gross"
   },
   "Largest": {
-    "Largest": "Größte"
+    "Largest": "Grösste"
   },
   "Last core": {
     "Last core": "Letzter Kern"
@@ -4335,7 +4335,7 @@
     "Layout": "Layout"
   },
   "Layout overrides": {
-    "Layout overrides": "Layout-Außerkraftsetzungen"
+    "Layout overrides": "Layout-Ausserkraftsetzungen"
   },
   "Layout, authentication, screensaver": {
     "Layout, authentication, screensaver": "Layout, Authentifizierung, Bildschirmschoner"
@@ -4557,7 +4557,7 @@
     "MTU": "MTU"
   },
   "Magnification": {
-    "Magnification": "Vergrößerung"
+    "Magnification": "Vergrösserung"
   },
   "Mail": {
     "Mail": "Mail"
@@ -4593,7 +4593,7 @@
     "Manual show/hide": "Manuelles Ein-/Ausblenden"
   },
   "Map window class names to icon names for proper icon display": {
-    "Map window class names to icon names for proper icon display": "Fenster-Klassennamen den Icon-Namen für ordnungsgemäße Icon-Anzeige zuordnen"
+    "Map window class names to icon names for proper icon display": "Fenster-Klassennamen den Icon-Namen für ordnungsgemässe Icon-Anzeige zuordnen"
   },
   "Maps": {
     "Maps": "Karten"
@@ -4626,7 +4626,7 @@
     "Master position": "Master-Position"
   },
   "Master size": {
-    "Master size": "Master-Größe"
+    "Master size": "Master-Grösse"
   },
   "Match (%1)": {
     "Match (%1)": "Übereinstimmung (%1)"
@@ -4641,7 +4641,7 @@
     "Match type": "Übereinstimmungstyp"
   },
   "Matches player identity or desktop file name, case-insensitive": {
-    "Matches player identity or desktop file name, case-insensitive": "Stimmt mit der Player-Identität oder dem Desktop-Dateiname überein, Groß-/Kleinschreibung nicht berücksichtigt"
+    "Matches player identity or desktop file name, case-insensitive": "Stimmt mit der Player-Identität oder dem Desktop-Dateiname überein, Gross-/Kleinschreibung nicht berücksichtigt"
   },
   "Material": {
     "Material": "Material"
@@ -4716,7 +4716,7 @@
     "Maximum entries": "Maximale Einträge"
   },
   "Maximum entry size": {
-    "Maximum entry size": "Maximale Eintragsgröße"
+    "Maximum entry size": "Maximale Eintragsgrösse"
   },
   "Maximum fingerprint attempts reached. Please use password.": {
     "Maximum fingerprint attempts reached. Please use password.": "Maximale Anzahl an Fingerabdruckversuchen erreicht. Bitte verwenden Sie das Passwort."
@@ -4797,7 +4797,7 @@
     "Middle click": "Mittelklick"
   },
   "Middle click closes": {
-    "Middle click closes": "Mittelklick schließt"
+    "Middle click closes": "Mittelklick schliesst"
   },
   "Middle click emulation": {
     "Middle click emulation": "Mittelklick-Emulation"
@@ -5295,7 +5295,7 @@
     "No keybinds found": "Keine Tastenkombinationen gefunden"
   },
   "No label overrides": {
-    "No label overrides": "Keine Label-Außerkraftsetzungen"
+    "No label overrides": "Keine Label-Ausserkraftsetzungen"
   },
   "No launcher plugins installed.": {
     "No launcher plugins installed.": "Keine Launcher-Plugins installiert."
@@ -5622,7 +5622,7 @@
     "Only on battery": "Nur im Akkubetrieb"
   },
   "Only outside groups": {
-    "Only outside groups": "Nur außerhalb von Gruppen"
+    "Only outside groups": "Nur ausserhalb von Gruppen"
   },
   "Only the main process of a system service can be restarted.": {
     "Only the main process of a system service can be restarted.": "Nur der Hauptprozess eines Systemdienstes kann neu gestartet werden."
@@ -5670,7 +5670,7 @@
     "Open in the Island": "Im Island öffnen"
   },
   "Open large file?": {
-    "Open large file?": "Große Datei öffnen?"
+    "Open large file?": "Grosse Datei öffnen?"
   },
   "Open network": {
     "Open network": "Offenes Netzwerk"
@@ -5745,10 +5745,10 @@
     "Out-of-memory score": "OOM-Score"
   },
   "Outer gap": {
-    "Outer gap": "Äußere Lücke"
+    "Outer gap": "Äussere Lücke"
   },
   "Outer gaps": {
-    "Outer gaps": "Äußere Lücken"
+    "Outer gaps": "Äussere Lücken"
   },
   "Outline": {
     "Outline": "Umriss"
@@ -5802,22 +5802,22 @@
     "Overlay": "Overlay"
   },
   "Overridden by config": {
-    "Overridden by config": "Durch Konfig außer Kraft gesetzt"
+    "Overridden by config": "Durch Konfig ausser Kraft gesetzt"
   },
   "Override": {
-    "Override": "Außer Kraft setzen"
+    "Override": "Ausser Kraft setzen"
   },
   "Override border size": {
-    "Override border size": "Randgröße außer Kraft sezten"
+    "Override border size": "Randgrösse ausser Kraft sezten"
   },
   "Override floating window transparency for Notepad": {
-    "Override floating window transparency for Notepad": "Transparenz des schwebenden Fensters für Notepad außer Kraft setzen"
+    "Override floating window transparency for Notepad": "Transparenz des schwebenden Fensters für Notepad ausser Kraft setzen"
   },
   "Override window radius": {
-    "Override window radius": "Fensterradius außer Kraft setzen"
+    "Override window radius": "Fensterradius ausser Kraft setzen"
   },
   "Overrides": {
-    "Overrides": "Außer Kraft gesetzt"
+    "Overrides": "Ausser Kraft gesetzt"
   },
   "Overview": {
     "Overview": "Übersicht"
@@ -6177,7 +6177,7 @@
     "Position, pinned apps, trash": "Position, angeheftete Apps, Papierkorb"
   },
   "Possible override conflicts": {
-    "Possible override conflicts": "Mögliche Konflikte bei Außerkraftsetzung"
+    "Possible override conflicts": "Mögliche Konflikte bei Ausserkraftsetzung"
   },
   "Power": {
     "Power": "Energie"
@@ -6366,7 +6366,7 @@
     "Profile image": "Profilbild"
   },
   "Profile image is too large. Please use a smaller image.": {
-    "Profile image is too large. Please use a smaller image.": "Profilbild ist zu groß. Bitte verwenden Sie ein kleineres Bild."
+    "Profile image is too large. Please use a smaller image.": "Profilbild ist zu gross. Bitte verwenden Sie ein kleineres Bild."
   },
   "Profile name": {
     "Profile name": "Profilname"
@@ -6609,7 +6609,7 @@
     "Remove match": "Übereinstimmung entfernen"
   },
   "Remove override": {
-    "Remove override": "Außerkraftsetzung entfernen"
+    "Remove override": "Ausserkraftsetzung entfernen"
   },
   "Remove the shortcut %1?": {
     "Remove the shortcut %1?": "Den Shortcut %1 entfernen?"
@@ -6690,7 +6690,7 @@
     "Reset Position": "Position zurücksetzen"
   },
   "Reset Size": {
-    "Reset Size": "Größe zurücksetzen"
+    "Reset Size": "Grösse zurücksetzen"
   },
   "Reset to default": {
     "Reset to default": "Auf Standard zurücksetzen"
@@ -6699,7 +6699,7 @@
     "Resident": "Resident"
   },
   "Resize on border": {
-    "Resize on border": "Größenänderung am Rand"
+    "Resize on border": "Grössenänderung am Rand"
   },
   "Resolution & refresh": {
     "Resolution & refresh": "Auflösung & Aktualisierungsrate"
@@ -6885,7 +6885,7 @@
     "Save QR Code": "QR Code speichern"
   },
   "Save and close": {
-    "Save and close": "Speichern und schließen"
+    "Save and close": "Speichern und schliessen"
   },
   "Save and paste": {
     "Save and paste": "Speichern und einfügen"
@@ -7029,7 +7029,7 @@
     "Sections": "Abschnitte"
   },
   "Sector size": {
-    "Sector size": "Sektorgröße"
+    "Sector size": "Sektorgrösse"
   },
   "Secure Boot": {
     "Secure Boot": "Secure Boot"
@@ -7326,7 +7326,7 @@
     "Show filename": "Dateiname zeigen"
   },
   "Show footer": {
-    "Show footer": "Fußzeile zeigen"
+    "Show footer": "Fusszeile zeigen"
   },
   "Show for": {
     "Show for": "Anzeigen für"
@@ -7497,13 +7497,13 @@
     "Single-line popup": "Einzeiliges Popup"
   },
   "Size & spacing": {
-    "Size & spacing": "Größe & Abstände"
+    "Size & spacing": "Grösse & Abstände"
   },
   "Size offset": {
-    "Size offset": "Größenversatz"
+    "Size offset": "Grössenversatz"
   },
   "Size, padding, opacity, borders": {
-    "Size, padding, opacity, borders": "Größe, Padding, Opazität, Rahmen"
+    "Size, padding, opacity, borders": "Grösse, Padding, Opazität, Rahmen"
   },
   "Skip confirmation": {
     "Skip confirmation": "Bestätigung überspringen"
@@ -7632,7 +7632,7 @@
     "Split direction follows the cursor position in the window": "Teilungsrichtung folgt der Cursorposition im Fenster"
   },
   "Split direction stays fixed when the container resizes": {
-    "Split direction stays fixed when the container resizes": "Teilungsrichtung bleibt fixiert, wenn der Container in der Größe geändert wird"
+    "Split direction stays fixed when the container resizes": "Teilungsrichtung bleibt fixiert, wenn der Container in der Grösse geändert wird"
   },
   "Spool Area Full": {
     "Spool Area Full": "Spool-Bereich voll"
@@ -7746,7 +7746,7 @@
     "Style, search, hidden apps": "Stil, Suche, ausgeblendete Apps"
   },
   "Styles outside of Default use more GPU": {
-    "Styles outside of Default use more GPU": "Stile außerhalb der Vorgabe brauchen mehr GPU"
+    "Styles outside of Default use more GPU": "Stile ausserhalb der Vorgabe brauchen mehr GPU"
   },
   "Success": {
     "Success": "Erfolg"
@@ -7755,7 +7755,7 @@
     "Summary": "Zusammenfassung"
   },
   "Summary font size": {
-    "Summary font size": "Schriftgröße der Zusammenfassung"
+    "Summary font size": "Schriftgrösse der Zusammenfassung"
   },
   "Sun": {
     "Sun": "Sonne"
@@ -7956,10 +7956,10 @@
     "Terminal fallback failed. Install one of the supported terminal emulators or run '%1' manually.": "Terminal-Fallback fehlgeschlagen. Installieren Sie einen der unterstützten Terminal-Emulatoren oder führen Sie '%1' manuell aus."
   },
   "Terminal fallback opened. Complete authentication there; it will close automatically when done.": {
-    "Terminal fallback opened. Complete authentication there; it will close automatically when done.": "Terminal-Fallback geöffnet. Schließen Sie dort die Authentifizierung ab; es wird nach Abschluss automatisch geschlossen."
+    "Terminal fallback opened. Complete authentication there; it will close automatically when done.": "Terminal-Fallback geöffnet. Schliessen Sie dort die Authentifizierung ab; es wird nach Abschluss automatisch geschlossen."
   },
   "Terminal opened. Complete authentication there; it will close automatically when done.": {
-    "Terminal opened. Complete authentication there; it will close automatically when done.": "Terminal geöffnet. Schließen Sie dort die Authentifizierung ab; es wird nach Abschluss automatisch geschlossen."
+    "Terminal opened. Complete authentication there; it will close automatically when done.": "Terminal geöffnet. Schliessen Sie dort die Authentifizierung ab; es wird nach Abschluss automatisch geschlossen."
   },
   "Terminals always dark": {
     "Terminals always dark": "Terminals immer dunkel"
@@ -8001,7 +8001,7 @@
     "The Control Center opens at the cursor instead of its widget": "Das Kontrollzentrum öffnet sich am Cursor anstatt an seinem Widget"
   },
   "The Default action only overrides priority": {
-    "The Default action only overrides priority": "Die Standardaktion setzt nur die Priorität außer Kraft"
+    "The Default action only overrides priority": "Die Standardaktion setzt nur die Priorität ausser Kraft"
   },
   "The Island holds this edge on a display this bar covers, so the bar stays hidden there": {
     "The Island holds this edge on a display this bar covers, so the bar stays hidden there": "Das Island ragt an dem Rand, der diese Leiste abdeckt, etwas über das Display hinaus, sodass die Leiste dort ausgeblendet bleibt"
@@ -8100,7 +8100,7 @@
     "This bar is the Island": "Diese Leiste ist das Island"
   },
   "This bind is overridden by %1": {
-    "This bind is overridden by %1": "Diese Bindung wird durch %1 außer Kraft gesetzt"
+    "This bind is overridden by %1": "Diese Bindung wird durch %1 ausser Kraft gesetzt"
   },
   "This display does not report HDR support, so Hyprland falls back to sRGB.": {
     "This display does not report HDR support, so Hyprland falls back to sRGB.": "Dieses Display meldet keine HDR-Unterstützung, daher fällt Hyprland auf sRGB zurück."
@@ -8445,7 +8445,7 @@
     "Unknown Track": "Unbekannter Track"
   },
   "Unload on close": {
-    "Unload on close": "Beim Schließen entladen"
+    "Unload on close": "Beim Schliessen entladen"
   },
   "Unlock": {
     "Unlock": "Entsperren"
@@ -8805,7 +8805,7 @@
     "Wave progress bars": "Wellen-Fortschrittsbalken"
   },
   "Wear": {
-    "Wear": "Verschleiß"
+    "Wear": "Verschleiss"
   },
   "Weather": {
     "Weather": "Wetter"
@@ -8838,10 +8838,10 @@
     "While download and upload are both under 1 KB/s": "Solange Download und Upload beide unter 1 KB/s liegen"
   },
   "White": {
-    "White": "Weiß"
+    "White": "Weiss"
   },
   "White point": {
-    "White point": "Weißpunkt"
+    "White point": "Weisspunkt"
   },
   "Whole numbers, at most three digits": {
     "Whole numbers, at most three digits": "Ganze Zahlen, höchstens drei Ziffern"
@@ -9003,7 +9003,7 @@
     "Workspaces up to the count are always shown and can be opened": "Arbeitsbereiche bis zu dieser Anzahl werden immer angezeigt und können geöffnet werden"
   },
   "Wrap the app command. %command% is replaced with the actual executable": {
-    "Wrap the app command. %command% is replaced with the actual executable": "Umschließen Sie den App-Befehl. %command% wird durch die tatsächliche ausführbare Datei ersetzt"
+    "Wrap the app command. %command% is replaced with the actual executable": "Umschliessen Sie den App-Befehl. %command% wird durch die tatsächliche ausführbare Datei ersetzt"
   },
   "Write cache": {
     "Write cache": "Schreibcache"
@@ -9177,7 +9177,7 @@
     "Saved": "Gespeichert"
   },
   "noun, badge on a keybind that overrides the default": {
-    "Override": "Außer Kraft setzen"
+    "Override": "Ausser Kraft setzen"
   },
   "noun, overflow button position before the first widget": {
     "Start": "Start"
