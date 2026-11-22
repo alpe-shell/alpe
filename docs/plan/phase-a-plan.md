@@ -168,6 +168,40 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   `~/.config/alpe/plugins` anlegen (PC: hueManager, sathiAi; Mac: hueManager, calculator;
   `docs/plugins-anpassen.md`), Mac-Test des D7-Stands (`offene-faelle.md`, «Anleitung für den
   Stand nach D7»), zwei Fragen aus D7.8a (`offene-faelle.md`).
+- **Abschluss des Halts nach D7 läuft noch** (22.11.2026, abends; Zwischenstand in der Tabelle oben). Seither
+  dazugekommen: `aae5998` und `21f6ff2` (Design ohne fremdes Plugin, `pciId`, angeheftete Programme und
+  programmbezogene Regeln; Export filtert `pciId` und Widgets fremder Plugins; Test gegen persönliche Werte),
+  `76f42f0` (Diagnose `ALPE_LP_STAPEL=1`); alle im Temp-Worktree grün (32 Schritte), ebenso `44f99d1`.
+  **Ursache der fehlenden Verbindung zum Dienst unter Hyprland gefunden:** Der Dienst wartet nicht auf den
+  Compositor, sondern ohne Zeitgrenze auf die Antwort des Ersatz-Systembusses der Ladeprüfung auf `Hello`
+  (dessen Richtlinie erlaubt keine Antworten; nachgestellt mit `dbus-send`); unter Hyprland blockiert das über
+  die Ruhezustands-Überwachung der Gamma-Initialisierung den Start der Schnittstelle, unter KWin hängen
+  Netzwerk-, Loginctl- und Freedesktop-Manager still im Hintergrund. Der Eintrag in `offene-faelle.md`
+  («Ladeprüfung») nennt noch Gamma als mögliche Ursache und ist zu berichtigen.
+  **Offen, in dieser Reihenfolge:**
+  1. Entscheid des Maintainers: zuerst die Richtlinie des Ersatz-Systembusses berichtigen (eigener Commit, Lauf
+     ohne `Connected` gilt als gescheitert), dann Plan unter `docs/plan/` für den Dienst (Schnittstelle vor den
+     Managern, Gamma nebenher mit Zeitgrenze; ob alle Verbindungen zum Systembus eine Zeitgrenze bekommen).
+  2. Behebung im Dienst als eigener Commit mit Test und Eintrag in `offene-faelle.md` (Fehler aus der Zeit vor
+     Phase A); Mac-Anleitung: Nachtlicht prüfen.
+  3. Prüfen: `Connected` im Protokoll unter dem verschachtelten Hyprland, `cpuUsage` links in der Leiste.
+  4. **Export-Ergänzung (Auftrag vom 22.11.2026, nicht begonnen):** `tools/design.py` nimmt aus `session.json`
+     nur eine feste Liste von Schlüsseln, die zur Gestaltung gehören (etwa Material-Vorlage und Form), statt
+     einzelne Zustandswerte herauszufiltern. Befund beim Einlesen: Die Liste `SESSION_KEEP` gibt es schon, sie
+     enthält aber Zustand (`dockPins`, `barPinnedApps`, `trayItemOrder`, `recentColors`) und kennt
+     `materialWallpapers`/`materialWallpaperProfiles` nicht. Zu tun: alle Schlüssel der Session (88 in
+     `SessionSpec.js`, dazu die geteilten aus `SharedSessionSpec.js`) in Gestaltung und Zustand einordnen,
+     Liste im Code festlegen, Test in `tests/test_design.py`, Liste hier im Plan; `recentColors` kommt damit
+     auch aus `design/kde/session.json`. Eigener Commit.
+  5. Vorschlagsdatei für die 42 fehlenden deutschen Texte zusammen mit `docs/plan/sie-form.md` (Du-Form,
+     Schweizer Schreibweise); Freigabe durch den Maintainer vor G1.
+  6. Worktree `wt-alt` (`ba4ddbc`) auf den Stand der Ladeprüfung bringen; Grundlinien «gesperrt» und «offen»
+     unter KWin und Hyprland auf `ba4ddbc` und Endstand neu messen (mit Zusätzen, Hyprland-IPC und antwortendem
+     Systembus), SettingsRow-Rate unter Hyprland aus diesen Läufen, Grundlinien-Commit, Bild beschreiben,
+     Halt abschliessen.
+  Rückfragen an den Maintainer, noch unbeantwortet: `dockPins` entfernt statt geleert (ein leeres Dock im
+  Design überschriebe beim Einspielen die Anheftungen des Nutzers); `WindowClasses` des Unschärfe-Effekts
+  ganz entfernt.
 - Danach: Vorlage 6.7 → E1 (0.8 Nr. 6).
 
 ---
