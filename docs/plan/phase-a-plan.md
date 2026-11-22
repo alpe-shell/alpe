@@ -8,7 +8,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 
 ---
 
-## Stand (22.11.2026, nach D6)
+## Stand (22.11.2026, nach D6; D7 freigegeben)
 
 ### Erledigt
 
@@ -55,15 +55,21 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | `0515150` | **Fehler aus D2:** eigene Hyprland-Fensterregeln galten als fremd (`dms/windowrules`) | Test `tests/test_pfade.py` |
 | `eab4f12` | **D6** Suchindex: Skript nachgerüstet, Index neu erzeugt | dito |
 | `15b2072` | Reste aus D1: `ALPE_LOG_*` im Dienst, `alpe-dienst auth sync`, Rückfall `brand.Binary` | Go wie bekannt |
-| `8301a6a` | **D6** Dienst: Hilfe, Meldungen, Mitteilungs-Absender, Terminaltitel | Go wie bekannt (Tests angepasst) |
-| `1bbf8da` | **D6** Alpe-Zeichen unter eigenem Dateinamen, `dank.svg` weg | dito |
-| `b3db7fd` | **D6** Über-Seite: Beschreibung, Herkunft, Lizenz | dito |
-| `d4c90f5`, `7e3c5a3` | **D6** übrige Oberflächentexte (Kürzelkategorie, `dms setup`-Hinweise, Plugin-Basisversion, Kopfzeilen, Testmitteilungen) | dito; Node-Tests config-include, plugin-reload, settings-search-cards neu in test.sh |
-| `82ecea2` | Ladeprüfung auf dem Endstand: KWin 29/29, Hyprland 38/38, nur die 2 geänderten Meldungen; Grundlinien nachgeführt | – |
+| `b7c73d8` | **D6** Dienst: Hilfe, Meldungen, Mitteilungs-Absender, Terminaltitel | Go wie bekannt (Tests angepasst) |
+| `7be57f9` | **D6** Alpe-Zeichen unter eigenem Dateinamen, `dank.svg` weg | dito |
+| `b53ecd3` | **D6** Über-Seite: Beschreibung, Herkunft, Lizenz | dito |
+| `713749c`, `17a5f36` | **D6** übrige Oberflächentexte (Kürzelkategorie, `dms setup`-Hinweise, Plugin-Basisversion, Kopfzeilen, Testmitteilungen) | dito; Node-Tests config-include, plugin-reload, settings-search-cards neu in test.sh |
+| `459a476` | Ladeprüfung auf dem Endstand: KWin 29/29, Hyprland 38/38, nur die 2 geänderten Meldungen; Grundlinien nachgeführt | – |
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
 Fälle). Node-Tests des Ursprungs: 10 Fehlschläge, alle schon vor C1 rot. Jeder Commit nach D3
 einzeln mit test.sh geprüft (Zwischenstände in einem Temp-Worktree).
+
+**Zwischenfall (22.11.2026, behoben):** Commit «Dienst: sichtbare Texte» enthielt versehentlich
+die gebaute Binärdatei `core/alpe-dienst` (47 MB; `go build ./...` legt sie in `core/` ab,
+`.gitignore` kannte nur `core/dms`). Nur lokal, nie gepusht. Aus der Geschichte entfernt
+(Commits ab diesem neu angeordnet, Bäume sonst identisch), `core/alpe-dienst` steht jetzt in
+`.gitignore`. Deshalb tragen die D6-Commits ab dort neue Hashes (Tabelle nachgeführt).
 
 Offene Fragen aus C4 (Deployer in `internal/config`, Hinweistexte auf `dms setup`) stehen in
 `docs/plan/offene-faelle.md` unter «Nach C4: Liste für D», Folgen von D1–D3 unter «Nach D1» und
@@ -97,9 +103,11 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - ~~D4, D5, D6~~ erledigt; **Halt nach D6** (22.11.2026). Fragen zum Halt in
   `offene-faelle.md`, Abschnitt «Nach D4–D6: Fragen».
 - Mac-Test des Stands nach D6 (Anleitung in `offene-faelle.md`, Abschnitt «Mac-Test»).
-- **0.8: D7 kommt wieder** (vollständige Umbenennung der internen Namen, Abschnitt 2.3).
-  Vor dem Start: Freigabe von 2.3 und die Fragen in `offene-faelle.md`, «Vor D7». Halt nach D7.
-- Danach: Vorlage 6.7 (Sperrbildschirm) vor E1, dann E1–E4, Halt nach E4.
+- **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
+- **Als Nächstes: D7 in neuer Sitzung** – zuerst D7.N (Node-Tests mit fester Fehlschlagliste),
+  dann D7.0 ff. nach 2.3.5. Offen vor D7.2: Lesart A/B der Widget-Bibliothek (2.3.0).
+  D7.8 erst nach Bestätigung, dass Plugins an PC und Mac umgestellt sind.
+- Halt nach D7 → Mac-Test → Vorlage 6.7 → E1 (0.8 Nr. 6).
 
 ---
 
@@ -262,9 +270,26 @@ der Liste «Nach C4»), dann D1–D3. **Halt nach D3.**
 | 4 | **Kein `/usr/bin/dms`.** |
 | 5 | **D7 nach D6 mit eigenem Halt**, skriptbasiert, ein Commit pro Bereich, Ladeprüfung auf dem Endstand unter KWin und Hyprland (Prüfregel 0.7 Nr. 6). Die Weiterleitungen fallen erst weg, wenn alle Plugins angepasst sind (letzter Commit von D7). |
 
-Folgen: Die Fragen 1 und 3 zum Halt D6 (Kennungen `dms_*` der Starter-Plugins, Logo-Modus
-`"dank"`) erledigt D7 (2.3.2, D7.5). Die Ausnahmeliste der Namensprüfung (9) schrumpft auf 2.2
-«Begründete Ausnahmen» und 2.3.3.
+Freigabe von 2.3 am 22.11.2026 mit diesen Entscheiden und Änderungen:
+
+| # | Entscheid |
+|---|---|
+| 6 | **Reihenfolge:** D7 direkt nach D6, vor E1 (E1–E3 legen Dateinamen und Pfade fest und bauen auf den endgültigen Namen auf). Halt nach D7 → Mac-Test → Vorlage 6.7 → E1. |
+| 7 | **Namensregel** (2.3.0): interne Typen ohne Marke; nach aussen sichtbare Kennungen mit `alpe`; Widget-Bibliothek mit Präfix `Alpe`; jeder neue Name wird gegen bestehende Alpe-, Qt- und Quickshell-Typen geprüft, Kollisionen stehen in der Tabelle. |
+| 8 | **Namen freigegeben:** `DMSService` → `ShellBackend`, `dank_dash` → `dash`, `dms_*` → `alpe_*`, `dank16` → `palette16` (geprüft: weder Oberfläche, matugen-Vorlagen noch Dateien im HOME des Maintainers rufen `dank16` auf). |
+| 9 | **claudeCodeUsage** kommt ins Alpe-Repo wie die Alpe-Plugins (MIT-LICENSE und Copyright bleiben) und wird in D7 angepasst. |
+| 10 | **calculator** (AGPL-3.0) nicht ins Alpe-Repo, sondern in ein eigenes lokales Repo `~/alpe-plugins` (Branch `main`, eigener Ordner, unveränderte LICENSE, Copyright-Hinweis, Änderungen gekennzeichnet, README mit Herkunft und Lizenz). GitHub `alpe-shell/alpe-plugins` legt der Maintainer an und pusht. Installation entscheiden E3/E4, bis dahin als Klon. |
+| 11 | **sathiAi** (Quell-Repo unbekannt) und **hueManager** (ohne Lizenz): nicht ins Repo, Anleitung für die lokalen Kopien. Anleitungen und calculator-Anpassung sind **vor D7.8 fertig**; D7.8 erst nach Bestätigung des Maintainers. |
+| 12 | `requires_alpe`: Entscheid in 2.3.4 (Prüfung gegen `Brand.version`, Hinweis statt Ladesperre). Versionsangaben beziehen sich auf Alpe (1.1), nicht auf die Basis des Ursprungs. |
+| 13 | Halt-D6-Frage 2: Material-Vorlage heisst «Alpe», Form = Alpe-Zeichen, Wert `"dank"` → `"alpe"` in v44. Nicht entfernen. |
+| 14 | Halt-D6-Frage 4: Doku-Links nach `duxlabs.dev` (Autostart-Seite, doctor) entfernen; **«Wallpaper creator» samt Code entfernen** (ohne `/usr/bin/dms` gibt es keinen Handler für `dms://`), auch die `dms://`-Annahme in `alpe-dienst open` und `DMSShell.qml`. Als mögliche eigene Funktion in `offene-faelle.md`. |
+| 15 | Halt-D6-Frage 5: Prüfliste Sie-Form → `docs/plan/sie-form.md` (Schlüssel, alter Text, Vorschlag in Du-Form); Freigabe vor G1, Umsetzung danach. |
+| 16 | Halt-D6-Frage 6: **keine dauerhafte Ausnahme.** PAM-Dienst, `/usr/share/dms`-Richtlinien und alle anderen paketierten Pfade werden **in E1 zwingend** umbenannt (`alpe-shell` muss ohne `conflicts` neben `dms` installierbar sein). Hotspot: alten Verbindungsnamen erkennen, neu nur den Alpe-Namen anlegen (D7). CUPS-Benutzer `dms`: geklärt, Befund in `offene-faelle.md`. |
+| 17 | Halt-D6-Frage 7: `Brand.heldPackages` mit E4 entfernen. |
+| 18 | **Ausnahmeliste** enthält nur noch von aussen vorgegebene Namen; jeder Eintrag hat eine Phase, bis wann er erledigt ist (2.3.3). |
+| 19 | **Node-Tests in `tools/test.sh`** mit den 10 bekannten Fehlschlägen als fester Liste: neuer Fehlschlag = rot, bekannter nicht. Eigener Commit vor D7.0. |
+
+Folgen: Die Fragen 1 und 3 zum Halt D6 (Kennungen `dms_*`, Logo-Modus `"dank"`) erledigt D7.5.
 
 ---
 
@@ -363,13 +388,13 @@ Begründung:
 | kitty `dank-theme.conf`, `dank-tabs.conf` (matugen-Vorlagen, Design) | `alpe-theme.conf`, `alpe-tabs.conf` (+ `include`-Zeilen in kitty.conf) |
 | matugen-Vorlagen `dank*.json`, `dank-zed.json`, `dank-emacs.el`, `dms-theme.vsix` | `alpe*` (VS-Code-Erweiterung: Frage 5) |
 | Go-Modul `github.com/duxlabs-dev/dux-shell/core` | `github.com/alpe-shell/alpe/core` |
-| QML-Typen/Dateien `DMSService`, `DMSNetworkService`, `DMSShell*.qml`, `DankBar`, `DankDash`, `dankLauncherV2` … | `ShellBackend`, `BackendNetworkService`, `AlpeShell*.qml`, … (Tiefe: Frage 6) |
+| QML-Typen/Dateien `DMSService`, `DMSNetworkService`, `DMSShell*.qml`, `DankBar`, `DankDash`, `dankLauncherV2` … | siehe 2.3.2 (D7, Namensregel 2.3.0) |
 | Einstellungs-Schlüssel/-Werte mit dank/dms (`dankLauncherV2`, `alpeLockStyle: "dms"`, …) | umbenannt **mit Migration** in `SettingsData` (Versionssprung, alte Datei als `settings.v<N>.json`) |
 | Texte «DMS», «Dux Modular Shell», «DankMaterialShell», Willkommens-/Changelog-Dialog | weg bzw. «Alpe»; `Brand.apply()`-Ersetzung entfällt; Über-Seite: «basiert ursprünglich auf der Dux Modular Shell (MIT)» |
 | `Brand.heldPackages: ["dux-shell","dms","dms-cli"]` | entfällt (Alpe wird normal über die Paketverwaltung aktualisiert) |
 | Prozessname über `~/.local/share/applications/dev.duxlabs.shell.desktop` | entfällt – das Paket liefert die eigene Desktop-Datei |
 
-**Begründete Ausnahmen** (bleiben, werden in der Abnahme-Liste geführt):
+**Begründete Ausnahmen** (bleiben, werden in der Abnahme-Liste geführt; massgeblich ist seit 0.8 die Ausnahmeliste mit Fristen in 2.3.3):
 - Go-Abhängigkeiten `github.com/duxlabs-dev/dux-go` und `dux-gop` (MIT, Avenge Media). Beide sind
   sauber parametrisiert (z. B. `shellapp.ID`), enthalten selbst keine sichtbaren Namen. Sie stehen
   in `go.mod`/`go.sum` und in Importzeilen. Alternative: Frage 9.
@@ -377,121 +402,163 @@ Begründung:
   alten Namen kennen.
 - `NOTICE`, README-Abschnitt «Herkunft», `CHANGELOG.md`, `LICENSE`-Verweis.
 
-### 2.3 D7: Umbenennung der internen Namen (0.8)
+### 2.3 D7: Umbenennung der internen Namen (0.8, freigegeben 22.11.2026)
 
 Ziel: Nach D7 trifft eine Suche nach `dms|dank|dux` (Gross/klein) in `shell/`, `core/`, `plugins/`
-und `tools/` nur noch die Ausnahmen aus 2.2 und 2.3.3. Arbeitsweise wie in D1–D6: zuerst
-gemessen (Stand `a48512d`), dann skriptbasiert, ein Commit pro Bereich, `bash tools/test.sh`
-nach jedem Commit.
+und `tools/` nur noch die Einträge der Ausnahmeliste (2.3.3). Skriptbasiert, ein Commit pro
+Bereich, `bash tools/test.sh` nach jedem Commit, Ladeprüfung auf dem Endstand. Reihenfolge:
+direkt nach D6, vor E1 (0.8 Nr. 6).
 
-#### 2.3.1 Umfang (gemessen)
+#### 2.3.0 Namensregel (0.8 Nr. 7)
+
+1. **Interne Typen und Bezeichner ohne Marke**, nach ihrer Rolle: `ShellBackend`, `dash`,
+   `palette16`.
+2. **Nach aussen sichtbare Kennungen mit `alpe`:** D-Bus-Namen, App-ID, CLI (`alpe`,
+   `alpe-dienst`), Plugin-Namensraum (`requires_alpe`, Starter-Plugins `alpe_*`), gespeicherte
+   Kennungen, die Nutzer oder Fremdprogramme sehen (Regel-IDs, Vorlagen- und Themennamen).
+3. **Ausnahme Widget-Bibliothek: Präfix `Alpe`** (`AlpeButton`, `AlpeTextField`, `AlpeIcon` …),
+   weil neutrale Namen mit QtQuick.Controls kollidieren (geprüft: `Button`, `TextField`,
+   `Slider`, `Switch`, `ListView`, `Popup`, `Dialog`, `ToolTip`, `Icon` gibt es dort) und weil
+   das die Plugin-API ist.
+4. **Kollisionsprüfung** für jeden neuen Namen gegen bestehende Alpe-Typen und -Bezeichner
+   (Dateinamen und `git grep -w`), Qt-Typen (1208 aus `/usr/lib/qt6/qml/**/*.qmltypes`) und
+   Quickshell-Typen (139). Das Skript (D7.0) wiederholt die Prüfung vor jedem Lauf.
+
+**Rückfrage vor D7.2 (Lesart von Nr. 3):** Heute sind die 44 `Dank*`-Typen Hüllen um 34 Typen
+aus `DCommon` (`DButton`, `DIcon` …), die die Shell selbst ≈1330-mal benutzt.
+- **A:** Nur die Plugin-API heisst `Alpe*`: 44 dünne Typen in `qs.Widgets` ohne Veraltet-Meldung,
+  die Shell benutzt intern weiter `D*` (Plan 1: «D» bleibt). Klein, die API ist von den
+  Interna entkoppelt.
+- **B:** Die Bibliothek selbst heisst `Alpe*`: `DButton` → `AlpeButton` usw. in `DCommon` und an
+  allen ≈1330 Stellen, keine Hüllen mehr; ein Name für Shell und Plugins.
+  Offen dabei: ob auch die Modulnamen `DCommon`, `DBar`, `DDash`, `DIsland` unter Regel 1 fallen.
+Bis zur Antwort plant 2.3.5 mit **B** (folgt der Regel wörtlich); die Modulnamen bleiben, bis
+du anders entscheidest.
+
+#### 2.3.1 Umfang (gemessen, Stand `fab0760`)
 
 | Was | Menge |
 |---|---|
 | Dateien mit dms/dank im Namen (`shell/`, `core/`) | 105, davon **91 reine Weiterleitungen** (40 `Widgets/Dank*`, 33 `Modules/DankBar/Widgets/*`, 14 `Modules/DankDash/*`, 3 `Common/Dank*`, `Modals/Common/DankModal`) – die Shell selbst benutzt keine davon |
 | echte Dateien | `DMSShell.qml`, `DMSShellIPC.qml`, `Services/DMSService.qml`, `Services/DMSNetworkService.qml`, `Services/CalendarDankBackend.qml`, `core/internal/dank16/`, `core/internal/config/dms.go`, matugen `dank.json`, `dank-zed.json`, `dank-emacs.el` |
-| Bezeichner Oberfläche (QML/JS) | 311 verschiedene, ≈2000 Vorkommen (`DMSService` 472, `dmsBin` 73, `DMSNetworkService` 65, `DankBar` 35, `dankDashPopout` 32, `dankLauncherV2Modal` 31 …) |
+| Bezeichner Oberfläche (QML/JS, mit DCommon) | 311 verschiedene, ≈2000 Vorkommen (`DMSService` 472, `dmsBin` 73, `DMSNetworkService` 65, `DankBar` 35, `dankDashPopout` 32, `dankLauncherV2Modal` 31 …) |
 | Bezeichner Dienst (Go) | 161 verschiedene, ≈1170 Vorkommen (`dmsDir`, `dmsPath`, `DMSStatus`, `dank16` …) |
-| Gespeicherte Kennungen | Seiten-IDs `dankbar*`, `dank_dash` (z. B. in `settingsHiddenPages`), Starter-Plugins `dms_*`, Logo-Modus und Material-Vorlage `"dank"`, matugen-Spec `"dms"`, Kürzel-Quelle `"dms"`/`"dms-default"`, Regel-IDs `dms-floating-windows`/`dms-window-opaque`, Marke `-- DMS-RULE:` in `hypr/alpe/windowrules.lua` |
+| Gespeicherte Kennungen | Seiten-IDs `dankbar*`, `dank_dash`, Starter-Plugins `dms_*`, Logo-Modus und Material-Vorlage `"dank"`, matugen-Spec `"dms"`, Kürzel-Quelle `"dms"`/`"dms-default"`, Regel-IDs `dms-floating-windows`/`dms-window-opaque`, Marke `-- DMS-RULE:` |
 | Dateien bei Fremdprogrammen | Cache `dms-colors.json`, `dms-typography.json`; kitty `dank-theme.conf`/`dank-tabs.conf`; fcitx5-Thema `dms`; Lualine-Thema `dms` |
 | IPC | Ziel `dankdash` (Doppel zu `dash`) |
-| Plugin-Beschreibung | `requires_dms`, Fähigkeit `dankbar-widget` (alpeSport); `requires: ["dms"]` (calculator, nur Information) |
+| Plugin-Beschreibung | `requires_dms`, Fähigkeit `dankbar-widget` (alpeSport); `requires: ["dms"]` (calculator, nur Information, wird nicht ausgewertet) |
 
-#### 2.3.2 Zuordnung (Vorschlag zur Freigabe)
+#### 2.3.2 Zuordnung (freigegeben; nach Regel 2.3.0 geprüft)
 
-Code-Bezeichner englisch (CLAUDE.md), sprechend nach Rolle statt nach Marke:
+Spalte «R» = Regel aus 2.3.0. Kollisionen: geprüft wie in 2.3.0 Nr. 4; gefundene stehen in der
+letzten Spalte mit der Ausweichlösung.
 
-| Heute | Neu |
-|---|---|
-| `DMSService` | `ShellBackend` (Plan 2.2) |
-| `DMSNetworkService` | `BackendNetworkService` |
-| `DMSShell.qml`, `DMSShellIPC.qml` | `AlpeShell.qml`, `AlpeShellIPC.qml` |
-| `Proc.dmsBin`, `dmsAvailable`, `checkDMSCapabilities` … | `backendBin`, `backendAvailable`, `checkBackendCapabilities` |
-| `isDmsAction`, `dmsActions`, `DMS_ACTION_ARGS`, Aktionsart `"dms"` | `isShellAction`, `shellActions`, `SHELL_ACTION_ARGS`, `"shell"` |
-| `DankBar…`, `dankBar…` (Rest-Bezeichner, Repeater, Tabs) | `Bar…`, `bar…` |
-| `DankDash…`, `dankDashPopout(Loader)` | `Dash…`, `dashPopout(Loader)` |
-| `DankIsland…`, `dankIsland…`, `DankDot` | `Island…`, `island…`, `Dot` |
-| `dankLauncherV2Modal(Loader)` u. ä. | `launcherModal(Loader)` |
-| `hyprDmsDir`, `dmsParsedArgs`, `dmsStatus` (QML wie Go/JSON) | `hyprAppDir`, `shellParsedArgs`, `includeStatus` |
-| Go: `dmsDir`, `dmsPath`, `dmsState`, `DMSStatus`, `LoadDMSRules` … | `appDir`, `shellPath`, `appState`, `IncludeStatus`, `LoadShellRules` … |
-| Go-Paket `internal/dank16`, Befehl `alpe-dienst dank16` | `internal/palette16`, Befehl `palette16` |
-| Importname `danklog` (dux-go bleibt) | `duxlog` |
-| Seiten-IDs `dankbar`, `dankbar_appearance`, `dankbar_dot`, `dankbar_settings`, `dankbar_widgets`, `dank_dash` | `bar`, `bar_appearance`, `bar_dot`, `bar_settings`, `bar_widgets`, `dash` (Kollisionsprüfung im Skript) |
-| Starter-Plugins `dms_settings`, `dms_notepad`, … `dms_vpn` | `alpe_settings`, `alpe_notepad`, … |
-| Logo-Modus `"dank"`, Material-Vorlage `"dank"` (Ebene `dankLogo`) | `"alpe"`; Form der Vorlage siehe Frage 2 zum Halt D6 |
-| matugen-Spec `"dms"` (`SpecDMS`) | `"alpe"` |
-| Kürzel-Quelle `"dms"`, `"dms-default"` | `"alpe"`, `"alpe-default"` |
-| Regel-IDs `dms-floating-windows`, `dms-window-opaque`; Marke `-- DMS-RULE:` | `alpe-floating-windows`, `alpe-window-opaque`; `-- ALPE-RULE:` (die alte Marke wird gelesen, beim nächsten Schreiben ersetzt; sonst gingen bestehende Regeln verloren) |
-| Cache `dms-colors.json`, `dms-typography.json` | `colors.json`, `typography.json` (im Ordner `~/.cache/alpe`, bauen sich neu) |
-| matugen-Vorlagen `dank.json`, `dank-zed.json`, `dank-emacs.el`, kitty `dank-*.conf`, fcitx5/Lualine-Thema `dms` | `alpe*`; `include`-Zeilen und Themenwahl in den Fremdprogrammen schreibt der Umzug (F1) um |
-| IPC-Ziel `dankdash` | entfällt (`dash` bleibt); Hyprland-Kürzel schreibt der Umzug um |
-| `plugin.json`: `requires_dms`, Fähigkeit `dankbar-widget` | `requires_alpe` (gegen `Brand.version`), `bar-widget`; `requires_dms` wird nicht mehr gelesen |
-| Plugin `dankNotepadModule` (Store-Plugin des Ursprungs, Sonderweg im Notizblock) | Anbindung entfällt (kein Store, 0.8 Nr. 1) |
-| 91 Weiterleitungen, `Common/Deprecation.qml` | entfernt (D7.8) |
+| Heute | Neu | R | Kollision |
+|---|---|---|---|
+| `DMSService` | `ShellBackend` | 1 | keine |
+| `DMSNetworkService` | `BackendNetworkService` | 1 | keine |
+| `DMSShell.qml`, `DMSShellIPC.qml` | `ShellMain.qml`, `ShellIpc.qml` | 1 | `ShellRoot` (erste Wahl) ist ein Quickshell-Typ → `ShellMain`; `AlpeShell*` aus der ersten Fassung widerspricht Regel 1 |
+| `CalendarDankBackend.qml` | `CalendarDuxBackend.qml` | – | keine; «Dux» ist hier der Name der fremden App (Ausnahmeliste) |
+| `Proc.dmsBin`, `checkDMSCapabilities` | `backendBin`, `checkBackendCapabilities` | 1 | keine |
+| `dmsAvailable` | `backendReachable` | 1 | `backendAvailable` gibt es schon (`ThemeAutoService`, andere Bedeutung) |
+| `isDmsAction`, `dmsActions`, `DMS_ACTION_ARGS`, Aktionsart `"dms"` | `isShellAction`, `shellActions`, `SHELL_ACTION_ARGS`, `"shell"` | 1 | keine |
+| `DankBar…`, `dankBar…` (Rest-Bezeichner) | `Bar…`, `bar…` | 1 | keine (`Bar` ist weder Qt- noch Quickshell-Typ) |
+| `DankDash…`, `dankDashPopout(Loader)` | `Dash…`, `dashPopout(Loader)` | 1 | keine |
+| `DankIsland…`, `dankIsland…`, `DankDot` | `Island…`, `island…`, `Dot` | 1 | keine |
+| `dankLauncherV2Modal(Loader)` u. ä. | `launcherModal(Loader)` | 1 | keine |
+| `hyprDmsDir`, `dmsParsedArgs` | `hyprAppDir`, `shellParsedArgs` | 1 | keine |
+| `dmsStatus` (QML, JSON zwischen Dienst und Oberfläche) | `fragmentStatus` | 1 | `includeStatus` gibt es schon (`DisplayConfigState`) |
+| Go: `dmsDir`, `dmsState`, `DMSStatus`, `LoadDMSRules` … | `appDir`, `appState`, `FragmentStatus`, `LoadShellRules` … | 1 | keine |
+| Go: `dmsPath` (Pfad der Oberfläche) | `shellConfigPath` | 1 | `shellPath` gibt es schon (doctor, Schriftprüfung) |
+| Go-Paket `internal/dank16`, Befehl `alpe-dienst dank16` | `internal/palette16`, Befehl `palette16` | 1 | keine; kein Aufrufer ausserhalb des Dienstes |
+| Importname `danklog` (dux-go bleibt) | `duxlog` | – | keine; «dux» = Name des fremden Moduls (Ausnahmeliste) |
+| Widget-Typen `Dank*` (44) bzw. `D*` (34, Lesart B) | `Alpe*` (`AlpeButton`, `AlpeIcon`, `AlpeTextField` …) | 3 | keine mit Qt/Quickshell; keine mit bestehenden `Alpe*`-Dateien (`AlpeKwinTab` … sind Seiten). Hinweis: `AlpeColorAnim` und `AlpeColorAnimation` wären zwei Typen – beim Umbenennen zusammenführen, falls gleich |
+| Seiten-IDs `dankbar`, `dankbar_appearance`, `dankbar_dot`, `dankbar_settings`, `dankbar_widgets`, `dank_dash` | `bar`, `bar_appearance`, `bar_dot`, `bar_settings`, `bar_widgets`, `dash` | 1 | im Skript gegen bestehende Seiten-IDs prüfen |
+| Starter-Plugins `dms_settings` … `dms_vpn` | `alpe_settings` … `alpe_vpn` | 2 | keine |
+| Logo-Modus `"dank"`, Material-Vorlage `"dank"` (Ebene `dankLogo`) | `"alpe"`, Vorlage «Alpe», Form = Alpe-Zeichen (0.8 Nr. 13) | 2 | keine |
+| matugen-Spec `"dms"` (`SpecDMS`) | `"alpe"` | 2 | keine |
+| Kürzel-Quelle `"dms"`, `"dms-default"` | `"shell"`, `"shell-default"` | 1 | intern zwischen Dienst und Oberfläche; keine |
+| Regel-IDs `dms-floating-windows`, `dms-window-opaque`; Marke `-- DMS-RULE:` | `alpe-floating-windows`, `alpe-window-opaque`; `-- ALPE-RULE:` (alte Marke wird gelesen, beim nächsten Schreiben ersetzt) | 2 | keine |
+| Cache `dms-colors.json`, `dms-typography.json` | `colors.json`, `typography.json` | 1 | keine im Ordner `~/.cache/alpe` |
+| matugen-Vorlagen `dank.json`, `dank-zed.json`, `dank-emacs.el`, kitty `dank-*.conf`, fcitx5-/Lualine-Thema `dms` | `alpe*` | 2 | keine; Einbindung in den Fremdprogrammen schreibt F1 um |
+| IPC-Ziel `dankdash` | entfällt (`dash` bleibt) | – | – |
+| Hotspot-Verbindung «DankMaterialShell Hotspot» | «Alpe Hotspot»; die alte wird erkannt und weiter benutzt, neu angelegt wird nur der Alpe-Name (0.8 Nr. 16) | 2 | keine |
+| `plugin.json`: `requires_dms`, Fähigkeit `dankbar-widget` | `requires_alpe`, `bar-widget` | 2 | keine |
+| Plugin `dankNotepadModule` (Store-Plugin des Ursprungs, Sonderweg im Notizblock) | Anbindung entfällt | – | – |
+| «Wallpaper creator», Annahme von `dms://` | entfällt (0.8 Nr. 14) | – | – |
+| 91 Weiterleitungen, `Common/Deprecation.qml` | entfallen (D7.8) | – | – |
 
-Gespeicherte Kennungen ziehen mit **Migration v44** um (`SettingsStore`, wie v43; Session-Daten
-mit eigener Migration), `settings.v43.json` bleibt liegen. Das Skript liest die Tabelle aus
-einer Datei, ersetzt nur ganze Bezeichner, bricht bei Kollisionen ab und gibt vor dem Schreiben
-eine Liste aus.
+Gespeicherte Kennungen ziehen mit **Migration v44** um (wie v43, `settings.v43.json` bleibt
+liegen; Session-Daten wie `builtInPluginState` im selben Zug).
 
-#### 2.3.3 Was bleibt (Ausnahmeliste der Namensprüfung)
+#### 2.3.3 Ausnahmeliste (0.8 Nr. 18: nur von aussen vorgegebene Namen, je mit Frist)
 
-2.2 «Begründete Ausnahmen» (dux-go/dux-gop, Umzugscode und -tests, NOTICE, Herkunft, CHANGELOG,
-LICENSE) und zusätzlich:
-- `Brand.upstreamName`/`upstreamUrl`/`upstreamVersion` und die Herkunftszeile der Über-Seite;
-- Migrationscode, der alte Namen lesen muss (`SettingsStore` v43/v44, alte Kopfzeile
-  «DMS Include Configs», Marke `-- DMS-RULE:`), samt Tests;
-- die fremde App «Dux Calendar» (`dev.duxlabs.calendar`, Socket `dankcal`); die Datei
-  `CalendarDankBackend.qml` heisst künftig `CalendarDuxBackend.qml`;
-- systemnahe Namen, solange Frage 6 zum Halt D6 offen ist (PAM `dankshell`, Hotspot-Verbindung,
-  `/usr/share/dms`-Richtlinien, CUPS-Benutzer);
-- Dateien fremder Plugins in ihrem Original (Lizenz-/Herkunftsvermerke).
+| Eintrag | Warum von aussen vorgegeben | Erledigt bis |
+|---|---|---|
+| Go-Module `github.com/duxlabs-dev/dux-go`, `dux-gop` (Importpfade, `go.mod`/`go.sum`), Importname `duxlog` | fremde Bibliotheken (0.4 Nr. 9) | dauerhaft bis Phase B (Go-Dienst fällt weg) |
+| Herkunft: NOTICE, LICENSE-Vermerk, `LICENSE_CHANGE_12_11_2025.md`, README «Herkunft», `CHANGELOG.md`, `Brand.upstream*`, Herkunftszeile der Über-Seite | Rechtspflicht bzw. historische Angabe | dauerhaft |
+| Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | Phase C (wenn kein 1.0-Umzug mehr unterstützt wird) |
+| Fremde App «Dux Calendar»: `dev.duxlabs.calendar`, Socket `dankcal`, `CalendarDuxBackend.qml` | Namen der fremden App | solange die Anbindung besteht |
+| PAM-Dienste `dankshell`, `dankshell-u2f`, Blockmarken «DMS LOCKSCREEN AUTH»; Richtlinien `/usr/share/dms`, `/etc/dms`; alle anderen paketierten Pfade | heute vom Paket `dux-shell`/`dms` belegt | **E1** (zwingend, 0.8 Nr. 16; alte Blöcke erkennen) |
+| CUPS `requesting-user-name` `dms` | Besitzerkennung von Abonnements in cupsd (Befund in `offene-faelle.md`) | D7.7 (durch den Benutzernamen ersetzen) |
+| Dateien fremder Plugins im Original, Herkunftsvermerke im README von `~/alpe-plugins` | Lizenz/Herkunft | dauerhaft |
+| `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) | Paketnamen des Ursprungs | **E4** (0.8 Nr. 17) |
 
-`tools/namen-pruefen.sh` wird aus G1 nach D7 vorgezogen: ab D7.0 meldet es nur, ab D7.8 schlägt
-es in `tools/test.sh` fehl, sobald etwas ausserhalb der Ausnahmeliste dazukommt.
+Alles andere ist nach D7 ein Fehler der Namensprüfung. `tools/namen-pruefen.sh` (aus G1
+vorgezogen) meldet ab D7.0 und schlägt ab D7.8 in `tools/test.sh` fehl.
 
 #### 2.3.4 Plugins
 
-Alpe-Plugins: keine `Dank*`-Typen, kein `requires_dms` (gemessen); alpeSport trägt die Fähigkeit
-`dankbar-widget` → `bar-widget`. Alle drei bekommen `requires_alpe`.
+**`requires_alpe` (0.8 Nr. 12), Entscheid:** `PluginService` prüft das Feld gegen
+`Brand.version` (Alpe, z. B. 1.1) mit derselben Ausdruckssyntax wie heute (`>=1.1`, `<2` …).
+Ergebnis ist **ein Hinweis, keine Ladesperre** – wie heute bei `requires_dms`: Markierung in der
+Plugin-Liste und Hinweis auf der Plugin-Seite («Braucht Alpe 1.2»). Begründung: Eine Sperre
+schützt vor nichts, was der Hinweis nicht auch zeigt, nähme aber Plugins weg, deren Angabe zu
+streng ist. `requires_dms` wird nicht mehr gelesen; der Test in `plugin-reload.test.mjs` prüft
+gegen `Brand.version`.
 
-Fremde Plugins (alle vier liegen inzwischen auch auf dem PC unter `~/.config/dms/plugins`):
+Alpe-Plugins (alpeSport, alpeMeteoSwiss, alpeRadar): keine `Dank*`-Typen; `requires_alpe`
+dazu, alpeSport `dankbar-widget` → `bar-widget`.
 
-| Plugin | Lizenz (Repo geprüft am 22.11.2026) | Was es vom Ursprung benutzt | Weg |
+| Plugin | Lizenz (Repo geprüft 22.11.2026) | Benutzt vom Ursprung | Weg (0.8) |
 |---|---|---|---|
-| calculator (rochacbruno/DankCalculator) | **AGPL-3.0** (Standardtext, kein eigener Copyright-Vermerk; Autor laut README Bruno Cesar Rocha) | `["dms","cl","copy"]`, `requires_dms` | Erlaubt Aufnahme; **Folge:** das Plugin bleibt AGPL in einem MIT-Repo, eigener Ordner mit LICENSE, Vermerk in NOTICE; Name «DankCalculator» im Repo-Pfad → neuer Ordnername `calculator` – Frage «Vor D7» Nr. 2 |
-| hueManager (derethil/dms-hue-manager) | **keine Lizenz** (weder Datei noch Angabe; laut README nicht mehr gepflegt) | `DankIcon` (7), `DankSlider`, `DankListView`, `DankToggle`, `DankDropdown`, `DankButton` | nicht ins Repo → **Anleitung** für die lokalen Kopien |
-| sathiAi (Shinda Singh) | README sagt «MIT» und verweist auf `LICENSE`, die Datei fehlt aber; Quell-Repo nicht auffindbar (Register des Ursprungs umgezogen) | `dms notify`, `dms ipc call settings …` (eigene `DankRectangle.qml`, kein Shell-Typ) | ohne belegte Lizenzdatei vorerst **Anleitung**; mit Repo-URL und LICENSE ins Repo – Frage «Vor D7» Nr. 3 |
-| claudeCodeUsage (Nicolas Bellamy), in 0.8 nicht genannt | **MIT** (LICENSE mit Copyright) | `DankTextField`, `DankIcon`, `DankButton` | lädt nach D7.8 nicht mehr – Frage «Vor D7» Nr. 1 |
+| claudeCodeUsage (Nicolas Bellamy) | MIT, LICENSE mit Copyright | `DankTextField`, `DankIcon`, `DankButton` | **ins Alpe-Repo** `plugins/claudeCodeUsage/` mit LICENSE, Copyright in NOTICE; angepasst in D7.3 |
+| calculator (rochacbruno/DankCalculator) | AGPL-3.0 (Standardtext; Autor laut README Bruno Cesar Rocha) | `["dms","cl","copy"]`, `requires_dms` | **eigenes Repo `~/alpe-plugins`** (lokal `git init`, Branch `main`), Ordner `calculator/`, LICENSE unverändert, Copyright-Hinweis, Änderungen im Kopf der Dateien und in `CHANGES.md` gekennzeichnet, README mit Herkunft und Lizenz. GitHub `alpe-shell/alpe-plugins` und Push: Maintainer. Installation: E3/E4, bis dahin Klon |
+| hueManager (derethil/dms-hue-manager) | keine Lizenz | `DankIcon` (7), `DankSlider`, `DankListView`, `DankToggle`, `DankDropdown`, `DankButton` | **Anleitung** `docs/plugins-anpassen.md` |
+| sathiAi (Shinda Singh) | README sagt MIT, LICENSE fehlt, Repo unbekannt | `dms notify`, `dms ipc call settings …` | **Anleitung** wie hueManager |
 
-Anpassung (Repo oder Anleitung): `import qs.Widgets` → `qs.DCommon.Widgets`, `DankX` → `DX`
-(`DankIcon` → `DIcon` …, Ziele aus den Weiterleitungen), `dms …` → `alpe-dienst …`,
-`requires_dms` → `requires_alpe`, Ablage `~/.config/alpe/plugins`. Plugins im Repo behalten
-ihre ID (damit `plugin_settings.json` passt) und werden wie `alpe*` ausgeliefert; der Umzug
-kopiert ihre Nutzerkopien nicht (wie Plan 7.2 Schritt 4 für `alpe*`).
+Anpassung (Repo, `~/alpe-plugins` oder Anleitung): `import qs.Widgets` bzw. `qs.DCommon.Widgets`
+→ Modul der Widget-Bibliothek, `DankX` → `AlpeX`, `dms …` → `alpe-dienst …`,
+`requires_dms` → `requires_alpe`, Ablage `~/.config/alpe/plugins`. Plugins im Repo behalten ihre
+ID (`plugin_settings.json` passt weiter), der Umzug kopiert ihre Nutzerkopien nicht. Die
+Anleitungen und die calculator-Anpassung sind fertig, bevor D7.8 beginnt; **D7.8 erst nach
+Bestätigung des Maintainers**, dass PC und Mac umgestellt sind.
 
 #### 2.3.5 Commits D7
 
 | # | Bereich |
 |---|---|
-| D7.0 | Werkzeug: `entwicklung/umbenennen/` (Skript, Zuordnungstabelle, Probelauf, Kollisionsprüfung); `tools/namen-pruefen.sh` mit Ausnahmeliste, vorerst nur meldend |
-| D7.1 | Plugin-Beschreibung: `requires_alpe`, `bar-widget`; `PluginService`, Einstellungsseiten, Alpe-Plugins; Test |
-| D7.2 | Fremde Plugins: aufgenommene (nach Lizenz) unter `plugins/` angepasst, NOTICE; Anleitung für die übrigen in `docs/plugins-anpassen.md` |
-| D7.3 | Schnittstelle Dienst ↔ Oberfläche: `DMSService`, `DMSNetworkService`, `dmsBin`, JSON-Felder und Gegenstücke im Go-Dienst |
-| D7.4 | Oberfläche: Dateien `DMSShell*.qml`, Bezeichner `DankBar`/`DankDash`/`DankIsland`/`dankLauncherV2…`, Kürzel-Aktionen; `dankNotepadModule`-Anbindung weg |
-| D7.5 | Gespeicherte Kennungen mit Migration v44 (Seiten-IDs, Starter-Plugins, Logo-Modus, Material-Vorlage, matugen-Spec, Kürzel-Quelle), IPC-Ziel `dankdash` weg; Test mit Einstellungen aus 1.0 und v43 |
-| D7.6 | Erzeugte Dateien und Vorlagen für Fremdprogramme: Cache-Namen, matugen-Vorlagen, Regel-IDs, `-- ALPE-RULE:` |
-| D7.7 | Dienst (Go) intern: Bezeichner, Paket `palette16`, Importname |
-| D7.8 | Weiterleitungen und `Deprecation.qml` entfernt; Namensprüfung schlägt ab jetzt fehl |
+| D7.N | Node-Tests der Oberfläche in `tools/test.sh` mit fester Liste der 10 bekannten Fehlschläge (neuer Fehlschlag = rot) – vor D7.0 (0.8 Nr. 19) |
+| D7.0 | Werkzeug `entwicklung/umbenennen/` (Skript, Zuordnungstabelle, Probelauf, Kollisionsprüfung nach 2.3.0); `tools/namen-pruefen.sh` mit Ausnahmeliste 2.3.3, nur meldend |
+| D7.1 | Plugin-Beschreibung: `requires_alpe` gegen `Brand.version`, `bar-widget`; Alpe-Plugins; Tests |
+| D7.2 | Widget-Bibliothek `Alpe*` (nach Antwort auf die Rückfrage A/B); die `Dank*`-Weiterleitungen bleiben bis D7.8 |
+| D7.3 | Plugins: claudeCodeUsage ins Repo und angepasst, NOTICE; `~/alpe-plugins` mit calculator; `docs/plugins-anpassen.md` für hueManager und sathiAi |
+| D7.4 | Schnittstelle Dienst ↔ Oberfläche: `ShellBackend`, `BackendNetworkService`, `backendBin`, JSON-Felder (`fragmentStatus`, Kürzel-Quelle) samt Go-Gegenstücken |
+| D7.5 | Oberfläche: `ShellMain.qml`/`ShellIpc.qml`, Bezeichner Bar/Dash/Island/Launcher, Kürzel-Aktionen; `dankNotepadModule`-Anbindung, «Wallpaper creator», `dms://` und Doku-Links nach `duxlabs.dev` weg |
+| D7.6 | Gespeicherte Kennungen, Migration v44 (Seiten-IDs, Starter-Plugins, Logo-Modus, Material-Vorlage «Alpe» mit Alpe-Zeichen, matugen-Spec), IPC-Ziel `dankdash` weg; Test mit Einstellungen aus 1.0 und v43 |
+| D7.7 | Erzeugte Dateien und Fremdprogramm-Vorlagen (Cache-Namen, matugen, Regel-IDs, `-- ALPE-RULE:`), Hotspot-Name, CUPS-Benutzer; Dienst intern (Bezeichner, `palette16`, `duxlog`) |
+| D7.8 | **Nach Bestätigung:** Weiterleitungen und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
 
-Prüfung: je Commit `bash tools/test.sh`; Go-/Node-Tests wie bekannt; Ladeprüfung einmal auf
-dem Endstand unter KWin und Hyprland (Grundlinien: Meldungen mit umbenannten Namen werden
-nachgeführt, jede andere Abweichung einzeln erklärt). Halt nach D7 mit Mac-Test.
+Dazu im Lauf von D7 (Doku, kein Code): `docs/plan/sie-form.md` (0.8 Nr. 15).
 
-Folgen für F1 (Umzug), zusätzlich zu 7.2: kitty-`include`-Zeilen, fcitx5- und Lualine-Themenwahl,
-Hyprland-Kürzel mit `dankdash`, Regel-IDs und `-- DMS-RULE:` in eigenen Hyprland-Dateien
-(die Shell liest sie weiter, der Umzug darf sie umschreiben); Nutzerkopien der ins Repo
-aufgenommenen Plugins nicht kopieren.
+Prüfung: je Commit `bash tools/test.sh`; Go-Tests wie bekannt; Ladeprüfung einmal auf dem
+Endstand unter KWin und Hyprland (Meldungen mit umbenannten Namen werden in den Grundlinien
+nachgeführt, jede andere Abweichung einzeln erklärt). **Halt nach D7**, Mac-Test, dann 6.7, E1.
+
+Folgen für F1 (Umzug), zusätzlich zu 7.2: kitty-`include`-Zeilen, fcitx5- und Lualine-
+Themenwahl, Hyprland-Kürzel mit `dankdash`, Regel-IDs und `-- DMS-RULE:` in eigenen
+Hyprland-Dateien; Nutzerkopien der Repo-Plugins nicht kopieren; Hotspot-Verbindung bleibt.
+Folgen für E1: PAM-Dienste, Richtlinien und alle paketierten Pfade mit `alpe`-Namen (2.3.3).
 
 ---
 
@@ -958,8 +1025,8 @@ Meldungen die Commits dazwischen einzeln (0.7 Nr. 6).
 | D4 | KWin-Brücke `alpe-bridge`, Aktionen `alpe-*` | Test test_bridge.js angepasst |
 | D5 | Einstellungen: Schlüssel/Werte + Migration | Test mit alter settings.json |
 | D6 | Sichtbare Texte, Über-Seite, Brand.apply weg, Übersetzungen | |
-| D7.0–D7.8 | Interne Namen, Plugin-Beschreibung, fremde Plugins, Weiterleitungen weg | **wieder aufgenommen** (0.8), Bereiche und Reihenfolge in 2.3.5; Halt nach D7 |
-| E1 | Makefile, systemd-Unit, Desktop-Dateien | `make install DESTDIR` getestet in Temp-Wurzel |
+| D7.N, D7.0–D7.8 | Node-Tests in test.sh; interne Namen, Widget-Bibliothek `Alpe*`, Plugin-Beschreibung, Plugins, Migration v44; Weiterleitungen weg (D7.8 erst nach Bestätigung) | **direkt nach D6, vor E1** (0.8 Nr. 6), Bereiche in 2.3.5; Halt nach D7, Mac-Test, dann 6.7 |
+| E1 | Makefile, systemd-Unit, Desktop-Dateien; **PAM-Dienste, Richtlinien und alle paketierten Pfade mit `alpe`-Namen** (0.8 Nr. 16) | `make install DESTDIR` getestet in Temp-Wurzel; Dateiliste ohne Überschneidung mit dem Paket `dms`/`dux-shell` |
 | E2 | PKGBUILD | CI-Bau |
 | E3 | RPM-Spec | CI-Bau x86_64 |
 | E4 | Werkzeuge: `alpe` CLI, einrichten.sh, entwicklung, doctor/update/entfernen/backup, kde-sitzung, lockscreen, kuerzel, titelleisten, design.py | bestehende Tests nachgeführt |

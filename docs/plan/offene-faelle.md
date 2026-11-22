@@ -1,6 +1,6 @@
 # Phase A – offene Fälle
 
-Stand: 22. November 2026, Halt nach D6 (Plan «Stand»); Halt nach D3 abgenommen (Plan 0.7). Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
+Stand: 22. November 2026, Halt nach D6; D7 freigegeben (Plan 0.8, 2.3); Halt nach D3 abgenommen (Plan 0.7). Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
 (Abschnitt «Stand»). Erledigte Fälle werden gestrichen, nicht gelöscht.
 
 ## Entscheide des Maintainers
@@ -209,7 +209,7 @@ nur «nicht gefunden».)
    `launcherPluginVisibility`, `launcherPluginOrder`, Session `builtInPluginState`, Starter-
    Zwischenspeicher). Nicht sichtbar. In D5 bewusst nicht umbenannt. **Vorschlag:** auf die
    Ausnahmeliste (interne Kennung, wie 0.7 Nr. 3), Phase C. Alternative: Migration v44.
-2. **Material-Hintergrund «Dank»** (Vorgabe-Vorlage, `DCommon/Common/MaterialWallpaper.js`):
+2. ~~**Material-Hintergrund «Dank»**~~ → entschieden (Plan 0.8 Nr. 13): Vorlage «Alpe», Form Alpe-Zeichen, Migration v44. **Material-Hintergrund «Dank»** (Vorgabe-Vorlage, `DCommon/Common/MaterialWallpaper.js`):
    heisst sichtbar «Dank» und zeichnet als Ebene `dankLogo` die **Logoform des Ursprungs**
    (`DCommon/Widgets/DLogoShape.js`). **Vorschlag:** Form durch das Alpe-Zeichen ersetzen
    (Kurven aus `alpe-zeichen.svg`), Bezeichnung «Alpe»; der gespeicherte Wert `"dank"` bleibt
@@ -217,22 +217,22 @@ nur «nicht gefunden».)
 3. ~~**Logo-Modus `"dank"`**~~ → D7.5 (Plan 0.8). **Logo-Modus `"dank"`** (Starter-Knopf, Apps-Dock, Dot: `launcherLogoMode`,
    `islandFreeIconMode`): zeigt seit 1.0 das Alpe-Zeichen, der Wert ist nicht sichtbar, liegt
    aber verschachtelt in Leisten-/Dock-Konfigurationen. **Vorschlag:** Ausnahmeliste, Phase C.
-4. **Webdienste des Ursprungs** (`Common/Site.qml`, `duxlabs.dev`): Doku-Link auf der
+4. ~~**Webdienste des Ursprungs**~~ → entschieden (0.8 Nr. 14): Doku-Links und «Wallpaper creator» samt Code weg. **Webdienste des Ursprungs** (`Common/Site.qml`, `duxlabs.dev`): Doku-Link auf der
    Autostart-Seite, Doku-Links in `alpe-dienst doctor`, Knopf «Wallpaper creator»
    (Webdienst des Ursprungs; installiert über das Schema `dms://wallpaper/install/`, das
    `alpe-dienst open` und `DMSShell.qml` annehmen). **Vorschlag:** Doku-Links entfernen
    (Alpe hat keine eigene Doku-Seite), Wallpaper-Knopf ausblenden, `dms://` bleibt intern bis
    Phase C. Entscheid nötig, weil es eine Funktion wegnimmt.
-5. **Sie-Form im deutschen Katalog des Ursprungs:** 103 von 3090 Übersetzungen siezen
+5. ~~**Sie-Form**~~ → Prüfliste `docs/plan/sie-form.md`, Freigabe vor G1 (0.8 Nr. 15). **Sie-Form im deutschen Katalog des Ursprungs:** 103 von 3090 Übersetzungen siezen
    («Aktualisieren Sie …», «Ihr System …»); die Oberfläche soll duzen. Mechanisch nicht sicher
    umzustellen (Verbformen). **Vorschlag:** eigener Commit vor G1, Liste von Hand durchgehen.
-6. **Systemnahe Namen:** PAM-Dienste `/etc/pam.d/dankshell`, `dankshell-u2f` und deren
+6. ~~**Systemnahe Namen**~~ → keine dauerhafte Ausnahme (0.8 Nr. 16): paketierte Pfade und PAM in E1, Hotspot in D7, CUPS siehe unten. **Systemnahe Namen:** PAM-Dienste `/etc/pam.d/dankshell`, `dankshell-u2f` und deren
    Blockmarken «DMS LOCKSCREEN AUTH»; NetworkManager-Verbindung «DankMaterialShell Hotspot»
    (nur der Verbindungsname, die SSID wählt man selbst); Richtlinien
    `/usr/share/dms/cli-policy.json`, `/etc/dms/cli-policy.json`; CUPS-Benutzername `dms`.
    Umbenennen hiesse Systemdateien migrieren (sudo) bzw. alte Verbindungen doppelt führen.
    **Vorschlag:** Ausnahmeliste; die Richtlinien-Pfade mit E1 (Paket) neu entscheiden.
-7. **Gesperrte Pakete** `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) und die
+7. ~~**Gesperrte Pakete**~~ → mit E4 entfernen (0.8 Nr. 17). **Gesperrte Pakete** `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) und die
    Hold-Anzeige auf der Wartungsseite: gehören zur 1.0-Einrichtung; Plan 2.2 sagt «entfällt».
    **Vorschlag:** mit E4 entfernen (nach dem Umzug ist `dux-shell` weg).
 
@@ -240,26 +240,36 @@ Dazu, ohne Frage: Die deutschen Kataloge hatten «ß» (ersetzt), Importreihenfo
 seit D3 (`bca3795`, Import von `internal/brand`) nicht gofmt-sauber (kosmetisch, vor G1), `Theme.qml` kennt die Kategorie «registry»
 weiter (unverändert seit C4).
 
-## Vor D7: Fragen (Plan 0.8, 2.3)
+## Vor D7: Fragen (Plan 0.8, 2.3) – beantwortet am 22.11.2026
 
-Freigabe von Plan 2.3 (Zuordnung 2.3.2, Commits 2.3.5) und dazu:
+Antworten in Plan 0.8 Nr. 6–19: claudeCodeUsage ins Repo; calculator in eigenes Repo
+`~/alpe-plugins`; sathiAi und hueManager per Anleitung; Namen freigegeben (`ShellBackend`,
+`dash`, `alpe_*`, `palette16`); Material-Vorlage «Alpe» mit Alpe-Zeichen.
 
-1. **claudeCodeUsage** (PC, MIT, Nicolas Bellamy) steht nicht in 0.8, benutzt aber `DankTextField`,
-   `DankIcon`, `DankButton` und lädt nach D7.8 nicht mehr. Die Lizenz erlaubt die Aufnahme.
-   **Vorschlag:** wie die anderen behandeln, also ins Repo.
-2. **calculator ist AGPL-3.0.** Aufnahme erlaubt, aber Alpe liefert dann einen AGPL-Teil mit
-   (eigener Ordner mit LICENSE, Vermerk in NOTICE und im Paket; Änderungen bleiben AGPL, der
-   Quelltext liegt ohnehin offen). Der Rest von Alpe bleibt MIT. Einverstanden, oder lieber
-   Anleitung für die lokale Kopie?
-3. **sathiAi:** README nennt MIT, die LICENSE-Datei fehlt, das Quell-Repo habe ich nicht gefunden
-   (das Plugin-Register des Ursprungs ist umgezogen). Kennst du die Repo-URL? Mit belegter
-   Lizenz kommt es ins Repo, sonst bekommst du eine Anleitung.
-4. **hueManager** hat keine Lizenz (Repo geprüft, laut README nicht mehr gepflegt): nicht ins Repo,
-   Anleitung in D7.2.
-5. **Namen** in Plan 2.3.2, vor allem `ShellBackend` (statt `DMSService`), Seiten-ID `dash`
-   (statt `dank_dash`), `alpe_*` für die Starter-Plugins, `palette16` für `dank16` – passt das?
-6. Frage 2 zum Halt D6 (Material-Vorlage «Dank»: Alpe-Zeichen als Form oder Vorlage entfernen)
-   bestimmt D7.5 mit.
+**Noch offen (vor D7.2):** Lesart der Widget-Bibliothek, Plan 2.3.0 – A (nur die Plugin-API
+heisst `Alpe*`, intern bleibt `D*`) oder B (`D*` heisst überall `Alpe*`; ≈1330 Stellen). Dazu,
+ob die Modulnamen `DCommon`, `DBar`, `DDash`, `DIsland` unter Regel 1 fallen. Der Plan geht
+bis zur Antwort von B aus, Modulnamen bleiben.
+
+## CUPS-Benutzer `dms` (Befund, Plan 0.8 Nr. 16)
+
+Der Dienst setzt `requesting-user-name = "dms"` an fünf Stellen, alle beim **Abonnement von
+Druckerereignissen** (`core/internal/server/cups/subscription.go`, `subscription_dbus.go`):
+Anlegen (`Create-Printer-Subscriptions`), Abholen der Ereignisse und Kündigen. Druckaufträge,
+Verwaltung oder Anmeldung benutzen ihn nicht. cupsd führt den Namen als Besitzer des
+Abonnements; es ist kein Systemkonto, und es wird kein Recht damit verbunden (Ereignisse eines
+Abonnements darf jeder abholen, Kündigen prüft den Besitzer). Abonnements laufen unbegrenzt
+(Abfrageweg, `notify-lease-duration 0`) bzw. einen Tag (D-Bus-Weg) und werden beim Beenden
+gekündigt. **Vorschlag für D7.7:** den echten Benutzernamen (`os/user`) statt eines festen
+Wortes setzen. Folge: Ein beim Absturz liegengebliebenes altes Abonnement auf «dms» bleibt in
+cupsd bis zu dessen Neustart bzw. Ablauf; schadet nicht.
+
+## Mögliche eigene Funktion: Hintergrund-Gestalter (nach Phase A)
+
+«Wallpaper creator» war ein Webdienst des Ursprungs (`wallpaper.duxlabs.dev`), der Bilder über
+`dms://wallpaper/install/…` an die Shell übergab. Er entfällt in D7.5 samt Code (0.8 Nr. 14).
+Denkbar später: eigener Gestalter in den Einstellungen (Material-Vorlagen gibt es schon) oder
+ein eigenes Schema `alpe://` mit Handler im Paket.
 
 ## Hyprland: `hyprctl descriptions` (nach Phase A)
 
