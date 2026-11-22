@@ -30,6 +30,9 @@ Die Shell des Maintainers ist **fish**. In Befehlen für ihn:
 - **Nie pushen, nie Tags setzen oder verschieben, nie Releases anlegen.** Das macht der Maintainer selbst.
 - Arbeiten auf einem eigenen Branch (für Phase A: `phase-a`), kleine, thematisch saubere Commits.
 - Nicht `main` umschreiben. Kein `git push --force`, kein `git reset --hard` auf fremde Arbeit.
+- Vor jedem Commit `git diff --cached --name-status` gegen die beabsichtigte Liste prüfen und nur
+  mit ausdrücklich genannten Pfaden committen (`git commit -- PFAD…`), nie den ganzen Index
+  (Plan 0.8 Nr. 72).
 - `KONTEXT.md` ist lokal und gitignored – lesen ja, nie committen.
 - Keine fremden oder urheberrechtlich geschützten Bilder ins Repository.
 
@@ -56,12 +59,18 @@ Der Maintainer arbeitet auf dem PC, auf dem du läufst, und Alpe ist seine aktiv
 bash tools/test.sh          # = alpe test, dieselben Prüfungen wie auf GitHub Actions
 ```
 
-Alles muss grün sein. Neue Funktion → neuer Test. Shell-Skripte: `bash -n`, QML-Seiten laden
+Alles muss grün sein – nach jedem Commit, und zwar auf dem Commit selbst in einem Temp-Worktree
+(`git worktree add --detach`), nicht auf einem baumgleichen Vorgänger und nicht auf dem
+Arbeitsbaum (Plan 0.8 Nr. 72). Neue Funktion → neuer Test. Shell-Skripte: `bash -n`, QML-Seiten laden
 in den Harnessen unter `entwicklung/`.
 
 Ladeprüfung (`entwicklung/ladepruefung/ladepruefung.py`) einmal pro Halt auf dem Endstand unter
-KWin und Hyprland; im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet, damit
-Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33).
+KWin und Hyprland, **in zwei Varianten**: «gesperrt» (ohne Option; das Design sperrt beim Start)
+und «offen» (`--offen`: ohne `lockAtStartup`, mit sichtbarer Material-Vorlage), je gegen die eigene
+Grundlinie (Plan 0.8 Nr. 70). Im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet,
+damit Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33). Zum Halt gehört ein Bild der Variante
+«offen» unter Hyprland (`--offen --bild DATEI`, aufgenommen mit `alpe-dienst screenshot full`;
+grim wird nicht benutzt), das angesehen und dem Maintainer beschrieben wird (Plan 0.8 Nr. 71).
 
 Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `shell/` – nicht in
 `tools/test.sh`: `python3 entwicklung/qmllint/qmllint-pruefung.py` vergleicht mit

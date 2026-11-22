@@ -189,7 +189,7 @@ Neu seit D6 – bitte gezielt ansehen:
   D7.8a noch `dms clipboard copy` und tat unter 1.1 nichts).
 - **Bildschirmfoto und Pipette ohne Animation:** `/tmp/alpe-d7/alpe-dienst screenshot region`
   starten und während der Auswahl im zweiten Terminal `hyprctl layers | grep alpe:` – die Fläche
-  heisst `alpe:screenshot` (Pipette: `alpe:colorpicker`); sie soll ohne Einblenden erscheinen,
+  heisst `alpe:screenshot` (Pipette: `alpe:eyedropper`, Plan 0.8 Nr. 75); sie soll ohne Einblenden erscheinen,
   wenn in der eigenen Hyprland-Datei eine Regel für `^alpe:.*` steht.
 - **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
 
@@ -418,7 +418,12 @@ aus dem Git-Stand der Oberfläche, neueste Version über die Release-Seite bzw. 
 mit dem neuen Dienst; dann gegen die Releases des eigenen Repos und mit dem User-Agent nach
 0.8 Nr. 67.
 
-## Aus D7.8a: zwei Fragen (22.11.2026)
+## Aus D7.8a: zwei Fragen (22.11.2026) – beantwortet, Plan 0.8 Nr. 73 und 74
+
+**Entschieden:** (1) F1 benennt die WirePlumber-Datei um, `AudioService` schreibt danach nur den
+neuen Namen, der Rückweg benennt zurück, nie beide Dateien gleichzeitig. (2) Abgleich-Skripte
+werden entfernt, das Skript zum Herausziehen der Texte wird angepasst und behalten. Der Text
+unten ist der Stand der Frage.
 
 1. **WirePlumber-Datei `51-dms-audio-aliases.conf`.** `AudioService.qml` schreibt die Namen der
    Audiogeräte nach `~/.config/wireplumber/wireplumber.conf.d/51-dms-audio-aliases.conf` – eine
