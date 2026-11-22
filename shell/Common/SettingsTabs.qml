@@ -200,7 +200,7 @@ Singleton {
         },
         {
             "id": "dash",
-            "text": I18n.tr("Dashboard", "settings page name for the dank dash popout"),
+            "text": I18n.tr("Dashboard", "settings page name for the dash popout"),
             "icon": "space_dashboard",
             "tabIndex": 43,
             "aliases": ["dashboard", "dashboards_osd"],

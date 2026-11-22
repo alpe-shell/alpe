@@ -44,7 +44,9 @@ def shell_processes():
             target = ""
         if exe in ("quickshell", "qs") or os.path.basename(target) in ("quickshell", "qs"):
             kind = "Oberfläche (Quickshell)"
+        # alpe-namen-ausnahme: umzug-ende – den Dienst einer Einrichtung aus 1.0 unter seinem alten Namen erkennen
         elif (exe in ("alpe-dienst", "dms", "alpe") or os.path.basename(target) in ("alpe-dienst", "dms", "alpe")) and "run" in cmdline[1:]:
+            # alpe-namen-ausnahme: umzug-ende
             kind = "Dienst (" + ("eigener Bau" if "/.local/lib/alpe/" in target else "Paket") + ")"
         else:
             continue

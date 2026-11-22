@@ -669,7 +669,7 @@ Item {
                 }
             }
 
-            // Dank* wrappers reset contentY on model change and take the wheel; the pager needs snap-one-item paging.
+            // Alpe* wrappers reset contentY on model change and take the wheel; the pager needs snap-one-item paging.
             ListView {
                 id: pager
                 anchors.centerIn: parent

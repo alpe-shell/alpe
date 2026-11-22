@@ -319,7 +319,7 @@ Item {
         openEditor("edit", rule);
     }
 
-    function copyRuleToDms(rule) {
+    function copyRuleToShell(rule) {
         openEditor("copy", rule);
     }
 
@@ -612,7 +612,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         tooltipText: I18n.tr("Convert to Alpe")
                         tooltipSide: "left"
-                        onClicked: root.copyRuleToDms(externalCard.modelData)
+                        onClicked: root.copyRuleToShell(externalCard.modelData)
                     }
 
                     body: Column {

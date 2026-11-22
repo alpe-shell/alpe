@@ -8,7 +8,7 @@ import test from "node:test";
 
 test("shell staging and archives exclude tests and preserve runtime assets", t => {
     const root = fileURLToPath(new URL("../../", import.meta.url));
-    const temporary = mkdtempSync(join(tmpdir(), "dms-shell-embed-"));
+    const temporary = mkdtempSync(join(tmpdir(), "alpe-shell-embed-"));
     t.after(() => rmSync(temporary, { recursive: true, force: true }));
     const source = join(temporary, "source");
     const dist = join(temporary, "dist");

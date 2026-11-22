@@ -138,8 +138,8 @@ test("managed settings win over every settings file, on the first load and on ea
 });
 
 test("a save leaves managed keys out of the settings files, and a user's own value in place", () => {
-    const main = "/home/u/.config/dms/settings.json";
-    const overlay = "/home/u/.config/dms/config.d/lock.json";
+    const main = "/home/u/.config/alpe/settings.json";
+    const overlay = "/home/u/.config/alpe/config.d/lock.json";
     const fileSettings = { [main]: { lockBeforeSuspend: false, acLockTimeout: 60 }, [overlay]: { customPowerActionLock: "true", fadeToLockEnabled: false } };
     const context = settingsDataContext({
         AdminPolicy: { lockSettings: { lockBeforeSuspend: true, customPowerActionLock: "", batteryLockTimeout: 300 } },

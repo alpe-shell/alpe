@@ -75,7 +75,7 @@ Item {
                 buttonPadding: Theme.spacingS
                 minButtonWidth: 44
                 textSize: Theme.fontSizeSmall
-                model: [I18n.tr("Symbol"), I18n.tr("OS Logo"), "Dux", root.compositorLabel, I18n.tr("Custom")]
+                model: [I18n.tr("Symbol"), I18n.tr("OS Logo"), "Alpe", root.compositorLabel, I18n.tr("Custom")]
                 values: root.iconModes
                 value: root.iconMode
                 fallbackValue: "icon"

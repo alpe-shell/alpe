@@ -1009,8 +1009,10 @@
     // Global shortcuts. KWin owns them (kglobalaccel), so they show up under
     // System Settings > Shortcuts > KWin and can be rebound there. A default
     // key that is already taken elsewhere is left unassigned by KWin.
+    // alpe-namen-ausnahme: umzug-ende – Hinweis auf die Kennungen aus 1.0
     // Alpe: Kennungen alpe-* (bis 1.0 dms-*). An der Kennung hängen in kglobalaccel die
     // vergebenen Tasten; die Tasten der alten dms-*-Aktionen überträgt der Umzug (alpe umzug).
+    // alpe-namen-ausnahme: umzug-ende
     var shortcuts = [
         ["alpe-launcher", "Alpe: Starter", "Meta+Space"],
         ["alpe-clipboard", "Alpe: Zwischenablage", "Meta+Shift+V"],

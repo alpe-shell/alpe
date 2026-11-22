@@ -37,6 +37,7 @@ var CC_V41_FOOTER_CELLS = {
 
 var REMOVED_KEYS_V21 = ["showBattery", "showCapsLockIndicator", "showClipboard", "showClock", "showControlCenterButton", "showCpuUsage", "showFocusedWindow", "showLauncherButton", "showMemUsage", "showMusic", "showNotificationButton", "showPrivacyButton", "showSystemTray", "showWeather", "showWorkspaceSwitcher", "hideBrightnessSlider", "updaterHideWidget", "workspaceScrolling", "appLauncherViewMode", "spotlightModalViewMode", "audioDeviceScrollVolumeEnabled", "desktopClockX", "desktopClockY", "desktopClockWidth", "desktopClockHeight", "desktopClockDisplayPreferences", "systemMonitorX", "systemMonitorY", "systemMonitorWidth", "systemMonitorHeight", "systemMonitorDisplayPreferences", "systemMonitorVariants"];
 
+// alpe-namen-ausnahme: umzug-ende – alte Schlüssel der Insel lesen (Migration v18)
 // v18: the shell-wide island settings became per-bar-config island* keys
 var ISLAND_KEY_MOVES = {
     dankIslandFloating: "islandFloating",
@@ -72,6 +73,7 @@ var ISLAND_KEY_MOVES = {
     dankIslandSpringDamping: "islandSpringDamping",
     dankIslandSpringMass: "islandSpringMass"
 };
+// alpe-namen-ausnahme: umzug-ende
 
 function migrateBatteryPillStyle(target) {
     if (!target || typeof target !== "object" || target.batteryPillStyle === undefined)
@@ -274,6 +276,7 @@ function migrateToVersion(obj, targetVersion) {
 
     if (currentVersion < 2 && targetVersion >= 2) {
         console.info("Migrating settings from version", currentVersion, "to version 2");
+        // alpe-namen-ausnahme: umzug-ende – alte Schlüssel der einen Leiste lesen (Migration v2)
 
         if (settings.barConfigs === undefined) {
             var position = 0;
@@ -327,6 +330,7 @@ function migrateToVersion(obj, targetVersion) {
 
             console.info("Migrated single bar settings to barConfigs");
         }
+        // alpe-namen-ausnahme: umzug-ende
 
         settings.configVersion = 2;
     }
@@ -547,8 +551,9 @@ function migrateToVersion(obj, targetVersion) {
 
     if (currentVersion < 18 && targetVersion >= 18) {
         console.info("Migrating settings from version", currentVersion, "to version 18");
-        console.info("Moving the shell-wide Dank Island onto its bar config as a per-instance mode");
+        console.info("Moving the shell-wide island onto its bar config as a per-instance mode");
 
+        // alpe-namen-ausnahme: umzug-ende – alte Schlüssel der Insel lesen (Migration v18)
         var islandId = settings.dankIslandBarId;
         var islandBars = Array.isArray(settings.barConfigs) ? settings.barConfigs : [];
         for (var ib = 0; ib < islandBars.length; ib++) {
@@ -565,6 +570,7 @@ function migrateToVersion(obj, targetVersion) {
             delete settings[dropKey];
         delete settings.dankIslandBarId;
         delete settings.dankIslandSatelliteSwoopRadius;
+        // alpe-namen-ausnahme: umzug-ende
 
         settings.configVersion = 18;
     }
@@ -729,9 +735,11 @@ function migrateToVersion(obj, targetVersion) {
     }
 
     if (currentVersion < 30 && targetVersion >= 30) {
+        // alpe-namen-ausnahme: umzug-ende – alten Schlüssel lesen (Migration v30)
         if (settings.dmsWindowsFloating === false)
             settings.shellWindowsFloatingSeeded = ["niri", "hyprland", "mango"];
         delete settings.dmsWindowsFloating;
+        // alpe-namen-ausnahme: umzug-ende
         settings.configVersion = 30;
     }
 
@@ -799,6 +807,7 @@ function migrateToVersion(obj, targetVersion) {
     return settings;
 }
 
+// alpe-namen-ausnahme: umzug-ende – Schlüssel und Werte aus 1.0 lesen (Migration v43)
 // Alpe (v43): Schlüssel und Werte mit den Namen des Ursprungs (DMS) tragen eigene Namen.
 var ALPE_RENAMED_KEYS = {
     "dankLauncherV2Size": "launcherSize",
@@ -829,6 +838,7 @@ function migrateAlpeNames(settings) {
     if (settings.alpeHyprBlurMode === "dms")
         settings.alpeHyprBlurMode = "standard";
 }
+// alpe-namen-ausnahme: umzug-ende
 
 // v42: dock apps follow the dock's icon size and magnification instead of their own copies
 function migrateDockAppsSizing(settings) {

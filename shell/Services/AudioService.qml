@@ -1266,7 +1266,9 @@ EOFCONFIG
                 return;
 
             const loginFile = `${runtimeDir}/alpe.login-${sessionId}`;
+            // alpe-namen-ausnahme: umzug-ende – Marke einer Sitzung lesen, in der noch 1.0 gestartet wurde
             const legacyLoginFile = `${runtimeDir}/danklinux.login-${sessionId}`;
+            // alpe-namen-ausnahme: umzug-ende
 
             // if file doesn't exist, touch it (0)
             // If it exists, do nothing (1)

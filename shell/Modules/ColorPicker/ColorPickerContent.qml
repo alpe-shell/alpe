@@ -108,7 +108,7 @@ AlpeDialog {
                 copyColor(result.hex);
             }
         } catch (error) {
-            log.warn("Failed to parse dms color pick JSON:", error);
+            log.warn("Failed to parse color pick JSON:", error);
         }
         showRequested();
     }

@@ -89,7 +89,7 @@ CATEGORY_KEYWORDS = {
     "Greeter": ["login", "greetd", "display manager"],
     "Multiplexers": ["tmux", "zellij", "terminal"],
     "Frame": ["window", "border", "decoration"],
-    "Dank Island": ["island", "activities", "dynamic island"],
+    "Island": ["island", "activities", "dynamic island"],
     "Default apps": ["browser", "terminal", "handlers", "mime"],
     "Users": ["accounts", "user", "profile"],
     "Autostart": ["startup", "launch", "boot"],

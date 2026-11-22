@@ -1,0 +1,171 @@
+# D7.8a (Plan 0.8 Nr. 64): Einordnung jeder Fundstelle der Namensprüfung ausserhalb der Dateien, die D7.8 entfernt.
+# Stand der Trefferliste: efb3216 (167 Fundstellen). Einordnung: Migration = bleibt, zwischen Marken «alpe-namen-ausnahme: umzug-ende»;
+# umbenannt = Name ersetzt; behoben = alter Name hatte eine Wirkung; Ausnahmeliste = von aussen vorgegeben, Eintrag mit Frist.
+# FUNDSTELLE<Tab>EINORDNUNG<Tab>MASSNAHME<Tab>TEXT (gekürzt)
+entwicklung/pageharness/kuerzel_last.py:41	Ausnahmeliste	E4: Testdaten der Einrichtung von 1.0 (Kürzel-Komponente, Dienst), wie tests/test_kwin.py	comps.push({ component: c === 0 ? "kwin" : c === 1 ? "dms" : "comp" + c, name: c === 0 ? "
+entwicklung/pageharness/qs/Common/Brand.qml:12	Ausnahmeliste	Kopie aus shell/ erneuert; Herkunft, dauerhaft	readonly property string upstreamName: "Dux Modular Shell"
+entwicklung/pageharness/qs/Common/Brand.qml:14	Ausnahmeliste	Kopie aus shell/ erneuert; Herkunft, dauerhaft	readonly property string upstreamUrl: "https://github.com/duxlabs-dev/dux-shell"
+entwicklung/pageharness/qs/Common/Brand.qml:19	Ausnahmeliste	Kopie aus shell/ erneuert; E4 wie shell/Common/Brand.qml	readonly property var heldPackages: ["dux-shell", "dms", "dms-cli"]
+entwicklung/pageharness/qs/Common/SettingsTabs.qml:203	umbenannt	veraltete Kopie durch den Stand aus shell/ ersetzt	"text": I18n.tr("Dashboard", "settings page name for the dank dash popout"),
+entwicklung/pageharness/qs/Common/SettingsTabs.qml:577	umbenannt	veraltete Kopie durch den Stand aus shell/ ersetzt	"text": I18n.tr("Software updates", "settings page, modal and bar widget title, DMS and sy
+entwicklung/pageharness/qs/Common/SettingsTabs.qml:580	umbenannt	veraltete Kopie durch den Stand aus shell/ ersetzt	"hint": I18n.tr("DMS and system updates", "settings sidebar hint for the software updates 
+entwicklung/pageharness/qs/Common/SettingsTabs.qml:618	umbenannt	veraltete Kopie durch den Stand aus shell/ ersetzt	"text": I18n.tr("Release notes", "settings page and card title, notes for a DMS release"),
+entwicklung/pageharness/qs/Services/BrightnessService.qml:394	umbenannt	veraltete Kopie durch den Stand aus shell/ ersetzt	log.warn("Not connected to DMS");
+entwicklung/pageharness/tk2.qml:19	Ausnahmeliste	E4: Testdaten der Einrichtung von 1.0 (Kürzel-Komponente, Dienst), wie tests/test_kwin.py	{ component: "dms", name: "Alpe", actions: [{ action: "alpe-launcher", name: "Alpe: Starte
+entwicklung/pageharness/tk2.qml:20	Ausnahmeliste	E4: Testdaten der Einrichtung von 1.0 (Kürzel-Komponente, Dienst), wie tests/test_kwin.py	property var sv: ({ available: true, services: [{ Id: "dms.service", ActiveState: "active"
+entwicklung/pageharness/tp3.qml:9	Ausnahmeliste	E4: Testdaten der Einrichtung von 1.0 (Kürzel-Komponente, Dienst), wie tests/test_kwin.py	property var sv: ({ available: true, services: [{ Id: "dms.service", ActiveState: "active"
+entwicklung/pageharness/tp3.qml:29	Ausnahmeliste	E4: Testdaten der Einrichtung von 1.0 (Kürzel-Komponente, Dienst), wie tests/test_kwin.py	Proc.calls = []; s.journal("dms.service");
+entwicklung/qmllint/grundlinie.txt:1092	Ausnahmeliste	E1: Bezeichner der PAM-Dienste	Warning Common/settings/Processes.qml: Member "dankshellU2fPam" not found on type "QObject
+plugins/alpeMeteoSwiss/fetch:4	Ausnahmeliste	Phase B: Verweis auf dux-go	Vertrag (dux-go/weather.Command): Standort als JSON auf stdin
+plugins/claudeCodeUsage/ClaudeCodeUsageSettings.qml:1	Ausnahmeliste	dauerhaft: Herkunft und Änderungsvermerk (MIT)	// Alpe: angepasst (D7.3), Widget-Typen aus qs.Alpe.Widgets statt Dank* aus qs.Widgets. Or
+plugins/claudeCodeUsage/ClaudeCodeUsageWidget.qml:1	Ausnahmeliste	dauerhaft: Herkunft und Änderungsvermerk (MIT)	// Alpe: angepasst (D7.3), Widget-Typen aus qs.Alpe.Widgets statt Dank* aus qs.Widgets. Or
+plugins/claudeCodeUsage/README.md:4	Ausnahmeliste	dauerhaft: Herkunft und Änderungsvermerk (MIT)	> ([titeya/dms-claudecode](https://github.com/titeya/dms-claudecode), Version 1.3.6, MIT) 
+plugins/claudeCodeUsage/README.md:6	Ausnahmeliste	dauerhaft: Herkunft und Änderungsvermerk (MIT)	> (`AlpeTextField`, `AlpeButton`, `AlpeIcon` statt `Dank*`), `plugin.json` mit `requires_a
+shell/Alpe/Dash/WallpaperCarousel.qml:74	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// Not a Dank* wrapper: the view only ever follows currentIndex, never the pointer.
+shell/Alpe/Dash/WallpaperTab.qml:672	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// Dank* wrappers reset contentY on model change and take the wheel; the pager needs snap-
+shell/Alpe/FileBrowser/NaturalSort.js:4	Ausnahmeliste	Phase B: Verweis auf dux-go	// Zero-padding digit runs matches padDigits in dux-go files/sort.go, so search results so
+shell/Alpe/assets/fonts/dm-serif-display/DMSerifDisplay-Regular.ttf	Ausnahmeliste	bestehender Eintrag gilt jetzt auch für den Dateinamen (fremder Name)	(Dateiname)
+shell/Common/SettingsTabs.qml:203	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"text": I18n.tr("Dashboard", "settings page name for the dank dash popout"),
+shell/Common/StockThemes.js:1	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// Stock theme definitions for Dux Modular Shell
+shell/Common/Theme.qml:1710	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// !TODO: plugin API only (dms-plugins DankKDEConnect); fold into a parametrized BatterySe
+shell/Common/Theme.qml:1834	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// Only sent when it would change something. A shell newer than the dms
+shell/Common/Theme.qml:1923	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// an older dms rejecting a newer flag prints cobra usage after the error line, which must
+shell/Common/Theme.qml:1961	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	_reportWorkerFailure(I18n.tr("Theme worker failed to start", "error toast, the dms binary 
+shell/Common/settings/Processes.qml:282	behoben	Meldung nannte den Befehl «dms auth sync» – jetzt alpe-dienst	root.toastRequested(2, I18n.tr("Terminal fallback failed. Install one of the supported ter
+shell/Common/settings/SettingsStore.js:42	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandFloating: "islandFloating",
+shell/Common/settings/SettingsStore.js:43	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandUseOverlayLayer: "islandUseOverlayLayer",
+shell/Common/settings/SettingsStore.js:44	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandReserveHeight: "islandReserveThickness",
+shell/Common/settings/SettingsStore.js:45	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandCompactHeight: "islandCompactThickness",
+shell/Common/settings/SettingsStore.js:46	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandOuterGap: "islandOuterGap",
+shell/Common/settings/SettingsStore.js:47	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHorizontalOffset: "islandAlongOffset",
+shell/Common/settings/SettingsStore.js:48	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandInteractionMode: "islandInteractionMode",
+shell/Common/settings/SettingsStore.js:49	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHoverOpenDelay: "islandHoverOpenDelay",
+shell/Common/settings/SettingsStore.js:50	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHoverCloseDelay: "islandHoverCloseDelay",
+shell/Common/settings/SettingsStore.js:51	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandPalette: "islandPalette",
+shell/Common/settings/SettingsStore.js:52	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandTransparency: "islandTransparency",
+shell/Common/settings/SettingsStore.js:53	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandCornerRadius: "islandCornerRadius",
+shell/Common/settings/SettingsStore.js:54	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHighContrast: "islandHighContrast",
+shell/Common/settings/SettingsStore.js:55	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandMediaClockVisible: "islandMediaClockVisible",
+shell/Common/settings/SettingsStore.js:56	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandNotificationBadgeClearOnOpen: "islandNotificationBadgeClearOnOpen",
+shell/Common/settings/SettingsStore.js:57	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandNotificationExpand: "islandNotificationExpand",
+shell/Common/settings/SettingsStore.js:58	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHomeCompactTight: "islandHomeCompactTight",
+shell/Common/settings/SettingsStore.js:59	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHomeClockDisplay: "islandHomeClockDisplay",
+shell/Common/settings/SettingsStore.js:60	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHomeVolumeDisplay: "islandHomeVolumeDisplay",
+shell/Common/settings/SettingsStore.js:61	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHomeBrightnessDisplay: "islandHomeBrightnessDisplay",
+shell/Common/settings/SettingsStore.js:62	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandHomeLayout: "islandHomeLayout",
+shell/Common/settings/SettingsStore.js:63	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandBatteryStyle: "islandBatteryStyle",
+shell/Common/settings/SettingsStore.js:64	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSatellitesEnabled: "islandSatellitesEnabled",
+shell/Common/settings/SettingsStore.js:65	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSatellitePosition: "islandSatellitePosition",
+shell/Common/settings/SettingsStore.js:66	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSatelliteGap: "islandSatelliteGap",
+shell/Common/settings/SettingsStore.js:67	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSatelliteBackground: "islandSatelliteBackground",
+shell/Common/settings/SettingsStore.js:68	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSatelliteGothCorners: "islandSatelliteGothCorners",
+shell/Common/settings/SettingsStore.js:69	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSatelliteTransparency: "islandSatelliteTransparency",
+shell/Common/settings/SettingsStore.js:70	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandReducedMotion: "islandReducedMotion",
+shell/Common/settings/SettingsStore.js:71	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSpringStiffness: "islandSpringStiffness",
+shell/Common/settings/SettingsStore.js:72	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSpringDamping: "islandSpringDamping",
+shell/Common/settings/SettingsStore.js:73	Migration	Marke umzug-ende (Schlüsseltabelle der Migration v18)	dankIslandSpringMass: "islandSpringMass"
+shell/Common/settings/SettingsStore.js:280	Migration	Marke umzug-ende (Migration v2)	if (settings.dankBarAtBottom !== undefined || settings.topBarAtBottom !== undefined) {
+shell/Common/settings/SettingsStore.js:281	Migration	Marke umzug-ende (Migration v2)	var atBottom = settings.dankBarAtBottom !== undefined ? settings.dankBarAtBottom : setting
+shell/Common/settings/SettingsStore.js:283	Migration	Marke umzug-ende (Migration v2)	} else if (settings.dankBarPosition !== undefined) {
+shell/Common/settings/SettingsStore.js:284	Migration	Marke umzug-ende (Migration v2)	position = settings.dankBarPosition;
+shell/Common/settings/SettingsStore.js:294	Migration	Marke umzug-ende (Migration v2)	leftWidgets: settings.dankBarLeftWidgets || ["launcherButton", "workspaceSwitcher", "focus
+shell/Common/settings/SettingsStore.js:295	Migration	Marke umzug-ende (Migration v2)	centerWidgets: settings.dankBarCenterWidgets || ["music", "clock", "weather"],
+shell/Common/settings/SettingsStore.js:296	Migration	Marke umzug-ende (Migration v2)	rightWidgets: settings.dankBarRightWidgets || ["systemTray", "clipboard", "cpuUsage", "mem
+shell/Common/settings/SettingsStore.js:297	Migration	Marke umzug-ende (Migration v2)	spacing: settings.dankBarSpacing !== undefined ? settings.dankBarSpacing : 4,
+shell/Common/settings/SettingsStore.js:298	Migration	Marke umzug-ende (Migration v2)	innerPadding: settings.dankBarInnerPadding !== undefined ? settings.dankBarInnerPadding : 
+shell/Common/settings/SettingsStore.js:299	Migration	Marke umzug-ende (Migration v2)	bottomGap: settings.dankBarBottomGap !== undefined ? settings.dankBarBottomGap : 0,
+shell/Common/settings/SettingsStore.js:300	Migration	Marke umzug-ende (Migration v2)	transparency: settings.dankBarTransparency !== undefined ? settings.dankBarTransparency : 
+shell/Common/settings/SettingsStore.js:301	Migration	Marke umzug-ende (Migration v2)	widgetTransparency: settings.dankBarWidgetTransparency !== undefined ? settings.dankBarWid
+shell/Common/settings/SettingsStore.js:302	Migration	Marke umzug-ende (Migration v2)	squareCorners: settings.dankBarSquareCorners !== undefined ? settings.dankBarSquareCorners
+shell/Common/settings/SettingsStore.js:303	Migration	Marke umzug-ende (Migration v2)	noBackground: settings.dankBarNoBackground !== undefined ? settings.dankBarNoBackground : 
+shell/Common/settings/SettingsStore.js:304	Migration	Marke umzug-ende (Migration v2)	gothCornersEnabled: settings.dankBarGothCornersEnabled !== undefined ? settings.dankBarGot
+shell/Common/settings/SettingsStore.js:305	Migration	Marke umzug-ende (Migration v2)	gothCornerRadiusOverride: settings.dankBarGothCornerRadiusOverride !== undefined ? setting
+shell/Common/settings/SettingsStore.js:306	Migration	Marke umzug-ende (Migration v2)	gothCornerRadiusValue: settings.dankBarGothCornerRadiusValue !== undefined ? settings.dank
+shell/Common/settings/SettingsStore.js:307	Migration	Marke umzug-ende (Migration v2)	borderEnabled: settings.dankBarBorderEnabled !== undefined ? settings.dankBarBorderEnabled
+shell/Common/settings/SettingsStore.js:308	Migration	Marke umzug-ende (Migration v2)	borderColor: settings.dankBarBorderColor || "surfaceText",
+shell/Common/settings/SettingsStore.js:309	Migration	Marke umzug-ende (Migration v2)	borderOpacity: settings.dankBarBorderOpacity !== undefined ? settings.dankBarBorderOpacity
+shell/Common/settings/SettingsStore.js:310	Migration	Marke umzug-ende (Migration v2)	borderThickness: settings.dankBarBorderThickness !== undefined ? settings.dankBarBorderThi
+shell/Common/settings/SettingsStore.js:311	Migration	Marke umzug-ende (Migration v2)	fontScale: settings.dankBarFontScale !== undefined ? settings.dankBarFontScale : 1.0,
+shell/Common/settings/SettingsStore.js:312	Migration	Marke umzug-ende (Migration v2)	autoHide: settings.dankBarAutoHide !== undefined ? settings.dankBarAutoHide : false,
+shell/Common/settings/SettingsStore.js:313	Migration	Marke umzug-ende (Migration v2)	autoHideDelay: settings.dankBarAutoHideDelay !== undefined ? settings.dankBarAutoHideDelay
+shell/Common/settings/SettingsStore.js:314	Migration	Marke umzug-ende (Migration v2)	openOnOverview: settings.dankBarOpenOnOverview !== undefined ? settings.dankBarOpenOnOverv
+shell/Common/settings/SettingsStore.js:315	Migration	Marke umzug-ende (Migration v2)	visible: settings.dankBarVisible !== undefined ? settings.dankBarVisible : true,
+shell/Common/settings/SettingsStore.js:322	Migration	Marke umzug-ende (Migration v2)	var legacyKeys = ["dankBarLeftWidgets", "dankBarCenterWidgets", "dankBarRightWidgets", "da
+shell/Common/settings/SettingsStore.js:550	umbenannt	Protokolltext ohne alten Namen	console.info("Moving the shell-wide Dank Island onto its bar config as a per-instance mode
+shell/Common/settings/SettingsStore.js:552	Migration	Marke umzug-ende (Migration v18)	var islandId = settings.dankIslandBarId;
+shell/Common/settings/SettingsStore.js:566	Migration	Marke umzug-ende (Migration v18)	delete settings.dankIslandBarId;
+shell/Common/settings/SettingsStore.js:567	Migration	Marke umzug-ende (Migration v18)	delete settings.dankIslandSatelliteSwoopRadius;
+shell/Common/settings/SettingsStore.js:732	Migration	Marke umzug-ende (Migration v30)	if (settings.dmsWindowsFloating === false)
+shell/Common/settings/SettingsStore.js:734	Migration	Marke umzug-ende (Migration v30)	delete settings.dmsWindowsFloating;
+shell/Common/settings/SettingsStore.js:802	Migration	Marke umzug-ende (Migration v43; ersetzt den Zeileneintrag der Ausnahmeliste)	// Alpe (v43): Schlüssel und Werte mit den Namen des Ursprungs (DMS) tragen eigene Namen.
+shell/Modules/ColorPicker/ColorPickerContent.qml:111	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	log.warn("Failed to parse dms color pick JSON:", error);
+shell/Modules/Lock/Widgets/LockAuthWidget.qml:836	Ausnahmeliste	dauerhaft: Verweis auf Fehlerberichte des Ursprungs	// IME commits use a hidden password input: https://github.com/duxlabs-dev/dux-shell/issue
+shell/Modules/Lock/Widgets/LockAuthWidget.qml:837	Ausnahmeliste	dauerhaft: Verweis auf Fehlerberichte des Ursprungs	// An in-process module like fcitx5-qt draws its popup as an xdg_popup, which the lock sur
+shell/Modules/Notepad/NotepadTextEditor.qml:275	behoben	rief «dms clipboard copy» auf (lief unter 1.1 ins Leere) – jetzt alpe-dienst	command: ["sh", "-c", "printf '%s' \"$CONTENT\" | dms clipboard copy"]
+shell/Modules/Settings/BarTab.qml:291	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	text: I18n.tr("Strict auto-hide", "Dank bar setting: hide the bar when the pointer leaves 
+shell/Modules/Settings/DotTab.qml:78	behoben	sichtbarer Eintrag «Dux» für den Modus alpe – jetzt «Alpe»	model: [I18n.tr("Symbol"), I18n.tr("OS Logo"), "Dux", root.compositorLabel, I18n.tr("Custo
+shell/Modules/Settings/KeybindEditorDialog.qml:1046	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	labelText: I18n.tr("Amount", "keybind editor field, numeric amount argument of a dms actio
+shell/Modules/Settings/KeybindsTab.qml:488	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	text: KeybindsService.fixing ? I18n.tr("Setting up...") : I18n.tr("Setup", "verb, button t
+shell/Modules/Settings/LauncherTab.qml:104	umbenannt	Suchwort entfernt	tags: ["launcher", "style", "default", "spotlight", "full", "minimal", "island", "dankisla
+shell/Modules/Settings/ThemeAppsTab.qml:396	Ausnahmeliste	solange die Anbindung besteht: fremdes Plugin base46	description: root.getTemplateDescription("nvim", I18n.tr("Required plugin: %1", "%1 is a r
+shell/Modules/Settings/WallpaperColorsTab.qml:372	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// dms picks the animation driver at launch from this setting
+shell/Modules/Settings/WindowRulesTab.qml:322	umbenannt	Bezeichner copyRuleToShell	function copyRuleToDms(rule) {
+shell/Modules/Settings/WindowRulesTab.qml:615	umbenannt	Bezeichner copyRuleToShell	onClicked: root.copyRuleToDms(externalCard.modelData)
+shell/Services/AudioService.qml:134	Ausnahmeliste	F1: Datei aus 1.0, die die Shell weiterschreibt – Umbenennen braucht den Umzug (offene-faelle.md)	property string wireplumberConfigPath: Paths.strip(StandardPaths.writableLocation(Standard
+shell/Services/AudioService.qml:1269	Migration	Marke umzug-ende (Marke einer Sitzung aus 1.0 lesen)	const legacyLoginFile = `${runtimeDir}/danklinux.login-${sessionId}`;
+shell/Services/CalendarDuxBackend.qml	Ausnahmeliste	bestehender Eintrag gilt jetzt auch für den Dateinamen (fremder Name)	(Dateiname)
+shell/Services/MatugenPreviewService.qml:38	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// a dms binary older than the tri-color preview returns the primary hex as a plain string
+shell/Services/NightModeService.qml:618	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	return "Gamma adjustment not available (requires dms API v34+)";
+shell/Services/NightModeService.qml:632	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	return "Contrast adjustment not available (requires dms API v34+)";
+shell/Services/SystemUpdateService.qml:65	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	// From the filtered list, so an AUR-off/ignored dms package doesn't advertise.
+shell/Services/WellbeingService.qml:228	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	return "Screen time tracking: unavailable (dms server without wellbeing support)";
+shell/Services/kwin/alpe-bridge.js:1012	Migration	Marke umzug-ende (Kommentar zu den Kennungen aus 1.0)	// Alpe: Kennungen alpe-* (bis 1.0 dms-*). An der Kennung hängen in kglobalaccel die
+shell/Services/kwin/alpe-bridge.js:1013	Migration	Marke umzug-ende (Kommentar zu den Kennungen aus 1.0)	// vergebenen Tasten; die Tasten der alten dms-*-Aktionen überträgt der Umzug (alpe umzug)
+shell/matugen/templates/neovim-colors.lua:4	Ausnahmeliste	solange die Anbindung besteht: fremdes Plugin base46	"base46 plugin not found or incorrect, make sure to install duxlabs-dev/base46",
+shell/matugen/templates/neovim-lualine.lua:1	Ausnahmeliste	solange die Anbindung besteht: fremdes Plugin base46	-- NOTE: this file should never be accessed if duxlabs-dev/base46 is not installed,
+shell/matugen/templates/vesktop.css:6	umbenannt	Adresse des eigenen Repos	* @website https://github.com/duxlabs-dev/dux-shell
+shell/scripts/alpe-kwin.py:523	Ausnahmeliste	E4: Kürzel-Komponente der Einrichtung von 1.0	rank = 0 if c["component"] == "kwin" else 1 if c["component"] == "dms" else 2 if c.get("cu
+shell/scripts/alpe-perf.py:47	Migration	Marke umzug-ende (Dienst einer Einrichtung aus 1.0 erkennen)	elif (exe in ("alpe-dienst", "dms", "alpe") or os.path.basename(target) in ("alpe-dienst",
+shell/scripts/qmllint-entrypoints.sh:77	umbenannt	Kommentar oder Meldung (d7-8a-texte.tsv)	printf '  # or: dms -c %q run\n' "${quickshell_dir}" >&2
+shell/tests/admin-policy.test.mjs:141	umbenannt	Testdaten ohne Bezug zu 1.0 (d7-8a-texte.tsv)	const main = "/home/u/.config/dms/settings.json";
+shell/tests/admin-policy.test.mjs:142	umbenannt	Testdaten ohne Bezug zu 1.0 (d7-8a-texte.tsv)	const overlay = "/home/u/.config/dms/config.d/lock.json";
+shell/tests/config-include.test.mjs:27	umbenannt	Testdaten ohne Bezug zu 1.0 (d7-8a-texte.tsv)	const directory = mkdtempSync(join(tmpdir(), "dms-includes-"));
+shell/tests/config-include.test.mjs:57	Ausnahmeliste	Umzug-Ende: Test der Kopfzeile aus 1.0	// Alpe: Ein Abschnitt mit der Kopfzeile aus DMS bzw. Alpe 1.0 bekommt keine zweite Kopfze
+shell/tests/config-include.test.mjs:58	Ausnahmeliste	Umzug-Ende: Test der Kopfzeile aus 1.0	test("repair appends below a legacy DMS section header instead of adding a new one", t => 
+shell/tests/fixtures/outputs/hyprland-monitors.lua:1	Ausnahmeliste	Umzug-Ende: Testdatei, wie 1.0 sie schrieb	-- Auto-generated by DMS — do not edit manually
+shell/tests/keyutils-mod.test.mjs:53	umbenannt	Testdaten ohne Bezug zu 1.0 (d7-8a-texte.tsv)	assert.equal(keys.getConflictingBinds("Alt", "spawn dms", binds, "Super", "Mod").length, 2
+shell/tests/keyutils-mod.test.mjs:54	umbenannt	Testdaten ohne Bezug zu 1.0 (d7-8a-texte.tsv)	assert.equal(keys.getConflictingBinds("Alt_L", "spawn dms", binds, "Super", "Mod").length,
+shell/tests/keyutils-reachable.test.mjs:7	umbenannt	Testdaten ohne Bezug zu 1.0 (d7-8a-texte.tsv)	// Shaped like `dms keybinds keymap` on de:neo, where bracketleft sits on layer 4
+shell/tests/lock/tst_Pam.qml:109	Ausnahmeliste	E1: Test zu den PAM-Diensten	tag: "policyWithoutDankshell",
+shell/tests/shell-embed.test.mjs:11	umbenannt	Testdaten ohne Bezug zu 1.0 (d7-8a-texte.tsv)	const temporary = mkdtempSync(join(tmpdir(), "dms-shell-embed-"));
+shell/tests/unit/tst_OutputCycleState.qml:164	umbenannt	Name des Tests	function test_cycleRoundTripForgetsOutputDmsEnabled() {
+shell/translations/README.md:6	umbenannt	Titel und Aufruf (auch ein fremder Home-Pfad entfernt)	# Dux Shell Translations
+shell/translations/README.md:8	umbenannt	Titel und Aufruf (auch ein fremder Home-Pfad entfernt)	This directory contains translation files for Dux Shell extracted from all qsTr() calls in
+shell/translations/README.md:58	umbenannt	Titel und Aufruf (auch ein fremder Home-Pfad entfernt)	cd /home/brandon/.config/quickshell/DankMaterialShellGit/translations
+shell/translations/check_term_freeze.py:25	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	# dms-plugins and dms-plugins-external are separate checkouts with their own
+shell/translations/check_term_freeze.py:31	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	if any(not occ['file'].startswith(('dms-plugins/', 'dms-plugins-external/')) for occ in in
+shell/translations/check_term_variants.py:21	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	EXTERNAL_PLUGIN_PREFIX = "dms-plugins-external/"
+shell/translations/check_term_variants.py:30	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	{"Custom Color", "Custom color"},  # dms-plugins checkout, not this repo
+shell/translations/check_term_variants.py:31	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	{"Media Player", "Media player"},  # dms-plugins checkout, not this repo
+shell/translations/en.json:1913	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "keybind editor field, numeric amount argument of a dms action",
+shell/translations/en.json:6459	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "settings page name for the dank dash popout",
+shell/translations/en.json:22528	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "verb, button that creates the dms include config file",
+shell/translations/en.json:24117	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "Dank bar setting: hide the bar when the pointer leaves even if a menu or bar p
+shell/translations/en.json:25210	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "error toast, the dms binary could not be launched",
+shell/translations/extract_settings_index.py:92	umbenannt	Stichwort-Schlüssel	"Dank Island": ["island", "activities", "dynamic island"],
+shell/translations/extract_translations.py:41	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	# owned by the DankPlugins POEditor project keyed "<pluginId>:<context>".
+shell/translations/extract_translations.py:48	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	# the DankPlugins project and never enter the shell catalog.
+shell/translations/extract_translations.py:49	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	OFFICIAL_PLUGINS_DIR = 'dms-plugins'
+shell/translations/extract_translations.py:50	Ausnahmeliste	G1: Verzeichnisse der Plugin-Repos des Ursprungs; Skripte ohne Aufrufer (offene-faelle.md)	EXTERNAL_PLUGINS_DIR = 'dms-plugins-external'
+shell/translations/settings_search_index.json:6505	umbenannt	Index mit extract_settings_index.py neu erzeugt (war veraltet)	"dankisland",
+shell/translations/settings_search_index.json:6740	umbenannt	Index mit extract_settings_index.py neu erzeugt (war veraltet)	"dankisland",
+shell/translations/settings_search_index.json:9334	umbenannt	Index mit extract_settings_index.py neu erzeugt (war veraltet)	"dms",
+shell/translations/settings_search_index.json:15268	umbenannt	Index mit extract_settings_index.py neu erzeugt (war veraltet)	"dms",
+shell/translations/settings_search_index.json:15568	Ausnahmeliste	solange die Anbindung besteht: aus der Adresse von base46 (erzeugt)	"duxlabs",
+shell/translations/settings_search_index.json:15586	Ausnahmeliste	solange die Anbindung besteht: aus der Adresse von base46 (erzeugt)	"https://github.com/duxlabs-dev/base46"
+shell/translations/template.json:1477	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "keybind editor field, numeric amount argument of a dms action"
+shell/translations/template.json:4956	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "settings page name for the dank dash popout"
+shell/translations/template.json:17297	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "verb, button that creates the dms include config file"
+shell/translations/template.json:18515	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "Dank bar setting: hide the bar when the pointer leaves even if a menu or bar p
+shell/translations/template.json:19355	umbenannt	Kontext für Übersetzende (d7-8a-texte.tsv)	"comment": "error toast, the dms binary could not be launched"
+tests/test_ladepruefung.py:79	Ausnahmeliste	Umzug-Ende: Probe mit Session aus 1.0	check(ebene["shape"] == "dankLogo" and all(k in ebene for k in ("x", "y", "size", "fill"))

@@ -3,9 +3,9 @@
 > Übersetzungsdienst gibt es nicht mehr; der Rest dieser Datei beschreibt das Dateiformat und die
 > Skripte.
 
-# Dux Shell Translations
+# Alpe Translations
 
-This directory contains translation files for Dux Shell extracted from all qsTr() calls in the QML codebase.
+This directory contains translation files for Alpe extracted from all qsTr() and I18n.tr() calls in the QML codebase.
 
 ## Files
 
@@ -55,8 +55,7 @@ The JSON files follow POEditor's import format:
 To update the translation files after code changes:
 
 ```bash
-cd /home/brandon/.config/quickshell/DankMaterialShellGit/translations
-./extract_translations.py
+python3 shell/translations/extract_translations.py
 ```
 
 This will scan all QML files and regenerate `en.json` and `template.json`.

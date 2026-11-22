@@ -272,7 +272,7 @@ Column {
         id: clipboardCopyProcComp
         Process {
             property string content: ""
-            command: ["sh", "-c", "printf '%s' \"$CONTENT\" | dms clipboard copy"]
+            command: ["sh", "-c", "printf '%s' \"$CONTENT\" | alpe-dienst clipboard copy"]
             environment: ({
                     "CONTENT": content
                 })

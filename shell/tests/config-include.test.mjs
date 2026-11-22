@@ -24,7 +24,7 @@ test("resolveIncludeArgs names the compositor and the fragment", () => {
 });
 
 test("repair preserves config and fragments, backs up, and adds live includes only once", t => {
-    const directory = mkdtempSync(join(tmpdir(), "dms-includes-"));
+    const directory = mkdtempSync(join(tmpdir(), "alpe-includes-"));
     t.after(() => rmSync(directory, { recursive: true, force: true }));
     for (const [compositor, kind, prefix] of [["hyprland", "binds", "--"]]) {
         const configDir = join(directory, compositor + " space's");

@@ -35,7 +35,7 @@ Singleton {
             if (SettingsData.matugenSpec !== "2021" && !option.spec2025)
                 continue;
             const colors = (previews[option.value] ?? previews["scheme-tonal-spot"])?.[mode];
-            // a dms binary older than the tri-color preview returns the primary hex as a plain string
+            // an alpe-dienst binary older than the tri-color preview returns the primary hex as a plain string
             const primary = typeof colors === "string" ? colors : (colors?.primary ?? Theme.primary.toString());
             options.push({
                 "value": option.value,

@@ -1,4 +1,4 @@
-// Stock theme definitions for Dux Modular Shell
+// Stock theme definitions for Alpe
 // Separated from Theme.qml to keep that file clean
 
 const StockThemes = {

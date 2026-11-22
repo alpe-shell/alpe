@@ -200,7 +200,7 @@ Singleton {
         },
         {
             "id": "dash",
-            "text": I18n.tr("Dashboard", "settings page name for the dank dash popout"),
+            "text": I18n.tr("Dashboard", "settings page name for the dash popout"),
             "icon": "space_dashboard",
             "tabIndex": 43,
             "aliases": ["dashboard", "dashboards_osd"],
@@ -476,20 +476,13 @@ Singleton {
                     "hint": CompositorService.isKwin ? "Automatische Sperre, Sperre nach der Anmeldung" : I18n.tr("Layout, authentication, screensaver")
                 },
                 {
-                    "id": "greeter",
-                    "text": I18n.tr("Greeter", "noun, login screen settings page and greeter account badge"),
-                    "icon": "login",
-                    "tabIndex": 31,
-                    "greeterOnly": true,
-                    "hint": I18n.tr("Login screen appearance and authentication")
-                },
-                {
-                    "id": "greeter_auth",
-                    "hidden": true,
-                    "greeterOnly": true,
-                    "text": I18n.tr("Authentication"),
-                    "icon": "fingerprint",
-                    "tabIndex": 62
+                    // Alpe: Texte, Bilder und Passwortfeld des KDE-Sperrbildschirms anordnen.
+                    "id": "lock_design",
+                    "aliases": ["sperrbildschirm gestalten", "lockscreen design", "hyprlock"],
+                    "text": "Sperrbildschirm gestalten",
+                    "icon": "brush",
+                    "tabIndex": 105,
+                    "hint": "Uhr, Datum, Bilder, Passwortfeld – mit Vorschau"
                 }
             ]
         },
@@ -558,6 +551,15 @@ Singleton {
                     "hint": I18n.tr("Forecast and conditions")
                 },
                 {
+                    // Alpe: Einstellungen des Sport-Plugins
+                    "id": "alpe_sport",
+                    "aliases": ["sport", "fussball", "eishockey", "nba", "streaming"],
+                    "text": "Sport",
+                    "icon": "sports_soccer",
+                    "tabIndex": 109,
+                    "hint": "Wettbewerbe, Favoriten, Mitteilungen, Streamingdienste"
+                },
+                {
                     "id": "locale",
                     "text": I18n.tr("Locale", "settings page name for language and region"),
                     "icon": "language",
@@ -574,10 +576,10 @@ Singleton {
             "children": [
                 {
                     "id": "updater",
-                    "text": I18n.tr("Software updates", "settings page, modal and bar widget title, DMS and system package updates"),
+                    "text": I18n.tr("Software updates", "settings page, modal and bar widget title, Alpe and system package updates"),
                     "icon": "system_update_alt",
                     "tabIndex": 20,
-                    "hint": I18n.tr("DMS and system updates", "settings sidebar hint for the software updates page")
+                    "hint": I18n.tr("Alpe and system updates", "settings sidebar hint for the software updates page")
                 },
                 {
                     "id": "alpe_desktop",
@@ -587,6 +589,30 @@ Singleton {
                     "tabIndex": 100,
                     "kwinOnly": true,
                     "hint": "Fenster ziehen, Kurzbefehle, KDE-Module"
+                },
+                {
+                    "id": "alpe_effects",
+                    "aliases": ["effekte", "ecken", "blur", "animationen", "platzierung"],
+                    "text": "Fenster & Effekte",
+                    "icon": "auto_awesome",
+                    "tabIndex": 106,
+                    "hint": CompositorService.isKwin ? "Abgerundete Ecken, Weichzeichnen, neue Fenster, Animationen" : "Unschärfe: Modus, Feinheiten, was gerade gilt"
+                },
+                {
+                    "id": "alpe_performance",
+                    "aliases": ["leistung", "ram", "speicher", "performance"],
+                    "text": "Leistung",
+                    "icon": "speed",
+                    "tabIndex": 108,
+                    "hint": "Speicher und CPU der Shell, Teile abschalten"
+                },
+                {
+                    "id": "alpe_services",
+                    "aliases": ["dienste", "services", "systemd"],
+                    "text": "Dienste",
+                    "icon": "deployed_code",
+                    "tabIndex": 107,
+                    "hint": "Shell-Dienst, eigene systemd-Dienste, Autostart"
                 },
                 {
                     "id": "alpe_maintenance",
@@ -611,14 +637,6 @@ Singleton {
                     "icon": "visibility_off",
                     "tabIndex": 103,
                     "hint": "Einstellungsseiten ein- und ausblenden"
-                },
-                {
-                    "id": "updater_changelog",
-                    "hidden": true,
-                    "text": I18n.tr("Release notes", "settings page and card title, notes for a DMS release"),
-                    "icon": "article",
-                    "tabIndex": 66,
-                    "hint": I18n.tr("Summary, highlights, links", "settings sidebar hint for the release notes page")
                 },
                 {
                     "id": "clipboard",
@@ -659,17 +677,17 @@ Singleton {
             "id": "plugins",
             "text": I18n.tr("Plugins"),
             "icon": "extension",
-            "hint": I18n.tr("Browse, install, registries"),
+            "hint": "Installierte Plugins verwalten",
             "tabIndex": 12,
             "hubHeader": "PluginsHubHeader",
             "children": [
                 {
                     "id": "plugins_manage",
                     "hidden": true,
-                    "text": I18n.tr("Manage Registries", "plugin registry management"),
+                    "text": "Plugin-Ordner",
                     "icon": "folder_open",
                     "tabIndex": 28,
-                    "hint": I18n.tr("Plugin directory and registries")
+                    "hint": "Ordner und Suche nach Plugins"
                 }
             ]
         },
@@ -731,7 +749,7 @@ Singleton {
         const entry = page(id);
         if (!entry || entry.kind === "plugin")
             return true;
-        if (id === "lock_screen" && CompositorService.isKwin && !own)
+        if ((id === "lock_screen" || id === "keybinds" || id === "window_rules") && CompositorService.isKwin && !own)
             return false;
         if (!isVisible(entry))
             return false;
@@ -872,13 +890,14 @@ Singleton {
             return false;
         if (entry.cupsOnly && !CupsService.cupsAvailable)
             return false;
-        if (entry.shortcutsOnly && !KeybindsService.available)
+        // Alpe: unter KWin gibt es eigene Seiten für Kürzel und Fensterregeln.
+        if (entry.shortcutsOnly && !KeybindsService.available && !CompositorService.isKwin)
             return false;
         if (entry.soundsOnly && MultimediaService.unavailable)
             return false;
-        if (entry.hyprlandNiriOnly && !CompositorService.isNiri && !CompositorService.isHyprland && !CompositorService.isMango)
+        if (entry.hyprlandNiriOnly && !CompositorService.isHyprland)
             return false;
-        if (entry.windowRulesCapable && !CompositorService.supportsWindowRules)
+        if (entry.windowRulesCapable && !CompositorService.supportsWindowRules && !CompositorService.isKwin)
             return false;
         if (entry.layoutCapable && !CompositorService.supportsLayoutConfig)
             return false;
@@ -887,10 +906,6 @@ Singleton {
         if (entry.pointerCapable && !CompositorService.supportsPointerConfig)
             return false;
         if (entry.clipboardOnly && (!ShellBackend.isConnected || ShellBackend.apiVersion < 23))
-            return false;
-        if (entry.greeterOnly)
-            GreeterService.ensureDetected();
-        if (entry.greeterOnly && !GreeterService.available)
             return false;
         if (entry.autostartOnly)
             DesktopService.ensureProbed();

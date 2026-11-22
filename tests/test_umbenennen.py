@@ -132,6 +132,16 @@ check(code == 1 and "shell/Marke.js:1: Marke nimmt keine Fundstelle aus" in ausg
 os.remove(os.path.join(repo, "shell/Marke.js"))
 subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
 check(run(np, "--streng").returncode == 0, "--streng: grün nach dem Entfernen")
+# Ein Zeilenmuster der Ausnahmeliste gilt auch für den Dateinamen (fremde Namen wie eine Schriftdatei).
+fremd = "Da" + "nkFremd"
+write("shell/" + fremd + ".qml", "Item {}\n")
+subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
+check("shell/%s.qml: (Dateiname)" % fremd in run(np, "--liste").stdout, "alter Name im Dateinamen ohne Ausnahme: gemeldet")
+with open(os.path.join(repo, "tools", "namen-ausnahmen.txt"), "a", encoding="utf-8") as handle:
+    handle.write("shell/*\t" + fremd + "\tdauerhaft\tfremder Name\n")
+check(run(np, "--streng").returncode == 0, "Muster der Ausnahmeliste nimmt auch den Dateinamen aus")
+os.remove(os.path.join(repo, "shell", fremd + ".qml"))
+subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
 write("tools/namen-ausnahmen.txt", "tools/*\t*\t\tohne Frist\n")
 check(run(np).returncode != 0, "Eintrag ohne Frist wird abgelehnt")
 

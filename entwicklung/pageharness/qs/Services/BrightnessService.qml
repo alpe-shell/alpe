@@ -391,7 +391,7 @@ Singleton {
         }
 
         if (!ShellBackend.isConnected) {
-            log.warn("Not connected to DMS");
+            log.warn("Not connected to the service");
             return;
         }
 

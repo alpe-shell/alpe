@@ -62,7 +62,8 @@ def ausnahmen():
 
 def erlaubt(pfad, zeile, liste):
     for glob, pat, _frist in liste:
-        if fnmatch.fnmatch(pfad, glob) and (pat is None or (zeile is not None and pat.search(zeile))):
+        # Ohne Zeile geht es um den Dateinamen: Das Muster gilt dann für den Pfad (z. B. fremder Schriftname).
+        if fnmatch.fnmatch(pfad, glob) and (pat is None or pat.search(pfad if zeile is None else zeile)):
             return True
     return False
 

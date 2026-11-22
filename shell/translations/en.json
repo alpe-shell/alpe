@@ -1910,7 +1910,7 @@
     "term": "Amount",
     "context": "Amount",
     "reference": "Modules/Settings/KeybindEditorDialog.qml:1046",
-    "comment": "keybind editor field, numeric amount argument of a dms action",
+    "comment": "keybind editor field, numeric amount argument of a shell action",
     "tags": [
       "settings"
     ]
@@ -6456,7 +6456,7 @@
     "term": "Dashboard",
     "context": "Dashboard",
     "reference": "Common/SettingsTabs.qml:204, Alpe/Dash/DashPageTitle.qml:26, Alpe/Dash/DashPageTitle.qml:49, Modules/Settings/MediaPlayerTab.qml:85, Modules/Settings/WeatherSettingsTab.qml:187, Modules/Settings/BarWidgetOptions/ClockOptions.qml:48, Modules/Settings/Widgets/IslandBehaviorCard.qml:95",
-    "comment": "settings page name for the dank dash popout",
+    "comment": "settings page name for the dash popout",
     "tags": [
       "settings",
       "shell"
@@ -22525,7 +22525,7 @@
     "term": "Setup",
     "context": "Setup",
     "reference": "Modules/Settings/KeybindsTab.qml:488, Modules/Settings/Widgets/IncludeSetupBanner.qml:62",
-    "comment": "verb, button that creates the dms include config file",
+    "comment": "verb, button that creates the Alpe include config file",
     "tags": [
       "settings"
     ]
@@ -24114,7 +24114,7 @@
     "term": "Strict auto-hide",
     "context": "Strict auto-hide",
     "reference": "Modules/Settings/BarTab.qml:291",
-    "comment": "Dank bar setting: hide the bar when the pointer leaves even if a menu or bar popover is still open",
+    "comment": "Bar setting: hide the bar when the pointer leaves even if a menu or bar popover is still open",
     "tags": [
       "settings"
     ]
@@ -25207,7 +25207,7 @@
     "term": "Theme worker failed to start",
     "context": "Theme worker failed to start",
     "reference": "Common/Theme.qml:1961",
-    "comment": "error toast, the dms binary could not be launched",
+    "comment": "error toast, the alpe-dienst binary could not be launched",
     "tags": [
       "shell"
     ]

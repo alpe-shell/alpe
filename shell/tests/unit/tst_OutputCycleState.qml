@@ -161,7 +161,7 @@ TestCase {
         compare(awake.intents, []);
     }
 
-    function test_cycleRoundTripForgetsOutputDmsEnabled() {
+    function test_cycleRoundTripForgetsOutputShellEnabled() {
         let state = OutputCycleState.handleOutputsChanged(OutputCycleState.emptyState(), [
             output("DP-2", true), output("HDMI-A-2", false)
         ]).state;

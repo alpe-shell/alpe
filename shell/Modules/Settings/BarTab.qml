@@ -288,7 +288,7 @@ Item {
                 settingKey: "barAutoHideStrict"
                 visible: (bar.selectedBarConfig?.autoHide ?? false) && !bar.islandShadowsSelectedBar && (!bar.selectedBarIsIsland || barTab.selectedIslandOverlay)
                 tags: ["autohide", "strict", "popout"]
-                text: I18n.tr("Strict auto-hide", "Dank bar setting: hide the bar when the pointer leaves even if a menu or bar popover is still open")
+                text: I18n.tr("Strict auto-hide", "Bar setting: hide the bar when the pointer leaves even if a menu or bar popover is still open")
                 description: I18n.tr("Hides even while a bar popout or menu is open", "bar strict auto-hide toggle description")
                 checked: bar.selectedBarConfig?.autoHideStrict ?? false
                 onToggled: toggled => {

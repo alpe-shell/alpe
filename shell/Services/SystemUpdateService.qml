@@ -62,7 +62,7 @@ Singleton {
     property bool rebootRecommended: false
     property var rebootPackages: []
     property var _rawShellUpdate: null
-    // From the filtered list, so an AUR-off/ignored dms package doesn't advertise.
+    // From the filtered list, so an AUR-off/ignored shell package doesn't advertise.
     readonly property var shellUpdate: _rawShellUpdate ? (availableUpdates.find(p => p.name === _rawShellUpdate.name) ?? null) : null
 
     readonly property int updateCount: availableUpdates.length

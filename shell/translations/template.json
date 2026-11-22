@@ -1474,7 +1474,7 @@
     "translation": "",
     "context": "Amount",
     "reference": "",
-    "comment": "keybind editor field, numeric amount argument of a dms action"
+    "comment": "keybind editor field, numeric amount argument of a shell action"
   },
   {
     "term": "An Island bar already covers a display this bar is on",
@@ -4953,7 +4953,7 @@
     "translation": "",
     "context": "Dashboard",
     "reference": "",
-    "comment": "settings page name for the dank dash popout"
+    "comment": "settings page name for the dash popout"
   },
   {
     "term": "Dashboard tabs",
@@ -17294,7 +17294,7 @@
     "translation": "",
     "context": "Setup",
     "reference": "",
-    "comment": "verb, button that creates the dms include config file"
+    "comment": "verb, button that creates the Alpe include config file"
   },
   {
     "term": "Shadow",
@@ -18512,7 +18512,7 @@
     "translation": "",
     "context": "Strict auto-hide",
     "reference": "",
-    "comment": "Dank bar setting: hide the bar when the pointer leaves even if a menu or bar popover is still open"
+    "comment": "Bar setting: hide the bar when the pointer leaves even if a menu or bar popover is still open"
   },
   {
     "term": "Stripes",
@@ -19352,7 +19352,7 @@
     "translation": "",
     "context": "Theme worker failed to start",
     "reference": "",
-    "comment": "error toast, the dms binary could not be launched"
+    "comment": "error toast, the alpe-dienst binary could not be launched"
   },
   {
     "term": "Theme, light and dark, matugen",

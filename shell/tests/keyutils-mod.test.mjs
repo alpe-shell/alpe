@@ -50,8 +50,8 @@ test("a bare modifier conflicts with its sided keysyms", () => {
         assert.equal(keys.keyCombosConflict(a, b, "Super", "Mod"), want, `${a} vs ${b}`);
 
     const binds = [{ action: "spawn user", keys: [{ key: "Alt_L" }, { key: "Alt_R" }] }, { action: "spawn other", keys: [{ key: "Alt_R" }] }];
-    assert.equal(keys.getConflictingBinds("Alt", "spawn dms", binds, "Super", "Mod").length, 2);
-    assert.equal(keys.getConflictingBinds("Alt_L", "spawn dms", binds, "Super", "Mod").length, 1);
+    assert.equal(keys.getConflictingBinds("Alt", "spawn alpe-dienst", binds, "Super", "Mod").length, 2);
+    assert.equal(keys.getConflictingBinds("Alt_L", "spawn alpe-dienst", binds, "Super", "Mod").length, 1);
 });
 
 test("bare modifier keysyms render as glyphs", () => {

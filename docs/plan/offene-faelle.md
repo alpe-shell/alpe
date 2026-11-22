@@ -344,6 +344,29 @@ aus dem Git-Stand der Oberfläche, neueste Version über die Release-Seite bzw. 
 mit dem neuen Dienst; dann gegen die Releases des eigenen Repos und mit dem User-Agent nach
 0.8 Nr. 67.
 
+## Aus D7.8a: zwei Fragen (22.11.2026)
+
+1. **WirePlumber-Datei `51-dms-audio-aliases.conf`.** `AudioService.qml` schreibt die Namen der
+   Audiogeräte nach `~/.config/wireplumber/wireplumber.conf.d/51-dms-audio-aliases.conf` – eine
+   Ausgabedatei mit altem Namen, die in D7.7b2 (Tabelle 7.6) fehlt. Sie liegt auf Rechnern mit
+   1.0 schon dort. Schreibt 1.1 unter einem neuen Namen, liest WirePlumber beide Dateien, und die
+   alte gewinnt oder verdoppelt Einträge; umbenennen darf die Shell sie nicht still. In D7.8a
+   **nicht umbenannt**, Ausnahmeliste mit Frist F1. Vorschlag: F1 benennt die Datei beim Umzug auf
+   `51-alpe-audio-aliases.conf` um (Rückweg zurück), die Shell schreibt ab dann den neuen Namen;
+   bis dahin bleibt der alte. Entscheid offen.
+2. **Übersetzungsskripte des Ursprungs** (`shell/translations/extract_translations.py`,
+   `check_term_freeze.py`, `check_term_variants.py`, `replace_qstr.py`): kein Aufrufer in
+   `tools/test.sh`, Skripten oder CI. Sie kennen die Plugin-Repos des Ursprungs als
+   Nachbarverzeichnisse (`dms-plugins`, `dms-plugins-external`) und ein fremdes
+   Übersetzungsprojekt; `extract_translations.py` überspringt zudem den ganzen Ordner `Alpe/`
+   (gedacht für die Widget-Bibliothek mit eigenem Katalog; seit D7.2a liegen dort auch Dash und
+   Dateiverwaltung, `en.json` führt 185 Einträge mit erster Fundstelle unter `Alpe/`) – ein neuer
+   Lauf würde solche Texte vermutlich aus `en.json` streichen (nicht ausprobiert). In D7.8a nichts daran geändert (Ausnahmeliste, Frist G1);
+   `en.json`/`template.json` sind von Hand nachgeführt, `settings_search_index.json` mit
+   `extract_settings_index.py` neu erzeugt (das Skript läuft richtig). Vorschlag für G1:
+   `extract_translations.py` auf den heutigen Baum richten (ohne Plugin-Nachbarn, mit `Alpe/`)
+   und als Prüfung in `tools/test.sh` aufnehmen, die beiden `check_term_*` entfernen. Entscheid offen.
+
 ## Notizblock: Markdown-Vorschau neu bauen (Frist: vor G1)
 
 Die Vorschau im Notizblock wurde nur vom Store-Plugin `dankNotepadModule` gespeist und ist mit

@@ -4,7 +4,7 @@ import { loadScript } from "./qml-script.mjs";
 
 const keys = loadScript(new URL("../Common/KeyUtils.js", import.meta.url));
 
-// Shaped like `dms keybinds keymap` on de:neo, where bracketleft sits on layer 4
+// Shaped like `alpe-dienst keybinds keymap` on de:neo, where bracketleft sits on layer 4
 // and so appears on no key's first level. `named` is the vocabulary the keysyms
 // are drawn from.
 const neoKeymap = {

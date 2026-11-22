@@ -1043,7 +1043,7 @@ AlpeDialog {
                 width: parent.width
                 outlined: true
                 leftIconName: "tune"
-                labelText: I18n.tr("Amount", "keybind editor field, numeric amount argument of a dms action")
+                labelText: I18n.tr("Amount", "keybind editor field, numeric amount argument of a shell action")
                 placeholderText: "5"
                 rightAccessoryWidth: amountUnit.width + Theme.spacingS
                 onAmountChanged: {

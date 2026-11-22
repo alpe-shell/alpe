@@ -101,7 +101,7 @@ Item {
                 readonly property bool spotlightOffered: !SettingsData.connectedFrameModeActive
 
                 settingKey: "launcherStyleSelector"
-                tags: ["launcher", "style", "default", "spotlight", "full", "minimal", "island", "dankisland"]
+                tags: ["launcher", "style", "default", "spotlight", "full", "minimal", "island"]
                 resetKeys: ["launcherStyle"]
                 text: I18n.tr("Opens", "verb, row label, which launcher style the shortcut opens")
                 model: [I18n.tr("Full", "adjective, full size launcher style option")].concat(spotlightOffered ? [I18n.tr("Spotlight", "launcher style option, small centered search bar")] : []).concat(islandOffered ? [I18n.tr("Island")] : [])

@@ -369,7 +369,7 @@ Column {
 
             readonly property var fillModes: ["Stretch", "Fit", "Fill", "Scrolling", "Tile", "TileVertically", "TileHorizontally", "Pad"]
             readonly property var fillModeLabels: [I18n.tr("Stretch", "wallpaper fill mode"), I18n.tr("Fit", "wallpaper fill mode"), I18n.tr("Fill", "wallpaper fill mode"), I18n.tr("Scroll", "wallpaper fill mode"), I18n.tr("Tile", "wallpaper fill mode"), I18n.tr("Tile Vertically", "wallpaper fill mode"), I18n.tr("Tile Horizontally", "wallpaper fill mode"), I18n.tr("Pad", "wallpaper fill mode")]
-            // dms picks the animation driver at launch from this setting
+            // alpe-dienst picks the animation driver at launch from this setting
             readonly property bool simpleAnimationDriver: Quickshell.env("QSG_USE_SIMPLE_ANIMATION_DRIVER") === "1"
             readonly property bool driverMismatch: (SettingsData.wallpaperFillMode === "Scrolling") !== simpleAnimationDriver
 

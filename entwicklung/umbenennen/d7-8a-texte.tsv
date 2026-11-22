@@ -1,0 +1,39 @@
+# D7.8a (Plan 0.8 Nr. 64): Texte, Kommentare, Übersetzungskontexte und Testdaten ausserhalb der Dateien,
+# die D7.8 entfernt (texte-ersetzen.py, nur gemeldete Zeilen). Einordnung je Fundstelle: d7-8a-fundstellen.tsv.
+#
+# Übersetzungskontexte (nur Kommentar für Übersetzende, kein eigener Schlüssel; gleich in en.json/template.json)
+the dank dash popout	the dash popout
+Dank bar setting:	Bar setting:
+of a dms action	of a shell action
+creates the dms include config file	creates the Alpe include config file
+the dms binary could not be launched	the alpe-dienst binary could not be launched
+# Kommentare
+Not a Dank\* wrapper	Not an Alpe* wrapper
+Dank\* wrappers reset	Alpe* wrappers reset
+Stock theme definitions for Dux Modular Shell	Stock theme definitions for Alpe
+\(dms-plugins DankKDEConnect\)	(KDE Connect plugin of the upstream plugin store)
+A shell newer than the dms$	A shell newer than the alpe-dienst
+an older dms rejecting	an older alpe-dienst rejecting
+// dms picks the animation driver	// alpe-dienst picks the animation driver
+a dms binary older than	an alpe-dienst binary older than
+ignored dms package	ignored shell package
+Shaped like `dms keybinds keymap`	Shaped like `alpe-dienst keybinds keymap`
+# Meldungen
+Failed to parse dms color pick JSON	Failed to parse color pick JSON
+requires dms API v34\+	requires alpe-dienst API v34+
+\(dms server without wellbeing support\)	(alpe-dienst without wellbeing support)
+\# or: dms -c %q run	# or: alpe-dienst -c %q run
+# Aufrufe des Dienstes unter dem Namen von 1.0 (liefen ins Leere bzw. zeigten den falschen Befehl)
+\| dms clipboard copy"	| alpe-dienst clipboard copy"
+\.arg\("dms auth sync"\)	.arg("alpe-dienst auth sync")
+# Sichtbarer Text: Eintrag für den Modus "alpe" des Punkt-Symbols
+"Dux", root\.compositorLabel	"Alpe", root.compositorLabel
+# Suchwort der Einstellungssuche
+, "island", "dankisland"\]	, "island"]
+# Kopfzeile der Discord-Vorlage
+@website https://github\.com/duxlabs-dev/dux-shell	@website https://github.com/alpe-shell/alpe
+# Testdaten ohne Bezug zu 1.0
+/home/u/\.config/dms/	/home/u/.config/alpe/
+"dms-includes-"	"alpe-includes-"
+"spawn dms"	"spawn alpe-dienst"
+"dms-shell-embed-"	"alpe-shell-embed-"

@@ -71,7 +71,7 @@ Item {
         }
     }
 
-    // Not a Dank* wrapper: the view only ever follows currentIndex, never the pointer.
+    // Not an Alpe* wrapper: the view only ever follows currentIndex, never the pointer.
     // Flickable snapping with the negative spacing drifts to the neighbour and desyncs from the host.
     ListView {
         id: list

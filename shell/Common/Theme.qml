@@ -1707,7 +1707,7 @@ Singleton {
         return Math.round((maximized ? fontSizeLarge : fontSizeSmall) * barScale);
     }
 
-    // !TODO: plugin API only (dms-plugins DankKDEConnect); fold into a parametrized BatteryService ladder and drop from Theme
+    // !TODO: plugin API only (KDE Connect plugin of the upstream plugin store); fold into a parametrized BatteryService ladder and drop from Theme
     function getBatteryIcon(level, isCharging, batteryAvailable) {
         if (!batteryAvailable)
             return "battery_std";
@@ -1831,7 +1831,7 @@ Singleton {
         if (typeof SettingsData !== "undefined" && SettingsData.matugenContrast !== 0) {
             args.push("--contrast", SettingsData.matugenContrast.toString());
         }
-        // Only sent when it would change something. A shell newer than the dms
+        // Only sent when it would change something. A shell newer than the alpe-dienst
         // binary is a supported setup (ALPE_SHELL_DIR / -c), and an older binary
         // exits with "unknown flag: --source-mode" rather than ignoring it, so
         // the default must not put the flag on the command line at all.
@@ -1920,7 +1920,7 @@ Singleton {
         systemThemeGenerator.running = true;
     }
 
-    // an older dms rejecting a newer flag prints cobra usage after the error line, which must stay in view
+    // an older alpe-dienst rejecting a newer flag prints cobra usage after the error line, which must stay in view
     function _recordWorkerStderr(line) {
         const text = line.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").replace(/^\s*(FATAL|ERROR|WARN|INFO|DEBUG)\s+\S+:\s*/, "").replace(/^Theme generation failed:\s*/, "").trim();
         if (!text || _workerStderrUsage || /^(Backtrace omitted|Run with RUST_BACKTRACE)/.test(text))
@@ -1958,7 +1958,7 @@ Singleton {
         pendingThemeRequest = null;
         if (CacheData.matugenAppliedKey !== "")
             CacheData.set("matugenAppliedKey", "");
-        _reportWorkerFailure(I18n.tr("Theme worker failed to start", "error toast, the dms binary could not be launched"));
+        _reportWorkerFailure(I18n.tr("Theme worker failed to start", "error toast, the alpe-dienst binary could not be launched"));
         root.matugenCompleted((typeof SessionData !== "undefined" && SessionData.isLightMode) ? "light" : "dark", "error");
     }
 
