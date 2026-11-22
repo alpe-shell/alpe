@@ -179,9 +179,10 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   Netzwerk-, Loginctl- und Freedesktop-Manager still im Hintergrund. Der Eintrag in `offene-faelle.md`
   («Ladeprüfung») nennt noch Gamma als mögliche Ursache und ist zu berichtigen.
   **Offen, in dieser Reihenfolge:**
-  1. Entscheid des Maintainers: zuerst die Richtlinie des Ersatz-Systembusses berichtigen (eigener Commit, Lauf
-     ohne `Connected` gilt als gescheitert), dann Plan unter `docs/plan/` für den Dienst (Schnittstelle vor den
-     Managern, Gamma nebenher mit Zeitgrenze; ob alle Verbindungen zum Systembus eine Zeitgrenze bekommen).
+  1. **Entschieden (0.8 Nr. 80–82):** erst die Prüfumgebung (Richtlinie des Ersatz-Systembusses, eigener
+     Commit; ein Lauf ohne `Connected` gilt als gescheitert), dann der Dienst (Zeitgrenze für alle Verbindungen
+     zum Systembus; Plan `docs/plan/dienst-systembus.md` zur Freigabe, vorher keine Umsetzung), Grundlinien erst
+     messen, wenn beides committet ist.
   2. Behebung im Dienst als eigener Commit mit Test und Eintrag in `offene-faelle.md` (Fehler aus der Zeit vor
      Phase A); Mac-Anleitung: Nachtlicht prüfen.
   3. Prüfen: `Connected` im Protokoll unter dem verschachtelten Hyprland, `cpuUsage` links in der Leiste.
@@ -199,9 +200,10 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      unter KWin und Hyprland auf `ba4ddbc` und Endstand neu messen (mit Zusätzen, Hyprland-IPC und antwortendem
      Systembus), SettingsRow-Rate unter Hyprland aus diesen Läufen, Grundlinien-Commit, Bild beschreiben,
      Halt abschliessen.
-  Rückfragen an den Maintainer, noch unbeantwortet: `dockPins` entfernt statt geleert (ein leeres Dock im
-  Design überschriebe beim Einspielen die Anheftungen des Nutzers); `WindowClasses` des Unschärfe-Effekts
-  ganz entfernt.
+  Rückfragen aus `21f6ff2`, **beantwortet am 22.11.2026 (0.8 Nr. 78, 79):** `dockPins` entfernt statt geleert
+  und `WindowClasses` des Unschärfe-Effekts ganz entfernt sind bestätigt; `recentColors` kommt aus
+  `design/kde/session.json` heraus; der Export nimmt aus `session.json` nur die feste Liste der
+  Gestaltungs-Schlüssel (Punkt 4).
 - Danach: Vorlage 6.7 → E1 (0.8 Nr. 6).
 
 ---
@@ -468,6 +470,11 @@ Entscheide nach D7.7b (22.11.2026):
 | 75 | **Layer der Pipette:** Die Fläche des Dienstes heisst `alpe:eyedropper` statt `alpe:colorpicker` (Nr. 68), damit sie sich klar vom Modal `alpe:color-picker` unterscheidet. Mit Test. F1 schreibt Layer-Regeln mit `dms-colorpicker` auf `alpe:eyedropper` um (7.4 Schritt 6). |
 | 76 | **Sporadische Meldungen** (Entscheid 22.11.2026, nach der Messung zu `Cannot find member data`): Eine Grundlinie der Ladeprüfung kann eine Meldung als sporadisch kennzeichnen, mit der beobachteten Häufigkeit (`SPORADISCH k/n: <Meldung>`; `--grundlinie` schreibt die Marke selbst, wenn eine Meldung nicht in jedem Lauf vorkommt). Eine sporadische Meldung darf auftreten oder fehlen; sie zählt weder als neu noch als weg. **Eine neue Meldung, die nicht in jedem Lauf auftritt, wird vor dem Einordnen mehrfach gegen den Stand vor der Änderung gegengemessen** – wenige Läufe allein beweisen bei einer niedrigen Rate weder Herkunft noch Behebung; ein `git bisect` setzt eine Meldung voraus, die auf dem schlechten Stand verlässlich erscheint. Prüfregel 0.7 Nr. 6 und `CLAUDE.md` nachgeführt. |
 | 77 | **Variante «offen» = ausgeliefertes Design plus Abdeckungs-Zusätze** (Entscheid 22.11.2026): Im Temp-HOME der Variante «offen» werden zusätzlich eingeschaltet: die Arbeitsflächen-Anzeige (`workspaceSwitcher`) und der Starter-Knopf (`launcherButton`) im Logo-Modus `"alpe"` – beide sind im ausgelieferten Design aus. So berühren Lauf und Bild die Anbindung an den Compositor und das Alpe-Zeichen. **Das Testprofil «offen» ist damit nicht das ausgelieferte Design**; dieses prüft die Variante «gesperrt». **Hyprland-IPC:** Ein Lauf unter Hyprland gilt nur, wenn Signatur und beide Sockets bei der Shell ankommen (`umgebung.log`) und die Shell kein `ServerNotFoundError` meldet; `$ALPE_LP_TMP` darf höchstens 19 Zeichen lang sein (`/tmp/claude-1000` geht), sonst bricht der Lauf ab. Prüfregel 0.7 Nr. 6 und `CLAUDE.md` nachgeführt. |
+| 78 | **Design ohne Zustand, bestätigt** (Entscheid 22.11.2026 zu den Rückfragen aus `21f6ff2`): `dockPins` ist aus dem ausgelieferten Design **entfernt, nicht geleert** (ein leeres Dock im Design überschriebe beim Einspielen die Anheftungen des Nutzers). `WindowClasses` des Unschärfe-Effekts ist **ganz entfernt**. `recentColors` kommt aus `design/kde/session.json` heraus. |
+| 79 | **Export der Session über eine feste Liste** (Entscheid 22.11.2026): `tools/design.py` übernimmt aus `session.json` nur Schlüssel, die zur Gestaltung gehören (etwa Material-Vorlage und Form), statt einzelne Zustandswerte herauszufiltern. Jeder Schlüssel der Session ist im Code als Gestaltung oder Zustand eingeordnet; ein Test verlangt die Einordnung für jeden Schlüssel aus `SessionSpec.js` und `SharedSessionSpec.js`. Die Liste steht in 7.8. Eigener Commit. |
+| 80 | **Dienst hängt am Systembus – Reihenfolge der Behebung** (Entscheid 22.11.2026): (1) zuerst die Prüfumgebung, (2) dann der Dienst, (3) die Grundlinien der Ladeprüfung erst messen, wenn beides committet ist. |
+| 81 | **Prüfumgebung** (eigener Commit): Die Richtlinie des Ersatz-Systembusses der Ladeprüfung wird so ergänzt, dass er antwortet. **Jeder Lauf prüft, dass die Oberfläche `Connected` meldet; fehlt die Meldung, gilt der Lauf als gescheitert und liefert nichts für die Grundlinie** (wie beim fehlenden Hyprland-IPC, Nr. 77). Prüfregel 0.7 Nr. 6 und `CLAUDE.md` nachgeführt. |
+| 82 | **Dienst: Zeitgrenze für alle Verbindungen zum Systembus**, nicht nur für Gamma. Zuerst ein kurzer Plan unter `docs/plan/` (`dienst-systembus.md`), Umsetzung erst nach Freigabe. Als erster Vorschlag zu prüfen: eine einzige, vom Dienst selbst aufgebaute Systembus-Verbindung mit Zeitgrenze über einen Context (godbus v5), an alle Manager weitergereicht, kein Aufruf von `dbus.SystemBus()` mehr; bei Scheitern gelten die betroffenen Manager als nicht verfügbar (eine Meldung, erneute Versuche im Hintergrund mit wachsendem Abstand); der Wayland-Teil von Gamma bleibt synchron, nur die Überwachung des Ruhezustands wird nach dem Start der Schnittstelle nebenher eingerichtet; Grundsatz: keine Sperre über einen Bus- oder Netzaufruf hinweg. Ob der Wayland-Teil bei einem stummen Compositor hängen kann, ist nicht belegt und bleibt ein offener Fall ohne Umbau. Grundlinien, Vorschlagsdatei der Übersetzungen und der Rest des Halts kommen nach der Behebung. |
 
 Ausgabedateien für Fremdprogramme (0.8 Nr. 48). Basis: `~/.config`, sofern nichts anderes steht.
 
