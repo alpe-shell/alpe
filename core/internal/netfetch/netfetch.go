@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"sync"
 	"time"
-)
 
-const DefaultUserAgent = "Alpe/1.0 (Linux)"
+	"github.com/alpe-shell/alpe/core/internal/brand"
+)
 
 type Options struct {
 	Headers        map[string]string
@@ -86,7 +86,7 @@ func (o Options) request(ctx context.Context, url string) (*http.Request, error)
 
 	agent := o.UserAgent
 	if agent == "" {
-		agent = DefaultUserAgent
+		agent = brand.UserAgent()
 	}
 	req.Header.Set("User-Agent", agent)
 

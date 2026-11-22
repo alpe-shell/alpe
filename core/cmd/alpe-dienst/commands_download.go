@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/netfetch"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +33,7 @@ var dlCmd = &cobra.Command{
 
 func init() {
 	dlCmd.Flags().StringVarP(&dlOutput, "output", "o", "", "Output file path (default: stdout)")
-	dlCmd.Flags().StringVar(&dlUserAgent, "user-agent", "", "Custom User-Agent header")
+	dlCmd.Flags().StringVar(&dlUserAgent, "user-agent", "", "Custom User-Agent header (default: "+brand.UserAgent()+")")
 	dlCmd.Flags().StringArrayVarP(&dlHeaders, "header", "H", nil, "Extra request header as 'Name: value' (repeatable)")
 	dlCmd.Flags().IntVar(&dlTimeout, "timeout", 10, "Total request timeout in seconds")
 	dlCmd.Flags().IntVar(&dlConnectTimeout, "connect-timeout", 5, "Connection timeout in seconds")

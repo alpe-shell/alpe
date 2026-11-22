@@ -106,6 +106,41 @@ check(len(attrappen) > 10 and all("// template: testify (core/.mockery/testify.t
 check(not any(re.search(r"_Expecter\) (Unm|M)arshalJSON\(", read(a)) for a in attrappen),
       "keine Attrappe hat einen Expecter-Helfer für MarshalJSON (go vet, Plan 0.8 Nr. 62)")
 check("file://.mockery/testify.templ" in read(core, ".mockery.yml"), ".mockery.yml benutzt die eigene Vorlage")
+check("MOCKERY_VERSION = v3.9.1" in read(core, "Makefile") and "mockery v3.9.1" in read(REPO, "CLAUDE.md"),
+      "mockery-Version steht im Makefile und in CLAUDE.md (Plan 0.8 Nr. 66)")
+check(not os.path.exists(os.path.join(core, "internal", "netfetch", "release.go")) and not os.path.isdir(os.path.join(core, "internal", "mocks", "version"))
+      and re.findall(r"^func (\w+)", read(core, "internal", "version", "version.go"), re.M) == ["CompareVersions"],
+      "Aktualisierungsprüfung des Ursprungs ist weg, internal/version hat nur CompareVersions (Plan 0.8 Nr. 65)")
+agenten = []
+for wurzel, _verzeichnisse, dateien in os.walk(core):
+    if os.sep + "mocks" in wurzel:
+        continue
+    for datei in dateien:
+        if datei.endswith(".go") and not datei.endswith("_test.go"):
+            agenten += [(os.path.relpath(os.path.join(wurzel, datei), core), m) for m in re.findall(r'"(Alpe[ /][^"]*)"', read(wurzel, datei))
+                        if "github.com/alpe-shell" in m or re.match(r"Alpe/\d", m)]
+check(agenten == [], "kein fest eingetragener User-Agent im Dienst, alle über brand.UserAgent() (Plan 0.8 Nr. 67): " + str(agenten))
+
+# Layer-Namensräume (Plan 0.8 Nr. 68): ein Schema «alpe:<name>» in Oberfläche und Dienst; die Regel der
+# eingebetteten Hyprland-Vorlage erfasst jeden davon.
+vorlage = read(core, "internal", "config", "embedded", "hyprland.lua")
+regeln = [re.compile(m) for m in re.findall(r'hl\.layer_rule\(\{ match = \{ namespace = "([^"]+)" \}, no_anim = true \}\)', vorlage)]
+check(len(regeln) == 2, "Hyprland-Vorlage: zwei Regeln ohne Animation (quickshell, alpe:…)")
+raeume = []
+for wurzel, _verzeichnisse, dateien in os.walk(core):
+    for datei in dateien:
+        if datei.endswith(".go") and not datei.endswith("_test.go") and os.sep + "mocks" not in wurzel:
+            raeume += [(datei, m) for m in re.findall(r'GetLayerSurface\(\s*[^,]+,\s*[^,]+,\s*[^,]+,\s*"([^"]*)"', read(wurzel, datei))]
+check(len(raeume) >= 2, "Dienst: Layer-Flächen gefunden (%d)" % len(raeume))
+for wurzel, _verzeichnisse, dateien in os.walk(SHELL):
+    for datei in dateien:
+        if datei.endswith(".qml"):
+            # Jede Zeichenkette auf einer Zeile, die einen Namensraum setzt; «:anhang» hängt an einen Namensraum an.
+            for zeile in re.findall(r'^\s*(?:WlrLayershell\.namespace|layerNamespace)\s*:(.*)$', read(wurzel, datei), re.M):
+                raeume += [(datei, m) for m in re.findall(r'"([^"]+)"', zeile) if not m.startswith(":")]
+ausserhalb = sorted(set((d, r) for d, r in raeume if not r.startswith("alpe:")))
+check(len(raeume) > 60 and ausserhalb == [], "alle Layer-Namensräume folgen dem Schema alpe:<name> (%d geprüft): %s" % (len(raeume), ausserhalb))
+check(all(any(regel.search(r) for regel in regeln) for _d, r in raeume), "die Regeln der Hyprland-Vorlage erfassen jeden Layer-Namensraum")
 
 
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")

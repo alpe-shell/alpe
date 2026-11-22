@@ -18,7 +18,8 @@ VERSION=$(BRAND_VERSION)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 COMMIT?=$(COMMIT_HASH)
 
-VERSION_LDFLAGS=-X main.Version=$(VERSION) -X main.buildTime=$(BUILD_TIME) -X main.commit=$(COMMIT)
+# brand.Version trägt dieselbe Nummer in den User-Agent des Dienstes (Plan 0.8 Nr. 67).
+VERSION_LDFLAGS=-X main.Version=$(VERSION) -X github.com/alpe-shell/alpe/core/internal/brand.Version=$(VERSION) -X main.buildTime=$(BUILD_TIME) -X main.commit=$(COMMIT)
 BUILD_LDFLAGS=-ldflags='-s -w $(VERSION_LDFLAGS)'
 
 # Architecture to build for dist target (amd64, arm64, or all)
@@ -32,7 +33,7 @@ else
 DIST_ARCHS = $(ARCH)
 endif
 
-.PHONY: all build sync-shell dist clean install uninstall install-config uninstall-config test fmt vet deps print-version help
+.PHONY: all build sync-shell dist clean install uninstall install-config uninstall-config test fmt vet deps mocks print-version help
 
 # Default target
 all: build
@@ -108,6 +109,17 @@ dev:
 	$(GO) build -ldflags='$(VERSION_LDFLAGS)' -o $(BUILD_DIR)/$(BINARY_NAME) ./$(SOURCE_DIR)
 	@echo "Development build complete: $(BUILD_DIR)/$(BINARY_NAME)"
 
+# Attrappen unter internal/mocks: nie von Hand ändern, sondern neu erzeugen (Plan 0.8 Nr. 62) – immer
+# mit derselben mockery-Version, damit ein Lauf keine fremden Unterschiede einträgt (0.8 Nr. 66).
+# Einstellung in .mockery.yml, Vorlage in .mockery/testify.templ. Ein anderes Programm: MOCKERY=/pfad/mockery.
+MOCKERY ?= mockery
+MOCKERY_VERSION = v3.9.1
+
+mocks:
+	@got="$$($(MOCKERY) version 2>/dev/null | tail -1)"; \
+	 test "$$got" = "$(MOCKERY_VERSION)" || { echo "mockery $(MOCKERY_VERSION) nötig, gefunden: $${got:-keines}. Einrichten: go install github.com/vektra/mockery/v3@$(MOCKERY_VERSION)"; exit 1; }
+	$(MOCKERY)
+
 check-go:
 	@echo "Checking Go version..."
 	@go version | grep -E "go1\.(2[2-9]|[3-9][0-9])" > /dev/null || (echo "ERROR: Go 1.22 or higher required" && exit 1)
@@ -135,6 +147,7 @@ help:
 	@echo "  fmt                 - Format Go code"
 	@echo "  vet                 - Run go vet"
 	@echo "  deps                - Update dependencies"
+	@echo "  mocks               - Regenerate internal/mocks with mockery $(MOCKERY_VERSION)"
 	@echo "  dev                 - Build with debug info"
 	@echo "  check-go            - Check Go version compatibility"
 	@echo "  version             - Show version information"

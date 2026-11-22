@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/lowprio"
 	"github.com/alpe-shell/alpe/core/internal/plugins"
 	"github.com/duxlabs-dev/dux-go/ipc"
@@ -24,7 +25,7 @@ func HandleRequest(ctx context.Context, conn *ipc.ConnWriter, req ipc.Request) {
 const pluginPrefix = "plugin_"
 
 var client = coreweather.New(coreweather.Options{
-	UserAgent: "Alpe Weather Widget (+https://github.com/alpe-shell/alpe)",
+	UserAgent: brand.UserAgent(),
 	Resolve:   pluginSource,
 })
 

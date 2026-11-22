@@ -50,6 +50,11 @@ try:
     make("dev", "BUILD_DIR=" + out_dir, env=env)
     got = subprocess.run([os.path.join(out_dir, "alpe-dienst"), "version"], capture_output=True, text=True).stdout.strip()
     expect(got, "alpe-dienst " + brand, "«alpe-dienst version» meldet die Version aus Brand.qml")
+    # Plan 0.8 Nr. 67: Der User-Agent trägt dieselbe Version, auf drei Stellen ergänzt. Die Hilfe von
+    # «dl» nennt ihn; so zeigt sich, dass der Bau die Nummer wirklich einsetzt (und nicht «dev»).
+    agent = "Alpe/%s (+https://github.com/alpe-shell/alpe)" % ".".join((brand.split(".") + ["0", "0"])[:max(3, len(brand.split(".")))])
+    hilfe = subprocess.run([os.path.join(out_dir, "alpe-dienst"), "dl", "--help"], capture_output=True, text=True).stdout
+    expect(agent in hilfe, True, "User-Agent des gebauten Dienstes ist %s" % agent)
 finally:
     shutil.rmtree(out_dir, ignore_errors=True)
 

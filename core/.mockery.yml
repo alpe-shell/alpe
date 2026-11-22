@@ -48,12 +48,6 @@ packages:
       pkgname: mocks_utils
     interfaces:
       AppChecker: {}
-  github.com/alpe-shell/alpe/core/internal/version:
-    config:
-      dir: internal/mocks/version
-      pkgname: mocks_version
-    interfaces:
-      VersionFetcher: {}
   github.com/duxlabs-dev/dux-go/wayland/client:
     config:
       dir: internal/mocks/wlclient

@@ -1,12 +1,6 @@
 package version
 
-import (
-	"os"
-	"path/filepath"
-	"testing"
-
-	mocks_version "github.com/alpe-shell/alpe/core/internal/mocks/version"
-)
+import "testing"
 
 func TestCompareVersions(t *testing.T) {
 	tests := []struct {
@@ -29,106 +23,5 @@ func TestCompareVersions(t *testing.T) {
 		if result != tt.expected {
 			t.Errorf("CompareVersions(%q, %q) = %d; want %d", tt.v1, tt.v2, result, tt.expected)
 		}
-	}
-}
-
-func TestGetShellVersionInfo_Structure(t *testing.T) {
-	// Create a temp directory with a fake Alpe installation
-	tempDir := t.TempDir()
-	shellConfigPath := filepath.Join(tempDir, ".config", "quickshell", "alpe")
-	os.MkdirAll(shellConfigPath, 0o755)
-
-	// Create a .git directory to simulate git installation
-	os.MkdirAll(filepath.Join(shellConfigPath, ".git"), 0o755)
-
-	originalHome := os.Getenv("HOME")
-	defer os.Setenv("HOME", originalHome)
-	os.Setenv("HOME", tempDir)
-
-	// Create mock fetcher
-	mockFetcher := mocks_version.NewMockVersionFetcher(t)
-	mockFetcher.EXPECT().GetCurrentVersion(shellConfigPath).Return("v0.1.0", nil)
-	mockFetcher.EXPECT().GetLatestVersion(shellConfigPath).Return("v0.1.1", nil)
-
-	info, err := GetShellVersionInfoWithFetcher(mockFetcher)
-	if err != nil {
-		t.Fatalf("GetShellVersionInfoWithFetcher() failed: %v", err)
-	}
-
-	if !info.HasUpdate {
-		t.Error("HasUpdate should be true when current != latest")
-	}
-
-	if !info.IsTag {
-		t.Error("IsTag should be true for v0.1.0")
-	}
-}
-
-func TestGetShellVersionInfo_BranchVersion(t *testing.T) {
-	tempDir := t.TempDir()
-	shellConfigPath := filepath.Join(tempDir, ".config", "quickshell", "alpe")
-	os.MkdirAll(shellConfigPath, 0o755)
-	os.MkdirAll(filepath.Join(shellConfigPath, ".git"), 0o755)
-
-	originalHome := os.Getenv("HOME")
-	defer os.Setenv("HOME", originalHome)
-	os.Setenv("HOME", tempDir)
-
-	mockFetcher := mocks_version.NewMockVersionFetcher(t)
-	mockFetcher.EXPECT().GetCurrentVersion(shellConfigPath).Return("master@abc1234", nil)
-	mockFetcher.EXPECT().GetLatestVersion(shellConfigPath).Return("master@def5678", nil)
-
-	info, err := GetShellVersionInfoWithFetcher(mockFetcher)
-	if err != nil {
-		t.Fatalf("GetShellVersionInfoWithFetcher() failed: %v", err)
-	}
-
-	if !info.IsBranch {
-		t.Error("IsBranch should be true for branch@commit format")
-	}
-
-	if !info.IsGit {
-		t.Error("IsGit should be true for branch@commit format")
-	}
-
-	if !info.HasUpdate {
-		t.Error("HasUpdate should be true when commits differ")
-	}
-}
-
-func TestGetShellVersionInfo_NoUpdate(t *testing.T) {
-	tempDir := t.TempDir()
-	shellConfigPath := filepath.Join(tempDir, ".config", "quickshell", "alpe")
-	os.MkdirAll(shellConfigPath, 0o755)
-	os.MkdirAll(filepath.Join(shellConfigPath, ".git"), 0o755)
-
-	originalHome := os.Getenv("HOME")
-	defer os.Setenv("HOME", originalHome)
-	os.Setenv("HOME", tempDir)
-
-	mockFetcher := mocks_version.NewMockVersionFetcher(t)
-	mockFetcher.EXPECT().GetCurrentVersion(shellConfigPath).Return("v0.1.0", nil)
-	mockFetcher.EXPECT().GetLatestVersion(shellConfigPath).Return("v0.1.0", nil)
-
-	info, err := GetShellVersionInfoWithFetcher(mockFetcher)
-	if err != nil {
-		t.Fatalf("GetShellVersionInfoWithFetcher() failed: %v", err)
-	}
-
-	if info.HasUpdate {
-		t.Error("HasUpdate should be false when current == latest")
-	}
-}
-
-func TestGetInstalledShellVersion_NotInstalled(t *testing.T) {
-	originalHome := os.Getenv("HOME")
-	defer os.Setenv("HOME", originalHome)
-
-	tempDir := t.TempDir()
-	os.Setenv("HOME", tempDir)
-
-	_, err := GetInstalledShellVersion()
-	if err == nil {
-		t.Error("Expected error when Alpe not installed, got nil")
 	}
 }

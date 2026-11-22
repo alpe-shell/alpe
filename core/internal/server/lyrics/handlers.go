@@ -29,7 +29,7 @@ const pluginPrefix = "plugin_"
 
 var client = corelyrics.New(corelyrics.Options{
 	CacheDir:  filepath.Join(utils.XDGCacheHome(), brand.DirName, "lyrics"),
-	UserAgent: "Alpe/1 (+https://github.com/alpe-shell/alpe)",
+	UserAgent: brand.UserAgent(),
 	Resolve:   pluginSource,
 })
 
