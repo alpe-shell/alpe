@@ -89,6 +89,8 @@ type Manager struct {
 	notifierWg        sync.WaitGroup
 	lastNotifiedState *CUPSState
 	baseURL           string
+	legacyMarker      string // Marke «Abonnements aus 1.0 gekündigt»; leer = nicht prüfen (Tests)
+	legacyOnce        sync.Once
 	probeRemoteFn     func(host string, port int, useTLS bool) (*RemotePrinterInfo, error)
 	dialFn            func(network, addr string, timeout time.Duration) (net.Conn, error)
 }

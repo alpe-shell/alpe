@@ -439,13 +439,14 @@ var (
 		AttributeJobImpressionsCompleted: TagInteger,
 		AttributePrintScaling:            TagKeyword,
 		// IPP Subscription/Notification attributes (added for dankdots)
-		"notify-events":           TagKeyword,
-		"notify-pull-method":      TagKeyword,
-		"notify-lease-duration":   TagInteger,
-		"notify-subscription-id":  TagInteger,
-		"notify-subscription-ids": TagInteger,
-		"notify-sequence-numbers": TagInteger,
-		"notify-wait":             TagBoolean,
-		"notify-recipient-uri":    TagUri,
+		"notify-events":               TagKeyword,
+		"notify-pull-method":          TagKeyword,
+		"notify-lease-duration":       TagInteger,
+		"notify-subscription-id":      TagInteger,
+		"notify-subscription-ids":     TagInteger,
+		"notify-sequence-numbers":     TagInteger,
+		"notify-wait":                 TagBoolean,
+		"notify-recipient-uri":        TagUri,
+		"notify-subscriber-user-name": TagName,
 	}
 )

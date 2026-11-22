@@ -16,8 +16,14 @@ const (
 	nmWiFiDeviceCapFreq2GHz  uint32 = 0x00000200
 	nmWiFiDeviceCapFreq5GHz  uint32 = 0x00000400
 
-	dmsHotspotConnectionID = "DankMaterialShell Hotspot"
-	dmsHotspotStableID     = "dms-hotspot"
+	hotspotConnectionID = "Alpe Hotspot"
+	hotspotStableID     = "alpe-hotspot"
+
+	// Verbindung aus Alpe 1.0 (Plan 2.3.2, 0.8 Nr. 16): Sie wird erkannt und unter ihrem Namen
+	// weiter benutzt; neu angelegt wird nur der Alpe-Name. Fällt weg, sobald der Umzug von 1.0
+	// nicht mehr unterstützt wird.
+	legacyHotspotConnectionID = "DankMaterialShell Hotspot"
+	legacyHotspotStableID     = "dms-hotspot"
 )
 
 var _ HotspotBackend = (*NetworkManagerBackend)(nil)
@@ -53,7 +59,7 @@ func (b *NetworkManagerBackend) ConfigureHotspot(req HotspotRequest) error {
 		return err
 	}
 
-	existing, existingSettings, err := b.findDMSHotspotConnection()
+	existing, existingSettings, err := b.findManagedHotspotConnection()
 	if err != nil {
 		return err
 	}
@@ -75,7 +81,7 @@ func (b *NetworkManagerBackend) ConfigureHotspot(req HotspotRequest) error {
 }
 
 func (b *NetworkManagerBackend) StartHotspot() error {
-	conn, settings, err := b.findDMSHotspotConnection()
+	conn, settings, err := b.findManagedHotspotConnection()
 	if err != nil {
 		return err
 	}
@@ -118,7 +124,7 @@ func (b *NetworkManagerBackend) StopHotspot() error {
 	b.hotspotPendingDevice = ""
 	b.stateMutex.Unlock()
 
-	active, err := b.findActiveDMSHotspotConnection()
+	active, err := b.findActiveManagedHotspotConnection()
 	if err != nil {
 		return err
 	}
@@ -139,7 +145,7 @@ func (b *NetworkManagerBackend) StopHotspot() error {
 }
 
 func (b *NetworkManagerBackend) GetHotspotSecrets() (string, error) {
-	conn, settings, err := b.findDMSHotspotConnection()
+	conn, settings, err := b.findManagedHotspotConnection()
 	if err != nil {
 		return "", err
 	}
@@ -184,10 +190,10 @@ func (b *NetworkManagerBackend) networkManagerSettings() (gonetworkmanager.Setti
 
 func buildHotspotSettings(req HotspotRequest, existing gonetworkmanager.ConnectionSettings) gonetworkmanager.ConnectionSettings {
 	connection := map[string]any{
-		"id":          dmsHotspotConnectionID,
+		"id":          hotspotConnectionID,
 		"type":        "802-11-wireless",
 		"autoconnect": false,
-		"stable-id":   dmsHotspotStableID,
+		"stable-id":   hotspotStableID,
 	}
 	if req.Device != "" {
 		connection["interface-name"] = req.Device
@@ -195,6 +201,14 @@ func buildHotspotSettings(req HotspotRequest, existing gonetworkmanager.Connecti
 	if existingConnection, ok := existing["connection"]; ok {
 		if uuid, ok := existingConnection["uuid"].(string); ok && uuid != "" {
 			connection["uuid"] = uuid
+		}
+		// Eine Verbindung aus 1.0 behält Namen und Kennung: Sie wird weiter benutzt, nicht
+		// umbenannt (1.0 findet sie nach einem Rückweg wieder).
+		if stableID, _ := existingConnection["stable-id"].(string); stableID == legacyHotspotStableID {
+			connection["stable-id"] = legacyHotspotStableID
+			if id, ok := existingConnection["id"].(string); ok && id != "" {
+				connection["id"] = id
+			}
 		}
 	}
 
@@ -225,7 +239,7 @@ func buildHotspotSettings(req HotspotRequest, existing gonetworkmanager.Connecti
 	return settings
 }
 
-func (b *NetworkManagerBackend) findDMSHotspotConnection() (gonetworkmanager.Connection, gonetworkmanager.ConnectionSettings, error) {
+func (b *NetworkManagerBackend) findManagedHotspotConnection() (gonetworkmanager.Connection, gonetworkmanager.ConnectionSettings, error) {
 	settingsMgr, err := b.networkManagerSettings()
 	if err != nil {
 		return nil, nil, err
@@ -236,20 +250,29 @@ func (b *NetworkManagerBackend) findDMSHotspotConnection() (gonetworkmanager.Con
 		return nil, nil, fmt.Errorf("failed to list connections: %w", err)
 	}
 
+	// Die Alpe-Verbindung gewinnt; gibt es nur die aus 1.0, wird sie benutzt.
+	var legacyConn gonetworkmanager.Connection
+	var legacySettings gonetworkmanager.ConnectionSettings
 	for _, conn := range connections {
 		connSettings, err := conn.GetSettings()
 		if err != nil {
 			continue
 		}
-		if isDMSHotspotConnection(connSettings) {
+		if !isManagedHotspotConnection(connSettings) {
+			continue
+		}
+		if !isLegacyHotspotConnection(connSettings) {
 			return conn, connSettings, nil
+		}
+		if legacyConn == nil {
+			legacyConn, legacySettings = conn, connSettings
 		}
 	}
 
-	return nil, nil, nil
+	return legacyConn, legacySettings, nil
 }
 
-func (b *NetworkManagerBackend) findActiveDMSHotspotConnection() (gonetworkmanager.ActiveConnection, error) {
+func (b *NetworkManagerBackend) findActiveManagedHotspotConnection() (gonetworkmanager.ActiveConnection, error) {
 	nm := b.nmConn.(gonetworkmanager.NetworkManager)
 	activeConns, err := nm.GetPropertyActiveConnections()
 	if err != nil {
@@ -271,7 +294,7 @@ func (b *NetworkManagerBackend) findActiveDMSHotspotConnection() (gonetworkmanag
 		if err != nil {
 			continue
 		}
-		if isDMSHotspotConnection(settings) {
+		if isManagedHotspotConnection(settings) {
 			return active, nil
 		}
 	}
@@ -279,14 +302,24 @@ func (b *NetworkManagerBackend) findActiveDMSHotspotConnection() (gonetworkmanag
 	return nil, nil
 }
 
-func isDMSHotspotConnection(settings gonetworkmanager.ConnectionSettings) bool {
+func isManagedHotspotConnection(settings gonetworkmanager.ConnectionSettings) bool {
 	connMeta, _, ok := wifiConnectionSettings(settings)
 	if !ok || !isAPModeWiFiConnection(settings) {
 		return false
 	}
 
 	stableID, _ := connMeta["stable-id"].(string)
-	return stableID == dmsHotspotStableID
+	return stableID == hotspotStableID || stableID == legacyHotspotStableID
+}
+
+// isLegacyHotspotConnection: die von 1.0 angelegte Verbindung (Kennung «dms-hotspot»).
+func isLegacyHotspotConnection(settings gonetworkmanager.ConnectionSettings) bool {
+	connMeta, _, ok := wifiConnectionSettings(settings)
+	if !ok {
+		return false
+	}
+	stableID, _ := connMeta["stable-id"].(string)
+	return stableID == legacyHotspotStableID
 }
 
 func wifiConnectionSettings(settings gonetworkmanager.ConnectionSettings) (map[string]any, map[string]any, bool) {
@@ -321,12 +354,12 @@ func isClientWiFiConnection(settings gonetworkmanager.ConnectionSettings) bool {
 	return ok && !isAPModeWiFiConnection(settings)
 }
 
-// activeDMSHotspotDevicePaths returns only the devices hosting the DMS-owned
+// activeManagedHotspotDevicePaths returns only the devices hosting the shell-owned
 // hotspot, unlike activeAPModeWiFiDevicePaths which matches any AP-mode
 // connection (as the client-state isolation requires).
-func (b *NetworkManagerBackend) activeDMSHotspotDevicePaths() map[string]bool {
+func (b *NetworkManagerBackend) activeManagedHotspotDevicePaths() map[string]bool {
 	paths := make(map[string]bool)
-	active, err := b.findActiveDMSHotspotConnection()
+	active, err := b.findActiveManagedHotspotConnection()
 	if err != nil || active == nil {
 		return paths
 	}
@@ -405,9 +438,9 @@ func (b *NetworkManagerBackend) getAPCapableWiFiDevice(deviceName string, band s
 	}
 	sort.Strings(deviceNames)
 
-	dmsHotspotDevicePaths := b.activeDMSHotspotDevicePaths()
+	managedHotspotDevicePaths := b.activeManagedHotspotDevicePaths()
 
-	// Rank 0: already hosting the DMS hotspot (keep it where it is). Radios
+	// Rank 0: already hosting the managed hotspot (keep it where it is). Radios
 	// hosting foreign AP-mode connections must not get this preference and
 	// rank as busy through their Activated state instead.
 	// Rank 1: genuinely disconnected, so starting the AP disturbs nothing.
@@ -415,7 +448,7 @@ func (b *NetworkManagerBackend) getAPCapableWiFiDevice(deviceName string, band s
 	// Rank 3: carrying an active connection; only used as a last resort.
 	// Rank 4: unavailable, failed, or unknown; activation is unlikely to succeed.
 	rankDevice := func(devInfo *wifiDeviceInfo) int {
-		if len(dmsHotspotDevicePaths) > 0 && dmsHotspotDevicePaths[string(devInfo.device.GetPath())] {
+		if len(managedHotspotDevicePaths) > 0 && managedHotspotDevicePaths[string(devInfo.device.GetPath())] {
 			return 0
 		}
 		state, err := devInfo.device.GetPropertyState()
@@ -618,7 +651,7 @@ func (b *NetworkManagerBackend) updateHotspotState() error {
 		}
 	}
 
-	_, settings, err := b.findDMSHotspotConnection()
+	_, settings, err := b.findManagedHotspotConnection()
 	if err != nil {
 		return err
 	}
@@ -627,7 +660,7 @@ func (b *NetworkManagerBackend) updateHotspotState() error {
 	enabled := false
 	activating := false
 	if configured {
-		active, err := b.findActiveDMSHotspotConnection()
+		active, err := b.findActiveManagedHotspotConnection()
 		if err != nil {
 			return err
 		}

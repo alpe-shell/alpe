@@ -81,17 +81,10 @@ func (sm *DBusSubscriptionManager) Start() error {
 func (sm *DBusSubscriptionManager) createDBusSubscription() (int, error) {
 	req := ipp.NewRequest(ipp.OperationCreatePrinterSubscriptions, 2)
 	req.OperationAttributes[ipp.AttributePrinterURI] = fmt.Sprintf("%s/", sm.baseURL)
-	req.OperationAttributes[ipp.AttributeRequestingUserName] = "dms"
+	req.OperationAttributes[ipp.AttributeRequestingUserName] = requestingUserName()
 
 	req.SubscriptionAttributes = map[string]any{
-		"notify-events": []string{
-			"printer-state-changed",
-			"printer-added",
-			"printer-deleted",
-			"job-created",
-			"job-completed",
-			"job-state-changed",
-		},
+		"notify-events":         notifyEvents(),
 		"notify-recipient-uri":  "dbus:/",
 		"notify-lease-duration": 86400,
 	}
@@ -291,7 +284,7 @@ func (sm *DBusSubscriptionManager) Stop() {
 func (sm *DBusSubscriptionManager) cancelSubscription() {
 	req := ipp.NewRequest(ipp.OperationCancelSubscription, 1)
 	req.OperationAttributes[ipp.AttributePrinterURI] = fmt.Sprintf("%s/", sm.baseURL)
-	req.OperationAttributes[ipp.AttributeRequestingUserName] = "dms"
+	req.OperationAttributes[ipp.AttributeRequestingUserName] = requestingUserName()
 	req.OperationAttributes["notify-subscription-id"] = sm.subscriptionID
 
 	_, err := sm.client.SendRequest(fmt.Sprintf("%s/", sm.baseURL), req, nil)

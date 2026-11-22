@@ -45,12 +45,13 @@ func NewManager() (*Manager, error) {
 		state: &CUPSState{
 			Printers: make(map[string]*Printer),
 		},
-		client:     client,
-		pkHelper:   pkHelper,
-		baseURL:    baseURL,
-		stateMutex: sync.RWMutex{},
-		stopChan:   make(chan struct{}),
-		dirty:      make(chan struct{}, 1),
+		client:       client,
+		pkHelper:     pkHelper,
+		baseURL:      baseURL,
+		legacyMarker: legacySubscriptionsMarkerPath(),
+		stateMutex:   sync.RWMutex{},
+		stopChan:     make(chan struct{}),
+		dirty:        make(chan struct{}, 1),
 	}
 
 	if err := m.updateState(); err != nil {
@@ -242,6 +243,8 @@ func (m *Manager) Subscribe(id string) chan CUPSState {
 	if !wasEmpty || m.subscription == nil {
 		return ch
 	}
+
+	m.cancelLegacySubscriptionsOnce()
 
 	if err := m.subscription.Start(); err != nil {
 		log.Warnf("[CUPS] Failed to start subscription manager: %v", err)

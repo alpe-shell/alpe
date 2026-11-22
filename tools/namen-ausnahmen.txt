@@ -53,3 +53,8 @@ entwicklung/umbenennen/*	*	dauerhaft	Zuordnungstabellen der Umbenennung (D7)
 *	dsearch|dux-search|duxlabs-dev/dux-search	solange die Anbindung besteht (E3/E4 vermerkt)	fremdes Programm dsearch (0.8 Nr. 26)
 shell/DCommon/Widgets/*	*	D7.8	Übergangs-Hüllen für fremde Plugins (sathiAi), die noch qs.DCommon.Widgets importieren (0.8 Nr. 27)
 tools/namen-verboten.txt	*	dauerhaft	Liste der verbotenen alten Typnamen selbst (0.8 Nr. 34)
+core/internal/server/network/backend_networkmanager_hotspot.go	DankMaterialShell Hotspot|dms-hotspot	Umzug-Ende	Hotspot-Verbindung aus 1.0 erkennen und weiter benutzen (0.8 Nr. 16)
+core/internal/server/network/backend_networkmanager_hotspot_altnamen_test.go	*	Umzug-Ende	Test dazu
+core/internal/server/cups/legacy_subscriptions.go	"dms"|«dms»	Umzug-Ende	CUPS: Abonnements des Besitzers dms aus 1.0 einmal kündigen (0.8 Nr. 22)
+core/internal/server/cups/owner.go	«dms»	Umzug-Ende	Kommentar: früherer fester Besitzername
+core/internal/server/cups/legacy_subscriptions_test.go	*	Umzug-Ende	Test dazu

@@ -105,7 +105,7 @@ func TestHandleHotspotRequests(t *testing.T) {
 			ID:     123,
 			Method: "network.hotspot.configure",
 			Params: map[string]any{
-				"ssid":     "DMS Hotspot",
+				"ssid":     "Alpe Hotspot",
 				"password": "hunter2-password",
 				"device":   "wlan0",
 				"band":     "bg",
@@ -124,7 +124,7 @@ func TestHandleHotspotRequests(t *testing.T) {
 		assert.True(t, resp.Result.Success)
 		assert.True(t, backend.configureCalled)
 		assert.Equal(t, HotspotRequest{
-			SSID:     "DMS Hotspot",
+			SSID:     "Alpe Hotspot",
 			Password: "hunter2-password",
 			Device:   "wlan0",
 			Band:     "bg",

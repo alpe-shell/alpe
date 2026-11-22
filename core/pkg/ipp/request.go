@@ -256,6 +256,14 @@ func (d *RequestDecoder) Decode(data io.Writer) (*Request, error) {
 			tagSet = true
 		}
 
+		if startByte == TagSubscription {
+			if req.SubscriptionAttributes == nil {
+				req.SubscriptionAttributes = make(map[string]any)
+			}
+			tag = TagSubscription
+			tagSet = true
+		}
+
 		if tagSet {
 			if _, err := d.reader.Read(startByteSlice); err != nil {
 				return nil, err
@@ -295,5 +303,7 @@ func appendAttributeToRequest(req *Request, tag int8, name string, value any) {
 		req.PrinterAttributes[name] = value
 	case TagJob:
 		req.JobAttributes[name] = value
+	case TagSubscription:
+		req.SubscriptionAttributes[name] = value
 	}
 }

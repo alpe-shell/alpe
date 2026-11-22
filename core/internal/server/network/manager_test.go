@@ -36,7 +36,7 @@ func TestStateChangedMeaningfully_HotspotFields(t *testing.T) {
 		},
 		{
 			name: "ssid",
-			old:  NetworkState{HotspotSSID: "DMS Hotspot"},
+			old:  NetworkState{HotspotSSID: "Alpe Hotspot"},
 			new:  NetworkState{HotspotSSID: "Other Hotspot"},
 		},
 		{
@@ -179,7 +179,7 @@ func TestManager_HotspotUnsupportedBackend(t *testing.T) {
 	assert.Empty(t, state.HotspotDevice)
 	assert.Empty(t, state.HotspotBand)
 
-	assert.ErrorIs(t, manager.ConfigureHotspot(HotspotRequest{SSID: "DMS Hotspot"}), ErrHotspotNotSupported)
+	assert.ErrorIs(t, manager.ConfigureHotspot(HotspotRequest{SSID: "Alpe Hotspot"}), ErrHotspotNotSupported)
 	assert.ErrorIs(t, manager.StartHotspot(), ErrHotspotNotSupported)
 	assert.ErrorIs(t, manager.StopHotspot(), ErrHotspotNotSupported)
 
@@ -195,7 +195,7 @@ func TestManager_HotspotSupportedBackend(t *testing.T) {
 	manager := NewTestManager(backend, &NetworkState{})
 
 	req := HotspotRequest{
-		SSID:     "DMS Hotspot",
+		SSID:     "Alpe Hotspot",
 		Password: "hunter2-password",
 		Device:   "wlan0",
 		Band:     "bg",
@@ -210,7 +210,7 @@ func TestManager_HotspotSupportedBackend(t *testing.T) {
 	assert.True(t, state.HotspotSupported)
 	assert.True(t, state.HotspotAvailable)
 	assert.True(t, state.HotspotConfigured)
-	assert.Equal(t, "DMS Hotspot", state.HotspotSSID)
+	assert.Equal(t, "Alpe Hotspot", state.HotspotSSID)
 	assert.Equal(t, "wlan0", state.HotspotDevice)
 	assert.Equal(t, "bg", state.HotspotBand)
 

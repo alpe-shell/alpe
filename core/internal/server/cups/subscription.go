@@ -62,18 +62,11 @@ func (sm *SubscriptionManager) Start() error {
 func (sm *SubscriptionManager) createSubscription() (int, error) {
 	req := ipp.NewRequest(ipp.OperationCreatePrinterSubscriptions, 1)
 	req.OperationAttributes[ipp.AttributePrinterURI] = fmt.Sprintf("%s/", sm.baseURL)
-	req.OperationAttributes[ipp.AttributeRequestingUserName] = "dms"
+	req.OperationAttributes[ipp.AttributeRequestingUserName] = requestingUserName()
 
 	// Subscription attributes go in SubscriptionAttributes (subscription-attributes-tag in IPP)
 	req.SubscriptionAttributes = map[string]any{
-		"notify-events": []string{
-			"printer-state-changed",
-			"printer-added",
-			"printer-deleted",
-			"job-created",
-			"job-completed",
-			"job-state-changed",
-		},
+		"notify-events":         notifyEvents(),
 		"notify-pull-method":    "ippget",
 		"notify-lease-duration": 0,
 	}
@@ -146,7 +139,7 @@ func (sm *SubscriptionManager) notificationLoop() {
 func (sm *SubscriptionManager) fetchNotificationsWithWait() (bool, error) {
 	req := ipp.NewRequest(ipp.OperationGetNotifications, 1)
 	req.OperationAttributes[ipp.AttributePrinterURI] = fmt.Sprintf("%s/", sm.baseURL)
-	req.OperationAttributes[ipp.AttributeRequestingUserName] = "dms"
+	req.OperationAttributes[ipp.AttributeRequestingUserName] = requestingUserName()
 	req.OperationAttributes["notify-subscription-ids"] = sm.subscriptionID
 	if sm.sequenceNumber > 0 {
 		req.OperationAttributes["notify-sequence-numbers"] = sm.sequenceNumber
@@ -242,7 +235,7 @@ func (sm *SubscriptionManager) Stop() {
 func (sm *SubscriptionManager) cancelSubscription() {
 	req := ipp.NewRequest(ipp.OperationCancelSubscription, 1)
 	req.OperationAttributes[ipp.AttributePrinterURI] = fmt.Sprintf("%s/", sm.baseURL)
-	req.OperationAttributes[ipp.AttributeRequestingUserName] = "dms"
+	req.OperationAttributes[ipp.AttributeRequestingUserName] = requestingUserName()
 	req.OperationAttributes["notify-subscription-id"] = sm.subscriptionID
 
 	_, err := sm.client.SendRequest(fmt.Sprintf("%s/", sm.baseURL), req, nil)

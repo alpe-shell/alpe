@@ -1,0 +1,18 @@
+# D7.7c (Plan 2.3.5): Hotspot und CUPS im Dienst. Die Bezeichner unten sind paketlokal
+# (core/internal/server/network) und wurden mit ganzen Wortgrenzen ersetzt; die Logik (Alpe-Name neu,
+# Verbindung aus 1.0 erkennen; CUPS-Benutzername zur Laufzeit, einmaliges Kündigen) ist von Hand geschrieben.
+# Bereits angewendet: Ein Probelauf zeigt darum 0 Treffer und meldet die neuen Namen als vorhanden.
+ohne	entwicklung/umbenennen/*,docs/plan/*
+wort	dmsHotspotConnectionID	hotspotConnectionID	core/internal/server/network/*
+wort	dmsHotspotStableID	hotspotStableID	core/internal/server/network/*
+wort	findDMSHotspotConnection	findManagedHotspotConnection	core/internal/server/network/*
+wort	findActiveDMSHotspotConnection	findActiveManagedHotspotConnection	core/internal/server/network/*
+wort	isDMSHotspotConnection	isManagedHotspotConnection	core/internal/server/network/*
+wort	activeDMSHotspotDevicePaths	activeManagedHotspotDevicePaths	core/internal/server/network/*
+wort	dmsHotspotDevicePaths	managedHotspotDevicePaths	core/internal/server/network/*
+wort	dmsHotspotConn	managedHotspotConn	core/internal/server/network/*
+wort	dmsSettings	managedSettings	core/internal/server/network/*
+wort	dmsConn	managedConn	core/internal/server/network/*
+wort	dmsActive	managedActive	core/internal/server/network/*
+text	"DMS Hotspot"	"Alpe Hotspot"	core/internal/server/network/*
+text	DMS-managed	Alpe-managed	core/internal/server/network/API.md
