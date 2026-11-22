@@ -67,18 +67,18 @@ Item {
         }
 
         SettingsCard {
-            visible: DMSService.isConnected
+            visible: ShellBackend.isConnected
             iconName: "dns"
             title: I18n.tr("Backend", "noun, settings label for the backend service in use")
 
             SettingsRow {
                 title: I18n.tr("Version")
-                trailingBadge: DMSService.cliVersion || "—"
+                trailingBadge: ShellBackend.cliVersion || "—"
             }
 
             SettingsRow {
                 title: I18n.tr("API", "about page card title, application programming interface version")
-                trailingBadge: `v${DMSService.apiVersion}`
+                trailingBadge: `v${ShellBackend.apiVersion}`
             }
 
             SettingsRow {
@@ -91,14 +91,14 @@ Item {
             }
 
             SettingsRow {
-                visible: DMSService.capabilities.length > 0
+                visible: ShellBackend.capabilities.length > 0
                 title: I18n.tr("Capabilities")
                 body: Flow {
                     width: parent.width
                     spacing: Theme.spacingS
 
                     Repeater {
-                        model: DMSService.capabilities
+                        model: ShellBackend.capabilities
 
                         AlpeBadge {
                             required property string modelData

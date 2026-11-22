@@ -73,7 +73,7 @@ Singleton {
                 return;
             }
             if (socketPath && socketPath.length > 0) {
-                checkDMSCapabilities();
+                checkBackendCapabilities();
             } else {
                 log.debug("ALPE_SOCKET not set");
             }
@@ -314,11 +314,11 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
         if (!path)
             return;
         const fallback = () => Qt.openUrlExternally("file://" + path);
-        if (!DMSService.isConnected) {
+        if (!ShellBackend.isConnected) {
             fallback();
             return;
         }
-        DMSService.sendRequest("mime.getDefault", {
+        ShellBackend.sendRequest("mime.getDefault", {
             "path": path
         }, response => {
             const entry = resolveDesktopId(response?.result?.desktopId);
@@ -451,7 +451,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
                 return;
             }
 
-            DMSService.sendRequest("loginctl.terminate", null, response => {
+            ShellBackend.sendRequest("loginctl.terminate", null, response => {
                 if (response.error)
                     log.warn("Failed to terminate session:", response.error);
             });
@@ -835,11 +835,11 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
-            if (DMSService.isConnected) {
-                checkDMSCapabilities();
+            if (ShellBackend.isConnected) {
+                checkBackendCapabilities();
             } else {
                 clearPowerSubscriptionState();
             }
@@ -852,11 +852,11 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     }
 
     Connections {
-        target: DMSService
-        enabled: DMSService.isConnected
+        target: ShellBackend
+        enabled: ShellBackend.isConnected
 
         function onCapabilitiesChanged() {
-            checkDMSCapabilities();
+            checkBackendCapabilities();
         }
 
         function onDbusSignalReceived(subscriptionId, data) {
@@ -899,7 +899,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         enabled: SettingsData.loginctlLockIntegration
 
         function onLoginctlStateUpdate(data) {
@@ -907,16 +907,16 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
         }
     }
 
-    function checkDMSCapabilities() {
-        if (!DMSService.isConnected) {
+    function checkBackendCapabilities() {
+        if (!ShellBackend.isConnected) {
             return;
         }
 
-        if (DMSService.capabilities.length === 0) {
+        if (ShellBackend.capabilities.length === 0) {
             return;
         }
 
-        if (DMSService.capabilities.includes("loginctl")) {
+        if (ShellBackend.capabilities.includes("loginctl")) {
             loginctlAvailable = true;
             if (SettingsData.loginctlLockIntegration && !stateInitialized) {
                 stateInitialized = true;
@@ -928,7 +928,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
             log.debug("loginctl capability not available in the service");
         }
 
-        if (DMSService.capabilities.includes("dbus")) {
+        if (ShellBackend.capabilities.includes("dbus")) {
             ensurePrepareForSleepSubscription();
             ensureLidSubscription();
         } else {
@@ -944,13 +944,13 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     }
 
     function ensureLidSubscription() {
-        if (!DMSService.isConnected || !DMSService.capabilities.includes("dbus"))
+        if (!ShellBackend.isConnected || !ShellBackend.capabilities.includes("dbus"))
             return;
         if (lidSubscriptionId || lidSubscriptionPending)
             return;
 
         lidSubscriptionPending = true;
-        DMSService.dbusSubscribe("system", "org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.DBus.Properties", "PropertiesChanged", response => {
+        ShellBackend.dbusSubscribe("system", "org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.DBus.Properties", "PropertiesChanged", response => {
             lidSubscriptionPending = false;
             if (response.error) {
                 log.warn("Failed to subscribe to lid changes:", response.error);
@@ -980,7 +980,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     }
 
     function ensurePrepareForSleepSubscription() {
-        if (!DMSService.isConnected || !DMSService.capabilities.includes("dbus")) {
+        if (!ShellBackend.isConnected || !ShellBackend.capabilities.includes("dbus")) {
             return;
         }
 
@@ -989,7 +989,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
         }
 
         prepareForSleepSubscriptionPending = true;
-        DMSService.dbusSubscribe("system", "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", "PrepareForSleep", response => {
+        ShellBackend.dbusSubscribe("system", "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", "PrepareForSleep", response => {
             prepareForSleepSubscriptionPending = false;
 
             if (response.error) {
@@ -1026,7 +1026,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     function getLoginctlState() {
         if (!loginctlAvailable)
             return;
-        DMSService.sendRequest("loginctl.getState", null, response => {
+        ShellBackend.sendRequest("loginctl.getState", null, response => {
             if (response.result) {
                 updateLoginctlState(response.result);
             }
@@ -1036,7 +1036,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     function syncLockBeforeSuspend() {
         if (!loginctlAvailable)
             return;
-        DMSService.sendRequest("loginctl.setLockBeforeSuspend", {
+        ShellBackend.sendRequest("loginctl.setLockBeforeSuspend", {
             enabled: SettingsData.lockBeforeSuspend
         }, response => {
             if (response.error) {
@@ -1050,9 +1050,9 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     function syncSleepInhibitor() {
         if (!loginctlAvailable)
             return;
-        if (!DMSService.apiVersion || DMSService.apiVersion < 4)
+        if (!ShellBackend.apiVersion || ShellBackend.apiVersion < 4)
             return;
-        DMSService.sendRequest("loginctl.setSleepInhibitorEnabled", {
+        ShellBackend.sendRequest("loginctl.setSleepInhibitorEnabled", {
             enabled: SettingsData.loginctlLockIntegration && SettingsData.lockBeforeSuspend
         }, response => {
             if (response.error) {
@@ -1066,7 +1066,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
     function syncKeepAwake() {
         if (!loginctlAvailable)
             return;
-        DMSService.sendRequest("loginctl.setKeepAwake", {
+        ShellBackend.sendRequest("loginctl.setKeepAwake", {
             enabled: idleInhibited && SettingsData.keepAwakeBlocksSleep
         }, response => {
             if (response.error)

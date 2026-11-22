@@ -40,7 +40,7 @@ Rectangle {
         cachedMimeType = "";
         const entryId = entry.id;
         _requestedEntryId = entryId;
-        DMSService.sendRequest("clipboard.getEntry", {
+        ShellBackend.sendRequest("clipboard.getEntry", {
             "id": entryId
         }, function (response) {
             if (_requestedEntryId !== entryId)

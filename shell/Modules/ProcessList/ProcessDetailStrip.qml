@@ -607,7 +607,7 @@ Rectangle {
                         iconName: "content_copy"
                         iconColor: Theme.surfaceText
                         tooltipText: I18n.tr("Copy Full Command")
-                        onClicked: Quickshell.execDetached([Proc.dmsBin, "cl", "copy", "--", root.fullCommand])
+                        onClicked: Quickshell.execDetached([Proc.backendBin, "cl", "copy", "--", root.fullCommand])
                     }
                 }
             }

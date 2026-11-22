@@ -57,12 +57,12 @@ Item {
             width: parent.width
 
             SettingsRow {
-                visible: !DMSNetworkService.vpnAvailable
+                visible: !BackendNetworkService.vpnAvailable
                 subtitle: I18n.tr("Unavailable")
             }
 
             SettingsRow {
-                visible: DMSNetworkService.vpnAvailable && DMSNetworkService.profiles.length === 0
+                visible: BackendNetworkService.vpnAvailable && BackendNetworkService.profiles.length === 0
                 body: Item {
                     width: parent.width
                     height: SettingsMetrics.emptyStateHeight
@@ -96,7 +96,7 @@ Item {
             }
 
             Repeater {
-                model: DMSNetworkService.vpnAvailable ? DMSNetworkService.profiles : []
+                model: BackendNetworkService.vpnAvailable ? BackendNetworkService.profiles : []
 
                 VpnProfileDelegate {
                     required property var modelData
@@ -123,7 +123,7 @@ Item {
         }
 
         SettingsFabBar {
-            shown: DMSNetworkService.vpnAvailable
+            shown: BackendNetworkService.vpnAvailable
 
             AlpeFab {
                 text: I18n.tr("Import VPN")

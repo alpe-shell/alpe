@@ -414,7 +414,7 @@ Item {
                 StyledRect {
                     id: warningBox
 
-                    readonly property var status: KeybindsService.dmsStatus
+                    readonly property var status: KeybindsService.fragmentStatus
                     readonly property bool showLegacy: KeybindsService.readOnly
                     readonly property bool showWarning: !showLegacy && status.included && status.overriddenBy > 0
                     readonly property bool showSetup: !showLegacy && !status.included

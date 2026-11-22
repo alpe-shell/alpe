@@ -30,23 +30,23 @@ Singleton {
         if (!genericPowerBackend)
             return;
         const backend = compositor;
-        Proc.runCommand("output-power-probe", [Proc.dmsBin, "dpms", "list"], (output, code) => {
+        Proc.runCommand("output-power-probe", [Proc.backendBin, "dpms", "list"], (output, code) => {
             if (root.compositor === backend && root.genericPowerBackend)
                 root.outputPowerAvailable = code === 0;
         }, 0, 5000);
     }
 
     function setOutputPower(on) {
-        Proc.runCommand("output-power-action", [Proc.dmsBin, "dpms", on ? "on" : "off"], (output, code) => {
+        Proc.runCommand("output-power-action", [Proc.backendBin, "dpms", on ? "on" : "off"], (output, code) => {
             if (code !== 0)
                 ToastService.showError(I18n.tr("Error"), I18n.tr("Failed to change display power", "Error shown when changing monitor power fails"));
         }, 0, 12000);
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         function onConnectionStateChanged() {
-            if (DMSService.isConnected)
+            if (ShellBackend.isConnected)
                 root.probeOutputPower();
             else
                 root.outputPowerAvailable = false;
@@ -210,7 +210,7 @@ Singleton {
     }
 
     function fetchRandrData() {
-        Proc.runCommand("randr", [Proc.dmsBin, "randr", "--json"], (output, exitCode) => {
+        Proc.runCommand("randr", [Proc.backendBin, "randr", "--json"], (output, exitCode) => {
             if (exitCode === 0 && output) {
                 try {
                     const data = JSON.parse(output.trim());
@@ -1198,7 +1198,7 @@ Singleton {
         if (!supportsWindowRules)
             return;
         const procId = ensureOpaque ? "dms-windowrule-startup-list" : "dms-windowrule-float-list";
-        Proc.runCommand(procId, [Proc.dmsBin, "config", "windowrules", "list", compositor], (output, exitCode) => {
+        Proc.runCommand(procId, [Proc.backendBin, "config", "windowrules", "list", compositor], (output, exitCode) => {
             if (exitCode !== 0) {
                 if (ensureOpaque)
                     log.warn("failed to list window rules:", exitCode, output);
@@ -1245,7 +1245,7 @@ Singleton {
                 "id": id,
                 "enabled": true
             }, rule))] : ["remove", compositor, id];
-        Proc.runCommand("dms-windowrule-" + id, [Proc.dmsBin, "config", "windowrules", ...args], (output, exitCode) => {
+        Proc.runCommand("dms-windowrule-" + id, [Proc.backendBin, "config", "windowrules", ...args], (output, exitCode) => {
             if (exitCode !== 0) {
                 log.warn("failed to update the shell window rule", id, exitCode, output);
                 return;

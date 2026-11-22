@@ -47,7 +47,7 @@ AlpeModal {
     function fetchNetworkQRCode(ssid) {
         // TODO: Add loading UI?
 
-        DMSService.sendRequest("network.qrcode", {
+        ShellBackend.sendRequest("network.qrcode", {
             ssid: ssid
         }, response => {
             if (response.error) {
@@ -61,7 +61,7 @@ AlpeModal {
     }
 
     function deleteQRCodeFile(path) {
-        DMSService.sendRequest("network.delete-qrcode", {
+        ShellBackend.sendRequest("network.delete-qrcode", {
             path: path
         }, response => {
             if (response.error) {

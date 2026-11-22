@@ -21,18 +21,18 @@ func marshalKeys(t *testing.T, v any) map[string]json.RawMessage {
 }
 
 func TestDMSBindsStatusKeySpellings(t *testing.T) {
-	keys := marshalKeys(t, DMSBindsStatus{
-		Exists:          true,
-		Included:        true,
-		IncludePosition: 2,
-		TotalIncludes:   3,
-		BindsAfterDMS:   4,
-		Effective:       true,
-		OverriddenBy:    4,
-		StatusMessage:   "DMS binds are active",
+	keys := marshalKeys(t, BindsFragmentStatus{
+		Exists:             true,
+		Included:           true,
+		IncludePosition:    2,
+		TotalIncludes:      3,
+		BindsAfterFragment: 4,
+		Effective:          true,
+		OverriddenBy:       4,
+		StatusMessage:      "DMS binds are active",
 	})
 
-	want := []string{"exists", "included", "includePosition", "totalIncludes", "bindsAfterDms", "effective", "overriddenBy", "statusMessage"}
+	want := []string{"exists", "included", "includePosition", "totalIncludes", "bindsAfterFragment", "effective", "overriddenBy", "statusMessage"}
 	if len(keys) != len(want) {
 		t.Fatalf("key count = %d, want %d: %v", len(keys), len(want), keys)
 	}
@@ -44,28 +44,28 @@ func TestDMSBindsStatusKeySpellings(t *testing.T) {
 }
 
 func TestDMSBindsStatusFromCarriesEveryField(t *testing.T) {
-	got := DMSBindsStatusFrom(configfrag.Status{
-		Exists:          true,
-		Included:        true,
-		IncludePosition: 2,
-		TotalIncludes:   3,
-		EntriesAfterDMS: 7,
-		Effective:       true,
-		OverriddenBy:    7,
-		StatusMessage:   "DMS binds are active",
+	got := BindsFragmentStatusFrom(configfrag.Status{
+		Exists:               true,
+		Included:             true,
+		IncludePosition:      2,
+		TotalIncludes:        3,
+		EntriesAfterFragment: 7,
+		Effective:            true,
+		OverriddenBy:         7,
+		StatusMessage:        "DMS binds are active",
 	})
 
-	want := DMSBindsStatus{
-		Exists:          true,
-		Included:        true,
-		IncludePosition: 2,
-		TotalIncludes:   3,
-		BindsAfterDMS:   7,
-		Effective:       true,
-		OverriddenBy:    7,
-		StatusMessage:   "DMS binds are active",
+	want := BindsFragmentStatus{
+		Exists:             true,
+		Included:           true,
+		IncludePosition:    2,
+		TotalIncludes:      3,
+		BindsAfterFragment: 7,
+		Effective:          true,
+		OverriddenBy:       7,
+		StatusMessage:      "DMS binds are active",
 	}
 	if *got != want {
-		t.Errorf("DMSBindsStatusFrom = %+v, want %+v", *got, want)
+		t.Errorf("BindsFragmentStatusFrom = %+v, want %+v", *got, want)
 	}
 }

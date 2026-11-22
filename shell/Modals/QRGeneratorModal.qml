@@ -62,11 +62,11 @@ AlpeModal {
 
     function deleteQrCodeFiles(themed, normal) {
         if (themed.length > 0)
-            DMSService.sendRequest("network.delete-qrcode", {
+            ShellBackend.sendRequest("network.delete-qrcode", {
                 path: themed
             });
         if (normal.length > 0)
-            DMSService.sendRequest("network.delete-qrcode", {
+            ShellBackend.sendRequest("network.delete-qrcode", {
                 path: normal
             });
     }
@@ -86,7 +86,7 @@ AlpeModal {
         _generatingPayload = trimmed;
         generating = true;
 
-        DMSService.sendRequest("network.generate-qrcode", {
+        ShellBackend.sendRequest("network.generate-qrcode", {
             text: trimmed
         }, response => {
             root.generating = false;
@@ -252,7 +252,7 @@ AlpeModal {
                         iconName: "content_copy"
                         onClicked: {
                             if (root.normalQrCodePath.length > 0)
-                                DMSService.sendRequest("clipboard.copyFile", {
+                                ShellBackend.sendRequest("clipboard.copyFile", {
                                     filePath: root.normalQrCodePath
                                 });
                         }

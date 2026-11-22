@@ -20,10 +20,10 @@ BasePill {
             AlpeIcon {
                 id: icon
 
-                name: DMSNetworkService.connected ? "vpn_lock" : "vpn_key_off"
+                name: BackendNetworkService.connected ? "vpn_lock" : "vpn_key_off"
                 size: Theme.barIconSize(root.barThickness, -4, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
-                color: DMSNetworkService.connected ? Theme.primary : Theme.widgetIconColor
-                opacity: DMSNetworkService.isBusy ? 0.5 : 1.0
+                color: BackendNetworkService.connected ? Theme.primary : Theme.widgetIconColor
+                opacity: BackendNetworkService.isBusy ? 0.5 : 1.0
                 anchors.centerIn: parent
 
                 Behavior on opacity {
@@ -50,14 +50,14 @@ BasePill {
         width: root.width + root.leftMargin + root.rightMargin
         height: root.height + root.topMargin + root.bottomMargin
         hoverEnabled: true
-        cursorShape: DMSNetworkService.isBusy ? Qt.BusyCursor : Qt.PointingHandCursor
+        cursorShape: BackendNetworkService.isBusy ? Qt.BusyCursor : Qt.PointingHandCursor
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        enabled: !DMSNetworkService.isBusy
+        enabled: !BackendNetworkService.isBusy
         onPressed: event => {
             root.triggerRipple(this, event.x, event.y);
             switch (event.button) {
             case Qt.RightButton:
-                DMSNetworkService.toggleVpn();
+                BackendNetworkService.toggleVpn();
                 return;
             case Qt.LeftButton:
                 root.toggleVpnPopup();
@@ -71,10 +71,10 @@ BasePill {
             if (!tooltipLoader.item)
                 return;
             let tooltipText = "";
-            if (!DMSNetworkService.connected) {
+            if (!BackendNetworkService.connected) {
                 tooltipText = "VPN Disconnected";
             } else {
-                const names = DMSNetworkService.activeNames || [];
+                const names = BackendNetworkService.activeNames || [];
                 if (names.length <= 1) {
                     const name = names[0] || "";
                     const maxLength = 25;

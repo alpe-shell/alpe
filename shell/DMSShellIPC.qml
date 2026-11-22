@@ -98,7 +98,7 @@ Item {
     }
 
     function launchDefaultMimeApp(appName, mimeType) {
-        DMSService.sendRequest("mime.getDefault", {
+        ShellBackend.sendRequest("mime.getDefault", {
             "mimeType": mimeType
         }, response => {
             if (response.error) {

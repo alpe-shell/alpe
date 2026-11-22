@@ -100,8 +100,8 @@ func init() {
 }
 
 type WindowRulesListResult struct {
-	Rules     []windowrules.WindowRule    `json:"rules"`
-	DMSStatus *windowrules.DMSRulesStatus `json:"dmsStatus,omitempty"`
+	Rules          []windowrules.WindowRule         `json:"rules"`
+	FragmentStatus *windowrules.RulesFragmentStatus `json:"fragmentStatus,omitempty"`
 }
 
 type WindowRuleWriteResult struct {
@@ -174,7 +174,7 @@ func runWindowrulesList(cmd *cobra.Command, args []string) {
 		}
 
 		result.Rules = allRules
-		result.DMSStatus = parseResult.DMSStatus
+		result.FragmentStatus = parseResult.FragmentStatus
 
 	default:
 		log.Fatalf("Unknown compositor: %s", compositor)

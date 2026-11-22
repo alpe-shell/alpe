@@ -14,7 +14,7 @@ Singleton {
 
     readonly property int longTextThreshold: 200
 
-    readonly property bool clipboardAvailable: DMSService.isConnected && (DMSService.capabilities.length === 0 || DMSService.capabilities.includes("clipboard"))
+    readonly property bool clipboardAvailable: ShellBackend.isConnected && (ShellBackend.capabilities.length === 0 || ShellBackend.capabilities.includes("clipboard"))
     property bool pasteSupported: false
     readonly property bool pasteAvailable: clipboardAvailable && pasteSupported
 
@@ -64,14 +64,14 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         function onIsConnectedChanged() {
             root.refreshPasteSupport();
         }
     }
 
     // subscribed for the shell's lifetime; resubscribing replays every service's snapshot
-    Component.onCompleted: DMSService.addSubscription("clipboard")
+    Component.onCompleted: ShellBackend.addSubscription("clipboard")
 
     onRefCountChanged: {
         if (refCount > 0 && !_pasteSupportChecked)
@@ -79,13 +79,13 @@ Singleton {
     }
 
     function refreshPasteSupport() {
-        if (!DMSService.isConnected) {
+        if (!ShellBackend.isConnected) {
             pasteSupported = false;
             _pasteSupportChecked = false;
             return;
         }
         _pasteSupportChecked = true;
-        DMSService.sendRequest("clipboard.pasteSupported", null, function (response) {
+        ShellBackend.sendRequest("clipboard.pasteSupported", null, function (response) {
             root.pasteSupported = !response.error && response.result && response.result.supported === true;
         });
     }
@@ -104,7 +104,7 @@ Singleton {
     }
 
     function sendPasteKeystroke() {
-        DMSService.sendRequest("clipboard.sendPaste", {
+        ShellBackend.sendRequest("clipboard.sendPaste", {
             "shift": isTerminalFocused()
         }, function (response) {
             if (response.error) {
@@ -140,7 +140,7 @@ Singleton {
 
         const pinnedSeq = ++_pinnedSeq;
         if (filterActive) {
-            DMSService.sendRequest("clipboard.search", entryQuery(true, 0, 5000), function (response) {
+            ShellBackend.sendRequest("clipboard.search", entryQuery(true, 0, 5000), function (response) {
                 if (pinnedSeq !== root._pinnedSeq)
                     return;
                 if (response.error) {
@@ -154,7 +154,7 @@ Singleton {
         }
 
         const seq = ++_unpinnedSeq;
-        DMSService.sendRequest("clipboard.search", entryQuery(false, 0, limit), function (response) {
+        ShellBackend.sendRequest("clipboard.search", entryQuery(false, 0, limit), function (response) {
             if (seq !== root._unpinnedSeq)
                 return;
             if (response.error) {
@@ -169,7 +169,7 @@ Singleton {
 
     function fetchAllPinned(keepSelection) {
         const seq = ++_allPinnedSeq;
-        DMSService.sendRequest("clipboard.search", {
+        ShellBackend.sendRequest("clipboard.search", {
             "pinned": true,
             "limit": 5000
         }, function (response) {
@@ -190,7 +190,7 @@ Singleton {
             return;
         _loadingMore = true;
         const seq = _unpinnedSeq;
-        DMSService.sendRequest("clipboard.search", entryQuery(false, unpinnedEntries.length, pageSize), function (response) {
+        ShellBackend.sendRequest("clipboard.search", entryQuery(false, unpinnedEntries.length, pageSize), function (response) {
             if (seq !== root._unpinnedSeq)
                 return;
             root._loadingMore = false;
@@ -267,7 +267,7 @@ Singleton {
 
         _launcherSearchSeq++;
         const seq = _launcherSearchSeq;
-        DMSService.sendRequest("clipboard.search", {
+        ShellBackend.sendRequest("clipboard.search", {
             "query": trimmed,
             "limit": maxItems
         }, function (response) {
@@ -329,7 +329,7 @@ Singleton {
 
     function copyEntry(entry, closeCallback, textOnly) {
         const asText = textOnly === true;
-        DMSService.sendRequest("clipboard.copyEntry", {
+        ShellBackend.sendRequest("clipboard.copyEntry", {
             "id": entry.id,
             "textOnly": asText
         }, function (response) {
@@ -359,7 +359,7 @@ Singleton {
             copyEntry(entry, closeCallback);
             return;
         }
-        DMSService.sendRequest("clipboard.copyEntry", {
+        ShellBackend.sendRequest("clipboard.copyEntry", {
             "id": entry.id
         }, function (response) {
             if (response.error) {
@@ -374,7 +374,7 @@ Singleton {
     }
 
     function deleteEntry(entry) {
-        DMSService.sendRequest("clipboard.deleteEntry", {
+        ShellBackend.sendRequest("clipboard.deleteEntry", {
             "id": entry.id
         }, function (response) {
             if (response.error) {
@@ -390,7 +390,7 @@ Singleton {
             return;
         }
         confirmDialog.show(I18n.tr("Delete Saved Item?"), I18n.tr("This will permanently remove this saved clipboard item. This action cannot be undone."), function () {
-            DMSService.sendRequest("clipboard.deleteEntry", {
+            ShellBackend.sendRequest("clipboard.deleteEntry", {
                 "id": entry.id
             }, function (response) {
                 if (response.error) {
@@ -404,7 +404,7 @@ Singleton {
     }
 
     function pinEntry(entry) {
-        DMSService.sendRequest("clipboard.pinEntry", {
+        ShellBackend.sendRequest("clipboard.pinEntry", {
             "id": entry.id
         }, function (response) {
             if (response.error) {
@@ -418,7 +418,7 @@ Singleton {
     }
 
     function unpinEntry(entry) {
-        DMSService.sendRequest("clipboard.unpinEntry", {
+        ShellBackend.sendRequest("clipboard.unpinEntry", {
             "id": entry.id
         }, function (response) {
             if (response.error) {
@@ -438,7 +438,7 @@ Singleton {
             }
             return;
         }
-        DMSService.sendRequest("clipboard.editEntry", {
+        ShellBackend.sendRequest("clipboard.editEntry", {
             "id": entry.id,
             "text": text
         }, function (response) {
@@ -459,7 +459,7 @@ Singleton {
     function clearAll() {
         const hasPinned = pinnedCount > 0;
         const savedCount = pinnedCount;
-        DMSService.sendRequest("clipboard.clearHistory", null, function (response) {
+        ShellBackend.sendRequest("clipboard.clearHistory", null, function (response) {
             if (response.error) {
                 log.warn("Failed to clear history:", response.error);
                 return;
@@ -477,7 +477,7 @@ Singleton {
             return;
         }
         const filter = entryQuery(false, 0, 0);
-        DMSService.sendRequest("clipboard.deleteMatching", {
+        ShellBackend.sendRequest("clipboard.deleteMatching", {
             "query": filter.query,
             "type": filter.type
         }, function (response) {
@@ -552,7 +552,7 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         function onClipboardStateUpdate(data) {
             root.pinnedCount = data.pinnedCount || 0;
             root.historyCount = data.historyCount || 0;

@@ -7,12 +7,12 @@ import qs.Alpe.Widgets
 BasePill {
     id: root
 
-    opacity: DMSService.capsLockState ? 1 : 0
+    opacity: ShellBackend.capsLockState ? 1 : 0
 
     states: [
         State {
             name: "hidden_horizontal"
-            when: !DMSService.capsLockState && !isVerticalOrientation
+            when: !ShellBackend.capsLockState && !isVerticalOrientation
             PropertyChanges {
                 target: root
                 width: 0
@@ -20,7 +20,7 @@ BasePill {
         },
         State {
             name: "hidden_vertical"
-            when: !DMSService.capsLockState && isVerticalOrientation
+            when: !ShellBackend.capsLockState && isVerticalOrientation
             PropertyChanges {
                 target: root
                 height: 0

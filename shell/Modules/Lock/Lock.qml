@@ -149,8 +149,8 @@ Scope {
     // logind meldet die Sperre; der KDE-Sperrbildschirm steht dann schon. Der Dienst wartet
     // vor dem Standby auf diese Meldung.
     function confirmKdeLock() {
-        if (SessionService.loginctlAvailable && DMSService.apiVersion >= 2)
-            DMSService.sendRequest("loginctl.lockerReady", null, () => {});
+        if (SessionService.loginctlAvailable && ShellBackend.apiVersion >= 2)
+            ShellBackend.sendRequest("loginctl.lockerReady", null, () => {});
     }
 
     Component.onCompleted: {
@@ -175,18 +175,18 @@ Scope {
     }
 
     function notifyLockedHint(locked: bool) {
-        if (!SettingsData.loginctlLockIntegration || !DMSService.isConnected)
+        if (!SettingsData.loginctlLockIntegration || !ShellBackend.isConnected)
             return;
-        DMSService.setLockedHint(locked, () => {});
+        ShellBackend.setLockedHint(locked, () => {});
     }
 
     function notifyLoginctl(lockAction: bool) {
-        if (!SettingsData.loginctlLockIntegration || !DMSService.isConnected)
+        if (!SettingsData.loginctlLockIntegration || !ShellBackend.isConnected)
             return;
         if (lockAction)
-            DMSService.lockSession(() => {});
+            ShellBackend.lockSession(() => {});
         else
-            DMSService.unlockSession(() => {});
+            ShellBackend.unlockSession(() => {});
     }
 
     function spawnCustomLocker() {

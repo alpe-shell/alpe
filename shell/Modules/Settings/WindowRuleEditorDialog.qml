@@ -431,7 +431,7 @@ AlpeDialog {
 
         const compositor = CompositorService.compositor;
         const ruleJson = JSON.stringify(ruleData);
-        const args = isEditMode ? [Proc.dmsBin, "config", "windowrules", "update", compositor, editingRule.id, ruleJson] : [Proc.dmsBin, "config", "windowrules", "add", compositor, ruleJson];
+        const args = isEditMode ? [Proc.backendBin, "config", "windowrules", "update", compositor, editingRule.id, ruleJson] : [Proc.backendBin, "config", "windowrules", "add", compositor, ruleJson];
         submitting = true;
         applying = keepOpen;
         Proc.runCommand(isEditMode ? "update-windowrule" : "add-windowrule", args, (output, exitCode) => {

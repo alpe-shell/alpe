@@ -123,7 +123,7 @@ Singleton {
     }
 
     function copyPathToClipboard(path: string): void {
-        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", path]);
+        Quickshell.execDetached([Proc.backendBin, "cl", "copy", path]);
     }
 
     function resolveIconUrl(iconName: string): string {

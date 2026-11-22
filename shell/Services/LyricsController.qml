@@ -16,10 +16,10 @@ QtObject {
     property bool settling: false
     property string url: ""
     property string embeddedText: ""
-    property var backend: DMSService
+    property var backend: ShellBackend
     property bool enabled: false
 
-    readonly property bool available: DMSService.capabilities.includes("lyrics")
+    readonly property bool available: ShellBackend.capabilities.includes("lyrics")
     readonly property bool canSeekLines: synced && (player?.canSeek ?? false) && duration > 0
     readonly property string fileUrl: url.startsWith("file://") ? url : ""
     readonly property string trackKey: track ? JSON.stringify([track.key, track.title, track.artist, track.album, fileUrl, MediaOptions.enabledLyricsProviders]) : ""
@@ -454,7 +454,7 @@ QtObject {
     function probePosition() {
         const token = serial;
         const name = busName;
-        DMSService.dbusGetProperty("session", name, "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player", "Position", response => root.receivePosition(token, name, response));
+        ShellBackend.dbusGetProperty("session", name, "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player", "Position", response => root.receivePosition(token, name, response));
     }
 
     function receivePosition(token, name, response) {
@@ -587,7 +587,7 @@ QtObject {
         interval: root.positionTrusted ? DashMetrics.mediaLyricsPositionProbeInterval : DashMetrics.mediaLyricsPositionSettleInterval
         repeat: true
         triggeredOnStart: true
-        running: root.enabled && root.synced && root.playing && !root.stopped && root.busName !== "" && DMSService.isConnected
+        running: root.enabled && root.synced && root.playing && !root.stopped && root.busName !== "" && ShellBackend.isConnected
         onTriggered: root.probePosition()
     }
 

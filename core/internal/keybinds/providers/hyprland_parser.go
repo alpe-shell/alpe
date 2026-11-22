@@ -346,12 +346,12 @@ func describeHyprlandMove(params string) string {
 }
 
 type HyprlandParseResult struct {
-	Section            *HyprlandSection
-	DMSBindsIncluded   bool
-	DMSStatus          *configfrag.Status
-	ConflictingConfigs map[string]*HyprlandKeyBinding
-	DefaultDMSKeys     map[string]bool // keys with a DMS default in binds.lua
-	MainMod            string          // value of the mainMod Lua variable when the config defines one
+	Section               *HyprlandSection
+	BindsFragmentIncluded bool
+	FragmentStatus        *configfrag.Status
+	ConflictingConfigs    map[string]*HyprlandKeyBinding
+	DefaultDMSKeys        map[string]bool // keys with a DMS default in binds.lua
+	MainMod               string          // value of the mainMod Lua variable when the config defines one
 }
 
 var hyprlandBindsMessages = configfrag.Messages{
@@ -361,7 +361,7 @@ var hyprlandBindsMessages = configfrag.Messages{
 	Active:      "Alpe binds are active",
 }
 
-func (p *HyprlandParser) buildDMSStatus() *configfrag.Status {
+func (p *HyprlandParser) buildFragmentStatus() *configfrag.Status {
 	status := configfrag.BuildStatus(p.walker.Scan(), p.dmsBindsExists, p.bindsAfterDMS, hyprlandBindsMessages)
 	return &status
 }
@@ -720,12 +720,12 @@ func ParseHyprlandKeysWithDMS(path string) (*HyprlandParseResult, error) {
 	}
 
 	return &HyprlandParseResult{
-		Section:            section,
-		DMSBindsIncluded:   parser.walker.Included(),
-		DMSStatus:          parser.buildDMSStatus(),
-		ConflictingConfigs: parser.conflictingConfigs,
-		DefaultDMSKeys:     parser.defaultDMSKeys,
-		MainMod:            parser.mainMod,
+		Section:               section,
+		BindsFragmentIncluded: parser.walker.Included(),
+		FragmentStatus:        parser.buildFragmentStatus(),
+		ConflictingConfigs:    parser.conflictingConfigs,
+		DefaultDMSKeys:        parser.defaultDMSKeys,
+		MainMod:               parser.mainMod,
 	}, nil
 }
 

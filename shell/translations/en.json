@@ -752,7 +752,7 @@
   {
     "term": "%1: %2",
     "context": "%1: %2",
-    "reference": "Services/DMSNetworkService.qml:534",
+    "reference": "Services/BackendNetworkService.qml:534",
     "comment": "vpn error toast, %1 is the vpn name, %2 is the error",
     "tags": [
       "shell"
@@ -1170,7 +1170,7 @@
   {
     "term": "Active VPN",
     "context": "Active VPN",
-    "reference": "Services/DMSNetworkService.qml:179",
+    "reference": "Services/BackendNetworkService.qml:179",
     "comment": "",
     "tags": [
       "shell"
@@ -1728,7 +1728,7 @@
   {
     "term": "Alpe out of date",
     "context": "Alpe out of date",
-    "reference": "Services/DMSService.qml:246, Alpe/Dash/WellbeingTab.qml:67",
+    "reference": "Services/ShellBackend.qml:246, Alpe/Dash/WellbeingTab.qml:67",
     "comment": "",
     "tags": [
       "shell"
@@ -1737,7 +1737,7 @@
   {
     "term": "Alpe server is outdated (API v%1, expected v%2)",
     "context": "Alpe server is outdated (API v%1, expected v%2)",
-    "reference": "Services/DMSService.qml:268",
+    "reference": "Services/ShellBackend.qml:268",
     "comment": "error toast, %1 is current api version, %2 is required version",
     "tags": [
       "shell"
@@ -2856,7 +2856,7 @@
   {
     "term": "Autoconnect disabled",
     "context": "Autoconnect disabled",
-    "reference": "Services/DMSNetworkService.qml:1231",
+    "reference": "Services/BackendNetworkService.qml:1231",
     "comment": "",
     "tags": [
       "shell"
@@ -2865,7 +2865,7 @@
   {
     "term": "Autoconnect enabled",
     "context": "Autoconnect enabled",
-    "reference": "Services/DMSNetworkService.qml:1231",
+    "reference": "Services/BackendNetworkService.qml:1231",
     "comment": "",
     "tags": [
       "shell"
@@ -4160,7 +4160,7 @@
   {
     "term": "Cellular disabled",
     "context": "Cellular disabled",
-    "reference": "Services/DMSNetworkService.qml:857",
+    "reference": "Services/BackendNetworkService.qml:857",
     "comment": "",
     "tags": [
       "shell"
@@ -4169,7 +4169,7 @@
   {
     "term": "Cellular enabled",
     "context": "Cellular enabled",
-    "reference": "Services/DMSNetworkService.qml:857",
+    "reference": "Services/BackendNetworkService.qml:857",
     "comment": "",
     "tags": [
       "shell"
@@ -5314,7 +5314,7 @@
   {
     "term": "Configuration activated",
     "context": "Configuration activated",
-    "reference": "Services/DMSNetworkService.qml:601, Services/DMSNetworkService.qml:624, Services/DMSNetworkService.qml:648",
+    "reference": "Services/BackendNetworkService.qml:601, Services/BackendNetworkService.qml:624, Services/BackendNetworkService.qml:648",
     "comment": "",
     "tags": [
       "shell"
@@ -5488,7 +5488,7 @@
   {
     "term": "Connected to %1",
     "context": "Connected to %1",
-    "reference": "Services/DMSNetworkService.qml:548",
+    "reference": "Services/BackendNetworkService.qml:548",
     "comment": "wifi toast, %1 is the network name",
     "tags": [
       "shell"
@@ -7257,7 +7257,7 @@
   {
     "term": "Disconnected from WiFi",
     "context": "Disconnected from WiFi",
-    "reference": "Services/DMSNetworkService.qml:748",
+    "reference": "Services/BackendNetworkService.qml:748",
     "comment": "",
     "tags": [
       "shell"
@@ -8809,7 +8809,7 @@
   {
     "term": "Failed to activate configuration",
     "context": "Failed to activate configuration",
-    "reference": "Services/DMSNetworkService.qml:597, Services/DMSNetworkService.qml:620, Services/DMSNetworkService.qml:644",
+    "reference": "Services/BackendNetworkService.qml:597, Services/BackendNetworkService.qml:620, Services/BackendNetworkService.qml:644",
     "comment": "",
     "tags": [
       "shell"
@@ -8890,7 +8890,7 @@
   {
     "term": "Failed to configure hotspot",
     "context": "Failed to configure hotspot",
-    "reference": "Services/DMSNetworkService.qml:1258",
+    "reference": "Services/BackendNetworkService.qml:1258",
     "comment": "hotspot configuration error title",
     "tags": [
       "shell"
@@ -8899,7 +8899,7 @@
   {
     "term": "Failed to connect VPN",
     "context": "Failed to connect VPN",
-    "reference": "Services/DMSNetworkService.qml:1126",
+    "reference": "Services/BackendNetworkService.qml:1126",
     "comment": "",
     "tags": [
       "shell"
@@ -8908,7 +8908,7 @@
   {
     "term": "Failed to connect to %1",
     "context": "Failed to connect to %1",
-    "reference": "Services/DMSNetworkService.qml:568",
+    "reference": "Services/BackendNetworkService.qml:568",
     "comment": "wifi error toast, %1 is the network name",
     "tags": [
       "shell"
@@ -8989,7 +8989,7 @@
   {
     "term": "Failed to disconnect VPN",
     "context": "Failed to disconnect VPN",
-    "reference": "Services/DMSNetworkService.qml:1150",
+    "reference": "Services/BackendNetworkService.qml:1150",
     "comment": "",
     "tags": [
       "shell"
@@ -8998,7 +8998,7 @@
   {
     "term": "Failed to disconnect VPNs",
     "context": "Failed to disconnect VPNs",
-    "reference": "Services/DMSNetworkService.qml:1168",
+    "reference": "Services/BackendNetworkService.qml:1168",
     "comment": "",
     "tags": [
       "shell"
@@ -9007,7 +9007,7 @@
   {
     "term": "Failed to disconnect WiFi",
     "context": "Failed to disconnect WiFi",
-    "reference": "Services/DMSNetworkService.qml:746",
+    "reference": "Services/BackendNetworkService.qml:746",
     "comment": "",
     "tags": [
       "shell"
@@ -9034,7 +9034,7 @@
   {
     "term": "Failed to enable WiFi",
     "context": "Failed to enable WiFi",
-    "reference": "Services/DMSNetworkService.qml:867",
+    "reference": "Services/BackendNetworkService.qml:867",
     "comment": "",
     "tags": [
       "shell"
@@ -9448,7 +9448,7 @@
   {
     "term": "Failed to start connection to %1",
     "context": "Failed to start connection to %1",
-    "reference": "Services/DMSNetworkService.qml:733",
+    "reference": "Services/BackendNetworkService.qml:733",
     "comment": "wifi error toast, %1 is the network name",
     "tags": [
       "shell"
@@ -9457,7 +9457,7 @@
   {
     "term": "Failed to start hotspot",
     "context": "Failed to start hotspot",
-    "reference": "Services/DMSNetworkService.qml:468, Services/DMSNetworkService.qml:1280",
+    "reference": "Services/BackendNetworkService.qml:468, Services/BackendNetworkService.qml:1280",
     "comment": "hotspot start error title",
     "tags": [
       "shell"
@@ -9466,7 +9466,7 @@
   {
     "term": "Failed to stop hotspot",
     "context": "Failed to stop hotspot",
-    "reference": "Services/DMSNetworkService.qml:1302",
+    "reference": "Services/BackendNetworkService.qml:1302",
     "comment": "hotspot stop error title",
     "tags": [
       "shell"
@@ -9502,7 +9502,7 @@
   {
     "term": "Failed to toggle cellular",
     "context": "Failed to toggle cellular",
-    "reference": "Services/DMSNetworkService.qml:854",
+    "reference": "Services/BackendNetworkService.qml:854",
     "comment": "",
     "tags": [
       "shell"
@@ -9538,7 +9538,7 @@
   {
     "term": "Failed to update autoconnect",
     "context": "Failed to update autoconnect",
-    "reference": "Services/DMSNetworkService.qml:1229",
+    "reference": "Services/BackendNetworkService.qml:1229",
     "comment": "",
     "tags": [
       "shell"
@@ -10498,7 +10498,7 @@
   {
     "term": "Forgot network %1",
     "context": "Forgot network %1",
-    "reference": "Services/DMSNetworkService.qml:812",
+    "reference": "Services/BackendNetworkService.qml:812",
     "comment": "toast after removing a saved wifi network, %1 is its name",
     "tags": [
       "shell"
@@ -11815,7 +11815,7 @@
   {
     "term": "Hotspot activation failed.",
     "context": "Hotspot activation failed.",
-    "reference": "Services/DMSNetworkService.qml:1364",
+    "reference": "Services/BackendNetworkService.qml:1364",
     "comment": "generic hotspot activation failure message",
     "tags": [
       "shell"
@@ -11842,7 +11842,7 @@
   {
     "term": "Hotspot started",
     "context": "Hotspot started",
-    "reference": "Services/DMSNetworkService.qml:465",
+    "reference": "Services/BackendNetworkService.qml:465",
     "comment": "hotspot start success message",
     "tags": [
       "shell"
@@ -12015,7 +12015,7 @@
   {
     "term": "IP sharing setup failed. Check that %1 is installed.",
     "context": "IP sharing setup failed. Check that %1 is installed.",
-    "reference": "Services/DMSNetworkService.qml:1360",
+    "reference": "Services/BackendNetworkService.qml:1360",
     "comment": "hotspot IP configuration failure message, %1 is a package name",
     "tags": [
       "shell"
@@ -24997,7 +24997,7 @@
   {
     "term": "The WiFi adapter could not start access point mode.",
     "context": "The WiFi adapter could not start access point mode.",
-    "reference": "Services/DMSNetworkService.qml:1362",
+    "reference": "Services/BackendNetworkService.qml:1362",
     "comment": "hotspot adapter failure message",
     "tags": [
       "shell"
@@ -26546,7 +26546,7 @@
   {
     "term": "Update Alpe with your package manager, then restart the shell.",
     "context": "Update Alpe with your package manager, then restart the shell.",
-    "reference": "Services/DMSService.qml:246, Alpe/Dash/WellbeingTab.qml:68",
+    "reference": "Services/ShellBackend.qml:246, Alpe/Dash/WellbeingTab.qml:68",
     "comment": "shown when the running shell is older than the installed alpe-dienst binary",
     "tags": [
       "shell"
@@ -26929,7 +26929,7 @@
   {
     "term": "VPN",
     "context": "VPN",
-    "reference": "Common/BarWidgetCatalog.qml:155, Common/SettingsTabs.qml:416, Services/DMSNetworkService.qml:533, Services/AppSearchService.qml:250, Services/AppSearchService.qml:427, Modules/ProcessList/PerformanceView.qml:27, Modules/Settings/BarWidgetOptions/ControlCenterOptions.qml:22, Modules/ControlCenter/BuiltinPlugins/VpnWidget.qml:15, Modules/ControlCenter/Details/VpnDetailContent.qml:23, Modules/ControlCenter/Models/WidgetModel.qml:395",
+    "reference": "Common/BarWidgetCatalog.qml:155, Common/SettingsTabs.qml:416, Services/BackendNetworkService.qml:533, Services/AppSearchService.qml:250, Services/AppSearchService.qml:427, Modules/ProcessList/PerformanceView.qml:27, Modules/Settings/BarWidgetOptions/ControlCenterOptions.qml:22, Modules/ControlCenter/BuiltinPlugins/VpnWidget.qml:15, Modules/ControlCenter/Details/VpnDetailContent.qml:23, Modules/ControlCenter/Models/WidgetModel.qml:395",
     "comment": "virtual private network, widget and page title",
     "tags": [
       "settings",
@@ -27653,7 +27653,7 @@
   {
     "term": "WiFi disabled",
     "context": "WiFi disabled",
-    "reference": "Services/DMSNetworkService.qml:841, Modules/ControlCenter/Details/NetworkDetail.qml:373",
+    "reference": "Services/BackendNetworkService.qml:841, Modules/ControlCenter/Details/NetworkDetail.qml:373",
     "comment": "hotspot unavailable status",
     "tags": [
       "shell"
@@ -27662,7 +27662,7 @@
   {
     "term": "WiFi enabled",
     "context": "WiFi enabled",
-    "reference": "Services/DMSNetworkService.qml:841, Services/DMSNetworkService.qml:869",
+    "reference": "Services/BackendNetworkService.qml:841, Services/BackendNetworkService.qml:869",
     "comment": "",
     "tags": [
       "shell"

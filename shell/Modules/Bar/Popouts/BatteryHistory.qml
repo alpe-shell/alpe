@@ -16,7 +16,7 @@ Item {
     property string devicePath: ""
     property var previousSample: null
     property int generation: 0
-    readonly property bool busAvailable: DMSService.isConnected && DMSService.capabilities.includes("dbus")
+    readonly property bool busAvailable: ShellBackend.isConnected && ShellBackend.capabilities.includes("dbus")
 
     onActiveChanged: reset()
     onNativePathChanged: {
@@ -51,7 +51,7 @@ Item {
             readDevice(devicePath, request);
             return;
         }
-        DMSService.dbusCall("system", "org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", "EnumerateDevices", [], response => {
+        ShellBackend.dbusCall("system", "org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", "EnumerateDevices", [], response => {
             if (request !== root.generation)
                 return;
             const paths = response.result?.values?.[0];
@@ -61,7 +61,7 @@ Item {
             }
             let pending = paths.length;
             for (const path of paths) {
-                DMSService.dbusGetAllProperties("system", "org.freedesktop.UPower", path, "org.freedesktop.UPower.Device", reply => {
+                ShellBackend.dbusGetAllProperties("system", "org.freedesktop.UPower", path, "org.freedesktop.UPower.Device", reply => {
                     if (request !== root.generation)
                         return;
                     pending--;
@@ -78,7 +78,7 @@ Item {
     }
 
     function readDevice(path, request) {
-        DMSService.dbusGetAllProperties("system", "org.freedesktop.UPower", path, "org.freedesktop.UPower.Device", response => {
+        ShellBackend.dbusGetAllProperties("system", "org.freedesktop.UPower", path, "org.freedesktop.UPower.Device", response => {
             if (request !== root.generation)
                 return;
             if (response.error || response.result?.NativePath !== root.nativePath) {
@@ -104,7 +104,7 @@ Item {
     }
 
     function fetchHistory(properties, request, timespan) {
-        DMSService.dbusCall("system", "org.freedesktop.UPower", devicePath, "org.freedesktop.UPower.Device", "GetHistory", ["charge", timespan, 240], response => {
+        ShellBackend.dbusCall("system", "org.freedesktop.UPower", devicePath, "org.freedesktop.UPower.Device", "GetHistory", ["charge", timespan, 240], response => {
             if (request !== root.generation)
                 return;
             const rows = History.normalize(response.result?.values?.[0], 0, root.rangeEnd);

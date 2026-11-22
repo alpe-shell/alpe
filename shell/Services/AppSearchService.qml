@@ -413,15 +413,15 @@ Singleton {
         }
 
         if (pluginId === "dms_vpn") {
-            if (!DMSNetworkService.vpnAvailable)
+            if (!BackendNetworkService.vpnAvailable)
                 return [];
             const q = (query || "").toString().trim().toLowerCase();
             if (!q && !allowEmptyQuery && !getBuiltInPluginTrigger(pluginId))
                 return [];
-            return (DMSNetworkService.profiles || []).map(profile => {
+            return (BackendNetworkService.profiles || []).map(profile => {
                 const id = profile.uuid || profile.name || "";
-                const active = DMSNetworkService.isActiveVpnUuid(id);
-                const connecting = DMSNetworkService.isVpnConnectingUuid(id);
+                const active = BackendNetworkService.isActiveVpnUuid(id);
+                const connecting = BackendNetworkService.isVpnConnectingUuid(id);
                 const typeLabel = VPNService.getVpnTypeFromProfile(profile);
                 return {
                     name: profile.name || I18n.tr("VPN", "virtual private network, widget and page title"),
@@ -509,7 +509,7 @@ Singleton {
                 const id = parts.slice(1).join(":");
                 if (!id)
                     return false;
-                DMSNetworkService.toggleVpn(id);
+                BackendNetworkService.toggleVpn(id);
                 return true;
             }
         }
@@ -929,7 +929,7 @@ Singleton {
         if (typeof instance.getPasteText === "function") {
             const text = instance.getPasteText(item);
             if (text)
-                return [Proc.dmsBin, "cl", "copy", text];
+                return [Proc.backendBin, "cl", "copy", text];
         }
 
         return null;

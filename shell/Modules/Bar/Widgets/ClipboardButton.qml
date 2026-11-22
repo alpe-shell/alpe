@@ -26,7 +26,7 @@ BasePill {
         if (drop.hasUrls && drop.urls.length > 0) {
             const fileUrls = drop.urls.map(url => url.toString()).filter(url => url.startsWith("file://"));
             if (fileUrls.length > 0) {
-                DMSService.sendRequest("clipboard.store", {
+                ShellBackend.sendRequest("clipboard.store", {
                     "data": fileUrls.join("\r\n"),
                     "mimeType": "text/uri-list"
                 }, response => {
@@ -41,7 +41,7 @@ BasePill {
         }
 
         if (drop.hasText && drop.text.length > 0) {
-            DMSService.sendRequest("clipboard.store", {
+            ShellBackend.sendRequest("clipboard.store", {
                 "data": drop.text,
                 "mimeType": "text/plain;charset=utf-8"
             }, response => {

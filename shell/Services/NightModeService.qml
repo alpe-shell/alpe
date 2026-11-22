@@ -30,7 +30,7 @@ Singleton {
     property real gammaSunPosition: gammaState?.sunPosition ?? 0
     property int gammaLowTemp: gammaState?.config?.LowTemp ?? 0
     property int gammaHighTemp: gammaState?.config?.HighTemp ?? 0
-    property bool gammaAdjustAvailable: gammaControlAvailable && DMSService.apiVersion >= 34
+    property bool gammaAdjustAvailable: gammaControlAvailable && ShellBackend.apiVersion >= 34
 
     function _setNightModeEnabled(enabled, quiet, onComplete) {
         if (!gammaControlAvailable) {
@@ -41,7 +41,7 @@ Singleton {
             return;
         }
 
-        DMSService.sendRequest("wayland.gamma.setEnabled", {
+        ShellBackend.sendRequest("wayland.gamma.setEnabled", {
             "enabled": enabled
         }, response => {
             if (response.error) {
@@ -151,7 +151,7 @@ Singleton {
         if (!gammaAdjustAvailable)
             return;
 
-        DMSService.sendRequest("wayland.gamma.setGamma", {
+        ShellBackend.sendRequest("wayland.gamma.setGamma", {
             "gamma": SessionData.displayGamma,
             "contrast": SessionData.displayContrast
         }, response => {
@@ -172,7 +172,7 @@ Singleton {
     function applyNightModeDirectly() {
         const temperature = SessionData.nightModeTemperature || 4000;
 
-        DMSService.sendRequest("wayland.gamma.setManualTimes", {
+        ShellBackend.sendRequest("wayland.gamma.setManualTimes", {
             "sunrise": null,
             "sunset": null
         }, response => {
@@ -181,7 +181,7 @@ Singleton {
                 return;
             }
 
-            DMSService.sendRequest("wayland.gamma.setUseIPLocation", {
+            ShellBackend.sendRequest("wayland.gamma.setUseIPLocation", {
                 "use": false
             }, response => {
                 if (response.error) {
@@ -189,7 +189,7 @@ Singleton {
                     return;
                 }
 
-                DMSService.sendRequest("wayland.gamma.setTemperature", {
+                ShellBackend.sendRequest("wayland.gamma.setTemperature", {
                     "low": temperature,
                     "high": temperature
                 }, response => {
@@ -232,7 +232,7 @@ Singleton {
         const sunrise = `${String(sunriseHour).padStart(2, '0')}:${String(sunriseMinute).padStart(2, '0')}`;
         const sunset = `${String(sunsetHour).padStart(2, '0')}:${String(sunsetMinute).padStart(2, '0')}`;
 
-        DMSService.sendRequest("wayland.gamma.setUseIPLocation", {
+        ShellBackend.sendRequest("wayland.gamma.setUseIPLocation", {
             "use": false
         }, response => {
             if (response.error) {
@@ -240,7 +240,7 @@ Singleton {
                 return;
             }
 
-            DMSService.sendRequest("wayland.gamma.setTemperature", {
+            ShellBackend.sendRequest("wayland.gamma.setTemperature", {
                 "low": temperature,
                 "high": highTemp
             }, response => {
@@ -250,7 +250,7 @@ Singleton {
                     return;
                 }
 
-                DMSService.sendRequest("wayland.gamma.setManualTimes", {
+                ShellBackend.sendRequest("wayland.gamma.setManualTimes", {
                     "sunrise": sunrise,
                     "sunset": sunset,
                     "durationMinutes": SessionData.nightModeTransitionMinutes
@@ -270,7 +270,7 @@ Singleton {
         const temperature = SessionData.nightModeTemperature || 4000;
         const highTemp = SessionData.nightModeHighTemperature || 6500;
 
-        DMSService.sendRequest("wayland.gamma.setManualTimes", {
+        ShellBackend.sendRequest("wayland.gamma.setManualTimes", {
             "sunrise": null,
             "sunset": null
         }, response => {
@@ -279,7 +279,7 @@ Singleton {
                 return;
             }
 
-            DMSService.sendRequest("wayland.gamma.setTemperature", {
+            ShellBackend.sendRequest("wayland.gamma.setTemperature", {
                 "low": temperature,
                 "high": highTemp
             }, response => {
@@ -290,7 +290,7 @@ Singleton {
                 }
 
                 if (SessionData.nightModeUseIPLocation) {
-                    DMSService.sendRequest("wayland.gamma.setUseIPLocation", {
+                    ShellBackend.sendRequest("wayland.gamma.setUseIPLocation", {
                         "use": true
                     }, response => {
                         if (response.error) {
@@ -301,7 +301,7 @@ Singleton {
                         }
                     });
                 } else if (SessionData.latitude !== 0.0 && SessionData.longitude !== 0.0) {
-                    DMSService.sendRequest("wayland.gamma.setUseIPLocation", {
+                    ShellBackend.sendRequest("wayland.gamma.setUseIPLocation", {
                         "use": false
                     }, response => {
                         if (response.error) {
@@ -309,7 +309,7 @@ Singleton {
                             return;
                         }
 
-                        DMSService.sendRequest("wayland.gamma.setLocation", {
+                        ShellBackend.sendRequest("wayland.gamma.setLocation", {
                             "latitude": SessionData.latitude,
                             "longitude": SessionData.longitude
                         }, response => {
@@ -349,23 +349,23 @@ Singleton {
     }
 
     function checkGammaControlAvailability() {
-        if (!DMSService.isConnected) {
+        if (!ShellBackend.isConnected) {
             return;
         }
 
-        if (DMSService.apiVersion < 6) {
+        if (ShellBackend.apiVersion < 6) {
             gammaControlAvailable = false;
             automationAvailable = false;
             return;
         }
 
-        if (!DMSService.capabilities.includes("gamma")) {
+        if (!ShellBackend.capabilities.includes("gamma")) {
             gammaControlAvailable = false;
             automationAvailable = false;
             return;
         }
 
-        DMSService.sendRequest("wayland.gamma.getState", null, response => {
+        ShellBackend.sendRequest("wayland.gamma.getState", null, response => {
             if (response.error) {
                 gammaControlAvailable = false;
                 automationAvailable = false;
@@ -440,16 +440,16 @@ Singleton {
 
     Component.onCompleted: {
         nightModeEnabled = SessionData.nightModeEnabled;
-        if (DMSService.isConnected) {
+        if (ShellBackend.isConnected) {
             checkGammaControlAvailability();
         }
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
-            if (!DMSService.isConnected) {
+            if (!ShellBackend.isConnected) {
                 gammaControlAvailable = false;
                 automationAvailable = false;
                 return;

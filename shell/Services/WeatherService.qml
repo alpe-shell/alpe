@@ -54,7 +54,7 @@ Singleton {
     property int _weatherSerial: 0
     property var _weatherRequestId: null
     property var _weatherCoords: null
-    readonly property bool _backendReady: DMSService.capabilities.includes("weather")
+    readonly property bool _backendReady: ShellBackend.capabilities.includes("weather")
     // The first fetch, or a retry after a reconnect, can run before the socket is up.
     on_BackendReadyChanged: {
         if (root._backendReady && (!root.weather.available || root.retryAttempts > 0 || persistentRetryTimer.running))
@@ -73,7 +73,7 @@ Singleton {
         }
     ]
     readonly property var pluginProviders: {
-        if (!DMSService.capabilities.includes("weather.plugins"))
+        if (!ShellBackend.capabilities.includes("weather.plugins"))
             return [];
         const loaded = PluginService.loadedPlugins;
         const providers = [];
@@ -145,7 +145,7 @@ Singleton {
 
     // ionice is util-linux only; the BSDs get plain nice
     readonly property var lowPriorityCmd: Qt.platform.os === "linux" ? ["nice", "-n", "19", "ionice", "-c3"] : ["nice", "-n", "19"]
-    readonly property var fetchCmd: [Proc.dmsBin, "dl", "--connect-timeout", "8", "--timeout", "20"]
+    readonly property var fetchCmd: [Proc.backendBin, "dl", "--connect-timeout", "8", "--timeout", "20"]
 
     property var weatherIcons: ({
             "0": "clear_day",
@@ -775,7 +775,7 @@ Singleton {
         };
         root.weather.loading = true;
         const token = ++root._weatherSerial;
-        root._weatherRequestId = DMSService.sendRequest("weather.get", {
+        root._weatherRequestId = ShellBackend.sendRequest("weather.get", {
             "latitude": lat,
             "longitude": lon,
             "providers": root.enabledProviders
@@ -819,7 +819,7 @@ Singleton {
         root._weatherSerial++;
         if (root._weatherRequestId === null)
             return;
-        DMSService.cancelRequest(root._weatherRequestId);
+        ShellBackend.cancelRequest(root._weatherRequestId);
         root._weatherRequestId = null;
     }
 

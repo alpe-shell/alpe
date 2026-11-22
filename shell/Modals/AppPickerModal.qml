@@ -72,7 +72,7 @@ AlpeModal {
         const queriedMime = mimeType;
         if (queriedMime.length === 0)
             return;
-        DMSService.sendRequest("mime.appsForMime", {
+        ShellBackend.sendRequest("mime.appsForMime", {
             "mimeType": queriedMime
         }, response => {
             if (queriedMime !== root.mimeType)
@@ -198,7 +198,7 @@ AlpeModal {
     onSearchQueryChanged: updateApplicationList()
 
     function copyEditableTarget() {
-        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", editableTargetData]);
+        Quickshell.execDetached([Proc.backendBin, "cl", "copy", editableTargetData]);
         ToastService.showInfo(I18n.tr("Copied to clipboard"));
         targetCopied = true;
         targetCopyConfirmationTimer.restart();

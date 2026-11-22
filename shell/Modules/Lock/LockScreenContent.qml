@@ -88,8 +88,8 @@ FocusScope {
         if (root.unlocking)
             return;
         lockerReadySent = true;
-        if (SessionService.loginctlAvailable && DMSService.apiVersion >= 2) {
-            DMSService.sendRequest("loginctl.lockerReady", null, resp => {
+        if (SessionService.loginctlAvailable && ShellBackend.apiVersion >= 2) {
+            ShellBackend.sendRequest("loginctl.lockerReady", null, resp => {
                 if (resp?.error)
                     log.warn("lockerReady failed:", resp.error);
                 else

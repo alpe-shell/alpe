@@ -115,7 +115,7 @@ func (p *HyprlandRulesParser) parseFile(filePath string) error {
 	return nil
 }
 
-func (p *HyprlandRulesParser) HasDMSRulesIncluded() bool {
+func (p *HyprlandRulesParser) HasRulesFragmentIncluded() bool {
 	return p.walker.Included()
 }
 
@@ -126,14 +126,14 @@ var hyprlandRulesMessages = configfrag.Messages{
 	Active:      "Alpe window rules are active",
 }
 
-func (p *HyprlandRulesParser) buildDMSStatus() *windowrules.DMSRulesStatus {
-	return windowrules.DMSRulesStatusFrom(configfrag.BuildStatus(p.walker.Scan(), p.dmsRulesExists, p.rulesAfterDMS, hyprlandRulesMessages))
+func (p *HyprlandRulesParser) buildFragmentStatus() *windowrules.RulesFragmentStatus {
+	return windowrules.RulesFragmentStatusFrom(configfrag.BuildStatus(p.walker.Scan(), p.dmsRulesExists, p.rulesAfterDMS, hyprlandRulesMessages))
 }
 
 type HyprlandRulesParseResult struct {
-	Rules            []HyprlandWindowRule
-	DMSRulesIncluded bool
-	DMSStatus        *windowrules.DMSRulesStatus
+	Rules                 []HyprlandWindowRule
+	RulesFragmentIncluded bool
+	FragmentStatus        *windowrules.RulesFragmentStatus
 }
 
 func ParseHyprlandWindowRules(configDir string) (*HyprlandRulesParseResult, error) {
@@ -143,9 +143,9 @@ func ParseHyprlandWindowRules(configDir string) (*HyprlandRulesParseResult, erro
 		return nil, err
 	}
 	return &HyprlandRulesParseResult{
-		Rules:            rules,
-		DMSRulesIncluded: parser.HasDMSRulesIncluded(),
-		DMSStatus:        parser.buildDMSStatus(),
+		Rules:                 rules,
+		RulesFragmentIncluded: parser.HasRulesFragmentIncluded(),
+		FragmentStatus:        parser.buildFragmentStatus(),
 	}, nil
 }
 
@@ -186,11 +186,11 @@ func (p *HyprlandWritableProvider) GetRuleSet() (*windowrules.RuleSet, error) {
 		return nil, err
 	}
 	return &windowrules.RuleSet{
-		Title:            "Hyprland Window Rules",
-		Provider:         "hyprland",
-		Rules:            ConvertHyprlandRulesToWindowRules(result.Rules),
-		DMSRulesIncluded: result.DMSRulesIncluded,
-		DMSStatus:        result.DMSStatus,
+		Title:                 "Hyprland Window Rules",
+		Provider:              "hyprland",
+		Rules:                 ConvertHyprlandRulesToWindowRules(result.Rules),
+		RulesFragmentIncluded: result.RulesFragmentIncluded,
+		FragmentStatus:        result.FragmentStatus,
 	}, nil
 }
 

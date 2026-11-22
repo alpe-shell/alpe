@@ -2879,7 +2879,7 @@ Item {
         if (!path)
             return;
         // No mimeType: it would limit the picker to declared handlers, and any app must stay pickable.
-        DMSService.appPickerRequested({
+        ShellBackend.appPickerRequested({
             target: path
         });
     }
@@ -2897,6 +2897,6 @@ Item {
     function copyToClipboard(text) {
         if (!text)
             return;
-        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", text]);
+        Quickshell.execDetached([Proc.backendBin, "cl", "copy", text]);
     }
 }

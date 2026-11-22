@@ -8,7 +8,7 @@ import qs.Services
 
 Singleton {
     id: root
-    readonly property var log: Log.scoped("DMSNetworkService")
+    readonly property var log: Log.scoped("BackendNetworkService")
 
     property bool networkAvailable: false
     property string backend: ""
@@ -126,7 +126,7 @@ Singleton {
     property string backendHotspotDevice: ""
     property string backendHotspotBand: ""
     property string backendHotspotLastError: ""
-    readonly property bool hotspotSupported: DMSService.isConnected && networkAvailable && DMSService.apiVersion >= hotspotApiVersion && backendHotspotSupported
+    readonly property bool hotspotSupported: ShellBackend.isConnected && networkAvailable && ShellBackend.apiVersion >= hotspotApiVersion && backendHotspotSupported
     readonly property bool hotspotAvailable: hotspotSupported && backendHotspotAvailable
     readonly property bool hotspotConfigured: hotspotSupported && backendHotspotConfigured
     readonly property bool hotspotEnabled: hotspotSupported && backendHotspotEnabled
@@ -258,12 +258,12 @@ Singleton {
     Component.onCompleted: {
         lastConnectedVpnUuid = SessionData.vpnLastConnected || "";
         if (socketPath && socketPath.length > 0) {
-            checkDMSCapabilities();
+            checkBackendCapabilities();
         }
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onNetworkStateUpdate(data) {
             const networksCount = data.wifiNetworks?.length ?? "null";
@@ -273,21 +273,21 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
-            if (DMSService.isConnected) {
-                checkDMSCapabilities();
+            if (ShellBackend.isConnected) {
+                checkBackendCapabilities();
             }
         }
     }
 
     Connections {
-        target: DMSService
-        enabled: DMSService.isConnected
+        target: ShellBackend
+        enabled: ShellBackend.isConnected
 
         function onCapabilitiesChanged() {
-            checkDMSCapabilities();
+            checkBackendCapabilities();
         }
 
         function onCredentialsRequest(data) {
@@ -295,16 +295,16 @@ Singleton {
         }
     }
 
-    function checkDMSCapabilities() {
-        if (!DMSService.isConnected) {
+    function checkBackendCapabilities() {
+        if (!ShellBackend.isConnected) {
             return;
         }
 
-        if (DMSService.capabilities.length === 0) {
+        if (ShellBackend.capabilities.length === 0) {
             return;
         }
 
-        networkAvailable = DMSService.capabilities.includes("network");
+        networkAvailable = ShellBackend.capabilities.includes("network");
 
         if (networkAvailable && !stateInitialized) {
             stateInitialized = true;
@@ -351,7 +351,7 @@ Singleton {
     function getState() {
         if (!networkAvailable)
             return;
-        DMSService.sendRequest("network.getState", null, response => {
+        ShellBackend.sendRequest("network.getState", null, response => {
             if (response.result) {
                 updateState(response.result);
                 if (refCount > 0 && !initialStateFetched && response.result.wifiEnabled && (!response.result.wifiNetworks || response.result.wifiNetworks.length === 0)) {
@@ -390,7 +390,7 @@ Singleton {
 
         if (!state.wifiNetworks && !state.savedWifiNetworks)
             return;
-        const hasSavedWifiState = DMSService.apiVersion >= savedWifiStateApiVersion && state.savedWifiNetworks instanceof Array;
+        const hasSavedWifiState = ShellBackend.apiVersion >= savedWifiStateApiVersion && state.savedWifiNetworks instanceof Array;
         const sourceSavedNetworks = hasSavedWifiState ? state.savedWifiNetworks : (state.wifiNetworks || []).filter(network => network.saved);
         const normalized = sourceSavedNetworks.map(network => Object.assign({}, network, {
                 saved: true,
@@ -443,7 +443,7 @@ Singleton {
         wifiDevices = keepUnchanged(wifiDevices, state.wifiDevices || []);
         connectingDevice = state.connectingDevice || "";
 
-        if (DMSService.apiVersion >= hotspotApiVersion) {
+        if (ShellBackend.apiVersion >= hotspotApiVersion) {
             const supportsHotspot = state.hotspotSupported === true;
             const wasHotspotEnabled = backendHotspotEnabled;
             const wasHotspotActivating = backendHotspotActivating;
@@ -589,7 +589,7 @@ Singleton {
             uuid: uuid
         };
 
-        DMSService.sendRequest("network.ethernet.connect.config", params, response => {
+        ShellBackend.sendRequest("network.ethernet.connect.config", params, response => {
             if (response.error) {
                 connectionError = response.error;
                 lastConnectionError = response.error;
@@ -612,7 +612,7 @@ Singleton {
         connectionError = "";
         connectionStatus = "connecting";
 
-        DMSService.sendRequest("network.cellular.connect", null, response => {
+        ShellBackend.sendRequest("network.cellular.connect", null, response => {
             if (response.error) {
                 connectionError = response.error;
                 lastConnectionError = response.error;
@@ -634,7 +634,7 @@ Singleton {
         connectionError = "";
         connectionStatus = "connecting";
 
-        DMSService.sendRequest("network.cellular.connect.config", {
+        ShellBackend.sendRequest("network.cellular.connect.config", {
             uuid: uuid
         }, response => {
             if (response.error) {
@@ -659,7 +659,7 @@ Singleton {
         const params = effectiveWifiDevice ? {
             device: effectiveWifiDevice
         } : null;
-        DMSService.sendRequest("network.wifi.scan", params, response => {
+        ShellBackend.sendRequest("network.wifi.scan", params, response => {
             isScanning = false;
             if (response.error) {
                 log.warn("WiFi scan failed:", response.error);
@@ -696,7 +696,7 @@ Singleton {
         if (phase2Auth)
             params.phase2Auth = phase2Auth;
 
-        if (DMSService.apiVersion >= 7) {
+        if (ShellBackend.apiVersion >= 7) {
             if (password || username) {
                 params.password = password;
                 if (username)
@@ -720,7 +720,7 @@ Singleton {
                 params.domainSuffixMatch = domainSuffixMatch;
         }
 
-        DMSService.sendRequest("network.wifi.connect", params, response => {
+        ShellBackend.sendRequest("network.wifi.connect", params, response => {
             if (response.error) {
                 if (connectionStatus === "cancelled")
                     return;
@@ -741,7 +741,7 @@ Singleton {
         const params = effectiveWifiDevice ? {
             device: effectiveWifiDevice
         } : null;
-        DMSService.sendRequest("network.wifi.disconnect", params, response => {
+        ShellBackend.sendRequest("network.wifi.disconnect", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to disconnect WiFi"), response.error);
             } else {
@@ -753,10 +753,10 @@ Singleton {
     }
 
     function submitCredentials(token, secrets, save) {
-        log.debug("submitCredentials: networkAvailable=" + networkAvailable + " apiVersion=" + DMSService.apiVersion);
+        log.debug("submitCredentials: networkAvailable=" + networkAvailable + " apiVersion=" + ShellBackend.apiVersion);
 
-        if (!networkAvailable || DMSService.apiVersion < 7) {
-            log.warn("submitCredentials: Aborting - networkAvailable=" + networkAvailable + " apiVersion=" + DMSService.apiVersion);
+        if (!networkAvailable || ShellBackend.apiVersion < 7) {
+            log.warn("submitCredentials: Aborting - networkAvailable=" + networkAvailable + " apiVersion=" + ShellBackend.apiVersion);
             return;
         }
 
@@ -774,7 +774,7 @@ Singleton {
             connectionStatus = "connecting";
         }
 
-        DMSService.sendRequest("network.credentials.submit", params, response => {
+        ShellBackend.sendRequest("network.credentials.submit", params, response => {
             if (response.error) {
                 log.warn("Failed to submit credentials:", response.error);
             }
@@ -782,7 +782,7 @@ Singleton {
     }
 
     function cancelCredentials(token) {
-        if (!networkAvailable || DMSService.apiVersion < 7)
+        if (!networkAvailable || ShellBackend.apiVersion < 7)
             return;
         const params = {
             token: token
@@ -792,7 +792,7 @@ Singleton {
         pendingConnectionSSID = "";
         connectionStatus = "cancelled";
 
-        DMSService.sendRequest("network.credentials.cancel", params, response => {
+        ShellBackend.sendRequest("network.credentials.cancel", params, response => {
             if (response.error) {
                 log.warn("Failed to cancel credentials:", response.error);
             }
@@ -803,7 +803,7 @@ Singleton {
         if (!networkAvailable)
             return;
         forgetSSID = ssid;
-        DMSService.sendRequest("network.wifi.forget", {
+        ShellBackend.sendRequest("network.wifi.forget", {
             ssid: ssid
         }, response => {
             if (response.error) {
@@ -831,7 +831,7 @@ Singleton {
         if (!networkAvailable || wifiToggling)
             return;
         wifiToggling = true;
-        DMSService.sendRequest("network.wifi.toggle", null, response => {
+        ShellBackend.sendRequest("network.wifi.toggle", null, response => {
             wifiToggling = false;
 
             if (response.error) {
@@ -847,7 +847,7 @@ Singleton {
         if (!networkAvailable || cellularToggling)
             return;
         cellularToggling = true;
-        DMSService.sendRequest("network.cellular.toggle", null, response => {
+        ShellBackend.sendRequest("network.cellular.toggle", null, response => {
             cellularToggling = false;
 
             if (response.error) {
@@ -862,7 +862,7 @@ Singleton {
     function enableWifiDevice() {
         if (!networkAvailable)
             return;
-        DMSService.sendRequest("network.wifi.enable", null, response => {
+        ShellBackend.sendRequest("network.wifi.enable", null, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to enable WiFi"), response.error);
             } else {
@@ -881,7 +881,7 @@ Singleton {
     function applyNetworkPreference(preference) {
         changingPreference = true;
         targetPreference = preference;
-        DMSService.sendRequest("network.preference.set", {
+        ShellBackend.sendRequest("network.preference.set", {
             preference: preference
         }, response => {
             changingPreference = false;
@@ -898,13 +898,13 @@ Singleton {
             return;
         if (type === "ethernet") {
             if (ethernetConnected) {
-                DMSService.sendRequest("network.ethernet.disconnect", null, null);
+                ShellBackend.sendRequest("network.ethernet.disconnect", null, null);
             } else {
-                DMSService.sendRequest("network.ethernet.connect", null, null);
+                ShellBackend.sendRequest("network.ethernet.connect", null, null);
             }
         } else if (type === "cellular") {
             if (cellularConnected) {
-                DMSService.sendRequest("network.cellular.disconnect", null, null);
+                ShellBackend.sendRequest("network.cellular.disconnect", null, null);
             } else {
                 connectCellular();
             }
@@ -914,7 +914,7 @@ Singleton {
     function disconnectEthernetDevice(deviceName) {
         if (!networkAvailable)
             return;
-        DMSService.sendRequest("network.ethernet.disconnect", {
+        ShellBackend.sendRequest("network.ethernet.disconnect", {
             device: deviceName
         }, null);
     }
@@ -922,7 +922,7 @@ Singleton {
     function disconnectCellularDevice(deviceName) {
         if (!networkAvailable)
             return;
-        DMSService.sendRequest("network.cellular.disconnect", {
+        ShellBackend.sendRequest("network.cellular.disconnect", {
             device: deviceName
         }, null);
     }
@@ -954,7 +954,7 @@ Singleton {
         networkWiredInfoLoading = true;
         networkWiredInfoDetails = "Loading network information...";
 
-        DMSService.sendRequest("network.ethernet.info", {
+        ShellBackend.sendRequest("network.ethernet.info", {
             uuid: uuid
         }, response => {
             networkWiredInfoLoading = false;
@@ -1011,7 +1011,7 @@ Singleton {
         networkInfoLoading = true;
         networkInfoDetails = "Loading network information...";
 
-        DMSService.sendRequest("network.info", {
+        ShellBackend.sendRequest("network.info", {
             ssid: ssid
         }, response => {
             networkInfoLoading = false;
@@ -1089,7 +1089,7 @@ Singleton {
     function refreshVpnProfiles() {
         if (!vpnAvailable)
             return;
-        DMSService.sendRequest("network.vpn.profiles", null, response => {
+        ShellBackend.sendRequest("network.vpn.profiles", null, response => {
             if (response.result) {
                 vpnProfiles = response.result;
             }
@@ -1099,7 +1099,7 @@ Singleton {
     function refreshVpnActive() {
         if (!vpnAvailable)
             return;
-        DMSService.sendRequest("network.vpn.active", null, response => {
+        ShellBackend.sendRequest("network.vpn.active", null, response => {
             if (response.result) {
                 vpnActive = response.result;
             }
@@ -1118,7 +1118,7 @@ Singleton {
             singleActive: singleActive
         };
 
-        DMSService.sendRequest("network.vpn.connect", params, response => {
+        ShellBackend.sendRequest("network.vpn.connect", params, response => {
             if (response.error) {
                 vpnIsBusy = false;
                 pendingVpnUuid = "";
@@ -1143,7 +1143,7 @@ Singleton {
             uuidOrName: uuidOrName
         };
 
-        DMSService.sendRequest("network.vpn.disconnect", params, response => {
+        ShellBackend.sendRequest("network.vpn.disconnect", params, response => {
             if (response.error) {
                 vpnIsBusy = false;
                 vpnBusyStartTime = 0;
@@ -1162,7 +1162,7 @@ Singleton {
         vpnIsBusy = true;
         pendingVpnUuid = "";
 
-        DMSService.sendRequest("network.vpn.disconnectAll", null, response => {
+        ShellBackend.sendRequest("network.vpn.disconnectAll", null, response => {
             if (response.error) {
                 vpnIsBusy = false;
                 ToastService.showError(I18n.tr("Failed to disconnect VPNs"), response.error);
@@ -1217,14 +1217,14 @@ Singleton {
     }
 
     function setWifiAutoconnect(ssid, autoconnect) {
-        if (!networkAvailable || DMSService.apiVersion <= 13)
+        if (!networkAvailable || ShellBackend.apiVersion <= 13)
             return;
         const params = {
             ssid: ssid,
             autoconnect: autoconnect
         };
 
-        DMSService.sendRequest("network.wifi.setAutoconnect", params, response => {
+        ShellBackend.sendRequest("network.wifi.setAutoconnect", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to update autoconnect"), response.error);
             } else {
@@ -1251,7 +1251,7 @@ Singleton {
         hotspotBusy = true;
         hotspotError = "";
 
-        DMSService.sendRequest("network.hotspot.configure", params, response => {
+        ShellBackend.sendRequest("network.hotspot.configure", params, response => {
             hotspotBusy = false;
             if (response.error) {
                 hotspotError = response.error;
@@ -1273,7 +1273,7 @@ Singleton {
         hotspotBusy = true;
         hotspotError = "";
 
-        DMSService.sendRequest("network.hotspot.start", null, response => {
+        ShellBackend.sendRequest("network.hotspot.start", null, response => {
             hotspotBusy = false;
             if (response.error) {
                 hotspotError = response.error;
@@ -1295,7 +1295,7 @@ Singleton {
         hotspotBusy = true;
         hotspotError = "";
 
-        DMSService.sendRequest("network.hotspot.stop", null, response => {
+        ShellBackend.sendRequest("network.hotspot.stop", null, response => {
             hotspotBusy = false;
             if (response.error) {
                 hotspotError = response.error;
@@ -1330,7 +1330,7 @@ Singleton {
             return false;
         }
 
-        DMSService.sendRequest("network.hotspot.getSecrets", null, response => {
+        ShellBackend.sendRequest("network.hotspot.getSecrets", null, response => {
             if (callback)
                 callback(response);
         });

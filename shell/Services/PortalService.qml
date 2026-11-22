@@ -38,7 +38,7 @@ Singleton {
         const username = Quickshell.env("USER");
         if (!username)
             return;
-        DMSService.sendRequest("freedesktop.accounts.getUserIconFile", {
+        ShellBackend.sendRequest("freedesktop.accounts.getUserIconFile", {
             "username": username
         }, response => {
             if (response.result && response.result.success) {
@@ -63,7 +63,7 @@ Singleton {
             return;
         }
 
-        DMSService.sendRequest("freedesktop.accounts.getUserIconFile", {
+        ShellBackend.sendRequest("freedesktop.accounts.getUserIconFile", {
             "username": username
         }, response => {
             if (response.result && response.result.success) {
@@ -148,7 +148,7 @@ Singleton {
     function setSystemIconTheme(themeName) {
         if (!settingsPortalAvailable || !freedeskAvailable)
             return;
-        DMSService.sendRequest("freedesktop.settings.setIconTheme", {
+        ShellBackend.sendRequest("freedesktop.settings.setIconTheme", {
             "iconTheme": themeName
         }, response => {
             if (response.error) {
@@ -160,7 +160,7 @@ Singleton {
     function setSystemProfileImage(imagePath) {
         if (!accountsServiceAvailable || !freedeskAvailable)
             return;
-        DMSService.sendRequest("freedesktop.accounts.setIconFile", {
+        ShellBackend.sendRequest("freedesktop.accounts.setIconFile", {
             "path": imagePath || ""
         }, response => {
             if (response.error) {
@@ -192,7 +192,7 @@ Singleton {
 
     Component.onCompleted: {
         if (socketPath && socketPath.length > 0) {
-            checkDMSCapabilities();
+            checkBackendCapabilities();
         } else {
             log.info("ALPE_SOCKET not set");
         }
@@ -229,7 +229,7 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onFreedesktopStateUpdate(data) {
             if (!data || !data.settings)
@@ -240,34 +240,34 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
-            if (DMSService.isConnected) {
-                checkDMSCapabilities();
+            if (ShellBackend.isConnected) {
+                checkBackendCapabilities();
             }
         }
     }
 
     Connections {
-        target: DMSService
-        enabled: DMSService.isConnected
+        target: ShellBackend
+        enabled: ShellBackend.isConnected
 
         function onCapabilitiesChanged() {
-            checkDMSCapabilities();
+            checkBackendCapabilities();
         }
     }
 
-    function checkDMSCapabilities() {
-        if (!DMSService.isConnected) {
+    function checkBackendCapabilities() {
+        if (!ShellBackend.isConnected) {
             return;
         }
 
-        if (DMSService.capabilities.length === 0) {
+        if (ShellBackend.capabilities.length === 0) {
             return;
         }
 
-        freedeskAvailable = DMSService.capabilities.includes("freedesktop");
+        freedeskAvailable = ShellBackend.capabilities.includes("freedesktop");
         if (freedeskAvailable) {
             checkAccountsService();
             checkSettingsPortal();
@@ -279,7 +279,7 @@ Singleton {
     function checkAccountsService() {
         if (!freedeskAvailable)
             return;
-        DMSService.sendRequest("freedesktop.getState", null, response => {
+        ShellBackend.sendRequest("freedesktop.getState", null, response => {
             if (response.result && response.result.accounts) {
                 accountsServiceAvailable = response.result.accounts.available || false;
                 if (accountsServiceAvailable) {
@@ -292,7 +292,7 @@ Singleton {
     function checkSettingsPortal() {
         if (!freedeskAvailable)
             return;
-        DMSService.sendRequest("freedesktop.getState", null, response => {
+        ShellBackend.sendRequest("freedesktop.getState", null, response => {
             if (response.result && response.result.settings) {
                 settingsPortalAvailable = response.result.settings.available || false;
                 handlePortalColorScheme(response.result.settings.colorScheme || 0);

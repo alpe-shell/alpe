@@ -23,15 +23,15 @@ type Keybind struct {
 	HasDefault      bool     `json:"hasDefault,omitempty"` // override has a DMS default to revert to
 }
 
-type DMSBindsStatus struct {
-	Exists          bool   `json:"exists"`
-	Included        bool   `json:"included"`
-	IncludePosition int    `json:"includePosition"`
-	TotalIncludes   int    `json:"totalIncludes"`
-	BindsAfterDMS   int    `json:"bindsAfterDms"`
-	Effective       bool   `json:"effective"`
-	OverriddenBy    int    `json:"overriddenBy"`
-	StatusMessage   string `json:"statusMessage"`
+type BindsFragmentStatus struct {
+	Exists             bool   `json:"exists"`
+	Included           bool   `json:"included"`
+	IncludePosition    int    `json:"includePosition"`
+	TotalIncludes      int    `json:"totalIncludes"`
+	BindsAfterFragment int    `json:"bindsAfterFragment"`
+	Effective          bool   `json:"effective"`
+	OverriddenBy       int    `json:"overriddenBy"`
+	StatusMessage      string `json:"statusMessage"`
 }
 
 const (
@@ -81,13 +81,13 @@ func CanonicalModifier(modifier string) string {
 }
 
 type CheatSheet struct {
-	Title            string               `json:"title"`
-	Provider         string               `json:"provider"`
-	ModKey           string               `json:"modKey,omitempty"`
-	Mod              ModKey               `json:"mod"`
-	Binds            map[string][]Keybind `json:"binds"`
-	DMSBindsIncluded bool                 `json:"dmsBindsIncluded"`
-	DMSStatus        *DMSBindsStatus      `json:"dmsStatus,omitempty"`
+	Title                 string               `json:"title"`
+	Provider              string               `json:"provider"`
+	ModKey                string               `json:"modKey,omitempty"`
+	Mod                   ModKey               `json:"mod"`
+	Binds                 map[string][]Keybind `json:"binds"`
+	BindsFragmentIncluded bool                 `json:"bindsFragmentIncluded"`
+	FragmentStatus        *BindsFragmentStatus `json:"fragmentStatus,omitempty"`
 }
 
 // ModKey stays populated with Mod.Resolved so shells older than the mod field keep working.
@@ -114,15 +114,15 @@ type WritableProvider interface {
 	GetOverridePath() string
 }
 
-func DMSBindsStatusFrom(s configfrag.Status) *DMSBindsStatus {
-	return &DMSBindsStatus{
-		Exists:          s.Exists,
-		Included:        s.Included,
-		IncludePosition: s.IncludePosition,
-		TotalIncludes:   s.TotalIncludes,
-		BindsAfterDMS:   s.EntriesAfterDMS,
-		Effective:       s.Effective,
-		OverriddenBy:    s.OverriddenBy,
-		StatusMessage:   s.StatusMessage,
+func BindsFragmentStatusFrom(s configfrag.Status) *BindsFragmentStatus {
+	return &BindsFragmentStatus{
+		Exists:             s.Exists,
+		Included:           s.Included,
+		IncludePosition:    s.IncludePosition,
+		TotalIncludes:      s.TotalIncludes,
+		BindsAfterFragment: s.EntriesAfterFragment,
+		Effective:          s.Effective,
+		OverriddenBy:       s.OverriddenBy,
+		StatusMessage:      s.StatusMessage,
 	}
 }

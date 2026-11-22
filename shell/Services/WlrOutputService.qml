@@ -19,14 +19,14 @@ Singleton {
     signal configurationApplied(bool success, string message)
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onCapabilitiesReceived() {
             checkCapabilities();
         }
 
         function onConnectionStateChanged() {
-            if (DMSService.isConnected) {
+            if (ShellBackend.isConnected) {
                 checkCapabilities();
                 return;
             }
@@ -42,19 +42,19 @@ Singleton {
     }
 
     Component.onCompleted: {
-        if (!DMSService.dmsAvailable) {
+        if (!ShellBackend.backendReachable) {
             return;
         }
         checkCapabilities();
     }
 
     function checkCapabilities() {
-        if (!DMSService.capabilities || !Array.isArray(DMSService.capabilities)) {
+        if (!ShellBackend.capabilities || !Array.isArray(ShellBackend.capabilities)) {
             wlrOutputAvailable = false;
             return;
         }
 
-        const hasWlrOutput = DMSService.capabilities.includes("wlroutput");
+        const hasWlrOutput = ShellBackend.capabilities.includes("wlroutput");
         if (hasWlrOutput && !wlrOutputAvailable) {
             wlrOutputAvailable = true;
             log.info("wlr-output-management capability detected");
@@ -68,11 +68,11 @@ Singleton {
     }
 
     function requestState() {
-        if (!DMSService.isConnected || !wlrOutputAvailable) {
+        if (!ShellBackend.isConnected || !wlrOutputAvailable) {
             return;
         }
 
-        DMSService.sendRequest("wlroutput.getState", null, response => {
+        ShellBackend.sendRequest("wlroutput.getState", null, response => {
             if (!response.result) {
                 return;
             }
@@ -105,7 +105,7 @@ Singleton {
     }
 
     function applyConfiguration(heads, callback) {
-        if (!DMSService.isConnected || !wlrOutputAvailable) {
+        if (!ShellBackend.isConnected || !wlrOutputAvailable) {
             if (callback) {
                 callback(false, I18n.tr("Not connected"));
             }
@@ -117,7 +117,7 @@ Singleton {
             log.debug("Head", index, "- name:", head.name, "enabled:", head.enabled, "modeId:", head.modeId, "customMode:", JSON.stringify(head.customMode), "position:", JSON.stringify(head.position), "scale:", head.scale, "transform:", head.transform, "adaptiveSync:", head.adaptiveSync);
         });
 
-        DMSService.sendRequest("wlroutput.applyConfiguration", {
+        ShellBackend.sendRequest("wlroutput.applyConfiguration", {
             "heads": heads
         }, response => {
             const success = !response.error && response.result?.success === true;
@@ -137,7 +137,7 @@ Singleton {
     }
 
     function testConfiguration(heads, callback) {
-        if (!DMSService.isConnected || !wlrOutputAvailable) {
+        if (!ShellBackend.isConnected || !wlrOutputAvailable) {
             if (callback) {
                 callback(false, I18n.tr("Not connected"));
             }
@@ -146,7 +146,7 @@ Singleton {
 
         log.debug("Testing configuration for", heads.length, "outputs");
 
-        DMSService.sendRequest("wlroutput.testConfiguration", {
+        ShellBackend.sendRequest("wlroutput.testConfiguration", {
             "heads": heads
         }, response => {
             const success = !response.error && response.result?.success === true;

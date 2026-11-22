@@ -17,9 +17,9 @@ CcListRow {
     signal toggleExpand
     signal deleteRequested
 
-    readonly property bool isActive: DMSNetworkService.vpnStateForUuid(profile?.uuid) === "activated"
-    readonly property bool isConnecting: DMSNetworkService.isVpnConnectingUuid(profile?.uuid)
-    readonly property bool hasError: !isConnecting && DMSNetworkService.vpnError !== "" && DMSNetworkService.vpnErrorUuid === (profile?.uuid ?? "")
+    readonly property bool isActive: BackendNetworkService.vpnStateForUuid(profile?.uuid) === "activated"
+    readonly property bool isConnecting: BackendNetworkService.isVpnConnectingUuid(profile?.uuid)
+    readonly property bool hasError: !isConnecting && BackendNetworkService.vpnError !== "" && BackendNetworkService.vpnErrorUuid === (profile?.uuid ?? "")
     readonly property var configData: (!isTransient && isExpanded) ? VPNService.editConfig : null
     readonly property var configFields: buildConfigFields()
 
@@ -70,11 +70,11 @@ CcListRow {
     iconColor: hasError ? Theme.error : contentColor
     active: isActive
     title: profile?.name ?? ""
-    subtitle: isConnecting ? I18n.tr("Connecting...") : (hasError ? DMSNetworkService.vpnError : VPNService.getVpnTypeFromProfile(profile))
+    subtitle: isConnecting ? I18n.tr("Connecting...") : (hasError ? BackendNetworkService.vpnError : VPNService.getVpnTypeFromProfile(profile))
     subtitleColor: isConnecting ? Theme.warning : (hasError ? Theme.error : Theme.surfaceVariantText)
-    enabled: !(DMSNetworkService.isBusy && !isConnecting)
+    enabled: !(BackendNetworkService.isBusy && !isConnecting)
     clickable: true
-    onClicked: DMSNetworkService.toggle(profile.uuid)
+    onClicked: BackendNetworkService.toggle(profile.uuid)
 
     leading: AlpeSpinner {
         size: Theme.iconSizeMedium
@@ -92,8 +92,8 @@ CcListRow {
         iconName: "link_off"
         Accessible.name: I18n.tr("Disconnect")
         iconColor: root.contentColor
-        enabled: !DMSNetworkService.isBusy
-        onClicked: DMSNetworkService.toggle(root.profile.uuid)
+        enabled: !BackendNetworkService.isBusy
+        onClicked: BackendNetworkService.toggle(root.profile.uuid)
     }
 
     AlpeActionButton {
@@ -166,7 +166,7 @@ CcListRow {
             visible: !root.isTransient && !VPNService.configLoading && root.profile?.type !== "wireguard"
 
             StyledText {
-                text: root.hasError ? DMSNetworkService.vpnError : I18n.tr("Credentials", "noun, label above vpn username and password fields")
+                text: root.hasError ? BackendNetworkService.vpnError : I18n.tr("Credentials", "noun, label above vpn username and password fields")
                 font.pixelSize: Theme.fontSizeSmall
                 color: root.hasError ? Theme.error : Theme.surfaceVariantText
             }

@@ -397,8 +397,8 @@ QtObject {
             "icon": "vpn_key",
             "type": "builtin_plugin",
             "category": "network",
-            "enabled": DMSNetworkService.available,
-            "warning": !DMSNetworkService.available ? I18n.tr("VPN not available") : undefined,
+            "enabled": BackendNetworkService.available,
+            "warning": !BackendNetworkService.available ? I18n.tr("VPN not available") : undefined,
             "isBuiltinPlugin": true
         },
         {

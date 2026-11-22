@@ -88,7 +88,7 @@ p qpa "\${QT_QPA_PLATFORMTHEME:-}"
 
     Process {
         id: doctorProc
-        command: [Proc.dmsBin, "doctor", "--json"]
+        command: [Proc.backendBin, "doctor", "--json"]
         stdout: StdioCollector {
             onStreamFinished: {
                 try {

@@ -90,12 +90,12 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         function onCapabilitiesReceived() {
             root.checkCapabilities();
         }
         function onConnectionStateChanged() {
-            if (DMSService.isConnected) {
+            if (ShellBackend.isConnected) {
                 root.checkCapabilities();
             } else {
                 root.sysupdateAvailable = false;
@@ -128,7 +128,7 @@ Singleton {
     }
 
     Component.onCompleted: {
-        if (DMSService.dmsAvailable) {
+        if (ShellBackend.backendReachable) {
             checkCapabilities();
         }
         Qt.callLater(() => root._maybeStartupCheck());
@@ -139,12 +139,12 @@ Singleton {
     }
 
     function checkCapabilities() {
-        if (!DMSService.capabilities || !Array.isArray(DMSService.capabilities)) {
+        if (!ShellBackend.capabilities || !Array.isArray(ShellBackend.capabilities)) {
             sysupdateAvailable = false;
             Qt.callLater(() => root._maybeStartupCheck());
             return;
         }
-        const has = DMSService.capabilities.includes("sysupdate");
+        const has = ShellBackend.capabilities.includes("sysupdate");
         if (has && !sysupdateAvailable) {
             sysupdateAvailable = true;
             if (pollWanted) {
@@ -159,10 +159,10 @@ Singleton {
     }
 
     function requestState() {
-        if (!DMSService.isConnected || !sysupdateAvailable) {
+        if (!ShellBackend.isConnected || !sysupdateAvailable) {
             return;
         }
-        DMSService.sysupdateGetState(resp => {
+        ShellBackend.sysupdateGetState(resp => {
             if (resp && resp.result) {
                 _applyState(resp.result);
             }
@@ -305,7 +305,7 @@ Singleton {
             return;
         _notifyInFlight = true;
         const count = updateCount;
-        DMSService.notifySend({
+        ShellBackend.notifySend({
             "summary": count === 1 ? I18n.tr("%1 update", "singular, %1 is 1, available system update count").arg(count) : I18n.tr("%1 updates", "plural, %1 is a count of available system updates").arg(count),
             "body": I18n.tr("Software updates are ready to install.", "notification body when system updates are available"),
             "actionLabel": I18n.tr("Settings"),
@@ -344,7 +344,7 @@ Singleton {
     }
 
     function checkForUpdates() {
-        DMSService.sysupdateRefresh(false, null);
+        ShellBackend.sysupdateRefresh(false, null);
     }
 
     function restartShell() {
@@ -365,7 +365,7 @@ Singleton {
                 params.terminalArgs = termArgs.split(/\s+/);
             }
         }
-        DMSService.sysupdateUpgrade(params, null);
+        ShellBackend.sysupdateUpgrade(params, null);
     }
 
     function cancelUpdates() {
@@ -374,7 +374,7 @@ Singleton {
             ToastService.showInfo("Die Aktualisierung läuft im Terminal und wird dort beendet.");
             return;
         }
-        DMSService.sysupdateCancel(null);
+        ShellBackend.sysupdateCancel(null);
     }
 
     function runScript(terminal) {
@@ -456,7 +456,7 @@ Singleton {
     }
 
     function setInterval(seconds) {
-        DMSService.sysupdateSetInterval(seconds, null);
+        ShellBackend.sysupdateSetInterval(seconds, null);
     }
 
     property bool _startupCheckDone: false
@@ -470,10 +470,10 @@ Singleton {
             return;
         if (_startupCheckDone)
             return;
-        if (!DMSService.isConnected || !sysupdateAvailable)
+        if (!ShellBackend.isConnected || !sysupdateAvailable)
             return;
         _startupCheckDone = true;
-        Qt.callLater(() => DMSService.sysupdateRefresh(false, null, true));
+        Qt.callLater(() => ShellBackend.sysupdateRefresh(false, null, true));
     }
 
     onPollWantedChanged: {
@@ -487,11 +487,11 @@ Singleton {
 
     function _syncSubscription() {
         if (!pollWanted) {
-            if (DMSService.activeSubscriptions.includes("sysupdate"))
-                DMSService.removeSubscription("sysupdate");
+            if (ShellBackend.activeSubscriptions.includes("sysupdate"))
+                ShellBackend.removeSubscription("sysupdate");
             return;
         }
-        DMSService.addSubscription("sysupdate");
+        ShellBackend.addSubscription("sysupdate");
         if (!sysupdateAvailable)
             return;
         requestState();
@@ -510,9 +510,9 @@ Singleton {
         }
         _acquired = want;
         if (want) {
-            DMSService.sysupdateAcquire(null);
+            ShellBackend.sysupdateAcquire(null);
             return;
         }
-        DMSService.sysupdateRelease(null);
+        ShellBackend.sysupdateRelease(null);
     }
 }

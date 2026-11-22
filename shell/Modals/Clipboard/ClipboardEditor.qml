@@ -86,7 +86,7 @@ Item {
     function fetchEntry(requestedId) {
         loadFailed = false;
         loadTimeoutTimer.restart();
-        DMSService.sendRequest("clipboard.getEntry", {
+        ShellBackend.sendRequest("clipboard.getEntry", {
             "id": requestedId
         }, function (response) {
             loadTimeoutTimer.stop();
@@ -205,7 +205,7 @@ Item {
             return;
         }
 
-        DMSService.sendRequest("clipboard.copy", {
+        ShellBackend.sendRequest("clipboard.copy", {
             "text": root.editorText
         }, function (response) {
             if (response.error) {

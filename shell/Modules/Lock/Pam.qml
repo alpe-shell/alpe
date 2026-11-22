@@ -171,7 +171,7 @@ Scope {
     Process {
         id: resolveUserPam
 
-        command: [Proc.dmsBin, "auth", "resolve-lock", "--quiet"]
+        command: [Proc.backendBin, "auth", "resolve-lock", "--quiet"]
         running: false
         onExited: exitCode => {
             if (exitCode === 0)

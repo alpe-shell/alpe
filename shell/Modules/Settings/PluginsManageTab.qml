@@ -68,8 +68,8 @@ FocusScope {
                     wrapText: true
                     onClicked: {
                         PluginService.scanPlugins();
-                        if (DMSService.dmsAvailable && DMSService.apiVersion >= 8)
-                            DMSService.listInstalled();
+                        if (ShellBackend.backendReachable && ShellBackend.apiVersion >= 8)
+                            ShellBackend.listInstalled();
                     }
                 }
             }

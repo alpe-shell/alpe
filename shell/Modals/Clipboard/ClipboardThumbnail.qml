@@ -138,7 +138,7 @@ ClippingRectangle {
             };
             thumbnailImage.activeEntryId = requestedId;
             thumbnailImage.activeRequest = request;
-            DMSService.sendRequest("clipboard.getEntry", {
+            ShellBackend.sendRequest("clipboard.getEntry", {
                 "id": requestedId
             }, function (response) {
                 if (request.cancelled) {

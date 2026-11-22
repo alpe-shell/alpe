@@ -302,7 +302,7 @@ Rectangle {
                     iconName: "content_copy"
                     iconColor: Theme.surfaceText
                     tooltipText: I18n.tr("Copy")
-                    onClicked: Quickshell.execDetached([Proc.dmsBin, "cl", "copy", "--", root.cardText()])
+                    onClicked: Quickshell.execDetached([Proc.backendBin, "cl", "copy", "--", root.cardText()])
                 }
 
                 AlpeActionButton {

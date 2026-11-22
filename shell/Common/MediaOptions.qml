@@ -71,7 +71,7 @@ Singleton {
         }
     ]
     readonly property var pluginLyricsProviders: {
-        if (!DMSService.capabilities.includes("lyrics.plugins"))
+        if (!ShellBackend.capabilities.includes("lyrics.plugins"))
             return [];
         const loaded = PluginService.loadedPlugins;
         const providers = [];

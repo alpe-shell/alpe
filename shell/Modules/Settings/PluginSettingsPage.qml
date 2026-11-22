@@ -104,7 +104,7 @@ FocusScope {
         const id = pluginId;
         operationPending = true;
         actionError = "";
-        DMSService.uninstall(id, response => {
+        ShellBackend.uninstall(id, response => {
             operationPending = false;
             if (response.error) {
                 actionError = I18n.tr("Uninstall failed: %1").arg(response.error);
@@ -239,7 +239,7 @@ FocusScope {
                 iconName: "delete"
                 title: I18n.tr("Uninstall plugin")
                 clickable: true
-                visible: DMSService.dmsAvailable && !root.isSystemPlugin
+                visible: ShellBackend.backendReachable && !root.isSystemPlugin
                 enabled: !root.operationPending
                 onClicked: root.requestUninstall()
             }

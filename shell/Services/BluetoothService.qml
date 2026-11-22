@@ -17,8 +17,8 @@ Singleton {
     readonly property bool available: adapter !== null
     readonly property bool enabled: (adapter && adapter.enabled) ?? false
     readonly property bool discovering: (adapter && adapter.discovering) ?? false
-    readonly property bool dbusBridgeAvailable: DMSService.isConnected && DMSService.capabilities.includes("dbus")
-    readonly property bool bluetoothBridgeAvailable: DMSService.isConnected && DMSService.capabilities.includes("bluetooth")
+    readonly property bool dbusBridgeAvailable: ShellBackend.isConnected && ShellBackend.capabilities.includes("dbus")
+    readonly property bool bluetoothBridgeAvailable: ShellBackend.isConnected && ShellBackend.capabilities.includes("bluetooth")
     property bool wpexecAvailable: false
     property bool wpexecChecked: false
     property var pendingCodecActions: []
@@ -32,7 +32,7 @@ Singleton {
     readonly property string cardProfileScript: Quickshell.shellDir + "/scripts/bluez-card-profile.lua"
     readonly property bool codecControlAvailable: wpexecChecked && wpexecAvailable
     readonly property var devices: adapter ? adapter.devices : null
-    readonly property bool enhancedPairingAvailable: DMSService.dmsAvailable && DMSService.apiVersion >= 9 && DMSService.capabilities.includes("bluetooth")
+    readonly property bool enhancedPairingAvailable: ShellBackend.backendReachable && ShellBackend.apiVersion >= 9 && ShellBackend.capabilities.includes("bluetooth")
     readonly property bool connected: {
         if (!adapter || !adapter.devices) {
             return false;
@@ -96,7 +96,7 @@ Singleton {
 
     function setBluetoothEnabled(enabled) {
         if (bluetoothBridgeAvailable) {
-            DMSService.sendRequest("bluetooth.setPowered", {
+            ShellBackend.sendRequest("bluetooth.setPowered", {
                 "powered": enabled,
                 "adapter": adapter?.dbusPath ?? ""
             }, response => {
@@ -111,8 +111,8 @@ Singleton {
     }
 
     function toggleBluetooth() {
-        if (bluetoothBridgeAvailable && DMSService.apiVersion >= 33) {
-            DMSService.sendRequest("bluetooth.togglePowered", {
+        if (bluetoothBridgeAvailable && ShellBackend.apiVersion >= 33) {
+            ShellBackend.sendRequest("bluetooth.togglePowered", {
                 "adapter": adapter?.dbusPath ?? ""
             }, response => {
                 if (response.error)
@@ -125,7 +125,7 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
             root._codecSignalsSubscribed = false;
@@ -139,7 +139,7 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         enabled: root._codecSignalsSubscribed
 
         function onDbusSignalReceived(subscriptionId, data) {
@@ -164,9 +164,9 @@ Singleton {
         if (!dbusBridgeAvailable || _codecSignalsSubscribed || !hasConnectedAudioDevice)
             return;
         _codecSignalsSubscribed = true;
-        DMSService.dbusSubscribe("system", bluezService, "", objectManagerIface, "InterfacesAdded", _rememberCodecSubscription);
-        DMSService.dbusSubscribe("system", bluezService, "", objectManagerIface, "InterfacesRemoved", _rememberCodecSubscription);
-        DMSService.dbusSubscribe("system", bluezService, "", propertiesIface, "PropertiesChanged", _rememberCodecSubscription);
+        ShellBackend.dbusSubscribe("system", bluezService, "", objectManagerIface, "InterfacesAdded", _rememberCodecSubscription);
+        ShellBackend.dbusSubscribe("system", bluezService, "", objectManagerIface, "InterfacesRemoved", _rememberCodecSubscription);
+        ShellBackend.dbusSubscribe("system", bluezService, "", propertiesIface, "PropertiesChanged", _rememberCodecSubscription);
     }
 
     function _rememberCodecSubscription(response) {
@@ -174,7 +174,7 @@ Singleton {
         if (response.error || !id)
             return;
         if (!_codecSignalsSubscribed) {
-            DMSService.dbusUnsubscribe(id, null);
+            ShellBackend.dbusUnsubscribe(id, null);
             return;
         }
         _codecSubscriptionIds = _codecSubscriptionIds.concat([id]);
@@ -186,9 +186,9 @@ Singleton {
         _codecSignalsSubscribed = false;
         const ids = _codecSubscriptionIds;
         _codecSubscriptionIds = [];
-        if (!DMSService.isConnected)
+        if (!ShellBackend.isConnected)
             return;
-        ids.forEach(id => DMSService.dbusUnsubscribe(id, null));
+        ids.forEach(id => ShellBackend.dbusUnsubscribe(id, null));
     }
 
     function handleCodecDbusSignal(data) {
@@ -284,7 +284,7 @@ Singleton {
             return;
         }
 
-        DMSService.dbusCall("system", bluezService, "/", objectManagerIface, "GetManagedObjects", [], response => {
+        ShellBackend.dbusCall("system", bluezService, "/", objectManagerIface, "GetManagedObjects", [], response => {
             if (response.error) {
                 callback([], "");
                 return;
@@ -468,7 +468,7 @@ Singleton {
         // The DMS backend actually implements a bluez agent, so we can pair anything
         if (enhancedPairingAvailable) {
             const devicePath = getDevicePath(device);
-            DMSService.bluetoothPair(devicePath, callback);
+            ShellBackend.bluetoothPair(devicePath, callback);
             return;
         }
 

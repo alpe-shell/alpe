@@ -18,9 +18,9 @@ import (
 )
 
 type HyprlandProvider struct {
-	configPath       string
-	dmsBindsIncluded bool
-	parsed           bool
+	configPath            string
+	bindsFragmentIncluded bool
+	parsed                bool
 }
 
 func NewHyprlandProvider(configPath string) *HyprlandProvider {
@@ -50,30 +50,30 @@ func (h *HyprlandProvider) GetCheatSheet() (*keybinds.CheatSheet, error) {
 		return nil, fmt.Errorf("failed to parse hyprland config: %w", err)
 	}
 
-	h.dmsBindsIncluded = result.DMSBindsIncluded
+	h.bindsFragmentIncluded = result.BindsFragmentIncluded
 	h.parsed = true
 
 	categorizedBinds := make(map[string][]keybinds.Keybind)
 	h.convertSection(result.Section, "", categorizedBinds, result.ConflictingConfigs, result.DefaultDMSKeys)
 
 	sheet := &keybinds.CheatSheet{
-		Title:            "Hyprland Keybinds",
-		Provider:         h.Name(),
-		Binds:            categorizedBinds,
-		DMSBindsIncluded: result.DMSBindsIncluded,
+		Title:                 "Hyprland Keybinds",
+		Provider:              h.Name(),
+		Binds:                 categorizedBinds,
+		BindsFragmentIncluded: result.BindsFragmentIncluded,
 	}
 	sheet.SetMod(keybinds.ConfiguredModKey("", result.MainMod))
 
-	if result.DMSStatus != nil {
-		sheet.DMSStatus = keybinds.DMSBindsStatusFrom(*result.DMSStatus)
+	if result.FragmentStatus != nil {
+		sheet.FragmentStatus = keybinds.BindsFragmentStatusFrom(*result.FragmentStatus)
 	}
 
 	return sheet, nil
 }
 
-func (h *HyprlandProvider) HasDMSBindsIncluded() bool {
+func (h *HyprlandProvider) HasBindsFragmentIncluded() bool {
 	if h.parsed {
-		return h.dmsBindsIncluded
+		return h.bindsFragmentIncluded
 	}
 
 	result, err := ParseHyprlandKeysWithDMS(h.configPath)
@@ -81,9 +81,9 @@ func (h *HyprlandProvider) HasDMSBindsIncluded() bool {
 		return false
 	}
 
-	h.dmsBindsIncluded = result.DMSBindsIncluded
+	h.bindsFragmentIncluded = result.BindsFragmentIncluded
 	h.parsed = true
-	return h.dmsBindsIncluded
+	return h.bindsFragmentIncluded
 }
 
 func (h *HyprlandProvider) convertSection(section *HyprlandSection, subcategory string, categorizedBinds map[string][]keybinds.Keybind, conflicts map[string]*HyprlandKeyBinding, defaultKeys map[string]bool) {
@@ -214,13 +214,13 @@ func (h *HyprlandProvider) convertKeybind(kb *HyprlandKeyBinding, subcategory st
 
 	source := "config"
 	if isDMSBindsUserOverridePath(kb.Source) {
-		source = "dms"
+		source = "shell"
 	} else if isDMSBindsPrimarySourcePath(kb.Source) {
-		source = "dms-default"
+		source = "shell-default"
 	}
 
 	hasDefault := false
-	if source == "dms" && defaultKeys != nil {
+	if source == "shell" && defaultKeys != nil {
 		hasDefault = defaultKeys[strings.ToLower(keyStr)]
 	}
 
@@ -237,7 +237,7 @@ func (h *HyprlandProvider) convertKeybind(kb *HyprlandKeyBinding, subcategory st
 		bind.LuaAction = expr
 	}
 
-	if (source == "dms" || source == "dms-default") && conflicts != nil {
+	if (source == "shell" || source == "shell-default") && conflicts != nil {
 		normalizedKey := strings.ToLower(keyStr)
 		if conflictKb, ok := conflicts[normalizedKey]; ok {
 			bind.Conflict = &keybinds.Keybind{

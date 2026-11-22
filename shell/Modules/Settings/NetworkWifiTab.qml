@@ -115,7 +115,7 @@ Item {
 
             function mergedSavedWifiNetworks() {
                 const saved = NetworkService.savedWifiNetworks || [];
-                const supportsSavedWifiState = DMSService.apiVersion >= NetworkService.savedWifiStateApiVersion;
+                const supportsSavedWifiState = ShellBackend.apiVersion >= NetworkService.savedWifiStateApiVersion;
                 const result = [];
                 const seen = new Set();
 
@@ -475,7 +475,7 @@ Item {
                     }
 
                     SettingsToggleRow {
-                        visible: wifiNetworkDelegate.isExpanded && (wifiNetworkDelegate.modelData.saved || wifiNetworkDelegate.isConnected) && DMSService.apiVersion > 13
+                        visible: wifiNetworkDelegate.isExpanded && (wifiNetworkDelegate.modelData.saved || wifiNetworkDelegate.isConnected) && ShellBackend.apiVersion > 13
                         text: I18n.tr("Autoconnect", "toggle, connect to this wifi or vpn automatically")
                         checked: wifiNetworkDelegate.modelData.autoconnect || false
                         onToggled: checked => {
@@ -635,7 +635,7 @@ Item {
                     }
 
                     SettingsToggleRow {
-                        visible: savedWifiDelegate.isExpanded && DMSService.apiVersion > 13
+                        visible: savedWifiDelegate.isExpanded && ShellBackend.apiVersion > 13
                         text: I18n.tr("Autoconnect", "toggle, connect to this wifi or vpn automatically")
                         checked: savedWifiDelegate.modelData.autoconnect || false
                         onToggled: checked => NetworkService.setWifiAutoconnect(savedWifiDelegate.modelData.ssid, checked)

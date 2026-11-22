@@ -66,7 +66,7 @@ Item {
     readonly property bool wifiScanningEmpty: wifiMode && NetworkService.wifiEnabled && !NetworkService.wifiToggling && NetworkService.wifiInterface && (NetworkService.wifiNetworks?.length ?? 0) < 1 && (NetworkService.isScanning || transitioning)
     readonly property bool wifiListVisible: wifiMode && NetworkService.wifiEnabled && !NetworkService.wifiToggling && !wifiScanningEmpty
 
-    readonly property bool paneSwitchSupported: connectionTypes.length > 1 && networkManager && DMSService.apiVersion > 10
+    readonly property bool paneSwitchSupported: connectionTypes.length > 1 && networkManager && ShellBackend.apiVersion > 10
     readonly property var typeLabels: ({
             "ethernet": I18n.tr("Ethernet"),
             "wifi": I18n.tr("Wi-Fi", "wireless network, page and section title"),
@@ -183,7 +183,7 @@ Item {
             {
                 "label": network.autoconnect ? I18n.tr("Disable autoconnect") : I18n.tr("Enable autoconnect"),
                 "iconName": "autorenew",
-                "visible": showSavedOptions && DMSService.apiVersion > 13,
+                "visible": showSavedOptions && ShellBackend.apiVersion > 13,
                 "action": () => NetworkService.setWifiAutoconnect(ssid, !network.autoconnect)
             },
             {
@@ -428,7 +428,7 @@ Item {
             }
 
             CcGroup {
-                visible: root.ethernetMode && root.networkManager && DMSService.apiVersion > 10
+                visible: root.ethernetMode && root.networkManager && ShellBackend.apiVersion > 10
 
                 Repeater {
                     model: wiredConnectionsModel

@@ -8,7 +8,7 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property bool connected: DMSService.isConnected && DMSService.subscribeConnected && DMSService.capabilities.includes("files")
+    readonly property bool connected: ShellBackend.isConnected && ShellBackend.subscribeConnected && ShellBackend.capabilities.includes("files")
     readonly property var capabilities: ({
             "mkdir": true,
             "rename": true,
@@ -22,8 +22,8 @@ Singleton {
     onRefCountChanged: {
         if (refCount > 0) {
             ensureSubscription();
-        } else if (refCount === 0 && DMSService.activeSubscriptions.includes("files")) {
-            DMSService.removeSubscription("files");
+        } else if (refCount === 0 && ShellBackend.activeSubscriptions.includes("files")) {
+            ShellBackend.removeSubscription("files");
         }
     }
 
@@ -36,11 +36,11 @@ Singleton {
     }
 
     function ensureSubscription() {
-        if (DMSService.activeSubscriptions.includes("files"))
+        if (ShellBackend.activeSubscriptions.includes("files"))
             return;
-        if (DMSService.activeSubscriptions.includes("all"))
+        if (ShellBackend.activeSubscriptions.includes("all"))
             return;
-        DMSService.addSubscription("files");
+        ShellBackend.addSubscription("files");
     }
 
     onConnectedChanged: {
@@ -140,7 +140,7 @@ Singleton {
     }
 
     function _send(method, params, callback) {
-        DMSService.sendRequest(method, params, response => {
+        ShellBackend.sendRequest(method, params, response => {
             if (!callback)
                 return;
             if (response.error) {
@@ -155,7 +155,7 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onFilesEvent(data) {
             root.watchEvent(data);

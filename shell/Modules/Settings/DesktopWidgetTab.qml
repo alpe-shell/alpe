@@ -144,7 +144,7 @@ Item {
                         iconName: "content_copy"
                         Accessible.name: I18n.tr("Copy")
                         onClicked: {
-                            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", root.overlayCommand]);
+                            Quickshell.execDetached([Proc.backendBin, "cl", "copy", root.overlayCommand]);
                             ToastService.showInfo(I18n.tr("Copied to clipboard"));
                         }
                     }

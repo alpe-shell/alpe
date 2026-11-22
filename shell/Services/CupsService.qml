@@ -15,21 +15,21 @@ Singleton {
     onRefCountChanged: {
         if (refCount > 0) {
             ensureSubscription();
-        } else if (refCount === 0 && DMSService.activeSubscriptions.includes("cups")) {
-            DMSService.removeSubscription("cups");
+        } else if (refCount === 0 && ShellBackend.activeSubscriptions.includes("cups")) {
+            ShellBackend.removeSubscription("cups");
         }
     }
 
     function ensureSubscription() {
         if (refCount <= 0)
             return;
-        if (!DMSService.isConnected)
+        if (!ShellBackend.isConnected)
             return;
-        if (DMSService.activeSubscriptions.includes("cups"))
+        if (ShellBackend.activeSubscriptions.includes("cups"))
             return;
-        if (DMSService.activeSubscriptions.includes("all"))
+        if (ShellBackend.activeSubscriptions.includes("all"))
             return;
-        DMSService.addSubscription("cups");
+        ShellBackend.addSubscription("cups");
         if (cupsAvailable) {
             getState();
         }
@@ -187,24 +187,24 @@ Singleton {
 
     Component.onCompleted: {
         if (socketPath && socketPath.length > 0) {
-            checkDMSCapabilities();
+            checkBackendCapabilities();
         }
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
-            if (DMSService.isConnected) {
-                checkDMSCapabilities();
+            if (ShellBackend.isConnected) {
+                checkBackendCapabilities();
                 ensureSubscription();
             }
         }
     }
 
     Connections {
-        target: DMSService
-        enabled: DMSService.isConnected
+        target: ShellBackend
+        enabled: ShellBackend.isConnected
 
         function onCupsStateUpdate(data) {
             log.debug("Subscription update received");
@@ -212,16 +212,16 @@ Singleton {
         }
 
         function onCapabilitiesChanged() {
-            checkDMSCapabilities();
+            checkBackendCapabilities();
         }
     }
 
-    function checkDMSCapabilities() {
-        if (!DMSService.isConnected)
+    function checkBackendCapabilities() {
+        if (!ShellBackend.isConnected)
             return;
-        if (DMSService.capabilities.length === 0)
+        if (ShellBackend.capabilities.length === 0)
             return;
-        cupsAvailable = DMSService.capabilities.includes("cups");
+        cupsAvailable = ShellBackend.capabilities.includes("cups");
 
         if (refCount <= 0)
             return;
@@ -234,7 +234,7 @@ Singleton {
     function getState() {
         if (!cupsAvailable)
             return;
-        DMSService.sendRequest("cups.getPrinters", null, response => {
+        ShellBackend.sendRequest("cups.getPrinters", null, response => {
             if (response.result) {
                 updatePrinters(response.result);
                 fetchAllJobs();
@@ -284,7 +284,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.getJobs", params, response => {
+        ShellBackend.sendRequest("cups.getJobs", params, response => {
             if (response.result && printers[printerName]) {
                 let updatedPrinters = Object.assign({}, printers);
                 updatedPrinters[printerName].jobs = response.result;
@@ -373,7 +373,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.pausePrinter", params, response => {
+        ShellBackend.sendRequest("cups.pausePrinter", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to pause printer"), response.error);
             } else {
@@ -389,7 +389,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.resumePrinter", params, response => {
+        ShellBackend.sendRequest("cups.resumePrinter", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to resume printer"), response.error);
             } else {
@@ -406,7 +406,7 @@ Singleton {
             "jobID": jobID
         };
 
-        DMSService.sendRequest("cups.cancelJob", params, response => {
+        ShellBackend.sendRequest("cups.cancelJob", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to cancel selected job"), response.error);
             } else {
@@ -422,7 +422,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.purgeJobs", params, response => {
+        ShellBackend.sendRequest("cups.purgeJobs", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to cancel all jobs"), response.error);
             } else {
@@ -435,7 +435,7 @@ Singleton {
         if (!cupsAvailable)
             return;
         loadingDevices = true;
-        DMSService.sendRequest("cups.getDevices", null, response => {
+        ShellBackend.sendRequest("cups.getDevices", null, response => {
             loadingDevices = false;
             if (response.result) {
                 devices = response.result;
@@ -447,7 +447,7 @@ Singleton {
         if (!cupsAvailable)
             return;
         loadingPPDs = true;
-        DMSService.sendRequest("cups.getPPDs", null, response => {
+        ShellBackend.sendRequest("cups.getPPDs", null, response => {
             loadingPPDs = false;
             if (response.result) {
                 ppds = response.result;
@@ -459,7 +459,7 @@ Singleton {
         if (!cupsAvailable)
             return;
         loadingClasses = true;
-        DMSService.sendRequest("cups.getClasses", null, response => {
+        ShellBackend.sendRequest("cups.getClasses", null, response => {
             loadingClasses = false;
             if (response.result) {
                 printerClasses = response.result;
@@ -476,7 +476,7 @@ Singleton {
             "protocol": protocol
         };
 
-        DMSService.sendRequest("cups.testConnection", params, response => {
+        ShellBackend.sendRequest("cups.testConnection", params, response => {
             if (callback)
                 callback(response);
         });
@@ -502,7 +502,7 @@ Singleton {
                 params.errorPolicy = options.errorPolicy;
         }
 
-        DMSService.sendRequest("cups.createPrinter", params, response => {
+        ShellBackend.sendRequest("cups.createPrinter", params, response => {
             creatingPrinter = false;
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to create printer"), response.error);
@@ -520,7 +520,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.deletePrinter", params, response => {
+        ShellBackend.sendRequest("cups.deletePrinter", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to delete printer"), response.error);
             } else {
@@ -540,7 +540,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.acceptJobs", params, response => {
+        ShellBackend.sendRequest("cups.acceptJobs", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to enable job acceptance"), response.error);
             } else {
@@ -556,7 +556,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.rejectJobs", params, response => {
+        ShellBackend.sendRequest("cups.rejectJobs", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to disable job acceptance"), response.error);
             } else {
@@ -572,7 +572,7 @@ Singleton {
             "printerName": printerName
         };
 
-        DMSService.sendRequest("cups.printTestPage", params, response => {
+        ShellBackend.sendRequest("cups.printTestPage", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to print test page"), response.error);
             } else {
@@ -589,7 +589,7 @@ Singleton {
             "jobID": jobID
         };
 
-        DMSService.sendRequest("cups.restartJob", params, response => {
+        ShellBackend.sendRequest("cups.restartJob", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to restart job"), response.error);
             } else {
@@ -608,7 +608,7 @@ Singleton {
             params.holdUntil = holdUntil;
         }
 
-        DMSService.sendRequest("cups.holdJob", params, response => {
+        ShellBackend.sendRequest("cups.holdJob", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to hold job"), response.error);
             } else {
@@ -624,7 +624,7 @@ Singleton {
             "className": className
         };
 
-        DMSService.sendRequest("cups.deleteClass", params, response => {
+        ShellBackend.sendRequest("cups.deleteClass", params, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to delete class"), response.error);
             } else {

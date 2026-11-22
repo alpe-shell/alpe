@@ -575,7 +575,7 @@ def find_settings_components(content, filename, wrappers, tab_meta, hub_meta):
                     condition_key = "cupsAvailable"
                 elif "NetworkService.networkAvailable" in visible_raw:
                     condition_key = "networkAvailable"
-                elif "DMSService.isConnected" in visible_raw:
+                elif "ShellBackend.isConnected" in visible_raw:
                     condition_key = "dmsConnected"
                 elif "Theme.matugenAvailable" in visible_raw:
                     condition_key = "matugenAvailable"

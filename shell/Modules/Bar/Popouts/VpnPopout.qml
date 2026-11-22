@@ -21,7 +21,7 @@ AlpePopout {
 
     onShouldBeVisibleChanged: {
         if (shouldBeVisible && !wasVisible) {
-            DMSNetworkService.getState();
+            BackendNetworkService.getState();
         }
         wasVisible = shouldBeVisible;
     }

@@ -208,7 +208,7 @@ Item {
         }
 
         windowRulesInclude.checking = true;
-        Proc.runCommand("load-windowrules", [Proc.dmsBin, "config", "windowrules", "list", compositor], (output, exitCode) => {
+        Proc.runCommand("load-windowrules", [Proc.backendBin, "config", "windowrules", "list", compositor], (output, exitCode) => {
             windowRulesInclude.checking = false;
             if (exitCode !== 0) {
                 windowRules = [];
@@ -221,7 +221,7 @@ Item {
                 CompositorService.syncDmsWindowFloatingRule(allRules);
                 windowRules = allRules.filter(r => (r.source || "").includes("/" + Paths.appDir + "/windowrules") && r.id !== CompositorService.dmsOpaqueRuleId);
                 externalRules = allRules.filter(r => !(r.source || "").includes("/" + Paths.appDir + "/windowrules"));
-                windowRulesInclude.applyStatus(result.dmsStatus);
+                windowRulesInclude.applyStatus(result.fragmentStatus);
             } catch (e) {
                 windowRules = [];
                 externalRules = [];
@@ -238,7 +238,7 @@ Item {
         if (compositor !== "hyprland")
             return;
 
-        Proc.runCommand("remove-windowrule", [Proc.dmsBin, "config", "windowrules", "remove", compositor, ruleId], (output, exitCode) => {
+        Proc.runCommand("remove-windowrule", [Proc.backendBin, "config", "windowrules", "remove", compositor, ruleId], (output, exitCode) => {
             if (exitCode === 0) {
                 CompositorService.reloadAfterWindowRuleWrite();
                 loadWindowRules();
@@ -263,7 +263,7 @@ Item {
         savingRuleOrder = true;
         windowRules = reordered;
 
-        Proc.runCommand("reorder-windowrules", [Proc.dmsBin, "config", "windowrules", "reorder", compositor, JSON.stringify(ids)], (output, exitCode) => {
+        Proc.runCommand("reorder-windowrules", [Proc.backendBin, "config", "windowrules", "reorder", compositor, JSON.stringify(ids)], (output, exitCode) => {
             savingRuleOrder = false;
             if (exitCode !== 0) {
                 windowRules = previous;

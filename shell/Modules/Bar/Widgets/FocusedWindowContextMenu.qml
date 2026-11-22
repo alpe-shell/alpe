@@ -66,7 +66,7 @@ AlpePopout {
         matchingRule = null;
         const targetWin = currentWindow;
         const compositor = CompositorService.compositor;
-        Proc.runCommand("focused-window-rules", [Proc.dmsBin, "config", "windowrules", "list", compositor], (output, exitCode) => {
+        Proc.runCommand("focused-window-rules", [Proc.backendBin, "config", "windowrules", "list", compositor], (output, exitCode) => {
             if (exitCode !== 0 || targetWin !== currentWindow)
                 return;
             try {
@@ -91,7 +91,7 @@ AlpePopout {
     function copyValue(value) {
         if (!value)
             return;
-        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", value.toString()]);
+        Quickshell.execDetached([Proc.backendBin, "cl", "copy", value.toString()]);
         ToastService.showInfo(I18n.tr("Copied to clipboard"));
         close();
     }

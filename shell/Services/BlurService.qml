@@ -61,7 +61,7 @@ Singleton {
     Process {
         id: blurProbe
         running: false
-        command: [Proc.dmsBin, "blur", "check"]
+        command: [Proc.backendBin, "blur", "check"]
 
         stdout: StdioCollector {
             onStreamFinished: {

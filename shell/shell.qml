@@ -22,11 +22,11 @@ ShellRoot {
 
     readonly property bool disableHotReload: Quickshell.env("ALPE_DISABLE_HOT_RELOAD") === "1" || Quickshell.env("ALPE_DISABLE_HOT_RELOAD") === "true"
 
-    readonly property bool shellReady: !!Quickshell.env("NOTIFY_SOCKET") && dmsShellLoader.status === Loader.Ready && DMSService.isConnected && DMSService.apiVersion >= 38
+    readonly property bool shellReady: !!Quickshell.env("NOTIFY_SOCKET") && dmsShellLoader.status === Loader.Ready && ShellBackend.isConnected && ShellBackend.apiVersion >= 38
 
     onShellReadyChanged: {
         if (shellReady)
-            DMSService.sendRequest("shell.ready", {
+            ShellBackend.sendRequest("shell.ready", {
                 "pid": Quickshell.processId
             });
     }

@@ -40,7 +40,7 @@ Item {
     }
 
     Component.onCompleted: {
-        Proc.runCommand("template-check", [Proc.dmsBin, "matugen", "check"], (output, exitCode) => {
+        Proc.runCommand("template-check", [Proc.backendBin, "matugen", "check"], (output, exitCode) => {
             if (exitCode !== 0)
                 return;
             try {

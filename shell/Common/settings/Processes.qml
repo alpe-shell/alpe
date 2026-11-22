@@ -210,7 +210,7 @@ Singleton {
     }
 
     property var authApplyProcess: Process {
-        command: [Proc.dmsBin, "auth", "sync", "--yes"]
+        command: [Proc.backendBin, "auth", "sync", "--yes"]
         running: false
 
         stdout: StdioCollector {
@@ -266,7 +266,7 @@ Singleton {
     }
 
     property var authApplyTerminalFallbackProcess: Process {
-        command: [Proc.dmsBin, "auth", "sync", "--terminal", "--yes"]
+        command: [Proc.backendBin, "auth", "sync", "--terminal", "--yes"]
         running: false
 
         stderr: StdioCollector {

@@ -390,7 +390,7 @@ Singleton {
             return;
         }
 
-        if (!DMSService.isConnected) {
+        if (!ShellBackend.isConnected) {
             log.warn("Not connected to DMS");
             return;
         }
@@ -428,7 +428,7 @@ Singleton {
             params.exponent = SessionData.getBrightnessExponent(actualDevice);
         }
 
-        DMSService.sendRequest("brightness.setBrightness", params, response => {
+        ShellBackend.sendRequest("brightness.setBrightness", params, response => {
             if (response.error) {
                 log.error("Failed to set brightness:", response.error);
                 ToastService.showError(I18n.tr("Failed to set brightness"), response.error, "", "brightness");
@@ -638,11 +638,11 @@ Singleton {
     }
 
     function rescanDevices() {
-        if (!DMSService.isConnected) {
+        if (!ShellBackend.isConnected) {
             return;
         }
 
-        DMSService.sendRequest("brightness.rescan", null, response => {
+        ShellBackend.sendRequest("brightness.rescan", null, response => {
             if (response.error) {
                 log.error("Failed to rescan brightness devices:", response.error);
             }
@@ -650,11 +650,11 @@ Singleton {
     }
 
     function requestBrightnessState() {
-        if (!DMSService.isConnected) {
+        if (!ShellBackend.isConnected) {
             return;
         }
 
-        DMSService.sendRequest("brightness.getState", null, response => {
+        ShellBackend.sendRequest("brightness.getState", null, response => {
             if (response.error) {
                 log.error("Failed to request brightness state:", response.error);
                 return;
@@ -687,7 +687,7 @@ Singleton {
 
     Component.onCompleted: {
         deviceBrightnessUserSet = Object.assign({}, SessionData.brightnessUserSetValues);
-        if (DMSService.isConnected) {
+        if (ShellBackend.isConnected) {
             requestBrightnessState();
         }
         refreshKde();
@@ -726,10 +726,10 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
-            if (!DMSService.isConnected) {
+            if (!ShellBackend.isConnected) {
                 brightnessAvailable = root.kdeMode && root.kdeDevices.length > 0;
                 return;
             }

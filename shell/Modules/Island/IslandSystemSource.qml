@@ -70,7 +70,7 @@ QtObject {
     readonly property string displayValue: {
         switch (kind) {
         case "capslock":
-            return DMSService.capsLockState ? I18n.tr("On") : I18n.tr("Off");
+            return ShellBackend.capsLockState ? I18n.tr("On") : I18n.tr("Off");
         case "powerprofile":
             return Theme.getPowerProfileLabel(PowerProfileWatcher.currentProfile);
         case "idleinhibitor":
@@ -89,7 +89,7 @@ QtObject {
         case "brightness":
             return BrightnessService.brightnessIconName(brightnessDevice, value);
         case "capslock":
-            return DMSService.capsLockState ? "shift_lock" : "shift_lock_off";
+            return ShellBackend.capsLockState ? "shift_lock" : "shift_lock_off";
         case "powerprofile":
             return Theme.getPowerProfileIcon(PowerProfileWatcher.currentProfile);
         case "idleinhibitor":
@@ -205,7 +205,7 @@ QtObject {
     }
 
     property Connections capsLockConnection: Connections {
-        target: DMSService
+        target: ShellBackend
         enabled: root.enabled
 
         function onCapsLockStateChanged() {

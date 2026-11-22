@@ -18,12 +18,12 @@ Singleton {
     property string installCommand: ""
     property bool loaded: false
 
-    readonly property bool polling: refCount > 0 && DMSService.isConnected && DMSService.capabilities.includes("drives")
+    readonly property bool polling: refCount > 0 && ShellBackend.isConnected && ShellBackend.capabilities.includes("drives")
 
     property bool _errorLogged: false
 
     function refresh() {
-        DMSService.sendRequest("drives.list", null, response => {
+        ShellBackend.sendRequest("drives.list", null, response => {
             // The last reply may arrive after the final Ref went away
             if (!root.polling)
                 return;

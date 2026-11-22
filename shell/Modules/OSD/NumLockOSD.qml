@@ -13,12 +13,12 @@ AlpeOSD {
     autoHideInterval: 2000
     enableMouseInteraction: false
 
-    readonly property bool currentNumLockState: DMSService.numLockState
+    readonly property bool currentNumLockState: ShellBackend.numLockState
     property bool lastNumLockState: false
     property bool stateInitialized: false
 
     onCurrentNumLockStateChanged: {
-        if (stateInitialized && DMSService.evdevStateInitialized && lastNumLockState !== currentNumLockState && SettingsData.osdNumLockEnabled)
+        if (stateInitialized && ShellBackend.evdevStateInitialized && lastNumLockState !== currentNumLockState && SettingsData.osdNumLockEnabled)
             root.show();
         lastNumLockState = currentNumLockState;
     }

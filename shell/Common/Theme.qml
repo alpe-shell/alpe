@@ -1808,7 +1808,7 @@ Singleton {
             "runUserTemplates": (typeof SettingsData !== "undefined") ? SettingsData.runUserMatugenTemplates : true
         };
 
-        const args = [Proc.dmsBin, "matugen", "queue", "--state-dir", stateDir, "--shell-dir", shellDir, "--config-dir", configDir, "--kind", desired.kind, "--value", desired.value, "--mode", desired.mode, "--icon-theme", desired.iconTheme, "--matugen-type", desired.matugenType,];
+        const args = [Proc.backendBin, "matugen", "queue", "--state-dir", stateDir, "--shell-dir", shellDir, "--config-dir", configDir, "--kind", desired.kind, "--value", desired.value, "--mode", desired.mode, "--icon-theme", desired.iconTheme, "--matugen-type", desired.matugenType,];
 
         if (!desired.runUserTemplates) {
             args.push("--run-user-templates=false");
@@ -2240,7 +2240,7 @@ Singleton {
         });
 
         if (isQtengineActive) {
-            Proc.runCommand("qtengineApplier", [Proc.dmsBin, "matugen", "qtengine", "--config-dir", configDir], (output, exitCode) => {
+            Proc.runCommand("qtengineApplier", [Proc.backendBin, "matugen", "qtengine", "--config-dir", configDir], (output, exitCode) => {
                 qtengineFailed = exitCode !== 0;
                 finishApplyQtColors(exitCode === 0);
             });

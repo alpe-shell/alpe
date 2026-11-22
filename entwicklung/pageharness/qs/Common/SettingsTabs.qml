@@ -887,7 +887,7 @@ Singleton {
             return false;
         if (entry.pointerCapable && !CompositorService.supportsPointerConfig)
             return false;
-        if (entry.clipboardOnly && (!DMSService.isConnected || DMSService.apiVersion < 23))
+        if (entry.clipboardOnly && (!ShellBackend.isConnected || ShellBackend.apiVersion < 23))
             return false;
         if (entry.greeterOnly)
             GreeterService.ensureDetected();

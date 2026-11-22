@@ -147,7 +147,7 @@ function includePaths(kind, compositor, configDir, configName) {
     };
 }
 
-function repairScriptFor(kind, compositor, configDir, backupFile, configName, dmsBin) {
+function repairScriptFor(kind, compositor, configDir, backupFile, configName, backendBin) {
     const paths = includePaths(kind, compositor, configDir, configName);
     if (!paths)
         return "";
@@ -156,7 +156,7 @@ function repairScriptFor(kind, compositor, configDir, backupFile, configName, dm
         backupFile: backupFile,
         fragmentFiles: paths.fragmentFiles,
         includes: paths.includes,
-        dmsBin: dmsBin
+        backendBin: backendBin
     });
 }
 

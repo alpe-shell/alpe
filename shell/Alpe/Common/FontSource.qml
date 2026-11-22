@@ -16,8 +16,8 @@ Scope {
     property real scale: 1.0
 
     property var dms: null
-    readonly property bool dmsAvailable: dms !== null
-    readonly property bool followingDms: source === "auto" && dmsAvailable
+    readonly property bool backendReachable: dms !== null
+    readonly property bool followingDms: source === "auto" && backendReachable
 
     readonly property string fontFamily: {
         if (followingDms)

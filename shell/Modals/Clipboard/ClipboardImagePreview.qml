@@ -36,7 +36,7 @@ ClippingRectangle {
         cachedMimeType = "";
         const entryId = entry.id;
         requestedEntryId = entryId;
-        DMSService.sendRequest("clipboard.getEntry", {
+        ShellBackend.sendRequest("clipboard.getEntry", {
             "id": entryId
         }, function (response) {
             if (root.requestedEntryId !== entryId)

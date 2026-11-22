@@ -122,7 +122,7 @@ Item {
             device.forget();
             return;
         }
-        DMSService.bluetoothRemove(BluetoothService.getDevicePath(device), response => {
+        ShellBackend.bluetoothRemove(BluetoothService.getDevicePath(device), response => {
             if (!response.error)
                 return;
             ToastService.showError(I18n.tr("Failed to remove device"), response.error);
@@ -372,7 +372,7 @@ Item {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onBluetoothPairingRequest(data) {
             const modal = PopoutService.ensureBluetoothPairingModal();

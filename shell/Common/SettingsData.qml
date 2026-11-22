@@ -1601,7 +1601,7 @@ Singleton {
             return;
         SessionData.lastAppliedIconTheme = gtkThemeName;
         SessionData.saveSettings();
-        if (typeof DMSService !== "undefined" && DMSService.apiVersion >= 3 && typeof PortalService !== "undefined") {
+        if (typeof ShellBackend !== "undefined" && ShellBackend.apiVersion >= 3 && typeof PortalService !== "undefined") {
             PortalService.setSystemIconTheme(gtkThemeName);
         }
 
@@ -1663,7 +1663,7 @@ Singleton {
 
         if (!qtengineActive || !runMatugenTemplates || !matugenTemplateQtengine)
             return;
-        Proc.runCommand("updateQtengineIconTheme", [Proc.dmsBin, "matugen", "qtengine", "--icon-theme", qtThemeName], () => {});
+        Proc.runCommand("updateQtengineIconTheme", [Proc.backendBin, "matugen", "qtengine", "--icon-theme", qtThemeName], () => {});
     }
 
     function scheduleAuthApply() {

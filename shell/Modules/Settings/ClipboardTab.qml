@@ -216,7 +216,7 @@ Item {
     function loadConfig() {
         configLoaded = false;
         configError = false;
-        DMSService.sendRequest("clipboard.getConfig", null, response => {
+        ShellBackend.sendRequest("clipboard.getConfig", null, response => {
             if (response.error) {
                 configError = true;
                 return;
@@ -230,7 +230,7 @@ Item {
         const params = {};
         params[key] = value;
         saving = true;
-        DMSService.sendRequest("clipboard.setConfig", params, response => {
+        ShellBackend.sendRequest("clipboard.setConfig", params, response => {
             saving = false;
             if (response.error) {
                 ToastService.showError(I18n.tr("Failed to save clipboard setting"), response.error);
@@ -243,14 +243,14 @@ Item {
     }
 
     Component.onCompleted: {
-        if (DMSService.isConnected)
+        if (ShellBackend.isConnected)
             loadConfig();
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         function onIsConnectedChanged() {
-            if (DMSService.isConnected)
+            if (ShellBackend.isConnected)
                 loadConfig();
         }
     }
@@ -260,8 +260,8 @@ Item {
 
         SettingsNoteRow {
             paintBackground: false
-            visible: !DMSService.isConnected || configError
-            text: !DMSService.isConnected ? I18n.tr("Alpe service is not connected. Clipboard settings are unavailable.") : I18n.tr("Failed to load clipboard configuration.")
+            visible: !ShellBackend.isConnected || configError
+            text: !ShellBackend.isConnected ? I18n.tr("Alpe service is not connected. Clipboard settings are unavailable.") : I18n.tr("Failed to load clipboard configuration.")
         }
 
         SettingsCard {

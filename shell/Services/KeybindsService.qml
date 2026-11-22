@@ -36,14 +36,14 @@ Singleton {
     property string lastError: ""
     property string modKey: "Super"
     property string modSymbol: ""
-    property bool dmsBindsIncluded: true
+    property bool bindsFragmentIncluded: true
 
-    property var dmsStatus: ({
+    property var fragmentStatus: ({
             "exists": true,
             "included": true,
             "includePosition": -1,
             "totalIncludes": 0,
-            "bindsAfterDms": 0,
+            "bindsAfterFragment": 0,
             "effective": true,
             "overriddenBy": 0,
             "statusMessage": ""
@@ -127,7 +127,7 @@ Singleton {
     Process {
         id: keymapProcess
         running: false
-        command: [Proc.dmsBin, "keybinds", "keymap"]
+        command: [Proc.backendBin, "keybinds", "keymap"]
 
         stdout: StdioCollector {
             onStreamFinished: {
@@ -260,7 +260,7 @@ Singleton {
                 return;
             }
             root.lastError = "";
-            root.dmsBindsIncluded = true;
+            root.bindsFragmentIncluded = true;
             root.dmsBindsFixed();
             ToastService.showInfo(I18n.tr("Binds include added"), I18n.tr("%1 is now included in config", "keybinds toast, %1 is the binds file path").arg("alpe/" + root.includePaths.fragmentFiles[0].split("/").pop()), "", "keybinds");
             Qt.callLater(root.forceReload);
@@ -268,7 +268,7 @@ Singleton {
     }
 
     function fixDmsBindsInclude() {
-        if (fixing || dmsBindsIncluded || !compositorConfigDir)
+        if (fixing || bindsFragmentIncluded || !compositorConfigDir)
             return;
         if (readOnly) {
             showHyprlandReadOnlyWarning();
@@ -276,7 +276,7 @@ Singleton {
         }
         const timestamp = Math.floor(Date.now() / 1000);
         const backupPath = `${mainConfigPath}.dmsbackup${timestamp}`;
-        const script = ConfigIncludeResolve.repairScriptFor("binds", includeCompositor, configDir, backupPath, "", Proc.dmsBin);
+        const script = ConfigIncludeResolve.repairScriptFor("binds", includeCompositor, configDir, backupPath, "", Proc.backendBin);
         if (!script)
             return;
         fixing = true;
@@ -298,7 +298,7 @@ Singleton {
         if (!target)
             return;
         cheatsheetLoading = true;
-        cheatsheetProcess.command = path ? [Proc.dmsBin, "keybinds", "show", target, "--path", path] : [Proc.dmsBin, "keybinds", "show", target];
+        cheatsheetProcess.command = path ? [Proc.backendBin, "keybinds", "show", target, "--path", path] : [Proc.backendBin, "keybinds", "show", target];
         cheatsheetProcess.running = true;
     }
 
@@ -362,7 +362,7 @@ Singleton {
             return;
         const hasData = Object.keys(_allBinds).length > 0;
         loading = showLoading !== false && !hasData;
-        loadProcess.command = [Proc.dmsBin, "keybinds", "show", currentProvider];
+        loadProcess.command = [Proc.backendBin, "keybinds", "show", currentProvider];
         loadProcess.provider = currentProvider;
         loadProcess.running = true;
     }
@@ -371,15 +371,15 @@ Singleton {
         keybinds = _rawData || {};
         modKey = _rawData?.mod?.resolved || _rawData?.modKey || "Super";
         modSymbol = _rawData?.mod?.symbol || "";
-        dmsBindsIncluded = _rawData?.dmsBindsIncluded ?? true;
-        const status = _rawData?.dmsStatus;
+        bindsFragmentIncluded = _rawData?.bindsFragmentIncluded ?? true;
+        const status = _rawData?.fragmentStatus;
         if (status) {
-            dmsStatus = {
+            fragmentStatus = {
                 "exists": status.exists ?? true,
                 "included": status.included ?? true,
                 "includePosition": status.includePosition ?? -1,
                 "totalIncludes": status.totalIncludes ?? 0,
-                "bindsAfterDms": status.bindsAfterDms ?? 0,
+                "bindsAfterFragment": status.bindsAfterFragment ?? 0,
                 "effective": status.effective ?? true,
                 "overriddenBy": status.overriddenBy ?? 0,
                 "statusMessage": status.statusMessage ?? ""
@@ -438,8 +438,8 @@ Singleton {
                     "key": bind.key || "",
                     "desc": bind.desc || "",
                     "source": sourceStr,
-                    "isOverride": sourceStr === "dms",
-                    "isDMSManaged": sourceStr === "dms" || sourceStr === "dms-default",
+                    "isOverride": sourceStr === "shell",
+                    "isShellManaged": sourceStr === "shell" || sourceStr === "shell-default",
                     "hasDefault": bind.hasDefault === true,
                     "cooldownMs": bind.cooldownMs || 0,
                     "flags": bind.flags || "",
@@ -539,7 +539,7 @@ Singleton {
         if (!bindData.key || !Actions.isValidAction(bindData.action))
             return;
         saving = true;
-        const cmd = [Proc.dmsBin, "keybinds", "set", currentProvider, bindData.key, bindData.action];
+        const cmd = [Proc.backendBin, "keybinds", "set", currentProvider, bindData.key, bindData.action];
         cmd.push("--desc", bindData.desc || "");
         if (originalKey && originalKey !== bindData.key)
             cmd.push("--replace-key", originalKey);
@@ -571,7 +571,7 @@ Singleton {
             showHyprlandReadOnlyWarning();
             return;
         }
-        if (!dmsStatus.exists || dmsStatus.included)
+        if (!fragmentStatus.exists || fragmentStatus.included)
             return;
         _hyprlandLegacyWarnShown = true;
         ToastService.showWarning(I18n.tr("Hyprland config include missing"), I18n.tr("Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply."), "", "hyprland-migration");
@@ -588,7 +588,7 @@ Singleton {
         }
         if (!key)
             return;
-        removeProcess.command = [Proc.dmsBin, "keybinds", "remove", currentProvider, key];
+        removeProcess.command = [Proc.backendBin, "keybinds", "remove", currentProvider, key];
         removeProcess.provider = currentProvider;
         removeProcess.running = true;
         bindRemoved(key);
@@ -601,7 +601,7 @@ Singleton {
         }
         if (!key)
             return;
-        removeProcess.command = [Proc.dmsBin, "keybinds", "reset", currentProvider, key];
+        removeProcess.command = [Proc.backendBin, "keybinds", "reset", currentProvider, key];
         removeProcess.provider = currentProvider;
         removeProcess.running = true;
         bindRemoved(key);

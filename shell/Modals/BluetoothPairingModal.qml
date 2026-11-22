@@ -68,7 +68,7 @@ AlpeModal {
 
     onBackgroundClicked: () => {
         if (token) {
-            DMSService.bluetoothCancelPairing(token);
+            ShellBackend.bluetoothCancelPairing(token);
         }
         close();
         token = "";
@@ -89,7 +89,7 @@ AlpeModal {
 
             Keys.onEscapePressed: event => {
                 if (token) {
-                    DMSService.bluetoothCancelPairing(token);
+                    ShellBackend.bluetoothCancelPairing(token);
                 }
                 close();
                 token = "";
@@ -280,7 +280,7 @@ AlpeModal {
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: () => {
                                     if (token) {
-                                        DMSService.bluetoothCancelPairing(token);
+                                        ShellBackend.bluetoothCancelPairing(token);
                                     }
                                     close();
                                     token = "";
@@ -360,7 +360,7 @@ AlpeModal {
                 iconColor: Theme.surfaceText
                 onClicked: () => {
                     if (token) {
-                        DMSService.bluetoothCancelPairing(token);
+                        ShellBackend.bluetoothCancelPairing(token);
                     }
                     close();
                     token = "";
@@ -393,7 +393,7 @@ AlpeModal {
             break;
         }
 
-        DMSService.bluetoothSubmitPairing(token, secrets, true, response => {
+        ShellBackend.bluetoothSubmitPairing(token, secrets, true, response => {
             if (response.error) {
                 ToastService.showError(I18n.tr("Pairing failed"), response.error);
             }

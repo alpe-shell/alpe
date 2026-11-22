@@ -234,7 +234,7 @@ FocusScope {
             return;
         }
 
-        DMSService.sendRequest("clipboard.getEntry", {
+        ShellBackend.sendRequest("clipboard.getEntry", {
             "id": requestedId
         }, function (response) {
             if (response.error || !response.result) {

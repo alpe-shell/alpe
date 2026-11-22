@@ -24,7 +24,7 @@ function service({ enabled = true, type = "widget" } = {}) {
         log: { error() {}, warn() {} },
         Paths: { toFileUrl: path => path.startsWith("file://") ? path : "file://" + path },
         SettingsData: { getPluginSetting: () => enabled, setPluginSetting() {} },
-        DMSService: { installedPlugins: [] },
+        ShellBackend: { installedPlugins: [] },
         Brand: { version: "1.1", upstreamVersion: "2.1.2" },
         Component: { Error: 3, PreferSynchronous: 0 },
         I18n: { tr: text => Object.assign(new String(text), { arg: value => text.replace("%1", value) }) },

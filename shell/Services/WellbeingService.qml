@@ -15,7 +15,7 @@ Singleton {
     readonly property int idleTimeoutSeconds: 300
     readonly property int summaryDays: Wellbeing.retentionDays
     readonly property var ownAppIds: [Brand.appId, "org.quickshell", "quickshell"]
-    readonly property bool available: DMSService.isConnected && DMSService.capabilities.includes("wellbeing")
+    readonly property bool available: ShellBackend.isConnected && ShellBackend.capabilities.includes("wellbeing")
     readonly property bool enabled: SettingsData.wellbeingEnabled
     readonly property bool tracking: available && enabled
     readonly property bool sessionActive: !idleMonitor.isIdle && !IdleService.isShellLocked && !SessionService.locked
@@ -79,10 +79,10 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onConnectionStateChanged() {
-            if (!DMSService.isConnected)
+            if (!ShellBackend.isConnected)
                 return;
             root.ensureSubscription();
             root.pushLimits();
@@ -101,22 +101,22 @@ Singleton {
     }
 
     function ensureSubscription() {
-        const subscribed = DMSService.activeSubscriptions.includes("wellbeing");
+        const subscribed = ShellBackend.activeSubscriptions.includes("wellbeing");
         if (!enabled) {
             if (subscribed)
-                DMSService.removeSubscription("wellbeing");
+                ShellBackend.removeSubscription("wellbeing");
             return;
         }
-        if (!available || subscribed || DMSService.activeSubscriptions.includes("all"))
+        if (!available || subscribed || ShellBackend.activeSubscriptions.includes("all"))
             return;
-        DMSService.addSubscription("wellbeing");
+        ShellBackend.addSubscription("wellbeing");
     }
 
     function pushState() {
         if (!available)
             return;
         seq = Math.max(Date.now(), seq + 1);
-        DMSService.sendRequest("wellbeing.setState", {
+        ShellBackend.sendRequest("wellbeing.setState", {
             "appId": tracking ? focusedAppId : "",
             "active": tracking && sessionActive,
             "seq": seq
@@ -126,7 +126,7 @@ Singleton {
     function pushLimits() {
         if (!available)
             return;
-        DMSService.sendRequest("wellbeing.setLimits", limitParams, null);
+        ShellBackend.sendRequest("wellbeing.setLimits", limitParams, null);
     }
 
     function handleStateUpdate(data) {
@@ -146,7 +146,7 @@ Singleton {
 
     function notifyLimit(limit) {
         const summary = limit.kind === "daily" ? I18n.tr("Daily screen time limit reached", "screen time notification title") : I18n.tr("%1 limit reached", "screen time notification title, %1 is an app name").arg(appName(limit.appId));
-        DMSService.notifySend({
+        ShellBackend.notifySend({
             "summary": summary,
             "body": formatDuration(limit.used) + " · " + I18n.tr("Today"),
             "icon": "preferences-system-time"
@@ -158,7 +158,7 @@ Singleton {
             callback([]);
             return;
         }
-        DMSService.sendRequest("wellbeing.summary", {
+        ShellBackend.sendRequest("wellbeing.summary", {
             "days": summaryDays
         }, response => callback(response?.result?.days ?? []));
     }
@@ -166,7 +166,7 @@ Singleton {
     function clearHistory() {
         if (!available)
             return;
-        DMSService.sendRequest("wellbeing.clear", null, null);
+        ShellBackend.sendRequest("wellbeing.clear", null, null);
     }
 
     function appLimitMinutes(appId) {

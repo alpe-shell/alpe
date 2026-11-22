@@ -22,7 +22,7 @@ Item {
 
     readonly property string title: I18n.tr("VPN", "virtual private network, widget and page title")
     readonly property bool fillsParent: listHeight <= 0
-    readonly property bool hasProfiles: DMSNetworkService.profiles.length > 0
+    readonly property bool hasProfiles: BackendNetworkService.profiles.length > 0
 
     readonly property Item headerActions: Row {
         spacing: Theme.spacingS
@@ -98,11 +98,11 @@ Item {
 
             CcListRow {
                 iconName: "vpn_key"
-                iconColor: DMSNetworkService.connected ? Theme.primary : Theme.surfaceText
+                iconColor: BackendNetworkService.connected ? Theme.primary : Theme.surfaceText
                 title: {
-                    if (!DMSNetworkService.connected)
+                    if (!BackendNetworkService.connected)
                         return I18n.tr("Active: None");
-                    const names = DMSNetworkService.activeNames || [];
+                    const names = BackendNetworkService.activeNames || [];
                     if (names.length <= 1)
                         return I18n.tr("Active: %1", "vpn status line, %1 is the active connection name").arg(names[0] || "VPN");
                     return I18n.tr("Active: %1 +%2", "vpn status, %1 is a connection name, %2 counts the others").arg(names[0]).arg(names.length - 1);
@@ -110,15 +110,15 @@ Item {
 
                 AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
-                    visible: DMSNetworkService.connected
+                    visible: BackendNetworkService.connected
                     buttonHeight: Theme.buttonHeightXS
                     iconName: "link_off"
                     iconSize: Theme.iconSizeSmall
                     text: I18n.tr("Disconnect", "verb, button or menu action for network, vpn or bluetooth")
                     backgroundColor: Theme.errorHover
                     textColor: Theme.error
-                    enabled: !DMSNetworkService.isBusy
-                    onClicked: DMSNetworkService.disconnectAllActive()
+                    enabled: !BackendNetworkService.isBusy
+                    onClicked: BackendNetworkService.disconnectAllActive()
                 }
             }
         }
@@ -143,7 +143,7 @@ Item {
                 clip: true
 
                 model: ScriptModel {
-                    values: DMSNetworkService.profiles
+                    values: BackendNetworkService.profiles
                     objectProp: "uuid"
                 }
 

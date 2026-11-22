@@ -27,12 +27,12 @@ Singleton {
         return false;
     }
     readonly property bool shouldPauseCycling: fullscreenShowing || SessionService.locked
-    readonly property bool serverSchedulingAvailable: DMSService.capabilities.includes("wallpaper")
+    readonly property bool serverSchedulingAvailable: ShellBackend.capabilities.includes("wallpaper")
     property real lastCycleSeq: -1
     property real _lastVideoAdvance: 0
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onWallpaperCycleUpdate(data) {
             if (!data)
@@ -143,14 +143,14 @@ Singleton {
     function pushConfigToServer() {
         if (!serverSchedulingAvailable)
             return;
-        DMSService.sendRequest("wallpaper.setConfig", {
+        ShellBackend.sendRequest("wallpaper.setConfig", {
             "config": buildServerConfig()
         }, null);
     }
 
     function listWallpapers(folder, recursive, currentPath, screenName, goToPrevious) {
         const revision = SessionData.wallpaperRequestRevision(screenName);
-        DMSService.sendRequest("wallpaper.list", {
+        ShellBackend.sendRequest("wallpaper.list", {
             "folders": [
                 {
                     "path": folder,
@@ -233,7 +233,7 @@ Singleton {
     function resetScheduleAfterManual() {
         if (!serverSchedulingAvailable)
             return;
-        DMSService.sendRequest("wallpaper.trigger", {
+        ShellBackend.sendRequest("wallpaper.trigger", {
             "target": ""
         }, null);
     }
@@ -254,7 +254,7 @@ Singleton {
             return;
         if (SessionData.perMonitorWallpaper) {
             cycleNextForMonitor(screenName);
-            DMSService.sendRequest("wallpaper.trigger", {
+            ShellBackend.sendRequest("wallpaper.trigger", {
                 "target": screenName
             }, null);
             return;

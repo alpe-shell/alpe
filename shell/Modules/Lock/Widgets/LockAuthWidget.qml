@@ -1211,7 +1211,7 @@ Item {
             id: capsLockRow
             x: (parent.width - width) / 2
             spacing: Theme.spacingXS
-            opacity: DMSService.capsLockState ? 1 : 0
+            opacity: ShellBackend.capsLockState ? 1 : 0
 
             AlpeIcon {
                 name: "shift_lock"

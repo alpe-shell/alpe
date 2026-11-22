@@ -24,7 +24,7 @@ Singleton {
     property bool pendingUpdate: false
     property int subscriptionGeneration: 0
     readonly property bool pollingActive: dgopAvailable && refCount > 0 && enabledModules.length > 0
-    readonly property bool dgopAvailable: DMSService.isConnected && DMSService.capabilities.includes("dgop")
+    readonly property bool dgopAvailable: ShellBackend.isConnected && ShellBackend.capabilities.includes("dgop")
     property bool sessionGpuIdsSeeded: false
     property bool _metaWanted: false
     property bool _metaLoaded: false
@@ -457,7 +457,7 @@ Singleton {
     function initializeGpuMetadata() {
         if (!dgopAvailable)
             return;
-        DMSService.sendRequest("dgop.gpu", null, response => {
+        ShellBackend.sendRequest("dgop.gpu", null, response => {
             if (!response.result) {
                 log.warn("dgop.gpu failed:", response.error || "empty result");
                 return;
@@ -500,7 +500,7 @@ Singleton {
     // Through the unlocked helper while it runs, otherwise through the DMS background process.
     function request(method, params, callback) {
         if (!unlocked) {
-            DMSService.sendRequest(method, params, callback);
+            ShellBackend.sendRequest(method, params, callback);
             return;
         }
         const id = _helperNextId++;
@@ -519,7 +519,7 @@ Singleton {
         property bool ready: false
         property string lastError: ""
 
-        command: ["pkexec", Proc.dmsBin, "sysmon-helper"]
+        command: ["pkexec", Proc.backendBin, "sysmon-helper"]
         stdinEnabled: true
         onStarted: {
             ready = false;
@@ -574,7 +574,7 @@ Singleton {
     }
 
     function initializeModules() {
-        DMSService.sendRequest("dgop.modules", null, response => {
+        ShellBackend.sendRequest("dgop.modules", null, response => {
             if (!response.result) {
                 log.warn("dgop.modules failed:", response.error || "empty result");
                 return;
@@ -595,7 +595,7 @@ Singleton {
     function initializeSystemMetadata() {
         if (!dgopAvailable)
             return;
-        DMSService.sendRequest("dgop.meta", {
+        ShellBackend.sendRequest("dgop.meta", {
             modules: ["hardware", "system"]
         }, response => {
             if (!response.result) {
@@ -613,7 +613,7 @@ Singleton {
             return;
         diskMountsRequested = true;
         const previousMounts = diskMounts;
-        DMSService.sendRequest("dgop.meta", {
+        ShellBackend.sendRequest("dgop.meta", {
             modules: ["diskmounts"]
         }, response => {
             if (!response.result?.diskmounts) {

@@ -5,7 +5,7 @@ singleton CompositorService 1.0 CompositorService.qml
 singleton CupsService 1.0 CupsService.qml
 singleton KeybindsService 1.0 KeybindsService.qml
 singleton MultimediaService 1.0 MultimediaService.qml
-singleton DMSService 1.0 DMSService.qml
+singleton ShellBackend 1.0 ShellBackend.qml
 singleton GreeterService 1.0 GreeterService.qml
 singleton DesktopService 1.0 DesktopService.qml
 singleton PluginService 1.0 PluginService.qml

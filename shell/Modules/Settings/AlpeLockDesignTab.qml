@@ -673,7 +673,7 @@ Item {
                         if (root.kde)
                             Quickshell.execDetached(["bash", Quickshell.shellDir + "/scripts/alpe-lockcheck.sh", "test", "org.alpe.desktop"]);
                         else
-                            Qt.callLater(() => Quickshell.execDetached(root.hyprMode ? ["sh", "-c", "sleep 0.8; pidof hyprlock >/dev/null || hyprlock"] : [Proc.dmsBin, "ipc", "call", "lock", "lock"]));
+                            Qt.callLater(() => Quickshell.execDetached(root.hyprMode ? ["sh", "-c", "sleep 0.8; pidof hyprlock >/dev/null || hyprlock"] : [Proc.backendBin, "ipc", "call", "lock", "lock"]));
                     }
                 }
             }

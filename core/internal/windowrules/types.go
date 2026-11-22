@@ -110,23 +110,23 @@ type WindowRule struct {
 	Source        string          `json:"source,omitempty"`
 }
 
-type DMSRulesStatus struct {
-	Exists          bool   `json:"exists"`
-	Included        bool   `json:"included"`
-	IncludePosition int    `json:"includePosition"`
-	TotalIncludes   int    `json:"totalIncludes"`
-	RulesAfterDMS   int    `json:"rulesAfterDms"`
-	Effective       bool   `json:"effective"`
-	OverriddenBy    int    `json:"overriddenBy"`
-	StatusMessage   string `json:"statusMessage"`
+type RulesFragmentStatus struct {
+	Exists             bool   `json:"exists"`
+	Included           bool   `json:"included"`
+	IncludePosition    int    `json:"includePosition"`
+	TotalIncludes      int    `json:"totalIncludes"`
+	RulesAfterFragment int    `json:"rulesAfterFragment"`
+	Effective          bool   `json:"effective"`
+	OverriddenBy       int    `json:"overriddenBy"`
+	StatusMessage      string `json:"statusMessage"`
 }
 
 type RuleSet struct {
-	Title            string          `json:"title"`
-	Provider         string          `json:"provider"`
-	Rules            []WindowRule    `json:"rules"`
-	DMSRulesIncluded bool            `json:"dmsRulesIncluded"`
-	DMSStatus        *DMSRulesStatus `json:"dmsStatus,omitempty"`
+	Title                 string               `json:"title"`
+	Provider              string               `json:"provider"`
+	Rules                 []WindowRule         `json:"rules"`
+	RulesFragmentIncluded bool                 `json:"rulesFragmentIncluded"`
+	FragmentStatus        *RulesFragmentStatus `json:"fragmentStatus,omitempty"`
 }
 
 type Provider interface {
@@ -142,15 +142,15 @@ type WritableProvider interface {
 	GetOverridePath() string
 }
 
-func DMSRulesStatusFrom(s configfrag.Status) *DMSRulesStatus {
-	return &DMSRulesStatus{
-		Exists:          s.Exists,
-		Included:        s.Included,
-		IncludePosition: s.IncludePosition,
-		TotalIncludes:   s.TotalIncludes,
-		RulesAfterDMS:   s.EntriesAfterDMS,
-		Effective:       s.Effective,
-		OverriddenBy:    s.OverriddenBy,
-		StatusMessage:   s.StatusMessage,
+func RulesFragmentStatusFrom(s configfrag.Status) *RulesFragmentStatus {
+	return &RulesFragmentStatus{
+		Exists:             s.Exists,
+		Included:           s.Included,
+		IncludePosition:    s.IncludePosition,
+		TotalIncludes:      s.TotalIncludes,
+		RulesAfterFragment: s.EntriesAfterFragment,
+		Effective:          s.Effective,
+		OverriddenBy:       s.OverriddenBy,
+		StatusMessage:      s.StatusMessage,
 	}
 }

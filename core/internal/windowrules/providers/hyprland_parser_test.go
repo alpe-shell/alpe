@@ -138,7 +138,7 @@ require("alpe.windowrules")
 	if len(res.Rules) != 1 {
 		t.Fatalf("expected 1 rule, got %d", len(res.Rules))
 	}
-	if !res.DMSRulesIncluded {
+	if !res.RulesFragmentIncluded {
 		t.Fatal("expected dms.windowrules fragment to be marked included")
 	}
 	wr := ConvertHyprlandRulesToWindowRules(res.Rules)[0]

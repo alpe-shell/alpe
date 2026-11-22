@@ -16,10 +16,10 @@ Singleton {
     readonly property bool available: daemonRunning
 
     function checkDaemon() {
-        if (!DMSService.isConnected || !DMSService.capabilities.includes("dbus"))
+        if (!ShellBackend.isConnected || !ShellBackend.capabilities.includes("dbus"))
             return;
 
-        DMSService.dbusCall("system", "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "NameHasOwner", ["org.freedesktop.UPower.PowerProfiles"], response => {
+        ShellBackend.dbusCall("system", "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "NameHasOwner", ["org.freedesktop.UPower.PowerProfiles"], response => {
             if (response.error || !response.result)
                 return;
             root.daemonRunning = response.result.values?.[0] === true;
@@ -99,7 +99,7 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onCapabilitiesReceived() {
             root.checkDaemon();

@@ -29,12 +29,12 @@ QtObject {
         };
     }
 
-    function applyStatus(dmsStatus) {
-        if (!dmsStatus)
+    function applyStatus(fragmentStatus) {
+        if (!fragmentStatus)
             return;
         status = {
-            "exists": dmsStatus.exists,
-            "included": dmsStatus.included
+            "exists": fragmentStatus.exists,
+            "included": fragmentStatus.included
         };
     }
 
@@ -49,7 +49,7 @@ QtObject {
             return;
         }
         checking = true;
-        Proc.runCommand("check-" + procTag, [Proc.dmsBin, "config", "resolve-include", ...args], (output, exitCode) => {
+        Proc.runCommand("check-" + procTag, [Proc.backendBin, "config", "resolve-include", ...args], (output, exitCode) => {
             checking = false;
             if (exitCode !== 0) {
                 status = defaultStatus();
@@ -79,7 +79,7 @@ QtObject {
         if (!paths)
             return;
         const unixTime = Math.floor(Date.now() / 1000);
-        const script = ConfigIncludeResolve.repairScriptFor(includeKind, compositor, dir, paths.configFile + ".backup" + unixTime, configName, Proc.dmsBin);
+        const script = ConfigIncludeResolve.repairScriptFor(includeKind, compositor, dir, paths.configFile + ".backup" + unixTime, configName, Proc.backendBin);
         fixing = true;
         Proc.runCommand("fix-" + procTag, ["sh", "-c", script], (output, exitCode) => {
             fixing = false;

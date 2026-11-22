@@ -203,7 +203,7 @@ Item {
                 step: 5
                 unit: "min"
                 value: SessionData.nightModeTransitionMinutes
-                visible: !autoModeGroup.locationMode && DMSService.apiVersion >= 32
+                visible: !autoModeGroup.locationMode && ShellBackend.apiVersion >= 32
                 onSliderValueChanged: newValue => SessionData.setNightModeTransitionMinutes(newValue)
             }
 

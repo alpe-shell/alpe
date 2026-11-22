@@ -75,7 +75,7 @@ Item {
         root.authValidateOk = false;
         root.authValidateWarn = false;
         root.authValidateRunning = true;
-        authValidateProcess.command = [Proc.dmsBin, "auth", "validate", "--path", path, "--json"];
+        authValidateProcess.command = [Proc.backendBin, "auth", "validate", "--path", path, "--json"];
         authValidateProcess.running = true;
     }
 
@@ -94,7 +94,7 @@ Item {
         root.u2fValidateOk = false;
         root.u2fValidateWarn = false;
         root.u2fValidateRunning = true;
-        u2fValidateProcess.command = [Proc.dmsBin, "auth", "validate", "--purpose", "u2f", "--path", path, "--json"];
+        u2fValidateProcess.command = [Proc.backendBin, "auth", "validate", "--purpose", "u2f", "--path", path, "--json"];
         u2fValidateProcess.running = true;
     }
 
@@ -167,7 +167,7 @@ Item {
 
     Process {
         id: authListServicesProcess
-        command: [Proc.dmsBin, "auth", "list-services", "--json"]
+        command: [Proc.backendBin, "auth", "list-services", "--json"]
         running: false
 
         property string collected: ""

@@ -14,7 +14,7 @@ Singleton {
     property bool enabled: true
     property bool respectInhibitors: true
 
-    readonly property bool externalInhibitActive: DMSService.screensaverInhibited
+    readonly property bool externalInhibitActive: ShellBackend.screensaverInhibited
 
     readonly property bool isOnBattery: BatteryService.batteryAvailable && !BatteryService.isPluggedIn
     readonly property int monitorTimeout: isOnBattery ? SettingsData.batteryMonitorTimeout : SettingsData.acMonitorTimeout
@@ -182,13 +182,13 @@ Singleton {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
 
         function onCapabilitiesReceived() {
-            if (!DMSService.capabilities.includes("dbus"))
+            if (!ShellBackend.capabilities.includes("dbus"))
                 return;
-            DMSService.dbusSubscribe("system", "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.DBus.Properties", "PropertiesChanged");
-            DMSService.dbusGetProperty("system", "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", "BlockInhibited", r => root._updateSleepBlocked(r.result?.value));
+            ShellBackend.dbusSubscribe("system", "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.DBus.Properties", "PropertiesChanged");
+            ShellBackend.dbusGetProperty("system", "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", "BlockInhibited", r => root._updateSleepBlocked(r.result?.value));
         }
 
         function onDbusSignalReceived(subscriptionId, data) {
@@ -216,7 +216,7 @@ Singleton {
 
     onExternalInhibitActiveChanged: {
         if (externalInhibitActive) {
-            const apps = DMSService.screensaverInhibitors.map(i => i.appName).join(", ");
+            const apps = ShellBackend.screensaverInhibitors.map(i => i.appName).join(", ");
             log.info("External idle inhibit active from:", apps || "unknown");
         } else {
             log.info("External idle inhibit released");

@@ -30,7 +30,7 @@ Singleton {
         const mode = SessionData.isLightMode ? "light" : "dark";
         const options = [];
         for (const option of Theme.availableMatugenSchemes) {
-            if (option.value === "scheme-smart" && !DMSService.matugenSmartSupported)
+            if (option.value === "scheme-smart" && !ShellBackend.matugenSmartSupported)
                 continue;
             if (SettingsData.matugenSpec !== "2021" && !option.spec2025)
                 continue;
@@ -96,7 +96,7 @@ Singleton {
         seedQueue = seedQueue.slice(1);
         seedRequestKey = key;
         const [source, contrast, spec] = key.split("|");
-        const args = [Proc.dmsBin, "matugen", "preview", "--source-color", source, "--contrast", contrast];
+        const args = [Proc.backendBin, "matugen", "preview", "--source-color", source, "--contrast", contrast];
         if (spec !== "2021")
             args.push("--spec", spec);
         Proc.runCommand("", args, (output, exitCode) => {
@@ -145,7 +145,7 @@ Singleton {
         requestKey = wanted;
         failed = false;
 
-        const args = [Proc.dmsBin, "matugen", "preview", "--source-color", source, "--contrast", String(SettingsData.matugenContrast ?? 0)];
+        const args = [Proc.backendBin, "matugen", "preview", "--source-color", source, "--contrast", String(SettingsData.matugenContrast ?? 0)];
         if (image)
             args.push("--image", image);
         if (SettingsData.matugenSpec !== "2021")

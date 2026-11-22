@@ -48,7 +48,7 @@ SettingsRow {
 
                 required property var modelData
                 required property int index
-                readonly property bool removable: modelData.isDMSManaged || modelData.isOverride
+                readonly property bool removable: modelData.isShellManaged || modelData.isOverride
 
                 anchors.right: parent?.right
                 spacing: Theme.spacingS

@@ -874,7 +874,7 @@ Item {
     }
 
     Connections {
-        target: DMSService
+        target: ShellBackend
         function onOpenUrlRequested(url) {
             if (url.startsWith("dms://wallpaper/install/")) {
                 const payload = url.replace("dms://wallpaper/install/", "").split(/[?#]/)[0];

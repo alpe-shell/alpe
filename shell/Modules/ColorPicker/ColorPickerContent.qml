@@ -82,7 +82,7 @@ AlpeDialog {
     }
 
     function copyColor(text) {
-        Quickshell.execDetached([Proc.dmsBin, "cl", "copy", text]);
+        Quickshell.execDetached([Proc.backendBin, "cl", "copy", text]);
         ToastService.showInfo(I18n.tr("Color %1 copied", "color picker toast, %1 is the copied color value").arg(text));
         SessionData.addRecentColor(currentColor);
     }
@@ -130,7 +130,7 @@ AlpeDialog {
         if (!pickingFromScreen)
             return;
         const generation = screenPickGeneration;
-        Proc.runCommand(null, [Proc.dmsBin, "color", "pick", "--json"], (output, exitCode) => {
+        Proc.runCommand(null, [Proc.backendBin, "color", "pick", "--json"], (output, exitCode) => {
             if (generation === root.screenPickGeneration)
                 root.finishScreenPick(output, exitCode);
         }, 0, Proc.noTimeout, root);

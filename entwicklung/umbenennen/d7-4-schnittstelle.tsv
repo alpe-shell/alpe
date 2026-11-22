@@ -1,0 +1,32 @@
+# D7.4 (Plan 2.3.2/2.3.5): Schnittstelle Dienst ↔ Oberfläche samt Go-Gegenstücken.
+ohne	entwicklung/umbenennen/*,docs/plan/*,tests/test_umbenennen.py
+wort	DMSNetworkService	BackendNetworkService
+wort	DMSService	ShellBackend
+wort	dmsBin	backendBin
+wort	checkDMSCapabilities	checkBackendCapabilities
+wort	dmsAvailable	backendReachable
+wort	dmsStatus	fragmentStatus
+wort	DMSStatus	FragmentStatus
+wort	buildDMSStatus	buildFragmentStatus
+wort	DMSBindsStatusFrom	BindsFragmentStatusFrom
+wort	DMSBindsStatus	BindsFragmentStatus
+wort	DMSRulesStatusFrom	RulesFragmentStatusFrom
+wort	DMSRulesStatus	RulesFragmentStatus
+wort	EntriesAfterDMS	EntriesAfterFragment
+wort	BindsAfterDMS	BindsAfterFragment
+wort	bindsAfterDms	bindsAfterFragment
+wort	RulesAfterDMS	RulesAfterFragment
+wort	rulesAfterDms	rulesAfterFragment
+wort	HasDMSBindsIncluded	HasBindsFragmentIncluded
+wort	DMSBindsIncluded	BindsFragmentIncluded
+wort	dmsBindsIncluded	bindsFragmentIncluded
+wort	HasDMSRulesIncluded	HasRulesFragmentIncluded
+wort	DMSRulesIncluded	RulesFragmentIncluded
+wort	dmsRulesIncluded	rulesFragmentIncluded
+wort	isDMSManaged	isShellManaged
+# Kürzel-Quelle "dms"/"dms-default" → "shell"/"shell-default" (nur der Vergleich mit der Quelle)
+regex	(source ={1,2} )"dms(-default)?"	\1"shell\2"	core/internal/keybinds/providers/*.go
+regex	(sourceStr === )"dms(-default)?"	\1"shell\2"	shell/Services/KeybindsService.qml
+datei	shell/Services/DMSService.qml	shell/Services/ShellBackend.qml
+datei	shell/Services/DMSNetworkService.qml	shell/Services/BackendNetworkService.qml
+datei	entwicklung/pageharness/qs/Services/DMSService.qml	entwicklung/pageharness/qs/Services/ShellBackend.qml

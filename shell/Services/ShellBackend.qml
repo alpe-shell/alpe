@@ -10,9 +10,9 @@ import qs.Alpe.Common as Alpe
 
 Singleton {
     id: root
-    readonly property var log: Log.scoped("DMSService")
+    readonly property var log: Log.scoped("ShellBackend")
 
-    readonly property bool dmsAvailable: isConnected
+    readonly property bool backendReachable: isConnected
     property var capabilities: []
     property int apiVersion: 0
     property string cliVersion: ""
@@ -361,7 +361,7 @@ Singleton {
 
     function sendRequest(method, params, callback, timeoutMs) {
         if (!isConnected) {
-            log.warn("DMSService.sendRequest: Not connected, method:", method);
+            log.warn("ShellBackend.sendRequest: Not connected, method:", method);
             if (callback) {
                 callback({
                     "error": "not connected to the service socket"
@@ -396,7 +396,7 @@ Singleton {
         if (method.startsWith("clipboard")) {
             clipboardRequestIds[id] = true;
         } else {
-            log.debug("DMSService.sendRequest: Sending request id=" + id + " method=" + method);
+            log.debug("ShellBackend.sendRequest: Sending request id=" + id + " method=" + method);
         }
         requestSocket.send(request);
         return id;

@@ -128,7 +128,7 @@ Singleton {
 
     // Backend adoption must be state-checked here, not only edge-triggered below:
     // with staged shell loading this singleton can be instantiated after
-    // DMSNetworkService already resolved its capabilities, so the change signal
+    // BackendNetworkService already resolved its capabilities, so the change signal
     // may never fire again.
     Component.onCompleted: {
         log.info("Initializing...");
@@ -136,8 +136,8 @@ Singleton {
             log.info("ALPE_SOCKET not set, network backend unavailable");
             return;
         }
-        if (DMSNetworkService.networkAvailable) {
-            log.info("Network capability already available, using DMSNetworkService");
+        if (BackendNetworkService.networkAvailable) {
+            log.info("Network capability already available, using BackendNetworkService");
             useDMSService();
             return;
         }
@@ -145,19 +145,19 @@ Singleton {
     }
 
     Connections {
-        target: DMSNetworkService
+        target: BackendNetworkService
 
         function onNetworkAvailableChanged() {
-            if (!activeService && DMSNetworkService.networkAvailable) {
-                log.info("Network capability detected, using DMSNetworkService");
+            if (!activeService && BackendNetworkService.networkAvailable) {
+                log.info("Network capability detected, using BackendNetworkService");
                 useDMSService();
             }
         }
     }
 
     function useDMSService() {
-        activeService = DMSNetworkService;
-        log.info("Switched to DMSNetworkService, networkAvailable:", networkAvailable);
+        activeService = BackendNetworkService;
+        log.info("Switched to BackendNetworkService, networkAvailable:", networkAvailable);
         connectSignals();
     }
 

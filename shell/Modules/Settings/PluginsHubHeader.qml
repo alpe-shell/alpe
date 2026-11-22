@@ -155,7 +155,7 @@ Column {
         uninstallErrors = Object.assign({}, uninstallErrors, {
             [id]: ""
         });
-        DMSService.uninstall(id, response => {
+        ShellBackend.uninstall(id, response => {
             const pending = Object.assign({}, uninstalling);
             delete pending[id];
             uninstalling = pending;
@@ -199,7 +199,7 @@ Column {
 
     SettingsCard {
         settingKey: "pluginManagerUnavailable"
-        visible: !DMSService.dmsAvailable
+        visible: !ShellBackend.backendReachable
 
         SettingsRow {
             iconName: "warning"
@@ -573,7 +573,7 @@ Column {
                                 iconName: "delete"
                                 Accessible.name: I18n.tr("Uninstall")
                                 visible: installedCard.plugin.source !== "system"
-                                enabled: DMSService.dmsAvailable && !root.uninstalling[installedCard.modelData.pluginId]
+                                enabled: ShellBackend.backendReachable && !root.uninstalling[installedCard.modelData.pluginId]
                                 onClicked: root.requestUninstall(installedCard.modelData)
                             }
                         }

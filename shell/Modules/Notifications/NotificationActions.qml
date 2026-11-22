@@ -110,7 +110,7 @@ QtObject {
             SettingsData.setAppDndBypass(appName, desktopEntry, !isDndBypassed);
             return;
         case "copy":
-            Quickshell.execDetached([Proc.dmsBin, "cl", "copy", copyText]);
+            Quickshell.execDetached([Proc.backendBin, "cl", "copy", copyText]);
             ToastService.showInfo(I18n.tr("Copied to clipboard"));
             return;
         case "dismiss":
