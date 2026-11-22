@@ -181,8 +181,43 @@ import json
 registriert = set(re.findall(r'^\s*"([^"]+)"\s*:', re.search(r"componentNames\s*=\s*\{(.*?)\n\}", read(SHELL, "Modules", "Bar", "WidgetModel.js"), re.S).group(1), re.M))
 plugin_ids = {json.loads(read(REPO, "plugins", name, "plugin.json"))["id"] for name in os.listdir(os.path.join(REPO, "plugins"))
               if os.path.isfile(os.path.join(REPO, "plugins", name, "plugin.json"))}
-# Bekannte Ausnahme: sathiAi ist ein fremdes Plugin des Maintainers, das Alpe nicht mitliefert (offene-faelle.md).
-FREMD_IM_DESIGN = {"sathiAi"}
+# Persönliches gehört nicht in ein ausgeliefertes Design (CLAUDE.md): keine Pfade in ein Home-Verzeichnis, keine
+# Adressen, Geräte- oder Bildschirmkennungen, kein Wetterort, keine Rechner- oder Netznamen.
+PERSOENLICH = [
+    ("Pfad in ein Home-Verzeichnis", r"/home/|/Users/|file://~"),
+    ("IP-Adresse", r"(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?![\d.])"),
+    ("MAC-Adresse", r"\b[0-9A-Fa-f]{2}(?:[:-][0-9A-Fa-f]{2}){5}\b"),
+    ("PCI-/USB-Kennung", r"(?<![0-9A-Fa-f:])[0-9a-f]{4}:[0-9a-f]{4}(?![0-9A-Fa-f:])"),
+    ("Bildschirmname", r"\b(?:eDP|DP|HDMI-A|HDMI|DVI-[DI]|VGA|LVDS|DSI)-\d+\b"),
+    ("Koordinaten", r"\b\d{1,2}\.\d{3,}\s*,\s*\d{1,3}\.\d{3,}\b"),
+    ("E-Mail-Adresse", r"[\w.+-]+@[\w-]+\.[\w.-]+"),
+]
+PERSOENLICHE_SCHLUESSEL = re.compile(r'"(weatherLocation|weatherCoordinates|pciId|hostname|hostName|serial|serialNumber|ssid|bssid|macAddress|'
+                                     r'username|userName|latitude|longitude|lockPamPath|matugenTargetMonitor)"\s*:\s*(?="[^"]|\[\s*[^\]\s]|-?[1-9])')
+TEXT_ENDUNGEN = (".json", ".jsonc", ".conf", ".txt", ".md", ".lua", ".toml", ".ini", ".css", ".qml")
+funde, gelesen = [], 0
+for ordner, _dirs, dateien in os.walk(os.path.join(REPO, "design")):
+    for d in dateien:
+        if not d.endswith(TEXT_ENDUNGEN):
+            continue
+        gelesen += 1
+        rel = os.path.relpath(os.path.join(ordner, d), REPO)
+        for nummer, zeile in enumerate(read(ordner, d).splitlines(), 1):
+            for art, muster in PERSOENLICH:
+                if re.search(muster, zeile):
+                    funde.append("%s:%d %s" % (rel, nummer, art))
+            if PERSOENLICHE_SCHLUESSEL.search(zeile):
+                funde.append("%s:%d Schlüssel %s" % (rel, nummer, PERSOENLICHE_SCHLUESSEL.search(zeile).group(1)))
+check(gelesen >= 6 and funde == [], "ausgelieferte Designs ohne persönliche Werte (%d Dateien): %s" % (gelesen, funde[:8]))
+for art, probe in (("Pfad in ein Home-Verzeichnis", "/home/x/bild.png"), ("IP-Adresse", "192.168.1.20"), ("MAC-Adresse", "aa:bb:cc:dd:ee:ff"),
+                   ("PCI-/USB-Kennung", '"1234:abcd"'), ("Bildschirmname", '["DP-2"]'), ("Koordinaten", "47.123, 8.456"), ("E-Mail-Adresse", "a@b.ch")):
+    check(any(a == art and re.search(m, probe) for a, m in PERSOENLICH), "Muster erkennt: " + art)
+check(PERSOENLICHE_SCHLUESSEL.search('"weatherLocation": "Ort"') and not PERSOENLICHE_SCHLUESSEL.search('"weatherLocation": ""')
+      and not re.search(PERSOENLICH[3][1], "aa:bb:cc:dd:ee:ff") and not re.search(PERSOENLICH[1][1], '"1.2.3"'),
+      "Schlüssel mit Wert erkannt, leere Werte, Versionsnummern und Teile einer MAC-Adresse nicht")
+
+# Kein fremdes Plugin im Bar-Layout: sathiAi stand bis zum Halt nach D7 im ausgelieferten Design.
+FREMD_IM_DESIGN = set()
 for variante in sorted(os.listdir(os.path.join(REPO, "design"))):
     datei = os.path.join(REPO, "design", variante, "settings.json")
     if not os.path.isfile(datei):

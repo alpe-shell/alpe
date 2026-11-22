@@ -54,6 +54,9 @@ SETTINGS_DROP = {
     "customPowerActionSuspend", "customPowerActionHibernate", "customPowerActionReboot",
     "customPowerActionPowerOff", "weatherLocation", "weatherCoordinates",
 }
+# Gerätegebundene Schlüssel an beliebiger Stelle (auch in Widgets der Leiste): fallen weg. `pciId` ist die
+# Kennung der Grafikkarte im Widget gpuTemp; die Shell trägt sie auf dem neuen Rechner selbst wieder ein.
+NESTED_DROP = {"pciId"}
 # settings.json: Schlüssel, die bis 1.0 den Namen des Ursprungs trugen (wie die Migration der
 # Shell auf Version 43, shell/Common/settings/SettingsStore.js). Ein Design aus 1.0 trifft so
 # beim Einspielen dieselben Schlüssel wie die Einstellungen des Nutzers.
@@ -181,7 +184,7 @@ def personal(value):
 
 def screens_to_all(value):
     if isinstance(value, dict):
-        return {k: (SCREEN_KEYS[k] if k in SCREEN_KEYS else screens_to_all(v)) for k, v in value.items()}
+        return {k: (SCREEN_KEYS[k] if k in SCREEN_KEYS else screens_to_all(v)) for k, v in value.items() if k not in NESTED_DROP}
     if isinstance(value, list):
         return [screens_to_all(v) for v in value]
     return value
@@ -257,6 +260,9 @@ def scrub(value, images, where, dropped):
     if isinstance(value, dict):
         out = {}
         for k, v in value.items():
+            if k in NESTED_DROP:
+                dropped.append("%s.%s (gerätegebunden)" % (where, k))
+                continue
             new, keep = scrub(v, images, where + "." + k, dropped)
             if keep:
                 out[k] = new

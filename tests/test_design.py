@@ -58,7 +58,8 @@ write(os.path.join(a, ".config", "alpe", "settings.json"), {
     "customThemeFile": os.path.join(a, ".config", "alpe", "farben.json"),
     "fontFamily": "Inter Variable",
     "cornerRadius": 18,
-    "barConfigs": [{"id": "default", "position": 0, "screenPreferences": ["DP-2"], "leftWidgets": ["launcherButton"]}],
+    "barConfigs": [{"id": "default", "position": 0, "screenPreferences": ["DP-2"],
+                    "leftWidgets": ["launcherButton", {"id": "gpuTemp", "enabled": True, "selectedGpuIndex": 0, "pciId": "1234:abcd"}]}],
     "dockConfigs": [{"id": "dock", "screenPreferences": [{"name": "DP-2"}]}],
     "dashTabs": ["overview", "weather", "plugin_alpeRadar", "plugin_alpeSport"],
     "screenPreferences": {"notifications": ["DP-2"]},
@@ -113,6 +114,8 @@ check(s["barConfigs"][0]["screenPreferences"] == ["all"] and s["dockConfigs"][0]
 check("screenPreferences" not in s and "updaterCustomCommand" not in s and "updaterUseCustomCommand" not in s, "Bildschirm-Zuordnung und eigener Aktualisierungsbefehl weg")
 check(s["useAutoLocation"] is True, "Wetter folgt beim neuen Nutzer dem Standort")
 check("lockScreenVideoPath" not in s and "launcherLogoCustomPath" not in s, "Pfade in den eigenen Ordner weggelassen")
+check(s["barConfigs"][0]["leftWidgets"] == ["launcherButton", {"id": "gpuTemp", "enabled": True, "selectedGpuIndex": 0}],
+      "Kennung der Grafikkarte (pciId) im Widget gpuTemp weggelassen, das Widget bleibt")
 check(s["customThemeFile"] == "@DESIGN@/farben.json" and os.path.isfile(os.path.join(d, "farben.json")), "eigenes Farbschema kommt mit")
 se = json.load(open(os.path.join(d, "session.json")))
 check(se["wallpaperPath"] == "@DESIGN@/bilder/berg.jpg" and os.path.isfile(os.path.join(d, "bilder", "berg.jpg")), "bestätigtes eigenes Hintergrundbild kommt mit")

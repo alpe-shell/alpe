@@ -224,10 +224,6 @@
       "showOnLastDisplay": true,
       "leftWidgets": [
         {
-          "id": "sathiAi",
-          "enabled": true
-        },
-        {
           "id": "workspaceSwitcher",
           "enabled": false,
           "workspaceColorMode": "none"
@@ -245,8 +241,7 @@
         {
           "id": "gpuTemp",
           "enabled": true,
-          "selectedGpuIndex": 0,
-          "pciId": "10de:2504"
+          "selectedGpuIndex": 0
         },
         {
           "id": "cpuUsage",

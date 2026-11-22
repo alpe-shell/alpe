@@ -598,6 +598,18 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   leer) und bei `gpuTemp` die Gerätekennung `pciId: 10de:2504`. `tests/test_werte.py` prüft die
   Widget-Kennungen des Designs gegen die registrierten Widgets und führt `sathiAi` als bekannte
   Ausnahme. Ob beides ins Design gehört, ist offen.
+  **Erledigt (22.11.2026, Entscheid des Maintainers):** `sathiAi` und `pciId` sind aus
+  `design/kde/settings.json` entfernt (die Shell trägt die Kennung der Grafikkarte auf jedem
+  Rechner selbst ein); `tools/design.py` lässt `pciId` beim Export weg (`NESTED_DROP`, Test in
+  `tests/test_design.py`). `tests/test_werte.py` kennt keine Ausnahme mehr und prüft alle
+  Textdateien unter `design/` auf persönliche Werte (Pfade in ein Home-Verzeichnis, IP-, MAC-
+  und E-Mail-Adressen, PCI-/USB-Kennungen, Bildschirmnamen, Koordinaten, Schlüssel wie
+  `weatherLocation`, `hostname`, `ssid` mit Wert). **Nicht entfernt, dem Maintainer gemeldet:**
+  angeheftete Programme im Dock (`session.json`, `dockPins`: 14 Programmkennungen), die
+  Reihenfolge der Ligen in `plugins.json` (`alpeSport.order`), Fensterregeln und
+  `windowGripExcluded` für einzelne Programme (`kwin.json`, `settings.json`), Exportdatum im
+  `manifest.json`. Ein fremdes Plugin im Bar-Layout fängt beim Export nur der Test ab,
+  `design.py` filtert es nicht.
 - ~~Sporadisch: `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null`~~
   Behoben (Commit «Einstellungssuche: abgebaute Karten»): Bindung und `sync()` prüfen `target`
   auf null; `unregisterCard` ohne Karte entfernt nur einen Eintrag, dessen Karte schon weg ist,
