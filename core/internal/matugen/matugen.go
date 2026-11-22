@@ -18,8 +18,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/alpe-shell/alpe/core/internal/dank16"
 	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/palette16"
 	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/godbus/dbus/v5"
 	"github.com/lucasb-eyer/go-colorful"
@@ -1325,7 +1325,7 @@ func extractNestedColor(jsonStr, colorName, variant string) string {
 }
 
 func generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight string, mode ColorMode, profile string) string {
-	variantOpts := dank16.VariantOptions{
+	variantOpts := palette16.VariantOptions{
 		PrimaryDark:     primaryDark,
 		PrimaryLight:    primaryLight,
 		BackgroundDark:  surfaceDark,
@@ -1336,8 +1336,8 @@ func generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight
 		IsLightMode:     mode == ColorModeLight,
 		Profile:         profile,
 	}
-	variantColors := dank16.GenerateVariantPalette(variantOpts)
-	return dank16.GenerateVariantJSON(variantColors)
+	variantColors := palette16.GenerateVariantPalette(variantOpts)
+	return palette16.GenerateVariantJSON(variantColors)
 }
 
 // Must match dank_colors_active in quickshell/scripts/gtk.sh.

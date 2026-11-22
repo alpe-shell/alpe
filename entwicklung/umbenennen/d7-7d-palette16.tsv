@@ -1,0 +1,17 @@
+# D7.7d (Plan 2.3.5): Paket internal/dank16 → internal/palette16, Befehl «alpe-dienst palette16».
+# Kein Aufrufer des Befehls ausserhalb des Dienstes (0.8 Nr. 8). Die alten Vorlagen-Namen
+# "dank16"/"dank16term" in internal/matugen bleiben bis F1 (0.8 Nr. 47), die übrigen Bezeichner dort folgen in D7.7f.
+ohne	entwicklung/umbenennen/*,docs/plan/*
+datei	core/internal/dank16/dank16.go	core/internal/palette16/palette16.go
+datei	core/internal/dank16/dank16_test.go	core/internal/palette16/palette16_test.go
+datei	core/internal/dank16/terminals.go	core/internal/palette16/terminals.go
+datei	core/cmd/alpe-dienst/commands_dank16.go	core/cmd/alpe-dienst/commands_palette16.go
+text	package dank16	package palette16	core/internal/dank16/*
+text	internal/dank16"	internal/palette16"	core/*
+# Paketname als Qualifizierer
+regex	\bdank16\.(?=[A-Z])	palette16.	core/cmd/alpe-dienst/commands_dank16.go,core/internal/matugen/matugen.go
+# Befehl
+wort	dank16Cmd	palette16Cmd	core/cmd/alpe-dienst/*
+wort	runDank16	runPalette16	core/cmd/alpe-dienst/*
+text	"dank16 [hex_color]"	"palette16 [hex_color]"	core/cmd/alpe-dienst/commands_dank16.go
+text	with dank16 color integration	with the 16-colour terminal palette	core/cmd/alpe-dienst/commands_matugen.go

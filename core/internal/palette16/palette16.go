@@ -1,4 +1,4 @@
-package dank16
+package palette16
 
 import (
 	"fmt"

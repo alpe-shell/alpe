@@ -4,43 +4,43 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/alpe-shell/alpe/core/internal/dank16"
 	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/alpe-shell/alpe/core/internal/palette16"
 	"github.com/spf13/cobra"
 )
 
-var dank16Cmd = &cobra.Command{
-	Use:   "dank16 [hex_color]",
+var palette16Cmd = &cobra.Command{
+	Use:   "palette16 [hex_color]",
 	Short: "Generate Base16 color palettes",
 	Long:  "Generate Base16 color palettes from a color with support for various output formats",
 	Args:  cobra.MaximumNArgs(1),
-	Run:   runDank16,
+	Run:   runPalette16,
 }
 
 func init() {
-	dank16Cmd.Flags().Bool("light", false, "Generate light theme variant (sets default to light)")
-	dank16Cmd.Flags().Bool("json", false, "Output in JSON format")
-	dank16Cmd.Flags().Bool("kitty", false, "Output in Kitty terminal format")
-	dank16Cmd.Flags().Bool("foot", false, "Output in Foot terminal format")
-	dank16Cmd.Flags().Bool("neovim", false, "Output in Neovim plugin format")
-	dank16Cmd.Flags().Bool("alacritty", false, "Output in Alacritty terminal format")
-	dank16Cmd.Flags().Bool("ghostty", false, "Output in Ghostty terminal format")
-	dank16Cmd.Flags().Bool("wezterm", false, "Output in Wezterm terminal format")
-	dank16Cmd.Flags().String("background", "", "Custom background color")
-	dank16Cmd.Flags().String("contrast", "dps", "Contrast algorithm: dps (Delta Phi Star, default) or wcag")
-	dank16Cmd.Flags().String("profile", "default", "Palette: default, low, medium or high")
-	dank16Cmd.Flags().Bool("variants", false, "Output all variants (dark/light/default) in JSON")
-	dank16Cmd.Flags().String("primary-dark", "", "Primary color for dark mode (use with --variants)")
-	dank16Cmd.Flags().String("primary-light", "", "Primary color for light mode (use with --variants)")
-	_ = dank16Cmd.RegisterFlagCompletionFunc("profile", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	palette16Cmd.Flags().Bool("light", false, "Generate light theme variant (sets default to light)")
+	palette16Cmd.Flags().Bool("json", false, "Output in JSON format")
+	palette16Cmd.Flags().Bool("kitty", false, "Output in Kitty terminal format")
+	palette16Cmd.Flags().Bool("foot", false, "Output in Foot terminal format")
+	palette16Cmd.Flags().Bool("neovim", false, "Output in Neovim plugin format")
+	palette16Cmd.Flags().Bool("alacritty", false, "Output in Alacritty terminal format")
+	palette16Cmd.Flags().Bool("ghostty", false, "Output in Ghostty terminal format")
+	palette16Cmd.Flags().Bool("wezterm", false, "Output in Wezterm terminal format")
+	palette16Cmd.Flags().String("background", "", "Custom background color")
+	palette16Cmd.Flags().String("contrast", "dps", "Contrast algorithm: dps (Delta Phi Star, default) or wcag")
+	palette16Cmd.Flags().String("profile", "default", "Palette: default, low, medium or high")
+	palette16Cmd.Flags().Bool("variants", false, "Output all variants (dark/light/default) in JSON")
+	palette16Cmd.Flags().String("primary-dark", "", "Primary color for dark mode (use with --variants)")
+	palette16Cmd.Flags().String("primary-light", "", "Primary color for light mode (use with --variants)")
+	_ = palette16Cmd.RegisterFlagCompletionFunc("profile", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"default", "low", "medium", "high"}, cobra.ShellCompDirectiveNoFileComp
 	})
-	_ = dank16Cmd.RegisterFlagCompletionFunc("contrast", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = palette16Cmd.RegisterFlagCompletionFunc("contrast", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"dps", "wcag"}, cobra.ShellCompDirectiveNoFileComp
 	})
 }
 
-func runDank16(cmd *cobra.Command, args []string) {
+func runPalette16(cmd *cobra.Command, args []string) {
 	isLight, _ := cmd.Flags().GetBool("light")
 	isJson, _ := cmd.Flags().GetBool("json")
 	isKitty, _ := cmd.Flags().GetBool("kitty")
@@ -83,7 +83,7 @@ func runDank16(cmd *cobra.Command, args []string) {
 			primaryDark = primaryColor
 			primaryLight = primaryColor
 		}
-		variantOpts := dank16.VariantOptions{
+		variantOpts := palette16.VariantOptions{
 			PrimaryDark:    primaryDark,
 			PrimaryLight:   primaryLight,
 			BackgroundDark: background,
@@ -91,8 +91,8 @@ func runDank16(cmd *cobra.Command, args []string) {
 			IsLightMode:    isLight,
 			Profile:        profile,
 		}
-		variantColors := dank16.GenerateVariantPalette(variantOpts)
-		fmt.Print(dank16.GenerateVariantJSON(variantColors))
+		variantColors := palette16.GenerateVariantPalette(variantOpts)
+		fmt.Print(palette16.GenerateVariantJSON(variantColors))
 		return
 	}
 
@@ -104,30 +104,30 @@ func runDank16(cmd *cobra.Command, args []string) {
 		primaryColor = "#" + primaryColor
 	}
 
-	opts := dank16.PaletteOptions{
+	opts := palette16.PaletteOptions{
 		IsLight:    isLight,
 		Background: background,
 		UseDPS:     contrastAlgo == "dps",
 		Profile:    profile,
 	}
 
-	colors := dank16.GeneratePalette(primaryColor, opts)
+	colors := palette16.GeneratePalette(primaryColor, opts)
 
 	if isJson {
-		fmt.Print(dank16.GenerateJSON(colors))
+		fmt.Print(palette16.GenerateJSON(colors))
 	} else if isKitty {
-		fmt.Print(dank16.GenerateKittyTheme(colors))
+		fmt.Print(palette16.GenerateKittyTheme(colors))
 	} else if isFoot {
-		fmt.Print(dank16.GenerateFootTheme(colors))
+		fmt.Print(palette16.GenerateFootTheme(colors))
 	} else if isAlacritty {
-		fmt.Print(dank16.GenerateAlacrittyTheme(colors))
+		fmt.Print(palette16.GenerateAlacrittyTheme(colors))
 	} else if isGhostty {
-		fmt.Print(dank16.GenerateGhosttyTheme(colors))
+		fmt.Print(palette16.GenerateGhosttyTheme(colors))
 	} else if isWezterm {
-		fmt.Print(dank16.GenerateWeztermTheme(colors))
+		fmt.Print(palette16.GenerateWeztermTheme(colors))
 	} else if isNeovim {
-		fmt.Print(dank16.GenerateNeovimTheme(colors))
+		fmt.Print(palette16.GenerateNeovimTheme(colors))
 	} else {
-		fmt.Print(dank16.GenerateGhosttyTheme(colors))
+		fmt.Print(palette16.GenerateGhosttyTheme(colors))
 	}
 }

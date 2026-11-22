@@ -17,7 +17,7 @@ import (
 var matugenCmd = &cobra.Command{
 	Use:   "matugen",
 	Short: "Generate Material Design themes",
-	Long:  "Generate Material Design themes using matugen with dank16 color integration",
+	Long:  "Generate Material Design themes using matugen with the 16-colour terminal palette",
 }
 
 var matugenGenerateCmd = &cobra.Command{
