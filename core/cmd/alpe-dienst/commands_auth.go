@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/log"
 	sharedpam "github.com/alpe-shell/alpe/core/internal/pam"
 	"github.com/spf13/cobra"
@@ -205,7 +206,7 @@ func syncAuthInTerminal(nonInteractive bool) error {
 		syncFlags = append(syncFlags, "--yes")
 	}
 
-	shellSyncCmd := "dms auth sync"
+	shellSyncCmd := brand.Binary + " auth sync"
 	if len(syncFlags) > 0 {
 		shellSyncCmd += " " + strings.Join(syncFlags, " ")
 	}

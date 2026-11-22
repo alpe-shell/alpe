@@ -1,13 +1,15 @@
 package log
 
 import (
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	danklog "github.com/duxlabs-dev/dux-go/log"
 )
 
 type Logger = danklog.Logger
 
 func init() {
-	danklog.SetEnvPrefix("DMS")
+	// ALPE_LOG_LEVEL, ALPE_LOG_FILE … wie in der Oberfläche (Services/Log.qml)
+	danklog.SetEnvPrefix(brand.EnvPrefix)
 }
 
 func GetLogger() *Logger { return danklog.GetLogger() }

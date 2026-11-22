@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
@@ -41,7 +42,7 @@ func GitBuildCount(version string) int {
 func dmsBinaryPath() string {
 	path, err := os.Executable()
 	if err != nil {
-		path, err = exec.LookPath("dms")
+		path, err = exec.LookPath(brand.Binary)
 		if err != nil {
 			return ""
 		}

@@ -3,6 +3,7 @@ package notifyactions
 import (
 	"os"
 
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/notify"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
@@ -53,7 +54,7 @@ func handleSend(conn *ipc.ConnWriter, req ipc.Request, manager *Manager) {
 	if args := stringSlice(req.Params["actionArgs"]); label != "" && len(args) > 0 {
 		exe, err := os.Executable()
 		if err != nil {
-			exe = "dms"
+			exe = brand.Binary
 		}
 		argv = append([]string{exe}, args...)
 		n.Actions = []string{"default", label}
