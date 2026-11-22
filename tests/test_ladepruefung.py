@@ -106,6 +106,16 @@ try:
     aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)
     check(aufruf.returncode == 2 and "--offen" in aufruf.stdout + aufruf.stderr, "--bild ohne --offen wird abgelehnt")
 
+    # Sporadische Meldungen in der Grundlinie (Plan 0.8 Nr. 76).
+    text = lp.baseline_text({"WARN immer": 3, "WARN manchmal": 1}, 3)
+    check(text == "WARN immer\nSPORADISCH 1/3: WARN manchmal\n", "Grundlinie kennzeichnet, was nicht in jedem Lauf vorkam, mit der Häufigkeit")
+    fest, sporadisch = lp.read_baseline("# Kopf\n" + text + "\n")
+    check(fest == {"WARN immer"} and sporadisch == {"WARN manchmal": "1/3"}, "Grundlinie lesen: feste und sporadische Meldungen getrennt")
+    check(lp.compare({"WARN immer"}, fest, sporadisch) == ([], [], []), "eine sporadische Meldung darf fehlen")
+    check(lp.compare({"WARN immer", "WARN manchmal", "WARN fremd"}, fest, sporadisch) == (["WARN fremd"], [], ["WARN manchmal"]),
+          "eine sporadische Meldung darf auftreten und ist nicht neu; eine fremde ist neu")
+    check(lp.compare(set(), fest, sporadisch) == ([], ["WARN immer"], []), "eine feste Meldung, die fehlt, ist weg")
+
     # Auswertung nach dem Lauf: erkennt eine umgezogene und eine nicht umgezogene Session.
     check(any(line.startswith("FEHLER") for line in lp.probe_report(home)), "Auswertung meldet eine Session, die nicht umgezogen ist")
     migrated = {"configVersion": 8, "materialWallpapers": {"": {"shared": {"preset": "alpe"}}},

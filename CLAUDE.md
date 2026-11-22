@@ -67,7 +67,10 @@ in den Harnessen unter `entwicklung/`.
 Ladeprüfung (`entwicklung/ladepruefung/ladepruefung.py`) einmal pro Halt auf dem Endstand unter
 KWin und Hyprland, **in zwei Varianten**: «gesperrt» (ohne Option; das Design sperrt beim Start)
 und «offen» (`--offen`: ohne `lockAtStartup`, mit sichtbarer Material-Vorlage), je gegen die eigene
-Grundlinie (Plan 0.8 Nr. 70). Im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet,
+Grundlinie (Plan 0.8 Nr. 70). Grundlinien können Meldungen als sporadisch kennzeichnen
+(`SPORADISCH k/n: …`, beobachtete Häufigkeit); eine neue Meldung, die nicht in jedem Lauf auftritt,
+wird vor dem Einordnen mehrfach gegen den Stand vor der Änderung gegengemessen (Plan 0.8 Nr. 76).
+Im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet,
 damit Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33). Zum Halt gehört ein Bild der Variante
 «offen» unter Hyprland (`--offen --bild DATEI`, aufgenommen mit `alpe-dienst screenshot full`;
 grim wird nicht benutzt), das angesehen und dem Maintainer beschrieben wird (Plan 0.8 Nr. 71).

@@ -17,6 +17,10 @@ einer Grundlinie vergleichen.
                                           bevor etwas geöffnet wird, mit «alpe-dienst screenshot full» (0.8 Nr. 71)
               --grundlinie-datei DATEI    statt der eingecheckten Grundlinie (Messung auf einem anderen Stand)
 
+Sporadische Meldungen (Plan 0.8 Nr. 76): Kommt eine Meldung beim Schreiben der Grundlinie nicht in jedem
+Lauf vor, steht sie dort als «SPORADISCH k/n: <Meldung>» (k von n Läufen). Beim Vergleich darf sie
+auftreten oder fehlen; sie zählt weder als neu noch als weg. Die Zeile lässt sich auch von Hand führen.
+
 Jeder Lauf läuft in einem eigenen systemd-Scope (alpe-ladepruefung-<zeit>-<n>.scope). Aufgeräumt wird
 nur über diesen Scope (systemctl --user stop …), nie über Prozessnamen: Die echte Shell läuft unter
 denselben Namen. Nach einer harten Obergrenze stoppt die Prüfung ihren Scope und meldet einen Hänger.
@@ -475,6 +479,34 @@ def findings(result):
     return found
 
 
+SPORADISCH = re.compile(r"^SPORADISCH (\d+/\d+): (.*)$")
+
+
+def baseline_text(counts, runs):
+    """Zeilen einer Grundlinie: Was nicht in jedem Lauf vorkam, trägt «SPORADISCH k/n: » (Plan 0.8 Nr. 76)."""
+    return "".join(("%s\n" % line) if counts[line] >= runs else ("SPORADISCH %d/%d: %s\n" % (counts[line], runs, line))
+                   for line in sorted(counts))
+
+
+def read_baseline(text):
+    """Liest eine Grundlinie: (feste Meldungen, {sporadische Meldung: beobachtete Häufigkeit «k/n»})."""
+    fixed, sporadic = set(), {}
+    for line in text.splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        match = SPORADISCH.match(line)
+        if match:
+            sporadic[match.group(2)] = match.group(1)
+        else:
+            fixed.add(line)
+    return fixed, sporadic
+
+
+def compare(found, fixed, sporadic):
+    """(neu, weg, sporadisch gesehen): Eine sporadische Meldung darf auftreten oder fehlen."""
+    return sorted(found - fixed - set(sporadic)), sorted(fixed - found), sorted(found & set(sporadic))
+
+
 def health(result):
     """Kam die Shell wirklich hoch und lief der Ablauf durch? Sonst ist der Vergleich wertlos."""
     log = ANSI.sub("", result["shell.log"])
@@ -539,7 +571,7 @@ def main(argv):
         dienst = os.path.join(tmpbin, "alpe-dienst")
         say("== Dienst bauen (core/)")
         build_dienst(dienst)
-    union = set()
+    union, counts = set(), {}
     stamp = time.strftime("%Y%m%d-%H%M%S")
     try:
         for n in range(runs):
@@ -572,25 +604,31 @@ def main(argv):
             got = findings(result)
             say("   %d verschiedene Warnungen/Fehler" % len(got))
             union |= got
+            for line in got:
+                counts[line] = counts.get(line, 0) + 1
     finally:
         if tmpbin:
             shutil.rmtree(tmpbin, ignore_errors=True)
     if write:
         with open(baseline_path, "w", encoding="utf-8") as handle:
             handle.write("# Grundlinie der Ladeprüfung (%s): Warnungen und Fehler eines Laufs mit dem ausgelieferten\n"
-                         "# Design, vereint über %d Läufe. Neu schreiben: ladepruefung.py %s --grundlinie\n" % (compositor, runs, compositor))
-            for line in sorted(union):
-                handle.write(line + "\n")
-        say("Grundlinie geschrieben: %s (%d Einträge)" % (os.path.relpath(baseline_path, REPO), len(union)))
+                         "# Design, vereint über %d Läufe. Neu schreiben: ladepruefung.py %s --grundlinie\n"
+                         % (compositor + (", Variante «offen»" if offen else ", Variante «gesperrt»"), runs, compositor + (" --offen" if offen else "")))
+            handle.write(baseline_text(counts, runs))
+        say("Grundlinie geschrieben: %s (%d Einträge, davon %d sporadisch)"
+            % (os.path.relpath(baseline_path, REPO), len(union), sum(1 for n in counts.values() if n < runs)))
         return 0
     if not os.path.exists(baseline_path):
         say("keine Grundlinie – zuerst: ladepruefung.py %s --grundlinie" % compositor)
         return 2
-    baseline = {l.rstrip("\n") for l in open(baseline_path, encoding="utf-8") if l.strip() and not l.startswith("#")}
-    new = sorted(union - baseline)
-    gone = sorted(baseline - union)
+    with open(baseline_path, encoding="utf-8") as handle:
+        baseline, sporadic = read_baseline(handle.read())
+    new, gone, seen = compare(union, baseline, sporadic)
     say("== Vergleich mit %s" % os.path.relpath(baseline_path, REPO))
-    say("   gleich: %d   neu: %d   nicht mehr da: %d" % (len(union & baseline), len(new), len(gone)))
+    say("   gleich: %d   neu: %d   nicht mehr da: %d   sporadisch: %d von %d gesehen"
+        % (len(union & baseline), len(new), len(gone), len(seen), len(sporadic)))
+    for line in seen:
+        say("   SPORADISCH (Grundlinie %s, jetzt %d/%d)   %s" % (sporadic[line], counts[line], runs, line))
     for line in new:
         say("   NEU   " + line)
     for line in gone:
