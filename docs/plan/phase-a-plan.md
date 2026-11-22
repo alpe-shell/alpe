@@ -104,9 +104,8 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   `offene-faelle.md`, Abschnitt «Nach D4–D6: Fragen».
 - Mac-Test des Stands nach D6 (Anleitung in `offene-faelle.md`, Abschnitt «Mac-Test»).
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
-- **Als Nächstes: D7 in neuer Sitzung** – zuerst D7.N (Node-Tests mit fester Fehlschlagliste),
-  dann D7.0 ff. nach 2.3.5. Offen vor D7.2: Lesart A/B der Widget-Bibliothek (2.3.0).
-  D7.8 erst nach Bestätigung, dass Plugins an PC und Mac umgestellt sind.
+- **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
+  nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
 - Halt nach D7 → Mac-Test → Vorlage 6.7 → E1 (0.8 Nr. 6).
 
 ---
@@ -291,6 +290,16 @@ Freigabe von 2.3 am 22.11.2026 mit diesen Entscheiden und Änderungen:
 
 Folgen: Die Fragen 1 und 3 zum Halt D6 (Kennungen `dms_*`, Logo-Modus `"dank"`) erledigt D7.5.
 
+Entscheide zum Start von D7 (22.11.2026):
+
+| # | Entscheid |
+|---|---|
+| 20 | **Widget-Bibliothek Variante B:** Die `D*`-Typen aus DCommon heissen überall `Alpe*`; die `Dank*`-Hüllen fallen weg statt umbenannt zu werden. Pro Widget genau ein Typ; die Plugin-API ist dieselbe Bibliothek, die die Shell benutzt. |
+| 21 | **Modulnamen** `DCommon`, `DBar`, `DDash`, `DIsland` fallen unter die Namensregel. Module, die Plugins importieren, sind Plugin-API und bekommen eine gepunktete URI im Namensraum Alpe; rein interne Module neutrale Namen, sofern die Kollisionsprüfung nichts findet. Verzeichnisse und `qmldir` mit `git mv` in einem eigenen Commit ohne Inhaltsänderung. Zuordnung 2.3.2. |
+| 22 | **CUPS:** Besitzername der Abonnements = Benutzername des laufenden Prozesses (`os/user`), Rückfall `alpe`, nichts fest codiert. Alte Abonnements des Besitzers `dms`: gewählter Weg in 2.3.3. |
+| 23 | **«Phase C»** ist im Plan nicht definiert und wird durch einen Auslöser ersetzt: Das Lesen alter Namen bei der Migration fällt weg, sobald der Umzug von 1.0 nicht mehr unterstützt wird, frühestens mit dem ersten Release nach Abschluss von Phase B. |
+| 24 | **Prüfung nach dem Zwischenfall `core/alpe-dienst`:** `tools/test.sh` wird rot, wenn ein Commit gegenüber `origin/phase-a` eine Datei über 1 MB oder eine ELF-Binärdatei hinzufügt. Eigener Commit vor bzw. mit D7.N. |
+
 ---
 
 ## 1. Zielstruktur des Repos
@@ -424,16 +433,30 @@ direkt nach D6, vor E1 (0.8 Nr. 6).
    (Dateinamen und `git grep -w`), Qt-Typen (1208 aus `/usr/lib/qt6/qml/**/*.qmltypes`) und
    Quickshell-Typen (139). Das Skript (D7.0) wiederholt die Prüfung vor jedem Lauf.
 
-**Rückfrage vor D7.2 (Lesart von Nr. 3):** Heute sind die 44 `Dank*`-Typen Hüllen um 34 Typen
-aus `DCommon` (`DButton`, `DIcon` …), die die Shell selbst ≈1330-mal benutzt.
-- **A:** Nur die Plugin-API heisst `Alpe*`: 44 dünne Typen in `qs.Widgets` ohne Veraltet-Meldung,
-  die Shell benutzt intern weiter `D*` (Plan 1: «D» bleibt). Klein, die API ist von den
-  Interna entkoppelt.
-- **B:** Die Bibliothek selbst heisst `Alpe*`: `DButton` → `AlpeButton` usw. in `DCommon` und an
-  allen ≈1330 Stellen, keine Hüllen mehr; ein Name für Shell und Plugins.
-  Offen dabei: ob auch die Modulnamen `DCommon`, `DBar`, `DDash`, `DIsland` unter Regel 1 fallen.
-Bis zur Antwort plant 2.3.5 mit **B** (folgt der Regel wörtlich); die Modulnamen bleiben, bis
-du anders entscheidest.
+**Lesart von Nr. 3: Variante B** (0.8 Nr. 20). Die 77 `D*`-Typen aus DCommon (`DButton`,
+`DIcon` …, ≈1330 Verwendungen in der Shell) heissen `Alpe*`. Abgeleitet aus Regel 1 und 3 für die
+übrigen 36 `D*`-Typen ausserhalb von DCommon: Was in einem Modul liegt, das Plugins importieren,
+und ein Baustein ist (`qs.Widgets`: `DPopout`, `DTooltip`, `DContextMenu`, `DSeekbar` …;
+`qs.Modals.Common`: `DModal`, `DModalHost`), gehört zur Bibliothek und heisst `Alpe*`; rein
+interne Typen verlieren das «D» (`DBarWindow` → `BarWindow`, `DDashPopout` → `DashPopout`,
+`DIslandSurface` → `IslandSurface`, Einstellungsseiten `DBarTab` → `BarTab` …). Ausnahme:
+`DSearchService` gehört zum fremden Programm `dsearch` und heisst `DsearchService`. Die genaue
+Liste erzeugt D7.0 (Zuordnungstabelle im Repo) mit Kollisionsprüfung.
+
+**Module (0.8 Nr. 21).** Quickshell lädt Shell-Module nur über `qs.<Pfad>` (der Baum hat keine
+eigenen `qmldir`; Verzeichnis = Modul). Der Namensraum Alpe ist darum `qs.Alpe.*` (Ordner
+`shell/Alpe/`); eine URI ohne `qs.` (`Alpe.Common`) bräuchte einen eigenen QML-Importpfad samt
+`qmldir` neben dem Mechanismus von Quickshell und ist nicht vorgesehen. Gemessen, was Plugins
+importieren (Alpe-Plugins und die vier fremden): `qs.Common` 76, `qs.DCommon.Widgets` 52,
+`qs.Services` 18, `qs.Modules.Plugins` 17, `qs.Widgets` 14, `qs.Modules.DDash` 6 (alpeSport,
+alpeRadar), `qs.Modals.Common` 3. Zuordnung in 2.3.2.
+
+**Übergang für fremde Plugins bis D7.8:** sathiAi benutzt `qs.DCommon.Widgets` und `D*`-Typen
+direkt (`DActionButton`, `DTextField`, `DDropdown`, `DButton`, `DToggle`, `DSpinner`), hueManager,
+claudeCodeUsage und calculator die `Dank*`-Hüllen aus `qs.Widgets`. Damit lokale Kopien bis zur
+Bestätigung weiterladen, bleiben bis D7.8 vorübergehend: die `Dank*`-Hüllen (auf `Alpe*`
+umgestellt) und ein Ordner `shell/DCommon/Widgets/` mit erzeugten `D*`-Hüllen auf `Alpe*`. Beides
+ist markiert und fällt in D7.8 vollständig weg.
 
 #### 2.3.1 Umfang (gemessen, Stand `fab0760`)
 
@@ -472,7 +495,14 @@ letzten Spalte mit der Ausweichlösung.
 | Go: `dmsPath` (Pfad der Oberfläche) | `shellConfigPath` | 1 | `shellPath` gibt es schon (doctor, Schriftprüfung) |
 | Go-Paket `internal/dank16`, Befehl `alpe-dienst dank16` | `internal/palette16`, Befehl `palette16` | 1 | keine; kein Aufrufer ausserhalb des Dienstes |
 | Importname `danklog` (dux-go bleibt) | `duxlog` | – | keine; «dux» = Name des fremden Moduls (Ausnahmeliste) |
-| Widget-Typen `Dank*` (44) bzw. `D*` (34, Lesart B) | `Alpe*` (`AlpeButton`, `AlpeIcon`, `AlpeTextField` …) | 3 | keine mit Qt/Quickshell; keine mit bestehenden `Alpe*`-Dateien (`AlpeKwinTab` … sind Seiten). Hinweis: `AlpeColorAnim` und `AlpeColorAnimation` wären zwei Typen – beim Umbenennen zusammenführen, falls gleich |
+| Widget-Typen `D*` (77 in DCommon, Bibliotheks-Typen in `qs.Widgets` und `qs.Modals.Common`) | `Alpe*` (`AlpeButton`, `AlpeIcon`, `AlpeTextField` …); die 44 `Dank*`-Hüllen entfallen (D7.8) | 3 | keine mit Qt/Quickshell; keine mit bestehenden `Alpe*`-Dateien (`AlpeKwinTab` … sind Seiten). Vollständige Liste in der Zuordnungstabelle (D7.0) |
+| übrige `D*`-Typen (intern) | ohne «D» (`BarWindow`, `DashPopout`, `IslandSurface`, `BarTab` …) | 1 | Prüfung je Name in D7.0 |
+| Modul `qs.DCommon.*` (Ordner `DCommon/`: Common, Widgets, Session, FileBrowser, Shaders, assets, translations) | `qs.Alpe.*` (Ordner `Alpe/`) | API | Plugins importieren `qs.DCommon.Widgets`; keine Kollision (`Modules/Lock/Alpe` ist `qs.Modules.Lock.Alpe`) |
+| Modul `qs.Modules.DDash` (+ Overview, Media, Weather, Wellbeing, utils) | `qs.Alpe.Dash` (Ordner `Alpe/Dash/`) | API | alpeSport, alpeRadar importieren es; keine |
+| Modul `qs.Modules.DBar` (+ Widgets, Popouts) | `qs.Modules.Bar` | 1 | intern; keine (weder Ordner noch Qt-/Quickshell-Typ `Bar`) |
+| Modul `qs.Modules.DIsland` (+ Activities) | `qs.Modules.Island` | 1 | intern; keine |
+| Modul `qs.Modals.DLauncherV2` | `qs.Modals.Launcher` | 1 | intern; keine |
+| Harness-Module `entwicklung/*/qs/DCommon/**/qmldir` | `…/qs/Alpe/**/qmldir` | – | im Verschiebe-Commit mit |
 | Seiten-IDs `dankbar`, `dankbar_appearance`, `dankbar_dot`, `dankbar_settings`, `dankbar_widgets`, `dank_dash` | `bar`, `bar_appearance`, `bar_dot`, `bar_settings`, `bar_widgets`, `dash` | 1 | im Skript gegen bestehende Seiten-IDs prüfen |
 | Starter-Plugins `dms_settings` … `dms_vpn` | `alpe_settings` … `alpe_vpn` | 2 | keine |
 | Logo-Modus `"dank"`, Material-Vorlage `"dank"` (Ebene `dankLogo`) | `"alpe"`, Vorlage «Alpe», Form = Alpe-Zeichen (0.8 Nr. 13) | 2 | keine |
@@ -495,14 +525,24 @@ liegen; Session-Daten wie `builtInPluginState` im selben Zug).
 
 | Eintrag | Warum von aussen vorgegeben | Erledigt bis |
 |---|---|---|
-| Go-Module `github.com/duxlabs-dev/dux-go`, `dux-gop` (Importpfade, `go.mod`/`go.sum`), Importname `duxlog` | fremde Bibliotheken (0.4 Nr. 9) | dauerhaft bis Phase B (Go-Dienst fällt weg) |
+| Go-Module `github.com/duxlabs-dev/dux-go`, `dux-gop` (Importpfade, `go.mod`/`go.sum`), Importname `duxlog` | fremde Bibliotheken (0.4 Nr. 9) | Abschluss von Phase B (Go-Dienst durch Rust ersetzt) |
 | Herkunft: NOTICE, LICENSE-Vermerk, `LICENSE_CHANGE_12_11_2025.md`, README «Herkunft», `CHANGELOG.md`, `Brand.upstream*`, Herkunftszeile der Über-Seite | Rechtspflicht bzw. historische Angabe | dauerhaft |
-| Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | Phase C (wenn kein 1.0-Umzug mehr unterstützt wird) |
+| Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | sobald der Umzug von 1.0 nicht mehr unterstützt wird, frühestens mit dem ersten Release nach Abschluss von Phase B (0.8 Nr. 23) |
 | Fremde App «Dux Calendar»: `dev.duxlabs.calendar`, Socket `dankcal`, `CalendarDuxBackend.qml` | Namen der fremden App | solange die Anbindung besteht |
 | PAM-Dienste `dankshell`, `dankshell-u2f`, Blockmarken «DMS LOCKSCREEN AUTH»; Richtlinien `/usr/share/dms`, `/etc/dms`; alle anderen paketierten Pfade | heute vom Paket `dux-shell`/`dms` belegt | **E1** (zwingend, 0.8 Nr. 16; alte Blöcke erkennen) |
-| CUPS `requesting-user-name` `dms` | Besitzerkennung von Abonnements in cupsd (Befund in `offene-faelle.md`) | D7.7 (durch den Benutzernamen ersetzen) |
+| CUPS `requesting-user-name` `dms` | Besitzerkennung von Abonnements in cupsd (Befund in `offene-faelle.md`) | D7.7: Benutzername zur Laufzeit (`os/user`, Rückfall `alpe`); `dms` nur noch beim einmaligen Kündigen alter Abonnements (siehe unten), Frist wie Migration |
 | Dateien fremder Plugins im Original, Herkunftsvermerke im README von `~/alpe-plugins` | Lizenz/Herkunft | dauerhaft |
 | `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) | Paketnamen des Ursprungs | **E4** (0.8 Nr. 17) |
+
+**Alte CUPS-Abonnements (0.8 Nr. 22), gewählt: einmal kündigen.** Der Dienst legte Abonnements
+mit Laufzeit 0 (Abfrageweg; bei cupsd bedeutet 0 «ohne Ende», sofern `MaxLeaseDuration` es
+zulässt – `cupsd.conf` ist nur für root lesbar und liess sich nicht prüfen) bzw. 86400 s (D-Bus)
+an. Auf ein Auslaufen ist also kein Verlass. Beim ersten Start fragt der Dienst darum einmal
+`Get-Subscriptions` ab und kündigt nur Abonnements mit Besitzer `dms`, deren Ereignisliste und
+Zustellweg (`ippget` bzw. `dbus://`) denen des Dienstes entsprechen; danach eine Marke in
+`~/.local/state/alpe/`. Befund am PC (22.11.2026, lesend über IPP): kein Abonnement mit Besitzer
+`dms`, eines von `fabian` (`dbus://`, Auftragsereignisse, 3600 s – nicht vom Dienst). Test mit
+einer IPP-Attrappe.
 
 Alles andere ist nach D7 ein Fehler der Namensprüfung. `tools/namen-pruefen.sh` (aus G1
 vorgezogen) meldet ab D7.0 und schlägt ab D7.8 in `tools/test.sh` fehl.
@@ -538,18 +578,24 @@ Bestätigung des Maintainers**, dass PC und Mac umgestellt sind.
 
 | # | Bereich |
 |---|---|
+| D7.G | `tools/test.sh`: rot bei neuen Dateien über 1 MB oder ELF-Binärdateien gegenüber `origin/phase-a` (0.8 Nr. 24) |
 | D7.N | Node-Tests der Oberfläche in `tools/test.sh` mit fester Liste der 10 bekannten Fehlschläge (neuer Fehlschlag = rot) – vor D7.0 (0.8 Nr. 19) |
 | D7.0 | Werkzeug `entwicklung/umbenennen/` (Skript, Zuordnungstabelle, Probelauf, Kollisionsprüfung nach 2.3.0); `tools/namen-pruefen.sh` mit Ausnahmeliste 2.3.3, nur meldend |
 | D7.1 | Plugin-Beschreibung: `requires_alpe` gegen `Brand.version`, `bar-widget`; Alpe-Plugins; Tests |
-| D7.2 | Widget-Bibliothek `Alpe*` (nach Antwort auf die Rückfrage A/B); die `Dank*`-Weiterleitungen bleiben bis D7.8 |
+| D7.2a | Module verschieben, **nur `git mv`, ohne Inhaltsänderung** (0.8 Nr. 21): `DCommon/` → `Alpe/`, `Modules/DDash/` → `Alpe/Dash/`, `Modules/DBar/` → `Modules/Bar/`, `Modules/DIsland/` → `Modules/Island/`, `Modals/DLauncherV2/` → `Modals/Launcher/`, Harness-`qmldir`-Ordner. Damit dieser Commit grün bleibt, zeigen Symlinks unter den alten Pfaden auf die neuen (neue Dateien, keine Inhaltsänderung); `git log --follow` behält die Geschichte |
+| D7.2b | Importe auf die neuen Module, Symlinks weg; `D*` → `Alpe*` bzw. ohne «D» (Dateien per `git mv`, dann Bezüge); Übergangs-Hüllen `shell/DCommon/Widgets/D*.qml` und umgestellte `Dank*`-Hüllen bis D7.8 |
 | D7.3 | Plugins: claudeCodeUsage ins Repo und angepasst, NOTICE; `~/alpe-plugins` mit calculator; `docs/plugins-anpassen.md` für hueManager und sathiAi |
 | D7.4 | Schnittstelle Dienst ↔ Oberfläche: `ShellBackend`, `BackendNetworkService`, `backendBin`, JSON-Felder (`fragmentStatus`, Kürzel-Quelle) samt Go-Gegenstücken |
 | D7.5 | Oberfläche: `ShellMain.qml`/`ShellIpc.qml`, Bezeichner Bar/Dash/Island/Launcher, Kürzel-Aktionen; `dankNotepadModule`-Anbindung, «Wallpaper creator», `dms://` und Doku-Links nach `duxlabs.dev` weg |
 | D7.6 | Gespeicherte Kennungen, Migration v44 (Seiten-IDs, Starter-Plugins, Logo-Modus, Material-Vorlage «Alpe» mit Alpe-Zeichen, matugen-Spec), IPC-Ziel `dankdash` weg; Test mit Einstellungen aus 1.0 und v43 |
 | D7.7 | Erzeugte Dateien und Fremdprogramm-Vorlagen (Cache-Namen, matugen, Regel-IDs, `-- ALPE-RULE:`), Hotspot-Name, CUPS-Benutzer; Dienst intern (Bezeichner, `palette16`, `duxlog`) |
-| D7.8 | **Nach Bestätigung:** Weiterleitungen und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
+| D7.8 | **Nach Bestätigung:** `Dank*`-Hüllen, Übergangs-Hüllen `DCommon/Widgets`, `Modules/DankBar`, `Modules/DankDash` und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
 
 Dazu im Lauf von D7 (Doku, kein Code): `docs/plan/sie-form.md` (0.8 Nr. 15).
+
+Zwischenhalt nach D7.7: `~/alpe-plugins` mit calculator lokal fertig, Anleitungen für
+hueManager und sathiAi (PC und Mac, fish-tauglich) in `offene-faelle.md`; D7.8 erst nach
+Bestätigung. Nach jedem Commit wird «Stand» nachgeführt.
 
 Prüfung: je Commit `bash tools/test.sh`; Go-Tests wie bekannt; Ladeprüfung einmal auf dem
 Endstand unter KWin und Hyprland (Meldungen mit umbenannten Namen werden in den Grundlinien

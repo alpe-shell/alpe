@@ -246,10 +246,10 @@ Antworten in Plan 0.8 Nr. 6–19: claudeCodeUsage ins Repo; calculator in eigene
 `~/alpe-plugins`; sathiAi und hueManager per Anleitung; Namen freigegeben (`ShellBackend`,
 `dash`, `alpe_*`, `palette16`); Material-Vorlage «Alpe» mit Alpe-Zeichen.
 
-**Noch offen (vor D7.2):** Lesart der Widget-Bibliothek, Plan 2.3.0 – A (nur die Plugin-API
-heisst `Alpe*`, intern bleibt `D*`) oder B (`D*` heisst überall `Alpe*`; ≈1330 Stellen). Dazu,
-ob die Modulnamen `DCommon`, `DBar`, `DDash`, `DIsland` unter Regel 1 fallen. Der Plan geht
-bis zur Antwort von B aus, Modulnamen bleiben.
+~~**Noch offen (vor D7.2):** Lesart der Widget-Bibliothek~~ → **Variante B** (Plan 0.8 Nr. 20);
+Modulnamen fallen unter die Regel (0.8 Nr. 21, Zuordnung Plan 2.3.2: `qs.Alpe.*`,
+`qs.Alpe.Dash`, `qs.Modules.Bar`, `qs.Modules.Island`, `qs.Modals.Launcher`). CUPS, «Phase C»
+und Grössenprüfung: 0.8 Nr. 22–24.
 
 ## CUPS-Benutzer `dms` (Befund, Plan 0.8 Nr. 16)
 
@@ -260,9 +260,10 @@ Verwaltung oder Anmeldung benutzen ihn nicht. cupsd führt den Namen als Besitze
 Abonnements; es ist kein Systemkonto, und es wird kein Recht damit verbunden (Ereignisse eines
 Abonnements darf jeder abholen, Kündigen prüft den Besitzer). Abonnements laufen unbegrenzt
 (Abfrageweg, `notify-lease-duration 0`) bzw. einen Tag (D-Bus-Weg) und werden beim Beenden
-gekündigt. **Vorschlag für D7.7:** den echten Benutzernamen (`os/user`) statt eines festen
-Wortes setzen. Folge: Ein beim Absturz liegengebliebenes altes Abonnement auf «dms» bleibt in
-cupsd bis zu dessen Neustart bzw. Ablauf; schadet nicht.
+gekündigt. **Entschieden (Plan 0.8 Nr. 22, 2.3.3):** Benutzername zur Laufzeit (`os/user`, Rückfall
+`alpe`); alte Abonnements des Besitzers `dms` kündigt der Dienst beim ersten Start einmal, weil
+sich ihre Laufzeit (0 = ohne Ende, je nach `MaxLeaseDuration`) nicht belegen lässt. Am PC gab es
+am 22.11.2026 keines.
 
 ## Mögliche eigene Funktion: Hintergrund-Gestalter (nach Phase A)
 
