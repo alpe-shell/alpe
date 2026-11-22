@@ -4,8 +4,8 @@ import QtQuick
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
 Item {
     id: root
@@ -168,7 +168,7 @@ Item {
                     color: Theme.primary
                     visible: slide.selected
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: "check"
                         size: Theme.iconSizeSmall

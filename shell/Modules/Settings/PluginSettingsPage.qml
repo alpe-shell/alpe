@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modals.Common
 import qs.Modules.Settings.Widgets
 
@@ -215,7 +215,7 @@ FocusScope {
                     Repeater {
                         model: root.permissions
 
-                        DBadge {
+                        AlpeBadge {
                             required property string modelData
 
                             text: modelData

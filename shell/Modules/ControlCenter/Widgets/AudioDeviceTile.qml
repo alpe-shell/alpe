@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 CcTile {
     id: root
@@ -34,7 +34,7 @@ CcTile {
     available: widgetDef?.enabled ?? true
     tallContent: Component {
         Item {
-            DRingGauge {
+            AlpeRingGauge {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 width: Math.min(parent.width, parent.height)

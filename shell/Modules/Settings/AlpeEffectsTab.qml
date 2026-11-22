@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Fenster & Effekte unter KWin. Abgerundete Ecken (KDE-Rounded-Corners,
@@ -241,7 +241,7 @@ Item {
                     Repeater {
                         model: root.st ? root.st.blurClasses : []
 
-                        DButton {
+                        AlpeButton {
                             required property string modelData
                             text: modelData
                             iconName: "close"
@@ -322,7 +322,7 @@ Item {
                 subtitle: "Gegen flackernde oder fehlerhafte Unschärfe: Optimierungen an, keine Unschärfe hinter Popups und Spezial-Arbeitsflächen, Deckkraft der Fenster beachten."
                 iconName: "healing"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Anwenden"
                     variant: "tonal"

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Rectangle {
     id: root
@@ -79,7 +79,7 @@ Rectangle {
         visible: status === Image.Ready
     }
 
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         name: "image"
         size: Math.min(Theme.iconSize, Math.max(Theme.iconSizeSmall, root.height / 2))

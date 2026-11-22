@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DColorAnimation {
+Alpe.AlpeColorAnimation {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankColorAnimation", "DColorAnimation", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankColorAnimation", "AlpeColorAnimation", "qs.Alpe.Widgets")
 }

@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 FileItemSurface {
     id: tile

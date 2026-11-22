@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -35,7 +35,7 @@ Item {
         color: Theme.surfaceText
     }
 
-    DActionButton {
+    AlpeActionButton {
         id: collapseButton
         anchors.right: parent.right
         anchors.rightMargin: Theme.spacingXS

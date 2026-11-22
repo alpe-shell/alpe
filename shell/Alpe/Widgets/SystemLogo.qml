@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Effects
 import Quickshell
 import Quickshell.Widgets
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -34,7 +34,7 @@ Item {
         }
     }
 
-    DNFIcon {
+    AlpeNFIcon {
         id: nfIcon
         anchors.centerIn: parent
         visible: root.useNerdFont

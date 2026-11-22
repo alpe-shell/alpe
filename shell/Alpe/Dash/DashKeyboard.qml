@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import "../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import "../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 Item {
     id: root

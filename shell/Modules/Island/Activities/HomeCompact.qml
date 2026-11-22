@@ -3,11 +3,11 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Services.SystemTray
 import qs.Common
-import qs.Modules.DBar.Widgets
+import qs.Modules.Bar.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import "../../../DCommon/Common/LayoutCodes.js" as LayoutCodes
+import "../../../Alpe/Common/LayoutCodes.js" as LayoutCodes
 
 Item {
     id: root
@@ -411,7 +411,7 @@ Item {
         height: root.iconSize
         opacity: root.connectivityIconOpacity(connectivityIcon.type)
 
-        DIcon {
+        AlpeIcon {
             id: connectivityGlyph
 
             anchors.centerIn: parent
@@ -419,14 +419,14 @@ Item {
             size: root.statusIconSize
             color: root.connectivityIconColor(connectivityIcon.type)
 
-            DBlink {
+            AlpeBlink {
                 target: connectivityGlyph
                 running: connectivityIcon.visible && root.connectivityBusy(connectivityIcon.type)
             }
         }
     }
 
-    component PrivacyIcon: DIcon {
+    component PrivacyIcon: AlpeIcon {
         required property bool active
 
         visible: active
@@ -577,14 +577,14 @@ Item {
                 visible: group.isMedia && root.controller.mediaAvailable
             }
 
-            DIcon {
+            AlpeIcon {
                 visible: group.isMedia && !root.controller.mediaAvailable
                 name: "search"
                 size: root.iconSize
                 color: Theme.surfaceTextMedium
             }
 
-            DIcon {
+            AlpeIcon {
                 visible: group.isWeather
                 name: WeatherService.getWeatherIcon(WeatherService.weather.wCode)
                 size: root.statusIconSize
@@ -598,7 +598,7 @@ Item {
                 font.pixelSize: root.textSize
             }
 
-            DIcon {
+            AlpeIcon {
                 visible: group.isNotifications
                 name: "notifications"
                 size: root.statusIconSize
@@ -619,7 +619,7 @@ Item {
                 font.pixelSize: root.textSize
             }
 
-            DIcon {
+            AlpeIcon {
                 visible: group.isSystemLevel && (group.vertical || group.levelDisplay !== "percentage")
                 name: group.isVolume ? AudioService.sinkVolumeIconName : BrightnessService.brightnessIconName(root.brightnessDevice, root.brightnessLevel)
                 size: root.statusIconSize
@@ -684,7 +684,7 @@ Item {
                 }
             }
 
-            DIcon {
+            AlpeIcon {
                 visible: group.isStatus && !group.usesBattery && !group.usesConnectivity
                 name: "tune"
                 size: root.iconSize
@@ -899,7 +899,7 @@ Item {
                         : (caretRoot.hovered ? Theme.surfaceTextHover : "transparent")
                 }
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: {
                         const edge = root.controller.edge;

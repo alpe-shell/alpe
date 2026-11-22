@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
 SettingsDropdownRow {
     id: root
@@ -17,7 +17,7 @@ SettingsDropdownRow {
     function _enumerate() {
         if (_enumerated)
             return;
-        _families = ["Default"].concat(DCommon.Fonts.selectableFamilies(root.defaultFamily));
+        _families = ["Default"].concat(Alpe.Fonts.selectableFamilies(root.defaultFamily));
         _enumerated = true;
     }
 

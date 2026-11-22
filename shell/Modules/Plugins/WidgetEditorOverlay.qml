@@ -3,12 +3,12 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.ControlCenter.Widgets
-import qs.Modules.DDash.Overview
+import qs.Alpe.Dash.Overview
 import qs.Modules.Settings.DesktopWidgetSettings
 import qs.Modules.Settings.Widgets
-import "../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import "../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 FocusScope {
     id: root
@@ -225,7 +225,7 @@ FocusScope {
                 }
             }
 
-            DWindowHeader {
+            AlpeWindowHeader {
                 id: header
                 x: panel.padding
                 y: panel.padding
@@ -237,7 +237,7 @@ FocusScope {
                 onCloseRequested: root.closeOptions()
             }
 
-            DFlickable {
+            AlpeFlickable {
                 id: scroll
                 x: panel.padding - panel.focusPadding
                 y: header.y + header.height + PopoutMetrics.contentGap - panel.focusPadding

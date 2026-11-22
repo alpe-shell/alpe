@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 
-DModal {
+AlpeModal {
     id: root
 
     layerNamespace: "dms:confirm-modal"

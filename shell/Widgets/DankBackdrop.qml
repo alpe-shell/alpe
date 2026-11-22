@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DBackdrop {
+AlpeBackdrop {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankBackdrop", "DBackdrop", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankBackdrop", "AlpeBackdrop", "qs.Widgets")
 }

@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Row {
     id: control
@@ -71,7 +71,7 @@ Row {
 
         Behavior on topRightRadius {
             enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
+            AlpeAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
             }
@@ -79,7 +79,7 @@ Row {
 
         Behavior on bottomRightRadius {
             enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
+            AlpeAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
             }
@@ -87,7 +87,7 @@ Row {
 
         Behavior on topLeftRadius {
             enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
+            AlpeAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
             }
@@ -95,7 +95,7 @@ Row {
 
         Behavior on bottomLeftRadius {
             enabled: FileBrowserMetrics.animationsEnabled
-            DAnim {
+            AlpeAnim {
                 duration: Style.expressiveDurations.expressiveEffects
                 easing.bezierCurve: Style.expressiveCurves.expressiveEffects
             }
@@ -143,7 +143,7 @@ Row {
             anchors.centerIn: parent
             spacing: Style.spacingS
 
-            DIcon {
+            AlpeIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 name: control.current.icon
                 size: Style.iconSizeMedium
@@ -160,7 +160,7 @@ Row {
             }
         }
 
-        DDropdown {
+        AlpeDropdown {
             id: menu
 
             showTrigger: false
@@ -186,7 +186,7 @@ Row {
         tooltipText: control.descending ? I18n.tr("Descending", "file browser sort order option") : I18n.tr("Ascending", "file browser sort order option")
         onClicked: control.directionToggled()
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: control.descending ? "arrow_downward" : "arrow_upward"
             size: Style.iconSizeMedium

@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 BasePill {
     id: root
@@ -50,7 +50,7 @@ BasePill {
             implicitWidth: icon.width
             implicitHeight: root.contentThickness
 
-            DIcon {
+            AlpeIcon {
                 id: icon
                 anchors.centerIn: parent
                 name: "shift_lock"

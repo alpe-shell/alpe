@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Column {
@@ -22,7 +22,7 @@ Column {
             settingKey: "profileImage"
             tags: ["user", "account", "profile", "avatar", "image"]
 
-            leading: DCircularImage {
+            leading: AlpeCircularImage {
                 width: SettingsMetrics.avatarSize
                 ringWidth: Theme.avatarRingWidth
                 ringColor: Theme.avatarRingColor
@@ -31,13 +31,13 @@ Column {
                 fallbackIcon: "material:person"
             }
 
-            DActionButton {
+            AlpeActionButton {
                 iconName: "edit"
                 tooltipText: I18n.tr("Select Profile Image", "profile image file browser title")
                 onClicked: root.parentModal?.openProfileBrowser()
             }
 
-            DActionButton {
+            AlpeActionButton {
                 iconName: "close"
                 Accessible.name: I18n.tr("Clear")
                 enabled: PortalService.profileImage !== ""

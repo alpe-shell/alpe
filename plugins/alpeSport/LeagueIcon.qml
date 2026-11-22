@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Logo des Wettbewerbs (ESPN), sonst ein Symbol der Sportart.
 Item {
@@ -29,7 +29,7 @@ Item {
         visible: root.logo !== "" && status !== Image.Error
     }
 
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         visible: !image.visible
         name: root.league?.kind === "national" ? "flag" : root.league?.sport === "hockey" ? "sports_hockey" : root.league?.sport === "basketball" ? "sports_basketball" : root.league?.kind === "cup" ? "emoji_events" : "sports_soccer"

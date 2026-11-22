@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Effects
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root

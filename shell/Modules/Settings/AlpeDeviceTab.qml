@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: dieselbe Shell auf verschiedenen Rechnern. Die Seite zeigt, was Alpe am Gerät erkennt
@@ -277,7 +277,7 @@ Item {
                 subtitle: "Braucht einmal dein Passwort. Ein kleiner Systemdienst (alpe-ladegrenze) setzt den Wert nach jedem Start wieder; bei 100 % wird er entfernt."
                 iconName: "lock_open"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Übernehmen"
                     variant: "tonal"
@@ -323,7 +323,7 @@ Item {
                 subtitle: "Gilt systemweit über logind (/etc/systemd/logind.conf.d/60-alpe-deckel.conf); braucht einmal dein Passwort."
                 iconName: "lock_open"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Übernehmen"
                     variant: "tonal"

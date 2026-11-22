@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DToggle {
+Alpe.AlpeToggle {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankToggle", "DToggle", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankToggle", "AlpeToggle", "qs.Alpe.Widgets")
 }

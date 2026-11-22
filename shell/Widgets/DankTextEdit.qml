@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DTextEdit {
+Alpe.AlpeTextEdit {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankTextEdit", "DTextEdit", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankTextEdit", "AlpeTextEdit", "qs.Alpe.Widgets")
 }

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -38,7 +38,7 @@ SettingsRow {
     }
 
     leading: [
-        DDragHandle {
+        AlpeDragHandle {
             id: handle
 
             visible: root.reorderEnabled

@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell.Services.Mpris
 import qs.Common
 import qs.Services
-import qs.Modules.DDash.Media
+import qs.Alpe.Dash.Media
 
 Item {
     id: root

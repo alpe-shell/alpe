@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DColorSwatch {
+Alpe.AlpeColorSwatch {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankColorSwatch", "DColorSwatch", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankColorSwatch", "AlpeColorSwatch", "qs.Alpe.Widgets")
 }

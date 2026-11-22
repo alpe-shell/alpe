@@ -7,7 +7,7 @@ import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../../../Common/QmlUtils.js" as QmlUtils
 
@@ -35,7 +35,7 @@ Item {
     readonly property Item headerActions: Row {
         spacing: Theme.spacingS
 
-        DDropdown {
+        AlpeDropdown {
             id: adapterDropdown
 
             function adapterLabel(adapter) {
@@ -58,7 +58,7 @@ Item {
             }
         }
 
-        DButton {
+        AlpeButton {
             anchors.verticalCenter: parent.verticalCenter
             visible: root.adapterEnabled
             buttonHeight: Theme.buttonHeightXS
@@ -201,7 +201,7 @@ Item {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         contentHeight: column.height
         clip: true
@@ -295,7 +295,7 @@ Item {
                             onToggled: root.togglePin(pairedRow.modelData.address)
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             id: optionsButton
                             anchors.verticalCenter: parent.verticalCenter
                             buttonSize: Theme.buttonHeightXS

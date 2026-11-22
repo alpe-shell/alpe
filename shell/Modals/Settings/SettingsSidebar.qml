@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -211,7 +211,7 @@ Item {
     width: implicitWidth
     height: parent.height
 
-    DSearchField {
+    AlpeSearchField {
         id: searchField
 
         property real sideInset: root.searchActive ? Theme.spacingS : SettingsMetrics.paneMargin
@@ -310,7 +310,7 @@ Item {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             id: avatarButton
 
             anchors.right: parent.right
@@ -327,7 +327,7 @@ Item {
             }
 
             // Below the state layer so hover, press and focus tint the avatar
-            DCircularImage {
+            AlpeCircularImage {
                 z: -1
                 anchors.fill: parent
                 ringWidth: Theme.avatarRingWidth
@@ -339,7 +339,7 @@ Item {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: sidebarFlickable
         anchors.left: parent.left
         anchors.right: parent.right

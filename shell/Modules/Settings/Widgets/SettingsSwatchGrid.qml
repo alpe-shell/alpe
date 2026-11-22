@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 
@@ -106,7 +106,7 @@ Flow {
                     }
                 }
 
-                DPaletteSwatch {
+                AlpePaletteSwatch {
                     anchors.centerIn: parent
                     width: Theme.minimumTouchTargetSize
                     height: Theme.minimumTouchTargetSize
@@ -117,7 +117,7 @@ Flow {
                 }
             }
 
-            DBadge {
+            AlpeBadge {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.margins: Theme.spacingXS
@@ -127,7 +127,7 @@ Flow {
                 textColor: Theme.onSecondaryContainer
             }
 
-            DActionButton {
+            AlpeActionButton {
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.margins: Theme.spacingXS

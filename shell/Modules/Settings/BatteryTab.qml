@@ -2,9 +2,9 @@ import QtQuick
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
-import qs.Modules.DBar.Popouts
+import qs.Modules.Bar.Popouts
 
 Item {
     id: root
@@ -91,7 +91,7 @@ done
                         width: parent.width
                         spacing: Theme.spacingM
 
-                        DIcon {
+                        AlpeIcon {
                             name: BatteryService.getBatteryIcon()
                             size: Theme.iconSizeLarge
                             color: root.batteryStatusColor
@@ -295,7 +295,7 @@ done
                         height: 1
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: applyButton
                         text: I18n.tr("Apply to hardware")
                         iconName: "lock"

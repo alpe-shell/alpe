@@ -4,7 +4,7 @@ import qs.Common
 import qs.Services
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     layerNamespace: "dms:control-center"

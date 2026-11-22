@@ -5,7 +5,7 @@ import Quickshell
 import qs.Common
 import qs.Services
 import "../../Common/WidgetPlacement.js" as Placement
-import qs.DCommon.Session
+import qs.Alpe.Session
 
 FocusScope {
     id: root

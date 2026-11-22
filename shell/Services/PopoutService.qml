@@ -530,7 +530,7 @@ Singleton {
         if (Date.now() - _settingsShownAt < 2000)
             return false;
         const settingsTitle = I18n.tr("Settings", "settings window title");
-        for (const toplevel of DToplevels.toplevels.values) {
+        for (const toplevel of Toplevels.toplevels.values) {
             if (toplevel.title === "Settings" || toplevel.title === settingsTitle)
                 return false;
         }
@@ -656,7 +656,7 @@ Singleton {
     function focusOrToggleSettings() {
         if (settingsModal?.visible) {
             const settingsTitle = I18n.tr("Settings", "settings window title");
-            for (const toplevel of DToplevels.toplevels.values) {
+            for (const toplevel of Toplevels.toplevels.values) {
                 if (toplevel.title !== "Settings" && toplevel.title !== settingsTitle)
                     continue;
                 if (toplevel.activated) {
@@ -673,7 +673,7 @@ Singleton {
     function focusOrToggleSettingsWithTab(tabName: string) {
         if (settingsModal?.visible) {
             const settingsTitle = I18n.tr("Settings", "settings window title");
-            for (const toplevel of DToplevels.toplevels.values) {
+            for (const toplevel of Toplevels.toplevels.values) {
                 if (toplevel.title !== "Settings" && toplevel.title !== settingsTitle)
                     continue;
                 if (toplevel.activated) {

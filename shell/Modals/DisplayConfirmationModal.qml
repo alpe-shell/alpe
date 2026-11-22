@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Modals.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
 
     property string outputName: ""
@@ -197,7 +197,7 @@ DModal {
                 }
             }
 
-            DActionButton {
+            AlpeActionButton {
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.topMargin: Theme.spacingM

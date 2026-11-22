@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 SettingsCard {
@@ -55,7 +55,7 @@ SettingsCard {
             width: parent.width
             height: workspaceTabBar.height + Theme.spacingM
 
-            DTabBar {
+            AlpeTabBar {
                 id: workspaceTabBar
                 width: parent.width
                 tabHeight: 44
@@ -210,7 +210,7 @@ SettingsCard {
 
             title: modelData
 
-            DIconPicker {
+            AlpeIconPicker {
                 id: iconPicker
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -241,7 +241,7 @@ SettingsCard {
                 }
             }
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.iconButtonSize
                 iconName: "close"
                 Accessible.name: I18n.tr("Remove")

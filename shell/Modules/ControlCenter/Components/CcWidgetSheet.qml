@@ -4,11 +4,11 @@ import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../utils/widgets.js" as WidgetUtils
 
-DBottomSheet {
+AlpeBottomSheet {
     id: root
 
     property var widgets: []
@@ -101,7 +101,7 @@ DBottomSheet {
                     // Solid: translucent, it vanishes against the card in light mode.
                     color: Theme.chipSurfaceNested
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: item.modelData.icon
                         size: Theme.iconSizeLarge
@@ -112,7 +112,7 @@ DBottomSheet {
                     Loader {
                         anchors.fill: parent
                         active: item.modelData.id === "user" && PortalService.profileImageUrl !== ""
-                        sourceComponent: DCircularImage {
+                        sourceComponent: AlpeCircularImage {
                             imageSource: PortalService.profileImageUrl
                             fallbackIcon: "material:person"
                         }
@@ -189,7 +189,7 @@ DBottomSheet {
                 radius: Theme.fullRadius(width, height)
                 color: Theme.chipSurfaceNested
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: card.category.icon
                     size: Theme.iconSize
@@ -210,7 +210,7 @@ DBottomSheet {
                 elide: Text.ElideRight
             }
 
-            DIcon {
+            AlpeIcon {
                 id: chevron
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.spacingL
@@ -258,7 +258,7 @@ DBottomSheet {
         }
     }
 
-    DSearchField {
+    AlpeSearchField {
         id: searchField
         width: parent.width
         placeholderText: I18n.tr("Search widgets...")

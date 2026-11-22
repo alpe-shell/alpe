@@ -2,10 +2,10 @@ import QtQuick
 import qs.Common
 import qs.Modals
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: win
 
     property alias shouldBeVisible: win.visible
@@ -48,7 +48,7 @@ DFloatingWindow {
         anchors.fill: parent
         spacing: 0
 
-        DWindowHeader {
+        AlpeWindowHeader {
             id: titleBar
             width: parent.width
             z: 10
@@ -56,7 +56,7 @@ DFloatingWindow {
             title: KeybindsService.cheatsheet.title || I18n.tr("Keybinds")
             onCloseRequested: win.hide()
 
-            DActionButton {
+            AlpeActionButton {
                 iconName: "close_fullscreen"
                 buttonSize: Theme.buttonHeightXXS
                 iconSize: Theme.iconSizeSmall

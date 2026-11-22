@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 StyledRect {
     id: root
@@ -65,7 +65,7 @@ StyledRect {
         anchors.rightMargin: Theme.spacingM
         spacing: Theme.spacingM
 
-        DIcon {
+        AlpeIcon {
             name: root.iconName
             size: Theme.iconSize
             color: Theme.primary
@@ -96,7 +96,7 @@ StyledRect {
             }
         }
 
-        DButton {
+        AlpeButton {
             id: openButton
             anchors.verticalCenter: parent.verticalCenter
             text: root.buttonText

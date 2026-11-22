@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -50,7 +50,7 @@ Item {
             }
         }
 
-        DSlider {
+        AlpeSlider {
             id: levelSlider
 
             width: parent.width

@@ -3,10 +3,10 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modules.DDash
-import qs.Modules.DDash.Overview
+import qs.Alpe.Dash
+import qs.Alpe.Dash.Overview
 
 FocusScope {
     id: root
@@ -41,7 +41,7 @@ FocusScope {
         }
     }
 
-    readonly property DPanelResizer panelResizer: DPanelResizer {
+    readonly property AlpePanelResizer panelResizer: AlpePanelResizer {
         popout: root.resizeHost
         stepWidth: DashMetrics.preferredColumnWidth + DashMetrics.gridGap
         widthFor: columns => Math.min(root.controller.dashboardAvailableWidth, DashMetrics.widthFor(SettingsData.showWeekNumber, undefined, columns))
@@ -158,7 +158,7 @@ FocusScope {
             active: root.tabsShown
             visible: !root.editMode
 
-            sourceComponent: DNavigationBar {
+            sourceComponent: AlpeNavigationBar {
                 id: tabBar
 
                 editable: true
@@ -207,7 +207,7 @@ FocusScope {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: pages
         enabled: !tabOptions.shown && !pageActions.menuOpen
         showScrollBar: false
@@ -253,7 +253,7 @@ FocusScope {
         }
     }
 
-    DGridEditChrome {
+    AlpeGridEditChrome {
         id: panelChrome
 
         anchors.fill: parent
@@ -274,7 +274,7 @@ FocusScope {
         onResizeCanceled: root.panelResizer.cancel()
     }
 
-    DSpinner {
+    AlpeSpinner {
         anchors.centerIn: pages
         size: DashMetrics.spinnerSize
         visible: !tabLoader.visible

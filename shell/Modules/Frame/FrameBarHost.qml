@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Services
 
 Item {
@@ -64,7 +64,7 @@ Item {
                 anchors.fill: parent
                 active: slot.dankBarItem !== null && slot.slotBarConfig !== null
 
-                sourceComponent: DBarBody {
+                sourceComponent: BarBody {
                     hostWindow: host.frameWindow
                     modelData: host.targetScreen
                     rootWindow: slot.dankBarItem

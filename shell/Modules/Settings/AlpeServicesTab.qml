@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Dienste und Autostart. Die Shell selbst (alpe.service mit ihren Drop-ins), eigene
@@ -89,7 +89,7 @@ Item {
                 iconName: root.shell && root.shell.ActiveState === "active" ? "check_circle" : "error_outline"
                 iconColor: root.shell && root.shell.ActiveState === "active" ? Theme.primary : Theme.error
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Protokoll"
                     iconName: "receipt_long"
@@ -110,7 +110,7 @@ Item {
                 subtitle: "Startet Leiste, Dock und diese Einstellungen neu; offene Fenster bleiben."
                 iconName: "restart_alt"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Neu starten"
                     variant: "tonal"
@@ -156,18 +156,18 @@ Item {
 
                     accessory: Row {
                         spacing: Theme.spacingXS
-                        DButton {
+                        AlpeButton {
                             text: svc.modelData.ActiveState === "active" ? "Stoppen" : "Starten"
                             variant: "text"
                             onClicked: root.act(svc.modelData.ActiveState === "active" ? "stop" : "start", svc.modelData.Id)
                         }
-                        DButton {
+                        AlpeButton {
                             text: "Neu starten"
                             variant: "text"
                             visible: svc.modelData.ActiveState === "active"
                             onClicked: root.act("restart", svc.modelData.Id)
                         }
-                        DButton {
+                        AlpeButton {
                             text: "Protokoll"
                             variant: "text"
                             onClicked: root.journal(svc.modelData.Id)
@@ -205,12 +205,12 @@ Item {
                     Row {
                         anchors.verticalCenter: parent ? parent.verticalCenter : undefined
                         spacing: Theme.spacingXS
-                        DButton {
+                        AlpeButton {
                             text: "Neu starten"
                             variant: "text"
                             onClicked: root.act("restart", other.modelData.Id)
                         }
-                        DButton {
+                        AlpeButton {
                             text: "Protokoll"
                             variant: "text"
                             onClicked: root.journal(other.modelData.Id)

@@ -4,13 +4,13 @@ import QtQuick
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Common/KeyUtils.js" as KeyUtils
 import "../../Common/KeybindActions.js" as Actions
 
-DDialog {
+AlpeDialog {
     id: root
 
     readonly property var log: Log.scoped("KeybindEditorDialog")
@@ -678,20 +678,20 @@ DDialog {
     }
 
     actions: [
-        DButton {
+        AlpeButton {
             text: I18n.tr("Reset to default")
             visible: root.canReset
             enabled: !root.busy
             variant: "text"
             onClicked: root.resetRequested(root.originalKey)
         },
-        DButton {
+        AlpeButton {
             text: I18n.tr("Cancel")
             enabled: root.closeEnabled
             variant: "text"
             onClicked: root.rejected()
         },
-        DButton {
+        AlpeButton {
             text: root.isNew ? I18n.tr("Add") : I18n.tr("Save")
             visible: !root.readOnly
             enabled: root.canSubmit
@@ -713,7 +713,7 @@ DDialog {
     SettingsCard {
         title: I18n.tr("Key", "noun, keybind editor row label for the key combination")
         enabled: root.formEnabled
-        headerActions: DButton {
+        headerActions: AlpeButton {
             visible: !root.isNew && !root.readOnly && !root.addingNewKey
             text: I18n.tr("New key")
             iconName: "add"
@@ -725,7 +725,7 @@ DDialog {
         SettingsRow {
             visible: !root.isNew && (root.keys.length > 1 || root.addingNewKey)
 
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 id: keyChips
                 width: parent.width
                 showCounts: false
@@ -809,14 +809,14 @@ DDialog {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingM
 
-                        DIcon {
+                        AlpeIcon {
                             name: "keyboard"
                             size: Theme.iconSize
                             color: Theme.surfaceVariantText
                             anchors.verticalCenter: parent.verticalCenter
                         }
 
-                        DKeycap {
+                        AlpeKeycap {
                             text: root.editKey
                             visible: root.editKey !== "" && !root.recording
                             anchors.verticalCenter: parent.verticalCenter
@@ -832,7 +832,7 @@ DDialog {
                         }
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: recordButton
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.spacingXS
@@ -850,7 +850,7 @@ DDialog {
                     spacing: Theme.spacingS
                     visible: root.conflicts.length > 0
 
-                    DIcon {
+                    AlpeIcon {
                         id: conflictIcon
                         name: "warning"
                         size: Theme.iconSizeSmall
@@ -872,7 +872,7 @@ DDialog {
                     spacing: Theme.spacingS
                     visible: root.keysymUnreachable
 
-                    DIcon {
+                    AlpeIcon {
                         id: unreachableIcon
                         name: "warning"
                         size: Theme.iconSizeSmall
@@ -897,7 +897,7 @@ DDialog {
         enabled: root.formEnabled
 
         SettingsRow {
-            body: DButtonGroup {
+            body: AlpeButtonGroup {
                 arrowKeysSelect: false
                 width: parent.width
                 fillWidth: true
@@ -921,7 +921,7 @@ DDialog {
         SettingsRow {
             visible: root.actionType === "dms"
 
-            body: DDropdown {
+            body: AlpeDropdown {
                 id: dmsActionDropdown
                 width: parent.width
                 compactMode: true
@@ -946,7 +946,7 @@ DDialog {
                 width: parent.width
                 spacing: Theme.spacingS
 
-                DDropdown {
+                AlpeDropdown {
                     id: compositorCategoryDropdown
                     width: Math.round((parent.width - parent.spacing) / 3)
                     compactMode: true
@@ -954,7 +954,7 @@ DDialog {
                     onValueChanged: value => root.selectCompositorCategory(value)
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     id: compositorActionDropdown
                     visible: !root.useCustomCompositor
                     width: parent.width - compositorCategoryDropdown.width - parent.spacing
@@ -972,7 +972,7 @@ DDialog {
                     }
                 }
 
-                DTextField {
+                AlpeTextField {
                     visible: root.useCustomCompositor
                     width: parent.width - compositorCategoryDropdown.width - parent.spacing
                     outlined: true
@@ -992,7 +992,7 @@ DDialog {
         SettingsRow {
             visible: root.actionType === "spawn"
 
-            body: DTextField {
+            body: AlpeTextField {
                 readonly property var parsedCommand: root.actionType === "spawn" ? Actions.parseSpawnCommand(root.editAction) : null
 
                 width: parent.width
@@ -1015,7 +1015,7 @@ DDialog {
         SettingsRow {
             visible: root.actionType === "shell"
 
-            body: DTextField {
+            body: AlpeTextField {
                 width: parent.width
                 outlined: true
                 leftIconName: "terminal"
@@ -1035,7 +1035,7 @@ DDialog {
         SettingsRow {
             visible: root.showDmsArgs && root.dmsArgDefs.some(arg => arg.name === "amount")
 
-            body: DTextField {
+            body: AlpeTextField {
                 id: amountField
 
                 readonly property string amount: root.dmsParsedArgs?.args?.amount || ""
@@ -1064,7 +1064,7 @@ DDialog {
         SettingsRow {
             visible: root.showDmsArgs && root.dmsArgDefs.some(arg => arg.name === "device")
 
-            body: DTextField {
+            body: AlpeTextField {
                 readonly property string device: root.dmsParsedArgs?.args?.device || ""
 
                 width: parent.width
@@ -1087,7 +1087,7 @@ DDialog {
             visible: root.showDmsArgs && root.dmsArgDefs.some(arg => arg.name === "tab")
             title: I18n.tr("Tab", "noun, keybind argument label for a dashboard tab")
 
-            DDropdown {
+            AlpeDropdown {
                 id: dashTabDropdown
                 compactMode: true
                 options: [I18n.tr("Overview"), I18n.tr("Media"), I18n.tr("Wallpaper"), I18n.tr("Weather")]
@@ -1100,7 +1100,7 @@ DDialog {
         SettingsRow {
             visible: root.showDmsArgs && root.dmsFlagArgs.length > 0
 
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
@@ -1125,7 +1125,7 @@ DDialog {
 
                 visible: root.showArgEditor(index, argDef)
 
-                body: DTextField {
+                body: AlpeTextField {
                     id: argField
 
                     property bool syncing: false
@@ -1157,7 +1157,7 @@ DDialog {
         SettingsRow {
             visible: root.showCompositorPicker && root.compositorFlags.length > 0
 
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
@@ -1174,7 +1174,7 @@ DDialog {
         }
 
         SettingsRow {
-            body: DTextField {
+            body: AlpeTextField {
                 width: parent.width
                 outlined: true
                 leftIconName: "title"
@@ -1194,7 +1194,7 @@ DDialog {
         visible: KeybindsService.currentProvider === "hyprland"
 
         SettingsRow {
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
@@ -1206,7 +1206,7 @@ DDialog {
     }
 
     component FieldUnit: StyledText {
-        required property DTextField field
+        required property AlpeTextField field
 
         anchors.right: parent.right
         anchors.rightMargin: field.contentPadding

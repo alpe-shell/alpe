@@ -6,9 +6,9 @@ import Quickshell.Services.Notifications
 import qs.Common
 import qs.Modules.Notifications
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
 PanelWindow {
     id: win
@@ -691,7 +691,7 @@ PanelWindow {
                 radius: cardSurface.radius
                 color: "transparent"
 
-                DFlickable {
+                AlpeFlickable {
                     anchors.fill: parent
                     anchors.bottomMargin: win.timeoutRailClearance
                     contentHeight: notificationCard.targetHeight
@@ -849,7 +849,7 @@ PanelWindow {
     }
 
     // Sits on the untranslated card footprint: inside content the handlers would lose the pointer once the card slides past them,
-    // and above content so they see the gesture before DFlickable's blocking vertical handler
+    // and above content so they see the gesture before AlpeFlickable's blocking vertical handler
     NotificationSwipeRow {
         id: swipe
         parent: slideClip
@@ -877,7 +877,7 @@ PanelWindow {
         }
     }
 
-    DCommon.DAnim {
+    Alpe.AlpeAnim {
         id: enterAnimation
         target: win
         property: "presentationProgress"
@@ -893,7 +893,7 @@ PanelWindow {
     SequentialAnimation {
         id: exitAnim
 
-        DCommon.DAnim {
+        Alpe.AlpeAnim {
             target: win
             property: "presentationProgress"
             to: 0
@@ -901,7 +901,7 @@ PanelWindow {
             easing.bezierCurve: NotificationMetrics.exitCurve
         }
 
-        DCommon.DAnim {
+        Alpe.AlpeAnim {
             target: win
             property: "chromeRelease"
             to: 1

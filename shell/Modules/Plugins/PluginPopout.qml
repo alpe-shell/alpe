@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     layerNamespace: "dms:plugins:" + layerNamespacePlugin

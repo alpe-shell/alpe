@@ -3,7 +3,7 @@ import Quickshell.Widgets
 import Quickshell.Services.Notifications
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Rectangle {
     id: root
@@ -252,7 +252,7 @@ Rectangle {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         visible: root.interactive && root.groupCount > 1
                         text: root.groupCount.toString()
                         iconName: root.groupExpanded ? "expand_less" : "expand_more"
@@ -264,7 +264,7 @@ Rectangle {
                         onClicked: root.groupToggleRequested()
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         visible: root.interactive && root.canExpand && root.groupCount <= 1
                         iconName: root.descriptionExpanded ? "expand_less" : "expand_more"
                         buttonSize: NotificationMetrics.controlSize
@@ -273,7 +273,7 @@ Rectangle {
                         onClicked: root.expandRequested()
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         visible: root.interactive && root.showClose
                         iconName: "close"
                         buttonSize: NotificationMetrics.controlSize
@@ -400,7 +400,7 @@ Rectangle {
 
                 Repeater {
                     model: root.showActions ? (root.notificationData?.actions || []) : []
-                    DButton {
+                    AlpeButton {
                         required property var modelData
                         required property int index
                         text: (modelData.text || I18n.tr("Open")) + (root.keyboardHints && index < 9 ? " (" + (index + 1) + ")" : "")
@@ -414,7 +414,7 @@ Rectangle {
                     }
                 }
 
-                DButton {
+                AlpeButton {
                     visible: root.showDismiss
                     text: root.dismissText
                     maximumWidth: actions.width

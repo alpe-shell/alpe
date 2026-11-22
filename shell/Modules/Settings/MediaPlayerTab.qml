@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell.Io
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import qs.Services
 
 Item {
@@ -96,7 +96,7 @@ Item {
                 resetKeys: ["audioWheelScrollAmount"]
                 title: I18n.tr("Volume step")
 
-                DTextField {
+                AlpeTextField {
                     outlined: true
                     leftIconName: "volume_up"
                     width: Theme.fieldHeight * 2
@@ -137,7 +137,7 @@ Item {
             settingKey: "mediaLyricsProviders"
             tags: ["lyrics", "provider", "priority", "order", "source", "lrclib", "better lyrics", "unison", "lyricsplus", "kugou", "youtube music"]
 
-            headerActions: DActionButton {
+            headerActions: AlpeActionButton {
                 iconName: "restart_alt"
                 tooltipText: I18n.tr("Reset to default")
                 enabled: !SettingsData.isDefault(["mediaLyricsProviders"])
@@ -163,7 +163,7 @@ Item {
                     clickable: true
                     onClicked: MediaOptions.setLyricsProviderEnabled(modelData, !provider?.enabled)
 
-                    DToggle {
+                    AlpeToggle {
                         hideText: true
                         Accessible.name: providerRow.title
                         checked: providerRow.provider?.enabled ?? false
@@ -189,14 +189,14 @@ Item {
                 onAccepted: root.addExcludedPlayer()
 
                 actions: [
-                    DIconButton {
+                    AlpeIconButton {
                         variant: "filled"
                         iconName: "add"
                         Accessible.name: I18n.tr("Add")
                         enabled: excludeEditor.value.trim() !== ""
                         onClicked: root.addExcludedPlayer()
                     },
-                    DIconButton {
+                    AlpeIconButton {
                         iconName: "apps"
                         tooltipText: I18n.tr("Browse")
                         onClicked: appBrowserPopup.show()
@@ -214,7 +214,7 @@ Item {
                     title: modelData
                     iconName: "music_off"
 
-                    DActionButton {
+                    AlpeActionButton {
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "delete"
                         iconColor: Theme.error

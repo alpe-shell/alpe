@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -43,7 +43,7 @@ Item {
     }
 
     // A logo mode with nothing to show (unknown compositor, empty custom path) falls back to the symbol.
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         visible: !(logoLoader.item as LauncherLogo)?.resolvedMode
         name: root.iconName

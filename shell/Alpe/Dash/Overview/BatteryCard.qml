@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 Card {
     id: root

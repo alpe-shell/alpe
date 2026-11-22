@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Popup {
     id: root
@@ -81,7 +81,7 @@ Popup {
             height: root.rowHeight
             visible: root.errorText !== ""
 
-            DIcon {
+            AlpeIcon {
                 id: errorIcon
 
                 anchors.left: parent.left
@@ -107,7 +107,7 @@ Popup {
             }
         }
 
-        DListView {
+        AlpeListView {
             id: list
 
             width: parent.width
@@ -136,7 +136,7 @@ Popup {
                     stateColor: Style.surfaceText
                 }
 
-                DIcon {
+                AlpeIcon {
                     id: entryIcon
 
                     anchors.left: parent.left

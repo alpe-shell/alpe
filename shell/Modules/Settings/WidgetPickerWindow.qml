@@ -1,10 +1,10 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: root
 
     property var widgets: []
@@ -165,7 +165,7 @@ DFloatingWindow {
             anchors.fill: parent
             spacing: 0
 
-            DWindowHeader {
+            AlpeWindowHeader {
                 id: titleBar
                 width: parent.width
                 controls: windowControls
@@ -192,7 +192,7 @@ DFloatingWindow {
                         wrapMode: Text.WordWrap
                     }
 
-                    DSearchField {
+                    AlpeSearchField {
                         id: searchField
                         width: parent.width
                         textColor: Theme.surfaceText
@@ -217,7 +217,7 @@ DFloatingWindow {
                         }
                     }
 
-                    DListView {
+                    AlpeListView {
                         id: widgetList
 
                         width: parent.width

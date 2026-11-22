@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import Quickshell.Wayland
-import qs.Modals.DLauncherV2 as DLauncher
-import qs.Modules.DBar
-import qs.Modules.DIsland.Activities
+import qs.Modals.Launcher as DLauncher
+import qs.Modules.Bar
+import qs.Modules.Island.Activities
 import qs.Services
 import qs.Widgets
 import "../../Common/LayoutResolver.js" as Resolver
@@ -489,7 +489,7 @@ Item {
         enabled: SettingsData.islandNotificationHost(root.screen)?.id === root.barId
     }
 
-    DIslandSurface {
+    IslandSurface {
         id: surface
 
         anchors.fill: parent

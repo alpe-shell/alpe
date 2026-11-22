@@ -66,7 +66,7 @@ test("under classic the corner style's default, modified state and reset follow 
     const root = settingsFunctions(["specDefault", "isDefault", "resetToDefault", "isManaged", "presetDefault"], vm.createContext({
         Store: store,
         DensityPresets: presets,
-        SpecUtil: loadScript(new URL("../DCommon/Common/settings/SpecUtil.js", import.meta.url)),
+        SpecUtil: loadScript(new URL("../Alpe/Common/settings/SpecUtil.js", import.meta.url)),
         Spec: { SPEC: Spec.SPEC, set: (target, key, value) => { changes.push([key, value]); target[key] = value; } },
         AdminPolicy: { lockSettings: {} },
         saveSettings() {},

@@ -6,8 +6,8 @@ import QtQuick.Shapes
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.DCommon.Session
+import qs.Alpe.Widgets
+import qs.Alpe.Session
 import "../../../Common/KeyUtils.js" as KeyUtils
 
 Item {
@@ -300,7 +300,7 @@ Item {
                 }
             }
 
-            DCircularImage {
+            AlpeCircularImage {
                 anchors.centerIn: parent
                 width: root.ringSize - root.ringStroke * 4
                 height: width
@@ -315,7 +315,7 @@ Item {
                 fallbackIcon: "material:person"
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 visible: !root.showProfileImage
                 name: root.unlocking ? "lock_open" : "lock"
@@ -336,7 +336,7 @@ Item {
             spacing: Theme.spacingM
             Layout.fillWidth: true
 
-            DCircularImage {
+            AlpeCircularImage {
                 Layout.preferredWidth: LockMetrics.avatarSize
                 ringWidth: Theme.avatarRingWidth
                 ringColor: Theme.avatarRingColor
@@ -477,7 +477,7 @@ Item {
                     width: !visible ? 0 : (root.morph ? LockMetrics.fieldHeight - Theme.spacingS * 2 : Theme.iconSizeSmall)
                     height: root.morph ? width : Theme.iconSizeSmall
 
-                    DMaterialShape {
+                    AlpeMaterialShape {
                         id: morphContainer
                         anchors.fill: parent
                         visible: root.morph
@@ -513,7 +513,7 @@ Item {
                         }
                     }
 
-                    DLoadingIndicator {
+                    AlpeLoadingIndicator {
                         anchors.centerIn: parent
                         size: parent.width
                         contained: true
@@ -521,7 +521,7 @@ Item {
                         running: visible
                     }
 
-                    DIcon {
+                    AlpeIcon {
                         id: lockIcon
 
                         anchors.centerIn: parent
@@ -1023,7 +1023,7 @@ Item {
                         }
                     }
 
-                    DTextCursor {
+                    AlpeTextCursor {
                         id: passwordCursor
 
                         x: passwordDisplay.x + passwordDisplay.cursorRectangle.x
@@ -1111,7 +1111,7 @@ Item {
                     height: Theme.iconSize
                     visible: !root.demoMode && !root.ring && !root.morph && ((root.pam?.authBusy ?? false) || root.unlocking)
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: "check_circle"
                         size: Theme.iconSizeSmall
@@ -1128,7 +1128,7 @@ Item {
                         }
                     }
 
-                    DLoadingIndicator {
+                    AlpeLoadingIndicator {
                         anchors.centerIn: parent
                         size: Theme.iconSize
                         contained: root.style === "expressive"
@@ -1213,7 +1213,7 @@ Item {
             spacing: Theme.spacingXS
             opacity: DMSService.capsLockState ? 1 : 0
 
-            DIcon {
+            AlpeIcon {
                 name: "shift_lock"
                 size: Theme.iconSizeSmall
                 color: Theme.error

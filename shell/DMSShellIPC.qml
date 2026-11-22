@@ -5,7 +5,7 @@ import Quickshell.Wayland
 import Quickshell.Services.SystemTray
 import Quickshell.Services.UPower
 import qs.Common
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import qs.Services
 import qs.Modules.Settings.DisplayConfig
 
@@ -1884,7 +1884,7 @@ Item {
         function move(name: string): string {
             if (!CompositorService.isHyprland)
                 return "SCRATCHPAD_UNSUPPORTED_COMPOSITOR";
-            const active = DToplevels.activeToplevel;
+            const active = Toplevels.activeToplevel;
             if (!active)
                 return "SCRATCHPAD_NO_FOCUSED_WINDOW";
             CompositorService.moveWindowToSpecial(active, name || "special");
@@ -1894,7 +1894,7 @@ Item {
         function restore(): string {
             if (!CompositorService.isHyprland)
                 return "SCRATCHPAD_UNSUPPORTED_COMPOSITOR";
-            const active = DToplevels.activeToplevel;
+            const active = Toplevels.activeToplevel;
             if (!active)
                 return "SCRATCHPAD_NO_FOCUSED_WINDOW";
             if (!CompositorService.windowScratchpadName(active))
@@ -1908,7 +1908,7 @@ Item {
 
     IpcHandler {
         function getFocusedWindow() {
-            const active = DToplevels.activeToplevel;
+            const active = Toplevels.activeToplevel;
             if (!active)
                 return null;
             return {

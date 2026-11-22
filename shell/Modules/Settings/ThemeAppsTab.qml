@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -71,7 +71,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingM
 
-                    DButton {
+                    AlpeButton {
                         width: (parent.width - Theme.spacingM) / 2
                         iconName: "settings"
                         text: I18n.tr("Apply GTK colors")
@@ -79,7 +79,7 @@ Item {
                         onClicked: Theme.applyGtkColors()
                     }
 
-                    DButton {
+                    AlpeButton {
                         width: (parent.width - Theme.spacingM) / 2
                         iconName: "settings"
                         text: I18n.tr("Apply Qt colors")

@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 FloatingWindow {
     id: modal

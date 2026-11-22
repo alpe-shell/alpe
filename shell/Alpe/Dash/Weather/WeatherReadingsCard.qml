@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
 Rectangle {
     id: root
@@ -58,7 +58,7 @@ Rectangle {
     Accessible.role: Accessible.StaticText
     Accessible.name: readings.map(reading => reading.label + " " + (reading.value ?? I18n.tr("Not available"))).join(", ")
 
-    DTone {
+    AlpeTone {
         id: toneColors
         tone: root.widgetOptions.tone ?? ""
     }
@@ -88,7 +88,7 @@ Rectangle {
                     width: parent.width
                     spacing: Theme.spacingXS
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: !!cell.modelData.icon
                         name: cell.modelData.icon ?? ""
@@ -96,7 +96,7 @@ Rectangle {
                         color: toneColors.contentColor
                     }
 
-                    DNFIcon {
+                    AlpeNFIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: !!cell.modelData.nerdIcon
                         name: cell.modelData.nerdIcon ?? ""

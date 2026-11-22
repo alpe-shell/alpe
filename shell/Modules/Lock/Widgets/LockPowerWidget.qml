@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
-import qs.DCommon.Session
+import qs.Alpe.Widgets
+import qs.Alpe.Session
 
 Item {
     id: root
@@ -18,7 +18,7 @@ Item {
     implicitWidth: powerButton.width
     implicitHeight: powerButton.height
 
-    DMaterialShape {
+    AlpeMaterialShape {
         anchors.fill: powerButton
         visible: !root.round
         shape: root.shape

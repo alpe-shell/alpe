@@ -3,10 +3,10 @@ import QtQuick.Window
 import qs.Common
 import qs.Modules.Settings
 import qs.Modules.Settings.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: root
 
     signal ruleSubmitted

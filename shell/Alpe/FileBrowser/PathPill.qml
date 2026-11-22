@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 StyledButton {
     id: pill
@@ -76,7 +76,7 @@ StyledButton {
         anchors.centerIn: parent
         spacing: FileBrowserMetrics.pathPillSpacing
 
-        DIcon {
+        AlpeIcon {
             anchors.verticalCenter: parent.verticalCenter
             visible: pill.iconName !== ""
             name: pill.iconName

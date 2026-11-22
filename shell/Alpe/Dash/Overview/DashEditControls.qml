@@ -2,9 +2,9 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
-import "../../../DCommon/Common/WheelInput.js" as WheelInput
+import qs.Alpe.Widgets
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
+import "../../../Alpe/Common/WheelInput.js" as WheelInput
 
 Item {
     id: root
@@ -68,7 +68,7 @@ Item {
         wrapMode: Text.NoWrap
     }
 
-    component EditButton: DButton {
+    component EditButton: AlpeButton {
         id: editButton
         property string label: ""
         readonly property real labelTextWidth: labelMeasure.implicitWidth
@@ -128,7 +128,7 @@ Item {
         event.accepted = true;
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: viewport
         anchors.fill: parent
         anchors.margins: -root.focusPadding

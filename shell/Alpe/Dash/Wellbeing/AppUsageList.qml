@@ -3,12 +3,12 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 import qs.Modules.ControlCenter.Widgets
 import "Wellbeing.js" as Wellbeing
 
-DCard {
+AlpeCard {
     id: root
 
     property var days: []
@@ -63,7 +63,7 @@ DCard {
             elide: Text.ElideRight
         }
 
-        DButtonGroup {
+        AlpeButtonGroup {
             id: periodGroup
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
@@ -119,7 +119,7 @@ DCard {
     Component {
         id: scrolling
 
-        DListView {
+        AlpeListView {
             clip: true
             spacing: Theme.groupedListGap
             showScrollBar: false
@@ -131,7 +131,7 @@ DCard {
         }
     }
 
-    component AppRow: DListItem {
+    component AppRow: AlpeListItem {
         id: row
 
         required property var modelData
@@ -209,7 +209,7 @@ DCard {
             color: row.overLimit ? Theme.error : row.contentColor
         }
 
-        DActionButton {
+        AlpeActionButton {
             id: limitButton
             anchors.right: parent.right
             anchors.rightMargin: Theme.spacingS

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Vereinslogo; ohne Logo (National League, kleine Cup-Gegner) ein rundes Abzeichen mit Kuerzel.
 Item {

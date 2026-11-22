@@ -91,7 +91,7 @@ Singleton {
     readonly property real smallRowFraction: 0.5
     readonly property real shapeButtonSize: Theme.iconSize
     readonly property real editChromeButtonSize: Theme.iconSize
-    // Mirrors DGridEditChrome.contentInset so the options menu anchor keeps the chrome's bounds while the chrome is unloaded.
+    // Mirrors AlpeGridEditChrome.contentInset so the options menu anchor keeps the chrome's bounds while the chrome is unloaded.
     readonly property real editChromeInset: Math.max(Theme.minimumTouchTargetSize, editChromeButtonSize) / 2
 
     readonly property real detailDialogPadding: Theme.spacingS

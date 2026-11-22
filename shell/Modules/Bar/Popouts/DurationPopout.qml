@@ -1,11 +1,11 @@
 import QtQuick
 import qs.Common
-import qs.Modules.DBar.Widgets
+import qs.Modules.Bar.Widgets
 import qs.Modules.Notifications
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     property var triggerScreen: null
@@ -63,7 +63,7 @@ DPopout {
                         id: optionRepeater
                         model: root.presets.presetOptions
 
-                        DListItem {
+                        AlpeListItem {
                             required property var modelData
                             required property int index
 
@@ -90,7 +90,7 @@ DPopout {
                         }
                     }
 
-                    DListItem {
+                    AlpeListItem {
                         id: turnOffRow
                         width: optionList.width
                         implicitHeight: Theme.listItemTwoLineHeight
@@ -112,7 +112,7 @@ DPopout {
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
 
-                            DIcon {
+                            AlpeIcon {
                                 id: turnOffIcon
                                 name: "power_settings_new"
                                 size: Theme.iconSizeSmall

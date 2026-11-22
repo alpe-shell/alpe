@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DPopout {
+AlpePopout {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankPopout", "DPopout", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankPopout", "AlpePopout", "qs.Widgets")
 }

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -38,12 +38,12 @@ Item {
         damping: root.scaleSpring.damping
     }
 
-    DLayer {
+    AlpeLayer {
         id: surface
 
         width: row.implicitWidth + root.shadowPadding * 2
         height: row.implicitHeight + root.shadowPadding * 2
-        // above the DFlickable edge fade, which sits at z 1
+        // above the AlpeFlickable edge fade, which sits at z 1
         z: 2
         anchors.bottomMargin: Theme.spacingL - root.shadowPadding
         opacity: root.shown ? 1 : 0

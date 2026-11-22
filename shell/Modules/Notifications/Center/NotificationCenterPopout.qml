@@ -1,11 +1,11 @@
 import QtQuick
 import qs.Common
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import qs.Modules.Notifications
 import qs.Services
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     layerNamespace: "dms:notification-center-popout"

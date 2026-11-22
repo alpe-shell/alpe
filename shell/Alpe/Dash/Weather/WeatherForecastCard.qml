@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
 Rectangle {
     id: root
@@ -76,7 +76,7 @@ Rectangle {
             elide: Text.ElideRight
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.horizontalCenter: parent.horizontalCenter
             name: root.forecastData ? WeatherService.getWeatherIcon(root.forecastData.wCode || 0, root.forecastData.isDay ?? true) : "cloud"
             size: Theme.iconSizeLarge
@@ -110,7 +110,7 @@ Rectangle {
                     anchors.horizontalCenter: detailRows.horizontalCenter
                     spacing: Theme.spacingXS
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         name: parent.modelData.icon
                         size: Theme.iconSizeSmall

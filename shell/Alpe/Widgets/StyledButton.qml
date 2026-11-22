@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Templates as T
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 T.CheckBox {
     id: root

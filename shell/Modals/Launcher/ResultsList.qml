@@ -4,8 +4,8 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modals.DLauncherV2.Components
+import qs.Alpe.Widgets
+import qs.Modals.Launcher.Components
 
 Item {
     id: root
@@ -336,7 +336,7 @@ Item {
         anchors.bottomMargin: bottomSectionHeader.visible ? bottomSectionHeader.height + LauncherMetrics.resultsGap : 0
         clip: true
 
-        DListView {
+        AlpeListView {
             id: mainListView
             y: -listClip.anchors.topMargin
             width: parent.width
@@ -642,7 +642,7 @@ Item {
             id: emptyColumn
             spacing: Theme.spacingM
 
-            DIcon {
+            AlpeIcon {
                 anchors.horizontalCenter: parent.horizontalCenter
                 name: getEmptyIcon()
                 size: LauncherMetrics.gridIconSize
@@ -688,7 +688,7 @@ Item {
 
                     switch (mode) {
                     case "files":
-                        if (!DSearchService.dsearchAvailable)
+                        if (!FileSearchService.dsearchAvailable)
                             return I18n.tr("File search requires %1\nInstall from %2", "launcher file search empty state, %1 is the dsearch binary, %2 is its repository").arg("dsearch").arg("github.com/duxlabs-dev/dux-search");
                         if (!hasQuery)
                             return I18n.tr("Type to search files");

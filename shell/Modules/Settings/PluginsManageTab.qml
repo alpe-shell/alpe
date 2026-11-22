@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 FocusScope {
@@ -47,7 +47,7 @@ FocusScope {
                 width: parent.width
                 spacing: Theme.spacingS
 
-                DButton {
+                AlpeButton {
                     text: PluginService.pluginDirectoryExists ? I18n.tr("Open folder") : I18n.tr("Create folder")
                     iconName: PluginService.pluginDirectoryExists ? "folder_open" : "create_new_folder"
                     maximumWidth: parent.width
@@ -60,7 +60,7 @@ FocusScope {
                         PluginService.createPluginDirectory();
                     }
                 }
-                DButton {
+                AlpeButton {
                     text: I18n.tr("Scan", "verb, button that scans for plugins, wifi networks or bluetooth devices")
                     iconName: "refresh"
                     variant: "tonal"

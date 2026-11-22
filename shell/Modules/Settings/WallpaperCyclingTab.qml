@@ -5,7 +5,7 @@ import Quickshell
 import qs.Common
 import qs.Modals.FileBrowser
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -162,7 +162,7 @@ Item {
                 subtitle: root.wallpaperFolder
                 enabled: root.canCycle
 
-                DActionButton {
+                AlpeActionButton {
                     buttonSize: Theme.iconButtonSize
                     iconName: "skip_previous"
                     iconSize: Theme.iconSizeMedium
@@ -174,7 +174,7 @@ Item {
                     onClicked: root.cycle(true)
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     buttonSize: Theme.iconButtonSize
                     iconName: "skip_next"
                     iconSize: Theme.iconSizeMedium
@@ -203,7 +203,7 @@ Item {
                 title: I18n.tr("Folder")
                 subtitle: root.folderPath || I18n.tr("Use desktop wallpaper")
 
-                DButton {
+                AlpeButton {
                     text: I18n.tr("Browse")
                     horizontalPadding: Theme.spacingL
                     anchors.verticalCenter: parent.verticalCenter

@@ -5,7 +5,7 @@ import Quickshell.Widgets
 import qs.Common
 import qs.Services
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "ProcessColumns.js" as ProcessColumns
 import "Connections.js" as Remotes
@@ -175,7 +175,7 @@ Rectangle {
             anchors.centerIn: parent
             spacing: Theme.spacingXS
 
-            DIcon {
+            AlpeIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 name: chip.iconName
                 size: Theme.iconSizeSmall
@@ -201,7 +201,7 @@ Rectangle {
             acceptedButtons: Qt.NoButton
         }
 
-        DTooltipHost {
+        AlpeTooltipHost {
             target: chip
             hoverArea: chipHover
             multiline: chip.tip.includes("\n")
@@ -346,7 +346,7 @@ Rectangle {
                         acceptedButtons: Qt.NoButton
                     }
 
-                    DTooltipHost {
+                    AlpeTooltipHost {
                         target: commandLine
                         hoverArea: commandHover
                         multiline: true
@@ -426,7 +426,7 @@ Rectangle {
             }
         }
 
-        DTabBar {
+        AlpeTabBar {
             id: tabs
             Layout.fillWidth: true
             showIcons: false
@@ -599,7 +599,7 @@ Rectangle {
                         wrapMode: Text.WrapAnywhere
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: commandCopy
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.spacingXS
@@ -621,7 +621,7 @@ Rectangle {
                 Layout.fillWidth: true
             }
 
-            DButton {
+            AlpeButton {
                 id: priorityButton
                 text: I18n.tr("Priority", "process action: opens the priority presets")
                 iconName: "speed"
@@ -634,7 +634,7 @@ Rectangle {
                     priorityMenu.openDropdownMenu();
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     id: priorityMenu
                     showTrigger: false
                     popupAnchorItem: priorityButton
@@ -647,7 +647,7 @@ Rectangle {
                 }
             }
 
-            DButton {
+            AlpeButton {
                 readonly property bool paused: ProcessActions.isPaused(root.live)
                 text: paused ? I18n.tr("Resume", "process action: continue a paused process (SIGCONT)") : I18n.tr("Pause", "process action: freeze the process and everything it started (SIGSTOP)")
                 iconName: paused ? "play_arrow" : "pause"
@@ -658,7 +658,7 @@ Rectangle {
                 onClicked: ProcessActions.setPaused(root.live, !paused)
             }
 
-            DButton {
+            AlpeButton {
                 text: root.restartKind === "reload" ? I18n.tr("Reload", "process action: reload a compositor's configuration") : I18n.tr("Restart", "process action: start the process again")
                 iconName: "restart_alt"
                 visible: root.restartKind !== "" && !(root.restartKind === "relaunch" && (root.detail?.terminal ?? false))
@@ -667,7 +667,7 @@ Rectangle {
                 onClicked: root.actionRequested("restart")
             }
 
-            DSplitButton {
+            AlpeSplitButton {
                 id: quitButton
                 visible: root.endable
                 text: I18n.tr("Quit", "process action: ask the process to exit (SIGTERM)")
@@ -683,7 +683,7 @@ Rectangle {
                     quitMenu.openDropdownMenu();
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     id: quitMenu
                     showTrigger: false
                     popupAnchorItem: quitButton.trailingButton

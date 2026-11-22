@@ -1,10 +1,10 @@
 import QtQuick
 import qs.Services
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import qs.Modules.ControlCenter.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 CcSheetDialog {
     id: root
@@ -60,7 +60,7 @@ CcSheetDialog {
         }
     }
 
-    DButton {
+    AlpeButton {
         anchors.right: parent.right
         text: I18n.tr("Reset to default")
         iconName: "restart_alt"

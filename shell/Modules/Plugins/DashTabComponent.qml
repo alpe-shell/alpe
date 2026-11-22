@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 Item {
     id: root

@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Column {
@@ -176,7 +176,7 @@ Column {
             onToggled: checked => SettingsData.set("blurBorderEnabled", checked)
             onSliderValueChanged: newValue => SettingsData.set("blurBorderOpacity", newValue / 100)
 
-            accessory: DDropdown {
+            accessory: AlpeDropdown {
                 id: borderColorMenu
                 visible: root.borderEnabled
                 anchors.verticalCenter: parent.verticalCenter
@@ -489,7 +489,7 @@ Column {
                 clickable: true
                 onClicked: targetCard.showHidden = !targetCard.showHidden
 
-                DIcon {
+                AlpeIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: targetCard.showHidden ? "expand_less" : "expand_more"
                     size: Theme.iconSize

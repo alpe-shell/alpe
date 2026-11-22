@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Leistung. Was Oberfläche und Dienst gerade an Speicher und Rechenzeit brauchen
@@ -139,7 +139,7 @@ Item {
                 subtitle: "Offene Fenster bleiben."
                 iconName: "restart_alt"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Neu starten"
                     variant: "tonal"

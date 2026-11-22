@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "Wellbeing.js" as Wellbeing
 
 Singleton {

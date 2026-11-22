@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell.Widgets
 import qs.Common
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Common/Format.js" as Format
 import "Drives.js" as Drives
 
@@ -79,7 +79,7 @@ Item {
                     acceptedButtons: Qt.NoButton
                 }
 
-                DTooltipHost {
+                AlpeTooltipHost {
                     text: stripRow.partitionTooltip(seg.modelData.device)
                     target: seg
                     hoverArea: segHover

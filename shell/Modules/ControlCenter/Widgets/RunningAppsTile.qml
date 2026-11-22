@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Modules.ControlCenter
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 CcTile {
     id: root
@@ -121,7 +121,7 @@ CcTile {
                 visible: body.label !== ""
             }
 
-            DIcon {
+            AlpeIcon {
                 id: chevron
 
                 anchors.right: parent.right

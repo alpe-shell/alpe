@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -114,7 +114,7 @@ Item {
                 onResetRequested: SettingsData.resetOsdPosition(root.positionScope)
 
                 body: [
-                    DFilterChips {
+                    AlpeFilterChips {
                         model: root.positionScopes
                         Binding on currentIndex {
                             value: Math.max(0, root.positionScopes.findIndex(scope => scope.value === root.positionScope))

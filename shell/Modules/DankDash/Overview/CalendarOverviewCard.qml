@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.Modules.DDash.Overview as New
+import qs.Alpe.Dash.Overview as New
 
 New.CalendarOverviewCard {
     id: shim
-    Component.onCompleted: Deprecation.module(shim, "CalendarOverviewCard", "qs.Modules.DankDash.Overview", "qs.Modules.DDash.Overview")
+    Component.onCompleted: Deprecation.module(shim, "CalendarOverviewCard", "qs.Modules.DankDash.Overview", "qs.Alpe.Dash.Overview")
 }

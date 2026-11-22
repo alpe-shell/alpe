@@ -4,7 +4,7 @@ pragma ComponentBehavior: Bound
 import QtCore
 import Qt.labs.folderlistmodel
 import QtQuick
-import "../DCommon/Common/Shape.js" as Shape
+import "../Alpe/Common/Shape.js" as Shape
 import Quickshell
 import Quickshell.Io
 import qs.Common
@@ -15,7 +15,7 @@ import "LayoutResolver.js" as LayoutResolver
 import "NotificationRuleExpiry.js" as RuleExpiry
 import "settings/SettingsSpec.js" as Spec
 import "settings/SettingsStore.js" as Store
-import "../DCommon/Common/settings/SpecUtil.js" as SpecUtil
+import "../Alpe/Common/settings/SpecUtil.js" as SpecUtil
 import "settings/BarWidgetDefaults.js" as WidgetDefaults
 import "settings/DockConfig.js" as DockConfig
 import "settings/DensityPresets.js" as DensityPresets

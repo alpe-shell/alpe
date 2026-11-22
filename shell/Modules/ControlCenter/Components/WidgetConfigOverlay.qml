@@ -5,12 +5,12 @@ import Quickshell
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
-import qs.Modules.DBar.Widgets
-import qs.Modules.DDash
+import qs.Modules.Bar.Widgets
+import qs.Alpe.Dash
 import "../utils/widgets.js" as WidgetUtils
 import "../../../Common/QmlUtils.js" as QmlUtils
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -79,7 +79,7 @@ Item {
         WidgetUtils.setOption(widgetIndex, key, value);
     }
 
-    DContextMenu {
+    AlpeContextMenu {
         id: contextMenu
         layerNamespace: "dms:control-center-widget-options"
         minMenuWidth: CcMetrics.configMenuWidth
@@ -120,7 +120,7 @@ Item {
                     visible: root.batteryIndex >= 0
                     iconName: "battery_std"
                     title: I18n.tr("Battery style")
-                    body: DDropdown {
+                    body: AlpeDropdown {
                         readonly property var labels: [I18n.tr("Icon", "battery widget: system battery glyph"), I18n.tr("Solid", "island settings: filled battery meter style"), I18n.tr("Outline", "island settings: outlined battery meter style"), I18n.tr("Circle", "island settings: circular battery meter style"), I18n.tr("Duo", "battery meter style: open battery arc around the network glyph")]
 
                         compactMode: true
@@ -140,7 +140,7 @@ Item {
                     visible: root.batteryIndex >= 0 && (SettingsData.controlCenterWidgets[root.batteryIndex]?.batteryStyle ?? "icon") !== "icon"
                     iconName: "palette"
                     title: I18n.tr("Color")
-                    body: DDropdown {
+                    body: AlpeDropdown {
                         readonly property var labels: [I18n.tr("Theme", "battery settings: theme accent indicator colors"), I18n.tr("Level", "battery settings: charge level indicator colors")]
 
                         compactMode: true
@@ -175,7 +175,7 @@ Item {
                     visible: root.isIdleInhibitor
                     iconName: "timer"
                     title: I18n.tr("Duration")
-                    body: DDropdown {
+                    body: AlpeDropdown {
                         readonly property var presets: IdleInhibitPresets.presetOptions
 
                         compactMode: true

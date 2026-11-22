@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Row {
     id: root
@@ -43,7 +43,7 @@ Row {
     onValueChanged: resync()
     spacing: Theme.spacingS
 
-    DActionButton {
+    AlpeActionButton {
         buttonSize: Theme.iconButtonSize
         iconName: "remove"
         Accessible.name: I18n.tr("Decrease", "verb, minus button next to a settings slider")
@@ -54,7 +54,7 @@ Row {
         onClicked: root.nudge(-1)
     }
 
-    DSlider {
+    AlpeSlider {
         id: slider
         upDownKeysStep: false
         Accessible.name: root.accessibleName
@@ -74,7 +74,7 @@ Row {
         onSliderDragFinished: finalValue => root.sliderDragFinished(finalValue)
     }
 
-    DActionButton {
+    AlpeActionButton {
         buttonSize: Theme.iconButtonSize
         iconName: "add"
         Accessible.name: I18n.tr("Increase", "verb, plus button next to a settings slider")

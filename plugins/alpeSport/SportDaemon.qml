@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Services
 import qs.Modules.Plugins
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "sport.js" as S
 
 // Alpe: Hintergrunddienst des Sport-Plugins. Läuft, solange das Plugin an ist, auch bei

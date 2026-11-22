@@ -12,7 +12,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.SystemTray
 import qs.Common
-import qs.DCommon.Common as DC
+import qs.Alpe.Common as DC
 import qs.Modules
 import qs.Modules.Lock
 import qs.Services

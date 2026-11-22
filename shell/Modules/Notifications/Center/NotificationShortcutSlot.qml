@@ -3,11 +3,11 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Shapes
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Notifications
 import "../NotificationShortcuts.js" as Shortcuts
 
-DIconButton {
+AlpeIconButton {
     id: root
 
     required property string settingKey

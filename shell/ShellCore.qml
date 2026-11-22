@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.Modules.DBar
-import qs.Modules.DIsland
+import qs.Modules.Bar
+import qs.Modules.Island
 import qs.Modules.Frame
 import qs.Modules.WorkspaceOverlays
 import qs.Services
@@ -142,7 +142,7 @@ Item {
             asynchronous: false
             onItemChanged: dankBarRepeater.recountHorizontalReady()
 
-            sourceComponent: DBar {
+            sourceComponent: Bar {
                 barConfig: barLoader.barConfig
                 hyprlandOverviewLoader: dankBarRepeater.hyprlandOverviewLoaderRef
             }
@@ -152,7 +152,7 @@ Item {
     Loader {
         active: SettingsData.dankIslandEnabled
         asynchronous: false
-        sourceComponent: DIsland {
+        sourceComponent: Island {
             hyprlandOverviewLoader: root.hyprlandOverviewLoader
         }
     }

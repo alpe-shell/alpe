@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Common/UpgradeLog.js" as UpgradeLog
 
 StyledText {

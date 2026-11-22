@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../../Common/QmlUtils.js" as QmlUtils
 
@@ -69,7 +69,7 @@ Column {
         }
     }
 
-    DDropdown {
+    AlpeDropdown {
         downKeyOpens: false
         width: parent.width
         text: root.label

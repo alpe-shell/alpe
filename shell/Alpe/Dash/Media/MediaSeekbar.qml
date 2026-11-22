@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Services
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
-DSeekbar {
+AlpeSeekbar {
     id: root
 
     required property var player

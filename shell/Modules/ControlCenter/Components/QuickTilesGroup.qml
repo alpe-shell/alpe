@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../utils/widgets.js" as WidgetUtils
 
 Item {

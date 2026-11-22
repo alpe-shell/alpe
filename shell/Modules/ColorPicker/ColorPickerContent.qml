@@ -5,11 +5,11 @@ import QtQuick.Layouts
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
-import qs.DCommon.Widgets as CommonWidgets
+import qs.Alpe.Widgets as CommonWidgets
 
-DDialog {
+AlpeDialog {
     id: root
 
     readonly property var log: Log.scoped("ColorPickerContent")
@@ -140,7 +140,7 @@ DDialog {
         width: parent.width
         spacing: Theme.spacingS
 
-        CommonWidgets.DSaturationValuePicker {
+        CommonWidgets.AlpeSaturationValuePicker {
             id: gradientPicker
 
             width: parent.width
@@ -155,7 +155,7 @@ DDialog {
             }
         }
 
-        DSlider {
+        AlpeSlider {
             id: hueSlider
 
             width: parent.width
@@ -223,7 +223,7 @@ DDialog {
             Layout.preferredWidth: Theme.fieldDefaultWidth
             spacing: Theme.spacingS
 
-            DColorSwatch {
+            AlpeColorSwatch {
                 Layout.preferredWidth: hexInput.controlHeight
                 Layout.preferredHeight: hexInput.controlHeight
                 Layout.topMargin: hexInput.containerTop
@@ -231,7 +231,7 @@ DDialog {
                 minPreviewAlpha: 0
             }
 
-            DTextField {
+            AlpeTextField {
                 id: hexInput
 
                 Layout.fillWidth: true
@@ -245,7 +245,7 @@ DDialog {
                 onEditingFinished: root.applyHex()
             }
 
-            DActionButton {
+            AlpeActionButton {
                 Layout.topMargin: hexInput.containerTop
                 iconName: "content_copy"
                 Accessible.name: I18n.tr("Copy")
@@ -256,7 +256,7 @@ DDialog {
                 }
             }
 
-            DActionButton {
+            AlpeActionButton {
                 Layout.topMargin: hexInput.containerTop
                 iconName: "colorize"
                 Accessible.name: I18n.tr("Pick Color")
@@ -288,7 +288,7 @@ DDialog {
                 }
             }
 
-            DSlider {
+            AlpeSlider {
                 id: opacitySlider
 
                 width: parent.width
@@ -320,7 +320,7 @@ DDialog {
             paddingH: Theme.spacingL
             paddingV: Theme.spacingS
 
-            DActionButton {
+            AlpeActionButton {
                 iconName: "content_copy"
                 Accessible.name: I18n.tr("Copy")
                 onClicked: root.copyColor(root.rgbText)
@@ -333,7 +333,7 @@ DDialog {
             paddingH: Theme.spacingL
             paddingV: Theme.spacingS
 
-            DActionButton {
+            AlpeActionButton {
                 iconName: "content_copy"
                 Accessible.name: I18n.tr("Copy")
                 onClicked: root.copyColor(root.hsvText)
@@ -355,7 +355,7 @@ DDialog {
             Repeater {
                 model: root.standardColors
 
-                CommonWidgets.DColorButton {
+                CommonWidgets.AlpeColorButton {
                     required property string modelData
                     width: palette.width / palette.columns
                     height: Theme.buttonHeightXS
@@ -400,7 +400,7 @@ DDialog {
                         id: recentHover
                     }
 
-                    CommonWidgets.DColorButton {
+                    CommonWidgets.AlpeColorButton {
                         id: recentButton
                         anchors.fill: parent
                         swatchColor: recentSwatch.modelData
@@ -415,7 +415,7 @@ DDialog {
                         }
                     }
 
-                    CommonWidgets.DActionButton {
+                    CommonWidgets.AlpeActionButton {
                         anchors.top: parent.top
                         anchors.right: parent.right
                         anchors.margins: -Theme.spacingXS
@@ -433,7 +433,7 @@ DDialog {
         }
     }
 
-    actions: DButton {
+    actions: AlpeButton {
         maximumWidth: root.actionWidth
         wrapText: true
         text: I18n.tr("Save")

@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
 Card {
     id: root
@@ -129,13 +129,13 @@ Card {
         heldGpuId = "";
     }
 
-    DTooltipHost {
+    AlpeTooltipHost {
         id: meterTooltip
         text: target ? root.meterLabel(target.meter) : ""
         side: root.horizontal ? "bottom" : "top"
     }
 
-    component MeterIcon: DIcon {
+    component MeterIcon: AlpeIcon {
         id: icon
 
         property string meter: ""

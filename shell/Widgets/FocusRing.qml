@@ -1,6 +1,6 @@
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.FocusRing {
+Alpe.FocusRing {
     // Plain Items have no visualFocus; a tile sets this on its own press so a mouse click draws no ring
     property bool pointerFocused: false
     readonly property bool parentFocused: parent?.activeFocus ?? false

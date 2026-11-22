@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -243,7 +243,7 @@ Item {
             visible: root.activeFocus
         }
 
-        DIcon {
+        AlpeIcon {
             id: compactIcon
             anchors.centerIn: parent
             name: root.iconName
@@ -253,7 +253,7 @@ Item {
             rotation: root.iconRotation
             visible: root.compact && root.bodyContent === null && root.iconContent === null
 
-            DBlink {
+            AlpeBlink {
                 target: compactIcon
                 running: root.iconBlinking && root.compact && root.visible && root.live
             }
@@ -318,7 +318,7 @@ Item {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     id: tileIcon
                     anchors.centerIn: parent
                     name: root.iconName
@@ -328,7 +328,7 @@ Item {
                     rotation: root.iconRotation
                     visible: root.iconContent === null
 
-                    DBlink {
+                    AlpeBlink {
                         target: tileIcon
                         running: root.iconBlinking && !root.compact && root.visible && root.live
                     }

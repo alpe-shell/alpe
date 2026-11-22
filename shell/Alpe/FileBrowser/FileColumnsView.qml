@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 import "FileColumnsLayout.js" as Layout
 import "FilePreview.js" as FilePreview
 
@@ -306,7 +306,7 @@ Item {
 
             Behavior on presence {
                 enabled: FileBrowserMetrics.animationsEnabled && column.entrance !== "none" && !column.leaving
-                DAnim {
+                AlpeAnim {
                     duration: Style.expressiveDurations.expressiveEffects
                     easing.bezierCurve: Style.expressiveCurves.expressiveEffects
                 }
@@ -314,14 +314,14 @@ Item {
 
             Behavior on slide {
                 enabled: FileBrowserMetrics.animationsEnabled && !column.leaving
-                DAnim {
+                AlpeAnim {
                     duration: Style.expressiveDurations.expressiveFastSpatial
                 }
             }
 
             Behavior on span {
                 enabled: FileBrowserMetrics.animationsEnabled && !column.leaving
-                DAnim {
+                AlpeAnim {
                     duration: Style.expressiveDurations.expressiveFastSpatial
                 }
             }
@@ -330,14 +330,14 @@ Item {
                 id: closeAnim
 
                 ParallelAnimation {
-                    DAnim {
+                    AlpeAnim {
                         target: column
                         property: "span"
                         to: 0
                         duration: Style.expressiveDurations.expressiveFastSpatial
                     }
 
-                    DAnim {
+                    AlpeAnim {
                         target: column
                         property: "presence"
                         to: 0
@@ -583,7 +583,7 @@ Item {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: strip
 
         anchors.fill: parent
@@ -594,12 +594,12 @@ Item {
         onWidthChanged: columns.revealActive(columns.activeDepth, false)
         onDragStarted: scrollAnim.stop()
 
-        ScrollBar.horizontal: DHorizontalScrollbar {
+        ScrollBar.horizontal: AlpeHorizontalScrollbar {
             targetFlickable: strip
             onPressedChanged: scrollAnim.stop()
         }
 
-        DAnim {
+        AlpeAnim {
             id: scrollAnim
 
             target: strip

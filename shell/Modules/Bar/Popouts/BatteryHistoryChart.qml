@@ -4,12 +4,12 @@ import QtQuick
 import QtQuick.Shapes
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "BatteryHistory.js" as History
-import "../../../DCommon/Common/WheelInput.js" as WheelInput
+import "../../../Alpe/Common/WheelInput.js" as WheelInput
 
-DCard {
+AlpeCard {
     id: root
 
     property var samples: []
@@ -133,7 +133,7 @@ DCard {
                 LayoutMirroring.enabled: false
                 LayoutMirroring.childrenInherit: true
 
-                DActionButton {
+                AlpeActionButton {
                     buttonSize: Theme.buttonHeightXS
                     iconName: "chevron_left"
                     Accessible.name: I18n.tr("Previous")
@@ -141,7 +141,7 @@ DCard {
                     onClicked: root.scrollTo(timeline.contentX - timeline.width)
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     buttonSize: Theme.buttonHeightXS
                     iconName: "today"
                     Accessible.name: I18n.tr("Today")
@@ -149,7 +149,7 @@ DCard {
                     onClicked: root.showLatest()
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     buttonSize: Theme.buttonHeightXS
                     iconName: "chevron_right"
                     Accessible.name: I18n.tr("Next")
@@ -178,7 +178,7 @@ DCard {
                 }
             }
 
-            DFlickable {
+            AlpeFlickable {
                 id: timeline
                 width: parent.width - percentLabel.implicitWidth - Theme.spacingS
                 height: parent.height
@@ -226,7 +226,7 @@ DCard {
                     Repeater {
                         model: root.segments
 
-                        DSparkline {
+                        AlpeSparkline {
                             required property var modelData
                             anchors.fill: parent
                             values: modelData.samples.map(sample => sample[1])

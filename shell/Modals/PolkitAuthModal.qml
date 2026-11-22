@@ -1,10 +1,10 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: root
 
     property var currentFlow: null

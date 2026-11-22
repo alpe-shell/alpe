@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "ProcessColumns.js" as ProcessColumns
 
 Rectangle {
@@ -186,7 +186,7 @@ Rectangle {
                 elide: Text.ElideRight
             }
 
-            DIcon {
+            AlpeIcon {
                 id: arrow
                 visible: sh.sorted
                 name: sh.ascending ? "arrow_upward" : "arrow_downward"
@@ -451,7 +451,7 @@ Rectangle {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: tableScroll
         anchors.fill: parent
         contentWidth: root.tableWidth
@@ -508,7 +508,7 @@ Rectangle {
                 }
             }
 
-            DListView {
+            AlpeListView {
                 id: processListView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -584,7 +584,7 @@ Rectangle {
                     visible: processListView.count === 0 && !listSpinner.visible
                 }
 
-                DSpinner {
+                AlpeSpinner {
                     id: listSpinner
                     anchors.centerIn: parent
                     size: Theme.iconSize

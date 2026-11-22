@@ -1,5 +1,5 @@
 import QtQuick
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 Item {
     id: root

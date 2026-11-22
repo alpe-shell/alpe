@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modals.Common
 
 FocusScope {
@@ -148,7 +148,7 @@ FocusScope {
                 }
             }
 
-            DRefreshButton {
+            AlpeRefreshButton {
                 Layout.alignment: Qt.AlignTop
                 buttonSize: Theme.buttonHeightXS
                 iconSize: Theme.iconSizeSmall
@@ -166,7 +166,7 @@ FocusScope {
             Layout.fillHeight: true
             Layout.minimumHeight: Theme.listItemTwoLineHeight
 
-            DListView {
+            AlpeListView {
                 id: packagesList
                 anchors.fill: parent
                 visible: updaterPanel.showPackages
@@ -174,7 +174,7 @@ FocusScope {
                 spacing: Theme.groupedListGap
                 model: SystemUpdateService.availableUpdates
 
-                delegate: DListRow {
+                delegate: AlpeListRow {
                     id: packageRow
                     required property var modelData
                     required property int index
@@ -226,7 +226,7 @@ FocusScope {
                             }
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             buttonSize: Theme.iconButtonSize
                             iconSize: Theme.iconSize
                             iconName: "visibility_off"
@@ -242,7 +242,7 @@ FocusScope {
                 }
             }
 
-            DFlickable {
+            AlpeFlickable {
                 id: statusView
                 anchors.fill: parent
                 visible: !updaterPanel.showPackages && (!SystemUpdateService.isUpgrading || updaterPanel.upgradeRunsInTerminal)
@@ -257,7 +257,7 @@ FocusScope {
                     width: statusView.width - Theme.spacingL * 2
                     spacing: Theme.spacingM
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.horizontalCenter: parent.horizontalCenter
                         name: {
                             switch (true) {
@@ -322,7 +322,7 @@ FocusScope {
                 }
             }
 
-            DFlickable {
+            AlpeFlickable {
                 id: upgradeLog
                 anchors.fill: parent
                 visible: SystemUpdateService.isUpgrading && !updaterPanel.upgradeRunsInTerminal
@@ -341,7 +341,7 @@ FocusScope {
             }
         }
 
-        DButton {
+        AlpeButton {
             Layout.fillWidth: true
             visible: updaterPanel.showIgnored
             text: I18n.tr("Ignored (%1)").arg(updaterPanel.ignoredNames.length)
@@ -355,7 +355,7 @@ FocusScope {
             onClicked: updaterPanel.ignoredExpanded = !updaterPanel.ignoredExpanded
         }
 
-        DListView {
+        AlpeListView {
             id: ignoredList
             Layout.fillWidth: true
             Layout.preferredHeight: Math.min(contentHeight, Theme.listItemHeight * 2)
@@ -364,7 +364,7 @@ FocusScope {
             spacing: Theme.groupedListGap
             model: updaterPanel.ignoredNames
 
-            delegate: DListRow {
+            delegate: AlpeListRow {
                 id: ignoredRow
                 required property string modelData
                 required property int index
@@ -389,7 +389,7 @@ FocusScope {
                         elide: Text.ElideRight
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         buttonSize: Theme.iconButtonSize
                         iconSize: Theme.iconSize
                         iconName: "visibility"
@@ -410,7 +410,7 @@ FocusScope {
             layoutDirection: Qt.RightToLeft
             spacing: Theme.spacingS
 
-            DButton {
+            AlpeButton {
                 text: SystemUpdateService.isUpgrading ? I18n.tr("Cancel") : updaterPanel.offerReboot ? I18n.tr("Reboot", "verb, power menu action") : I18n.tr("Update All")
                 iconName: SystemUpdateService.isUpgrading ? "stop" : updaterPanel.offerReboot ? "restart_alt" : "system_update_alt"
                 maximumWidth: parent.width
@@ -419,7 +419,7 @@ FocusScope {
                 onClicked: updaterPanel.updateAll()
             }
 
-            DButton {
+            AlpeButton {
                 id: closeButton
                 text: I18n.tr("Close")
                 variant: "text"

@@ -2,13 +2,13 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.ProcessList
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     property var currentWindow: null
@@ -204,7 +204,7 @@ DPopout {
                         }
                     ]
 
-                    delegate: DListRow {
+                    delegate: AlpeListRow {
                         id: copyRow
                         required property var modelData
                         required property int index
@@ -271,7 +271,7 @@ DPopout {
                         anchors.leftMargin: Theme.spacingS
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: "outbox"
                             size: Theme.iconSizeSmall
                             color: Theme.surfaceText
@@ -309,7 +309,7 @@ DPopout {
                             anchors.leftMargin: Theme.spacingS
                             spacing: Theme.spacingS
 
-                            DIcon {
+                            AlpeIcon {
                                 name: "inbox"
                                 size: Theme.iconSizeSmall
                                 color: Theme.surfaceText
@@ -344,7 +344,7 @@ DPopout {
                         anchors.leftMargin: Theme.spacingS
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: root.hasMatchingRule ? "edit" : "rule"
                             size: Theme.iconSizeSmall
                             color: Theme.surfaceText
@@ -374,7 +374,7 @@ DPopout {
                         anchors.leftMargin: Theme.spacingS
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: "close"
                             size: Theme.iconSizeSmall
                             color: Theme.error

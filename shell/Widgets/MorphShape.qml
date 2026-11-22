@@ -1,8 +1,8 @@
-import "../DCommon/Widgets/MaterialShapes.js" as Shapes
+import "../Alpe/Widgets/MaterialShapes.js" as Shapes
 import QtQuick
 import QtQuick.Shapes
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -31,7 +31,7 @@ Item {
         return points;
     }
 
-    DMaterialShape {
+    AlpeMaterialShape {
         anchors.fill: parent
         shape: root.clampedProgress >= 1 ? root.toShape : root.fromShape
         color: root.color

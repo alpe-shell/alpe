@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 StyledButton {
     id: root
@@ -47,7 +47,7 @@ StyledButton {
         anchors.rightMargin: Style.spacingM
         spacing: Style.spacingM
 
-        DIcon {
+        AlpeIcon {
             anchors.verticalCenter: parent.verticalCenter
             visible: root.iconName !== ""
             name: root.iconName
@@ -67,7 +67,7 @@ StyledButton {
         }
     }
 
-    DIcon {
+    AlpeIcon {
         anchors.right: parent.right
         anchors.rightMargin: Style.spacingM
         anchors.verticalCenter: parent.verticalCenter

@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.SurfaceWidgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 GridLayout {
@@ -274,13 +274,13 @@ GridLayout {
                         anchors.centerIn: parent
                         spacing: Theme.spacingXS
 
-                        DIcon {
+                        AlpeIcon {
                             name: "wifi"
                             size: Theme.iconSize
                             color: Theme.primary
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             name: "bluetooth"
                             size: Theme.iconSize
                             color: Theme.primary

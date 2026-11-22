@@ -1,10 +1,10 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: root
     readonly property var log: Log.scoped("WorkspaceRenameModal")
 
@@ -57,7 +57,7 @@ DFloatingWindow {
         nameInput.text = "";
     }
 
-    DDialog {
+    AlpeDialog {
         id: renameDialog
 
         anchors.fill: parent
@@ -67,7 +67,7 @@ DFloatingWindow {
         onAccepted: root.submitAndClose()
         onRejected: root.hide()
 
-        DTextField {
+        AlpeTextField {
             id: nameInput
 
             width: parent.width
@@ -80,14 +80,14 @@ DFloatingWindow {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 maximumWidth: renameDialog.actionWidth
                 wrapText: true
                 text: I18n.tr("Cancel")
                 variant: "text"
                 onClicked: root.hide()
             },
-            DButton {
+            AlpeButton {
                 maximumWidth: renameDialog.actionWidth
                 wrapText: true
                 text: I18n.tr("Rename", "verb, rename button")

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 SettingsRow {
@@ -57,19 +57,19 @@ SettingsRow {
                     active: keyLine.modelData.trigger === "release"
                     visible: active
                     anchors.verticalCenter: parent.verticalCenter
-                    sourceComponent: DBadge {
+                    sourceComponent: AlpeBadge {
                         text: I18n.tr("Release", "noun, hyprland bind flag toggle, trigger on key release")
                         color: Theme.primaryHover
                         textColor: Theme.primary
                     }
                 }
 
-                DKeycap {
+                AlpeKeycap {
                     text: keyLine.modelData.key
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     iconName: "edit"
                     Accessible.name: I18n.tr("Edit")
                     Accessible.description: root.title + ", " + keyLine.modelData.key
@@ -83,7 +83,7 @@ SettingsRow {
                     visible: !root.readOnly
                     anchors.verticalCenter: parent.verticalCenter
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: deleteButton
                         iconName: "delete"
                         iconColor: Theme.error

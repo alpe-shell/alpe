@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Parent to the modal focus scope so it covers the window; focus returns to the opener on close
 Loader {
@@ -49,7 +49,7 @@ Loader {
             focusItem.forceActiveFocus(Qt.OtherFocusReason);
     }
 
-    sourceComponent: DDialog {
+    sourceComponent: AlpeDialog {
         id: dialog
 
         embedded: nativeWindow
@@ -75,12 +75,12 @@ Loader {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Cancel")
                 variant: "text"
                 onClicked: dialog.rejected()
             },
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Save")
                 iconName: "check"
                 enabled: dialog.acceptEnabled
@@ -94,7 +94,7 @@ Loader {
             sourceComponent: root.aboveField
         }
 
-        DTextField {
+        AlpeTextField {
             id: nameInput
             outlined: true
             leftIconName: root.leftIconName

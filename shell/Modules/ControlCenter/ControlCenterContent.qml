@@ -6,7 +6,7 @@ import qs.Services
 import qs.Modules.ControlCenter.Components
 import qs.Modules.ControlCenter.Models
 import qs.Modules.ControlCenter.Details
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "./utils/sections.js" as Sections
 import "./utils/widgets.js" as WidgetUtils
@@ -72,7 +72,7 @@ FocusScope {
     readonly property int gridColumnCap: host.gridColumnCap ?? CcMetrics.columnCapFor((host.triggerScreen?.width ?? CcMetrics.sheetWidthDefault + Theme.spacingL * 2) - Theme.spacingL * 2)
     readonly property int gridColumns: host.gridColumns ?? Math.min(CcMetrics.gridColumns, gridColumnCap)
     readonly property real availableGridHeight: (host.availableHeight ?? (host.triggerScreen?.height ?? CcMetrics.fallbackScreenHeight) - CcMetrics.maxHeightInset) - CcMetrics.sheetPadding * 2 - editRoom
-    readonly property DPanelResizer panelResizer: DPanelResizer {
+    readonly property AlpePanelResizer panelResizer: AlpePanelResizer {
         popout: root.host
         stepWidth: CcMetrics.columnWidth + CcMetrics.gridGap
         widthFor: columns => CcMetrics.sheetWidthFor(columns) + root.sheetContentWidth - CcMetrics.sheetWidthFor(root.gridColumns)
@@ -347,7 +347,7 @@ FocusScope {
             forceActiveFocus();
     }
 
-    DGridEditChrome {
+    AlpeGridEditChrome {
         id: panelChrome
 
         property int resizeSide: 0
@@ -406,7 +406,7 @@ FocusScope {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: contentFlickable
 
         anchors.left: parent.left

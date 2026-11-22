@@ -1,7 +1,7 @@
 import QtQuick
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
-DCommon.DSocket {
+Alpe.AlpeSocket {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankSocket", "DSocket", "qs.DCommon.Common")
+    Component.onCompleted: Deprecation.type(shim, "DankSocket", "AlpeSocket", "qs.Alpe.Common")
 }

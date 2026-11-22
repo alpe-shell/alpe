@@ -5,8 +5,8 @@ import QtQuick.Shapes
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -260,7 +260,7 @@ Item {
             readonly property real dotSize: Math.max(2, Math.round(root.ringStroke * 1.25))
             readonly property int glyphInset: Math.round(root.ringDiameter * 0.2)
 
-            DIcon {
+            AlpeIcon {
                 id: glyph
 
                 x: face.glyphInset
@@ -269,7 +269,7 @@ Item {
                 size: root.ringDiameter - 2 * face.glyphInset
                 color: NetworkService.networkStatus !== "disconnected" ? Theme.surfaceText : Theme.surfaceTextMedium
 
-                DBlink {
+                AlpeBlink {
                     target: glyph
                     running: face.visible && (NetworkService.wifiToggling || NetworkService.isWifiConnecting)
                 }

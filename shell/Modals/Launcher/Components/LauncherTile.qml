@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
-import qs.Modals.DLauncherV2
+import qs.Alpe.Widgets
+import qs.Modals.Launcher
 
 Rectangle {
     id: root
@@ -65,7 +65,7 @@ Rectangle {
         visible: root.isHovered || itemArea.pressed
     }
 
-    DRipple {
+    AlpeRipple {
         id: rippleLayer
         rippleColor: root.contentColor
         cornerRadius: root.radius
@@ -84,14 +84,14 @@ Rectangle {
             glyphSize: Theme.iconSizeSmall
         }
 
-        DIcon {
+        AlpeIcon {
             name: "push_pin"
             size: Theme.iconSizeSmall
             color: root.contentColor
             visible: root.item?.pinned === true
         }
 
-        DIcon {  // dmenu --multi-select checkbox
+        AlpeIcon {  // dmenu --multi-select checkbox
             name: root.item?.data?.checked ? "check_box" : "check_box_outline_blank"
             size: Theme.iconSizeSmall
             color: root.item?.data?.checked ? Theme.primary : root.contentColor

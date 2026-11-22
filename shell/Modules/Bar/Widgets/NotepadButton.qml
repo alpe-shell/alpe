@@ -3,7 +3,7 @@ import Quickshell.Hyprland
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 BasePill {
@@ -92,7 +92,7 @@ BasePill {
             implicitWidth: notepadIcon.width
             implicitHeight: root.contentThickness
 
-            DIcon {
+            AlpeIcon {
                 id: notepadIcon
 
                 anchors.centerIn: parent
@@ -128,7 +128,7 @@ BasePill {
         }
     }
 
-    DContextMenu {
+    AlpeContextMenu {
         id: contextMenu
         layerNamespace: "dms:notepad-context-menu"
         menuItems: root.savedTabEntries.map(entry => ({

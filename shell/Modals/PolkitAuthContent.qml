@@ -2,10 +2,10 @@ import QtQuick
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../Common/PamStack.js" as PamStack
 
-DDialog {
+AlpeDialog {
     id: root
 
     property var currentFlow: PolkitService.agent?.flow
@@ -145,7 +145,7 @@ DDialog {
         visible: text !== ""
     }
 
-    DTextField {
+    AlpeTextField {
         id: passwordField
 
         width: parent.width
@@ -167,14 +167,14 @@ DDialog {
     }
 
     actions: [
-        DButton {
+        AlpeButton {
             maximumWidth: root.actionWidth
             wrapText: true
             text: I18n.tr("Cancel")
             variant: "text"
             onClicked: root.cancelAuth()
         },
-        DButton {
+        AlpeButton {
             maximumWidth: root.actionWidth
             wrapText: true
             text: I18n.tr("Authenticate", "verb, polkit password dialog submit button")

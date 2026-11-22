@@ -1,11 +1,11 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Notifications
 import qs.Modules.Notifications.Center
-import "../Notifications/NotificationShortcuts.js" as Shortcuts
+import "../../Modules/Notifications/NotificationShortcuts.js" as Shortcuts
 
 FocusScope {
     id: root
@@ -262,7 +262,7 @@ FocusScope {
             onEditRequested: root.editShortcut(leadingSlot, leadingSlot.visualFocus)
         }
 
-        DButton {
+        AlpeButton {
             id: clearButton
             width: Math.max(0, footer.width - leadingSlot.width - trailingSlot.width - footer.spacing * 2)
             text: I18n.tr("Clear All")
@@ -308,7 +308,7 @@ FocusScope {
         onChosen: action => root.assignShortcut(action)
     }
 
-    DDropdown {
+    AlpeDropdown {
         id: duration
         showTrigger: false
         popupAnchorItem: leadingSlot

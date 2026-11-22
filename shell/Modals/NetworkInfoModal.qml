@@ -2,9 +2,9 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
 
     property bool wired: false
@@ -79,7 +79,7 @@ DModal {
                         }
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "close"
                         Accessible.name: I18n.tr("Close")
                         iconSize: Theme.iconSize - 4
@@ -99,7 +99,7 @@ DModal {
                     border.width: Theme.layerOutlineWidth
                     clip: true
 
-                    DFlickable {
+                    AlpeFlickable {
                         anchors.fill: parent
                         anchors.margins: Theme.spacingM
                         contentHeight: detailsText.contentHeight

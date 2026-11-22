@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 QtObject {
     id: root

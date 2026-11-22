@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
-import qs.Modals.DLauncherV2
+import qs.Modals.Launcher
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: appDrawerPopout
 
     layerNamespace: "dms:app-launcher"

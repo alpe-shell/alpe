@@ -6,7 +6,7 @@ import Quickshell.Widgets
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 BasePill {
@@ -50,7 +50,7 @@ BasePill {
         updateDesktopEntry();
     }
 
-    readonly property var managerActiveToplevel: DToplevels.activeToplevel
+    readonly property var managerActiveToplevel: Toplevels.activeToplevel
 
     onManagerActiveToplevelChanged: updateActiveWindow()
 
@@ -167,7 +167,7 @@ BasePill {
                 }
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 size: 18
                 name: "sports_esports"
@@ -227,7 +227,7 @@ BasePill {
                         }
                     }
 
-                    DIcon {
+                    AlpeIcon {
                         id: horizontalSteamIcon
                         width: contentRow.iconSize
                         size: contentRow.iconSize
@@ -382,7 +382,7 @@ BasePill {
     Loader {
         id: tooltipLoader
         active: false
-        sourceComponent: DTooltip {}
+        sourceComponent: AlpeTooltip {}
     }
 
     Loader {

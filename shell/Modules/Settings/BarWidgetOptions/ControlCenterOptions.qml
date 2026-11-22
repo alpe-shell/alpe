@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Column {
@@ -146,7 +146,7 @@ Column {
                 clickable: true
                 onClicked: root.setSetting(modelData.setting, !root.page.value(modelData.setting))
 
-                DToggle {
+                AlpeToggle {
                     hideText: true
                     checked: root.page.value(indicatorRow.modelData.setting)
                     onToggled: value => root.setSetting(indicatorRow.modelData.setting, value)

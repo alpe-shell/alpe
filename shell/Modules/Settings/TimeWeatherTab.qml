@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -206,7 +206,7 @@ Item {
                 }
             }
 
-            DTextField {
+            AlpeTextField {
                 id: customFormatInput
                 outlined: true
                 leftIconName: "calendar_today"
@@ -285,7 +285,7 @@ Item {
                 }
             }
 
-            DTextField {
+            AlpeTextField {
                 id: customLockFormatInput
                 outlined: true
                 leftIconName: "calendar_today"

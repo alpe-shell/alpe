@@ -3,7 +3,7 @@ import QtQuick
 import QtQuick.Controls
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Column {
     id: root
@@ -172,7 +172,7 @@ Column {
                                         anchors.verticalCenter: parent.verticalCenter
                                     }
 
-                                    DTextField {
+                                    AlpeTextField {
                                         id: renameField
                                         visible: delegateItem.editing
                                         enabled: delegateItem.editing
@@ -231,7 +231,7 @@ Column {
                                         visible: NotepadStorageService.tabs.length > 1 && !delegateItem.editing
                                         anchors.verticalCenter: parent.verticalCenter
 
-                                        DIcon {
+                                        AlpeIcon {
                                             name: "close"
                                             size: 14
                                             color: Theme.surfaceTextMedium
@@ -338,7 +338,7 @@ Column {
                             }
                         }
 
-                        DTooltipHost {
+                        AlpeTooltipHost {
                             text: tabText.truncated ? (delegateItem.modelData.title || "Untitled") : ""
                             target: delegateItem
                             hoverArea: tabMouseArea
@@ -348,7 +348,7 @@ Column {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             id: newTabButton
             width: 32
             height: 32

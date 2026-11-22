@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: root
 
     property string searchQuery: ""
@@ -59,7 +59,7 @@ DFloatingWindow {
             anchors.fill: parent
             spacing: 0
 
-            DWindowHeader {
+            AlpeWindowHeader {
                 id: titleBar
                 width: parent.width
                 controls: windowControls
@@ -77,7 +77,7 @@ DFloatingWindow {
                     anchors.topMargin: 0
                     spacing: Theme.spacingM
 
-                    DSearchField {
+                    AlpeSearchField {
                         id: searchField
                         width: parent.width
                         textColor: Theme.surfaceText
@@ -90,7 +90,7 @@ DFloatingWindow {
                         }
                     }
 
-                    DListView {
+                    AlpeListView {
                         id: appList
                         width: parent.width
                         height: parent.height - searchField.height - Theme.spacingM
@@ -159,7 +159,7 @@ DFloatingWindow {
                                     }
                                 }
 
-                                DIcon {
+                                AlpeIcon {
                                     name: "add"
                                     size: Theme.iconSizeMedium
                                     color: Theme.primary

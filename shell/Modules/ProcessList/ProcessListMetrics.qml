@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 import qs.Services
 import qs.Modules.Settings.Widgets
 import "ProcessIcons.js" as ProcessIcons
@@ -13,8 +13,8 @@ Singleton {
     readonly property real headerHeight: Theme.buttonHeightXS + Theme.spacingXS
     readonly property real appIconSize: Theme.iconSizeMedium
     readonly property real windowHeight: SettingsMetrics.windowHeight
-    readonly property real menuRowHeight: DCommon.Style.menuRowHeight
-    readonly property real menuPadding: DCommon.Style.menuPadding
+    readonly property real menuRowHeight: Alpe.Style.menuRowHeight
+    readonly property real menuPadding: Alpe.Style.menuPadding
     readonly property real menuWidth: 240
     readonly property real dialogWidth: 360
     readonly property int refreshInterval: DgopService.updateInterval

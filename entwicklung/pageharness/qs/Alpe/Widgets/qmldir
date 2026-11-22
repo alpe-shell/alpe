@@ -1,6 +1,6 @@
-module qs.DCommon.Widgets
-DButton 1.0 DButton.qml
-DIcon 1.0 DIcon.qml
+module qs.Alpe.Widgets
+AlpeButton 1.0 AlpeButton.qml
+AlpeIcon 1.0 AlpeIcon.qml
 StyledText 1.0 StyledText.qml
-DActionButton 1.0 DActionButton.qml
-DListView 1.0 DListView.qml
+AlpeActionButton 1.0 AlpeActionButton.qml
+AlpeListView 1.0 AlpeListView.qml

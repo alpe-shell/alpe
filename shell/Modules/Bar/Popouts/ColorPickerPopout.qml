@@ -3,7 +3,7 @@ import qs.Common
 import qs.Modules.ColorPicker
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     layerNamespace: "dms:color-picker"

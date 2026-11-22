@@ -142,7 +142,7 @@ test("resets land on the current level's preset", () => {
         Store: loadScript(new URL("../Common/settings/SettingsStore.js", import.meta.url)),
         interfaceStyle: "expressive",
         DockConfig: loadScript(new URL("../Common/settings/DockConfig.js", import.meta.url)),
-        SpecUtil: loadScript(new URL("../DCommon/Common/settings/SpecUtil.js", import.meta.url)),
+        SpecUtil: loadScript(new URL("../Alpe/Common/settings/SpecUtil.js", import.meta.url)),
         Spec: { SPEC: Spec.SPEC, set: (root, key, value) => changes.push([key, value]) },
         AdminPolicy: { lockSettings: {} },
         saveSettings() {},

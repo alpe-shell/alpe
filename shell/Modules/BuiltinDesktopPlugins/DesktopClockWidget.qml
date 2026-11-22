@@ -2,9 +2,9 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DClockWidget {
+AlpeClockWidget {
     id: root
 
     property real widgetWidth: 280

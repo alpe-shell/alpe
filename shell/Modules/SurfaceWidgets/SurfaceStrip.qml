@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Common/settings/DockConfig.js" as DockConfig
 
 FocusScope {
@@ -296,7 +296,7 @@ FocusScope {
         id: updateLayout
         onTriggered: root.layoutRevision++
     }
-    DFlickable {
+    AlpeFlickable {
         id: scroll
         x: root.vertical ? -root.crossOverflow : 0
         y: root.vertical ? 0 : -root.crossOverflow
@@ -499,7 +499,7 @@ FocusScope {
                     onCanceled: root.cancelDrag()
                     onWheel: wheel => wheel.accepted = false
                 }
-                DActionButton {
+                AlpeActionButton {
                     visible: root.surfaceContext.editMode && slot.modelData.widgetId !== "application" && (root.participating[slot.index] ?? false)
                     z: 2
                     anchors.top: parent.top

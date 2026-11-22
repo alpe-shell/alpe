@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "KeyboardLayoutLabels.js" as KeyboardLayoutLabels
 
 BasePill {
@@ -58,7 +58,7 @@ BasePill {
                 anchors.centerIn: parent
                 spacing: 1
 
-                DIcon {
+                AlpeIcon {
                     name: "keyboard"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
                     color: root.contentColor
@@ -81,7 +81,7 @@ BasePill {
                 anchors.centerIn: parent
                 spacing: Theme.spacingS
 
-                DIcon {
+                AlpeIcon {
                     name: "keyboard"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
                     color: root.contentColor

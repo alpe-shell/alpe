@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.Plugins
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 BasePill {

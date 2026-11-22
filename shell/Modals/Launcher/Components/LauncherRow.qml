@@ -2,11 +2,11 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
-import qs.Modals.DLauncherV2
+import qs.Alpe.Widgets
+import qs.Modals.Launcher
 import "../../../Common/htmlElide.js" as HtmlElide
 
-DListItem {
+AlpeListItem {
     id: root
 
     LayoutMirroring.enabled: I18n.isRtl
@@ -157,7 +157,7 @@ DListItem {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.spacingS
 
-        DIcon {
+        AlpeIcon {
             name: "push_pin"
             size: Theme.iconSizeSmall
             color: root.contentColor
@@ -165,7 +165,7 @@ DListItem {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        DIcon {  // dmenu --multi-select checkbox
+        AlpeIcon {  // dmenu --multi-select checkbox
             name: root.item?.data?.checked ? "check_box" : "check_box_outline_blank"
             size: Theme.iconSizeSmall
             color: root.item?.data?.checked ? Theme.primary : root.contentColor
@@ -216,7 +216,7 @@ DListItem {
                 radius: Theme.fullRadius(width, height)
                 color: allModeToggleArea.containsMouse ? Theme.surfaceHover : Theme.withAlpha(Theme.surfaceHover, 0)
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: toggleButton.isAllowed ? "visibility" : "visibility_off"
                     size: Theme.chipIconSize

@@ -2,15 +2,15 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import qs.Common
-import qs.DCommon.Common as DCommon
-import qs.DCommon.Widgets
+import qs.Alpe.Common as Alpe
+import qs.Alpe.Widgets
 
 Item {
     id: root
 
     property string appId: ""
     property real iconSize: Theme.iconSize
-    readonly property int iconRequestSize: DCommon.Style.iconRasterSize(iconSize)
+    readonly property int iconRequestSize: Alpe.Style.iconRasterSize(iconSize)
     property int _desktopEntriesRevision: 0
 
     implicitWidth: iconSize
@@ -49,7 +49,7 @@ Item {
         }
     }
 
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         name: "apps"
         size: root.iconSize

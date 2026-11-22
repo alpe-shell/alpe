@@ -1,7 +1,7 @@
 import QtQuick
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "../../../plugins/alpeSport"
-// Alpe: Das Dash ist so breit wie DashMetrics.panelColumnsFor (wie DDashPopout). Zu 6 × 8,
+// Alpe: Das Dash ist so breit wie DashMetrics.panelColumnsFor (wie DashPopout). Zu 6 × 8,
 // Spieldetail öffnen macht es zwei Spalten breiter (8 × 8); schliessen macht es wieder schmal. Im Bearbeiten-Modus und mit ausgeschalteter Einstellung bleibt es schmal.
 // SHOT_DELAY=690 nimmt das Bild mit offenem Detail auf.
 Rectangle {

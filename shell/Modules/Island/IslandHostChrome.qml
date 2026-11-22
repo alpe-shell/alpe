@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell.Wayland
 import qs.Widgets
 
-DFocusGrab {
+AlpeFocusGrab {
     id: root
 
     required property var window

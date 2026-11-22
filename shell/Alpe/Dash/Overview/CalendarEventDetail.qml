@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../../../Common/Format.js" as Format
 
@@ -185,13 +185,13 @@ Column {
         spacing: Theme.spacingS
         layoutDirection: Qt.RightToLeft
 
-        DButton {
+        AlpeButton {
             text: I18n.tr("Close")
             buttonHeight: Theme.buttonHeightS
             onClicked: root.closeRequested()
         }
 
-        DButton {
+        AlpeButton {
             text: I18n.tr("Delete")
             iconName: "delete"
             buttonHeight: Theme.buttonHeightS
@@ -201,7 +201,7 @@ Column {
             onClicked: root.deleteRequested()
         }
 
-        DButton {
+        AlpeButton {
             text: I18n.tr("Edit")
             iconName: "edit"
             buttonHeight: Theme.buttonHeightS
@@ -260,7 +260,7 @@ Column {
             anchors.rightMargin: Theme.spacingXS
             spacing: Theme.spacingXS
 
-            DIcon {
+            AlpeIcon {
                 name: detailRow.iconName
                 size: Theme.iconSizeSmall
                 color: detailRow.link ? Theme.primary : Theme.onSurfaceVariant

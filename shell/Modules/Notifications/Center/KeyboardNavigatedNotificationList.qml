@@ -4,9 +4,9 @@ import Quickshell
 import qs.Modules.Notifications
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DListView {
+AlpeListView {
     id: listView
 
     property var keyboardController: null

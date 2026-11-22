@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -36,7 +36,7 @@ SettingsRow {
         anchors.verticalCenter: parent.verticalCenter
     }
 
-    DToggle {
+    AlpeToggle {
         anchors.verticalCenter: parent.verticalCenter
         hideText: true
         text: root.text

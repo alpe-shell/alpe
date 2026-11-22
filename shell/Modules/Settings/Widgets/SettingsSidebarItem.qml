@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Rectangle {
@@ -108,7 +108,7 @@ Rectangle {
         }
     }
 
-    DRipple {
+    AlpeRipple {
         id: ripple
         rippleColor: Theme.surfaceText
         topLeftRadius: root.topRadius
@@ -136,7 +136,7 @@ Rectangle {
             }
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: root.iconName
             size: Theme.iconSizeMedium

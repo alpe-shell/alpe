@@ -1,11 +1,11 @@
 pragma Singleton
 
 import Quickshell
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
 Singleton {
-    readonly property var rounding: DCommon.Appearance.rounding
-    readonly property var spacing: DCommon.Appearance.spacing
-    readonly property var fontSize: DCommon.Appearance.fontSize
-    readonly property var anim: DCommon.Appearance.anim
+    readonly property var rounding: Alpe.Appearance.rounding
+    readonly property var spacing: Alpe.Appearance.spacing
+    readonly property var fontSize: Alpe.Appearance.fontSize
+    readonly property var anim: Alpe.Appearance.anim
 }

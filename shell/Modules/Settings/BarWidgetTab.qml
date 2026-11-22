@@ -3,10 +3,10 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Common/settings/DockConfig.js" as DockConfig
-import "../DBar/OverflowLayout.js" as OverflowLayout
+import "../Bar/OverflowLayout.js" as OverflowLayout
 
 Item {
     id: root
@@ -216,7 +216,7 @@ Item {
             height: optionsLoader.status === Loader.Loading ? Theme.iconButtonSize * 2 : 0
             visible: optionsLoader.status === Loader.Loading
 
-            DSpinner {
+            AlpeSpinner {
                 anchors.centerIn: parent
             }
         }

@@ -6,7 +6,7 @@ import qs.Common
 import qs.Services
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -37,7 +37,7 @@ Item {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         contentHeight: column.height
         clip: true
@@ -80,7 +80,7 @@ Item {
                             iconSize: Theme.iconSizeLarge
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             anchors.verticalCenter: parent.verticalCenter
                             iconName: "close"
                             iconColor: Theme.onSurfaceVariant

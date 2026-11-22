@@ -2,8 +2,8 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
 Card {
     id: root
@@ -46,7 +46,7 @@ Card {
     Component {
         id: digitalFace
 
-        DClockFace {
+        AlpeClockFace {
             hours: root.hourText
             minutes: root.minuteText
             seconds: root.showSeconds ? root.secondText : ""
@@ -71,7 +71,7 @@ Card {
             readonly property real groupWidth: sideDate ? dialSize + Theme.spacingS + dateMetrics.advanceWidth : dialSize
             readonly property real groupHeight: belowDate ? dialSize + Theme.spacingS + root.supportLine : dialSize
 
-            DAnalogClock {
+            AlpeAnalogClock {
                 id: dial
                 x: (face.width - face.groupWidth) / 2
                 y: (face.height - face.groupHeight) / 2

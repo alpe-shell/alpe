@@ -7,10 +7,10 @@ import qs.Modals
 import qs.Modals.Clipboard
 import qs.Modals.Common
 import qs.Modals.Settings
-import qs.Modals.DLauncherV2
+import qs.Modals.Launcher
 import qs.Modules
 import qs.Modules.AppDrawer
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import qs.Modules.ControlCenter
 import qs.Modules.Dock
 import qs.Modules.Lock
@@ -20,7 +20,7 @@ import qs.Widgets
 import qs.Modules.Notifications.Popup
 import qs.Modules.OSD
 import qs.Modules.ProcessList
-import qs.Modules.DBar.Popouts
+import qs.Modules.Bar.Popouts
 import qs.Modules.WorkspaceOverlays
 import qs.Modules.Settings.DisplayConfig
 import qs.Services
@@ -306,7 +306,7 @@ Item {
         }
 
         sourceComponent: Component {
-            DDashPopout {
+            DashPopout {
                 id: dankDashPopout
 
                 onPopoutClosed: PopoutService._scheduleUnload("dankDash")
@@ -733,7 +733,7 @@ Item {
             PopoutService.dankLauncherV2ModalLoader = dankLauncherV2ModalLoader;
         }
 
-        DLauncherV2Modal {
+        LauncherModal {
             id: dankLauncherV2Modal
 
             Component.onCompleted: {
@@ -752,7 +752,7 @@ Item {
             PopoutService.spotlightBarModalLoader = spotlightBarModalLoader;
         }
 
-        DLauncherV2ModalHost {
+        LauncherModalHost {
             id: spotlightBarModal
             connected: false
             spotlight: true
@@ -1030,7 +1030,7 @@ Item {
         id: notepadSlideoutVariants
         model: SettingsData.getFilteredScreens("notepad")
 
-        delegate: DSlideout {
+        delegate: AlpeSlideout {
             id: notepadSlideout
             title: I18n.tr("Notepad")
             slideoutWidth: 480

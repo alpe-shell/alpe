@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
-import qs.Modules.DDash.Weather
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
+import qs.Alpe.Dash.Weather
 import qs.Modules.ControlCenter.Widgets
 
 Item {
@@ -314,14 +314,14 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Theme.spacingS
 
-            DRefreshButton {
+            AlpeRefreshButton {
                 id: refreshButton
                 busy: WeatherService.weather.loading
                 Accessible.name: I18n.tr("Refresh Weather")
                 onClicked: WeatherService.forceRefresh()
             }
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Settings")
                 iconName: "settings"
                 onClicked: {

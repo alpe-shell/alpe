@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Einstellungen unter «Plugins»: Verweis auf die Alpe-Seite «Sport», wo alles beisammen ist.
 Item {
@@ -27,7 +27,7 @@ Item {
             color: Theme.surfaceText
         }
 
-        DButton {
+        AlpeButton {
             text: "Sport-Einstellungen öffnen"
             iconName: "sports_soccer"
             onClicked: PopoutService.openSettingsWithTab("alpe_sport")

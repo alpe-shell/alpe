@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Alpe: Spielername, den man anklicken kann (Saisonwerte). Ohne Kennung bloss Text.
 StyledText {

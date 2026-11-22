@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: actions
@@ -17,7 +17,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.spacingXS
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [actions.modal.modalFocusScope]
             iconName: "push_pin"
             iconColor: actions.modal.activeTab === "saved" ? Theme.onPrimary : Theme.onSurfaceVariant
@@ -27,7 +27,7 @@ Item {
             onClicked: actions.modal.activeTab = actions.modal.activeTab === "saved" ? "recents" : "saved"
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [actions.modal.modalFocusScope]
             objectName: "keyboardHints"
             iconName: "info"
@@ -44,14 +44,14 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.spacingXS
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [actions.modal.modalFocusScope]
             iconName: "settings"
             tooltipText: I18n.tr("Settings")
             onClicked: actions.modal.openSettings()
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [actions.modal.modalFocusScope]
             iconName: "delete_sweep"
             enabled: actions.modal.canClear
@@ -61,7 +61,7 @@ Item {
             onClicked: actions.modal.confirmClearAll()
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [actions.modal.modalFocusScope]
             visible: !actions.modal.popout
             iconName: "close"

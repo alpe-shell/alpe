@@ -4,7 +4,7 @@ import Quickshell.WindowManager
 import qs.Common
 import qs.Services
 import "../Common/WorkspaceModel.js" as WorkspaceModel
-import "../DCommon/Common/WheelInput.js" as WheelInput
+import "../Alpe/Common/WheelInput.js" as WheelInput
 
 // Workspace list, focus and switching for one screen, shared by every host that draws workspace indicators.
 QtObject {

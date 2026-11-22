@@ -3,12 +3,12 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "../../../Common/GridLayout.js" as GridUtils
 import "../utils/cards.js" as CardUtils
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
-DEditableGrid {
+AlpeEditableGrid {
     id: root
 
     property bool live: true

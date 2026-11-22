@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 import "FilePreview.js" as FilePreview
 
 Item {
@@ -224,7 +224,7 @@ Item {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: info
 
         anchors.left: parent.left
@@ -318,7 +318,7 @@ Item {
         }
     }
 
-    DActionButton {
+    AlpeActionButton {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: Style.spacingS

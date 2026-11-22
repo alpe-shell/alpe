@@ -3,9 +3,9 @@ import QtQuick.Window
 import Quickshell.Services.Mpris
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.DCommon.Session
-import "../../DCommon/Common/LayoutCodes.js" as LayoutCodes
+import qs.Alpe.Widgets
+import qs.Alpe.Session
+import "../../Alpe/Common/LayoutCodes.js" as LayoutCodes
 
 Row {
     id: root
@@ -60,7 +60,7 @@ Row {
             id: keyboardLayoutRow
             spacing: Theme.spacingXS
 
-            DIcon {
+            AlpeIcon {
                 name: "keyboard"
                 size: Theme.iconSize
                 color: root.contentColor
@@ -183,7 +183,7 @@ Row {
                     color: prevArea.containsMouse ? root.dividerColor : "transparent"
                     opacity: prevArea.enabled ? 1 : Theme.onSurface_38.a
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: "skip_previous"
                         size: Theme.iconSizeSmall
@@ -210,7 +210,7 @@ Row {
                     anchors.verticalCenter: parent.verticalCenter
                     color: playing ? root.contentColor : root.dividerColor
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: parent.playing ? "pause" : "play_arrow"
                         size: Theme.iconSizeSmall
@@ -236,7 +236,7 @@ Row {
                     color: nextArea.containsMouse ? root.dividerColor : "transparent"
                     opacity: nextArea.enabled ? 1 : Theme.onSurface_38.a
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: "skip_next"
                         size: Theme.iconSizeSmall
@@ -266,7 +266,7 @@ Row {
         visible: root.weatherVisible
         anchors.verticalCenter: parent.verticalCenter
 
-        DIcon {
+        AlpeIcon {
             name: WeatherService.getWeatherIcon(WeatherService.weather.wCode)
             size: Theme.iconSize
             color: root.contentColor
@@ -292,7 +292,7 @@ Row {
         anchors.verticalCenter: parent.verticalCenter
         visible: NetworkService.networkAvailable || (BluetoothService.available && BluetoothService.enabled) || (AudioService.sink && AudioService.sink.audio)
 
-        DIcon {
+        AlpeIcon {
             id: networkIcon
             name: {
                 if (NetworkService.wifiToggling)
@@ -313,13 +313,13 @@ Row {
             anchors.verticalCenter: parent.verticalCenter
             visible: NetworkService.networkAvailable
 
-            DBlink {
+            AlpeBlink {
                 target: networkIcon
                 running: NetworkService.isWifiConnecting
             }
         }
 
-        DIcon {
+        AlpeIcon {
             name: "vpn_lock"
             size: Theme.iconSizeSmall
             color: root.contentColor
@@ -327,7 +327,7 @@ Row {
             visible: NetworkService.vpnAvailable && NetworkService.vpnConnected
         }
 
-        DIcon {
+        AlpeIcon {
             id: bluetoothIcon
             name: "bluetooth"
             size: Theme.iconSizeSmall
@@ -335,13 +335,13 @@ Row {
             anchors.verticalCenter: parent.verticalCenter
             visible: BluetoothService.available && BluetoothService.enabled
 
-            DBlink {
+            AlpeBlink {
                 target: bluetoothIcon
                 running: BluetoothService.connecting
             }
         }
 
-        DIcon {
+        AlpeIcon {
             name: AudioService.sinkVolumeIconName
             size: Theme.iconSizeSmall
             color: AudioService.sinkSilent ? root.dimColor : root.contentColor
@@ -360,7 +360,7 @@ Row {
         visible: BatteryService.batteryAvailable
         anchors.verticalCenter: parent.verticalCenter
 
-        DIcon {
+        AlpeIcon {
             name: BatteryService.getBatteryIcon()
             size: Theme.iconSize
             color: root.batteryColor

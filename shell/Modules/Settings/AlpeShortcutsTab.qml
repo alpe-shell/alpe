@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Tastenkürzel unter KWin. Alle globalen Kürzel aus kglobalaccel (KWin, Alpe, Plasma,
@@ -451,11 +451,11 @@ Item {
                 body: Flow {
                     width: parent.width
                     spacing: Theme.spacingS
-                    DButton {
+                    AlpeButton {
                         text: "Trotzdem übernehmen"
                         onClicked: root.resolveConflict(true)
                     }
-                    DButton {
+                    AlpeButton {
                         text: "Abbrechen"
                         variant: "text"
                         onClicked: root.resolveConflict(false)
@@ -475,7 +475,7 @@ Item {
         }
     }
 
-    DListView {
+    AlpeListView {
         id: list
 
         readonly property real columnWidth: Math.min(SettingsMetrics.contentMaxWidth, width - SettingsMetrics.focusGutter * 2)
@@ -550,7 +550,7 @@ Item {
                         subtitle: root.newReady ? "Danach die gewünschte Kombination drücken." : root.newKind === "app" ? "Zuerst ein Programm wählen." : "Zuerst Name und Befehl eingeben."
                         iconName: "keyboard_alt"
 
-                        DButton {
+                        AlpeButton {
                             anchors.verticalCenter: parent ? parent.verticalCenter : undefined
                             text: "Aufnehmen"
                             iconName: "radio_button_checked"
@@ -604,7 +604,7 @@ Item {
                     active: root.capture !== null && root.capture.action === entry.modelData.action && root.capture.component === entry.modelData.component
                     onClicked: root.beginCapture(entry.modelData)
 
-                    DButton {
+                    AlpeButton {
                         visible: entry.modelData.changed
                         anchors.verticalCenter: parent ? parent.verticalCenter : undefined
                         text: "Vorgabe"
@@ -613,7 +613,7 @@ Item {
                         onClicked: root.setKeys(entry.modelData, entry.modelData.defaults)
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         visible: entry.modelData.removable
                         anchors.verticalCenter: parent ? parent.verticalCenter : undefined
                         iconName: "delete"

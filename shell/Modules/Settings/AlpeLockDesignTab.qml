@@ -7,7 +7,7 @@ import Quickshell.Io
 import qs.Common
 import qs.Services
 import qs.Modals.FileBrowser
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Sperrbildschirm gestalten. Die Vorschau ist der echte Sperrbildschirm: Die Seite lädt
@@ -500,7 +500,7 @@ Item {
                 subtitle: root.kde ? "Was du hier gestaltest, erscheint erst mit dem Stil «Eigenes Layout»." : "Die Shell sperrt gerade mit dem Sperrbildschirm des Ursprungsprojekts."
                 iconName: "info"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Eigenes Layout verwenden"
                     variant: "tonal"
@@ -629,13 +629,13 @@ Item {
                 width: parent.width
                 spacing: Theme.spacingS
 
-                DButton {
+                AlpeButton {
                     text: "Text"
                     iconName: "title"
                     variant: "tonal"
                     onClicked: root.addLabel()
                 }
-                DButton {
+                AlpeButton {
                     text: "Bild"
                     iconName: "add_photo_alternate"
                     variant: "tonal"
@@ -645,26 +645,26 @@ Item {
                         imageBrowser.open();
                     }
                 }
-                DButton {
+                AlpeButton {
                     text: "Rückgängig"
                     iconName: "undo"
                     variant: "text"
                     enabled: root.history.length > 0
                     onClicked: root.undo()
                 }
-                DButton {
+                AlpeButton {
                     text: "Vorlage"
                     iconName: "restart_alt"
                     variant: "text"
                     onClicked: root.resetToTemplate()
                 }
-                DButton {
+                AlpeButton {
                     text: "hyprlock.conf übernehmen"
                     iconName: "file_open"
                     variant: "text"
                     onClicked: confBrowser.open()
                 }
-                DButton {
+                AlpeButton {
                     text: root.kde ? "Echt ansehen" : "Jetzt sperren"
                     iconName: root.kde ? "visibility" : "lock"
                     variant: "text"
@@ -813,7 +813,7 @@ Item {
                 subtitle: root.sel ? String(root.sel.path || "") : ""
                 iconName: "image"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Wählen …"
                     variant: "tonal"
@@ -965,7 +965,7 @@ Item {
                                 }
                             }
 
-                            DButton {
+                            AlpeButton {
                                 text: "Eigene …"
                                 iconName: "colorize"
                                 variant: "text"
@@ -996,19 +996,19 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingS
 
-                    DButton {
+                    AlpeButton {
                         text: "Nach vorne"
                         iconName: "flip_to_front"
                         variant: "tonal"
                         onClicked: root.restack(1)
                     }
-                    DButton {
+                    AlpeButton {
                         text: "Nach hinten"
                         iconName: "flip_to_back"
                         variant: "tonal"
                         onClicked: root.restack(-1)
                     }
-                    DButton {
+                    AlpeButton {
                         text: "Waagrecht mittig"
                         iconName: "align_horizontal_center"
                         variant: "tonal"
@@ -1017,14 +1017,14 @@ Item {
                             w.position = ["0", w.position[1]];
                         }, "")
                     }
-                    DButton {
+                    AlpeButton {
                         visible: root.sel && root.sel.type !== "input"
                         text: "Duplizieren"
                         iconName: "content_copy"
                         variant: "text"
                         onClicked: root.duplicateSelected()
                     }
-                    DButton {
+                    AlpeButton {
                         visible: root.sel && root.sel.type !== "input"
                         text: "Entfernen"
                         iconName: "delete"
@@ -1069,7 +1069,7 @@ Item {
                 subtitle: String(root.bg.image || "")
                 iconName: "image"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Wählen …"
                     variant: "tonal"

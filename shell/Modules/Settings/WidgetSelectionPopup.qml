@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 WidgetPickerWindow {
@@ -50,7 +50,7 @@ WidgetPickerWindow {
     Component {
         id: rowDelegate
 
-        DListItem {
+        AlpeListItem {
             width: ListView.view.width
             implicitHeight: Math.max(SettingsMetrics.rowMinHeight, textColumn.implicitHeight + Theme.spacingM * 2)
             isSelected: root.keyboardNavigationActive && index === root.selectedIndex && !modelData.disabled
@@ -63,7 +63,7 @@ WidgetPickerWindow {
                 anchors.margins: Theme.spacingM
                 spacing: Theme.spacingM
 
-                DIcon {
+                AlpeIcon {
                     name: modelData.icon
                     size: Theme.iconSize
                     color: modelData.disabled ? Theme.onSurface_38 : Theme.primary
@@ -96,7 +96,7 @@ WidgetPickerWindow {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     name: "add"
                     size: Theme.iconSizeMedium
                     color: modelData.disabled ? Theme.onSurface_38 : Theme.primary

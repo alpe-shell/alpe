@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DSlideout {
+AlpeSlideout {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankSlideout", "DSlideout", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankSlideout", "AlpeSlideout", "qs.Widgets")
 }

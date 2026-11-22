@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 FocusScope {
@@ -74,7 +74,7 @@ FocusScope {
                 text: entry.modelData.group ?? ""
             }
 
-            DListItem {
+            AlpeListItem {
                 id: item
                 width: parent.width
                 implicitHeight: Theme.listItemHeight
@@ -132,7 +132,7 @@ FocusScope {
                                 cursorShape: Qt.PointingHandCursor
                             }
 
-                            DTooltipHost {
+                            AlpeTooltipHost {
                                 text: entry.modelData.valueTooltip ?? ""
                                 target: valueLabel
                                 hoverArea: valueHover
@@ -159,7 +159,7 @@ FocusScope {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: flick
         clip: true
         anchors.fill: parent
@@ -176,7 +176,7 @@ FocusScope {
                 items: root.shownEntries
             }
 
-            DButton {
+            AlpeButton {
                 visible: root.hiddenCount > 0
                 text: root.showHidden ? I18n.tr("Hide") : I18n.tr("Show virtual devices")
                 variant: "text"

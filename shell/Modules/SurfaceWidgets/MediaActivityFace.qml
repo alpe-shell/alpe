@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.Modules.DBar.Widgets
+import qs.Modules.Bar.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../../Common/LyricLayout.js" as LyricLayout
 

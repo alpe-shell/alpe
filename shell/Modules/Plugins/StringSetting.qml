@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Common/QmlUtils.js" as QmlUtils
 
 Column {
@@ -61,7 +61,7 @@ Column {
         visible: root.description !== ""
     }
 
-    DTextField {
+    AlpeTextField {
         id: textField
         width: parent.width
         placeholderText: root.placeholder

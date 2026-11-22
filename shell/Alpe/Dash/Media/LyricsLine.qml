@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 import "LyricsModel.js" as LyricsModel
 
 Item {
@@ -190,7 +190,7 @@ Item {
                 }
             }
 
-            sourceComponent: DCircularWavyProgress {
+            sourceComponent: AlpeCircularWavyProgress {
                 progress: root.ringProgress
                 color: root.lit ? MediaAccentService.lyricsLead : root.restingColor
                 trackColor: root.lit && root.following ? Theme.withAlpha(MediaAccentService.lyricsLead, DashMetrics.lyricsRestAlpha) : root.restingColor

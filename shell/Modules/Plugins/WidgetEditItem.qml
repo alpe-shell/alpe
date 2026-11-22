@@ -210,7 +210,7 @@ Item {
                 }
             }
 
-            DGridEditChrome {
+            AlpeGridEditChrome {
                 id: chrome
 
                 property real startWidth

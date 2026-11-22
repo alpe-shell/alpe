@@ -6,7 +6,7 @@ import qs.Modules.SystemUpdate
 import qs.Services
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: systemUpdatePopout
 
     layerNamespace: "dms:system-update"

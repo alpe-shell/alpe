@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 SettingsRow {
@@ -42,7 +42,7 @@ SettingsRow {
     subtitle: description
     onCurrentValueChanged: dropdown.currentValue = currentValue
 
-    DDropdown {
+    AlpeDropdown {
         id: dropdown
         downKeyOpens: false
         backgroundColor: SettingsMetrics.controlSurface

@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Alpe: Griffleisten. Fenster ohne Titelleiste lassen sich sonst nur mit Meta und Maustaste
 // bewegen. Das KWin-Skript meldet, wo der obere Rand eines solchen Fensters sichtbar ist
@@ -175,7 +175,7 @@ Item {
                             x: Theme.spacingS
                             spacing: Theme.spacingS
 
-                            DIcon {
+                            AlpeIcon {
                                 anchors.verticalCenter: parent.verticalCenter
                                 name: entry.modelData[1]
                                 size: 18

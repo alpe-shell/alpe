@@ -5,7 +5,7 @@ import QtQuick.Effects
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -60,7 +60,7 @@ Item {
     width: size
     height: size
 
-    DIcon {
+    AlpeIcon {
         visible: root.resolvedMode === "apps"
         anchors.centerIn: parent
         name: "apps"

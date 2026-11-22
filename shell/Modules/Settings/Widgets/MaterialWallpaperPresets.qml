@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Widgets
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import "../../../DCommon/Common/MaterialWallpaper.js" as Art
+import "../../../Alpe/Common/MaterialWallpaper.js" as Art
 
 Flow {
     id: root
@@ -99,7 +99,7 @@ Flow {
                     root.selected(tile.modelData.id);
                 }
             }
-            DIconButton {
+            AlpeIconButton {
                 anchors.top: preview.top
                 anchors.right: preview.right
                 anchors.margins: Theme.spacingXS
@@ -131,7 +131,7 @@ Flow {
         Column {
             anchors.centerIn: parent
             spacing: Theme.spacingS
-            DIcon {
+            AlpeIcon {
                 anchors.horizontalCenter: parent.horizontalCenter
                 name: "add"
                 size: Theme.iconSizeLarge

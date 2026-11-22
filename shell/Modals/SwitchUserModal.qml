@@ -2,9 +2,9 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
 
     property bool lockOnSwitch: false
@@ -67,7 +67,7 @@ DModal {
         }
     }
 
-    content: DDialog {
+    content: AlpeDialog {
         id: sessionDialog
         title: I18n.tr("Switch User")
         supportingText: SessionsService.otherSessions().length > 0 ? I18n.tr("Select an active session to switch to. The current session stays running in the background.") : ""
@@ -97,7 +97,7 @@ DModal {
                         anchors.margins: Theme.spacingM
                         spacing: Theme.spacingM
 
-                        DIcon {
+                        AlpeIcon {
                             name: "account_circle"
                             size: Theme.iconSize + 4
                             color: Theme.primary
@@ -133,7 +133,7 @@ DModal {
                             }
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             id: chevron
                             name: I18n.isRtl ? "chevron_left" : "chevron_right"
                             size: Theme.iconSize
@@ -168,7 +168,7 @@ DModal {
                     anchors.margins: Theme.spacingM
                     spacing: Theme.spacingM
 
-                    DIcon {
+                    AlpeIcon {
                         name: "info"
                         size: Theme.iconSize
                         color: Theme.surfaceVariantText
@@ -201,14 +201,14 @@ DModal {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 maximumWidth: sessionDialog.actionWidth
                 wrapText: true
                 text: I18n.tr("Close")
                 variant: "text"
                 onClicked: root.close()
             },
-            DButton {
+            AlpeButton {
                 maximumWidth: sessionDialog.actionWidth
                 wrapText: true
                 visible: SessionsService.otherSessions().length === 0 && !root.lockOnSwitch

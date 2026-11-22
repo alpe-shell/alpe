@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 FocusScope {
     id: root
@@ -155,7 +155,7 @@ FocusScope {
         }
     }
 
-    DSpinner {
+    AlpeSpinner {
         anchors.centerIn: parent
         size: DashMetrics.spinnerSize
         visible: root.isCurrent && root.loading

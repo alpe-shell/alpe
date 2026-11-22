@@ -4,7 +4,7 @@ import Quickshell
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 BasePill {
     id: root
@@ -488,7 +488,7 @@ BasePill {
                             root.refreshInteractionRefs();
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             id: vIconOnlyItem
                             anchors.centerIn: parent
                             visible: !verticalGroupItem.modelData.composite
@@ -536,13 +536,13 @@ BasePill {
                                 }
                             }
 
-                            DBlink {
+                            AlpeBlink {
                                 target: vIconOnlyItem
                                 running: root.surfaceLive && root.getIconBlinking(verticalGroupItem.modelData.id)
                             }
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             id: audioIconV
                             visible: verticalGroupItem.modelData.id === "audio"
                             name: AudioService.sinkVolumeIconName
@@ -564,7 +564,7 @@ BasePill {
                             anchors.topMargin: 2
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             id: micIconV
                             visible: verticalGroupItem.modelData.id === "microphone"
                             name: root.getMicIconName()
@@ -586,7 +586,7 @@ BasePill {
                             anchors.topMargin: 2
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             id: brightnessIconV
                             visible: verticalGroupItem.modelData.id === "brightness"
                             name: root.getBrightnessIconName()
@@ -615,7 +615,7 @@ BasePill {
                     height: root.vIconSize
                     visible: root.hasNoVisibleIcons()
 
-                    DIcon {
+                    AlpeIcon {
                         name: "settings"
                         size: root.vIconSize
                         color: root.isActive ? Theme.primary : Theme.widgetIconColor
@@ -670,7 +670,7 @@ BasePill {
                             root.refreshInteractionRefs();
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             id: iconOnlyItem
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
@@ -719,7 +719,7 @@ BasePill {
                                 }
                             }
 
-                            DBlink {
+                            AlpeBlink {
                                 target: iconOnlyItem
                                 running: root.surfaceLive && root.getIconBlinking(horizontalGroupItem.modelData.id)
                             }
@@ -741,7 +741,7 @@ BasePill {
                                 anchors.verticalCenter: parent.verticalCenter
                                 spacing: Theme.spacingXXS
 
-                                DIcon {
+                                AlpeIcon {
                                     id: audioIcon
                                     name: AudioService.sinkVolumeIconName
                                     size: root.getControlCenterIconSize()
@@ -778,7 +778,7 @@ BasePill {
                                 anchors.verticalCenter: parent.verticalCenter
                                 spacing: Theme.spacingXXS
 
-                                DIcon {
+                                AlpeIcon {
                                     id: micIcon
                                     name: root.getMicIconName()
                                     size: root.getControlCenterIconSize()
@@ -815,7 +815,7 @@ BasePill {
                                 anchors.verticalCenter: parent.verticalCenter
                                 spacing: Theme.spacingXXS
 
-                                DIcon {
+                                AlpeIcon {
                                     id: brightnessIcon
                                     name: root.getBrightnessIconName()
                                     size: root.getControlCenterIconSize()
@@ -838,7 +838,7 @@ BasePill {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     name: "settings"
                     size: root.getControlCenterIconSize()
                     color: root.isActive ? Theme.primary : Theme.widgetIconColor

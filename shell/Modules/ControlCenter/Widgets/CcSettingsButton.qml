@@ -2,9 +2,9 @@ import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DActionButton {
+AlpeActionButton {
     property string settingsTab: ""
 
     buttonSize: CcMetrics.headerActionSize

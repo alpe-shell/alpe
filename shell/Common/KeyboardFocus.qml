@@ -26,7 +26,7 @@ Singleton {
     }
 
     function captureActiveToplevel() {
-        return DToplevels.activeToplevel;
+        return Toplevels.activeToplevel;
     }
 
     function restoreToplevel(toplevel) {

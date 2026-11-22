@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -28,7 +28,7 @@ Item {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         active: root.loading
-        sourceComponent: DSpinner {
+        sourceComponent: AlpeSpinner {
             size: Theme.iconSizeSmall
         }
     }
@@ -63,7 +63,7 @@ Item {
     }
 
     // The tooltip is built on first hover; rows are rebuilt often and most are never hovered.
-    DTooltipHost {
+    AlpeTooltipHost {
         id: tip
         target: root
         hoverArea: rowHover

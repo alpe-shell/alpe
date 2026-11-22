@@ -1,8 +1,8 @@
 import QtQuick
-import qs.DCommon.Widgets
-import qs.DCommon.Common
+import qs.Alpe.Widgets
+import qs.Alpe.Common
 
-DActionButton {
+AlpeActionButton {
     radius: Style.buttonRadius(width, height, buttonSize, pressed, circular)
     shapeDuration: LockMetrics.effectsDuration
     shapeCurve: Style.expressiveCurves.expressiveEffects

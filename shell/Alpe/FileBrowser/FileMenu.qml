@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Popup {
     id: root
@@ -100,7 +100,7 @@ Popup {
         }
     }
 
-    contentItem: DFlickable {
+    contentItem: AlpeFlickable {
         id: flick
 
         implicitHeight: Math.min(column.height, Math.max(Style.menuItemHeight * 3, flick.Window.height - FileBrowserMetrics.menuMargin * 2))
@@ -156,7 +156,7 @@ Popup {
     enter: Transition {
         enabled: root.motionEnabled
 
-        DAnim {
+        AlpeAnim {
             property: "opacity"
             from: 0
             to: 1
@@ -164,7 +164,7 @@ Popup {
             easing.bezierCurve: Style.expressiveCurves.expressiveEffects
         }
 
-        DAnim {
+        AlpeAnim {
             property: "scale"
             from: Style.popupEnterScale
             to: 1
@@ -176,7 +176,7 @@ Popup {
     exit: Transition {
         enabled: root.motionEnabled
 
-        DAnim {
+        AlpeAnim {
             property: "opacity"
             from: 1
             to: 0

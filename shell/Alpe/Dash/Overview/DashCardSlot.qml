@@ -1,12 +1,12 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "../utils/cards.js" as CardUtils
 
-DEditableGridSlot {
+AlpeEditableGridSlot {
     id: root
 
     readonly property var cardData: JSON.parse(json)
@@ -131,7 +131,7 @@ DEditableGridSlot {
         }
     }
 
-    DSpinner {
+    AlpeSpinner {
         anchors.centerIn: parent
         size: DashMetrics.spinnerSize
         visible: cardLoader.status === Loader.Loading

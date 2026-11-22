@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -109,7 +109,7 @@ Item {
                 clickable: true
                 onClicked: root.openShadowColorPicker()
 
-                DColorSwatch {
+                AlpeColorSwatch {
                     width: Theme.iconSizeMedium
                     height: width
                     swatchColor: SettingsData.m3ElevationCustomColor ?? "#000000"

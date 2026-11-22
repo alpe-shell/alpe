@@ -2,10 +2,10 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import Quickshell.Services.UPower
 
-DModal {
+AlpeModal {
     id: root
 
     layerNamespace: "dms:power-profiles"
@@ -156,7 +156,7 @@ DModal {
                         }
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "close"
                         Accessible.name: I18n.tr("Close")
                         iconSize: Theme.iconSize - 4
@@ -222,7 +222,7 @@ DModal {
                                 anchors.centerIn: parent
                                 spacing: Theme.spacingS
 
-                                DIcon {
+                                AlpeIcon {
                                     name: Theme.getPowerProfileIcon(modelData)
                                     size: Theme.iconSize + 16
                                     color: isActive ? Theme.accentOnSelectedContainer : Theme.surfaceText
@@ -272,7 +272,7 @@ DModal {
                     spacing: Theme.spacingXS
                     opacity: 0.5
 
-                    DIcon {
+                    AlpeIcon {
                         name: "keyboard"
                         size: Theme.fontSizeSmall
                         color: Theme.surfaceText

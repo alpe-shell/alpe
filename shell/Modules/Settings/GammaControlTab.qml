@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Common/Format.js" as Format
 
@@ -42,7 +42,7 @@ Item {
             anchors.centerIn: parent
             spacing: Theme.spacingXS
 
-            DIcon {
+            AlpeIcon {
                 name: tile.iconName
                 size: Theme.iconSize
                 color: tile.iconColor
@@ -295,14 +295,14 @@ Item {
                 onAccepted: root.addNightModeExcludedApp()
 
                 actions: [
-                    DIconButton {
+                    AlpeIconButton {
                         variant: "filled"
                         iconName: "add"
                         Accessible.name: I18n.tr("Add")
                         enabled: excludeEditor.value.trim() !== ""
                         onClicked: root.addNightModeExcludedApp()
                     },
-                    DIconButton {
+                    AlpeIconButton {
                         iconName: "apps"
                         tooltipText: I18n.tr("Browse")
                         onClicked: appBrowserPopup.show()
@@ -320,7 +320,7 @@ Item {
                     title: modelData
                     iconName: "bedtime_off"
 
-                    DActionButton {
+                    AlpeActionButton {
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "delete"
                         iconColor: Theme.error

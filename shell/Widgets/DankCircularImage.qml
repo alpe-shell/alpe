@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DCircularImage {
+Alpe.AlpeCircularImage {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankCircularImage", "DCircularImage", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankCircularImage", "AlpeCircularImage", "qs.Alpe.Widgets")
 }

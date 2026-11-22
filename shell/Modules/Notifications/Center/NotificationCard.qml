@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Notifications
 import qs.Modules.Notifications as Notifications
@@ -147,7 +147,7 @@ Item {
                 anchors.rightMargin: NotificationMetrics.cardPadding
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Theme.spacingXS
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: I18n.tr("Dismiss")
                     buttonHeight: NotificationMetrics.controlSize
@@ -155,7 +155,7 @@ Item {
                     variant: "text"
                     onClicked: NotificationService.dismissGroup(root.notificationGroup?.key || "")
                 }
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: (root.notificationGroup?.count || 0).toString()
                     iconName: "expand_less"
@@ -246,7 +246,7 @@ Item {
         onAppMuted: NotificationService.dismissGroup(root.notificationGroup?.key || "")
     }
 
-    DDropdown {
+    AlpeDropdown {
         id: notificationCardContextMenu
         showTrigger: false
         popupWidth: NotificationMetrics.menuWidth

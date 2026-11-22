@@ -4,9 +4,9 @@ import Quickshell
 import Quickshell.Services.SystemTray
 import qs.Common
 import qs.Services
-import qs.Modules.DBar.Widgets
-import qs.Modules.DDash
-import "../DBar/WidgetModel.js" as WidgetModel
+import qs.Modules.Bar.Widgets
+import qs.Alpe.Dash
+import "../Bar/WidgetModel.js" as WidgetModel
 
 Item {
     id: root

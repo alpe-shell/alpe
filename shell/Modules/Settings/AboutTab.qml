@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import qs.Widgets
 
@@ -85,7 +85,7 @@ Item {
                 title: I18n.tr("Status")
                 trailingBadge: I18n.tr("Connected")
 
-                DBadge {
+                AlpeBadge {
                     color: Theme.success
                 }
             }
@@ -100,7 +100,7 @@ Item {
                     Repeater {
                         model: DMSService.capabilities
 
-                        DBadge {
+                        AlpeBadge {
                             required property string modelData
                             text: modelData
                             color: Theme.primaryHover

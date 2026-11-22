@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 FileItemSurface {
     id: row
@@ -105,7 +105,7 @@ FileItemSurface {
         anchors.verticalCenter: parent.verticalCenter
         active: row.isDir && (row.view?.chevrons ?? false)
         width: active ? Style.iconSizeMedium : 0
-        sourceComponent: DIcon {
+        sourceComponent: AlpeIcon {
             name: "chevron_right"
             size: Style.iconSizeMedium
             color: row.supportingColor

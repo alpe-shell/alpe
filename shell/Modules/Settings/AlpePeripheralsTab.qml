@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Akkustände von Maus, Tastatur und Headset. Was UPower meldet, erscheint von selbst;
@@ -128,7 +128,7 @@ Item {
                 iconName: HeadsetService.toolMissing || (HeadsetService.checked && HeadsetService.devices.length === 0) ? "error_outline" : "check_circle"
                 iconColor: HeadsetService.toolMissing || (HeadsetService.checked && HeadsetService.devices.length === 0) ? Theme.warning : Theme.primary
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     buttonHeight: Theme.buttonHeightS
                     text: "Jetzt abfragen"

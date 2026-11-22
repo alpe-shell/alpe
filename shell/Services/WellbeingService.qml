@@ -7,7 +7,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
-import "../Modules/DDash/Wellbeing/Wellbeing.js" as Wellbeing
+import "../Alpe/Dash/Wellbeing/Wellbeing.js" as Wellbeing
 
 Singleton {
     id: root
@@ -33,7 +33,7 @@ Singleton {
             "apps": apps
         };
     }
-    readonly property var managerActiveToplevel: DToplevels.activeToplevel
+    readonly property var managerActiveToplevel: Toplevels.activeToplevel
 
     property string focusedAppId: ""
     property var today: Wellbeing.emptyDay("")

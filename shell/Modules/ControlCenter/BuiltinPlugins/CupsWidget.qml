@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
@@ -41,7 +41,7 @@ PluginComponent {
                 settingsTab: "printers"
             }
 
-            DFlickable {
+            AlpeFlickable {
                 anchors.fill: parent
                 contentHeight: detailColumn.height
                 clip: true
@@ -65,7 +65,7 @@ PluginComponent {
                             title: I18n.tr("Printers")
                             subtitle: CupsService.getCurrentPrinterStatePrettyShort()
 
-                            DDropdown {
+                            AlpeDropdown {
                                 anchors.verticalCenter: parent.verticalCenter
                                 compactMode: true
                                 dropdownWidth: CcMetrics.rowDropdownWidth
@@ -80,7 +80,7 @@ PluginComponent {
                             width: parent.width
                             spacing: Theme.spacingS
 
-                            DButton {
+                            AlpeButton {
                                 buttonHeight: Theme.buttonHeightXS
                                 iconName: detailRoot.printerStopped ? "play_arrow" : "pause"
                                 iconSize: Theme.iconSizeSmall
@@ -96,7 +96,7 @@ PluginComponent {
                                 }
                             }
 
-                            DButton {
+                            AlpeButton {
                                 buttonHeight: Theme.buttonHeightXS
                                 iconName: "delete_forever"
                                 iconSize: Theme.iconSizeSmall
@@ -134,7 +134,7 @@ PluginComponent {
                                 title: "#" + modelData.id + " • " + modelData.state
                                 subtitle: new Date(modelData.timeCreated).toLocaleString(Qt.locale(), Locale.ShortFormat) + " • " + I18n.tr("%1 KB", "print job size in kilobytes").arg(Math.round(modelData.size / 1024))
 
-                                DActionButton {
+                                AlpeActionButton {
                                     anchors.verticalCenter: parent.verticalCenter
                                     buttonSize: Theme.buttonHeightXS
                                     iconSize: Theme.iconSizeMedium

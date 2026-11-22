@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -31,7 +31,7 @@ Item {
             }
         }
 
-        DIcon {
+        AlpeIcon {
             id: arrowIcon
             anchors.centerIn: parent
             size: actualIconSize * 0.6

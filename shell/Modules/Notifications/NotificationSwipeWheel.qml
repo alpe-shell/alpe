@@ -1,6 +1,6 @@
 import QtQuick
-import "../../DCommon/Common/WheelInput.js" as WheelInput
-import "../../DCommon/Widgets/ScrollConstants.js" as Scroll
+import "../../Alpe/Common/WheelInput.js" as WheelInput
+import "../../Alpe/Widgets/ScrollConstants.js" as Scroll
 
 WheelHandler {
     id: handler

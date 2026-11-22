@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
 import qs.Modules.Plugins
@@ -69,7 +69,7 @@ PluginComponent {
                 settingsTab: "displays"
             }
 
-            DFlickable {
+            AlpeFlickable {
                 anchors.fill: parent
                 contentHeight: detailColumn.height
                 clip: true
@@ -120,7 +120,7 @@ PluginComponent {
     horizontalBarPill: Component {
         Row {
             spacing: Theme.spacingXS
-            DIcon {
+            AlpeIcon {
                 name: "monitor"
                 color: Theme.primary
                 size: root.iconSize
@@ -138,7 +138,7 @@ PluginComponent {
     verticalBarPill: Component {
         Column {
             spacing: Theme.spacingXXS
-            DIcon {
+            AlpeIcon {
                 name: "monitor"
                 color: Theme.primary
                 size: root.iconSize

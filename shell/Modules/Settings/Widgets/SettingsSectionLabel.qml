@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -70,7 +70,7 @@ Item {
         spacing: Theme.spacingXS
     }
 
-    DIcon {
+    AlpeIcon {
         id: caret
         anchors.right: parent.right
         anchors.rightMargin: Theme.spacingS

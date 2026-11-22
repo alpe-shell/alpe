@@ -4,11 +4,11 @@ import QtQuick
 import Quickshell.Services.Mpris
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modules.DDash
-import qs.Modules.DDash.Media
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import qs.Alpe.Dash
+import qs.Alpe.Dash.Media
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 import "../../../Common/Format.js" as Format
 
 Card {
@@ -74,7 +74,7 @@ Card {
         spacing: Theme.spacingXS
         visible: !root.activePlayer
 
-        DIcon {
+        AlpeIcon {
             anchors.horizontalCenter: parent.horizontalCenter
             name: "music_note"
             size: Theme.iconSizeLarge
@@ -160,7 +160,7 @@ Card {
             LayoutMirroring.enabled: false
             LayoutMirroring.childrenInherit: true
 
-            DSeekbar {
+            AlpeSeekbar {
                 id: seekbar
                 focusRingColor: MediaAccentService.focusRing
                 width: parent.width
@@ -234,7 +234,7 @@ Card {
             height: stacked ? buttonHeight * 2 + spacing : buttonHeight
             y: root.tiny ? (parent.height - height) / 2 : parent.height - height
 
-            DIconButton {
+            AlpeIconButton {
                 id: playButton
                 x: transport.centered ? previousButton.width + transport.spacing : 0
                 anchors.top: parent.top
@@ -259,7 +259,7 @@ Card {
                 onClicked: root.activePlayer.togglePlaying()
             }
 
-            DIconButton {
+            AlpeIconButton {
                 id: previousButton
                 x: transport.stacked || transport.centered ? 0 : playButton.width + transport.spacing
                 anchors.bottom: parent.bottom
@@ -277,7 +277,7 @@ Card {
                 onClicked: MprisController.previousOrRewind()
             }
 
-            DIconButton {
+            AlpeIconButton {
                 id: nextButton
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom

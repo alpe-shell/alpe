@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 WidgetPickerWindow {
     id: root
@@ -33,7 +33,7 @@ WidgetPickerWindow {
     Component {
         id: tileDelegate
 
-        DListItem {
+        AlpeListItem {
             id: delegateRoot
 
             required property var modelData
@@ -57,7 +57,7 @@ WidgetPickerWindow {
                     color: Theme.withAlpha(Theme.primary, Theme.tonalTintAlpha)
                     anchors.verticalCenter: parent.verticalCenter
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: delegateRoot.modelData.icon || "widgets"
                         size: Theme.iconSize
@@ -108,7 +108,7 @@ WidgetPickerWindow {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     name: "add"
                     size: Theme.iconSizeMedium
                     color: Theme.primary

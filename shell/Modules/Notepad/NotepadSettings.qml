@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -108,7 +108,7 @@ Item {
             z: parent.z - 1
         }
 
-        DFlickable {
+        AlpeFlickable {
             id: settingsFlickable
             anchors.fill: parent
             clip: true
@@ -144,7 +144,7 @@ Item {
                     color: Theme.outlineHeavy
                 }
 
-                DToggle {
+                AlpeToggle {
                     anchors.left: parent.left
                     anchors.leftMargin: -Theme.spacingM
                     width: parent.width + Theme.spacingM
@@ -156,7 +156,7 @@ Item {
                     }
                 }
 
-                DToggle {
+                AlpeToggle {
                     anchors.left: parent.left
                     anchors.leftMargin: -Theme.spacingM
                     width: parent.width + Theme.spacingM
@@ -168,7 +168,7 @@ Item {
                     }
                 }
 
-                DToggle {
+                AlpeToggle {
                     anchors.left: parent.left
                     anchors.leftMargin: -Theme.spacingM
                     width: parent.width + Theme.spacingM
@@ -203,7 +203,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingM
 
-                        DIcon {
+                        AlpeIcon {
                             name: "search"
                             size: Theme.iconSize - 2
                             color: Theme.primary
@@ -236,7 +236,7 @@ Item {
                     color: "transparent"
                     visible: !SettingsData.notepadUseMonospace
 
-                    DDropdown {
+                    AlpeDropdown {
                         id: fontDropdown
                         anchors.left: parent.left
                         anchors.leftMargin: -Theme.spacingM
@@ -294,7 +294,7 @@ Item {
                             spacing: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
 
-                            DActionButton {
+                            AlpeActionButton {
                                 buttonSize: 32
                                 iconName: "remove"
                                 Accessible.name: I18n.tr("Decrease")
@@ -325,7 +325,7 @@ Item {
                                 }
                             }
 
-                            DActionButton {
+                            AlpeActionButton {
                                 buttonSize: 32
                                 iconName: "add"
                                 Accessible.name: I18n.tr("Increase")
@@ -352,7 +352,7 @@ Item {
                         width: parent.width
                         spacing: Theme.spacingS
 
-                        DToggle {
+                        AlpeToggle {
                             anchors.left: parent.left
                             anchors.leftMargin: -Theme.spacingM
                             width: parent.width + Theme.spacingM
@@ -368,7 +368,7 @@ Item {
                             }
                         }
 
-                        DSlider {
+                        AlpeSlider {
                             anchors.left: parent.left
                             anchors.leftMargin: -Theme.spacingM
                             width: parent.width + Theme.spacingM
@@ -409,7 +409,7 @@ Item {
                                 color: Theme.surfaceText
                             }
 
-                            DButtonGroup {
+                            AlpeButtonGroup {
                                 model: [I18n.tr("Slideout", "noun, notepad default mode option, side panel"), I18n.tr("Popout", "noun, option to open in a popout window")]
                                 size: "small"
                                 currentIndex: SettingsData.notepadDefaultMode === "popout" ? 1 : 0
@@ -433,7 +433,7 @@ Item {
                                 color: Theme.surfaceText
                             }
 
-                            DButtonGroup {
+                            AlpeButtonGroup {
                                 model: [I18n.tr("Right"), I18n.tr("Left")]
                                 size: "small"
                                 currentIndex: SettingsData.notepadSlideoutSide === "left" ? 1 : 0
@@ -445,7 +445,7 @@ Item {
                             }
                         }
 
-                        DToggle {
+                        AlpeToggle {
                             anchors.left: parent.left
                             anchors.leftMargin: -Theme.spacingM
                             width: parent.width + Theme.spacingM
@@ -466,7 +466,7 @@ Item {
                             color: Theme.surfaceText
                         }
 
-                        DSlider {
+                        AlpeSlider {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingXS
                             width: parent.width - Theme.spacingXS * 2
@@ -519,7 +519,7 @@ Item {
                         height: 36
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: root.shortcutsExpanded ? "expand_less" : "expand_more"
                             size: Theme.iconSizeSmall
                             color: Theme.surfaceText
@@ -542,7 +542,7 @@ Item {
                         anchors.top: shortcutsHeader.bottom
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        sourceComponent: DKeyHints {
+                        sourceComponent: AlpeKeyHints {
                             hints: [
                                 {
                                     keys: ["Ctrl+S"],

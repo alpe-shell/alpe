@@ -3,7 +3,7 @@ import QtQuick.Controls
 import qs.Common
 import qs.Modules.Settings.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 FocusScope {
     id: root
@@ -401,7 +401,7 @@ FocusScope {
                     width: host.showBack ? Theme.iconButtonSize + Theme.spacingM - glyphInset : 0
                     height: Theme.iconButtonSize
 
-                    DActionButton {
+                    AlpeActionButton {
                         buttonSize: Theme.iconButtonSize
                         iconName: I18n.isRtl ? "arrow_forward" : "arrow_back"
                         Accessible.name: I18n.tr("Back")
@@ -506,9 +506,9 @@ FocusScope {
             "keybinds": CompositorService.isKwin ? "AlpeShortcutsTab.qml" : "KeybindsTab.qml",
             "dankbar_widgets": "WidgetsTab.qml",
             "window_rules": CompositorService.isKwin ? "AlpeWindowRulesTab.qml" : "WindowRulesTab.qml",
-            "dankbar_settings": "DBarTab.qml",
-            "dankbar_appearance": "DBarAppearanceTab.qml",
-            "dankbar_dot": "DDotTab.qml",
+            "dankbar_settings": "BarTab.qml",
+            "dankbar_appearance": "BarAppearanceTab.qml",
+            "dankbar_dot": "DotTab.qml",
             "bar_widget": "BarWidgetTab.qml",
             "compositor_layout": "CompositorLayoutTab.qml",
             "dock_general": "DockGeneralTab.qml",
@@ -560,7 +560,7 @@ FocusScope {
             "user_create": "CreateUserTab.qml",
             "autostart": "AutoStartTab.qml",
             "battery": "BatteryTab.qml",
-            "dank_dash": "DDashTab.qml",
+            "dank_dash": "DashTab.qml",
             "wellbeing": "DigitalWellbeingTab.qml",
             "mouse_touchpad": "MouseTouchpadTab.qml",
             "keyboard": "KeyboardTab.qml",
@@ -614,7 +614,7 @@ FocusScope {
         replaceEnter: PageEnter {}
         replaceExit: PageExit {}
 
-        DSpinner {
+        AlpeSpinner {
             id: pageSpinner
 
             readonly property bool loading: pageStack.currentItem?.presented === false

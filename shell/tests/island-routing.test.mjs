@@ -587,7 +587,7 @@ test("power menu shortcuts open in the island before the modal", () => {
 });
 
 test("a right-click face swap holds hover-open until the pointer leaves", () => {
-    const source = readFileSync(new URL("../Modules/DIsland/IslandController.qml", import.meta.url), "utf8");
+    const source = readFileSync(new URL("../Modules/Island/IslandController.qml", import.meta.url), "utf8");
     const requested = [];
     const timer = { stop() {}, restart() {} };
     const controller = functions(source, "    ", vm.createContext({

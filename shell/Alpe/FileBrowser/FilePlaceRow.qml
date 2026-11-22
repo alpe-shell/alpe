@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 StyledButton {
     id: row
@@ -81,7 +81,7 @@ StyledButton {
         anchors.rightMargin: Style.spacingM
         spacing: Style.spacingM
 
-        DRingGauge {
+        AlpeRingGauge {
             Layout.preferredWidth: FileBrowserMetrics.sidebarIconSize
             Layout.preferredHeight: FileBrowserMetrics.sidebarIconSize
             value: row.ringValue
@@ -94,7 +94,7 @@ StyledButton {
                 radius: row.ringValue >= 0 ? width / 2 : Style.fullRadius(width, height)
                 color: row.showAction ? Style.primaryContainer : Style.withAlpha(Style.primary, Style.tonalTintAlpha)
 
-                DSpinner {
+                AlpeSpinner {
                     anchors.centerIn: parent
                     visible: row.busy
                     size: FileBrowserMetrics.sidebarGlyphSize
@@ -125,7 +125,7 @@ StyledButton {
                         radius: Style.fullRadius(width, height)
                         color: Style.surfaceContainerLowest
 
-                        DSVGIcon {
+                        AlpeSVGIcon {
                             anchors.centerIn: parent
                             source: Paths.resolveIconPath(row.look?.emblem ?? "")
                             size: parent.width - Style.spacingXS
@@ -133,7 +133,7 @@ StyledButton {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     visible: !row.busy && row.showAction
                     name: row.actionIcon
@@ -141,7 +141,7 @@ StyledButton {
                     color: Style.onPrimaryContainer
                 }
 
-                DTooltipHost {
+                AlpeTooltipHost {
                     text: row.actionTooltip
                     target: actionArea
                     hoverArea: actionArea
@@ -186,7 +186,7 @@ StyledButton {
             }
         }
 
-        DIcon {
+        AlpeIcon {
             visible: row.expandable
             name: "expand_more"
             size: FileBrowserMetrics.sidebarGlyphSize
@@ -195,7 +195,7 @@ StyledButton {
 
             Behavior on rotation {
                 enabled: FileBrowserMetrics.animationsEnabled
-                DAnim {
+                AlpeAnim {
                     duration: Style.expressiveDurations.expressiveFastSpatial
                     easing.bezierCurve: Style.expressiveCurves.expressiveDefaultSpatial
                 }

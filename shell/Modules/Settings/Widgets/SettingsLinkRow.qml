@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -11,7 +11,7 @@ SettingsRow {
     clickable: url !== ""
     onClicked: Qt.openUrlExternally(url)
 
-    DIcon {
+    AlpeIcon {
         anchors.verticalCenter: parent.verticalCenter
         name: "open_in_new"
         size: Theme.iconSize

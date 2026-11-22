@@ -1,7 +1,7 @@
 import QtQuick
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
-DCommon.DAnim {
+Alpe.AlpeAnim {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankAnim", "DAnim", "qs.DCommon.Common")
+    Component.onCompleted: Deprecation.type(shim, "DankAnim", "AlpeAnim", "qs.Alpe.Common")
 }

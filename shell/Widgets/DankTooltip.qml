@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DTooltip {
+AlpeTooltip {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankTooltip", "DTooltip", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankTooltip", "AlpeTooltip", "qs.Widgets")
 }

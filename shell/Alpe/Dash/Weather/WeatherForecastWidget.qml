@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
 Rectangle {
     id: root
@@ -50,7 +50,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             spacing: Theme.spacingS
 
-            DIcon {
+            AlpeIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 name: root.daily ? "calendar_month" : "schedule"
                 size: Theme.iconSize
@@ -75,7 +75,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             spacing: Theme.spacingXS
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.buttonHeightS
                 iconName: I18n.isRtl ? "chevron_right" : "chevron_left"
                 Accessible.name: I18n.tr("Previous")
@@ -83,14 +83,14 @@ Rectangle {
                 onClicked: root.step(-1)
             }
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.buttonHeightS
                 iconName: "today"
                 Accessible.name: I18n.tr("Today")
                 onClicked: root.startIndex = root.daily ? 0 : (WeatherService.weather.currentHourIndex ?? new Date().getHours())
             }
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.buttonHeightS
                 iconName: I18n.isRtl ? "chevron_left" : "chevron_right"
                 Accessible.name: I18n.tr("Next")

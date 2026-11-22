@@ -3,7 +3,7 @@ import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 CcListRow {
     id: root
@@ -76,7 +76,7 @@ CcListRow {
     clickable: true
     onClicked: DMSNetworkService.toggle(profile.uuid)
 
-    leading: DSpinner {
+    leading: AlpeSpinner {
         size: Theme.iconSizeMedium
         strokeWidth: CcMetrics.spinnerStroke
         color: Theme.warning
@@ -84,7 +84,7 @@ CcListRow {
         running: visible
     }
 
-    DActionButton {
+    AlpeActionButton {
         anchors.verticalCenter: parent.verticalCenter
         visible: root.isActive
         buttonSize: Theme.buttonHeightXS
@@ -96,7 +96,7 @@ CcListRow {
         onClicked: DMSNetworkService.toggle(root.profile.uuid)
     }
 
-    DActionButton {
+    AlpeActionButton {
         anchors.verticalCenter: parent.verticalCenter
         visible: root.canExpand
         buttonSize: Theme.buttonHeightXS
@@ -107,7 +107,7 @@ CcListRow {
         onClicked: root.toggleExpand()
     }
 
-    DActionButton {
+    AlpeActionButton {
         anchors.verticalCenter: parent.verticalCenter
         visible: root.canDelete
         buttonSize: Theme.buttonHeightXS
@@ -123,7 +123,7 @@ CcListRow {
         spacing: Theme.spacingS
         visible: root.isExpanded
 
-        DSpinner {
+        AlpeSpinner {
             anchors.horizontalCenter: parent.horizontalCenter
             size: Theme.iconSizeMedium
             strokeWidth: CcMetrics.spinnerStroke
@@ -139,7 +139,7 @@ CcListRow {
             Repeater {
                 model: root.configFields
 
-                DDetailChip {
+                AlpeDetailChip {
                     required property var modelData
 
                     label: modelData.label
@@ -150,7 +150,7 @@ CcListRow {
             }
         }
 
-        DToggle {
+        AlpeToggle {
             width: parent.width
             text: I18n.tr("Autoconnect")
             checked: root.configData ? (root.configData.autoconnect || false) : false
@@ -171,14 +171,14 @@ CcListRow {
                 color: root.hasError ? Theme.error : Theme.surfaceVariantText
             }
 
-            DTextField {
+            AlpeTextField {
                 id: usernameField
                 width: parent.width
                 placeholderText: I18n.tr("Username")
                 text: (root.configData && (root.configData.username || (root.configData.data && root.configData.data.username))) || ""
             }
 
-            DTextField {
+            AlpeTextField {
                 id: passwordField
                 width: parent.width
                 placeholderText: I18n.tr("Password")
@@ -187,7 +187,7 @@ CcListRow {
                 normalBorderColor: root.hasError ? Theme.error : Theme.outlineMedium
             }
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Save credentials")
                 buttonHeight: Theme.buttonHeightXS
                 enabled: passwordField.text.length > 0

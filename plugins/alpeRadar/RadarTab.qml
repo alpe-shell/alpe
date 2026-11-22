@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import Quickshell.Io
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Plugins
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 DashTabComponent {
     id: root
@@ -311,7 +311,7 @@ DashTabComponent {
             width: parent.width
             height: Math.max(playButton.height, timeColumn.height)
 
-            DActionButton {
+            AlpeActionButton {
                 id: playButton
 
                 anchors.left: parent.left

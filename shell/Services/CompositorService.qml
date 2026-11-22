@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.Common
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 import qs.Services
 import "../Common/WorkspaceModel.js" as WorkspaceModel
 import "../Common/WindowModel.js" as WindowModel
@@ -85,7 +85,7 @@ Singleton {
             right: SettingsData.Position.Right
         })
 
-    readonly property bool supportsMinimize: isKwin || DCommon.Compositor.supportsMinimize
+    readonly property bool supportsMinimize: isKwin || Alpe.Compositor.supportsMinimize
 
     readonly property bool hasWorkspaceIpc: {
         switch (compositor) {
@@ -274,7 +274,7 @@ Singleton {
         const known = _windowKeys.find(entry => entry.toplevel === toplevel);
         if (known)
             return known.key;
-        const live = DToplevels.toplevels?.values;
+        const live = Toplevels.toplevels?.values;
         if (live) {
             for (let i = _windowKeys.length - 1; i >= 0; i--) {
                 if (!live.includes(_windowKeys[i].toplevel))
@@ -347,7 +347,7 @@ Singleton {
     }
 
     Connections {
-        target: DToplevels.toplevels
+        target: Toplevels.toplevels
         function onValuesChanged() {
             root.scheduleSort();
         }
@@ -401,13 +401,13 @@ Singleton {
     }
 
     function computeSortedToplevels() {
-        if (!DToplevels.toplevels || !DToplevels.toplevels.values)
+        if (!Toplevels.toplevels || !Toplevels.toplevels.values)
             return [];
 
         if (isHyprland)
             return sortHyprlandToplevelsSafe();
 
-        return Array.from(DToplevels.toplevels.values);
+        return Array.from(Toplevels.toplevels.values);
     }
 
     function _get(o, path, fallback) {
@@ -677,10 +677,10 @@ Singleton {
 
     function fullscreenToplevelOnScreen(screenOrName) {
         const screenName = _screenName(screenOrName);
-        if (!screenName || !DToplevels.toplevels?.values)
+        if (!screenName || !Toplevels.toplevels?.values)
             return false;
 
-        const toplevels = DToplevels.toplevels.values;
+        const toplevels = Toplevels.toplevels.values;
         for (let i = 0; i < toplevels.length; i++) {
             const toplevel = toplevels[i];
             if (toplevel?.fullscreen && toplevel.activated && _toplevelOnScreen(toplevel, screenName))
@@ -966,7 +966,7 @@ Singleton {
     function _windowAlive(toplevel) {
         if (!toplevel)
             return false;
-        const alive = DToplevels.toplevels?.values;
+        const alive = Toplevels.toplevels?.values;
         return !!alive && Array.from(alive).some(t => t === toplevel);
     }
 
@@ -977,7 +977,7 @@ Singleton {
     }
 
     function activeWindowForScreen(screenName, previous, includeLastFocused) {
-        const active = DToplevels.activeToplevel;
+        const active = Toplevels.activeToplevel;
         if (!active)
             return _retainedWindow(screenName, previous);
         if (!screenName || filterCurrentDisplay([active], screenName)?.length > 0)

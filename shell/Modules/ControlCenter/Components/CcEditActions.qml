@@ -3,7 +3,7 @@ import QtQuick.Shapes
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 // Edit-mode actions hung off the panel; a removable drag turns the strip into the trash.
@@ -119,7 +119,7 @@ Item {
         spacing: Theme.spacingS
         visible: !root.trashShown
 
-        DButton {
+        AlpeButton {
             buttonHeight: Theme.iconButtonSize
             iconName: "add"
             text: I18n.tr("Add widget")
@@ -127,7 +127,7 @@ Item {
             onClicked: root.addWidgetRequested()
         }
 
-        DActionButton {
+        AlpeActionButton {
             id: moreButton
 
             buttonSize: Theme.iconButtonSize
@@ -147,7 +147,7 @@ Item {
         spacing: Theme.spacingS
         visible: !root.trashShown
 
-        DActionButton {
+        AlpeActionButton {
             buttonSize: Theme.iconButtonSize
             iconName: "close"
             iconSize: CcMetrics.iconBoxIconSize
@@ -157,7 +157,7 @@ Item {
             onClicked: root.cancelRequested()
         }
 
-        DActionButton {
+        AlpeActionButton {
             buttonSize: Theme.iconButtonSize
             iconName: "check"
             iconSize: CcMetrics.iconBoxIconSize
@@ -168,7 +168,7 @@ Item {
         }
     }
 
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         name: "delete"
         size: CcMetrics.iconBoxIconSize

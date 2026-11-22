@@ -2,11 +2,11 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Modals.Common
-import qs.Modals.DLauncherV2.Components
-import qs.DCommon.Widgets
+import qs.Modals.Launcher.Components
+import qs.Alpe.Widgets
 import qs.Services
 
-DModal {
+AlpeModal {
     id: root
     readonly property var log: Log.scoped("AppPickerModal")
 
@@ -313,7 +313,7 @@ DModal {
                         anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
 
-                        DActionButton {
+                        AlpeActionButton {
                             buttonSize: 36
                             circular: false
                             iconName: "view_list"
@@ -326,7 +326,7 @@ DModal {
                             }
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             buttonSize: 36
                             circular: false
                             iconName: "grid_view"
@@ -341,7 +341,7 @@ DModal {
                     }
                 }
 
-                DSearchField {
+                AlpeSearchField {
                     id: searchField
 
                     width: parent.width - Theme.spacingS * 2
@@ -412,7 +412,7 @@ DModal {
                     radius: Theme.cornerRadius
                     color: "transparent"
 
-                    DListView {
+                    AlpeListView {
                         id: appList
 
                         property int itemHeight: 60
@@ -470,7 +470,7 @@ DModal {
                         }
                     }
 
-                    DGridView {
+                    AlpeGridView {
                         id: appGrid
 
                         function ensureVisible(index) {
@@ -545,7 +545,7 @@ DModal {
                         visible: text.length > 0
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: targetDataField
                         anchors.left: targetDataLabelText.visible ? targetDataLabelText.right : parent.left
                         anchors.leftMargin: Theme.spacingS
@@ -567,7 +567,7 @@ DModal {
                         }
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: copyTargetButton
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.spacingXS
@@ -586,7 +586,7 @@ DModal {
                     height: 36
                     visible: root.mimeType.length > 0
 
-                    DToggle {
+                    AlpeToggle {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingM
                         anchors.right: parent.right

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Alpe: Saisonwerte eines Spielers (Klick in Aufstellung, Topspielern, Boxscore oder
 // Bestenliste). Liegt wie das Spieldetail rechts bzw. schmal über der Liste.
@@ -55,7 +55,7 @@ Item {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         anchors.margins: Theme.spacingS
         contentWidth: width
@@ -72,7 +72,7 @@ Item {
                 width: parent.width
                 height: 32
 
-                DActionButton {
+                AlpeActionButton {
                     id: back
 
                     anchors.left: parent.left
@@ -92,7 +92,7 @@ Item {
                     color: Theme.surfaceVariantText
                 }
 
-                DIcon {
+                AlpeIcon {
                     anchors.right: parent.right
                     anchors.rightMargin: Theme.spacingS
                     anchors.verticalCenter: parent.verticalCenter
@@ -131,7 +131,7 @@ Item {
                         color: root.team?.color ? "#ffffff" : Theme.onPrimaryContainer
                     }
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         visible: !root.info?.jersey
                         name: "person"
@@ -205,7 +205,7 @@ Item {
                             anchors.centerIn: parent
                             spacing: Theme.spacingXS
 
-                            DIcon {
+                            AlpeIcon {
                                 anchors.verticalCenter: parent.verticalCenter
                                 name: parent.parent.modelData[0]
                                 size: 14

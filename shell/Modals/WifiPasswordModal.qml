@@ -2,10 +2,10 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DModal {
+AlpeModal {
     id: root
 
     layerNamespace: "dms:wifi-password"
@@ -299,7 +299,7 @@ DModal {
         }
     }
 
-    DDialog {
+    AlpeDialog {
         id: contentFocusScope
 
         anchors.fill: parent
@@ -373,7 +373,7 @@ DModal {
             }
         }
 
-        DTextField {
+        AlpeTextField {
             id: ssidInput
             visible: isHiddenNetwork
             outlined: true
@@ -393,7 +393,7 @@ DModal {
             id: dynamicFieldsRepeater
             model: fieldsInfo
 
-            delegate: DTextField {
+            delegate: AlpeTextField {
                 id: fieldInput
                 required property var modelData
                 required property int index
@@ -445,7 +445,7 @@ DModal {
                     color: Theme.surfaceVariantText
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     width: parent.width
                     dropdownWidth: parent.width
                     compactMode: true
@@ -469,7 +469,7 @@ DModal {
                     color: Theme.surfaceVariantText
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     width: parent.width
                     dropdownWidth: parent.width
                     compactMode: true
@@ -480,7 +480,7 @@ DModal {
             }
         }
 
-        DTextField {
+        AlpeTextField {
             id: usernameInput
             visible: showUsernameField
             outlined: true
@@ -498,7 +498,7 @@ DModal {
             onAccepted: passwordInput.forceActiveFocus()
         }
 
-        DTextField {
+        AlpeTextField {
             id: passwordInput
             visible: showPasswordField
             outlined: true
@@ -526,7 +526,7 @@ DModal {
             }
         }
 
-        DTextField {
+        AlpeTextField {
             id: anonInput
             visible: showAnonField
             outlined: true
@@ -544,7 +544,7 @@ DModal {
             onAccepted: domainMatchInput.forceActiveFocus()
         }
 
-        DTextField {
+        AlpeTextField {
             id: domainMatchInput
             visible: showDomainField
             outlined: true
@@ -562,7 +562,7 @@ DModal {
             onAccepted: submitCredentialsAndClose()
         }
 
-        DToggle {
+        AlpeToggle {
             id: savePasswordCheckbox
 
             width: parent.width
@@ -573,14 +573,14 @@ DModal {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 maximumWidth: contentFocusScope.actionWidth
                 wrapText: true
                 text: I18n.tr("Cancel")
                 variant: "text"
                 onClicked: clearAndClose()
             },
-            DButton {
+            AlpeButton {
                 id: connectButton
                 maximumWidth: contentFocusScope.actionWidth
                 wrapText: true

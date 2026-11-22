@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 DashTabFace {
     id: root

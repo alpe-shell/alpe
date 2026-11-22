@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../../Common/Format.js" as Format
 
 BasePill {
@@ -74,7 +74,7 @@ BasePill {
                 spacing: Theme.spacingXXS
                 visible: root.isVerticalOrientation
 
-                DIcon {
+                AlpeIcon {
                     name: "network_check"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
                     color: Theme.widgetIconColor
@@ -102,7 +102,7 @@ BasePill {
                 spacing: Theme.spacingS
                 visible: !root.isVerticalOrientation
 
-                DIcon {
+                AlpeIcon {
                     name: "network_check"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
                     color: Theme.widgetIconColor

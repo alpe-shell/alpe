@@ -6,7 +6,7 @@ import qs.Common
 import qs.Modals.Common
 import qs.Modals.FileBrowser
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Common/ThemePalette.js" as ThemePalette
 
@@ -86,7 +86,7 @@ Item {
                         height: themeCategoryGroup.implicitHeight + Theme.focusRingOffset * 2
                         clip: true
 
-                        DButtonGroup {
+                        AlpeButtonGroup {
                             id: themeCategoryGroup
                             arrowKeysSelect: false
                             anchors.centerIn: parent
@@ -205,7 +205,7 @@ Item {
                             visible: Theme.wallpaperPath && Theme.wallpaperPath.startsWith("#")
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: (ToastService.wallpaperErrorStatus === "error" || ToastService.wallpaperErrorStatus === "matugen_missing") ? "error" : "palette"
                             size: Theme.iconSizeLarge
@@ -256,7 +256,7 @@ Item {
                         }
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         buttonSize: 36
                         iconName: "download"
                         iconSize: Theme.iconSize
@@ -323,7 +323,7 @@ Item {
                         }
                     }
 
-                    DSpinner {
+                    AlpeSpinner {
                         anchors.centerIn: parent
                         running: !MatugenPreviewService.ready
                         visible: running
@@ -415,7 +415,7 @@ Item {
                         width: parent.width
                         spacing: Theme.spacingM
 
-                        DActionButton {
+                        AlpeActionButton {
                             buttonSize: Theme.minimumTouchTargetSize
                             iconName: "folder_open"
                             Accessible.name: I18n.tr("Browse Files")
@@ -425,7 +425,7 @@ Item {
                             onClicked: fileBrowserModal.open()
                         }
 
-                        DPaletteSwatch {
+                        AlpePaletteSwatch {
                             id: customSwatch
                             width: Theme.minimumTouchTargetSize
                             height: Theme.minimumTouchTargetSize
@@ -547,7 +547,7 @@ Item {
                         clip: true
                         visible: variantSelector.isMultiVariant && variantSelector.flavorOptions.length > 1
 
-                        DButtonGroup {
+                        AlpeButtonGroup {
                             id: flavorButtonGroup
                             arrowKeysSelect: false
                             anchors.centerIn: parent
@@ -597,7 +597,7 @@ Item {
                             Repeater {
                                 model: variantSelector.activeThemeVariants?.accents || []
 
-                                DColorButton {
+                                AlpeColorButton {
                                     required property var modelData
                                     required property int index
                                     readonly property string accentId: modelData.id
@@ -624,7 +624,7 @@ Item {
                         clip: true
                         visible: !variantSelector.isMultiVariant && variantSelector.variantNames.length > 0
 
-                        DButtonGroup {
+                        AlpeButtonGroup {
                             id: variantButtonGroup
                             arrowKeysSelect: false
                             anchors.centerIn: parent

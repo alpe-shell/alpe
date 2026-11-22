@@ -4,12 +4,12 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.WindowManager
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import "../../../DCommon/Common/WheelInput.js" as WheelInput
+import "../../../Alpe/Common/WheelInput.js" as WheelInput
 
 BasePill {
     id: root
@@ -520,7 +520,7 @@ BasePill {
 
                 readonly property color displayColor: pillColor.value
 
-                DColorAnimation {
+                AlpeColorAnimation {
                     id: pillColor
                     to: delegateRoot.requestedColor
                     animated: delegateRoot.colorAnimationReady
@@ -776,7 +776,7 @@ BasePill {
                                     width: wsIcon.width
                                     height: root.appIconSize
 
-                                    DIcon {
+                                    AlpeIcon {
                                         id: wsIcon
                                         anchors.verticalCenter: parent.verticalCenter
                                         name: loadedIconData?.value ?? ""
@@ -879,7 +879,7 @@ BasePill {
                                             border.color: appBorderColor
                                             opacity: appOpacity
 
-                                            DIcon {
+                                            AlpeIcon {
                                                 anchors.centerIn: parent
                                                 size: parent.width * 0.7
                                                 name: "sports_esports"
@@ -908,7 +908,7 @@ BasePill {
                                             visible: modelData.isSteamApp && modelData.icon
                                         }
 
-                                        DIcon {
+                                        AlpeIcon {
                                             anchors.centerIn: parent
                                             size: root.appIconSize
                                             name: "sports_esports"
@@ -953,7 +953,7 @@ BasePill {
                                 spacing: Theme.spacingXS
                                 visible: loadedIcons.length > 0 || root.opt("showWorkspaceIndex") || root.opt("showWorkspaceName") || loadedHasIcon
 
-                                DIcon {
+                                AlpeIcon {
                                     visible: loadedHasIcon && loadedIconData?.type === "icon"
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     name: loadedIconData?.value ?? ""
@@ -1028,7 +1028,7 @@ BasePill {
                                             border.color: appBorderColor
                                             opacity: appOpacity
 
-                                            DIcon {
+                                            AlpeIcon {
                                                 anchors.centerIn: parent
                                                 size: parent.width * 0.7
                                                 name: "sports_esports"
@@ -1057,7 +1057,7 @@ BasePill {
                                             visible: modelData.isSteamApp && modelData.icon
                                         }
 
-                                        DIcon {
+                                        AlpeIcon {
                                             anchors.centerIn: parent
                                             size: root.appIconSize
                                             name: "sports_esports"

@@ -5,7 +5,7 @@ import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -32,7 +32,7 @@ Item {
         return parseFloat((mount.percent || "0").replace("%", "")) || 0;
     }
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         contentHeight: column.height
         clip: true

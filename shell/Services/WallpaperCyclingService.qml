@@ -18,9 +18,9 @@ Singleton {
     property bool cyclingActive: false
     property bool _lastPushedEnabled: true
     readonly property bool fullscreenShowing: {
-        if (!cyclingActive || !DToplevels.toplevels?.values)
+        if (!cyclingActive || !Toplevels.toplevels?.values)
             return false;
-        for (const toplevel of DToplevels.toplevels.values) {
+        for (const toplevel of Toplevels.toplevels.values) {
             if (toplevel.fullscreen && toplevel.activated)
                 return true;
         }

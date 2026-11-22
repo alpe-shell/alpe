@@ -1,10 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
-DTextField {
+AlpeTextField {
     id: field
 
     required property string name
@@ -47,7 +47,7 @@ DTextField {
     Keys.onReturnPressed: event => event.accepted = true
     Keys.onEnterPressed: event => event.accepted = true
 
-    DTooltipHost {
+    AlpeTooltipHost {
         id: invalidHint
 
         target: field

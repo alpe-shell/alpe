@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-// Attrappe: Rasterrechnung wie Modules/DDash/DashMetrics.qml (Spalte 128, Abstand 8, Rand 14),
+// Attrappe: Rasterrechnung wie Alpe/Dash/DashMetrics.qml (Spalte 128, Abstand 8, Rand 14),
 // dazu die Verbreiterung von Alpe.
 QtObject {
     property int minimumTabRows: 2

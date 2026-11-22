@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import Quickshell.Widgets
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root

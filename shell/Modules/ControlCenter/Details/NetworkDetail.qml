@@ -9,7 +9,7 @@ import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
 import qs.Modules.Network
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../../../Common/QmlUtils.js" as QmlUtils
 
@@ -86,7 +86,7 @@ Item {
     readonly property Item headerActions: Row {
         spacing: Theme.spacingS
 
-        DDropdown {
+        AlpeDropdown {
             anchors.verticalCenter: parent.verticalCenter
             visible: root.wifiMode && (NetworkService.wifiDevices?.length ?? 0) > 1
             compactMode: true
@@ -98,7 +98,7 @@ Item {
             onValueChanged: value => NetworkService.setWifiDeviceOverride(value === I18n.tr("Auto") ? "" : value)
         }
 
-        DRefreshButton {
+        AlpeRefreshButton {
             Accessible.name: I18n.tr("Scan")
             anchors.verticalCenter: parent.verticalCenter
             buttonSize: CcMetrics.headerActionSize
@@ -303,7 +303,7 @@ Item {
         }
     }
 
-    DListView {
+    AlpeListView {
         id: pageList
         objectName: "networkList"
 
@@ -320,7 +320,7 @@ Item {
             spacing: CcMetrics.detailContentGap
             bottomPadding: pageList.count > 0 ? CcMetrics.detailContentGap : 0
 
-            DButtonGroup {
+            AlpeButtonGroup {
                 anchors.horizontalCenter: parent.horizontalCenter
                 size: "small"
                 visible: root.paneSwitchSupported
@@ -375,7 +375,7 @@ Item {
                     }
                     subtitleColor: warnsWifiDrop ? Theme.warning : Theme.surfaceVariantText
 
-                    DSpinner {
+                    AlpeSpinner {
                         anchors.verticalCenter: parent.verticalCenter
                         size: Theme.iconSizeMedium
                         strokeWidth: CcMetrics.spinnerStroke
@@ -384,7 +384,7 @@ Item {
                         running: visible
                     }
 
-                    DToggle {
+                    AlpeToggle {
                         anchors.verticalCenter: parent.verticalCenter
                         hideText: true
                         visible: !root.hotspotWorking
@@ -449,7 +449,7 @@ Item {
                             NetworkService.connectToSpecificWiredConfig(modelData.uuid);
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             id: wiredOptionsButton
                             anchors.verticalCenter: parent.verticalCenter
                             buttonSize: Theme.buttonHeightXS
@@ -509,7 +509,7 @@ Item {
                         clickable: true
                         onClicked: NetworkService.toggleNetworkConnection("cellular")
 
-                        DActionButton {
+                        AlpeActionButton {
                             anchors.verticalCenter: parent.verticalCenter
                             buttonSize: Theme.buttonHeightXS
                             iconSize: Theme.iconSizeMedium
@@ -537,7 +537,7 @@ Item {
                         clickable: !active
                         onClicked: NetworkService.connectToSpecificCellularConfig(modelData.uuid)
 
-                        DActionButton {
+                        AlpeActionButton {
                             anchors.verticalCenter: parent.verticalCenter
                             buttonSize: Theme.buttonHeightXS
                             iconSize: Theme.iconSizeMedium
@@ -612,7 +612,7 @@ Item {
             leading: Loader {
                 active: wifiRow.isConnecting
                 visible: active
-                sourceComponent: DSpinner {
+                sourceComponent: AlpeSpinner {
                     size: Theme.iconSizeMedium
                     strokeWidth: CcMetrics.spinnerStroke
                     color: Theme.warning
@@ -623,7 +623,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 active: wifiRow.sharesQrCode
                 visible: active
-                sourceComponent: DActionButton {
+                sourceComponent: AlpeActionButton {
                     buttonSize: Theme.buttonHeightXS
                     iconSize: Theme.iconSizeMedium
                     iconName: "qr_code"
@@ -639,7 +639,7 @@ Item {
                 onToggled: root.togglePin(wifiRow.modelData.ssid)
             }
 
-            DActionButton {
+            AlpeActionButton {
                 id: wifiOptionsButton
                 anchors.verticalCenter: parent.verticalCenter
                 buttonSize: Theme.buttonHeightXS

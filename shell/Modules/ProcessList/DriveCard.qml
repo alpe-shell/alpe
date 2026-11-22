@@ -6,7 +6,7 @@ import Quickshell
 import qs.Common
 import qs.Services
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "Drives.js" as Drives
 import "../../Common/Format.js" as Format
@@ -298,14 +298,14 @@ Rectangle {
                     tooltip: root.warnTooltip()
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     iconName: "content_copy"
                     iconColor: Theme.surfaceText
                     tooltipText: I18n.tr("Copy")
                     onClicked: Quickshell.execDetached([Proc.dmsBin, "cl", "copy", "--", root.cardText()])
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     iconName: "expand_more"
                     rotation: root.expanded ? 180 : 0
                     tooltipText: root.expanded ? I18n.tr("Collapse") : I18n.tr("Expand")
@@ -379,7 +379,7 @@ Rectangle {
                     height: Theme.buttonHeightS
                     spacing: Theme.spacingL
 
-                    DIcon {
+                    AlpeIcon {
                         name: fsRow.modelData.swap ? "swap_horiz" : fsRow.modelData.encrypted ? "lock" : "folder"
                         size: Theme.iconSizeSmall
                         color: Theme.surfaceVariantText
@@ -461,7 +461,7 @@ Rectangle {
                 color: Theme.surfaceVariantText
             }
 
-            DButton {
+            AlpeButton {
                 visible: DriveService.smartctlPath === "" && DriveService.installCommand !== ""
                 text: I18n.tr("Install smartmontools", "button, installs the smartmontools package")
                 iconName: "download"
@@ -469,7 +469,7 @@ Rectangle {
                 onClicked: root.installRequested()
             }
 
-            DButton {
+            AlpeButton {
                 visible: DriveService.smartctlPath !== "" && !DgopService.unlocked
                 text: I18n.tr("Full SMART report", "drive health report from smartctl")
                 iconName: "lock_open"
@@ -530,7 +530,7 @@ Rectangle {
             acceptedButtons: Qt.NoButton
         }
 
-        DTooltipHost {
+        AlpeTooltipHost {
             text: pill.tooltip
             target: pill
             hoverArea: pillHover

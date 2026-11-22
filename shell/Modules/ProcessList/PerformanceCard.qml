@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Rectangle {
     id: card
@@ -129,7 +129,7 @@ Rectangle {
             Layout.fillWidth: true
             spacing: Theme.spacingS
 
-            DIcon {
+            AlpeIcon {
                 name: card.icon
                 size: Theme.iconSize
                 color: card.accentColor

@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 import qs.Modules.Settings.Widgets
 
 // Alpe: Einstellungen des Sport-Plugins an einem Ort. Wettbewerbe (an/aus wie im Dashboard,
@@ -191,7 +191,7 @@ Item {
                     onToggled: checked => root.setLeague(modelData, checked)
 
                     accessory: [
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "arrow_upward"
                             iconColor: Theme.surfaceVariantText
                             enabled: leagueRow.index > 0
@@ -199,7 +199,7 @@ Item {
                             tooltipText: "Nach oben"
                             onClicked: root.move(leagueRow.modelData.id, -1)
                         },
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "arrow_downward"
                             iconColor: Theme.surfaceVariantText
                             enabled: leagueRow.index < root.orderedLeagues.length - 1
@@ -216,7 +216,7 @@ Item {
                 title: "Reihenfolge zurücksetzen"
                 iconName: "restart_alt"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Zurücksetzen"
                     variant: "tonal"
@@ -253,7 +253,7 @@ Item {
                     subtitle: root.sportName(modelData.split(":")[0])
                     iconName: modelData.startsWith("hockey") ? "sports_hockey" : modelData.startsWith("basketball") ? "sports_basketball" : "sports_soccer"
 
-                    DActionButton {
+                    AlpeActionButton {
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "close"
                         iconColor: Theme.surfaceVariantText
@@ -316,7 +316,7 @@ Item {
                 subtitle: root.testState !== "" ? root.testState : "Schickt eine Mitteilung, wie sie bei einem Tor erscheint."
                 iconName: "campaign"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Senden"
                     variant: "tonal"
@@ -382,7 +382,7 @@ Item {
                 title: root.streams[root.streamLeague] ? "Geändert speichern" : "Hinzufügen"
                 iconName: "save"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Speichern"
                     enabled: root.draftUrl.trim() !== ""
@@ -407,21 +407,21 @@ Item {
                     Row {
                         anchors.verticalCenter: parent.verticalCenter
 
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "open_in_new"
                             iconColor: Theme.surfaceVariantText
                             tooltipText: "Im Browser öffnen"
                             onClicked: Qt.openUrlExternally(streamRow.stream.url)
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "edit"
                             iconColor: Theme.surfaceVariantText
                             tooltipText: "Bearbeiten"
                             onClicked: root.pickStreamLeague(streamRow.modelData)
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "delete"
                             iconColor: Theme.surfaceVariantText
                             tooltipText: "Entfernen"
@@ -479,7 +479,7 @@ Item {
                 subtitle: root.cache ? root.size(root.cache.bytes) + " in " + root.cache.files + " Dateien (Antworten der Quellen, Vereinslogos)" : "Wird gemessen …"
                 iconName: "database"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Leeren"
                     variant: "tonal"

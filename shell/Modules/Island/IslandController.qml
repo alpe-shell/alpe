@@ -3,10 +3,10 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Modals.Clipboard
-import qs.Modals.DLauncherV2.Components
+import qs.Modals.Launcher.Components
 import qs.Modules.ControlCenter
-import qs.Modules.DBar
-import qs.Modules.DDash
+import qs.Modules.Bar
+import qs.Alpe.Dash
 
 QtObject {
     id: root

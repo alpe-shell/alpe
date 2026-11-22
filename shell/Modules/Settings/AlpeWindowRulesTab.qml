@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Fensterregeln unter KWin (kwinrulesrc), ersetzt dort die Seite des Ursprungsprojekts,
@@ -212,7 +212,7 @@ Item {
                 subtitle: root.picking ? "Jetzt das gewünschte Fenster anklicken (Esc bricht ab) …" : "Fenster anklicken – Alpe füllt Klasse und Titel ein (KWin zeigt ein Fadenkreuz)."
                 iconName: "ads_click"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.picking ? "Warte …" : "Fenster anklicken"
                     iconName: "ads_click"
@@ -364,13 +364,13 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingS
 
-                    DButton {
+                    AlpeButton {
                         text: "Übernehmen"
                         iconName: "check"
                         enabled: root.dirty
                         onClicked: root.save()
                     }
-                    DButton {
+                    AlpeButton {
                         text: root.draft && root.draft.id === "" ? "Verwerfen" : "Regel löschen"
                         iconName: "delete"
                         variant: "text"

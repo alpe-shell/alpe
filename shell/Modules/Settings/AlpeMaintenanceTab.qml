@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Wartung der Shell selbst – Neustart, Protokoll, Zwischenspeicher, eigene Plugins und
@@ -129,7 +129,7 @@ Item {
                 subtitle: "Lädt Oberfläche und Plugins neu. Offene Programme bleiben unberührt."
                 iconName: "restart_alt"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     buttonHeight: Theme.buttonHeightS
                     text: I18n.tr("Restart")
@@ -148,7 +148,7 @@ Item {
                 resetKeys: []
                 onClicked: root.openJournal()
 
-                DIcon {
+                AlpeIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: "open_in_new"
                     size: Theme.iconSize
@@ -200,7 +200,7 @@ Item {
                 iconName: "partly_cloudy_day"
                 trailingBadge: root.cacheSize
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     buttonHeight: Theme.buttonHeightS
                     text: "Leeren"

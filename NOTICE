@@ -13,7 +13,7 @@ Dux Modular Shell (DMS)
 Herkunft:  https://github.com/duxlabs-dev/dux-shell, Stand v2.1.2 (November 2026),
            übernommen nach shell/ (QML, bisher quickshell/) und core/ (Go-Dienst)
 Baustein:  dux-qml-common (https://github.com/duxlabs-dev/dux-qml-common), Commit 0877466,
-           übernommen nach shell/DCommon/
+           übernommen nach shell/Alpe/
 Lizenz:    MIT. Die Relizenzierung von GPL-3.0 auf MIT mit Zustimmung aller Mitwirkenden ist
            in shell/LICENSE_CHANGE_12_11_2025.md belegt.
 
@@ -47,7 +47,7 @@ dux-qml-common steht unter derselben Lizenz, Copyright (c) 2025-2026 Avenge Medi
 Teile Dritter im Code der Dux Modular Shell
 -------------------------------------------
 
-Schriften (shell/DCommon/assets/fonts/, Lizenztext jeweils im Ordner)
+Schriften (shell/Alpe/assets/fonts/, Lizenztext jeweils im Ordner)
   Google Sans Flex, DM Serif Display, Gochi Hand, Notable    SIL Open Font License 1.1
   FiraCode Nerd Font (The Fira Code Project Authors)         SIL Open Font License 1.1
   Material Symbols Rounded (Google)                          Apache License 2.0
@@ -74,7 +74,7 @@ Alpe-eigene Teile im Shell-Code
 -------------------------------
 
   KWin-Unterstützung (shell/Services/kwin/, shell/Services/KwinService.qml,
-  shell/Services/DToplevels.qml und Anpassungen in der Shell): «Patch v4», vom Alpe-Maintainer
+  shell/Services/Toplevels.qml und Anpassungen in der Shell): «Patch v4», vom Alpe-Maintainer
   zwischen dem 15. und 17.11.2026 gegen DMS v2.1.2 geschrieben, ohne fremden Code.
   Teil von Alpe, MIT wie Alpe.
 

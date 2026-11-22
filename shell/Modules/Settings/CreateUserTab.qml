@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -70,7 +70,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingXS
 
-                    DTextField {
+                    AlpeTextField {
                         id: usernameField
                         outlined: true
                         leftIconName: "person"
@@ -111,7 +111,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingXS
 
-                    DTextField {
+                    AlpeTextField {
                         id: passwordField
                         outlined: true
                         leftIconName: "lock"
@@ -129,7 +129,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingXS
 
-                    DTextField {
+                    AlpeTextField {
                         id: confirmField
                         outlined: true
                         leftIconName: "lock"
@@ -168,7 +168,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingM
 
-                    DButton {
+                    AlpeButton {
                         text: root.operationPending ? I18n.tr("Working...", "create user button text while the operation runs") : I18n.tr("Add user", "button and settings page title, creates a new user account")
                         iconName: "person_add"
                         enabled: root._createCanProceed()

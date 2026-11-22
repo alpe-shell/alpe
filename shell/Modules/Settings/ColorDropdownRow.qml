@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 
@@ -155,13 +155,13 @@ Column {
                 spacing: Theme.spacingM
                 opacity: root.enabled ? 1 : SettingsMetrics.disabledOpacity
 
-                DColorSwatch {
+                AlpeColorSwatch {
                     width: Theme.avatarSize
                     height: Theme.avatarSize
                     swatchColor: root.customColor
                     anchors.verticalCenter: parent.verticalCenter
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: "colorize"
                         size: Theme.iconSizeSmall
@@ -193,7 +193,7 @@ Column {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     id: editIcon
                     name: "edit"
                     size: Theme.iconSizeSmall

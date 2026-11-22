@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -23,7 +23,7 @@ Item {
         width: parent.width - Theme.spacingL * 2
         spacing: Theme.spacingS
 
-        DSpinner {
+        AlpeSpinner {
             anchors.horizontalCenter: parent.horizontalCenter
             size: CcMetrics.emptyStateIconSize
             strokeWidth: CcMetrics.spinnerStroke
@@ -32,7 +32,7 @@ Item {
             running: visible
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.horizontalCenter: parent.horizontalCenter
             name: root.iconName
             size: CcMetrics.emptyStateIconSize

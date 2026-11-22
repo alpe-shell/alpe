@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Rectangle {
@@ -101,7 +101,7 @@ Rectangle {
         }
     }
 
-    DActionButton {
+    AlpeActionButton {
         id: identifyButton
         anchors.top: parent.top
         anchors.right: parent.right

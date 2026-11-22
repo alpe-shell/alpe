@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "sport.js" as S
 
 // Eine Spielzeile wie bei FotMob: Status | Heim + Logo | Resultat | Logo + Gast
@@ -180,7 +180,7 @@ Item {
         width: 22
         height: parent.height
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             visible: root.favorite
             name: "star"

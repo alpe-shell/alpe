@@ -3,11 +3,11 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "../../../Common/Format.js" as Format
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 MediaChromeBase {
     id: root
@@ -91,7 +91,7 @@ MediaChromeBase {
                         elide: Text.ElideRight
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: playerButton
 
                         readonly property string panelId: "players"
@@ -347,7 +347,7 @@ MediaChromeBase {
                                 tooltipText: (root.player.usePlayerVolume ? I18n.tr("Media volume") : I18n.tr("Volume")) + ": " + Math.round(root.player.currentVolume * 100) + "%"
                                 onClicked: root.player.togglePanel(panelId, volumeButton)
 
-                                DRingGauge {
+                                AlpeRingGauge {
                                     anchors.centerIn: parent
                                     width: parent.height - Theme.spacingXS * 2
                                     height: width
@@ -391,7 +391,7 @@ MediaChromeBase {
         }
     }
 
-    component OptionButton: DIconButton {
+    component OptionButton: AlpeIconButton {
         width: optionGroup.segmentWidth
         height: optionGroup.height
         focusRingColor: MediaAccentService.focusRing

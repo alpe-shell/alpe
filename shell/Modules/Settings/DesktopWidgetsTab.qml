@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -113,7 +113,7 @@ Item {
                     spacing: Theme.spacingS
                     width: parent.width
 
-                    DTextField {
+                    AlpeTextField {
                         id: newGroupField
                         outlined: true
                         leftIconName: "folder"
@@ -130,7 +130,7 @@ Item {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: addGroupBtn
                         iconName: "add"
                         text: I18n.tr("Add")
@@ -156,13 +156,13 @@ Item {
                     title: modelData.name
                     singleLineTitle: true
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "edit"
                         tooltipText: I18n.tr("Rename")
                         onClicked: root.openRenameDialog(groupRow.modelData)
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "delete"
                         iconColor: Theme.error
                         tooltipText: I18n.tr("Delete")
@@ -255,14 +255,14 @@ Item {
         }
 
         SettingsFabBar {
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Edit widgets")
                 iconName: "edit"
                 colorRole: "secondaryContainer"
                 onClicked: DesktopWidgetRegistry.editing = true
             }
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Add widget")
                 iconName: "add"
                 onClicked: root.showWidgetBrowser()

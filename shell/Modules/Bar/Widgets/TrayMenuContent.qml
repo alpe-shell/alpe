@@ -4,8 +4,8 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.Common
-import qs.Modules.DBar
-import qs.DCommon.Widgets
+import qs.Modules.Bar
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Item {
@@ -116,7 +116,7 @@ Item {
                 width: parent.width - Theme.spacingS * 2 - (Theme.iconSizeSmall + Theme.spacingS)
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.spacingS
                 anchors.verticalCenter: parent.verticalCenter
@@ -174,7 +174,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Theme.spacingXS
 
-                DIcon {
+                AlpeIcon {
                     name: "arrow_back"
                     size: Theme.iconSizeSmall
                     color: Theme.widgetTextColor
@@ -273,7 +273,7 @@ Item {
                             visible: menuEntry?.checkState === 2
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: "check"
                             size: Theme.iconSizeSmall - Theme.spacingXS - Theme.spacingXXS
@@ -315,7 +315,7 @@ Item {
                         Layout.alignment: Qt.AlignVCenter
                         visible: menuEntry?.hasChildren ?? false
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: "chevron_right"
                             size: Theme.iconSizeSmall - 2

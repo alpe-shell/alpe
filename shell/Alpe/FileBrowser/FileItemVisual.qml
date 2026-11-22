@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -48,7 +48,7 @@ Item {
         radius: Style.fullRadius(width, height)
         color: Style.surfaceContainerLowest
 
-        DIcon {
+        AlpeIcon {
             id: badge
 
             anchors.centerIn: parent
@@ -80,7 +80,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         active: (root.look?.emblem ?? "") !== "" && !root.untrusted && !root.unreadable
-        sourceComponent: DSVGIcon {
+        sourceComponent: AlpeSVGIcon {
             source: Paths.resolveIconPath(root.look?.emblem ?? "")
             size: root.emblemSize
         }

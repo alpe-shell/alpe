@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 import "FilePreview.js" as FilePreview
 
 Item {
@@ -85,7 +85,7 @@ Item {
         height: Math.min(parent.height, list.contentHeight)
         visible: viewer.showsContent
 
-        DListView {
+        AlpeListView {
             id: list
 
             anchors.fill: parent

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "sport.js" as S
 
 // Spieldetail: Kopf mit Resultat, dann Reiter Übersicht / Statistik / Aufstellung (NBA: Spieler).
@@ -109,7 +109,7 @@ Item {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: flick
 
         anchors.fill: parent
@@ -129,7 +129,7 @@ Item {
                 width: parent.width
                 height: 32
 
-                DActionButton {
+                AlpeActionButton {
                     id: closeButton
 
                     anchors.left: parent.left
@@ -172,7 +172,7 @@ Item {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     id: busy
 
                     anchors.right: parent.right
@@ -542,7 +542,7 @@ Item {
                                 height: hasStream ? 32 : 26
                                 spacing: Theme.spacingS
 
-                                DIcon {
+                                AlpeIcon {
                                     anchors.verticalCenter: parent.verticalCenter
                                     name: infoRow.modelData[0]
                                     size: 16
@@ -574,7 +574,7 @@ Item {
                                         anchors.centerIn: parent
                                         spacing: Theme.spacingXS
 
-                                        DIcon {
+                                        AlpeIcon {
                                             anchors.verticalCenter: parent.verticalCenter
                                             name: "play_circle"
                                             size: 16
@@ -700,7 +700,7 @@ Item {
                                 color: Theme.surfaceText
                             }
 
-                            DIcon {
+                            AlpeIcon {
                                 anchors.right: parent.right
                                 anchors.verticalCenter: parent.verticalCenter
                                 visible: parent.modelData.subIn === true

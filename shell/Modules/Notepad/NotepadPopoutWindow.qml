@@ -1,11 +1,11 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Notepad
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: win
 
     property alias shouldBeVisible: win.visible
@@ -43,7 +43,7 @@ DFloatingWindow {
     Item {
         anchors.fill: parent
 
-        DWindowHeader {
+        AlpeWindowHeader {
             id: titleBar
             anchors.top: parent.top
             anchors.left: parent.left

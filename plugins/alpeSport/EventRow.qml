@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "sport.js" as S
 
 // Ein Ereignis im Verlauf: Heim links, Gast rechts, Minute in der Mitte. Pausen als Trenner.
@@ -90,7 +90,7 @@ Item {
             width: 20
             height: 20
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 visible: S.eventIcon(root.event.type, root.sport) !== ""
                 name: S.eventIcon(root.event.type, root.sport)
@@ -131,7 +131,7 @@ Item {
                 spacing: Theme.spacingXS
                 layoutDirection: root.home ? Qt.RightToLeft : Qt.LeftToRight
 
-                DIcon {
+                AlpeIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: root.event.type === "sub"
                     name: "arrow_upward"
@@ -177,7 +177,7 @@ Item {
                 spacing: Theme.spacingXS
                 layoutDirection: root.home ? Qt.RightToLeft : Qt.LeftToRight
 
-                DIcon {
+                AlpeIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: root.event.type === "sub"
                     name: "arrow_downward"

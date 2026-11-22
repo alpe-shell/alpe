@@ -7,11 +7,11 @@ import qs.Common
 import qs.Modals.Common
 import qs.Modals.FileBrowser
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Common/Format.js" as Format
 import "../../Common/ThemePalette.js" as ThemePalette
-import "../../DCommon/Common/MaterialWallpaper.js" as Art
+import "../../Alpe/Common/MaterialWallpaper.js" as Art
 import "../../Common/WallpaperFormats.js" as WallpaperFormats
 
 Column {
@@ -282,7 +282,7 @@ Column {
                     width: hero.stacked ? hero.width : hero.width - hero.thumbWidth - hero.spacing
                     spacing: Theme.spacingM
 
-                    DButtonGroup {
+                    AlpeButtonGroup {
                         id: modeGroup
                         arrowKeysSelect: false
                         width: parent.width
@@ -341,7 +341,7 @@ Column {
                             paddingV: Theme.spacingM
                             onClicked: keyboard => root.parentModal?.navigateTo("theme", keyboard)
 
-                            leading: DPaletteSwatch {
+                            leading: AlpePaletteSwatch {
                                 width: SettingsMetrics.heroLeadingSize
                                 height: width
                                 primaryColor: root.themePalette.primary
@@ -379,14 +379,14 @@ Column {
                 onImportRequested: root.openLayoutBrowser()
             }
 
-            DButton {
+            AlpeButton {
                 visible: Art.hiddenBuiltins(SessionData.materialWallpaperProfiles).length > 0
                 text: I18n.tr("Restore")
                 iconName: "restore"
                 onClicked: SessionData.restoreMaterialWallpaperProfiles()
             }
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Create")
                 iconName: "open_in_new"
                 tooltipText: Site.wallpaperCreator
@@ -493,7 +493,7 @@ Column {
         SettingsRow {
             visible: root.perMonitor
             title: I18n.tr("Use default wallpaper", "inherit the global wallpaper on this display")
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Reset")
                 onClicked: SessionData.setMonitorWallpaper(root.selectedScreen, "")
             }
@@ -595,7 +595,7 @@ Column {
                     color: Theme.surfaceText
                 }
 
-                DFilterChips {
+                AlpeFilterChips {
                     width: parent.width
                     multiSelect: true
                     model: SessionData.availableWallpaperTransitions.filter(t => t !== "none").map(t => ({
@@ -646,7 +646,7 @@ Column {
             visible: Theme.matugenAvailable && !root.dynamicTheme
             title: I18n.tr("Dynamic theme is off", "Material seed card status")
             subtitle: I18n.tr("Shapes use the %1 theme's colors", "Material seed card status, %1 is a theme name").arg(Theme.currentThemeLabel)
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Use Dynamic", "switch the shell theme to the dynamic palette")
                 onClicked: Theme.switchTheme(Theme.dynamic)
             }
@@ -656,12 +656,12 @@ Column {
             visible: root.dynamicTheme && SettingsData.matugenSeedColor !== ""
             title: I18n.tr("A custom seed color overrides this", "Material seed card status")
             subtitle: I18n.tr("Set under Theme & colors, Derived color", "Material seed card status")
-            leading: DColorSwatch {
+            leading: AlpeColorSwatch {
                 width: SettingsMetrics.heroLeadingSize
                 height: width
                 swatchColor: SettingsData.matugenSeedColor
             }
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Remove override", "clear the custom matugen seed color")
                 onClicked: SettingsData.setMatugenSeedColor("")
             }
@@ -677,7 +677,7 @@ Column {
             subtitle: I18n.tr("The shell palette is built from this color. Shapes take their colors from that palette.", "Material seed picker description")
             modified: root.materialEntry.seed !== Art.defaultSeed
             onResetRequested: root.selectSeed(Art.defaultSeed)
-            DActionButton {
+            AlpeActionButton {
                 iconName: "colorize"
                 iconColor: Theme.primary
                 backgroundColor: SettingsMetrics.controlColor
@@ -768,7 +768,7 @@ Column {
             visible: root.dynamicTheme && MatugenPreviewService.seedPreviewFailed
             title: I18n.tr("Color previews unavailable", "Material seed card status")
             subtitle: I18n.tr("Swatches show the seed color itself", "Material seed card status")
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Retry")
                 onClicked: seedPicker.retry()
             }
@@ -781,7 +781,7 @@ Column {
             visible: root.dynamicTheme
             title: I18n.tr("Palette style", "matugen scheme navigation row")
             hint: Theme.getMatugenScheme(SettingsData.matugenScheme).label
-            leading: DPaletteSwatch {
+            leading: AlpePaletteSwatch {
                 width: SettingsMetrics.heroLeadingSize
                 height: width
                 primaryColor: root.themePalette.primary

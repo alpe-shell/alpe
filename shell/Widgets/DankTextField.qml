@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DTextField {
+Alpe.AlpeTextField {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankTextField", "DTextField", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankTextField", "AlpeTextField", "qs.Alpe.Widgets")
 }

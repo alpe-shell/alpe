@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
-import qs.Modules.DDash.Weather
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
+import qs.Alpe.Dash.Weather
 import "../Weather/WeatherVisuals.js" as Visuals
 
 Card {
@@ -87,7 +87,7 @@ Card {
                 width: Math.min(parent.height, parent.width * DashMetrics.weatherCompactIconRatio)
                 height: width
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: root.iconName
                     size: parent.width
@@ -95,7 +95,7 @@ Card {
                     visible: root.available || !WeatherService.weather.loading
                 }
 
-                DSpinner {
+                AlpeSpinner {
                     anchors.centerIn: parent
                     size: parent.width
                     color: root.contentColor
@@ -135,14 +135,14 @@ Card {
         anchors.fill: parent
         visible: root.stacked && !root.compact && !root.heroLayout
 
-        DMaterialShape {
+        AlpeMaterialShape {
             id: stackedChip
             width: Math.min(parent.width * 0.5, parent.height * 0.42)
             height: width
             shape: Visuals.conditionShape(WeatherService.weather.wCode, WeatherService.weather.isDay)
             color: root.chipColor
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 name: root.iconName
                 size: parent.width * 0.55
@@ -150,7 +150,7 @@ Card {
                 visible: root.available || !WeatherService.weather.loading
             }
 
-            DSpinner {
+            AlpeSpinner {
                 anchors.centerIn: parent
                 size: parent.width * 0.55
                 color: root.contentColor
@@ -237,7 +237,7 @@ Card {
         spacing: Theme.spacingM
         visible: !root.stacked
 
-        DMaterialShape {
+        AlpeMaterialShape {
             id: iconChip
             anchors.verticalCenter: parent.verticalCenter
             width: Math.min(DashMetrics.weatherChipSize, root.height - root.pad * 2)
@@ -245,7 +245,7 @@ Card {
             shape: Visuals.conditionShape(WeatherService.weather.wCode, WeatherService.weather.isDay)
             color: root.chipColor
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 name: root.iconName
                 size: Theme.iconSize

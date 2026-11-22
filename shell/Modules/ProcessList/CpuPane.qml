@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Services
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Services/SysmonDevices.js" as Devices
 import "../../Common/Format.js" as Format
 
@@ -46,7 +46,7 @@ DevicePane {
     maximum: 100
     maximumText: "100%"
 
-    headerActions: DButtonGroup {
+    headerActions: AlpeButtonGroup {
         visible: DgopService.perCoreCpuUsage.length > 0
         size: "small"
         checkEnabled: false
@@ -191,7 +191,7 @@ DevicePane {
                         acceptedButtons: Qt.NoButton
                     }
 
-                    DTooltipHost {
+                    AlpeTooltipHost {
                         text: thread.mhz > 0 ? root.ghz(thread.mhz) : ""
                         target: thread
                         hoverArea: threadHover

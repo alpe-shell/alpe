@@ -5,7 +5,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -263,7 +263,7 @@ Item {
             width: parent.width
             height: ClipboardConstants.headerHeight
 
-            DActionButton {
+            AlpeActionButton {
                 iconName: "arrow_back"
                 Accessible.name: I18n.tr("Back")
                 iconSize: Theme.iconSize - 4
@@ -281,7 +281,7 @@ Item {
                 anchors.centerIn: parent
             }
 
-            DActionButton {
+            AlpeActionButton {
                 iconName: "close"
                 Accessible.name: I18n.tr("Close")
                 iconSize: Theme.iconSize - 4
@@ -292,7 +292,7 @@ Item {
             }
         }
 
-        DTextEdit {
+        AlpeTextEdit {
             id: editField
             width: parent.width
             height: Math.max(Theme.fontSizeMedium * 8, parent.height - editorHeader.height - editorActions.height - PopoutMetrics.contentGap * 2)
@@ -335,7 +335,7 @@ Item {
                 Layout.fillWidth: true
             }
 
-            DButton {
+            AlpeButton {
                 id: cancelButton
                 text: I18n.tr("Cancel")
                 backgroundColor: Theme.chipSurface
@@ -348,12 +348,12 @@ Item {
                 spacing: Theme.spacingS
                 opacity: root.textLoaded ? 1 : 0.6
 
-                DButton {
+                AlpeButton {
                     text: I18n.tr("Save")
                     onClicked: root.saveEntry("history")
                 }
 
-                DIconButton {
+                AlpeIconButton {
                     variant: "filled"
                     iconName: saveMenu.visible ? "expand_less" : "expand_more"
                     tooltipText: I18n.tr("Save")
@@ -395,7 +395,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: "save"
                             size: Theme.iconSizeSmall
                             color: Theme.surfaceText
@@ -433,7 +433,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: "close"
                             size: Theme.iconSizeSmall
                             color: Theme.surfaceText
@@ -472,7 +472,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: "content_paste"
                             size: Theme.iconSizeSmall
                             color: Theme.surfaceText

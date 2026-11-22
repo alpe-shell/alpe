@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 CcTile {
     id: root
@@ -42,7 +42,7 @@ CcTile {
     available: DgopService.dgopAvailable
     tallContent: Component {
         Item {
-            DRingGauge {
+            AlpeRingGauge {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 width: Math.min(parent.width, parent.height)
@@ -74,7 +74,7 @@ CcTile {
     onClicked: expandClicked()
     expandedContent: Component {
         Item {
-            DRingGauge {
+            AlpeRingGauge {
                 anchors.centerIn: parent
                 width: Math.min(parent.width, parent.height)
                 height: width

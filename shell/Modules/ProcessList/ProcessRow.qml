@@ -1,12 +1,12 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import Quickshell.Widgets
 import "ProcessColumns.js" as ProcessColumns
 import "../../Services/ProcessSort.js" as ProcessSort
 
-DListItem {
+AlpeListItem {
     id: root
 
     required property var process
@@ -125,7 +125,7 @@ DListItem {
             active: root.paused
             visible: active
             height: root.rowHeight
-            sourceComponent: DIcon {
+            sourceComponent: AlpeIcon {
                 name: "pause"
                 size: Theme.iconSizeSmall
                 color: root.supportingContentColor
@@ -179,7 +179,7 @@ DListItem {
                     anchors.rightMargin: Theme.spacingS
                     anchors.verticalCenter: parent.verticalCenter
                     active: cell.waiting
-                    sourceComponent: DSpinner {
+                    sourceComponent: AlpeSpinner {
                         size: Theme.fontSizeSmall
                     }
                 }
@@ -207,7 +207,7 @@ DListItem {
     }
 
     // One tooltip per row, created on first hover: building one up front for every row made sorting slow.
-    DTooltipHost {
+    AlpeTooltipHost {
         id: rowTip
         multiline: true
     }

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 SettingsReorderRow {
@@ -29,7 +29,7 @@ SettingsReorderRow {
     onClicked: configureRequested()
 
     trailing: [
-        DIcon {
+        AlpeIcon {
             anchors.verticalCenter: parent.verticalCenter
             name: "chevron_right"
             size: Theme.iconSize
@@ -39,7 +39,7 @@ SettingsReorderRow {
         SettingsDivider {
             vertical: true
         },
-        DToggle {
+        AlpeToggle {
             anchors.verticalCenter: parent.verticalCenter
             visible: !root.fixed
             hideText: true
@@ -51,7 +51,7 @@ SettingsReorderRow {
                 });
             }
         },
-        DActionButton {
+        AlpeActionButton {
             anchors.verticalCenter: parent.verticalCenter
             visible: !root.fixed
             iconName: "content_copy"

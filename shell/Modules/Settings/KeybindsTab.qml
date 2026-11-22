@@ -8,7 +8,7 @@ import qs.Common
 import qs.Modals.Common
 import qs.Modules.Settings.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Common/KeyUtils.js" as KeyUtils
 
 Item {
@@ -331,7 +331,7 @@ Item {
         }
     }
 
-    DListView {
+    AlpeListView {
         id: flickable
         keyNavigationEnabled: false
         // ListView hands focus to every new current row; cleared, filtering can't steal it from the header search
@@ -388,7 +388,7 @@ Item {
                 topPadding: Theme.spacingXS
                 spacing: Theme.spacingL
 
-                DSearchField {
+                AlpeSearchField {
                     id: searchInput
                     width: parent.width
                     placeholderText: searchInhibitor.active ? I18n.tr("Search or press a shortcut...") : I18n.tr("Search shortcuts...")
@@ -400,7 +400,7 @@ Item {
                     }
                 }
 
-                DFilterChips {
+                AlpeFilterChips {
                     id: categoryFilter
                     width: parent.width
                     showCounts: false
@@ -433,7 +433,7 @@ Item {
                         anchors.margins: Theme.spacingL
                         spacing: Theme.spacingM
 
-                        DIcon {
+                        AlpeIcon {
                             name: warningBox.showWarning ? "info" : "warning"
                             size: Theme.iconSize
                             color: Theme.primary
@@ -482,7 +482,7 @@ Item {
                             }
                         }
 
-                        DButton {
+                        AlpeButton {
                             id: fixButton
                             visible: warningBox.showSetup
                             text: KeybindsService.fixing ? I18n.tr("Setting up...") : I18n.tr("Setup", "verb, button that creates the dms include config file")
@@ -512,7 +512,7 @@ Item {
 
                             leading: Loader {
                                 active: keybindsTab.initialLoading
-                                sourceComponent: DSpinner {
+                                sourceComponent: AlpeSpinner {
                                     size: Theme.iconSize
                                 }
                             }
@@ -528,7 +528,7 @@ Item {
                 SettingsFabBar {
                     shown: !KeybindsService.readOnly || KeybindsService.cheatsheetAvailable
 
-                    DFab {
+                    AlpeFab {
                         text: I18n.tr("Cheatsheet", "button opening the keybinds cheatsheet overlay")
                         iconName: "keyboard"
                         colorRole: "secondaryContainer"
@@ -536,7 +536,7 @@ Item {
                         onClicked: PopoutService.showKeybindsModal()
                     }
 
-                    DFab {
+                    AlpeFab {
                         text: I18n.tr("Add shortcut", "keybind editor dialog title and button")
                         iconName: "add"
                         visible: !KeybindsService.readOnly

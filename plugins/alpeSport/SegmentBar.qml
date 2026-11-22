@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Schmale Reiter (Verlauf / Statistik / Aufstellung …) im Stil der Shell-Chips.
 Row {

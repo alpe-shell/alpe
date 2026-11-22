@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Shapes
 import qs.Common
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -32,7 +32,7 @@ Item {
         }
     }
 
-    DSparkline {
+    AlpeSparkline {
         id: sparkline
         anchors.fill: parent
         values: root.values

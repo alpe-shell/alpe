@@ -2,9 +2,9 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
     readonly property var log: Log.scoped("BluetoothPairingModal")
 
@@ -161,7 +161,7 @@ DModal {
                         }
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: pinInputField
 
                         anchors.fill: parent
@@ -196,7 +196,7 @@ DModal {
                         }
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: passkeyInputField
 
                         anchors.fill: parent
@@ -349,7 +349,7 @@ DModal {
                 }
             }
 
-            DActionButton {
+            AlpeActionButton {
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.topMargin: Theme.spacingM

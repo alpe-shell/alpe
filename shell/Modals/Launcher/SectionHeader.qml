@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modals.DLauncherV2.Components
+import qs.Modals.Launcher.Components
 
 Item {
     id: root
@@ -66,7 +66,7 @@ Item {
             readonly property string _iconType: root.section?.iconType ?? "material"
             readonly property bool _iconSpaceReserved: root.hasAppCategories || _iconVisible
 
-            DIcon {
+            AlpeIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: root.hasAppCategories || (labelContent._iconVisible && labelContent._iconType !== "image")
                 name: root.hasAppCategories ? AppSearchService.getCategoryIcon(root.categoryLabel) : (root.section?.icon ?? "folder")
@@ -104,7 +104,7 @@ Item {
                 elide: Text.ElideRight
             }
 
-            DIcon {
+            AlpeIcon {
                 id: chevron
                 visible: root.hasAppCategories
                 anchors.verticalCenter: parent.verticalCenter
@@ -124,7 +124,7 @@ Item {
         Loader {
             id: categoryDropdown
             active: root.hasAppCategories
-            sourceComponent: DDropdown {
+            sourceComponent: AlpeDropdown {
                 showTrigger: false
                 focusPolicy: Qt.NoFocus
                 popupWidth: Math.min(Theme.fieldDefaultWidth, root.width)
@@ -149,7 +149,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.groupedListGap
 
-        DActionButton {
+        AlpeActionButton {
             readonly property var current: root.viewModes.find(entry => entry.mode === root.viewMode) ?? root.viewModes[0]
             focusPolicy: Qt.NoFocus
             visible: root.canChangeViewMode && !root.section?.collapsed
@@ -165,7 +165,7 @@ Item {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             focusPolicy: Qt.NoFocus
             visible: root.canCollapse
             iconName: root.section?.collapsed ? "expand_more" : "expand_less"

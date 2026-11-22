@@ -3,7 +3,7 @@ import qs.Common
 import qs.Modals
 import qs.Modals.FileBrowser
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 import qs.Modules.Settings.DisplayConfig
@@ -124,7 +124,7 @@ Item {
                     spacing: Theme.spacingS
                     opacity: SettingsData.displayProfileAutoSelect ? 0.4 : 1.0
 
-                    DDropdown {
+                    AlpeDropdown {
                         id: profileDropdown
                         downKeyOpens: false
                         backgroundColor: SettingsMetrics.controlSurface
@@ -147,7 +147,7 @@ Item {
                         value: SettingsData.displayProfileAutoSelect ? I18n.tr("Auto") : root.getProfileNameById(root.selectedProfileId)
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: newButton
                         tooltipText: I18n.tr("New profile")
                         iconName: "add"
@@ -162,7 +162,7 @@ Item {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: editMonitorsButton
                         tooltipText: I18n.tr("Edit monitors")
                         iconName: "edit"
@@ -174,7 +174,7 @@ Item {
                         onClicked: root.openEditMonitorsDialog()
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: deleteButton
                         Accessible.name: I18n.tr("Delete profile")
                         iconName: "delete"
@@ -194,7 +194,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingS
 
-                    DTextField {
+                    AlpeTextField {
                         id: newProfileField
                         outlined: true
                         leftIconName: "badge"
@@ -210,7 +210,7 @@ Item {
                         Component.onCompleted: forceActiveFocus()
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: createButton
                         text: I18n.tr("Create")
                         enabled: root.newProfileName.trim() !== ""
@@ -220,7 +220,7 @@ Item {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: cancelNewButton
                         text: I18n.tr("Cancel")
                         backgroundColor: "transparent"
@@ -234,7 +234,7 @@ Item {
                 visible: root.showDeleteConfirmDialog
                 title: I18n.tr("Delete profile \"%1\"?", "delete confirmation, %1 is the display profile name").arg(root.getProfileNameById(root.selectedProfileId))
 
-                DButton {
+                AlpeButton {
                     text: I18n.tr("Delete")
                     danger: true
                     onClicked: {
@@ -243,7 +243,7 @@ Item {
                     }
                 }
 
-                DButton {
+                AlpeButton {
                     text: I18n.tr("Cancel")
                     backgroundColor: "transparent"
                     textColor: Theme.surfaceText
@@ -281,7 +281,7 @@ Item {
             SettingsRow {
                 visible: root.showEditMonitorsDialog
 
-                DButton {
+                AlpeButton {
                     text: I18n.tr("Save")
                     enabled: Object.values(root.editMonitorSelection).some(v => v)
                     onClicked: {
@@ -291,7 +291,7 @@ Item {
                     }
                 }
 
-                DButton {
+                AlpeButton {
                     text: I18n.tr("Cancel")
                     backgroundColor: "transparent"
                     textColor: Theme.surfaceText
@@ -357,7 +357,7 @@ Item {
                     return I18n.tr("%1 disconnected (hidden)", "displays row title, %1 is a count of disconnected monitors").arg(disconnected.length);
                 }
 
-                DButton {
+                AlpeButton {
                     text: SettingsData.displayShowDisconnected ? I18n.tr("Hide") : I18n.tr("Show")
                     variant: "text"
                     onClicked: {
@@ -399,14 +399,14 @@ Item {
             id: pendingChangesBar
             shown: DisplayConfigState.hasOutputBackend && DisplayConfigState.hasPendingChanges
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Discard", "verb, button to discard pending changes")
                 iconName: "undo"
                 colorRole: "secondaryContainer"
                 onClicked: DisplayConfigState.discardChanges()
             }
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Apply changes")
                 iconName: "check"
                 colorRole: "primary"

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Plugins
 import "sport.js" as S
 
@@ -86,7 +86,7 @@ DashCardComponent {
             height: 24
             spacing: Theme.spacingS
 
-            DIcon {
+            AlpeIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 name: "sports_soccer"
                 size: 18

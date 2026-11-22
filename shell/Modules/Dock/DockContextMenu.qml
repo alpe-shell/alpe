@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 DockContextMenuBase {
     id: root
@@ -82,7 +82,7 @@ DockContextMenuBase {
                 radius: Theme.cornerRadiusS
                 color: minimizeMouseArea.containsMouse ? BlurService.hoverColor(Theme.widgetBaseHoverColor) : "transparent"
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: modelData.minimized ? "expand_content" : "minimize"
                     size: 12
@@ -117,7 +117,7 @@ DockContextMenuBase {
                 radius: Theme.cornerRadiusS
                 color: closeMouseArea.containsMouse ? Theme.errorPressed : Theme.withAlpha(Theme.errorPressed, 0)
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: "close"
                     size: 12
@@ -138,7 +138,7 @@ DockContextMenuBase {
                 }
             }
 
-            DRipple {
+            AlpeRipple {
                 id: windowRipple
                 rippleColor: Theme.surfaceText
                 cornerRadius: Theme.cornerRadius
@@ -215,7 +215,7 @@ DockContextMenuBase {
                 wrapMode: Text.NoWrap
             }
 
-            DRipple {
+            AlpeRipple {
                 id: actionRipple
                 rippleColor: Theme.surfaceText
                 cornerRadius: Theme.cornerRadius
@@ -301,7 +301,7 @@ DockContextMenuBase {
         radius: Theme.cornerRadius
         color: pinArea.containsMouse ? BlurService.hoverColor(Theme.widgetBaseHoverColor) : Theme.withAlpha(BlurService.hoverColor(Theme.widgetBaseHoverColor), 0)
 
-        DIcon {
+        AlpeIcon {
             id: pinIcon
             anchors.left: parent.left
             anchors.leftMargin: Theme.spacingS
@@ -327,7 +327,7 @@ DockContextMenuBase {
             wrapMode: Text.NoWrap
         }
 
-        DRipple {
+        AlpeRipple {
             id: pinRipple
             rippleColor: Theme.surfaceText
             cornerRadius: Theme.cornerRadius
@@ -374,7 +374,7 @@ DockContextMenuBase {
         radius: Theme.cornerRadius
         color: nvidiaArea.containsMouse ? BlurService.hoverColor(Theme.widgetBaseHoverColor) : Theme.withAlpha(BlurService.hoverColor(Theme.widgetBaseHoverColor), 0)
 
-        DIcon {
+        AlpeIcon {
             id: nvidiaIcon
             anchors.left: parent.left
             anchors.leftMargin: Theme.spacingS
@@ -400,7 +400,7 @@ DockContextMenuBase {
             wrapMode: Text.NoWrap
         }
 
-        DRipple {
+        AlpeRipple {
             id: nvidiaRipple
             rippleColor: Theme.surfaceText
             cornerRadius: Theme.cornerRadius
@@ -429,7 +429,7 @@ DockContextMenuBase {
         radius: Theme.cornerRadius
         color: closeArea.containsMouse ? Theme.errorHover : Theme.withAlpha(Theme.errorHover, 0)
 
-        DIcon {
+        AlpeIcon {
             id: closeIcon
             anchors.left: parent.left
             anchors.leftMargin: Theme.spacingS
@@ -455,7 +455,7 @@ DockContextMenuBase {
             wrapMode: Text.NoWrap
         }
 
-        DRipple {
+        AlpeRipple {
             id: closeRipple
             rippleColor: Theme.error
             cornerRadius: Theme.cornerRadius

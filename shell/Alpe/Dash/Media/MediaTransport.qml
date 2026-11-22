@@ -4,8 +4,8 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
-import qs.Modules.DDash
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import qs.Alpe.Dash
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 RowLayout {
     id: root

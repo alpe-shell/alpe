@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Services
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 Item {
     id: root
@@ -70,7 +70,7 @@ Item {
 
             anchors.fill: parent
             active: wantsAnimatedArt && MultimediaService.available
-            source: "../../../Widgets/DAnimatedAlbumArt.qml"
+            source: "../../../Widgets/AlpeAnimatedAlbumArt.qml"
 
             onWantsAnimatedArtChanged: {
                 if (wantsAnimatedArt)

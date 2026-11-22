@@ -5,8 +5,8 @@ import Quickshell.Widgets
 import qs.Common
 import qs.Modules.Notifications as Notifications
 import qs.Services
-import qs.DCommon.Widgets
-import qs.DCommon.Session
+import qs.Alpe.Widgets
+import qs.Alpe.Session
 
 Item {
     id: root
@@ -245,7 +245,7 @@ Item {
                     anchors.centerIn: parent
                     spacing: Theme.spacingS
 
-                    DIcon {
+                    AlpeIcon {
                         name: "notifications"
                         size: Theme.iconSizeSmall + Theme.spacingXXS
                         color: Theme.onSurfaceVariant
@@ -279,7 +279,7 @@ Item {
                 radius: Theme.groupedListOuterRadius
                 color: "transparent"
 
-                DFlickable {
+                AlpeFlickable {
                     anchors.fill: parent
                     contentHeight: notificationColumn.implicitHeight
                     clip: true

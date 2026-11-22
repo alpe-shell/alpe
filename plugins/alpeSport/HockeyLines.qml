@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Aufstellung im Eishockey: Torhüter, dann die Blöcke (Sturm links–Mitte–rechts, Verteidigung).
 // Alpe: Namen sind anklickbar (Saisonwerte).
@@ -80,7 +80,7 @@ Column {
                     spacing: Theme.spacingS
                     visible: block.modelData.forwards.length > 0
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         name: "north"
                         size: 14
@@ -99,7 +99,7 @@ Column {
                     spacing: Theme.spacingS
                     visible: block.modelData.defense.length > 0
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         name: "shield"
                         size: 14

@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DSearchField {
+AlpeSearchField {
     id: root
 
     property string mode: "all"
@@ -74,7 +74,7 @@ DSearchField {
             color: Theme.primaryContainer
             clip: true
 
-            DIcon {
+            AlpeIcon {
                 id: pluginIconGlyph
                 visible: root.pluginIconVisible
                 anchors.left: parent.left
@@ -103,7 +103,7 @@ DSearchField {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: modeViewport
         anchors.right: parent.right
         anchors.rightMargin: Theme.spacingM
@@ -117,7 +117,7 @@ DSearchField {
         flickableDirection: Flickable.HorizontalFlick
         clip: true
 
-        DFilterChips {
+        AlpeFilterChips {
             id: chips
             width: implicitWidth
             flow: Flow.TopToBottom

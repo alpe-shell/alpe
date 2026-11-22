@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DScrollbar {
+Alpe.AlpeScrollbar {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankScrollbar", "DScrollbar", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankScrollbar", "AlpeScrollbar", "qs.Alpe.Widgets")
 }

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-// Attrappe von DashCardComponent (Card/DCard): Inhalt in einem gepolsterten Feld.
+// Attrappe von DashCardComponent (Card/AlpeCard): Inhalt in einem gepolsterten Feld.
 Rectangle {
     property string pluginId: "alpeSport"
     property bool live: true

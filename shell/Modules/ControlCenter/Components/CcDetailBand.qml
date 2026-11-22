@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Details
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../utils/sections.js" as Sections
 
 FocusScope {
@@ -195,7 +195,7 @@ FocusScope {
                     height: childrenRect.height
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     id: closeButton
                     anchors.right: parent.right
                     anchors.rightMargin: CcMetrics.headerEdgeInset

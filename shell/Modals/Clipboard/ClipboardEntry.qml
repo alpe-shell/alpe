@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DListItem {
+AlpeListItem {
     id: root
 
     required property var entry
@@ -54,7 +54,7 @@ DListItem {
         spacing: Theme.spacingXS
         visible: root.showAnyAction
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [root.modal.modalFocusScope]
             objectName: "previewEntry"
             iconName: "preview"
@@ -70,7 +70,7 @@ DListItem {
             height: Theme.iconButtonSize
             visible: root.showPinnedIndicator
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 name: "push_pin"
                 size: Theme.iconSizeSmall
@@ -78,7 +78,7 @@ DListItem {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [root.modal.modalFocusScope]
             iconName: "content_copy"
             Accessible.name: I18n.tr("Copy")
@@ -88,7 +88,7 @@ DListItem {
             onClicked: copyRequested()
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [root.modal.modalFocusScope]
             iconName: "content_paste"
             Accessible.name: I18n.tr("Paste")
@@ -98,7 +98,7 @@ DListItem {
             onClicked: pasteRequested()
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [root.modal.modalFocusScope]
             iconName: "push_pin"
             Accessible.name: root.effectivePinned ? I18n.tr("Unpin") : I18n.tr("Pin", "verb, keep an item pinned in place")
@@ -119,7 +119,7 @@ DListItem {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [root.modal.modalFocusScope]
             iconName: "edit"
             Accessible.name: I18n.tr("Edit")
@@ -136,7 +136,7 @@ DListItem {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             Keys.forwardTo: [root.modal.modalFocusScope]
             iconName: "close"
             Accessible.name: I18n.tr("Delete")

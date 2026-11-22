@@ -5,10 +5,10 @@ import qs.Common
 import qs.Widgets
 import qs.Modules.ControlCenter.Widgets
 import qs.Modules.Settings.Widgets
-import qs.Modules.DDash.Overview
+import qs.Alpe.Dash.Overview
 import "../../Common/GridLayout.js" as GridUtils
 import "utils/widgets.js" as WidgetUtils
-import "../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import "../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 Item {
     id: root
@@ -125,7 +125,7 @@ Item {
         optionsSheet.dismiss();
     }
 
-    DEditableGrid {
+    AlpeEditableGrid {
         id: grid
         width: parent.width
         editMode: root.editMode
@@ -142,7 +142,7 @@ Item {
             id: slots
             model: grid.tileModel
 
-            DEditableGridSlot {
+            AlpeEditableGridSlot {
                 id: slot
                 grid: grid
                 readonly property var widget: JSON.parse(json)

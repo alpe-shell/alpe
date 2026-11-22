@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 SettingsCard {
@@ -152,7 +152,7 @@ SettingsCard {
             width: parent.width
             spacing: Theme.spacingM
 
-            DTextField {
+            AlpeTextField {
                 outlined: true
                 leftIconName: "brightness_6"
                 labelText: I18n.tr("SDR brightness")
@@ -176,7 +176,7 @@ SettingsCard {
                 }
             }
 
-            DTextField {
+            AlpeTextField {
                 outlined: true
                 leftIconName: "palette"
                 labelText: I18n.tr("SDR saturation")

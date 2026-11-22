@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 Item {
     id: root
@@ -150,7 +150,7 @@ Item {
                 width: parent.width
                 spacing: Theme.spacingM
 
-                DIcon {
+                AlpeIcon {
                     name: root.iconName
                     size: Theme.iconSizeLarge
                     color: Theme.primary
@@ -193,7 +193,7 @@ Item {
                 visible: text !== ""
             }
 
-            DFlickable {
+            AlpeFlickable {
                 id: contentFlickable
                 width: parent.width
                 height: Math.min(contentHeight, Math.max(0, root.height - Theme.spacingL * 4 - header.height - column.spacing - (status.visible ? status.height + column.spacing : 0)))

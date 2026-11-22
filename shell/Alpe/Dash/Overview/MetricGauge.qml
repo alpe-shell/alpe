@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
-DRingGauge {
+AlpeRingGauge {
     id: root
 
     property real usage: -1
@@ -28,7 +28,7 @@ DRingGauge {
         color: root.discColor
     }
 
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         name: root.iconName
         size: root.iconSize

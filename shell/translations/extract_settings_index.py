@@ -99,8 +99,8 @@ TAB_INDEX_MAP = {
     "TimeWeatherTab.qml": 1,
     "WeatherSettingsTab.qml": 56,
     "KeybindsTab.qml": 2,
-    "DBarTab.qml": 3,
-    "DDashTab.qml": 43,
+    "BarTab.qml": 3,
+    "DashTab.qml": 43,
     "DigitalWellbeingTab.qml": 67,
     "CompositorLayoutTab.qml": 37,
     "WindowRulesTab.qml": 38,
@@ -108,8 +108,8 @@ TAB_INDEX_MAP = {
     "DockWidgetsTab.qml": 57,
     "DockAppearanceTab.qml": 58,
     "DockAdvancedTab.qml": 59,
-    "DBarAppearanceTab.qml": 6,
-    "DDotTab.qml": 65,
+    "BarAppearanceTab.qml": 6,
+    "DotTab.qml": 65,
     "NetworkStatusTab.qml": 7,
     "NetworkEthernetTab.qml": 39,
     "NetworkWifiTab.qml": 40,
@@ -197,7 +197,7 @@ FILE_PAGE_MAP = {
 TAB_META_DEFAULT = ("Settings", None, None)
 
 # Frame and island rows live on the bar pages; ungated ones still need their feature on.
-BAR_TAB_FILES = {"DBarTab.qml", "DBarAppearanceTab.qml"}
+BAR_TAB_FILES = {"BarTab.qml", "BarAppearanceTab.qml"}
 
 SEARCHABLE_COMPONENTS = [
     "SettingsCard",
@@ -590,7 +590,7 @@ def find_settings_components(content, filename, wrappers, tab_meta, hub_meta):
                     condition_key = "frameEnabled"
                 elif setting_key.startswith("island"):
                     condition_key = "islandEnabled"
-            if filename == "DDotTab.qml" and not condition_key and setting_key != "dotEnabled":
+            if filename == "DotTab.qml" and not condition_key and setting_key != "dotEnabled":
                 condition_key = "dotEnabled"
             if component == "SettingsCard":
                 card_conditions.append((match.start(), block_end, condition_key if extract_property(own, "visible") else None))

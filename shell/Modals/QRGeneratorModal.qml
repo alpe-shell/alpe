@@ -6,9 +6,9 @@ import qs.Modals.Common
 import qs.Modals.FileBrowser
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
     visible: false
     layerNamespace: "dms:qr-generator"
@@ -164,7 +164,7 @@ DModal {
                         Layout.fillWidth: true
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "close"
                         Accessible.name: I18n.tr("Close")
                         iconSize: Theme.iconSize - 4
@@ -174,7 +174,7 @@ DModal {
                     }
                 }
 
-                DTextField {
+                AlpeTextField {
                     id: textInput
                     width: parent.width
                     placeholderText: I18n.tr("Enter text to encode")
@@ -234,7 +234,7 @@ DModal {
                         Layout.fillWidth: true
                     }
 
-                    DButton {
+                    AlpeButton {
                         text: I18n.tr("Save")
                         iconName: "save"
                         backgroundColor: Theme.chipSurface
@@ -247,7 +247,7 @@ DModal {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         text: I18n.tr("Copy")
                         iconName: "content_copy"
                         onClicked: {

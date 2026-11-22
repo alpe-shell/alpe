@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.Modules.DDash
-import qs.Modules.DDash.Wellbeing
+import qs.Alpe.Dash
+import qs.Alpe.Dash.Wellbeing
 import qs.Modules.ControlCenter.Widgets
 import "Wellbeing/Wellbeing.js" as Wellbeing
 

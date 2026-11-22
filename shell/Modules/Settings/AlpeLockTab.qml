@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Sperrbildschirm unter KWin. KWin kennt ext-session-lock nicht, die Sperre des
@@ -212,7 +212,7 @@ Item {
                 subtitle: "KWin lässt nur seinen eigenen Sperrbildschirm zu. Alpe sperrt deshalb über die Sitzungsverwaltung: Sperren im Energiemenü, per Tastenkürzel und vor dem Standby landen alle dort."
                 iconName: "shield_lock"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     buttonHeight: Theme.buttonHeightS
                     text: "Jetzt sperren"
@@ -315,7 +315,7 @@ Item {
                 iconName: root.checkBad ? "error_outline" : root.check !== null && !tester.running ? "check_circle" : "science"
                 iconColor: root.checkBad ? Theme.error : Theme.primary
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     buttonHeight: Theme.buttonHeightS
                     text: "Testen"
@@ -433,7 +433,7 @@ Item {
                 clickable: true
                 onClicked: Quickshell.execDetached(["kcmshell6", "kcm_screenlocker"])
 
-                DIcon {
+                AlpeIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: "open_in_new"
                     size: Theme.iconSize

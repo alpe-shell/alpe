@@ -4,7 +4,7 @@ import qs.Modules.Notifications
 import qs.Services
 import qs.Widgets
 
-DContextMenu {
+AlpeContextMenu {
     id: root
 
     property alias appName: actions.appName

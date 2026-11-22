@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Shapes
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Device glyphs Material Symbols lacks, drawn on its 24 px grid.
 Item {
@@ -20,7 +20,7 @@ Item {
     implicitWidth: size
     implicitHeight: size
 
-    DIcon {
+    AlpeIcon {
         visible: root.drawn === null
         anchors.centerIn: parent
         name: visible ? root.name : ""

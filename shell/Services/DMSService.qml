@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
 Singleton {
     id: root
@@ -76,7 +76,7 @@ Singleton {
         requestSocket.connected = true;
     }
 
-    DCommon.DSocket {
+    Alpe.AlpeSocket {
         id: requestSocket
         path: root.socketPath
         connected: false
@@ -118,7 +118,7 @@ Singleton {
         }
     }
 
-    DCommon.DSocket {
+    Alpe.AlpeSocket {
         id: subscribeSocket
         path: root.socketPath
         connected: false

@@ -4,11 +4,11 @@ import Quickshell.Wayland
 import qs.Common
 import qs.Modules.ProcessList
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../Modules/ProcessList/ProcessColumns.js" as ProcessColumns
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: processListModal
     readonly property var log: Log.scoped("ProcessListModal")
 
@@ -53,7 +53,7 @@ DFloatingWindow {
             return;
         }
         const modalTitle = I18n.tr("System Monitor", "sysmon window title");
-        for (const toplevel of DToplevels.toplevels.values) {
+        for (const toplevel of Toplevels.toplevels.values) {
             if (toplevel.title !== "System Monitor" && toplevel.title !== modalTitle)
                 continue;
             if (toplevel.activated) {
@@ -181,7 +181,7 @@ DFloatingWindow {
                 anchors.centerIn: parent
                 spacing: Theme.spacingL
 
-                DIcon {
+                AlpeIcon {
                     name: "error"
                     size: 48
                     color: Theme.error
@@ -213,7 +213,7 @@ DFloatingWindow {
             spacing: 0
             visible: DgopService.dgopAvailable
 
-            DWindowHeader {
+            AlpeWindowHeader {
                 Layout.fillWidth: true
                 controls: windowControls
                 title: I18n.tr("System Monitor")
@@ -225,7 +225,7 @@ DFloatingWindow {
                 Layout.fillHeight: true
                 spacing: 0
 
-                DNavigationBar {
+                AlpeNavigationBar {
                     id: viewNavigation
                     Layout.preferredWidth: Theme.navigationRailWidth
                     Layout.preferredHeight: implicitHeight
@@ -269,7 +269,7 @@ DFloatingWindow {
                         spacing: Theme.spacingM
                         visible: currentTab === 0
 
-                        DSearchField {
+                        AlpeSearchField {
                             id: searchField
                             Layout.fillWidth: true
                             Layout.maximumWidth: Theme.fontSizeMedium * 30
@@ -298,7 +298,7 @@ DFloatingWindow {
                             color: Theme.surfaceVariantText
                         }
 
-                        DIconButton {
+                        AlpeIconButton {
                             id: lockButton
                             readonly property bool busy: DgopService.unlocking || DgopService.unlockLoading
                             iconName: busy ? "" : DgopService.unlocked ? "lock_open" : "lock"
@@ -307,14 +307,14 @@ DFloatingWindow {
                             tooltipText: DgopService.unlocked ? I18n.tr("Lock") : I18n.tr("Unlock")
                             onClicked: DgopService.unlocked ? DgopService.lock() : DgopService.unlock()
 
-                            DSpinner {
+                            AlpeSpinner {
                                 anchors.centerIn: parent
                                 size: Theme.iconSizeSmall
                                 visible: lockButton.busy
                             }
                         }
 
-                        DIconButton {
+                        AlpeIconButton {
                             iconName: "view_column"
                             tooltipText: I18n.tr("Columns")
                             onClicked: columnPicker.present()

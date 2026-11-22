@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import qs.Alpe.Widgets
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 Row {
     id: root
@@ -20,7 +20,7 @@ Row {
 
     Keys.onPressed: event => event.accepted = FocusNavigation.handleHorizontalKey(event, focusTargets, I18n.isRtl)
 
-    DIconButton {
+    AlpeIconButton {
         id: lyricsButton
         focusRingColor: MediaAccentService.focusRing
         variant: "outlined"
@@ -65,7 +65,7 @@ Row {
         iconName: "assistant_device"
     }
 
-    component GroupButton: DIconButton {
+    component GroupButton: AlpeIconButton {
         required property string panelId
 
         focusRingColor: MediaAccentService.focusRing

@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import qs.Modules.Settings.BarWidgetOptions
 import "../../Common/settings/DockConfig.js" as DockConfig
@@ -189,14 +189,14 @@ Item {
                     Row {
                         spacing: Theme.spacingXS
 
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "settings"
                             visible: widgetRow.modelData.widgetId !== "appsDock" && !!BarWidgetCatalog.optionsFile(widgetRow.modelData.widgetId)
                             Accessible.name: I18n.tr("Settings")
                             onClicked: root.configureWidget(widgetRow.modelData)
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: widgetRow.shown ? "visibility" : "visibility_off"
                             Accessible.name: widgetRow.shown ? I18n.tr("Hide") : I18n.tr("Show")
                             onClicked: {
@@ -232,7 +232,7 @@ Item {
         SettingsFabBar {
             shown: dock.hasConfig
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Add widget")
                 iconName: "add"
                 onClicked: {

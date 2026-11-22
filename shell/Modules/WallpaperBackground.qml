@@ -281,7 +281,7 @@ Variants {
             onSessionMonitorWallpaperFillModesChanged: regenerate()
             onSessionPerMonitorWallpaperChanged: regenerate()
 
-            // Theme changes repaint DBackdrop but nothing else wakes the render loop
+            // Theme changes repaint AlpeBackdrop but nothing else wakes the render loop
             readonly property color themePrimary: Theme.primary
             readonly property color themeBackground: Theme.background
 
@@ -725,7 +725,7 @@ Variants {
                 active: root.showsBackdrop
                 asynchronous: true
 
-                sourceComponent: DBackdrop {
+                sourceComponent: AlpeBackdrop {
                     screenName: modelData.name
                     onInvalidated: root.invalidate()
                 }

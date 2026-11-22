@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankFloatingWindow", "DFloatingWindow", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankFloatingWindow", "AlpeFloatingWindow", "qs.Widgets")
 }

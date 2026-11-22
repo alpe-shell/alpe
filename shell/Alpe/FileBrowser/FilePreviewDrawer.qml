@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 import "FilePreview.js" as FilePreview
 
 Item {
@@ -136,7 +136,7 @@ Item {
 
     Behavior on reveal {
         enabled: FileBrowserMetrics.animationsEnabled && drawer.visible
-        DAnim {
+        AlpeAnim {
             duration: Style.expressiveDurations.expressiveFastSpatial
             easing.bezierCurve: Style.expressiveCurves.standard
         }
@@ -225,7 +225,7 @@ Item {
             }
         }
 
-        DCarousel {
+        AlpeCarousel {
             id: stripView
 
             anchors.bottom: parent.bottom
@@ -242,7 +242,7 @@ Item {
                     positionViewAtIndex(drawer.focusIndex, ListView.Contain);
             }
 
-            delegate: DCarouselItem {
+            delegate: AlpeCarouselItem {
                 id: tile
 
                 required property int index

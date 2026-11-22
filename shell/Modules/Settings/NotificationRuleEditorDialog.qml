@@ -2,11 +2,11 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 
-DDialog {
+AlpeDialog {
     id: root
 
     required property var fieldOptions
@@ -99,12 +99,12 @@ DDialog {
     }
 
     actions: [
-        DButton {
+        AlpeButton {
             text: I18n.tr("Cancel")
             variant: "text"
             onClicked: root.rejected()
         },
-        DButton {
+        AlpeButton {
             text: root.isEditMode ? I18n.tr("Save") : I18n.tr("Add")
             enabled: root.acceptEnabled
             onClicked: root.submit()
@@ -119,7 +119,7 @@ DDialog {
                 width: parent.width
                 spacing: Theme.spacingS
 
-                DDropdown {
+                AlpeDropdown {
                     id: fieldDropdown
                     width: Math.round(parent.width / 3)
                     anchors.verticalCenter: parent.verticalCenter
@@ -129,7 +129,7 @@ DDialog {
                     onValueChanged: value => root.ruleField = root.valueOf(root.fieldOptions, value)
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     id: matchTypeDropdown
                     width: Math.round(parent.width / 4)
                     anchors.verticalCenter: parent.verticalCenter
@@ -139,7 +139,7 @@ DDialog {
                     onValueChanged: value => root.ruleMatchType = root.valueOf(root.matchTypeOptions, value)
                 }
 
-                DTextField {
+                AlpeTextField {
                     id: patternInput
                     width: parent.width - fieldDropdown.width - matchTypeDropdown.width - parent.spacing * 2
                     anchors.verticalCenter: parent.verticalCenter
@@ -164,7 +164,7 @@ DDialog {
                     width: parent.width
                     spacing: Theme.spacingS
 
-                    DDropdown {
+                    AlpeDropdown {
                         id: conditionFieldDropdown
                         width: Math.round(parent.width / 3)
                         anchors.verticalCenter: parent.verticalCenter
@@ -175,7 +175,7 @@ DDialog {
                         onValueChanged: value => root.ruleConditions[conditionRow.index].field = root.valueOf(root.fieldOptions, value)
                     }
 
-                    DDropdown {
+                    AlpeDropdown {
                         id: conditionMatchTypeDropdown
                         width: Math.round(parent.width / 4)
                         anchors.verticalCenter: parent.verticalCenter
@@ -186,7 +186,7 @@ DDialog {
                         onValueChanged: value => root.ruleConditions[conditionRow.index].matchType = root.valueOf(root.matchTypeOptions, value)
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: conditionPatternInput
                         width: parent.width - conditionFieldDropdown.width - conditionMatchTypeDropdown.width - removeConditionButton.width - parent.spacing * 3
                         anchors.verticalCenter: parent.verticalCenter
@@ -197,7 +197,7 @@ DDialog {
                         onAccepted: root.submit()
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: removeConditionButton
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "delete"
@@ -212,7 +212,7 @@ DDialog {
         SettingsRow {
             subtitle: root.ruleConditions.length > 0 ? I18n.tr("A notification must match every condition", "hint in the notification rule editor, all match conditions must apply") : ""
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Add condition", "button in the notification rule editor, adds another match condition")
                 iconName: "add"
                 variant: "text"

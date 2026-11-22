@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { loadScript } from "./qml-script.mjs";
 
-const utils = loadScript(new URL("../Modals/DLauncherV2/ControllerUtils.js", import.meta.url));
+const utils = loadScript(new URL("../Modals/Launcher/ControllerUtils.js", import.meta.url));
 
 test("app source follows the binary, not BAMF_DESKTOP_FILE_HINT", () => {
     const cases = [

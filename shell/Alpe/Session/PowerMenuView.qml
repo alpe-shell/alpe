@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell.Widgets
-import qs.DCommon.Common
-import qs.DCommon.Widgets as Base
+import qs.Alpe.Common
+import qs.Alpe.Widgets as Base
 
 Rectangle {
     id: root
@@ -46,7 +46,7 @@ Rectangle {
         Repeater {
             model: root.actions
 
-            Base.DListItem {
+            Base.AlpeListItem {
                 id: button
                 required property int index
                 required property string modelData
@@ -96,7 +96,7 @@ Rectangle {
                     id: rowContent
 
                     Item {
-                        Base.DIcon {
+                        Base.AlpeIcon {
                             id: icon
                             anchors.left: parent.left
                             anchors.leftMargin: Style.spacingL
@@ -120,7 +120,7 @@ Rectangle {
                             elide: Text.ElideRight
                         }
 
-                        Base.DKeycap {
+                        Base.AlpeKeycap {
                             id: keycap
                             anchors.right: parent.right
                             anchors.rightMargin: Style.spacingL
@@ -144,7 +144,7 @@ Rectangle {
                             width: parent.width - Style.spacingM * 2
                             spacing: Style.spacingS
 
-                            Base.DIcon {
+                            Base.AlpeIcon {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 name: button.actionData.icon || ""
                                 size: Style.iconSizeLarge
@@ -165,7 +165,7 @@ Rectangle {
                             }
                         }
 
-                        Base.DKeycap {
+                        Base.AlpeKeycap {
                             anchors.top: parent.top
                             anchors.left: parent.left
                             anchors.margins: Style.spacingXS
@@ -188,7 +188,7 @@ Rectangle {
         spacing: Style.spacingXS
         visible: root.showHint
 
-        Base.DIcon {
+        Base.AlpeIcon {
             id: hintSymbol
             name: root.hintIcon
             size: Style.iconSizeSmall

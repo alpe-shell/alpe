@@ -3,11 +3,11 @@ import QtQuick.Layouts
 import qs.Common
 import qs.Modules.ProcessList
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "ProcessColumns.js" as ProcessColumns
 
-DPopout {
+AlpePopout {
     id: processListPopout
 
     layerNamespace: "dms:process-list-popout"
@@ -132,7 +132,7 @@ DPopout {
                     Layout.fillWidth: true
                     spacing: Theme.spacingM
 
-                    DSearchField {
+                    AlpeSearchField {
                         id: searchField
                         Layout.fillWidth: true
                         Layout.minimumWidth: Theme.fontSizeMedium * 8

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -24,7 +24,7 @@ SettingsRow {
         width: Theme.iconButtonSize
         height: Theme.iconButtonSize
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: "drag_indicator"
             size: Theme.iconSizeMedium

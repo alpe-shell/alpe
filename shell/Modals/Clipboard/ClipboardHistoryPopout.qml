@@ -8,7 +8,7 @@ import qs.Modals.Common
 import qs.Services
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     layerNamespace: "dms:clipboard-popout"

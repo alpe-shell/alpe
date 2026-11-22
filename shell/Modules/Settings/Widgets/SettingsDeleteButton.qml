@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DActionButton {
+AlpeActionButton {
     id: root
 
     property bool confirming: false

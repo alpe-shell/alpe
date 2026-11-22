@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Modules.Settings.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Column {
     id: root
@@ -68,7 +68,7 @@ Column {
                 width: parent.width
                 spacing: Theme.spacingS
 
-                DTextField {
+                AlpeTextField {
                     id: rawField
                     outlined: true
                     labelText: I18n.tr("Displayed label", "keyboard layout override, the label currently shown")
@@ -78,7 +78,7 @@ Column {
                     onAccepted: root.addOverride()
                 }
 
-                DTextField {
+                AlpeTextField {
                     id: customField
                     outlined: true
                     labelText: I18n.tr("Custom label", "keyboard layout override, the replacement label")
@@ -88,7 +88,7 @@ Column {
                     onAccepted: root.addOverride()
                 }
 
-                DButton {
+                AlpeButton {
                     id: addOverrideBtn
                     iconName: "add"
                     text: I18n.tr("Add")
@@ -129,7 +129,7 @@ Column {
                             elide: Text.ElideRight
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             id: removeOverrideBtn
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.spacingS

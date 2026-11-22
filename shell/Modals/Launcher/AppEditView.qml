@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 FocusScope {
     id: root
@@ -76,7 +76,7 @@ FocusScope {
                 radius: Theme.cornerRadius
                 color: backButtonArea.containsMouse ? Theme.surfaceHover : Theme.withAlpha(Theme.surfaceHover, 0)
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: "arrow_back"
                     size: Theme.iconSizeMedium
@@ -127,7 +127,7 @@ FocusScope {
             color: Theme.outlineMedium
         }
 
-        DFlickable {
+        AlpeFlickable {
             width: parent.width
             height: parent.height - y - buttonsRow.height - Theme.spacingM
             contentHeight: editFieldsColumn.height
@@ -150,7 +150,7 @@ FocusScope {
                         font.weight: Theme.fontWeightMedium
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: editNameField
                         width: parent.width
                         placeholderText: root.editingApp?.name || ""
@@ -170,7 +170,7 @@ FocusScope {
                         font.weight: Theme.fontWeightMedium
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: editIconField
                         width: parent.width
                         placeholderText: root.editingApp?.icon || ""
@@ -190,7 +190,7 @@ FocusScope {
                         font.weight: Theme.fontWeightMedium
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: editCommentField
                         width: parent.width
                         placeholderText: root.editingApp?.comment || ""
@@ -216,7 +216,7 @@ FocusScope {
                         color: Theme.onSurfaceVariant
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: editEnvVarsField
                         width: parent.width
                         placeholderText: "VAR=value"
@@ -236,7 +236,7 @@ FocusScope {
                         font.weight: Theme.fontWeightMedium
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: editExtraFlagsField
                         width: parent.width
                         placeholderText: "--flag --option=value"
@@ -252,7 +252,7 @@ FocusScope {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Theme.spacingM
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Reset", "verb, button that restores defaults")
                 backgroundColor: Theme.chipSurface
                 textColor: Theme.error
@@ -260,14 +260,14 @@ FocusScope {
                 onClicked: root.resetAppOverride()
             }
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Cancel")
                 backgroundColor: Theme.chipSurface
                 textColor: Theme.onSurface
                 onClicked: root.closeRequested()
             }
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Save")
                 onClicked: root.saveAppOverride()
             }

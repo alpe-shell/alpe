@@ -5,7 +5,7 @@ import QtQuick.Layouts
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../../Common/QmlUtils.js" as QmlUtils
 import qs.Modals.Common
@@ -229,7 +229,7 @@ Column {
             Layout.fillWidth: true
         }
 
-        DButton {
+        AlpeButton {
             text: "Plugin-Ordner"
             buttonHeight: Theme.buttonHeightXS
             horizontalPadding: Theme.spacingS
@@ -250,7 +250,7 @@ Column {
         wrapMode: Text.Wrap
     }
 
-    DCard {
+    AlpeCard {
         id: storeCard
         color: SettingsMetrics.rowColor
         width: parent.width
@@ -263,7 +263,7 @@ Column {
             width: parent.width
             spacing: Theme.spacingM
 
-            DIcon {
+            AlpeIcon {
                 name: "extension"
                 size: Theme.iconSizeLarge
                 color: storeCard.accentColor
@@ -287,7 +287,7 @@ Column {
                 Layout.preferredHeight: implicitHeight
                 spacing: Theme.spacingS
 
-                DButton {
+                AlpeButton {
                     text: "Plugin-Ordner"
                     iconName: "folder_open"
                     maximumWidth: parent.width
@@ -303,7 +303,7 @@ Column {
         spacing: Theme.spacingS
         visible: root.plugins.length > 0
 
-        DSearchField {
+        AlpeSearchField {
             width: parent.width
             text: root.searchQuery
             placeholderText: I18n.tr("Search plugins...", "plugin search placeholder")
@@ -314,7 +314,7 @@ Column {
             width: parent.width
             spacing: Theme.spacingS
 
-            DSplitButton {
+            AlpeSplitButton {
                 id: filterButton
                 text: I18n.tr("Filter") + ": " + root.filterOptions[root.filterIndex]
                 iconName: "filter_list"
@@ -330,7 +330,7 @@ Column {
                     filterMenu.openDropdownMenu();
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     id: filterMenu
                     showTrigger: false
                     popupAnchorItem: filterButton.trailingButton
@@ -341,7 +341,7 @@ Column {
                     onValueChanged: value => root.setFilter(options.indexOf(value))
                 }
             }
-            DSplitButton {
+            AlpeSplitButton {
                 id: sortButton
                 text: I18n.tr("Sort by") + ": " + root.sortOptions[root.sortIndex]
                 iconName: root.descending ? "arrow_downward" : "arrow_upward"
@@ -358,7 +358,7 @@ Column {
                     sortMenu.openDropdownMenu();
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     id: sortMenu
                     showTrigger: false
                     popupAnchorItem: sortButton.trailingButton
@@ -403,7 +403,7 @@ Column {
         Repeater {
             model: root.filteredPlugins
 
-            DCard {
+            AlpeCard {
                 id: installedCard
                 required property var modelData
                 readonly property bool loaded: PluginService.loadedPlugins[modelData.pluginId] !== undefined
@@ -448,7 +448,7 @@ Column {
                         Layout.minimumHeight: Math.ceil(pluginTitleMetrics.height) * 2 + Theme.spacingXXS + pluginMetadata.implicitHeight
                         Layout.maximumHeight: Layout.minimumHeight
                         spacing: Theme.spacingS
-                        DIcon {
+                        AlpeIcon {
                             id: pluginIcon
                             Layout.alignment: Qt.AlignTop
                             Layout.topMargin: Math.max(0, (pluginTitle.implicitHeight - height) / 2)
@@ -480,7 +480,7 @@ Column {
                                 Layout.minimumWidth: 0
                                 implicitHeight: Math.max(Theme.spacingL, Math.ceil(pluginDescriptionMetrics.height), versionBadge.implicitHeight)
 
-                                DBadge {
+                                AlpeBadge {
                                     id: versionBadge
                                     anchors.left: parent.left
                                     anchors.top: parent.top
@@ -506,7 +506,7 @@ Column {
                                 }
                             }
                         }
-                        DToggle {
+                        AlpeToggle {
                             Layout.alignment: Qt.AlignTop
                             enabled: !root.uninstalling[installedCard.modelData.pluginId]
                             checked: installedCard.loaded
@@ -531,7 +531,7 @@ Column {
                         Layout.fillHeight: false
                         visible: installedCard.problem !== "" || !!root.uninstalling[installedCard.modelData.pluginId]
                         spacing: Theme.spacingS
-                        DActionButton {
+                        AlpeActionButton {
                             visible: installedCard.problem !== ""
                             buttonSize: Theme.buttonHeightXS
                             iconName: "error"
@@ -554,7 +554,7 @@ Column {
                         Layout.fillWidth: true
                         implicitHeight: Math.max(settingsButton.implicitHeight, cardActions.implicitHeight)
 
-                        DIconButton {
+                        AlpeIconButton {
                             id: settingsButton
                             anchors.left: parent.left
                             anchors.verticalCenter: parent.verticalCenter
@@ -569,7 +569,7 @@ Column {
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingXS
 
-                            DIconButton {
+                            AlpeIconButton {
                                 iconName: "delete"
                                 Accessible.name: I18n.tr("Uninstall")
                                 visible: installedCard.plugin.source !== "system"

@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DHeroCard {
+AlpeHeroCard {
     // Kachel "Al" plus Rest des Namens ergibt den Schriftzug, die Marke daneben Version und Codename.
     brand: Brand.version
     accent: Brand.codename

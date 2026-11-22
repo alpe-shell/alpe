@@ -3,10 +3,10 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.SystemTray
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../OverflowLayout.js" as OverflowLayout
 
@@ -20,7 +20,7 @@ BasePill {
     property var widgetData: null
     property string section: "right"
     // A same-named binding inside the overflow grid would resolve to its own property.
-    readonly property DPopout overflowPopoutRef: overflowPopout
+    readonly property AlpePopout overflowPopoutRef: overflowPopout
     property bool isAtBottom: false
     property bool useOverflowPopup: !widgetData?.trayUseInlineExpansion
     property bool useSingleLineOverflowPopup: SettingsData.widgetOption("systemTray", widgetData, "trayPopupSingleLine")
@@ -418,7 +418,7 @@ BasePill {
         return rows * itemSize + (rows - 1) * spacing + popupPadding * 2;
     }
 
-    DPopout {
+    AlpePopout {
         id: overflowPopout
         layerNamespace: "dms:tray-overflow"
         screen: root.parentScreen
@@ -427,7 +427,7 @@ BasePill {
         content: overflowContentComponent
     }
 
-    DPopout {
+    AlpePopout {
         id: trayMenuPopout
         layerNamespace: "dms:tray-menu"
         screen: root.parentScreen
@@ -515,14 +515,14 @@ BasePill {
                     pressed: caretArea.pressed
                     color: Theme.withAlpha(Theme.onSurface, caretArea.pressed ? Theme.stateLayerPressed : caretArea.containsMouse ? Theme.stateLayerHover : 0)
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: root.toggleIconName()
                         size: root.trayIconSize
                         color: Theme.widgetTextColor
                     }
 
-                    DRipple {
+                    AlpeRipple {
                         id: caretRipple
                         cornerRadius: caretButton.radius
                     }
@@ -614,7 +614,7 @@ BasePill {
                     source: iconSource
                 }
 
-                DRipple {
+                AlpeRipple {
                     id: inlineItemRipple
                     cornerRadius: inlineVisualContent.radius
                 }
@@ -730,7 +730,7 @@ BasePill {
                     source: delegateRoot.iconSource
                 }
 
-                DRipple {
+                AlpeRipple {
                     id: itemRipple
                     topLeftRadius: visualContent.topLeftRadius
                     topRightRadius: visualContent.topRightRadius
@@ -853,14 +853,14 @@ BasePill {
                     pressed: caretAreaVert.pressed
                     color: Theme.withAlpha(Theme.onSurface, caretAreaVert.pressed ? Theme.stateLayerPressed : caretAreaVert.containsMouse ? Theme.stateLayerHover : 0)
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: root.toggleIconName()
                         size: root.trayIconSize
                         color: Theme.widgetTextColor
                     }
 
-                    DRipple {
+                    AlpeRipple {
                         id: caretRippleVert
                         cornerRadius: caretButtonVert.radius
                     }
@@ -906,7 +906,7 @@ BasePill {
         }
     }
 
-    // Overflow grid content rendered inside DPopout
+    // Overflow grid content rendered inside AlpePopout
     Component {
         id: overflowContentComponent
 
@@ -1011,7 +1011,7 @@ BasePill {
 
             Keys.forwardTo: [trayContent]
 
-            DFlickable {
+            AlpeFlickable {
                 id: menuFlickable
                 anchors.fill: parent
                 anchors.margins: BarMetrics.menuPadding

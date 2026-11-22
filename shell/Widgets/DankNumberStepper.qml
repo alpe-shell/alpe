@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DNumberStepper {
+Alpe.AlpeNumberStepper {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankNumberStepper", "DNumberStepper", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankNumberStepper", "AlpeNumberStepper", "qs.Alpe.Widgets")
 }

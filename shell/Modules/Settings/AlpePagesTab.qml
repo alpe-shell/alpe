@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: Einstellungsseiten ausblenden, die man nicht braucht. Ausgeblendet heisst nur: nicht
@@ -58,7 +58,7 @@ Item {
                 subtitle: "Ausgeblendete Seiten verschwinden aus Seitenleiste und Suche. Ihre Einstellungen bleiben unverändert wirksam."
                 iconName: "visibility_off"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     buttonHeight: Theme.buttonHeightS
                     visible: root.hiddenCount > 0

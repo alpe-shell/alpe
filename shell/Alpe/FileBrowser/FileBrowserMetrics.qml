@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 Singleton {
     readonly property int densityLevel: Style.densityLevel

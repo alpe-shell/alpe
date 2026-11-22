@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Column {
@@ -34,7 +34,7 @@ Column {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        DBadge {
+        AlpeBadge {
             visible: root.hasRelease && (root.release.codename || "") !== ""
             text: root.hasRelease ? root.release.codename || "" : ""
             color: Theme.primaryContainer
@@ -42,7 +42,7 @@ Column {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        DBadge {
+        AlpeBadge {
             visible: root.hasRelease && root.release.prerelease === true
             text: I18n.tr("Pre-release", "badge on a release that is not a stable version")
             color: Theme.chipSurface
@@ -94,7 +94,7 @@ Column {
                 width: parent.width
                 spacing: Theme.spacingS
 
-                DIcon {
+                AlpeIcon {
                     name: "arrow_right"
                     size: Theme.iconSizeSmall
                     color: Theme.primary
@@ -117,14 +117,14 @@ Column {
         visible: root.hasRelease
         spacing: Theme.spacingS
 
-        DButton {
+        AlpeButton {
             visible: root.blogUrl !== ""
             text: I18n.tr("Read the blog post", "release notes link")
             iconName: "article"
             onClicked: Qt.openUrlExternally(root.blogUrl)
         }
 
-        DButton {
+        AlpeButton {
             visible: root.releaseUrl !== ""
             text: I18n.tr("View on GitHub", "link to the release on GitHub")
             iconName: "open_in_new"

@@ -398,7 +398,7 @@ Item {
         }
     }
 
-    DTooltip {
+    AlpeTooltip {
         id: tooltip
         screen: root.dockScreen
     }

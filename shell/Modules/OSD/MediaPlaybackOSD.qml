@@ -2,12 +2,12 @@ import QtQuick
 import QtQuick.Effects
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import Quickshell.Services.Mpris
 import Quickshell.Widgets
 
-DOSD {
+AlpeOSD {
     id: root
 
     osdKind: "mediaPlayback"
@@ -276,7 +276,7 @@ DOSD {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Theme.spacingXXS
 
-                DActionButton {
+                AlpeActionButton {
                     buttonSize: Theme.buttonHeightXS
                     anchors.verticalCenter: parent.verticalCenter
                     objectName: "previousTrack"
@@ -291,7 +291,7 @@ DOSD {
                     }
                 }
 
-                DIconButton {
+                AlpeIconButton {
                     width: Theme.buttonHeightS
                     buttonSize: Theme.buttonHeightS
                     variant: "filled"
@@ -310,7 +310,7 @@ DOSD {
                     }
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     buttonSize: Theme.buttonHeightXS
                     anchors.verticalCenter: parent.verticalCenter
                     iconName: "skip_next"
@@ -359,7 +359,7 @@ DOSD {
     Component {
         id: verticalContent
 
-        DIconButton {
+        AlpeIconButton {
             anchors.fill: parent
             size: "m"
             round: false

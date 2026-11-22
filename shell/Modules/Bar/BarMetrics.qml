@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
 Singleton {
     readonly property real compactPillThickness: Theme.barHeight - Theme.iconSizeMedium
@@ -18,8 +18,8 @@ Singleton {
     readonly property real badgeSize: Theme.spacingS
     readonly property real badgeInset: Theme.spacingXS
     readonly property real mediaControlSize: Theme.iconSizeMedium
-    readonly property real menuRowHeight: DCommon.Style.menuRowHeight
-    readonly property real menuPadding: DCommon.Style.menuPadding
+    readonly property real menuRowHeight: Alpe.Style.menuRowHeight
+    readonly property real menuPadding: Alpe.Style.menuPadding
     readonly property real menuItemRadius: Theme.cornerRadiusS
     readonly property real popoutRowHeight: Math.max(Theme.listItemHeight + Theme.densityStepM, Theme.buttonHeightS + Theme.spacingXS)
     readonly property real popoutRowTwoLineHeight: Theme.listItemTwoLineHeight + Theme.densityStepM

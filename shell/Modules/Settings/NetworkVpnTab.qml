@@ -8,7 +8,7 @@ import qs.Modules.Settings.Widgets
 import qs.Modals.Common
 import qs.Modals.FileBrowser
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: networkVpnTab
@@ -71,7 +71,7 @@ Item {
                         anchors.centerIn: parent
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             name: "vpn_key_off"
                             size: 36
                             color: Theme.surfaceVariantText
@@ -125,7 +125,7 @@ Item {
         SettingsFabBar {
             shown: DMSNetworkService.vpnAvailable
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Import VPN")
                 iconName: "add"
                 busy: VPNService.importing

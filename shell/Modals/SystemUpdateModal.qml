@@ -3,10 +3,10 @@ import qs.Common
 import qs.Modules.Settings.Widgets
 import qs.Modules.SystemUpdate
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: root
 
     function show() {
@@ -36,7 +36,7 @@ DFloatingWindow {
         anchors.fill: parent
         spacing: 0
 
-        DWindowHeader {
+        AlpeWindowHeader {
             id: titleBar
             width: parent.width
             controls: windowControls

@@ -4,7 +4,7 @@ import qs.Services
 import qs.Widgets
 import "ControllerUtils.js" as Utils
 
-DContextMenu {
+AlpeContextMenu {
     id: root
 
     property var item: null

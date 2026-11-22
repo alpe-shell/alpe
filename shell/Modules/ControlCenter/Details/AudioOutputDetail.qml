@@ -6,7 +6,7 @@ import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../../Common/QmlUtils.js" as QmlUtils
 
 Item {
@@ -35,7 +35,7 @@ Item {
         CacheData.set("audioOutputDevicePins", QmlUtils.togglePinEntry(CacheData.audioOutputDevicePins, "preferredOutput", name, CcMetrics.maxPins));
     }
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         contentHeight: column.height
         clip: true
@@ -98,7 +98,7 @@ Item {
                                 AudioService.setDefaultSinkByName(modelData.name);
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             anchors.verticalCenter: parent.verticalCenter
                             visible: (AudioService.outputChoices[deviceRow.modelData.name]?.length ?? 0) > 1
                             buttonSize: Theme.buttonHeightXS

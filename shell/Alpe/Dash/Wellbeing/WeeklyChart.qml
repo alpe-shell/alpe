@@ -4,12 +4,12 @@ import QtQuick
 import QtQuick.Shapes
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 import "Wellbeing.js" as Wellbeing
-import "../../../DCommon/Common/WheelInput.js" as WheelInput
+import "../../../Alpe/Common/WheelInput.js" as WheelInput
 
-DCard {
+AlpeCard {
     id: root
 
     property var days: []
@@ -141,7 +141,7 @@ DCard {
                 width: parent.width - x
                 height: totalLabel.height
 
-                DActionButton {
+                AlpeActionButton {
                     anchors.right: rangeLabel.left
                     anchors.verticalCenter: parent.verticalCenter
                     buttonSize: Theme.buttonHeightXS
@@ -165,7 +165,7 @@ DCard {
                     elide: Text.ElideRight
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     id: nextButton
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
@@ -208,7 +208,7 @@ DCard {
                 }
             }
 
-            DFlickable {
+            AlpeFlickable {
                 id: pager
                 anchors.left: plot.left
                 anchors.right: plot.right

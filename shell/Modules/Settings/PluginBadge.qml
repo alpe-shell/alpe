@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Rectangle {
@@ -35,7 +35,7 @@ Rectangle {
         anchors.centerIn: parent
         spacing: Theme.spacingXXS
 
-        DIcon {
+        AlpeIcon {
             name: root.iconName
             size: Theme.iconSizeSmall
             color: root.tone

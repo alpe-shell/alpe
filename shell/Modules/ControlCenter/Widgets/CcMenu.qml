@@ -38,7 +38,7 @@ Item {
         menu.hide();
     }
 
-    DContextMenu {
+    AlpeContextMenu {
         id: menu
         layerNamespace: "dms:control-center-menu"
         minMenuWidth: CcMetrics.menuMinWidth

@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -244,7 +244,7 @@ Item {
                             root.persistHiddenOutputDeviceNames([...root.hiddenOutputDeviceNames, device.name]);
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             visible: outputRow.card !== null
                             iconName: "power_settings_new"
                             iconSize: Theme.iconSizeMedium
@@ -269,7 +269,7 @@ Item {
                             horizontalAlignment: Text.AlignLeft
                         }
 
-                        DSlider {
+                        AlpeSlider {
                             id: maxVolSlider
                             upDownKeysStep: false
                             anchors.left: maxVolLabel.right
@@ -325,7 +325,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
 
-                            DIcon {
+                            AlpeIcon {
                                 name: "visibility_off"
                                 size: Theme.iconSizeMedium
                                 color: Theme.surfaceVariantText
@@ -340,7 +340,7 @@ Item {
                             }
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             name: root.showHiddenOutputDevices ? "expand_less" : "expand_more"
                             size: Theme.iconSizeMedium
                             color: Theme.surfaceVariantText
@@ -394,7 +394,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
 
-                            DIcon {
+                            AlpeIcon {
                                 name: "power_off"
                                 size: Theme.iconSizeMedium
                                 color: Theme.surfaceVariantText
@@ -409,7 +409,7 @@ Item {
                             }
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             name: root.showDisabledOutputCards ? "expand_less" : "expand_more"
                             size: Theme.iconSizeMedium
                             color: Theme.surfaceVariantText
@@ -439,7 +439,7 @@ Item {
                                 title: modelData.cardDescription
                                 subtitle: modelData.cardName
 
-                                DActionButton {
+                                AlpeActionButton {
                                     iconName: "power_settings_new"
                                     iconSize: Theme.iconSizeMedium
                                     tooltipText: I18n.tr("Enable card", "audio settings button that turns a disabled sound card back on")
@@ -518,7 +518,7 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 spacing: Theme.spacingS
 
-                                DIcon {
+                                AlpeIcon {
                                     name: "visibility_off"
                                     size: Theme.iconSizeMedium
                                     color: Theme.surfaceVariantText
@@ -533,7 +533,7 @@ Item {
                                 }
                             }
 
-                            DIcon {
+                            AlpeIcon {
                                 name: root.showHiddenInputDevices ? "expand_less" : "expand_more"
                                 size: Theme.iconSizeMedium
                                 color: Theme.surfaceVariantText
@@ -586,7 +586,7 @@ Item {
             anchors.centerIn: parent
             spacing: Theme.spacingL
 
-            DLoadingIndicator {
+            AlpeLoadingIndicator {
                 contained: true
                 anchors.horizontalCenter: parent.horizontalCenter
             }

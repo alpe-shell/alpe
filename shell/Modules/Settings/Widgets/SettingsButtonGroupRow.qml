@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -52,7 +52,7 @@ SettingsRow {
         visible: root.compact
     }
 
-    DButtonGroup {
+    AlpeButtonGroup {
         id: buttonGroup
         arrowKeysSelect: false
         parent: root.compact ? bodyHost : trailingHost

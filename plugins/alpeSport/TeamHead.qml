@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Team im Kopf des Spieldetails: grosses Logo, Name, Bilanz (NBA) und Stern fuer Favoriten.
 Column {
@@ -44,7 +44,7 @@ Column {
             color: Theme.surfaceVariantText
         }
 
-        DActionButton {
+        AlpeActionButton {
             anchors.verticalCenter: parent.verticalCenter
             buttonSize: 26
             iconSize: 16

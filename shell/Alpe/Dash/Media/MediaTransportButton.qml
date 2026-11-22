@@ -4,9 +4,9 @@ import QtQuick
 import Quickshell.Services.Mpris
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DIconButton {
+AlpeIconButton {
     id: root
 
     focusRingColor: MediaAccentService.focusRing

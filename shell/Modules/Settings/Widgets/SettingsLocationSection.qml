@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Column {
     id: root
@@ -12,7 +12,7 @@ Column {
     width: parent.width
     spacing: Theme.spacingM
 
-    DToggle {
+    AlpeToggle {
         id: ipLocationToggle
         width: parent.width
         text: I18n.tr("Use IP Location")
@@ -50,7 +50,7 @@ Column {
                 width: (parent.width - Theme.spacingM) / 2
                 spacing: Theme.spacingXS
 
-                DTextField {
+                AlpeTextField {
                     id: latitudeField
                     outlined: true
                     leftIconName: "location_on"
@@ -88,7 +88,7 @@ Column {
                 width: (parent.width - Theme.spacingM) / 2
                 spacing: Theme.spacingXS
 
-                DTextField {
+                AlpeTextField {
                     id: longitudeField
                     outlined: true
                     leftIconName: "location_on"
@@ -130,7 +130,7 @@ Column {
             font.weight: Theme.fontWeightMedium
         }
 
-        DLocationSearch {
+        AlpeLocationSearch {
             width: parent.width
             currentLocation: SessionData.nightModeLocationName
             onLocationSelected: (displayName, coordinates) => {

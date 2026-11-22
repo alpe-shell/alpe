@@ -3,12 +3,12 @@ import Quickshell
 import qs.Common
 import qs.Modals.FileBrowser
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Common/WallpaperFormats.js" as WallpaperFormats
 
-DFloatingWindow {
+AlpeFloatingWindow {
     id: settingsModal
 
     property var profileBrowser: profileBrowserLoader.item
@@ -299,7 +299,7 @@ DFloatingWindow {
             anchors.fill: parent
             spacing: 0
 
-            DWindowHeader {
+            AlpeWindowHeader {
                 id: titleBar
                 width: parent.width
                 z: 10
@@ -347,7 +347,7 @@ DFloatingWindow {
                     anchors.rightMargin: body.paneInset + SettingsMetrics.panePadding
                     spacing: Theme.spacingM
 
-                    DIcon {
+                    AlpeIcon {
                         name: "info"
                         size: Theme.iconSize
                         color: Theme.warning
@@ -365,7 +365,7 @@ DFloatingWindow {
                         wrapMode: Text.WordWrap
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: copySettingsButton
 
                         visible: SettingsData.isReadOnly && SettingsData.unsavedUserChanges
@@ -380,7 +380,7 @@ DFloatingWindow {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: copySessionButton
 
                         visible: SessionData._isReadOnly && SessionData._hasUnsavedChanges

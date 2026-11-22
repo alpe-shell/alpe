@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -355,7 +355,7 @@ Item {
         desktopApps = [];
     }
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         clip: true
         contentHeight: mainColumn.height + Theme.spacingXL
@@ -431,7 +431,7 @@ Item {
 
                 SettingsRow {
                     visible: root.newEntryType === "desktop"
-                    body: DTextField {
+                    body: AlpeTextField {
                         outlined: true
                         leftIconName: "terminal"
                         labelText: I18n.tr("Command")
@@ -449,7 +449,7 @@ Item {
                         width: parent.width
                         spacing: Theme.spacingM
 
-                        DTextField {
+                        AlpeTextField {
                             outlined: true
                             leftIconName: "badge"
                             labelText: I18n.tr("Name")
@@ -459,7 +459,7 @@ Item {
                             onTextChanged: root.newEntryName = text
                         }
 
-                        DTextField {
+                        AlpeTextField {
                             outlined: true
                             leftIconName: "terminal"
                             labelText: I18n.tr("Command", "noun, text field label for a shell command")
@@ -482,7 +482,7 @@ Item {
                     }
                 }
 
-                DButton {
+                AlpeButton {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: I18n.tr("Add to autostart")
                     iconName: "add"
@@ -519,7 +519,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             id: clearAllButton
                             iconName: "delete_sweep"
                             tooltipText: I18n.tr("Clear All")
@@ -555,14 +555,14 @@ Item {
                             fallbackText: (entryRow.modelData.name || "?").charAt(0).toUpperCase()
                         }
 
-                        DToggle {
+                        AlpeToggle {
                             hideText: true
                             text: entryRow.title
                             checked: !entryRow.modelData.hidden
                             onToggled: checked => root.setHidden(entryRow.modelData, !checked)
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "delete"
                             iconColor: Theme.error
                             tooltipText: I18n.tr("Remove")
@@ -598,7 +598,7 @@ Item {
                             wrapMode: Text.WordWrap
                         }
 
-                        DButton {
+                        AlpeButton {
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: I18n.tr("Generate override")
                             iconName: "build"

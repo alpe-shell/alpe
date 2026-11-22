@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 
 Grid {
     id: root

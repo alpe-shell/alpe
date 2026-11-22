@@ -58,7 +58,7 @@ MonitorPill {
     Loader {
         id: tooltipLoader
         active: false
-        sourceComponent: DTooltip {}
+        sourceComponent: AlpeTooltip {}
     }
 
     MouseArea {

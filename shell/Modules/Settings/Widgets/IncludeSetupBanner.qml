@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 StyledRect {
     id: root
@@ -25,7 +25,7 @@ StyledRect {
         anchors.margins: Theme.spacingL
         spacing: Theme.spacingM
 
-        DIcon {
+        AlpeIcon {
             name: "warning"
             size: Theme.iconSize
             color: Theme.primary
@@ -56,7 +56,7 @@ StyledRect {
             }
         }
 
-        DButton {
+        AlpeButton {
             id: fixButton
             visible: root.showSetup
             text: root.include.fixing ? I18n.tr("Setting up...") : I18n.tr("Setup")

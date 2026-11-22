@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -40,7 +40,7 @@ Item {
             sourceComponent: root.leading
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.verticalCenter: parent.verticalCenter
             visible: root.iconName !== ""
             name: root.iconName
@@ -82,7 +82,7 @@ Item {
             sourceComponent: root.leading
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.horizontalCenter: parent.horizontalCenter
             visible: root.iconName !== ""
             name: root.iconName

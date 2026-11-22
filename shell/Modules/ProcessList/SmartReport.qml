@@ -3,7 +3,7 @@ import qs.Common
 import qs.Services
 import qs.Widgets
 import qs.Modules.Settings.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "Drives.js" as Drives
 
 // A drive's full SMART report. It is read through the unlocked root helper, so one password prompt covers every drive.
@@ -82,7 +82,7 @@ Column {
         onToggled: root.collapsed = !root.collapsed
     }
 
-    DSpinner {
+    AlpeSpinner {
         size: Theme.iconSize
         visible: !root.collapsed && root.state_ === "running"
         anchors.horizontalCenter: parent.horizontalCenter

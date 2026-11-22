@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Rectangle {
     id: root
@@ -23,7 +23,7 @@ Rectangle {
             spacing: Theme.spacingS
             anchors.verticalCenter: parent.verticalCenter
 
-            DIcon {
+            AlpeIcon {
                 name: "grid_on"
                 size: Theme.iconSizeSmall
                 color: root.gridEnabled ? Theme.primary : Theme.surfaceText
@@ -38,7 +38,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            DKeycap {
+            AlpeKeycap {
                 text: "G"
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -55,7 +55,7 @@ Rectangle {
             spacing: Theme.spacingS
             anchors.verticalCenter: parent.verticalCenter
 
-            DKeycap {
+            AlpeKeycap {
                 text: "Z"
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -68,7 +68,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            DKeycap {
+            AlpeKeycap {
                 text: "X"
                 anchors.verticalCenter: parent.verticalCenter
             }

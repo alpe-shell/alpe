@@ -5,8 +5,8 @@ import Quickshell.Widgets
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modals.DLauncherV2.Components
+import qs.Alpe.Widgets
+import qs.Modals.Launcher.Components
 
 LauncherTile {
     id: root
@@ -124,7 +124,7 @@ LauncherTile {
                 color: Theme.primary
                 visible: root.isSelected
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: "check"
                     size: Theme.iconSizeSmall

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -546,7 +546,7 @@ Item {
                 }
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 size: actualIconSize
                 name: "sports_esports"

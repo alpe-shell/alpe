@@ -1,6 +1,6 @@
 .pragma library
-.import "../../DCommon/Common/settings/SharedSessionSpec.js" as Shared
-.import "../../DCommon/Common/settings/SpecUtil.js" as Util
+.import "../../Alpe/Common/settings/SharedSessionSpec.js" as Shared
+.import "../../Alpe/Common/settings/SpecUtil.js" as Util
 
 var LOCAL_SPEC = {
     doNotDisturb: {

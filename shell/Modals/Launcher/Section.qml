@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.Modals.DLauncherV2.Components
+import qs.Modals.Launcher.Components
 
 Item {
     id: root

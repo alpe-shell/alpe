@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Services.UPower
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "SystemInfo.js" as SystemInfo
 import "Drives.js" as Drives
@@ -241,7 +241,7 @@ Item {
         return SystemInfo.summary([[Brand.name + " " + Brand.version, f.qs ? "Quickshell " + SystemInfo.version(f.qs) : "", compositorText].filter(x => x.trim() !== "").join(" · "), [DgopService.distribution, kernelText ? "Linux " + kernelText : "", f.session === "wayland" ? "Wayland" + (f.uwsm ? " (uwsm)" : "") : ""].filter(x => x).join(" · "), [DgopService.cpuModel, memoryText].filter(x => x).join(" · "), gpus.map(g => g.displayName).join(", ") + (graphicsDriver ? " (" + graphicsDriver + ")" : ""), displays.map(d => d.value).join("; "), doctorText && !facts.doctorRunning ? I18n.tr("System check") + ": " + doctorText : ""]);
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: scroll
         anchors.fill: parent
         contentWidth: width
@@ -400,7 +400,7 @@ Item {
 
         spacing: Theme.spacingS
 
-        DIcon {
+        AlpeIcon {
             name: sectionTitle.iconName
             size: Theme.iconSizeSmall + 2
             color: Theme.primary
@@ -528,14 +528,14 @@ Item {
     }
 
     SettingsFabBar {
-        DFab {
+        AlpeFab {
             text: I18n.tr("Copy summary", "button, copies a short system overview for bug reports")
             iconName: "short_text"
             colorRole: "secondaryContainer"
             onClicked: root.copy(root.summaryText())
         }
 
-        DFab {
+        AlpeFab {
             text: I18n.tr("Copy report", "button, copies the full system report without personal details")
             iconName: "content_copy"
             onClicked: root.copy(root.reportText())

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Spielfeld mit der Startelf (Torhueter unten, Sturm oben), wie in der Aufstellung bei FotMob.
 Item {
@@ -133,7 +133,7 @@ Item {
                                     width: modelData === "goal" || modelData === "owngoal" ? 13 : 9
                                     height: 13
 
-                                    DIcon {
+                                    AlpeIcon {
                                         anchors.centerIn: parent
                                         visible: parent.modelData === "goal" || parent.modelData === "owngoal"
                                         name: "sports_soccer"
@@ -153,7 +153,7 @@ Item {
                             }
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.right: parent.left
                             anchors.rightMargin: -6
                             anchors.top: parent.top

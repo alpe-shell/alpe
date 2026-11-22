@@ -38,7 +38,7 @@ endif
 all: build
 
 sync-shell:
-	@test -e $(SHELL_SRC)/DCommon/Widgets/DIcon.qml || { echo "DCommon missing in $(SHELL_SRC)"; exit 1; }
+	@test -e $(SHELL_SRC)/Alpe/Widgets/AlpeIcon.qml || { echo "Alpe missing in $(SHELL_SRC)"; exit 1; }
 	@rm -rf $(EMBED_DIR)
 	@mkdir -p $(EMBED_DIR)
 	@tar -C $(SHELL_SRC) --exclude=.qmlls.ini --exclude-from=shell-test-excludes.txt -chf - . | tar -C $(EMBED_DIR) -xf -

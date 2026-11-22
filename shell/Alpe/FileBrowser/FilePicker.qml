@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 FocusScope {
     id: root
@@ -372,7 +372,7 @@ FocusScope {
         }
     }
 
-    DWindowHeader {
+    AlpeWindowHeader {
         id: header
 
         anchors.top: parent.top
@@ -385,7 +385,7 @@ FocusScope {
         onCloseRequested: root.rejected()
     }
 
-    component ToolbarButton: DIconButton {
+    component ToolbarButton: AlpeIconButton {
         width: FileBrowserMetrics.controlSize
         buttonSize: FileBrowserMetrics.controlSize
         iconSize: Style.iconSizeMedium
@@ -483,7 +483,7 @@ FocusScope {
         anchors.margins: FileBrowserMetrics.contentMargin
         height: Style.buttonHeightS
 
-        DTextField {
+        AlpeTextField {
             id: nameField
 
             anchors.left: parent.left
@@ -523,13 +523,13 @@ FocusScope {
             spacing: Style.spacingS
             LayoutMirroring.enabled: I18n.isRtl
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
                 variant: "text"
                 onClicked: root.rejected()
             }
 
-            DButton {
+            AlpeButton {
                 enabled: root.canAccept
                 text: {
                     switch (root.mode) {
@@ -631,7 +631,7 @@ FocusScope {
         }
     }
 
-    DDialog {
+    AlpeDialog {
         id: newFolderDialog
 
         function show() {
@@ -651,7 +651,7 @@ FocusScope {
             root._focusStart();
         }
 
-        DTextField {
+        AlpeTextField {
             id: folderName
 
             width: parent.width
@@ -664,12 +664,12 @@ FocusScope {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
                 variant: "text"
                 onClicked: newFolderDialog.rejected()
             },
-            DButton {
+            AlpeButton {
                 enabled: newFolderDialog.acceptEnabled
                 text: I18n.tr("Create", "confirm button of the new folder dialog")
                 onClicked: newFolderDialog.accepted()
@@ -677,7 +677,7 @@ FocusScope {
         ]
     }
 
-    DDialog {
+    AlpeDialog {
         id: overwriteDialog
 
         anchors.fill: parent
@@ -700,12 +700,12 @@ FocusScope {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Cancel", "file browser overwrite dialog cancel button")
                 variant: "text"
                 onClicked: overwriteDialog.rejected()
             },
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Overwrite", "file browser overwrite dialog confirm button")
                 variant: "tonal"
                 danger: true

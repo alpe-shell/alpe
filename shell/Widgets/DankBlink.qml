@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DBlink {
+Alpe.AlpeBlink {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankBlink", "DBlink", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankBlink", "AlpeBlink", "qs.Alpe.Widgets")
 }

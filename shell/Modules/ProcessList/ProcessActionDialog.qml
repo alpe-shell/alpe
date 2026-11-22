@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Confirms a process action. Parent it to an item that covers the window; focus returns to the opener on close.
 Loader {
@@ -52,7 +52,7 @@ Loader {
         chosen(chosenAction, target);
     }
 
-    sourceComponent: DDialog {
+    sourceComponent: AlpeDialog {
         id: dialog
 
         embedded: false
@@ -73,18 +73,18 @@ Loader {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Cancel")
                 variant: "text"
                 onClicked: dialog.rejected()
             },
-            DButton {
+            AlpeButton {
                 text: ProcessActions.title(root.action, root.process)
                 variant: root.offerRestart ? "text" : "tonal"
                 danger: true
                 onClicked: root.choose(root.action)
             },
-            DButton {
+            AlpeButton {
                 visible: root.offerRestart
                 text: ProcessActions.title("restart", root.process)
                 iconName: "restart_alt"

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import "../../../DCommon/Common/MaterialWallpaper.js" as Art
+import "../../../Alpe/Common/MaterialWallpaper.js" as Art
 
 SettingsSwatchGrid {
     id: root

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Modules.SurfaceWidgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "OverflowLayout.js" as OverflowLayout
 
@@ -98,7 +98,7 @@ Item {
             Item {
                 implicitWidth: Math.max(0, root.button.widgetThickness - root.button.horizontalPadding * 2)
                 implicitHeight: implicitWidth
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: OverflowLayout.expanderIcon(root.sectionContext.axis?.edge, root.open)
                     size: Theme.iconSizeSmall
@@ -113,7 +113,7 @@ Item {
         active: root.wantOpen
         onLoaded: root.showPopout()
         sourceComponent: Component {
-            DPopout {
+            AlpePopout {
                 layerNamespace: "dms:bar-overflow"
                 screen: root.sectionContext.parentScreen
                 popupWidth: root.popupWidth
@@ -125,7 +125,7 @@ Item {
                         readonly property var widgetHost: scroller.contentItem
                         // A hosted widget holding focus would starve the popout's own Escape handler.
                         Keys.onEscapePressed: root.popout?.close()
-                        DFlickable {
+                        AlpeFlickable {
                             id: scroller
                             anchors.fill: parent
                             anchors.margins: Theme.spacingS

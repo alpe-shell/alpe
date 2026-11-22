@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DLocationSearch {
+Alpe.AlpeLocationSearch {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankLocationSearch", "DLocationSearch", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankLocationSearch", "AlpeLocationSearch", "qs.Alpe.Widgets")
 }

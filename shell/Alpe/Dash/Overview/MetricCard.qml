@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 
 Card {
     id: root
@@ -63,7 +63,7 @@ Card {
     component MetricBadge: Row {
         spacing: Theme.spacingXXS
 
-        DIcon {
+        AlpeIcon {
             anchors.verticalCenter: parent.verticalCenter
             name: root.badgeIcon
             size: Theme.iconSizeSmall
@@ -79,7 +79,7 @@ Card {
         }
     }
 
-    DSparkline {
+    AlpeSparkline {
         anchors.left: root.wide ? valueText.right : parent.left
         anchors.leftMargin: root.wide ? Theme.spacingM : -root.pad
         anchors.right: parent.right

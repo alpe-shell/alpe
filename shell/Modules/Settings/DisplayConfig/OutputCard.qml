@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 
@@ -56,7 +56,7 @@ Column {
                 return "";
             }
 
-            DActionButton {
+            AlpeActionButton {
                 visible: !root.isConnected
                 buttonSize: Theme.iconButtonSize
                 iconName: "delete"
@@ -152,7 +152,7 @@ Column {
             title: I18n.tr("Scale")
             onCurrentLabelChanged: scaleDropdown.currentValue = currentLabel
 
-            DDropdown {
+            AlpeDropdown {
                 id: scaleDropdown
                 downKeyOpens: false
                 backgroundColor: SettingsMetrics.controlSurface
@@ -173,7 +173,7 @@ Column {
                 }
             }
 
-            DTextField {
+            AlpeTextField {
                 id: scaleInput
                 visible: scaleRow.customMode
                 outlined: true
@@ -250,7 +250,7 @@ Column {
             }
             subtitleColor: hasProfile ? Theme.success : Theme.surfaceVariantText
 
-            DActionButton {
+            AlpeActionButton {
                 visible: colorProfileRow.hasProfile
                 buttonSize: Theme.iconButtonSize
                 iconName: "info"
@@ -260,7 +260,7 @@ Column {
                 onClicked: root.requestICCInfo(root.outputName)
             }
 
-            DActionButton {
+            AlpeActionButton {
                 visible: colorProfileRow.hasProfile
                 buttonSize: Theme.iconButtonSize
                 iconName: "close"
@@ -271,7 +271,7 @@ Column {
                 onClicked: ICCService.removeICC(root.outputName)
             }
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Browse", "Browse")
                 iconName: "folder_open"
                 anchors.verticalCenter: parent.verticalCenter

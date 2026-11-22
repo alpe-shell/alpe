@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 Rectangle {
     id: band

@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DModal {
+AlpeModal {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankModal", "DModal", "qs.Modals.Common")
+    Component.onCompleted: Deprecation.type(shim, "DankModal", "AlpeModal", "qs.Modals.Common")
 }

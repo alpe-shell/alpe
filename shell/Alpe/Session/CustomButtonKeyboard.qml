@@ -1,10 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Widgets
-import qs.DCommon.Common
+import qs.Alpe.Widgets
+import qs.Alpe.Common
 
-DActionButton {
+AlpeActionButton {
     id: customButtonKeyboard
     circular: false
     buttonSize: Style.iconButtonSize
@@ -15,7 +15,7 @@ DActionButton {
 
     property bool isIcon: text === "keyboard_hide" || text === "Backspace" || text === "Enter"
 
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         name: {
             if (parent.text === "keyboard_hide")

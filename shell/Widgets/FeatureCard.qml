@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DCard {
+AlpeCard {
     id: root
 
     property string iconName: ""
@@ -56,14 +56,14 @@ DCard {
                 color: root.accentPair?.container ?? Theme.primaryContainer
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: badge
                 name: root.iconName
                 size: Theme.iconSize
                 color: root.accentPair?.onContainer ?? Theme.onPrimaryContainer
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.right: parent.right
                 anchors.top: parent.top
                 name: "arrow_outward"

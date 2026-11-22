@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Widgets
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -20,7 +20,7 @@ Item {
         color: Theme.primaryContainer
         antialiasing: true
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: "music_note"
             size: root.placeholderIconSize

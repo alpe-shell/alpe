@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 BasePill {
     id: root
@@ -50,7 +50,7 @@ BasePill {
                 anchors.centerIn: parent
                 spacing: Theme.hairline(root.dpr)
 
-                DIcon {
+                AlpeIcon {
                     name: root.iconName
                     size: root.iconSize
                     color: root.levelColor
@@ -79,7 +79,7 @@ BasePill {
                 anchors.centerIn: parent
                 spacing: Theme.spacingXS
 
-                DIcon {
+                AlpeIcon {
                     name: root.iconName
                     size: root.iconSize
                     color: root.levelColor

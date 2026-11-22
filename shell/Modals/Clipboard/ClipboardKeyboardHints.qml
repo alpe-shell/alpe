@@ -17,7 +17,7 @@ Rectangle {
     opacity: visible ? 1 : 0
     z: 100
 
-    DKeyHints {
+    AlpeKeyHints {
         id: hints
 
         anchors.verticalCenter: parent.verticalCenter

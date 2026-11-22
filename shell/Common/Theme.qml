@@ -3,15 +3,15 @@ pragma ComponentBehavior: Bound
 
 import QtCore
 import QtQuick
-import "../DCommon/Common/Shape.js" as Shape
-import "../DCommon/Common/Surface.js" as Surface
-import "../DCommon/Common/Contrast.js" as Contrast
-import "../DCommon/Common/Accents.js" as Accents
-import "../DCommon/Common/Tonal.js" as Tonal
+import "../Alpe/Common/Shape.js" as Shape
+import "../Alpe/Common/Surface.js" as Surface
+import "../Alpe/Common/Contrast.js" as Contrast
+import "../Alpe/Common/Accents.js" as Accents
+import "../Alpe/Common/Tonal.js" as Tonal
 import Quickshell
 import Quickshell.Io
 import qs.Common
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 import qs.Services
 import "StockThemes.js" as StockThemes
 import "GSettings.js" as GSettings
@@ -1232,10 +1232,10 @@ Singleton {
     readonly property real groupedListInnerRadius: innerRadius("xs")
     readonly property real groupedListOuterRadius: cornerRadiusL
 
-    property string fontFamily: typeof SettingsData !== "undefined" ? resolvedFontFamily(SettingsData.fontFamily) : DCommon.Fonts.sans
+    property string fontFamily: typeof SettingsData !== "undefined" ? resolvedFontFamily(SettingsData.fontFamily) : Alpe.Fonts.sans
 
-    property string monoFontFamily: typeof SettingsData !== "undefined" ? resolvedMonoFontFamily(SettingsData.monoFontFamily) : DCommon.Fonts.mono
-    property string displayFontFamily: typeof SettingsData !== "undefined" ? resolvedDisplayFontFamily(SettingsData.displayFontFamily) : DCommon.Fonts.display
+    property string monoFontFamily: typeof SettingsData !== "undefined" ? resolvedMonoFontFamily(SettingsData.monoFontFamily) : Alpe.Fonts.mono
+    property string displayFontFamily: typeof SettingsData !== "undefined" ? resolvedDisplayFontFamily(SettingsData.displayFontFamily) : Alpe.Fonts.display
 
     readonly property var fontChoices: [
         {
@@ -1246,26 +1246,26 @@ Singleton {
             "value": "display",
             "text": I18n.tr("Display", "Display font role option")
         }
-    ].concat(DCommon.Fonts.bundledFamilies.map(family => ({
+    ].concat(Alpe.Fonts.bundledFamilies.map(family => ({
                 "value": family,
                 "text": family
             })))
 
     function resolvedFontFamily(family) {
         if (family === defaultFontFamily)
-            return DCommon.Fonts.sans;
+            return Alpe.Fonts.sans;
         return family;
     }
 
     function resolvedMonoFontFamily(family) {
         if (family === defaultMonoFontFamily)
-            return DCommon.Fonts.mono;
+            return Alpe.Fonts.mono;
         return family;
     }
 
     function resolvedDisplayFontFamily(family) {
         if (family === defaultDisplayFontFamily)
-            return DCommon.Fonts.display;
+            return Alpe.Fonts.display;
         return family;
     }
 
@@ -2248,11 +2248,11 @@ Singleton {
     }
 
     function withAlpha(c, a) {
-        return DCommon.Style.withAlpha(c, a);
+        return Alpe.Style.withAlpha(c, a);
     }
 
     function blendAlpha(c, a) {
-        return DCommon.Style.blendAlpha(c, a);
+        return Alpe.Style.blendAlpha(c, a);
     }
 
     function hoverTint(base) {

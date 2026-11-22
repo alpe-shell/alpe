@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 BasePill {
     id: root
@@ -29,7 +29,7 @@ BasePill {
                 anchors.centerIn: parent
                 spacing: 1
 
-                DIcon {
+                AlpeIcon {
                     name: WeatherService.getWeatherIcon(WeatherService.weather.wCode)
                     size: Theme.barIconSize(root.barThickness, -6, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
                     color: Theme.widgetIconColor
@@ -56,7 +56,7 @@ BasePill {
                 anchors.centerIn: parent
                 spacing: Theme.spacingXS
 
-                DIcon {
+                AlpeIcon {
                     name: WeatherService.getWeatherIcon(WeatherService.weather.wCode)
                     size: Theme.barIconSize(root.barThickness, -6, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
                     color: Theme.widgetIconColor

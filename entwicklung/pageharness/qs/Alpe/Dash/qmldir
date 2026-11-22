@@ -1,2 +1,2 @@
-module qs.Modules.DDash
+module qs.Alpe.Dash
 singleton DashRegistry 1.0 DashRegistry.qml

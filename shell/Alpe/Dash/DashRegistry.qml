@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.Modules.DDash.Overview
+import qs.Alpe.Dash.Overview
 import "utils/options.js" as Options
 
 Singleton {

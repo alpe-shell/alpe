@@ -1,5 +1,5 @@
 import QtQuick
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 TextMetrics {
     property bool isMonospace: false

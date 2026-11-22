@@ -5,13 +5,13 @@ import Quickshell.Widgets
 import qs.Common
 import qs.Services
 import qs.Modals.FileBrowser
-import qs.DCommon.FileBrowser as FB
-import qs.DCommon.Widgets
+import qs.Alpe.FileBrowser as FB
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.ControlCenter.Widgets
-import qs.Modules.DDash
-import "../../DCommon/Common/FocusNavigation.js" as FocusNavigation
-import "../../DCommon/Common/WheelInput.js" as WheelInput
+import qs.Alpe.Dash
+import "../../Alpe/Common/FocusNavigation.js" as FocusNavigation
+import "../../Alpe/Common/WheelInput.js" as WheelInput
 import "../../Common/WallpaperFormats.js" as WallpaperFormats
 
 Item {
@@ -754,7 +754,7 @@ Item {
                 }
             }
 
-            DGridView {
+            AlpeGridView {
                 id: scrollGrid
 
                 anchors.centerIn: parent
@@ -805,7 +805,7 @@ Item {
                 }
             }
 
-            DSpinner {
+            AlpeSpinner {
                 anchors.centerIn: parent
                 size: DashMetrics.spinnerSize
                 visible: wallpaperFolderModel.status === FolderListModel.Loading && wallpaperFolderModel.count === 0
@@ -817,7 +817,7 @@ Item {
                 iconName: root.searchQuery.trim() !== "" ? "search_off" : "wallpaper"
                 title: root.searchQuery.trim() !== "" ? I18n.tr("No results found") : I18n.tr("No wallpapers")
 
-                DButton {
+                AlpeButton {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: I18n.tr("Choose wallpaper folder")
                     visible: root.searchQuery.trim() === ""
@@ -849,7 +849,7 @@ Item {
                         onClicked: root.currentPage = (root.currentPage - 1 + root.totalPages) % root.totalPages
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: pageButton
                         anchors.verticalCenter: parent.verticalCenter
                         text: root.wallpaperCount > 0 ? (root.wallpaperCount === 1 ? I18n.tr("%1 wallpaper  •  %2 / %3", "singular, %1 is 1, %2 current page, %3 total pages").arg(root.wallpaperCount).arg(root.currentPage + 1).arg(root.totalPages) : I18n.tr("%1 wallpapers  •  %2 / %3", "plural, %1 is a count, %2 current page, %3 total pages").arg(root.wallpaperCount).arg(root.currentPage + 1).arg(root.totalPages)) : I18n.tr("No wallpapers")
@@ -899,7 +899,7 @@ Item {
                             event.accepted = true;
                         }
 
-                        DDropdown {
+                        AlpeDropdown {
                             id: sortMenu
 
                             showTrigger: false
@@ -950,7 +950,7 @@ Item {
                             onClicked: root.focusSearch()
                         }
 
-                        DSearchField {
+                        AlpeSearchField {
                             id: wallpaperSearchField
 
                             anchors.fill: parent
@@ -1063,7 +1063,7 @@ Item {
                 color: Theme.onSurfaceVariant
             }
 
-            DTextField {
+            AlpeTextField {
                 id: pageJumpField
                 width: parent.width
                 placeholderText: "1 - " + root.totalPages
@@ -1079,14 +1079,14 @@ Item {
         }
     }
 
-    component FooterButton: DActionButton {
+    component FooterButton: AlpeActionButton {
         anchors.verticalCenter: parent.verticalCenter
         iconSize: DashMetrics.wallpaperControlIconSize
         buttonSize: DashMetrics.wallpaperControlSize
         tooltipSide: "top"
     }
 
-    component SearchButton: DActionButton {
+    component SearchButton: AlpeActionButton {
         anchors.verticalCenter: parent.verticalCenter
         z: 2
         iconSize: Theme.iconSizeSmall

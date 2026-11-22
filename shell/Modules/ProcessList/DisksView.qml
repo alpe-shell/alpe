@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "Drives.js" as Drives
 
@@ -30,13 +30,13 @@ Item {
     // Held until the first drive reply, so the cards do not shuffle in one by one on the first visit.
     readonly property bool ready: DriveService.loaded || !DriveService.polling
 
-    DSpinner {
+    AlpeSpinner {
         anchors.centerIn: parent
         size: Theme.iconSize * 2
         visible: !root.ready
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: scroll
         anchors.fill: parent
         visible: root.ready
@@ -92,7 +92,7 @@ Item {
                             height: Theme.buttonHeightS
                             spacing: Theme.spacingL
 
-                            DIcon {
+                            AlpeIcon {
                                 name: "folder"
                                 size: Theme.iconSizeSmall
                                 color: Theme.surfaceVariantText

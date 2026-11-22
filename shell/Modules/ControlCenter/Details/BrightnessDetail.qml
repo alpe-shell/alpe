@@ -6,7 +6,7 @@ import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../../Common/QmlUtils.js" as QmlUtils
 
 Item {
@@ -28,7 +28,7 @@ Item {
     readonly property bool multipleDevices: devices.length > 1
     readonly property bool showPins: screenName.length > 0 && multipleDevices
 
-    readonly property Item headerActions: DActionButton {
+    readonly property Item headerActions: AlpeActionButton {
         visible: root.showPins && QmlUtils.normalizePinList((CacheData.brightnessDevicePins || {})[root.getScreenPinKey()]).length > 0
         buttonSize: CcMetrics.headerActionSize
         iconSize: CcMetrics.headerActionIconSize
@@ -134,7 +134,7 @@ Item {
 
     Component.onCompleted: currentDeviceName = resolveCurrentDevice()
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         contentHeight: column.height
         clip: true
@@ -210,7 +210,7 @@ Item {
                             visible: deviceItem.active && deviceItem.exponential && deviceItem.modelData.class !== "software"
                             title: I18n.tr("Curve")
 
-                            DNumberStepper {
+                            AlpeNumberStepper {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: deviceItem.exponent.toFixed(1)
                                 decrementEnabled: deviceItem.exponent > CcMetrics.brightnessExponentMin

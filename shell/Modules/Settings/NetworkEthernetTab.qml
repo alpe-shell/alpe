@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Settings.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: networkEthernetTab
@@ -105,7 +105,7 @@ Item {
                                             anchors.rightMargin: Theme.spacingS
                                             spacing: Theme.spacingS
 
-                                            DIcon {
+                                            AlpeIcon {
                                                 name: "lan"
                                                 size: 20
                                                 color: isConnected ? Theme.accentOnSelectedContainer : Theme.surfaceText
@@ -172,7 +172,7 @@ Item {
                                             anchors.verticalCenter: parent.verticalCenter
                                             spacing: Theme.spacingXS
 
-                                            DActionButton {
+                                            AlpeActionButton {
                                                 buttonSize: Theme.buttonHeightXXS
                                                 iconName: isExpanded ? "expand_less" : "expand_more"
                                                 iconColor: Theme.surfaceText
@@ -188,7 +188,7 @@ Item {
                                                 }
                                             }
 
-                                            DActionButton {
+                                            AlpeActionButton {
                                                 buttonSize: Theme.buttonHeightXXS
                                                 iconName: "link_off"
                                                 iconColor: Theme.surfaceVariantText
@@ -254,7 +254,7 @@ Item {
                                                             return fields;
                                                         }
 
-                                                        delegate: DDetailChip {
+                                                        delegate: AlpeDetailChip {
                                                             required property var modelData
 
                                                             label: modelData.label
@@ -268,7 +268,7 @@ Item {
                                                     height: NetworkService.networkWiredInfoLoading ? 40 : 0
                                                     visible: NetworkService.networkWiredInfoLoading
 
-                                                    DSpinner {
+                                                    AlpeSpinner {
                                                         anchors.centerIn: parent
                                                         size: 20
                                                     }
@@ -315,7 +315,7 @@ Item {
                                     anchors.verticalCenter: parent.verticalCenter
                                     spacing: Theme.spacingS
 
-                                    DIcon {
+                                    AlpeIcon {
                                         name: "lan"
                                         size: 20
                                         color: modelData.isActive ? Theme.accentOnSelectedContainer : Theme.surfaceText

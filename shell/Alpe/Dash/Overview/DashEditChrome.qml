@@ -1,8 +1,8 @@
 import qs.Common
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
-DGridEditChrome {
+AlpeGridEditChrome {
     cornerRadius: DashMetrics.cardRadius
     hitOverflow: DashMetrics.gridGap / 2
     buttonSize: PopoutMetrics.chromeButtonSize

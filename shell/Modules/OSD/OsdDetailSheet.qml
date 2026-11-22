@@ -5,7 +5,7 @@ import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Details
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 FocusScope {
     id: root
@@ -47,7 +47,7 @@ FocusScope {
             horizontalAlignment: Text.AlignLeft
         }
 
-        DActionButton {
+        AlpeActionButton {
             id: settingsButton
 
             anchors.right: parent.right

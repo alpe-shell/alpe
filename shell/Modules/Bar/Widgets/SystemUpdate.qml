@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 BasePill {
     id: root
@@ -52,7 +52,7 @@ BasePill {
             implicitWidth: root.isVerticalOrientation ? root.widgetThickness : updaterIcon.implicitWidth
             implicitHeight: root.widgetThickness
 
-            DIcon {
+            AlpeIcon {
                 id: statusIcon
                 anchors.centerIn: parent
                 visible: root.isVerticalOrientation
@@ -108,7 +108,7 @@ BasePill {
                 spacing: Theme.spacingXS
                 visible: !root.isVerticalOrientation
 
-                DIcon {
+                AlpeIcon {
                     id: statusIconHorizontal
                     anchors.verticalCenter: parent.verticalCenter
                     smoothTransform: root.isChecking

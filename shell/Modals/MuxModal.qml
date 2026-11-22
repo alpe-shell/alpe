@@ -7,10 +7,10 @@ import Quickshell
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DModal {
+AlpeModal {
     id: muxModal
 
     layerNamespace: "dms:mux"
@@ -303,7 +303,7 @@ DModal {
             }
 
             // Search field
-            DSearchField {
+            AlpeSearchField {
                 id: searchField
 
                 width: parent.width
@@ -338,7 +338,7 @@ DModal {
                         radius: Theme.fullRadius(width, height)
                         color: Theme.primaryContainer
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: "add"
                             size: Theme.iconSize
@@ -381,7 +381,7 @@ DModal {
                 radius: Theme.cornerRadius
                 color: "transparent"
 
-                DFlickable {
+                AlpeFlickable {
                     anchors.fill: parent
                     clip: true
                     contentHeight: sessionsColumn.height
@@ -473,7 +473,7 @@ DModal {
                                         visible: MuxService.supportsRename
                                         color: renameMouse.containsMouse ? Theme.chipSurface : Theme.withAlpha(Theme.chipSurface, 0)
 
-                                        DIcon {
+                                        AlpeIcon {
                                             anchors.centerIn: parent
                                             name: "edit"
                                             size: Theme.iconSizeSmall
@@ -498,7 +498,7 @@ DModal {
                                         radius: Theme.fullRadius(width, height)
                                         color: deleteMouse.containsMouse ? Theme.errorContainer : Theme.withAlpha(Theme.errorContainer, 0)
 
-                                        DIcon {
+                                        AlpeIcon {
                                             anchors.centerIn: parent
                                             name: "delete"
                                             size: Theme.iconSizeSmall
@@ -529,7 +529,7 @@ DModal {
                                 anchors.centerIn: parent
                                 spacing: Theme.spacingM
 
-                                DIcon {
+                                AlpeIcon {
                                     name: muxModal.searchText.length > 0 ? "search_off" : "terminal"
                                     size: 48
                                     color: Theme.surfaceVariantText
@@ -555,7 +555,7 @@ DModal {
                 }
             }
 
-            DKeyHints {
+            AlpeKeyHints {
                 id: shortcutsBar
 
                 width: parent.width

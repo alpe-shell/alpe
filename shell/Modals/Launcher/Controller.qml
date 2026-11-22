@@ -661,7 +661,7 @@ Item {
         }
         searchMode = mode;
         if (mode === "files") {
-            DSearchService.recheck();
+            FileSearchService.recheck();
             fileSearchType = fileTypeOverride !== undefined ? fileTypeOverride : (SessionData.launcherLastFileSearchType || "all");
         }
         modeChanged(mode, !isAutoSwitch && notPersist !== true);
@@ -726,9 +726,9 @@ Item {
             return;
         }
         if (mode === "files")
-            DSearchService.recheck();
+            FileSearchService.recheck();
         else
-            DSearchService.ensureChecked();
+            FileSearchService.ensureChecked();
         if (appCategory !== "" || Object.keys(collapsedSections).length > 0)
             _clearModeCache();
         appCategory = "";
@@ -1340,7 +1340,7 @@ Item {
         if (searchMode === "files") {
             var prefixInfo = Utils.parseFileSearchPrefix(searchQuery);
             var fileQuery = prefixInfo ? prefixInfo.query : searchQuery.trim();
-            isFileSearching = fileQuery.length >= 2 && DSearchService.dsearchAvailable;
+            isFileSearching = fileQuery.length >= 2 && FileSearchService.dsearchAvailable;
             sections = [];
             flatModel = [];
             selectedFlatIndex = 0;
@@ -1688,7 +1688,7 @@ Item {
     }
 
     function performFileSearch() {
-        if (!active || !DSearchService.dsearchAvailable)
+        if (!active || !FileSearchService.dsearchAvailable)
             return;
         var fileQuery = "";
         var effectiveType = fileSearchType || "all";
@@ -1719,7 +1719,7 @@ Item {
 
         isFileSearching = true;
 
-        var splitBothTypes = searchMode === "all" && includeFiles && includeFolders && DSearchService.supportsTypeFilter;
+        var splitBothTypes = searchMode === "all" && includeFiles && includeFolders && FileSearchService.supportsTypeFilter;
         var queryTypes = splitBothTypes ? ["file", "dir"] : [effectiveType];
         var pending = queryTypes.length;
         var aggregatedItems = [];
@@ -1735,7 +1735,7 @@ Item {
                 desc: true
             };
 
-            if (DSearchService.supportsTypeFilter) {
+            if (FileSearchService.supportsTypeFilter) {
                 params.type = (queryType && queryType !== "all") ? queryType : "all";
             }
             if (fileSearchExt) {
@@ -1745,7 +1745,7 @@ Item {
                 params.folder = fileSearchFolder;
             }
 
-            DSearchService.search(fileQuery, params, function (response) {
+            FileSearchService.search(fileQuery, params, function (response) {
                 if (!root.active || currentVersion !== root._searchVersion || currentMode !== root.searchMode)
                     return;
                 pending--;
@@ -1780,7 +1780,7 @@ Item {
         var filesPriority = filesOrderIdx !== -1 ? 2.6 + filesOrderIdx * 0.01 : 4;
         var foldersPriority = foldersOrderIdx !== -1 ? 2.6 + foldersOrderIdx * 0.01 : 4.1;
 
-        if (showType === "all" && DSearchService.supportsTypeFilter) {
+        if (showType === "all" && FileSearchService.supportsTypeFilter) {
             var onlyFiles = [];
             var onlyDirs = [];
             for (var j = 0; j < fileItems.length; j++) {
@@ -2822,7 +2822,7 @@ Item {
     function _runningToplevelFor(entry) {
         if (!entry.id)
             return null;
-        const toplevels = DToplevels.toplevels.values;
+        const toplevels = Toplevels.toplevels.values;
         for (let i = 0; i < toplevels.length; i++) {
             const appId = toplevels[i].appId;
             if (!appId)

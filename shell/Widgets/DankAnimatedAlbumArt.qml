@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DAnimatedAlbumArt {
+AlpeAnimatedAlbumArt {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankAnimatedAlbumArt", "DAnimatedAlbumArt", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankAnimatedAlbumArt", "AlpeAnimatedAlbumArt", "qs.Widgets")
 }

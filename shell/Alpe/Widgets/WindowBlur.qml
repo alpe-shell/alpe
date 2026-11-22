@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 Item {
     id: root

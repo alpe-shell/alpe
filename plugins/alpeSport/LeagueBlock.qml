@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "sport.js" as S
 
 // Karte eines Wettbewerbs in der Tagesansicht: Kopf mit Logo und Name, darunter die Spiele.
@@ -99,7 +99,7 @@ Rectangle {
                         color: Theme.primary
                     }
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         name: "chevron_right"
                         size: 16

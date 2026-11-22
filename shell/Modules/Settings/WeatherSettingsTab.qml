@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -71,7 +71,7 @@ Item {
             SettingsRow {
                 enabled: !SettingsData.useAutoLocation
                 title: I18n.tr("Location search")
-                body: DLocationSearch {
+                body: AlpeLocationSearch {
                     width: parent.width
                     currentLocation: SettingsData.weatherLocation
                     placeholderText: I18n.tr("New York, NY")
@@ -90,7 +90,7 @@ Item {
                         width: parent.width
                         spacing: Theme.spacingM
 
-                        DTextField {
+                        AlpeTextField {
                             id: latitude
                             outlined: true
                             leftIconName: "location_on"
@@ -101,7 +101,7 @@ Item {
                             onAccepted: root.saveCoordinates()
                         }
 
-                        DTextField {
+                        AlpeTextField {
                             id: longitude
                             outlined: true
                             leftIconName: "location_on"
@@ -113,7 +113,7 @@ Item {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         text: I18n.tr("Apply", "verb, button that saves custom weather coordinates")
                         enabled: root.validCoordinates && root.coordinatesEdited
                         onClicked: root.saveCoordinates()
@@ -128,7 +128,7 @@ Item {
             settingKey: "weatherProviders"
             tags: ["weather", "provider", "source", "fallback", "priority", "order", "open-meteo", "met norway"]
 
-            headerActions: DActionButton {
+            headerActions: AlpeActionButton {
                 iconName: "restart_alt"
                 tooltipText: I18n.tr("Reset to default")
                 enabled: !SettingsData.isDefault(["weatherProviders"])
@@ -154,7 +154,7 @@ Item {
                     clickable: true
                     onClicked: WeatherService.setProviderEnabled(modelData, !provider?.enabled)
 
-                    DToggle {
+                    AlpeToggle {
                         hideText: true
                         Accessible.name: providerRow.title
                         checked: providerRow.provider?.enabled ?? false

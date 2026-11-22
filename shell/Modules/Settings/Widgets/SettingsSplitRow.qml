@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -14,7 +14,7 @@ SettingsRow {
     clickable: navigable
     onClicked: keyboard => navigated(keyboard)
 
-    DIcon {
+    AlpeIcon {
         name: "chevron_right"
         size: Theme.iconSize
         color: Theme.surfaceVariantText
@@ -34,7 +34,7 @@ SettingsRow {
         visible: root.navigable
     }
 
-    DToggle {
+    AlpeToggle {
         hideText: true
         text: root.title
         checked: root.checked

@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Settings.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: networkStatusTab
@@ -136,7 +136,7 @@ Item {
                             height: 1
                         }
 
-                        DButtonGroup {
+                        AlpeButtonGroup {
                             id: preferenceButtons
                             arrowKeysSelect: false
 

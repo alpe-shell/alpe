@@ -3,7 +3,7 @@ import QtQuick.Controls
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modals.Common
 
 Popup {
@@ -432,7 +432,7 @@ Popup {
                                         anchors.verticalCenter: parent.verticalCenter
                                         spacing: Theme.spacingS
 
-                                        DIcon {
+                                        AlpeIcon {
                                             name: row.entry.icon || ""
                                             size: Theme.iconSizeSmall
                                             color: {
@@ -463,7 +463,7 @@ Popup {
                                             width: parent.width - Theme.iconSizeSmall * (row.entry.submenu ? 2 : 1) - Theme.spacingS * (row.entry.submenu ? 2 : 1)
                                         }
 
-                                        DIcon {
+                                        AlpeIcon {
                                             visible: !!row.entry.submenu
                                             name: "chevron_right"
                                             size: Theme.iconSizeSmall - 2
@@ -472,7 +472,7 @@ Popup {
                                         }
                                     }
 
-                                    DRipple {
+                                    AlpeRipple {
                                         id: menuItemRipple
                                         rippleColor: row.entry.dangerous ? Theme.error : Theme.surfaceText
                                         cornerRadius: menuItem.radius

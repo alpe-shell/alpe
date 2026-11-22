@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DIcon {
+Alpe.AlpeIcon {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankIcon", "DIcon", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankIcon", "AlpeIcon", "qs.Alpe.Widgets")
 }

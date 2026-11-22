@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../../Common/QmlUtils.js" as QmlUtils
 
-DReorderList {
+AlpeReorderList {
     id: root
 
     readonly property bool isSettingsRow: true

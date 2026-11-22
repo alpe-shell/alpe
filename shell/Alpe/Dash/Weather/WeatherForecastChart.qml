@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
-import "../../../DCommon/Common/WheelInput.js" as WheelInput
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
+import "../../../Alpe/Common/WheelInput.js" as WheelInput
 
 Item {
     id: root
@@ -120,7 +120,7 @@ Item {
                     elide: Text.ElideRight
                 }
 
-                DIcon {
+                AlpeIcon {
                     anchors.horizontalCenter: parent.horizontalCenter
                     name: WeatherService.getWeatherIcon(column.modelData.wCode || 0, column.modelData.isDay ?? true)
                     size: Theme.iconSize
@@ -140,7 +140,7 @@ Item {
         }
     }
 
-    DSparkline {
+    AlpeSparkline {
         x: Theme.spacingM + root.columnWidth / 2
         y: root.chartTop
         width: Math.max(0, root.width - Theme.spacingM * 2 - root.columnWidth)
@@ -194,7 +194,7 @@ Item {
                     y: (Theme.fontSizeSmall + Theme.spacingXS - height) / 2
                     spacing: Theme.spacingXXS
 
-                    DIcon {
+                    AlpeIcon {
                         visible: !root.daily
                         name: "rainy"
                         size: Theme.iconSizeSmall

@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../utils/widgets.js" as WidgetUtils
 
 Rectangle {
@@ -43,7 +43,7 @@ Rectangle {
             anchors.right: parent.right
             spacing: Theme.spacingM
 
-            DIcon {
+            AlpeIcon {
                 name: "add_circle"
                 size: Theme.iconSize
                 color: Theme.primary
@@ -59,7 +59,7 @@ Rectangle {
             }
         }
 
-        DSearchField {
+        AlpeSearchField {
             id: searchField
             anchors.top: headerRow.bottom
             anchors.topMargin: Theme.spacingM
@@ -80,7 +80,7 @@ Rectangle {
             }
         }
 
-        DListView {
+        AlpeListView {
             id: widgetList
 
             anchors.top: searchField.bottom
@@ -105,7 +105,7 @@ Rectangle {
                 bottomRadius: index === widgetList.count - 1 ? Theme.groupedListOuterRadius : Theme.groupedListInnerRadius
                 onClicked: root.chosen(modelData.id)
 
-                DIcon {
+                AlpeIcon {
                     name: "add"
                     size: Theme.iconSize
                     color: Theme.primary

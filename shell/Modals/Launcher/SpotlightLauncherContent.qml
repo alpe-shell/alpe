@@ -4,8 +4,8 @@ import QtQuick
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modals.DLauncherV2.Components
+import qs.Alpe.Widgets
+import qs.Modals.Launcher.Components
 import "../../Common/LauncherKeybinds.js" as LauncherKeybinds
 
 FocusScope {

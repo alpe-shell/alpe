@@ -2,10 +2,10 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Services
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "LyricsModel.js" as LyricsModel
 
 FocusScope {
@@ -381,7 +381,7 @@ FocusScope {
                 }
             }
 
-            DListView {
+            AlpeListView {
                 id: transcript
 
                 anchors.fill: parent
@@ -467,7 +467,7 @@ FocusScope {
             }
         }
 
-        DButton {
+        AlpeButton {
             id: followButton
             focusRingColor: MediaAccentService.focusRing
             objectName: "followPlayback"
@@ -501,7 +501,7 @@ FocusScope {
                 }
             }
 
-            sourceComponent: DLoadingIndicator {
+            sourceComponent: AlpeLoadingIndicator {
                 contained: true
                 containerColor: MediaAccentService.accentContainer
                 color: MediaAccentService.onAccentContainer
@@ -537,7 +537,7 @@ FocusScope {
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
 
-            DButton {
+            AlpeButton {
                 focusRingColor: MediaAccentService.focusRing
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: I18n.tr("Retry")

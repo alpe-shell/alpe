@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DSlider {
+AlpeSlider {
     id: root
 
     required property real volume

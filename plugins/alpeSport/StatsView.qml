@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Alpe: Bestenlisten eines Wettbewerbs (Tore, Vorlagen; NBA Punkte, Rebounds, Assists;
 // National League Skorer, Tore, Assists, Plus/Minus, Torhüter). Breit zwei Spalten.

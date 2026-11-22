@@ -2,8 +2,8 @@ import QtQuick
 import qs.Common
 import Quickshell
 import qs.Modules.ControlCenter
-import qs.DCommon.Widgets
-import qs.DCommon.Widgets as CommonWidgets
+import qs.Alpe.Widgets
+import qs.Alpe.Widgets as CommonWidgets
 
 CcTile {
     id: root
@@ -36,7 +36,7 @@ CcTile {
                 Repeater {
                     model: SessionData.recentColors.slice(0, colors.swatchColumns * colors.swatchRows)
 
-                    CommonWidgets.DColorButton {
+                    CommonWidgets.AlpeColorButton {
                         required property var modelData
                         width: CcMetrics.touchTarget
                         height: width
@@ -53,7 +53,7 @@ CcTile {
                 }
             }
 
-            DButton {
+            AlpeButton {
                 text: I18n.tr("Choose color", "color picker title")
                 maximumWidth: parent.width
                 visible: SessionData.recentColors.length === 0

@@ -6,7 +6,7 @@ import Quickshell
 import qs.Common
 import qs.Services
 import qs.Widgets
-import qs.DCommon.Session
+import qs.Alpe.Session
 
 Item {
     id: root
@@ -38,7 +38,7 @@ Item {
         }
         asynchronous: root.asynchronous
 
-        sourceComponent: DBackdrop {
+        sourceComponent: AlpeBackdrop {
             screenName: root.screenName
             blur: Theme.lockScreenBlur
             blurMax: Theme.lockScreenBlurMax

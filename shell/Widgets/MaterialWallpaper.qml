@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as Shared
+import qs.Alpe.Widgets as Shared
 
-Shared.DMaterialWallpaper {
+Shared.AlpeMaterialWallpaper {
     palette: Theme.wallpaperPalette()
 }

@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
-import "../../DDash/Media/LyricsModel.js" as LyricsModel
+import qs.Alpe.Widgets
+import "../../../Alpe/Dash/Media/LyricsModel.js" as LyricsModel
 
 Item {
     id: root

@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 BasePill {
@@ -109,7 +109,7 @@ BasePill {
                 }
             }
 
-            DIcon {
+            AlpeIcon {
                 id: icon
                 anchors.centerIn: parent
                 name: root.dropConfirmed ? "check" : "content_paste"
@@ -132,7 +132,7 @@ BasePill {
         }
     }
 
-    DContextMenu {
+    AlpeContextMenu {
         id: contextMenu
         layerNamespace: "dms:clipboard-context-menu"
         menuItems: [

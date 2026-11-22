@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Templates as T
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 T.Control {
     id: root
@@ -202,7 +202,7 @@ T.Control {
         anchors.top: parent.top
         height: root.hasBody ? root.headerBand : root.height
 
-        DRipple {
+        AlpeRipple {
             id: ripple
             visible: root.clickable
             rippleColor: root.contentColor
@@ -290,7 +290,7 @@ T.Control {
                     color: root.iconBox ? Theme.withAlpha(root.iconColor, Theme.tonalTintAlpha) : "transparent"
                     visible: root.iconName !== ""
 
-                    DIcon {
+                    AlpeIcon {
                         anchors.centerIn: parent
                         name: root.iconName
                         size: root.iconBox ? Theme.iconSizeMedium : Theme.iconSize
@@ -341,7 +341,7 @@ T.Control {
                 active: root.modified && root.resetInHeader
                 visible: active
 
-                sourceComponent: DActionButton {
+                sourceComponent: AlpeActionButton {
                     buttonSize: Theme.iconButtonSize
                     iconName: "restart_alt"
                     iconSize: Theme.iconSizeMedium
@@ -374,7 +374,7 @@ T.Control {
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                DIcon {
+                AlpeIcon {
                     name: "chevron_right"
                     size: Theme.iconSize
                     color: root.supportingContentColor

@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DCollapsibleSection {
+Alpe.AlpeCollapsibleSection {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankCollapsibleSection", "DCollapsibleSection", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankCollapsibleSection", "AlpeCollapsibleSection", "qs.Alpe.Widgets")
 }

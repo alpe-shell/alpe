@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // NBA-Boxscore eines Teams: Starter zuerst, dann die Bank.
 Column {

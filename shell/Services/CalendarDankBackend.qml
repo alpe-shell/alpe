@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
 Item {
     id: root
@@ -151,7 +151,7 @@ Item {
         Qt.callLater(() => requestSocket.connected = true);
     }
 
-    DCommon.DSocket {
+    Alpe.AlpeSocket {
         id: requestSocket
         path: root.socketPath
         connected: false
@@ -192,7 +192,7 @@ Item {
         }
     }
 
-    DCommon.DSocket {
+    Alpe.AlpeSocket {
         id: subscribeSocket
         path: root.socketPath
         connected: false

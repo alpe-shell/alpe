@@ -5,7 +5,7 @@ import qs.Common
 import qs.Modules.ControlCenter
 import qs.Widgets
 
-DOSD {
+AlpeOSD {
     id: root
 
     property string iconName: ""
@@ -78,7 +78,7 @@ DOSD {
     Loader {
         id: endIconTooltip
         active: false
-        sourceComponent: DTooltip {}
+        sourceComponent: AlpeTooltip {}
     }
 
     content: OsdLevelRow {

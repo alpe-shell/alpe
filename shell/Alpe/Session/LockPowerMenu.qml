@@ -1,9 +1,9 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import Quickshell.Widgets
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 Rectangle {
     id: root
@@ -579,7 +579,7 @@ Rectangle {
                             height: 1
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "close"
                             iconSize: Style.iconSize - 4
                             iconColor: Style.surfaceText
@@ -649,7 +649,7 @@ Rectangle {
                                     anchors.centerIn: parent
                                     spacing: Style.spacingS
 
-                                    DIcon {
+                                    AlpeIcon {
                                         name: gridButtonRect.actionData.icon
                                         size: Style.iconSize + 8
                                         color: {
@@ -773,7 +773,7 @@ Rectangle {
                                     anchors.verticalCenter: parent.verticalCenter
                                     spacing: Style.spacingM
 
-                                    DIcon {
+                                    AlpeIcon {
                                         name: listButtonRect.actionData.icon
                                         size: Style.iconSize + 4
                                         color: {
@@ -848,7 +848,7 @@ Rectangle {
                             }
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             name: root.showHoldHint ? "warning" : "touch_app"
                             size: Style.fontSizeSmall
                             color: root.showHoldHint ? Style.warning : Style.surfaceTextSecondary

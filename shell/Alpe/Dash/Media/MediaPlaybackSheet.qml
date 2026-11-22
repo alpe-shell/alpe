@@ -3,10 +3,10 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Widgets
+import qs.Alpe.Dash
 import qs.Modules.Settings.Widgets
-import "../../../DCommon/Common/FocusNavigation.js" as FocusNavigation
+import "../../../Alpe/Common/FocusNavigation.js" as FocusNavigation
 
 // Qt moves a focused control along the whole window's tab chain before its parents see Tab, so every
 // control in here hands Tab to cycleFocus itself.
@@ -147,7 +147,7 @@ FocusScope {
         width: parent.width - Theme.spacingL * 2
         height: backButton.height
 
-        DIconButton {
+        AlpeIconButton {
             id: backButton
             focusRingColor: MediaAccentService.focusRing
             width: buttonSize
@@ -183,7 +183,7 @@ FocusScope {
         }
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: flickable
 
         anchors.fill: parent

@@ -2,9 +2,9 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
 
     layerNamespace: "dms:icc-profile-info"
@@ -151,7 +151,7 @@ DModal {
                         }
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "close"
                         iconSize: Theme.iconSize - 4
                         iconColor: Theme.surfaceText
@@ -168,7 +168,7 @@ DModal {
                     border.width: Theme.layerOutlineWidth
                     clip: true
 
-                    DFlickable {
+                    AlpeFlickable {
                         anchors.fill: parent
                         anchors.margins: Theme.spacingM
                         contentHeight: detailColumn.implicitHeight
@@ -236,7 +236,7 @@ DModal {
                     width: parent.width
                     height: 40
 
-                    DButton {
+                    AlpeButton {
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
                         text: I18n.tr("Close", "Close")

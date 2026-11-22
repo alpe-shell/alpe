@@ -4,10 +4,10 @@ import Quickshell
 import Quickshell.WindowManager
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
-DOSD {
+AlpeOSD {
     id: root
 
     osdKind: "workspace"

@@ -4,8 +4,8 @@ import qs.Common
 import qs.Services
 import qs.Widgets
 import qs.Modules.SurfaceWidgets
-import qs.Modules.DBar
-import qs.Modules.DBar.Widgets as BarWidgets
+import qs.Modules.Bar
+import qs.Modules.Bar.Widgets as BarWidgets
 import qs.Modules.ControlCenter.Widgets
 import "../../Common/settings/DockConfig.js" as DockConfig
 
@@ -566,7 +566,7 @@ FocusScope {
 
     readonly property var hoveredButton: widgetStrip.hoveredButton
 
-    DTooltip {
+    AlpeTooltip {
         id: dockTooltip
         targetScreen: dock.screen
         persistent: dock.config.enabled && (dock.hostWindow?.visible ?? false) && !dock.fullscreenOnScreen

@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -88,7 +88,7 @@ Item {
     Loader {
         anchors.fill: parent
         active: root.thumbnail === "" && root.themeIconPath !== ""
-        sourceComponent: DSVGIcon {
+        sourceComponent: AlpeSVGIcon {
             source: root.themeIconPath
             size: root.size
             colorOverride: root.tint
@@ -99,7 +99,7 @@ Item {
     Loader {
         anchors.centerIn: parent
         active: root.thumbnail === "" && root.themeIconPath === ""
-        sourceComponent: DIcon {
+        sourceComponent: AlpeIcon {
             name: root.glyph !== "" ? root.glyph : root.glyphFor(root.iconName)
             size: root.size
             color: root.tint.a > 0 ? root.tint : root.color

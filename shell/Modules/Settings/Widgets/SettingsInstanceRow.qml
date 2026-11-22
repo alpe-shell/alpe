@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -21,7 +21,7 @@ SettingsRow {
     subtitle: deleteButton.confirming ? I18n.tr("Confirm Delete") : summary
     subtitleColor: deleteButton.confirming ? Theme.error : Theme.surfaceVariantText
 
-    DToggle {
+    AlpeToggle {
         visible: root.toggleVisible
         hideText: true
         text: root.title

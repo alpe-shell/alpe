@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Common/QmlUtils.js" as QmlUtils
 
 Row {
@@ -62,7 +62,7 @@ Row {
         }
     }
 
-    DToggle {
+    AlpeToggle {
         id: toggle
         anchors.verticalCenter: parent.verticalCenter
         checked: root.value

@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 import "PathCompletion.js" as PathCompletion
 
 FocusScope {
@@ -369,7 +369,7 @@ FocusScope {
             opacity: stripArea.containsMouse ? Style.stateLayerHover : 0
         }
 
-        DFlickable {
+        AlpeFlickable {
             id: strip
 
             readonly property bool mirrored: LayoutMirroring.enabled
@@ -463,7 +463,7 @@ FocusScope {
         }
     }
 
-    DTextField {
+    AlpeTextField {
         id: field
 
         anchors.fill: parent
@@ -501,7 +501,7 @@ FocusScope {
             implicitWidth: FileBrowserMetrics.pathIconSize + Style.spacingM - Style.spacingS
             implicitHeight: FileBrowserMetrics.pathIconSize
 
-            DLoadingIndicator {
+            AlpeLoadingIndicator {
                 size: FileBrowserMetrics.pathIconSize
             }
         }

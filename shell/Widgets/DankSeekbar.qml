@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DSeekbar {
+AlpeSeekbar {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankSeekbar", "DSeekbar", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankSeekbar", "AlpeSeekbar", "qs.Widgets")
 }

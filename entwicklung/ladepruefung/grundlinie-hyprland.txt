@@ -3,7 +3,7 @@
 ERROR qml: [KeybindsService:<Z>] Failed to parse binds: SyntaxError: JSON.parse: Parse error
 ERROR quickshell.service.pipewire.loop: Failed to connect pipewire context. Errno: 112
 WARN qml: [CompositorService:<Z>] failed to update the shell window rule dms-floating-windows 1 {"success":false,"error":"hyprland.lua not found in <TMP>/h/.config/hypr; create it before editing window rules: stat <TMP>/h/.config/hypr/hyprland.lua: no such file or directory"}
-WARN qml: [DSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
+WARN qml: [FileSearchService:<Z>] dsearch not found, command -v exit 1 PATH <TMP>/h/.local/bin:<TMP>/h/.nix-profile/bin:/etc/profiles/per-user/h/bin:<TMP>/s:/usr/local/bin:/usr/bin:/bin
 WARN qml: [KeybindsService:<Z>] Load process failed with code: 1
 WARN qml: [Proc:<Z>] runCommand callback error for command: ["sh","-c","for b in /sys/class/power_supply/*; do [ \"$(cat $b/type 2>/dev/null)\" = Battery ] && [ -f $b/charge_control_end_threshold ] && { echo \"charge=$(cat $b/charge_control_end_threshold)\"; break; }; done; [ -f /etc/alpe/ladegrenze ] && echo persist=1; for k in HandleLidSwitch HandleLidSwitchExternalPower HandleLidSwitchDocked; do printf \"%s=\" $k; busctl --json=short get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager $k 2>/dev/null || printf \"{}\"; echo; done"] Error: TypeError: Cannot read property 'lid' of null
 WARN qml: [ProcessListModal:<Z>] dgop is not available
@@ -26,14 +26,14 @@ WARN quickshell.service.polkit: failed to register listener on path "/org/quicks
 WARN quickshell.service.powerprofiles: Could not connect to DBus. PowerProfiles services will not work.
 WARN quickshell.service.upower: Could not connect to DBus. UPower service will not work.
 WARN scene: @Modules/Settings/AlpeDeviceTab.qml[<Z>]: Unable to assign [undefined] to bool
-WARN scene: @Modules/Settings/DBarTab.qml[<Z>]: Unable to assign [undefined] to QString
+WARN scene: @Modules/Settings/BarTab.qml[<Z>]: Unable to assign [undefined] to QString
 WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/appusage.json failed: File does not exist.
 WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/cache.json failed: File does not exist.
 WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/launcher_cache.json failed: File does not exist.
 WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/alpe/dms-colors.json failed: File does not exist.
 WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/notepad-session.json failed: File does not exist.
 WARN scene: QML FileView at @Services/PaletteInjectService.qml[<Z>]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
-WARN scene: QML QQuickImage* at @DCommon/Widgets/CachingImage.qml[<Z>]: Cannot open: file://<TMP>/h/.cache/alpe/imagecache/<HASH>@1024x1024.png
+WARN scene: QML QQuickImage* at @Alpe/Widgets/CachingImage.qml[<Z>]: Cannot open: file://<TMP>/h/.cache/alpe/imagecache/<HASH>@1024x1024.png
 WARN scene: QML SportDaemon at file://<TMP>/h/.config/alpe/plugins/alpeSport/SportDaemon.qml[<Z>]: Created graphical object was not placed in the graphics scene.
 WARN: Process failed to start, likely because the binary could not be found. Command: QList("khal", "printformats")
 WARN: Unrecognized pragma "DiskCache"

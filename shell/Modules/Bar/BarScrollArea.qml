@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import "../../DCommon/Common/WheelInput.js" as WheelInput
+import "../../Alpe/Common/WheelInput.js" as WheelInput
 
 MouseArea {
     id: root

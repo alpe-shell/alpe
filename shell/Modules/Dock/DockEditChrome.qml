@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Rectangle {
     id: root
@@ -44,7 +44,7 @@ Rectangle {
             elide: Text.ElideRight
         }
 
-        DButton {
+        AlpeButton {
             id: addButton
             anchors.verticalCenter: parent.verticalCenter
             buttonHeight: Theme.buttonHeightS
@@ -57,7 +57,7 @@ Rectangle {
             onClicked: root.addRequested(addButton)
         }
 
-        DActionButton {
+        AlpeActionButton {
             id: settingsButton
             anchors.verticalCenter: parent.verticalCenter
             buttonSize: Theme.buttonHeightS
@@ -68,7 +68,7 @@ Rectangle {
             onClicked: root.settingsRequested()
         }
 
-        DButton {
+        AlpeButton {
             id: finishButton
             anchors.verticalCenter: parent.verticalCenter
             buttonHeight: Theme.buttonHeightS

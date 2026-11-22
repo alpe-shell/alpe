@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "WeatherVisuals.js" as Visuals
 
 Rectangle {
@@ -22,7 +22,7 @@ Rectangle {
     border.width: flat ? 0 : Theme.layerOutlineWidth
     border.color: Theme.outlineMedium
 
-    DTone {
+    AlpeTone {
         id: toneColors
         tone: root.tone
         floatingWindow: Theme.isFloatingWindow(root)
@@ -96,7 +96,7 @@ Rectangle {
                     Accessible.role: Accessible.StaticText
                     Accessible.name: modelData.label + " " + (modelData.time || "--")
 
-                    DNFIcon {
+                    AlpeNFIcon {
                         anchors.verticalCenter: parent.verticalCenter
                         name: sunTime.modelData.icon
                         size: Theme.iconSizeSmall
@@ -137,7 +137,7 @@ Rectangle {
         fontSizeMode: Text.HorizontalFit
     }
 
-    DMaterialShape {
+    AlpeMaterialShape {
         id: emblem
         anchors.right: parent.right
         anchors.rightMargin: Theme.spacingL
@@ -148,7 +148,7 @@ Rectangle {
         shape: Visuals.conditionShape(root.weather.wCode, root.weather.isDay)
         color: Theme.primary
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: WeatherService.getWeatherIcon(root.weather.wCode, root.weather.isDay)
             size: parent.width / 2

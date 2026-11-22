@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 SettingsRow {
     id: root
@@ -51,7 +51,7 @@ SettingsRow {
     Component {
         id: toggleControl
 
-        DToggle {
+        AlpeToggle {
             hideText: true
             checked: root.value === true
             onToggled: checked => root.commit(checked)
@@ -61,7 +61,7 @@ SettingsRow {
     Component {
         id: choiceControl
 
-        DDropdown {
+        AlpeDropdown {
             options: root.choices.map(c => c.text)
             currentValue: root.choices[root.choiceIndex]?.text ?? ""
             onValueChanged: value => {
@@ -76,7 +76,7 @@ SettingsRow {
     Component {
         id: numberControl
 
-        DNumberStepper {
+        AlpeNumberStepper {
             readonly property real step: root.spec.step ?? 1
             readonly property real current: Number(root.value) || 0
 

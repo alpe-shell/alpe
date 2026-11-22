@@ -1621,24 +1621,24 @@ const (
 
 var bundledFontRelPaths = map[string][]string{
 	"google sans flex": {
-		"DCommon/assets/fonts/google-sans-flex/GoogleSansFlex.ttf",
+		"Alpe/assets/fonts/google-sans-flex/GoogleSansFlex.ttf",
 	},
 	"fira code": {
-		"DCommon/assets/fonts/nerd-fonts/FiraCodeNerdFont-Regular.ttf",
+		"Alpe/assets/fonts/nerd-fonts/FiraCodeNerdFont-Regular.ttf",
 		"assets/fonts/nerd-fonts/FiraCodeNerdFont-Regular.ttf",
 	},
 	"firacode nerd font": {
-		"DCommon/assets/fonts/nerd-fonts/FiraCodeNerdFont-Regular.ttf",
+		"Alpe/assets/fonts/nerd-fonts/FiraCodeNerdFont-Regular.ttf",
 		"assets/fonts/nerd-fonts/FiraCodeNerdFont-Regular.ttf",
 	},
 	"dm serif display": {
-		"DCommon/assets/fonts/dm-serif-display/DMSerifDisplay-Regular.ttf",
+		"Alpe/assets/fonts/dm-serif-display/DMSerifDisplay-Regular.ttf",
 	},
 	"notable": {
-		"DCommon/assets/fonts/notable/Notable-Regular.ttf",
+		"Alpe/assets/fonts/notable/Notable-Regular.ttf",
 	},
 	"gochi hand": {
-		"DCommon/assets/fonts/gochi-hand/GochiHand-Regular.ttf",
+		"Alpe/assets/fonts/gochi-hand/GochiHand-Regular.ttf",
 	},
 }
 
@@ -1735,7 +1735,7 @@ func checkConfiguredFont(label, family, shellPath string, fcFamilies map[string]
 		return checkResult{
 			catFonts, label, statusWarn,
 			fmt.Sprintf("'%s' bundled file missing", family),
-			"Expected font file missing from shell install. Reinstall Alpe or check DCommon assets.",
+			"Expected font file missing from shell install. Reinstall Alpe or check Alpe assets.",
 			url,
 		}
 	}

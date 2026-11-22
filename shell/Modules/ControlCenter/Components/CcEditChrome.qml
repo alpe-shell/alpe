@@ -4,7 +4,7 @@ import qs.Widgets
 import "../utils/widgets.js" as WidgetUtils
 import qs.Modules.ControlCenter
 
-DGridEditChrome {
+AlpeGridEditChrome {
     id: root
 
     property var widgetData: ({})

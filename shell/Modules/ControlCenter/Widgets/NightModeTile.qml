@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 CcTile {
     id: root
@@ -24,7 +24,7 @@ CcTile {
                 elide: Text.ElideRight
             }
 
-            DSlider {
+            AlpeSlider {
                 width: parent.width
                 minimum: 1000
                 maximum: 6000

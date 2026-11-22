@@ -1,3 +1,3 @@
-import qs.DCommon.FileBrowser as DCommon
+import qs.Alpe.FileBrowser as Alpe
 
-DCommon.FileBrowserModal {}
+Alpe.FileBrowserModal {}

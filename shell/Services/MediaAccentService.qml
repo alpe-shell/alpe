@@ -5,8 +5,8 @@ import Quickshell
 import QtQuick
 import qs.Common
 import qs.Services
-import "../DCommon/Common/Contrast.js" as Contrast
-import "../DCommon/Common/Hct.js" as Hct
+import "../Alpe/Common/Contrast.js" as Contrast
+import "../Alpe/Common/Hct.js" as Hct
 
 Singleton {
     id: root

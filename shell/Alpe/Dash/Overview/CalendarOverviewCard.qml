@@ -4,9 +4,9 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "../../../Common/DateOnly.js" as DateOnly
 
 Card {
@@ -213,7 +213,7 @@ Card {
             anchors.rightMargin: Theme.spacingS
             spacing: Theme.spacingS
 
-            DIcon {
+            AlpeIcon {
                 name: "warning"
                 size: Theme.iconSizeSmall
                 color: Theme.warning
@@ -229,7 +229,7 @@ Card {
                 wrapMode: Text.Wrap
             }
 
-            DButton {
+            AlpeButton {
                 id: launchButton
                 anchors.verticalCenter: parent.verticalCenter
                 visible: CalendarService.dankBinaryExists
@@ -345,7 +345,7 @@ Card {
         anchors.topMargin: Theme.spacingS
         anchors.bottom: parent.bottom
 
-        DMonthGrid {
+        AlpeMonthGrid {
             id: calendarGrid
 
             anchors.fill: parent
@@ -380,7 +380,7 @@ Card {
             visible: root.showEventDetails
             spacing: Theme.spacingS
 
-            DFlickable {
+            AlpeFlickable {
                 id: flickableArea
                 showScrollBar: false
                 width: parent.width
@@ -490,7 +490,7 @@ Card {
                 }
             }
 
-            DTextField {
+            AlpeTextField {
                 id: taskInput
                 width: parent.width
                 height: DashMetrics.taskInputHeight
@@ -522,7 +522,7 @@ Card {
         }
     }
 
-    component NavButton: DActionButton {
+    component NavButton: AlpeActionButton {
         buttonSize: DashMetrics.monthNavSize
         iconSize: DashMetrics.monthNavIconSize
         iconColor: Theme.primary
@@ -651,7 +651,7 @@ Card {
             color: taskItem.accentColor
         }
 
-        DIcon {
+        AlpeIcon {
             id: dragHandle
             anchors.left: parent.left
             anchors.leftMargin: Theme.spacingM + DashMetrics.eventAccentWidth + Theme.spacingM
@@ -696,7 +696,7 @@ Card {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             anchors.left: parent.left
             anchors.leftMargin: Theme.spacingM + DashMetrics.eventAccentWidth + Theme.spacingM + (taskItem.isLocalTask && !taskItem.isEditing ? DashMetrics.eventActionSize + Theme.spacingXS : 0)
             anchors.verticalCenter: parent.verticalCenter
@@ -754,7 +754,7 @@ Card {
             }
         }
 
-        DTextField {
+        AlpeTextField {
             id: editInput
             anchors.left: parent.left
             anchors.right: parent.right
@@ -783,7 +783,7 @@ Card {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             anchors.right: parent.right
             anchors.rightMargin: Theme.spacingS
             anchors.verticalCenter: parent.verticalCenter
@@ -797,7 +797,7 @@ Card {
             onClicked: Qt.openUrlExternally(taskItem.quickUrl)
         }
 
-        DActionButton {
+        AlpeActionButton {
             id: deleteButton
             anchors.right: parent.right
             anchors.rightMargin: Theme.spacingS
@@ -818,7 +818,7 @@ Card {
             }
         }
 
-        DActionButton {
+        AlpeActionButton {
             anchors.right: deleteButton.left
             anchors.rightMargin: Theme.spacingXS
             anchors.verticalCenter: parent.verticalCenter

@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Item {
     id: header
@@ -86,7 +86,7 @@ Item {
                     elide: Text.ElideRight
                 }
 
-                DIcon {
+                AlpeIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: cell.active
                     name: header.sortDescending ? "arrow_downward" : "arrow_upward"

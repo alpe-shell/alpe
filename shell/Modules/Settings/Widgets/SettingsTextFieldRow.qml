@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -36,7 +36,7 @@ SettingsRow {
         width: parent.width
         spacing: Theme.spacingS
 
-        DTextField {
+        AlpeTextField {
             id: field
             outlined: true
             labelText: root.text
@@ -49,7 +49,7 @@ SettingsRow {
             onEditingFinished: root.editingFinished(text)
             onAccepted: root.accepted(text)
 
-            DActionButton {
+            AlpeActionButton {
                 id: resetButton
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.spacingXS

@@ -3,12 +3,12 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Widgets
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import "../../../DCommon/Common/WheelInput.js" as WheelInput
+import "../../../Alpe/Common/WheelInput.js" as WheelInput
 
 BasePill {
     id: root
@@ -325,7 +325,7 @@ BasePill {
                     }
                 }
 
-                DIcon {
+                AlpeIcon {
                     anchors.left: parent.left
                     anchors.leftMargin: root.compactMode ? Math.round((parent.width - root.appIconSize) / 2) : Theme.spacingXS
                     anchors.verticalCenter: parent.verticalCenter
@@ -387,7 +387,7 @@ BasePill {
                     maximumLineCount: 1
                 }
 
-                DRipple {
+                AlpeRipple {
                     id: itemRipple
                     rippleColor: isFocused ? Theme.onSelectedContainer : Theme.onSurface
                     cornerRadius: visualContent.radius
@@ -452,7 +452,7 @@ BasePill {
 
         active: false
 
-        sourceComponent: DTooltip {}
+        sourceComponent: AlpeTooltip {}
     }
 
     function menuAnchorFor(item) {
@@ -471,7 +471,7 @@ BasePill {
         windowContextMenu.openFromBar(item ? root.menuAnchorFor(item) : root.contextMenuAnchor());
     }
 
-    DContextMenu {
+    AlpeContextMenu {
         id: windowContextMenu
 
         property var currentWindow: null

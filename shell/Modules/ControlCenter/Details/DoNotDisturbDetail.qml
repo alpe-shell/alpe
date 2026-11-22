@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../../Common/Format.js" as Format
 
 Item {
@@ -67,7 +67,7 @@ Item {
         return Math.max(1, Math.round((target.getTime() - now.getTime()) / 60000));
     }
 
-    DFlickable {
+    AlpeFlickable {
         anchors.fill: parent
         contentHeight: column.height
         clip: true
@@ -103,7 +103,7 @@ Item {
                     Repeater {
                         model: root.presets
 
-                        DButton {
+                        AlpeButton {
                             required property var modelData
 
                             buttonHeight: Theme.buttonHeightXS

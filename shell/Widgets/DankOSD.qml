@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DOSD {
+AlpeOSD {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankOSD", "DOSD", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankOSD", "AlpeOSD", "qs.Widgets")
 }

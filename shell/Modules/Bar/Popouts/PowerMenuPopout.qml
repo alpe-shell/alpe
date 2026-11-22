@@ -3,7 +3,7 @@ import qs.Common
 import qs.Modules.PowerMenu
 import qs.Widgets
 
-DPopout {
+AlpePopout {
     id: root
 
     signal powerActionRequested(string action)

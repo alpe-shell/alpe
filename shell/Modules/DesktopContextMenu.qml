@@ -4,12 +4,12 @@ import Qt.labs.folderlistmodel
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import "../DCommon/Common/MaterialWallpaper.js" as Art
+import "../Alpe/Common/MaterialWallpaper.js" as Art
 import "../Common/WallpaperFormats.js" as WallpaperFormats
 
-DContextMenu {
+AlpeContextMenu {
     id: root
 
     property bool settingsExpanded: false
@@ -205,7 +205,7 @@ DContextMenu {
         id: wallpaperStrip
 
         Item {
-            DCarousel {
+            AlpeCarousel {
                 x: root.menuPadding
                 y: Theme.spacingXS
                 width: parent.width - root.menuPadding * 2
@@ -214,7 +214,7 @@ DContextMenu {
                 itemRadius: Theme.cornerRadiusM
                 model: root.stripItems
 
-                delegate: DCarouselItem {
+                delegate: AlpeCarouselItem {
                     id: thumb
 
                     required property var modelData
@@ -265,7 +265,7 @@ DContextMenu {
                             }
                         }
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: "check"
                             size: Theme.iconSizeMedium

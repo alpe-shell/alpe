@@ -7,7 +7,7 @@ import qs.Common
 import "../../Common/ConfigIncludeResolve.js" as ConfigIncludeResolve
 import "../../Common/WindowRuleSize.js" as WindowRuleSize
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 
@@ -184,7 +184,7 @@ Item {
     signal rulesChanged
 
     function getActiveWindows() {
-        const toplevels = DToplevels.toplevels?.values || [];
+        const toplevels = Toplevels.toplevels?.values || [];
         return toplevels.map(t => ({
                     appId: t.appId || "",
                     title: t.title || ""
@@ -192,7 +192,7 @@ Item {
     }
 
     Connections {
-        target: DToplevels.toplevels
+        target: Toplevels.toplevels
         function onValuesChanged() {
             root.activeWindows = root.getActiveWindows();
         }
@@ -391,7 +391,7 @@ Item {
                 visible: root.activeWindows.length > 0
                 title: I18n.tr("Create rule for:")
 
-                DDropdown {
+                AlpeDropdown {
                     id: windowSelector
                     downKeyOpens: false
                     backgroundColor: SettingsMetrics.controlSurface
@@ -424,7 +424,7 @@ Item {
                 title: "Fenster wählen"
                 subtitle: root.pickStatus !== "" ? root.pickStatus : "Fenster anklicken – Alpe füllt Klasse und Titel ein"
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.picking ? "Warte …" : "Fenster anklicken"
                     iconName: "ads_click"
@@ -451,7 +451,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingXS
 
-                    DIcon {
+                    AlpeIcon {
                         name: "select_window"
                         size: Theme.iconSizeLarge
                         color: Theme.surfaceVariantText
@@ -496,7 +496,7 @@ Item {
                         return parts.length > 0 ? parts.join(" · ") : I18n.tr("No match criteria");
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "edit"
                         enabled: !root.readOnly
@@ -504,7 +504,7 @@ Item {
                         onClicked: root.editRule(ruleRow.liveRuleData)
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "delete"
                         iconColor: Theme.error
@@ -522,7 +522,7 @@ Item {
                             id: actionRepeater
                             model: root.actionChips(ruleRow.liveRuleData.actions)
 
-                            delegate: DBadge {
+                            delegate: AlpeBadge {
                                 required property string modelData
                                 maximumWidth: parent?.width ?? 0
                                 text: modelData
@@ -590,7 +590,7 @@ Item {
                     clickable: true
                     onClicked: root.expandedExternalId = externalCard.expanded ? "" : externalCard.modelData.id
 
-                    DBadge {
+                    AlpeBadge {
                         visible: externalCard.sourceFile.length > 0
                         anchors.verticalCenter: parent.verticalCenter
                         text: externalCard.sourceFile
@@ -598,14 +598,14 @@ Item {
                         textColor: Theme.surfaceVariantText
                     }
 
-                    DIcon {
+                    AlpeIcon {
                         name: externalCard.expanded ? "expand_less" : "expand_more"
                         size: Theme.iconSize
                         color: Theme.surfaceVariantText
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "content_copy"
                         iconColor: Theme.surfaceVariantText
                         enabled: !root.readOnly
@@ -628,7 +628,7 @@ Item {
                             Repeater {
                                 model: root.actionChips(externalCard.modelData.actions)
 
-                                delegate: DBadge {
+                                delegate: AlpeBadge {
                                     required property string modelData
                                     maximumWidth: parent?.width ?? 0
                                     text: modelData
@@ -705,7 +705,7 @@ Item {
         SettingsFabBar {
             shown: !root.readOnly
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Add window rule")
                 iconName: "add"
                 onClicked: root.openRuleModal()

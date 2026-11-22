@@ -1,10 +1,10 @@
 import QtQuick
 import Quickshell.Wayland
 import qs.Common
-import qs.DCommon.FileBrowser
+import qs.Alpe.FileBrowser
 import qs.Modals.Common
 
-DModal {
+AlpeModal {
     id: fileBrowserSurfaceModal
 
     property string mode: folderMode ? "openFolder" : saveMode ? "save" : "open"

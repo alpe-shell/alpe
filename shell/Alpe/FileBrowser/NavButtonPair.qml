@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Row {
     id: pair
@@ -44,7 +44,7 @@ Row {
             tooltipText: segment.tooltipText
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: segment.iconName
             size: Style.iconSizeMedium

@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.Modals.DLauncherV2
+import qs.Modals.Launcher
 
 FocusScope {
     id: root

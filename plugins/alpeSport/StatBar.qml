@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Statistikzeile wie bei FotMob: Wert | Bezeichnung | Wert, darunter zwei Balken von der Mitte aus.
 // Ballbesitz (split) als ein geteilter Balken.

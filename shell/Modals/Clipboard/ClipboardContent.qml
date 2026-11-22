@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Services
 
@@ -139,7 +139,7 @@ Item {
                 modal: clipboardContent.modal
             }
 
-            DSearchField {
+            AlpeSearchField {
                 id: searchField
 
                 anchors.left: parent.left
@@ -173,7 +173,7 @@ Item {
                 }
             }
 
-            DActionButton {
+            AlpeActionButton {
                 id: filterButton
 
                 anchors.right: searchField.right
@@ -196,7 +196,7 @@ Item {
             Component {
                 id: filterMenuComponent
 
-                DDropdown {
+                AlpeDropdown {
                     showTrigger: false
                     popupAnchorItem: filterButton
                     popupWidth: 180
@@ -230,7 +230,7 @@ Item {
         anchors.bottomMargin: keyboardHintsLoader.active ? PopoutMetrics.contentGap : 0
         clip: true
 
-        DListView {
+        AlpeListView {
             id: clipboardListView
             reuseItems: true
             highlightSelection: clipboardContent.modal.keyboardNavigationActive && clipboardContent.modal.selectedIndex >= 0

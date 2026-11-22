@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -82,7 +82,7 @@ Item {
                 visible: status === Image.Ready
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 visible: parent.iconPath === "" || trashIcon.status !== Image.Ready
                 name: "delete"

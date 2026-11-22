@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
-import qs.Modals.DLauncherV2.Components
+import qs.Alpe.Widgets
+import qs.Modals.Launcher.Components
 
 Rectangle {
     id: root
@@ -148,7 +148,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: Theme.spacingS
 
-        DFlickable {
+        AlpeFlickable {
             id: actionsFlickable
             anchors.left: parent.left
             anchors.right: tabHint.left
@@ -170,7 +170,7 @@ Rectangle {
                     id: actionRepeater
                     model: root.actions
 
-                    DButton {
+                    AlpeButton {
                         id: actionButton
                         required property var modelData
                         required property int index
@@ -194,7 +194,7 @@ Rectangle {
             }
         }
 
-        DKeycap {
+        AlpeKeycap {
             id: tabHint
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter

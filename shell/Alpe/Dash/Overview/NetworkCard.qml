@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "../../../Common/Format.js" as Format
 
 MetricCard {

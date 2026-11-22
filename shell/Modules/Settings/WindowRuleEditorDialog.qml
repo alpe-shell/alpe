@@ -4,11 +4,11 @@ import QtQuick
 import qs.Common
 import "../../Common/WindowRuleMerge.js" as WindowRuleMerge
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 
-DDialog {
+AlpeDialog {
     id: root
 
     property var editingRule: null
@@ -519,7 +519,7 @@ DDialog {
         }
     }
 
-    component Field: DTextField {
+    component Field: AlpeTextField {
         property int share: 1
         property int shares: 2
 
@@ -532,13 +532,13 @@ DDialog {
     readonly property var matchConditions: [condFloating, condFocused, condXwayland, condFullscreen, condPinned, condGroup, condModal]
 
     actions: [
-        DButton {
+        AlpeButton {
             text: I18n.tr("Cancel")
             enabled: root.closeEnabled
             variant: "text"
             onClicked: root.rejected()
         },
-        DButton {
+        AlpeButton {
             visible: root.isEditMode
             text: I18n.tr("Apply")
             enabled: root.acceptEnabled
@@ -546,7 +546,7 @@ DDialog {
             variant: "tonal"
             onClicked: root.submit(true)
         },
-        DButton {
+        AlpeButton {
             text: root.isEditMode ? I18n.tr("Save") : I18n.tr("Add")
             enabled: root.acceptEnabled
             busy: root.submitting && !root.applying
@@ -556,7 +556,7 @@ DDialog {
 
     SettingsGroup {
         SettingsRow {
-            body: DTextField {
+            body: AlpeTextField {
                 id: nameInput
                 width: parent.width
                 outlined: true
@@ -571,7 +571,7 @@ DDialog {
     SettingsCard {
         title: I18n.tr("Match Criteria")
         SettingsRow {
-            body: DTextField {
+            body: AlpeTextField {
                 id: appIdInput
                 width: parent.width
                 outlined: true
@@ -590,7 +590,7 @@ DDialog {
                 labelText: I18n.tr("Title regex (optional)")
             }
 
-            DActionButton {
+            AlpeActionButton {
                 id: addTitle
                 anchors.verticalCenter: parent.verticalCenter
                 iconName: "add"
@@ -626,7 +626,7 @@ DDialog {
                     onTextEdited: extraMatchModel.setProperty(extraRow.index, "rowTitle", text)
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     id: removeMatch
                     anchors.verticalCenter: parent.verticalCenter
                     iconName: "close"
@@ -778,7 +778,7 @@ DDialog {
         title: I18n.tr("Window Opening")
 
         SettingsRow {
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
@@ -822,7 +822,7 @@ DDialog {
         visible: root.isHyprland
 
         SettingsRow {
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
@@ -892,7 +892,7 @@ DDialog {
         SettingsRow {
             title: I18n.tr("Focus", "noun, window rule editor group of keyboard focus options")
 
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
@@ -918,7 +918,7 @@ DDialog {
         SettingsRow {
             title: I18n.tr("Pointer")
 
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
@@ -932,7 +932,7 @@ DDialog {
         SettingsRow {
             title: I18n.tr("Rendering", "window rule editor group of render options")
 
-            body: DFilterChips {
+            body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false

@@ -3,7 +3,7 @@ import qs.Modules.Notifications
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -222,7 +222,7 @@ Item {
         anchors.fill: parent
         spacing: Theme.spacingS
 
-        DFilterChips {
+        AlpeFilterChips {
             id: filterChips
             width: parent.width
             visible: root.visibleFilters.length > 1
@@ -236,7 +236,7 @@ Item {
             }
         }
 
-        DListView {
+        AlpeListView {
             id: historyListView
             x: -root.swipeBleed
             width: parent.width + root.swipeBleed * 2

@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DTextCursor {
+Alpe.AlpeTextCursor {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankTextCursor", "DTextCursor", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankTextCursor", "AlpeTextCursor", "qs.Alpe.Widgets")
 }

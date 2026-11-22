@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 // Alpe: was unter KWin nicht die Shell, sondern KWin und Plasma regeln – an einem Ort.
@@ -143,7 +143,7 @@ Item {
         resetKeys: []
         clickable: true
 
-        DIcon {
+        AlpeIcon {
             anchors.verticalCenter: parent.verticalCenter
             name: "open_in_new"
             size: Theme.iconSize
@@ -164,7 +164,7 @@ Item {
                 iconName: KwinService.connected ? "check_circle" : "error_outline"
                 iconColor: KwinService.connected ? Theme.primary : Theme.error
 
-                DButton {
+                AlpeButton {
                     anchors.verticalCenter: parent.verticalCenter
                     buttonHeight: Theme.buttonHeightS
                     text: "Neu laden"

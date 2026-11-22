@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Common
+import qs.Alpe.Widgets
 
 Rectangle {
     id: footer
@@ -38,7 +38,7 @@ Rectangle {
         elide: Text.ElideRight
     }
 
-    DActionButton {
+    AlpeActionButton {
         id: clearButton
 
         anchors.right: parent.right

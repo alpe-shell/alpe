@@ -2,7 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 BasePill {
@@ -17,7 +17,7 @@ BasePill {
             implicitWidth: icon.width
             implicitHeight: root.contentThickness
 
-            DIcon {
+            AlpeIcon {
                 id: icon
 
                 name: DMSNetworkService.connected ? "vpn_lock" : "vpn_key_off"
@@ -39,7 +39,7 @@ BasePill {
     Loader {
         id: tooltipLoader
         active: false
-        sourceComponent: DTooltip {}
+        sourceComponent: AlpeTooltip {}
     }
 
     MouseArea {

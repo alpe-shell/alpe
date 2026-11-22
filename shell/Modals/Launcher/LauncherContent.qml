@@ -4,9 +4,9 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modals.DLauncherV2.Components
+import qs.Modals.Launcher.Components
 import "../../Common/LauncherKeybinds.js" as LauncherKeybinds
 
 FocusScope {
@@ -325,7 +325,7 @@ FocusScope {
                 border.color: Theme.outlineMedium
                 radius: Theme.windowRadius
             }
-            DFilterChips {
+            AlpeFilterChips {
                 id: modeChips
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.spacingM
@@ -490,7 +490,7 @@ FocusScope {
                     }
                 }
 
-                DDropdown {
+                AlpeDropdown {
                     id: categoryDropdown
                     transientSurfaceTracker: root.transientSurfaceTracker
                     focusPolicy: Qt.NoFocus
@@ -557,14 +557,14 @@ FocusScope {
                     height: Theme.buttonHeightS
                     spacing: Theme.spacingS
 
-                    DDropdown {
+                    AlpeDropdown {
                         id: typeDropdown
                         focusPolicy: Qt.NoFocus
                         focusReturnTarget: searchField
                         Layout.fillWidth: true
                         Layout.preferredWidth: 1
                         Layout.minimumWidth: 0
-                        visible: DSearchService.supportsTypeFilter
+                        visible: FileSearchService.supportsTypeFilter
                         triggerHeight: fileFilterContent.height
                         triggerRadius: Theme.fullRadius(width, triggerHeight)
                         compactMode: true
@@ -597,7 +597,7 @@ FocusScope {
                         }
                     }
 
-                    DDropdown {
+                    AlpeDropdown {
                         id: sortDropdown
                         focusPolicy: Qt.NoFocus
                         focusReturnTarget: searchField
@@ -636,7 +636,7 @@ FocusScope {
                         }
                     }
 
-                    DTextField {
+                    AlpeTextField {
                         id: extFilterField
                         Layout.fillWidth: true
                         Layout.preferredWidth: 1

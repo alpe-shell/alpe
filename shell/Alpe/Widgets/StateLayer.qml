@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Templates as T
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 MouseArea {
     id: root
@@ -93,14 +93,14 @@ MouseArea {
 
         Behavior on stateAlpha {
             enabled: !Style.reduceMotion && Style.currentAnimationSpeed !== Style.AnimationSpeed.None
-            DAnim {
+            AlpeAnim {
                 duration: root.transitionDuration
                 easing.bezierCurve: root.transitionCurve
             }
         }
     }
 
-    DRipple {
+    AlpeRipple {
         id: rippleLayer
         anchors.fill: parent
         rippleColor: root.stateColor
@@ -131,7 +131,7 @@ MouseArea {
     Loader {
         id: tooltipLoader
         active: false
-        sourceComponent: DTooltipHost {
+        sourceComponent: AlpeTooltipHost {
             text: root.tooltipText
             multiline: root.tooltipMultiline
             target: root

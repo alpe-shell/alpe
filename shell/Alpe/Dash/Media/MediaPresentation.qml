@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell.Services.Mpris
 import qs.Services
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 QtObject {
     id: root

@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DFilterChips {
+Alpe.AlpeFilterChips {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankFilterChips", "DFilterChips", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankFilterChips", "AlpeFilterChips", "qs.Alpe.Widgets")
 }

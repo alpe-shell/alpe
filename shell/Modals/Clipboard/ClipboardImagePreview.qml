@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 ClippingRectangle {
     id: root
@@ -93,7 +93,7 @@ ClippingRectangle {
             onWheel: wheel => wheel.accepted = true
         }
 
-        DWindowHeader {
+        AlpeWindowHeader {
             id: header
 
             anchors.top: parent.top
@@ -130,7 +130,7 @@ ClippingRectangle {
                 visible: status === Image.Ready && source != ""
             }
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 name: "image"
                 size: Theme.iconSizeLarge

@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -16,7 +16,7 @@ Item {
             settingKey: "appIdSubstitutions"
             tags: ["app", "icon", "substitution", "replacement", "pattern", "window", "class", "regex"]
 
-            headerActions: DActionButton {
+            headerActions: AlpeActionButton {
                 iconName: "restart_alt"
                 tooltipText: I18n.tr("Reset to default")
                 visible: JSON.stringify(SettingsData.appIdSubstitutions) !== JSON.stringify(SettingsData.getDefaultAppIdSubstitutions())
@@ -45,7 +45,7 @@ Item {
                         value: substitutionGroup.modelData.pattern
                         onEditingFinished: value => SettingsData.updateAppIdSubstitution(substitutionGroup.index, value, replacementField.value, substitutionGroup.modelData.type)
 
-                        actions: DActionButton {
+                        actions: AlpeActionButton {
                             iconName: "delete"
                             iconColor: Theme.error
                             Accessible.name: I18n.tr("Remove")
@@ -72,7 +72,7 @@ Item {
         }
 
         SettingsFabBar {
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Add substitution", "running apps settings button, adds an app name or icon substitution")
                 iconName: "add"
                 onClicked: SettingsData.addAppIdSubstitution("", "", "exact")

@@ -10,7 +10,7 @@ Rectangle {
     } }
     Timer { interval: 900; running: true; onTriggered: {
         const d = tab.children.find(c => c.toString().indexOf("MatchDetail") === 0);
-        const f = d.children.find(c => c.toString().indexOf("DFlickable") === 0);
+        const f = d.children.find(c => c.toString().indexOf("AlpeFlickable") === 0);
         f.contentY = Math.max(0, f.contentHeight - f.height);
         if (!d.stream) console.error("Fehler: Streaming-Link fehlt");
     } }

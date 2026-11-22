@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Rectangle {
     id: root
@@ -33,7 +33,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.spacingXS
 
-        DIcon {
+        AlpeIcon {
             anchors.verticalCenter: parent.verticalCenter
             name: root.iconName
             size: 14
@@ -52,7 +52,7 @@ Rectangle {
         }
     }
 
-    DRipple {
+    AlpeRipple {
         id: ripple
         rippleColor: root.isDestructive ? Theme.error : Theme.surfaceText
         cornerRadius: Theme.cornerRadius

@@ -4,10 +4,10 @@ import QtQuick
 import qs.Common
 import qs.Services
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
-DFlickable {
+AlpeFlickable {
     id: root
     clip: true
 
@@ -98,7 +98,7 @@ DFlickable {
                         acceptedButtons: Qt.NoButton
                     }
 
-                    DTooltipHost {
+                    AlpeTooltipHost {
                         text: root.titleTooltip
                         target: titleText
                         hoverArea: titleHover

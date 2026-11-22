@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // One view at a time: owner filters persist in CacheData; Online lists every connected process.
-DFilterChips {
+AlpeFilterChips {
     readonly property var types: CacheData.processFilterTypes
 
     model: [I18n.tr("All"), I18n.tr("User", "noun, process filter and fallback display name"), I18n.tr("System"), I18n.tr("Online", "process filter: only processes with internet connections")]

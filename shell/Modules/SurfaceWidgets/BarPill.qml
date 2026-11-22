@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
-import qs.Modules.DBar
+import qs.Modules.Bar
 
 Item {
     id: root
@@ -312,7 +312,7 @@ Item {
                     onPressed: mouse => root.handlePress(mouse, stateLayer)
                 }
 
-                DRipple {
+                AlpeRipple {
                     id: ripple
                     rippleColor: Theme.surfaceText
                     topLeftRadius: fill.topLeftRadius

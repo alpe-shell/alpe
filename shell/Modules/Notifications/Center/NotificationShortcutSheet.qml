@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Window
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Notifications
 import "../NotificationShortcuts.js" as Shortcuts
 
@@ -154,7 +154,7 @@ FocusScope {
             acceptedButtons: Qt.AllButtons
         }
 
-        DFlickable {
+        AlpeFlickable {
             id: scroll
             anchors.fill: parent
             contentWidth: width
@@ -196,7 +196,7 @@ FocusScope {
                             width: NotificationMetrics.shortcutTileWidth
                             spacing: Theme.spacingXS
 
-                            DIconButton {
+                            AlpeIconButton {
                                 id: button
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 size: "m"

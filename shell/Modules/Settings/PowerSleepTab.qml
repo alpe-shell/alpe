@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Services/BootEntries.js" as BootEntries
@@ -330,7 +330,7 @@ Item {
                 visible: BootEntryService.status === "ready"
                 title: I18n.tr("Add entry", "settings row that adds an EFI boot entry to the power menu")
 
-                DDropdown {
+                AlpeDropdown {
                     id: bootEntryDropdown
                     downKeyOpens: false
                     backgroundColor: SettingsMetrics.controlSurface
@@ -367,7 +367,7 @@ Item {
                     subtitle: "Boot" + modelData.id
                     iconName: "restart_alt"
 
-                    DActionButton {
+                    AlpeActionButton {
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "delete"
                         iconColor: Theme.error

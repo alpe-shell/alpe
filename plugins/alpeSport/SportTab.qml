@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Plugins
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import "sport.js" as S
 
 // Sport-Tab im Aufbau von FotMob: links die Wettbewerbe, in der Mitte die Spiele des Tages oder die
@@ -484,7 +484,7 @@ DashTabComponent {
         radius: Theme.cornerRadius
         color: Theme.surfaceContainerHigh
 
-        DFlickable {
+        AlpeFlickable {
             anchors.fill: parent
             anchors.margins: Theme.spacingXS
             contentWidth: width
@@ -598,7 +598,7 @@ DashTabComponent {
                 visible: root.view === "day" || root.view === "fav"
                 spacing: Theme.spacingXS
 
-                DActionButton {
+                AlpeActionButton {
                     anchors.verticalCenter: parent.verticalCenter
                     iconName: "chevron_left"
                     iconColor: Theme.surfaceText
@@ -649,7 +649,7 @@ DashTabComponent {
                     }
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     anchors.verticalCenter: parent.verticalCenter
                     iconName: "chevron_right"
                     iconColor: Theme.surfaceText
@@ -766,7 +766,7 @@ DashTabComponent {
                     color: Theme.surfaceVariantText
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     id: refreshButton
 
                     anchors.verticalCenter: parent.verticalCenter
@@ -803,7 +803,7 @@ DashTabComponent {
         }
 
         // Tagesansicht (Alle, Live, Favoriten)
-        DFlickable {
+        AlpeFlickable {
             id: dayList
 
             anchors.top: failureText.visible ? failureText.bottom : header.bottom
@@ -887,7 +887,7 @@ DashTabComponent {
                         anchors.centerIn: parent
                         spacing: Theme.spacingS
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.horizontalCenter: parent.horizontalCenter
                             name: root.view === "live" ? "sensors_off" : root.view === "fav" ? "star" : "event_busy"
                             size: 36
@@ -917,7 +917,7 @@ DashTabComponent {
         }
 
         // Wettbewerb: Spiele nach Tagen
-        DListView {
+        AlpeListView {
             id: matchesList
 
             anchors.top: failureText.visible ? failureText.bottom : header.bottom
@@ -989,7 +989,7 @@ DashTabComponent {
         }
 
         // Wettbewerb: Tabelle
-        DFlickable {
+        AlpeFlickable {
             id: tableFlick
 
             anchors.top: failureText.visible ? failureText.bottom : header.bottom
@@ -1035,7 +1035,7 @@ DashTabComponent {
         }
 
         // Wettbewerb: Statistik
-        DFlickable {
+        AlpeFlickable {
             id: statsFlick
 
             anchors.top: failureText.visible ? failureText.bottom : header.bottom

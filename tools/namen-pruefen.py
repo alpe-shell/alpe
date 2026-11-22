@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Alpe: Namensprüfung (Plan 9, 2.3.3). Sucht dms/dank/dux (Gross/klein) in Inhalt und Pfaden der
+"""Alpe: Namensprüfung (Plan 9, 2.3.3). Sucht dms/dank/dux (Gross/klein) und Importe über das alte
+Modul qs.DCommon (0.8 Nr. 27) in Inhalt und Pfaden der
 versionierten Dateien unter shell, core, plugins, tools, tests, entwicklung, design, lockscreen,
 packaging und meldet alles, was nicht auf der Ausnahmeliste tools/namen-ausnahmen.txt steht.
 
@@ -19,7 +20,7 @@ import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BEREICH = ["shell", "core", "plugins", "tools", "tests", "entwicklung", "design", "lockscreen", "packaging"]
-SUCHE = re.compile(r"dms|dank|dux", re.IGNORECASE)
+SUCHE = re.compile(r"dms|dank|dux|qs\.DCommon", re.IGNORECASE)
 AUSNAHMEN = os.path.join(REPO, "tools", "namen-ausnahmen.txt")
 
 

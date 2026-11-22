@@ -3,7 +3,7 @@ import qs.Common
 import qs.Services
 import qs.Widgets
 
-DContextMenu {
+AlpeContextMenu {
     id: root
 
     property var entry: null

@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DActionButton {
+Alpe.AlpeActionButton {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankActionButton", "DActionButton", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankActionButton", "AlpeActionButton", "qs.Alpe.Widgets")
 }

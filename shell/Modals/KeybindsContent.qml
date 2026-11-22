@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../Common/KeyUtils.js" as KeyUtils
 import "../Common/KeybindActions.js" as Actions
 
@@ -49,7 +49,7 @@ FocusScope {
     Component {
         id: keybindItemDelegate
 
-        DListItem {
+        AlpeListItem {
             id: keybindRow
             required property var modelData
             readonly property bool canExecute: !keybindRow.modelData.isRange && keybindRow.modelData.trigger !== "both" && KeybindsService.canExecuteAction(keybindRow.modelData.action, keybindRow.modelData.luaAction)
@@ -91,14 +91,14 @@ FocusScope {
                     Layout.alignment: Qt.AlignVCenter
                     active: keybindRow.modelData.trigger === "release"
                     visible: active
-                    sourceComponent: DBadge {
+                    sourceComponent: AlpeBadge {
                         text: I18n.tr("Release", "noun, hyprland bind flag toggle, trigger on key release")
                         color: Theme.primaryHover
                         textColor: Theme.primary
                     }
                 }
 
-                // DKeycap items (Trailing - stacked vertically if multiple combos)
+                // AlpeKeycap items (Trailing - stacked vertically if multiple combos)
                 Column {
                     id: keycapsCol
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
@@ -114,7 +114,7 @@ FocusScope {
                             Repeater {
                                 model: modelData
 
-                                DKeycap {
+                                AlpeKeycap {
                                     text: modelData
                                     textColor: Theme.primary
                                 }
@@ -132,7 +132,7 @@ FocusScope {
                 cursorShape: keybindRow.canExecute ? Qt.PointingHandCursor : Qt.ArrowCursor
             }
 
-            DTooltipHost {
+            AlpeTooltipHost {
                 text: keybindRow.canExecute ? ((keybindRow.modelData.action || keybindRow.modelData.desc || "") + " • " + I18n.tr("Click to run", "cheatsheet action tooltip suffix")) : keybindRow.modelData.releaseAction ? (keybindRow.modelData.action + " • " + content.releaseLabel(keybindRow.modelData.releaseAction)) : (keybindRow.modelData.label || keybindRow.modelData.action || keybindRow.modelData.desc || "")
                 target: keybindRow
                 hoverArea: rowHoverArea
@@ -565,7 +565,7 @@ FocusScope {
                 anchors.top: parent.top
                 spacing: Theme.spacingS
 
-                DSearchField {
+                AlpeSearchField {
                     id: searchField
                     Layout.fillWidth: true
                     placeholderText: I18n.tr("Search")
@@ -586,7 +586,7 @@ FocusScope {
                     }
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     visible: content.showFloatingToggle
                     buttonSize: Theme.iconButtonSize
                     iconName: content.floating ? "close_fullscreen" : "open_in_new"
@@ -596,7 +596,7 @@ FocusScope {
                 }
             }
 
-            DFlickable {
+            AlpeFlickable {
                 id: sidebarFlickable
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -613,7 +613,7 @@ FocusScope {
                     spacing: Theme.spacingXXS
 
                     // "All" Category Tab
-                    DListItem {
+                    AlpeListItem {
                         id: allTab
                         width: sidebarCol.width
                         implicitHeight: Theme.menuItemHeight
@@ -634,7 +634,7 @@ FocusScope {
                             anchors.rightMargin: Theme.spacingL
                             spacing: Theme.spacingS
 
-                            DIcon {
+                            AlpeIcon {
                                 name: "apps"
                                 size: Theme.iconSizeSmall
                                 color: allTab.contentColor
@@ -648,7 +648,7 @@ FocusScope {
                                 elide: Text.ElideRight
                             }
 
-                            DBadge {
+                            AlpeBadge {
                                 text: content.dataModel.totalCount.toString()
                                 color: allTab.isSelected ? Theme.primary : Theme.surfaceVariant
                                 textColor: allTab.isSelected ? Theme.onPrimary : Theme.surfaceVariantText
@@ -661,7 +661,7 @@ FocusScope {
                     Repeater {
                         model: content.dataModel.sortedKeys
 
-                        DListItem {
+                        AlpeListItem {
                             id: catTab
                             required property var modelData
 
@@ -687,7 +687,7 @@ FocusScope {
                                 anchors.rightMargin: Theme.spacingL
                                 spacing: Theme.spacingS
 
-                                DIcon {
+                                AlpeIcon {
                                     name: content.getCategoryIcon(catTab.catName)
                                     size: Theme.iconSizeSmall
                                     color: catTab.contentColor
@@ -701,7 +701,7 @@ FocusScope {
                                     elide: Text.ElideRight
                                 }
 
-                                DBadge {
+                                AlpeBadge {
                                     text: (catTab.catInfo?.count || 0).toString()
                                     color: catTab.isSelected ? Theme.primary : Theme.surfaceVariant
                                     textColor: catTab.isSelected ? Theme.onPrimary : Theme.surfaceVariantText
@@ -723,7 +723,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
-            DFlickable {
+            AlpeFlickable {
                 id: rightFlickable
                 anchors.fill: parent
                 contentWidth: width
@@ -752,7 +752,7 @@ FocusScope {
                                 width: parent.width
                                 spacing: Theme.spacingS
 
-                                DIcon {
+                                AlpeIcon {
                                     name: content.getCategoryIcon(sectionCol.sectionCatName)
                                     size: Theme.iconSizeMedium
                                     color: Theme.primary
@@ -833,7 +833,7 @@ FocusScope {
                 spacing: Theme.spacingM
                 visible: content.dataModel.totalCount === 0
 
-                DIcon {
+                AlpeIcon {
                     anchors.horizontalCenter: parent.horizontalCenter
                     name: content.activeSearchQuery.trim() !== "" ? "search_off" : "keyboard"
                     size: Theme.iconSizeLarge + Theme.spacingL

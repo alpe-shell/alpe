@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -27,7 +27,7 @@ Item {
         enabled: root.editable
         onClicked: root.editRequested()
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: root.editable && titleIcon.hovered ? "edit" : DashRegistry.entry(root.entryId)?.icon ?? "dashboard"
             size: Theme.iconSize

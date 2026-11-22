@@ -7,7 +7,7 @@ import Quickshell.Services.UPower
 import qs.Common
 import qs.Modules.Settings.Widgets
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -163,7 +163,7 @@ Item {
         historyEnabled: false
     }
 
-    DFlickable {
+    AlpeFlickable {
         id: flickable
         anchors.fill: parent
         clip: true
@@ -189,7 +189,7 @@ Item {
             width: parent.width - root.contentPadding * 2
             spacing: PopoutMetrics.contentGap
 
-            DCard {
+            AlpeCard {
                 width: parent.width
                 height: heroRow.implicitHeight + pad * 2
                 restRadius: Theme.cornerRadiusL
@@ -201,7 +201,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingM
 
-                    DRingGauge {
+                    AlpeRingGauge {
                         id: heroGauge
                         width: Theme.iconButtonSize + Theme.spacingM
                         height: width
@@ -211,7 +211,7 @@ Item {
                         ringColor: root.levelLow ? Theme.error : Theme.primary
                         animated: root.active
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: BatteryService.isCharging ? "bolt" : BatteryService.getBatteryIcon()
                             size: Theme.iconSize
@@ -242,7 +242,7 @@ Item {
                         }
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: settingsButton
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "settings"
@@ -279,7 +279,7 @@ Item {
                 }
             }
 
-            DCard {
+            AlpeCard {
                 width: parent.width
                 height: profileColumn.implicitHeight + pad * 2
                 restRadius: Theme.cornerRadiusL
@@ -298,7 +298,7 @@ Item {
                         color: Theme.primary
                     }
 
-                    DButtonGroup {
+                    AlpeButtonGroup {
                         id: profileGroup
                         readonly property var profiles: PowerProfileWatcher.availableProfiles
 
@@ -320,7 +320,7 @@ Item {
                 }
             }
 
-            DCard {
+            AlpeCard {
                 id: devicesCard
                 readonly property int columns: Math.min(BatteryService.peripheralDevices.length, 4)
                 width: parent.width
@@ -376,7 +376,7 @@ Item {
                 }
             }
 
-            DCollapsibleSection {
+            AlpeCollapsibleSection {
                 width: parent.width
                 visible: root.multipleBatteries
                 title: I18n.tr("Individual Batteries")
@@ -390,7 +390,7 @@ Item {
                             values: root.multipleBatteries ? BatteryService.batteries : []
                         }
 
-                        delegate: DCard {
+                        delegate: AlpeCard {
                             id: deviceCard
                             required property var modelData
                             required property int index
@@ -485,7 +485,7 @@ Item {
         readonly property bool low: percentage <= SettingsData.batteryLowThreshold
         implicitHeight: deviceName.y + deviceName.implicitHeight
 
-        DRingGauge {
+        AlpeRingGauge {
             id: deviceRing
             width: Theme.iconButtonSize * 2
             height: width
@@ -498,7 +498,7 @@ Item {
             ringColor: device.low ? Theme.error : device.accent
             animated: device.animated
 
-            DIcon {
+            AlpeIcon {
                 anchors.centerIn: parent
                 name: device.iconName
                 size: Theme.iconSize
@@ -529,7 +529,7 @@ Item {
         }
     }
 
-    component StatTile: DCard {
+    component StatTile: AlpeCard {
         id: tile
         property string label: ""
         property string value: ""
@@ -553,7 +553,7 @@ Item {
             width: parent.width
             spacing: Theme.spacingXS
 
-            DRingGauge {
+            AlpeRingGauge {
                 width: Theme.buttonHeightXS
                 height: width
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -563,7 +563,7 @@ Item {
                 ringColor: tile.valueColor === Theme.error ? Theme.error : Theme.primary
                 animated: root.active
 
-                DIcon {
+                AlpeIcon {
                     anchors.centerIn: parent
                     name: tile.iconName
                     size: tile.ratio >= 0 ? Theme.iconSizeSmall : Theme.iconSize

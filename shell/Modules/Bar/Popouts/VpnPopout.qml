@@ -5,7 +5,7 @@ import qs.Widgets
 import qs.Modules.ControlCenter
 import qs.Modules.ControlCenter.Details
 
-DPopout {
+AlpePopout {
     id: root
 
     layerNamespace: "dms:vpn"

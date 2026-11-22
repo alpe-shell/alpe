@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "../../Common/QmlUtils.js" as QmlUtils
 
 Column {
@@ -57,7 +57,7 @@ Column {
         visible: root.description !== ""
     }
 
-    DSlider {
+    AlpeSlider {
         upDownKeysStep: false
         width: parent.width
         value: root.value

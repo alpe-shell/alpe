@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Session
+import qs.Alpe.Session
 
 FocusScope {
     id: root

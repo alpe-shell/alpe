@@ -6,9 +6,9 @@ import qs.Modals.Common
 import qs.Modals.FileBrowser
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
     visible: false
     layerNamespace: "dms:wifi-qrcode"
@@ -111,7 +111,7 @@ DModal {
                         Layout.alignment: Qt.AlignLeft
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "save"
                         Accessible.name: I18n.tr("Save QR Code")
                         iconSize: Theme.iconSize - 4
@@ -125,7 +125,7 @@ DModal {
                         Layout.alignment: Qt.AlignRight
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "close"
                         Accessible.name: I18n.tr("Close")
                         iconSize: Theme.iconSize - 4

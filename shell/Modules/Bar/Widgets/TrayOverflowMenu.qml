@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Widgets
 
-DContextMenu {
+AlpeContextMenu {
     id: root
 
     property var hiddenItems: []

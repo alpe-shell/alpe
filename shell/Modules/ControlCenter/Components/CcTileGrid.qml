@@ -8,7 +8,7 @@ import "../utils/sections.js" as Sections
 import "../utils/widgets.js" as WidgetUtils
 import "../../../Common/GridLayout.js" as GridUtils
 
-DEditableGrid {
+AlpeEditableGrid {
     id: root
 
     property var model: null

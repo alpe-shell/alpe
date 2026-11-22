@@ -1,3 +1,3 @@
-import qs.DCommon.Common as DCommon
+import qs.Alpe.Common as Alpe
 
-DCommon.SpringMotion {}
+Alpe.SpringMotion {}

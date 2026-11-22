@@ -4,7 +4,7 @@ import QtQuick.Window
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 
 Rectangle {
@@ -102,7 +102,7 @@ Rectangle {
         }
     }
 
-    DIcon {
+    AlpeIcon {
         anchors.centerIn: parent
         name: root.placeholderIcon
         size: Theme.iconSizeLarge
@@ -135,7 +135,7 @@ Rectangle {
             anchors.centerIn: parent
             spacing: Theme.spacingS
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.iconButtonSize
                 iconName: root.activateIcon
                 iconSize: Theme.iconSizeMedium
@@ -146,7 +146,7 @@ Rectangle {
                 onClicked: root.activated()
             }
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.iconButtonSize
                 iconName: "folder_open"
                 iconSize: Theme.iconSizeMedium
@@ -156,7 +156,7 @@ Rectangle {
                 onClicked: root.browse()
             }
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.iconButtonSize
                 iconName: "palette"
                 iconSize: Theme.iconSizeMedium
@@ -167,7 +167,7 @@ Rectangle {
                 onClicked: root.pickColor()
             }
 
-            DActionButton {
+            AlpeActionButton {
                 buttonSize: Theme.iconButtonSize
                 iconName: "close"
                 iconSize: Theme.iconSizeMedium

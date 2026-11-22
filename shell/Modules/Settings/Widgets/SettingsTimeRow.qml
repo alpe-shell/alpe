@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Window
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -84,7 +84,7 @@ Item {
                 enabled: root.enabled
                 onClicked: root.edit(isStart)
 
-                DIcon {
+                AlpeIcon {
                     name: "schedule"
                     size: Theme.iconSize
                     color: Theme.surfaceVariantText
@@ -98,7 +98,7 @@ Item {
         id: pickerLoader
         active: false
 
-        sourceComponent: DTimePicker {
+        sourceComponent: AlpeTimePicker {
             parent: root.Window.contentItem
             is24Hour: root.is24Hour
             onAccepted: (hour, minute) => {

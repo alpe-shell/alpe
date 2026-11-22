@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.DCommon.Common
+import qs.Alpe.Common
 
 Item {
     id: root
@@ -105,7 +105,7 @@ Item {
     Component {
         id: materialFace
 
-        DIcon {
+        AlpeIcon {
             name: root.materialName
             size: root.iconSize - root.materialIconSizeAdjustment
             color: root.hasColorOverride ? root.colorOverride : root.iconColor
@@ -125,7 +125,7 @@ Item {
     Component {
         id: svgFace
 
-        DSVGIcon {
+        AlpeSVGIcon {
             source: root.svgSource
             size: root.iconSize
             cornerIcon: root.svgCornerIcon

@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 
-DFocusGrab {
+AlpeFocusGrab {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankFocusGrab", "DFocusGrab", "qs.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankFocusGrab", "AlpeFocusGrab", "qs.Widgets")
 }

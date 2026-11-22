@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 // Eintrag der linken Leiste: Symbol oder Logo, Name, Zaehler fuer laufende Spiele.
 Item {
@@ -34,7 +34,7 @@ Item {
         width: 22
         height: 22
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             visible: root.league === null
             name: root.icon

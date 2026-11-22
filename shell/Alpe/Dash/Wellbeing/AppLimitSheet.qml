@@ -3,7 +3,7 @@ import qs.Common
 import qs.Services
 import qs.Modules.Settings.Widgets
 import qs.Modules.ControlCenter.Widgets
-import qs.Modules.DDash
+import qs.Alpe.Dash
 
 CcSheetDialog {
     id: root

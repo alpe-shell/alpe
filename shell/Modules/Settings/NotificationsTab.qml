@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Column {
@@ -98,7 +98,7 @@ Column {
         title: I18n.tr("Popups", "notification settings card title, popup notifications")
         settingKey: "notificationPopups"
 
-        headerActions: DButton {
+        headerActions: AlpeButton {
             text: I18n.tr("Preview")
             buttonHeight: Theme.buttonHeightXS
             onClicked: NotificationService.sendTestNotifications()
@@ -286,7 +286,7 @@ Column {
                 title: modelData.rule?.pattern || I18n.tr("Unknown")
                 singleLineTitle: true
 
-                DActionButton {
+                AlpeActionButton {
                     iconName: "delete"
                     iconColor: Theme.error
                     tooltipText: I18n.tr("Remove")

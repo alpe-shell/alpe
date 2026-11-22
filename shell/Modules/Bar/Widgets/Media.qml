@@ -2,10 +2,10 @@ import QtQuick
 import Quickshell.Services.Mpris
 import Quickshell.Widgets
 import qs.Common
-import qs.Modules.DBar
+import qs.Modules.Bar
 import qs.Modules.Plugins
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../../../Common/LyricLayout.js" as LyricLayout
 
@@ -87,7 +87,7 @@ BasePill {
     Loader {
         id: tooltipLoader
         active: false
-        sourceComponent: DTooltip {}
+        sourceComponent: AlpeTooltip {}
     }
 
     function showTrackTooltip() {
@@ -201,7 +201,7 @@ BasePill {
             visible: root.visualizerEnabled
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.fill: parent
             name: "music_note"
             size: parent.width
@@ -215,7 +215,7 @@ BasePill {
         height: width
         visible: root.playerAvailable
 
-        DIconButton {
+        AlpeIconButton {
             anchors.centerIn: parent
             width: parent.width
             height: parent.height
@@ -432,7 +432,7 @@ BasePill {
                         visible: root.playerAvailable
                         opacity: (activePlayer && activePlayer.canGoPrevious) ? 1 : 0.3
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: "skip_previous"
                             size: 12 * root.contentScale
@@ -460,7 +460,7 @@ BasePill {
                         visible: playerAvailable
                         opacity: (activePlayer && activePlayer.canGoNext) ? 1 : 0.3
 
-                        DIcon {
+                        AlpeIcon {
                             anchors.centerIn: parent
                             name: "skip_next"
                             size: 12 * root.contentScale

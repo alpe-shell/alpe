@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 RowLayout {
     id: root
@@ -28,7 +28,7 @@ RowLayout {
 
     spacing: Theme.spacingS
 
-    DActionButton {
+    AlpeActionButton {
         id: muteButton
         focusRingColor: MediaAccentService.focusRing
         buttonSize: Theme.iconButtonSize

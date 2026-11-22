@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Effects
 import qs.Common
 import qs.Modules.ControlCenter
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Widgets
 import "../utils/widgets.js" as WidgetUtils
 
@@ -77,14 +77,14 @@ Item {
         height: root.avatarSide
         visible: !root.wide
 
-        DMaterialShape {
+        AlpeMaterialShape {
             anchors.fill: parent
             shape: root.shape
             color: Theme.primaryContainer
             visible: !root.hasImage
         }
 
-        DIcon {
+        AlpeIcon {
             anchors.centerIn: parent
             name: "person"
             size: Math.round(root.avatarSide * root.fallbackGlyphRatio)
@@ -100,7 +100,7 @@ Item {
             layer.enabled: root.hasImage
             visible: false
 
-            DMaterialShape {
+            AlpeMaterialShape {
                 anchors.fill: parent
                 shape: root.shape
             }
@@ -169,7 +169,7 @@ Item {
         }
     }
 
-    DActionButton {
+    AlpeActionButton {
         id: shapeButton
 
         anchors.bottom: avatar.bottom

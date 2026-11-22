@@ -4,7 +4,7 @@ import Quickshell.Io
 import qs.Common
 import qs.Modals.FileBrowser
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import "../../Common/KeyUtils.js" as KeyUtils
 
@@ -504,7 +504,7 @@ Item {
                 placeholderText: "/path/to/videos"
                 onValueEdited: value => SettingsData.set("lockScreenVideoPath", value)
 
-                actions: DButton {
+                actions: AlpeButton {
                     text: I18n.tr("Browse")
                     onClicked: videoBrowserModal.open()
                 }
@@ -612,7 +612,7 @@ Item {
                         }
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: securityKeyCapture
                         width: 200
                         anchors.verticalCenter: parent.verticalCenter
@@ -735,7 +735,7 @@ Item {
                     PopoutService.colorPickerModal.show();
                 }
 
-                DColorSwatch {
+                AlpeColorSwatch {
                     width: Theme.iconSizeMedium
                     height: width
                     swatchColor: SettingsData.lockScreenInactiveColor
@@ -794,7 +794,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingS
 
-                    DTextField {
+                    AlpeTextField {
                         id: customPamField
                         outlined: true
                         leftIconName: "lock"
@@ -804,7 +804,7 @@ Item {
                         text: SettingsData.lockPamPath
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: validatePamButton
                         text: I18n.tr("Apply changes")
                         enabled: !root.authValidateRunning && customPamField.text.trim() !== ""
@@ -848,7 +848,7 @@ Item {
                     width: parent.width
                     spacing: Theme.spacingS
 
-                    DTextField {
+                    AlpeTextField {
                         id: customU2fPamField
                         outlined: true
                         leftIconName: "key"
@@ -858,7 +858,7 @@ Item {
                         text: SettingsData.lockU2fPamPath
                     }
 
-                    DButton {
+                    AlpeButton {
                         id: validateU2fPamButton
                         text: I18n.tr("Apply changes")
                         enabled: !root.u2fValidateRunning && customU2fPamField.text.trim() !== ""
@@ -904,14 +904,14 @@ Item {
         }
 
         SettingsFabBar {
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Edit widgets")
                 iconName: "edit"
                 colorRole: "secondaryContainer"
                 onClicked: SessionService.lockEditorRequested()
             }
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Add widget")
                 iconName: "add"
                 onClicked: root.showWidgetBrowser()

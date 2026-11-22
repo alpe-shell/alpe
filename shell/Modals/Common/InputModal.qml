@@ -1,9 +1,9 @@
 import QtQuick
 import qs.Common
 import qs.Modals.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
-DModal {
+AlpeModal {
     id: root
 
     layerNamespace: "dms:input-modal"
@@ -75,7 +75,7 @@ DModal {
         });
     }
 
-    content: DDialog {
+    content: AlpeDialog {
         id: inputDialog
         property alias textInputRef: textInput
 
@@ -84,7 +84,7 @@ DModal {
         onAccepted: root.confirmAndClose()
         onRejected: root.cancelAndClose()
 
-        DTextField {
+        AlpeTextField {
             id: textInput
 
             width: parent.width
@@ -98,14 +98,14 @@ DModal {
         }
 
         actions: [
-            DButton {
+            AlpeButton {
                 maximumWidth: inputDialog.actionWidth
                 wrapText: true
                 text: root.cancelButtonText
                 variant: "text"
                 onClicked: root.cancelAndClose()
             },
-            DButton {
+            AlpeButton {
                 maximumWidth: inputDialog.actionWidth
                 wrapText: true
                 text: root.confirmButtonText

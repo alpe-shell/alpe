@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 SettingsRow {
     id: root
@@ -64,13 +64,13 @@ SettingsRow {
                     anchors.centerIn: parent
                     spacing: Theme.spacingXS
 
-                    DColorSwatch {
+                    AlpeColorSwatch {
                         width: Theme.iconSize
                         height: Theme.iconSize
                         swatchColor: modelData.color
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        DIcon {
+                        AlpeIcon {
                             visible: modelData.id === "custom"
                             anchors.centerIn: parent
                             name: "colorize"

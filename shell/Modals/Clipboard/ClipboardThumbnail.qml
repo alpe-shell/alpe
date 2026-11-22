@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell.Widgets
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 ClippingRectangle {
     id: thumbnail
@@ -240,7 +240,7 @@ ClippingRectangle {
         }
     }
 
-    DIcon {
+    AlpeIcon {
         visible: !(entryType === "image" && thumbnailImage.status === Image.Ready && thumbnailImage.source != "")
         name: {
             switch (entryType) {

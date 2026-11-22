@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -588,7 +588,7 @@ Item {
             visible: hasMultipleBars
 
             SettingsRow {
-                body: DButtonGroup {
+                body: AlpeButtonGroup {
                     id: barSelectorGroup
                     arrowKeysSelect: false
                     width: parent.width
@@ -612,7 +612,7 @@ Item {
             iconName: "widgets"
             title: I18n.tr("Sections", "bar widget settings heading for left, center, right sections")
 
-            headerActions: DButton {
+            headerActions: AlpeButton {
                 text: I18n.tr("Reset")
                 iconName: "refresh"
                 buttonHeight: Theme.buttonHeightXS
@@ -713,7 +713,7 @@ Item {
                         width: parent.width
                         spacing: Theme.spacingS
 
-                        DButton {
+                        AlpeButton {
                             text: I18n.tr("Launcher", "island settings: button to launcher tab")
                             iconName: "grid_view"
                             onClicked: {
@@ -724,7 +724,7 @@ Item {
                             }
                         }
 
-                        DButton {
+                        AlpeButton {
                             text: I18n.tr("Time & weather", "island settings: button to weather tab")
                             iconName: "cloud"
                             onClicked: {

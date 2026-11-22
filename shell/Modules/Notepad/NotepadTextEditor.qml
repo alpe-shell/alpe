@@ -6,7 +6,7 @@ import QtQuick.Layouts
 import Quickshell.Io
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Column {
     id: root
@@ -390,7 +390,7 @@ Column {
             anchors.rightMargin: Theme.spacingM
             spacing: Theme.spacingS
 
-            DSearchField {
+            AlpeSearchField {
                 id: searchField
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
@@ -457,7 +457,7 @@ Column {
             }
 
             // Navigation buttons
-            DActionButton {
+            AlpeActionButton {
                 id: prevButton
                 Layout.alignment: Qt.AlignVCenter
                 iconName: "keyboard_arrow_up"
@@ -468,7 +468,7 @@ Column {
                 onClicked: root.findPrevious()
             }
 
-            DActionButton {
+            AlpeActionButton {
                 id: nextButton
                 Layout.alignment: Qt.AlignVCenter
                 iconName: "keyboard_arrow_down"
@@ -479,7 +479,7 @@ Column {
                 onClicked: root.findNext()
             }
 
-            DActionButton {
+            AlpeActionButton {
                 id: closeSearchButton
                 Layout.alignment: Qt.AlignVCenter
                 iconName: "close"
@@ -513,7 +513,7 @@ Column {
                 Layout.preferredWidth: inlinePreviewVisible ? parent.width * 0.55 : parent.width
                 clip: true
 
-                DFlickable {
+                AlpeFlickable {
                     id: flickable
                     anchors.fill: parent
                     clip: true
@@ -593,7 +593,7 @@ Column {
                         topPadding: Theme.spacingM
                         rightPadding: Theme.spacingM
                         bottomPadding: Theme.spacingM
-                        cursorDelegate: DTextCursor {
+                        cursorDelegate: AlpeTextCursor {
                             id: notepadCursor
                             width: 1.5
                             color: Theme.surfaceText
@@ -741,7 +741,7 @@ Column {
                         spacing: Theme.spacingS
 
                         // Copy plain text button
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "content_copy"
                             Accessible.name: I18n.tr("Copy Text")
                             iconSize: Theme.iconSize - 4
@@ -764,7 +764,7 @@ Column {
                         }
 
                         // Copy HTML button
-                        DActionButton {
+                        AlpeActionButton {
                             iconName: "code"
                             Accessible.name: I18n.tr("Copy HTML")
                             iconSize: Theme.iconSize - 4
@@ -781,7 +781,7 @@ Column {
                     }
                 }
 
-                DFlickable {
+                AlpeFlickable {
                     id: previewFlickable
                     anchors.top: previewHeader.bottom
                     anchors.left: parent.left
@@ -828,7 +828,7 @@ Column {
 
                 Row {
                     spacing: Theme.spacingS
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "save"
                         Accessible.name: I18n.tr("Save")
                         iconSize: Theme.iconSize - 2
@@ -846,7 +846,7 @@ Column {
 
                 Row {
                     spacing: Theme.spacingS
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "folder_open"
                         Accessible.name: I18n.tr("Open")
                         iconSize: Theme.iconSize - 2
@@ -863,7 +863,7 @@ Column {
 
                 Row {
                     spacing: Theme.spacingS
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: "note_add"
                         Accessible.name: I18n.tr("New")
                         iconSize: Theme.iconSize - 2
@@ -881,7 +881,7 @@ Column {
                 Row {
                     spacing: Theme.spacingS
                     visible: PluginService.isPluginLoaded("dankNotepadModule")
-                    DActionButton {
+                    AlpeActionButton {
                         iconName: inlinePreviewVisible ? "visibility" : "visibility_off"
                         Accessible.name: I18n.tr("Preview")
                         iconSize: Theme.iconSize - 2
@@ -904,7 +904,7 @@ Column {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Theme.spacingS
 
-                DActionButton {
+                AlpeActionButton {
                     visible: !root.inPopout
                     iconName: "open_in_new"
                     tooltipText: I18n.tr("Open as window")
@@ -913,7 +913,7 @@ Column {
                     onClicked: root.popoutRequested()
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     visible: root.inPopout
                     iconName: "dock_to_right"
                     tooltipText: I18n.tr("Dock")
@@ -922,7 +922,7 @@ Column {
                     onClicked: root.dockRequested()
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     iconName: "more_horiz"
                     tooltipText: I18n.tr("Settings")
                     iconSize: Theme.iconSize - 2
@@ -954,7 +954,7 @@ Column {
                     anchors.rightMargin: Theme.spacingM
                     spacing: Theme.spacingS
 
-                    DIcon {
+                    AlpeIcon {
                         name: currentTab && currentTab.isTemporary ? "draft" : "description"
                         size: Theme.iconSize - 4
                         color: Theme.surfaceVariantText
@@ -970,7 +970,7 @@ Column {
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: copyPathButton
                         iconName: "content_copy"
                         Accessible.name: I18n.tr("Copy path")
@@ -1048,7 +1048,7 @@ Column {
                     }
                 }
 
-                DActionButton {
+                AlpeActionButton {
                     anchors.verticalCenter: parent.verticalCenter
                     iconName: "info"
                     tooltipText: I18n.tr("File info")

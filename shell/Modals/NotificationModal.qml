@@ -1,13 +1,13 @@
 import QtQuick
 import Quickshell.Io
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modals.Common
-import qs.Modules.DDash
+import qs.Alpe.Dash
 import qs.Modules.Notifications
 import qs.Services
 
-DModal {
+AlpeModal {
     id: notificationModal
 
     layerNamespace: "dms:notification-center-modal"
@@ -27,7 +27,7 @@ DModal {
     }
 
     IpcHandler {
-        // DIsland owns this trigger whenever it is the sole bar for the screen.
+        // Island owns this trigger whenever it is the sole bar for the screen.
         function open(): string {
             if (PopoutService.routeToIsland("notificationcenter", null, false))
                 return "NOTIFICATION_ISLAND_OPEN_SUCCESS";
@@ -145,7 +145,7 @@ DModal {
                 anchors.margins: PopoutMetrics.contentPadding
                 spacing: PopoutMetrics.contentGap
 
-                DWindowHeader {
+                AlpeWindowHeader {
                     id: header
                     width: parent.width
                     controls: null

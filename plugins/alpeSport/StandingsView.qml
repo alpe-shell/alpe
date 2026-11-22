@@ -1,6 +1,6 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import "sport.js" as S
 
 // Tabelle eines Wettbewerbs (NBA: zwei Conferences). Zonen links als Farbstreifen, rechts die Form.

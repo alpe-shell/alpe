@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DListView {
+Alpe.AlpeListView {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankListView", "DListView", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankListView", "AlpeListView", "qs.Alpe.Widgets")
 }

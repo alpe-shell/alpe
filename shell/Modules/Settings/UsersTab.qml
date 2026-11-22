@@ -4,7 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Modals.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 
 Item {
@@ -88,7 +88,7 @@ Item {
                         id: actionButtons
                         spacing: Theme.spacingS
 
-                        DActionButton {
+                        AlpeActionButton {
                             id: adminToggleBtn
                             readonly property bool actionBlocked: root.operationPending || (userRow.isLastAdmin && userRow.modelData.isAdmin)
                             buttonSize: Theme.iconButtonSize
@@ -115,7 +115,7 @@ Item {
                             }
                         }
 
-                        DActionButton {
+                        AlpeActionButton {
                             id: deleteBtn
                             readonly property bool actionBlocked: root.operationPending || !UsersService.canDelete(userRow.modelData.username)
                             buttonSize: Theme.iconButtonSize
@@ -158,7 +158,7 @@ Item {
         SettingsFabBar {
             shown: PolkitService.polkitAvailable
 
-            DFab {
+            AlpeFab {
                 text: I18n.tr("Add user", "button and settings page title, creates a new user account")
                 iconName: "person_add"
                 onClicked: keyboard => root.parentModal?.navigateTo("user_create", keyboard)

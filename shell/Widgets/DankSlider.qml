@@ -1,8 +1,8 @@
 import QtQuick
 import qs.Common
-import qs.DCommon.Widgets as DCommon
+import qs.Alpe.Widgets as Alpe
 
-DCommon.DSlider {
+Alpe.AlpeSlider {
     id: shim
-    Component.onCompleted: Deprecation.type(shim, "DankSlider", "DSlider", "qs.DCommon.Widgets")
+    Component.onCompleted: Deprecation.type(shim, "DankSlider", "AlpeSlider", "qs.Alpe.Widgets")
 }

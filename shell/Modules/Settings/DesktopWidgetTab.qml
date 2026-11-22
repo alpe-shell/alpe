@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 import qs.Modules.Settings.Widgets
 import qs.Modules.Settings.DesktopWidgetSettings as DWS
 
@@ -138,7 +138,7 @@ Item {
                         elide: Text.ElideMiddle
                     }
 
-                    DActionButton {
+                    AlpeActionButton {
                         id: copyButton
                         anchors.verticalCenter: parent.verticalCenter
                         iconName: "content_copy"

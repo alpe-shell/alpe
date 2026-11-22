@@ -1,7 +1,7 @@
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
+import qs.Alpe.Widgets
 
 Item {
     id: root
@@ -14,7 +14,7 @@ Item {
         width: parent.width
         spacing: Theme.spacingM
 
-        DIcon {
+        AlpeIcon {
             anchors.horizontalCenter: parent.horizontalCenter
             name: "emoji_events"
             size: Theme.iconSizeLarge + Theme.spacingL
