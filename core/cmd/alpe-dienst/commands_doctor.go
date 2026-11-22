@@ -682,9 +682,9 @@ func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver stri
 	}
 	results = append(results, checkResult{catVersions, "Quickshell", qsStatus, qsVersion, qsDetails, ""})
 
-	dmsVersion, dmsPath := getDMSShellVersion()
-	if dmsVersion != "" {
-		results = append(results, checkResult{catVersions, "Alpe Shell", statusOK, dmsVersion, dmsPath, ""})
+	shellVersion, shellConfigPath := getShellVersion()
+	if shellVersion != "" {
+		results = append(results, checkResult{catVersions, "Alpe Shell", statusOK, shellVersion, shellConfigPath, ""})
 	} else {
 		results = append(results, checkResult{catVersions, "Alpe Shell", statusError, "Not installed or not detected", "", ""})
 	}
@@ -692,7 +692,7 @@ func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver stri
 	return results, qsSemver
 }
 
-func getDMSShellVersion() (version, path string) {
+func getShellVersion() (version, path string) {
 	if err := shellApp.ResolveConfig(nil, nil); err == nil && shellApp.ConfigPath() != "" {
 		if version := brandVersion(shellApp.ConfigPath()); version != "" {
 			return version, shellApp.ConfigPath()
@@ -700,11 +700,11 @@ func getDMSShellVersion() (version, path string) {
 		return "installed", shellApp.ConfigPath()
 	}
 
-	if dmsPath, err := config.LocateDMSConfig(); err == nil {
-		if version := brandVersion(dmsPath); version != "" {
-			return version, dmsPath
+	if shellConfigPath, err := config.LocateDMSConfig(); err == nil {
+		if version := brandVersion(shellConfigPath); version != "" {
+			return version, shellConfigPath
 		}
-		return "installed", dmsPath
+		return "installed", shellConfigPath
 	}
 
 	return "", ""
@@ -752,15 +752,15 @@ func quickshellVersionFailureDetails(stderr string) string {
 func checkDMSInstallation() []checkResult {
 	var results []checkResult
 
-	dmsPath := resolveDoctorShellPath()
+	shellConfigPath := resolveDoctorShellPath()
 
-	if dmsPath == "" {
+	if shellConfigPath == "" {
 		return []checkResult{{catInstallation, "Alpe Configuration", statusError, "Not found", "shell.qml not found in any config path", ""}}
 	}
 
-	results = append(results, checkResult{catInstallation, "Alpe Configuration", statusOK, "Found", dmsPath, ""})
+	results = append(results, checkResult{catInstallation, "Alpe Configuration", statusOK, "Found", shellConfigPath, ""})
 
-	shellQml := filepath.Join(dmsPath, "shell.qml")
+	shellQml := filepath.Join(shellConfigPath, "shell.qml")
 	if _, err := os.Stat(shellQml); err != nil {
 		results = append(results, checkResult{catInstallation, "shell.qml", statusError, "Missing", shellQml, ""})
 	} else {
@@ -770,14 +770,14 @@ func checkDMSInstallation() []checkResult {
 	if doctorVerbose {
 		installType := "Unknown"
 		switch {
-		case strings.Contains(dmsPath, "/nix/store"):
+		case strings.Contains(shellConfigPath, "/nix/store"):
 			installType = "Nix store"
-		case strings.Contains(dmsPath, ".local/share") || strings.Contains(dmsPath, "/usr/share"):
+		case strings.Contains(shellConfigPath, ".local/share") || strings.Contains(shellConfigPath, "/usr/share"):
 			installType = "System package"
-		case strings.Contains(dmsPath, ".config"):
+		case strings.Contains(shellConfigPath, ".config"):
 			installType = "User config"
 		}
-		results = append(results, checkResult{catInstallation, "Install Type", statusInfo, installType, dmsPath, ""})
+		results = append(results, checkResult{catInstallation, "Install Type", statusInfo, installType, shellConfigPath, ""})
 	}
 
 	return results

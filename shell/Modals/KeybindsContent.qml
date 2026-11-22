@@ -260,7 +260,8 @@ FocusScope {
             "sound": 4,
             "media": 5,
             "brightness": 6,
-            "dms": 7,
+            "alpe": 7,
+            "dms": 7, // Übergang: Kategorie aus Kürzeln von 1.0 (bis zum Umzug)
             "compositor": 8,
             "custom": 9,
             "system": 10

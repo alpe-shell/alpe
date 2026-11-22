@@ -65,7 +65,7 @@ Singleton {
         return (process?.username ?? "") === UserInfoService.username;
     }
 
-    function isDms(process) {
+    function isShell(process) {
         return (process?.pid ?? 0) === Quickshell.processId || (name(process) === "alpe-dienst" && isOwn(process));
     }
 
@@ -74,7 +74,7 @@ Singleton {
     }
 
     function isCritical(process) {
-        return isSession(process) || isDms(process);
+        return isSession(process) || isShell(process);
     }
 
     function isCompositor(process) {
@@ -94,7 +94,7 @@ Singleton {
     function canPause(process) {
         // Kernel threads (PID 2 and its children) ignore SIGSTOP.
         const kernel = process?.pid === 2 || process?.ppid === 2;
-        return canEnd(process) && !kernel && (process?.status ?? "") !== "" && !isDms(process) && !treeSkipNames.includes(name(process));
+        return canEnd(process) && !kernel && (process?.status ?? "") !== "" && !isShell(process) && !treeSkipNames.includes(name(process));
     }
 
     function canSetPriority(process) {
@@ -104,8 +104,8 @@ Singleton {
     // Whether a restart path exists; "reload" for compositors. Other users' processes only restart as a system service,
     // which is decided when it runs.
     function restartKind(process) {
-        if (isDms(process))
-            return "dms";
+        if (isShell(process))
+            return "shell";
         if (isCompositor(process))
             return "reload";
         if (!canEnd(process))
@@ -229,7 +229,7 @@ Singleton {
     function restart(process) {
         const pid = String(process.pid);
         switch (restartKind(process)) {
-        case "dms":
+        case "shell":
             Quickshell.execDetached(Proc.shellRestartCommand);
             return;
         case "reload":

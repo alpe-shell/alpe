@@ -1,0 +1,13 @@
+# D7.7a (Plan 2.3.5, 0.8 Nr. 38): restliche "dms"-Werte – Kürzel-Kategorie, Prozessliste, doctor.
+# Die Kürzel-Kategorie eigener Aktionen heisst «Alpe» (KeybindsService); "dms" bleibt übergangsweise
+# erkannt (Kürzel aus 1.0 in Hyprland-Dateien, Frist «Umzug-Ende», tools/namen-ausnahmen.txt).
+ohne	entwicklung/umbenennen/*,docs/plan/*
+text	            "dms": 7,	            "alpe": 7,\n            "dms": 7, // Übergang: Kategorie aus Kürzeln von 1.0 (bis zum Umzug)	shell/Modals/KeybindsContent.qml
+# Prozessliste: der eigene Prozess (Oberfläche oder Dienst)
+erlaubt	isShell
+wort	isDms	isShell	shell/Modules/ProcessList/*
+regex	(return |case )"dms"	\1"shell"	shell/Modules/ProcessList/ProcessActions.qml
+# doctor
+wort	getDMSShellVersion	getShellVersion	core/cmd/alpe-dienst/*
+regex	\bdmsVersion\b	shellVersion	core/cmd/alpe-dienst/commands_doctor.go
+regex	\bdmsPath\b	shellConfigPath	core/cmd/alpe-dienst/commands_doctor.go
