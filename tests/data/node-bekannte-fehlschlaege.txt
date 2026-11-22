@@ -1,0 +1,12 @@
+# Bekannte Fehlschläge der Node-Tests in shell/tests (alle schon vor C1 rot, Plan «Stand»).
+# Format: <Datei>: <Name des Tests>. Ein Fehlschlag, der hier nicht steht, macht tools/test.sh rot.
+dock-model.test.mjs: compositor window identity survives reorder and rejects null
+hyprland-lua.test.mjs: layout: a blur variant forces blur on and writes only its own tuning table
+hyprland-lua.test.mjs: layout: blur strength writes Hyprland's size and passes, default reach gives two passes and skips the stock size
+hyprland-lua.test.mjs: layout: effects the running Hyprland does not know are not written even when enabled
+hyprland-lua.test.mjs: layout: wobble writes spring tuning only off Hyprland's defaults
+hyprland-lua.test.mjs: layout: 0.57 options write nothing at Hyprland's defaults and only their own line once changed
+shell-embed.test.mjs: shell staging and archives exclude tests and preserve runtime assets
+singleton-cycles.test.mjs: no new creation-time cycles between Common and Services singletons
+system-update-ignore.test.mjs: portage ignores drop the update from the list
+system-update-ignore.test.mjs: excluded flatpak updates are dropped from the list
