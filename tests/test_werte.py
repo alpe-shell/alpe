@@ -47,7 +47,7 @@ if os.path.exists(doctor):
 # Layer-Namensräume heissen alpe:…; der Dienst schneidet denselben Vorsatz ab (Bildschirmfoto-Ziele).
 alt, neu = [], 0
 for ordner, _dirs, dateien in os.walk(SHELL):
-    if any(teil in ordner for teil in ("/Modules/DankBar", "/Modules/DankDash", "/DCommon", "/translations", "/tests")):
+    if any(teil in ordner for teil in ("/translations", "/tests")):
         continue
     for datei in dateien:
         if not datei.endswith((".qml", ".js")):
@@ -142,6 +142,17 @@ ausserhalb = sorted(set((d, r) for d, r in raeume if not r.startswith("alpe:")))
 check(len(raeume) > 60 and ausserhalb == [], "alle Layer-Namensräume folgen dem Schema alpe:<name> (%d geprüft): %s" % (len(raeume), ausserhalb))
 check(all(any(regel.search(r) for regel in regeln) for _d, r in raeume), "die Regeln der Hyprland-Vorlage erfassen jeden Layer-Namensraum")
 
+# D7.8: Hüllen und Weiterleitungen für fremde Plugins sind weg, die Namensprüfung ist streng.
+reste = []
+for ordner, _dirs, dateien in os.walk(SHELL):
+    rel = os.path.relpath(ordner, SHELL)
+    if rel.split(os.sep)[0] == "DCommon" or os.sep.join(rel.split(os.sep)[:2]) in ("Modules/DankBar", "Modules/DankDash"):
+        reste.append(rel)
+    reste += [os.path.join(rel, d) for d in dateien if re.match(r"Dank[A-Z]\w*\.qml$", d) or d == "Deprecation.qml"]
+check(reste == [], "keine Dank*-Hüllen, kein DCommon, keine Weiterleitungen, kein Deprecation.qml (D7.8): " + str(reste[:5]))
+check(not any("Deprecation." in read(ordner, d) for ordner, _dirs, dateien in os.walk(SHELL) for d in dateien if d.endswith((".qml", ".js"))),
+      "nichts in der Oberfläche ruft Deprecation auf")
+check("bash tools/namen-pruefen.sh --streng" in read(REPO, "tools", "test.sh"), "tools/test.sh ruft die Namensprüfung streng auf (D7.8)")
 
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

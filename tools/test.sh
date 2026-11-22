@@ -30,8 +30,8 @@ for t in tests/test_*.py; do
     run python3 "$t"
 done
 
-step "Namensprüfung (meldet nur, bis D7.8; Plan 2.3.3)"
-run bash tools/namen-pruefen.sh
+step "Namensprüfung (streng seit D7.8: jeder Fund ausserhalb der Ausnahmeliste ist ein Fehler; Plan 2.3.3)"
+run bash tools/namen-pruefen.sh --streng
 
 step "Skripte (bash -n)"
 run bash -n get.sh install.sh bootstrap.sh tools/*.sh tools/alpe
