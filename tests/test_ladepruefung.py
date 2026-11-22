@@ -75,6 +75,8 @@ try:
     session = read(state, "alpe", "session.json")
     check(session.get("configVersion") == 7 and session["materialWallpapers"][""]["shared"]["preset"] == "dank"
           and session["wallpaperPath"].startswith("#"), "Probe: Session aus 1.0 (Version 7, Vorlage des Ursprungs) mit einfarbigem Hintergrund")
+    ebene = session["materialWallpaperProfiles"]["eigen"]["layers"][0]
+    check(ebene["shape"] == "dankLogo" and all(k in ebene for k in ("x", "y", "size", "fill")), "Probe: eigenes Profil vollständig, Form noch die des Ursprungs")
     check(read(session_1_0)["wallpaperPath"] == "", "die Testdaten selbst bleiben unverändert")
 
     # Auswertung nach dem Lauf: erkennt eine umgezogene und eine nicht umgezogene Session.
@@ -85,7 +87,7 @@ try:
     shutil.copy(os.path.join(state, "alpe", "session.json"), os.path.join(home, ".local", "state", "alpe", "session.json"))
     check(any(line.startswith("FEHLER") for line in lp.probe_report(home)), "Auswertung meldet eine Session, die nicht umgezogen ist")
     migrated = {"configVersion": 8, "materialWallpapers": {"": {"shared": {"preset": "alpe"}}},
-                "materialWallpaperProfiles": {"eigen": {"layers": [{"shape": "alpeLogo"}]}}}
+                "materialWallpaperProfiles": {"eigen": {"name": "dank", "layers": [{"shape": "alpeLogo"}]}}}
     with open(os.path.join(home, ".local", "state", "alpe", "session.json"), "w") as handle:
         json.dump(migrated, handle)
     open(os.path.join(home, ".local", "state", "alpe", "session.v7.json"), "w").write("{}")

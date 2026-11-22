@@ -106,6 +106,13 @@ if probe:
     # Laden auf Version 8 um. Einfarbiger Hintergrund, damit die Material-Vorlage gezeichnet wird.
     session = load(session_1_0)
     session["wallpaperPath"] = "#1d2a33"
+    # Eigene Profile der Testdaten haben nur Form und x; ohne y, Grösse und Füllung verwirft die
+    # Shell sie beim Laden. Hier vervollständigt, damit auch die Form dankLogo den Umzug mitmacht.
+    for profile in (session.get("materialWallpaperProfiles") or {}).values():
+        for layer in (profile or {}).get("layers", []):
+            layer.setdefault("y", 0.5)
+            layer.setdefault("size", 1.2)
+            layer.setdefault("fill", "primaryContainer")
     save(os.path.join(state, "alpe", "session.json"), session)
     print("Probe: Session aus 1.0 (Version %s), Vorlage %s" % (session.get("configVersion"), json.dumps(session.get("materialWallpapers"))))
 '''
@@ -306,10 +313,13 @@ def probe_report(home):
         session = json.load(open(os.path.join(folder, "session.json"), encoding="utf-8"))
     except (OSError, ValueError) as error:
         return ["FEHLER: session.json nicht lesbar (%s)" % error]
-    text = json.dumps(session)
-    ok = session.get("configVersion", 0) >= 8 and '"dank"' not in text and "dankLogo" not in text and "alpeLogo" in text
-    lines.append("%s: session.json auf Version %s, Vorlage %s" % ("ok" if ok else "FEHLER", session.get("configVersion"),
-                                                                 json.dumps(session.get("materialWallpapers"))))
+    presets = [slot.get("preset") for slots in (session.get("materialWallpapers") or {}).values() for slot in (slots or {}).values()
+               if isinstance(slot, dict)]
+    shapes = [layer.get("shape") for profile in (session.get("materialWallpaperProfiles") or {}).values()
+              for layer in (profile or {}).get("layers", [])]
+    # Der Name eines eigenen Profils gehört dem Nutzer und bleibt; umgezogen werden Vorlage und Form.
+    ok = session.get("configVersion", 0) >= 8 and "alpe" in presets and "dank" not in presets and "alpeLogo" in shapes and "dankLogo" not in shapes
+    lines.append("%s: session.json auf Version %s, Vorlagen %s, Formen eigener Profile %s" % ("ok" if ok else "FEHLER", session.get("configVersion"), presets, shapes))
     backup = os.path.join(folder, "session.v7.json")
     lines.append(("ok" if os.path.exists(backup) else "FEHLER") + ": Sicherung session.v7.json " + ("vorhanden" if os.path.exists(backup) else "fehlt"))
     try:
