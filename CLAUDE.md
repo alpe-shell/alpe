@@ -71,3 +71,14 @@ in den Harnessen unter `entwicklung/`.
 
 Erst einen Plan als Markdown unter `docs/plan/` schreiben und dem Maintainer zur Freigabe vorlegen,
 dann umsetzen. Offene Entscheidungen als Frage stellen statt raten.
+
+## Arbeitsweise (Kontext sparen)
+
+- Beim Einstieg aus `docs/plan/phase-a-plan.md` nur «Stand» und die Abschnitte zum aktuellen
+  Schritt lesen, nicht den ganzen Plan; den Rest und `offene-faelle.md` nur bei einer konkreten Frage.
+- Trefferlisten von `umbenennen.py` und `namen-pruefen.sh` in Dateien unter `/tmp/claude-1000/`
+  schreiben. In den Kontext kommen nur Zählungen pro Name und auffällige Einzelfälle (Treffer in
+  Strings, Übersetzungen, Kommentaren, Kollisionen).
+- Von `tools/test.sh` bei grünem Lauf nur die Zusammenfassung lesen, bei rotem Lauf nur den
+  Ausschnitt mit dem Fehler.
+- Grosse Dateien gezielt mit Zeilenbereich oder `grep` lesen statt ganz.
