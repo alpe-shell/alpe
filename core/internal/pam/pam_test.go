@@ -568,7 +568,7 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 		}
 	})
 
-	t.Run("disabled removes DMS-managed file", func(t *testing.T) {
+	t.Run("disabled removes managed file", func(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)

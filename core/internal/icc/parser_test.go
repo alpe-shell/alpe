@@ -269,7 +269,7 @@ func TestGenerateGammaRampRequiresVCGT(t *testing.T) {
 
 // TestParseDescriptionMalformed feeds desc/mluc tags whose offsets or lengths
 // point outside the buffer. These must return an error or a clamped string
-// instead of a slice-bounds panic: `dms icc list` parses every file in the
+// instead of a slice-bounds panic: `alpe-dienst icc list` parses every file in the
 // profile directory and the daemon parses user-picked files in-process, so a
 // panic here takes the whole daemon down.
 func TestParseDescriptionMalformed(t *testing.T) {
@@ -331,7 +331,7 @@ func TestParseDescriptionMalformed(t *testing.T) {
 // be rejected up front: with tagCount*12 wrapping in uint32, a 140-byte profile
 // passed the old bounds check, allocated a ~4 GB tag slice and then panicked
 // with slice bounds out of range. ParseFile runs on the wayland actor goroutine,
-// which has no recover(), so that panic took the dms daemon down at startup.
+// which has no recover(), so that panic took the service down at startup.
 func TestParseBytesTagTableBounds(t *testing.T) {
 	t.Run("count wraps in uint32 arithmetic", func(t *testing.T) {
 		data := buildSyntheticProfile("Wrapping tag count", 2.2)

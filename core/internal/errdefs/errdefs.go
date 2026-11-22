@@ -1,15 +1,15 @@
 package errdefs
 
 import (
-	dankerrdefs "github.com/duxlabs-dev/dux-go/errdefs"
+	duxerrdefs "github.com/duxlabs-dev/dux-go/errdefs"
 )
 
-type ErrorType = dankerrdefs.ErrorType
+type ErrorType = duxerrdefs.ErrorType
 
-type CustomError = dankerrdefs.CustomError
+type CustomError = duxerrdefs.CustomError
 
 const (
-	ErrTypeNotLinux ErrorType = dankerrdefs.AppErrorBase + iota
+	ErrTypeNotLinux ErrorType = duxerrdefs.AppErrorBase + iota
 	ErrTypeInvalidArchitecture
 	ErrTypeUnsupportedDistribution
 	ErrTypeUnsupportedVersion
@@ -31,7 +31,7 @@ const (
 )
 
 func NewCustomError(errType ErrorType, message string) error {
-	return dankerrdefs.NewCustomError(errType, message)
+	return duxerrdefs.NewCustomError(errType, message)
 }
 
 const (

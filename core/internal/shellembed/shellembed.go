@@ -1,5 +1,5 @@
-// Package shellembed carries the quickshell UI inside the dms binary and
-// materializes it at runtime via dankgo/shellapp/shellfs, since quickshell
+// Package shellembed carries the quickshell UI inside the alpe-dienst binary and
+// materializes it at runtime via the shellapp/shellfs package of the foreign Go module, since quickshell
 // needs a real filesystem path. Customization goes through -c /
 // ALPE_SHELL_DIR instead of editing the extraction.
 package shellembed

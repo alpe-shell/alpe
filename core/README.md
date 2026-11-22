@@ -1,12 +1,12 @@
-# DMS Backend & CLI
+# Alpe backend (`alpe-dienst`)
 
-Go-based backend for Dux Modular Shell providing system integration, IPC, and installation tools.
+Go-based backend for Alpe providing system integration and IPC.
 
 **See [root README](../README.md) for project overview and installation.**
 
 ## Components
 
-**dms CLI**
+**alpe-dienst**
 Command-line interface and daemon for shell management and system control.
 
 ## System Integration
@@ -67,23 +67,23 @@ Custom IPC via unix socket (JSON API) for shell communication.
 
 ## CLI Commands
 
-- `dms run [-d]` - Start shell (optionally as daemon)
-- `dms restart` / `dms kill` - Manage running processes
-- `dms ipc <command>` - Send IPC commands (toggle launcher, notifications, etc.)
-- `dms plugins [list|uninstall]` - Manage locally installed plugins
-- `dms brightness [list|set]` - Control display/monitor brightness
-- `dms color pick` - Native color picker (see below)
+- `alpe-dienst run [-d]` - Start shell (optionally as daemon)
+- `alpe-dienst restart` / `alpe-dienst kill` - Manage running processes
+- `alpe-dienst ipc <command>` - Send IPC commands (toggle launcher, notifications, etc.)
+- `alpe-dienst plugins [list|uninstall]` - Manage locally installed plugins
+- `alpe-dienst brightness [list|set]` - Control display/monitor brightness
+- `alpe-dienst color pick` - Native color picker (see below)
 
 ### Color Picker
 
 Native Wayland color picker with magnifier, no external dependencies. Supports HiDPI and fractional scaling.
 
 ```bash
-dms color pick              # Pick color, output hex
-dms color pick --rgb        # Output as RGB (255 128 64)
-dms color pick --hsv        # Output as HSV (24 75% 100%)
-dms color pick --json       # Output all formats as JSON
-dms color pick -a           # Auto-copy to clipboard
+alpe-dienst color pick              # Pick color, output hex
+alpe-dienst color pick --rgb        # Output as RGB (255 128 64)
+alpe-dienst color pick --hsv        # Output as HSV (24 75% 100%)
+alpe-dienst color pick --json       # Output all formats as JSON
+alpe-dienst color pick -a           # Auto-copy to clipboard
 ```
 
 The on-screen preview displays the selected format. JSON output includes hex, RGB, HSL, HSV, and CMYK values.
@@ -95,7 +95,7 @@ Requires Go 1.25+
 **Development build:**
 
 ```bash
-make              # Build dms CLI
+make              # Build alpe-dienst
 make test         # Run tests
 ```
 
@@ -105,19 +105,19 @@ make test         # Run tests
 make dist         # Build without update features
 ```
 
-Produces `bin/dms-linux-amd64` and `bin/dms-linux-arm64`
+Produces `bin/alpe-dienst-linux-amd64` and `bin/alpe-dienst-linux-arm64`
 
 **Installation:**
 
 ```bash
-sudo make install  # Install to /usr/local/bin/dms
+sudo make install  # Install to /usr/local/bin/alpe-dienst
 ```
 
 ## Development
 
 **Regenerating Wayland Protocol Bindings:**
 
-Protocol XML files live in `internal/proto/xml/`. Bindings are generated with the [dankgo](https://github.com/duxlabs-dev/dux-go) `go-wayland-scanner`:
+Protocol XML files live in `internal/proto/xml/`. Bindings are generated with the [dux-go](https://github.com/duxlabs-dev/dux-go) `go-wayland-scanner`:
 
 ```bash
 go run github.com/duxlabs-dev/dux-go/cmd/go-wayland-scanner@latest \
@@ -125,9 +125,15 @@ go run github.com/duxlabs-dev/dux-go/cmd/go-wayland-scanner@latest \
   -pkg wlr_gamma_control -o internal/proto/wlr_gamma_control/gamma_control.go
 ```
 
+**Regenerating mocks:**
+
+Mocks under `internal/mocks/` are generated, never edited by hand. Run `mockery` (v3.9.1) in `core/`;
+`.mockery.yml` points at the template `.mockery/testify.templ` (stock testify template without
+expecter helpers for `MarshalJSON`/`UnmarshalJSON`, so `go vet` stays clean).
+
 **Module Structure:**
 
-- `cmd/` - Binary entrypoints (dms)
+- `cmd/` - Binary entrypoints (alpe-dienst)
 - `internal/osinfo/` - Operating system detection (os-release, image-based systems)
 - `internal/proto/` - Wayland protocol bindings
 - `pkg/` - Shared packages

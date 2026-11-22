@@ -438,7 +438,7 @@ var (
 		AttributeJobPrinterStateMessage:  TagString,
 		AttributeJobImpressionsCompleted: TagInteger,
 		AttributePrintScaling:            TagKeyword,
-		// IPP Subscription/Notification attributes (added for dankdots)
+		// IPP Subscription/Notification attributes (added for subscriptions)
 		"notify-events":               TagKeyword,
 		"notify-pull-method":          TagKeyword,
 		"notify-lease-duration":       TagInteger,

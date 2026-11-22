@@ -6,7 +6,7 @@
 core/go.mod	*	Phase B	Go-Module dux-go/dux-gop (fremde Bibliotheken, 0.4 Nr. 9)
 core/go.sum	*	Phase B	Go-Module dux-go/dux-gop
 core/*.go	github\.com/duxlabs-dev/dux-go	Phase B	Importpfad dux-go/dux-gop
-core/*.go	\bduxlog\b	Phase B	Importname des Log-Pakets aus dux-go
+core/*.go	\b(duxlog|duxerrdefs)\b	Phase B	Importnamen der Pakete log und errdefs aus dux-go
 shell/Common/Brand.qml	upstream|Dux Modular Shell|duxlabs-dev/dux-shell	dauerhaft	Herkunft
 shell/Common/Brand.qml	heldPackages	E4	Paketnamen des Ursprungs (0.8 Nr. 17)
 shell/Modules/Settings/AlpeMaintenanceTab.qml	heldPackages	E4	Paketnamen des Ursprungs
@@ -67,3 +67,12 @@ core/cmd/alpe-dienst/server_client.go	laufendes DMS \(dms-<pid>\.sock\)	Umzug-En
 core/cmd/alpe-dienst/systemd_restart_test.go	dms\.service	Umzug-Ende	Test: die Einheit des Ursprungs ist nicht die eigene
 core/cmd/alpe-dienst/commands_doctor.go	"dux-calendar"|"dux-files"	solange die Anbindung besteht	doctor: optionale fremde Programme (Kalender, Dateiverwaltung) unter ihrem Paketnamen
 *	\b(ppd|logind)Msg\b	dauerhaft	kein Name: Bezeichner auf …dMsg
+core/.mockery.yml	github\.com/duxlabs-dev/dux-go	Phase B	Importpfad dux-go (Attrappe für dessen Wayland-Schnittstelle)
+core/internal/mocks/*	github\.com/duxlabs-dev/dux-go	Phase B	erzeugte Attrappen: Importpfad dux-go
+core/Makefile	\.dankrev	Phase B	Revisionsdatei der eingebetteten Oberfläche: Name von dux-go vorgegeben (shellfs.RevFile)
+core/internal/shellembed/*.go	\.dankrev	Phase B	dito
+shell/tests/shell-embed.test.mjs	\.dankrev	Phase B	dito
+core/internal/highlight/lexers/embedded/*	*	dauerhaft	kein Name: fremde Lexer-Definitionen (Schlüsselwörter anderer Sprachen)
+*	%dms\b	dauerhaft	kein Name: Formatangabe %d vor «ms»
+core/internal/clipboard/store.go	\.cache/dms/clipboard	Umzug-Ende	Kommentar: Verlauf aus 1.0 holt der Umzug
+core/README.md	github\.com/duxlabs-dev/dux-go|\[dux-go\]	Phase B	Werkzeug aus dux-go zum Erzeugen der Wayland-Bindungen

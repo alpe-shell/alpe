@@ -86,7 +86,7 @@ libvirt-qemu:x:938:
 qemu:x:937:
 dnsmasq:x:936:
 clock:x:935:
-dms-greeter:x:1002:greeter,testuser
+greeter-test:x:1002:greeter,testuser
 pcscd:x:934:
 test:x:1003:
 empower:x:933:

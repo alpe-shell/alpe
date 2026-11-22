@@ -29,11 +29,11 @@ func TestTryLockRejectsSecondHolder(t *testing.T) {
 func TestTryLockSeparatesNames(t *testing.T) {
 	t.Setenv("XDG_RUNTIME_DIR", t.TempDir())
 
-	first, err := TryLock("dms-test-a")
+	first, err := TryLock("alpe-test-a")
 	require.NoError(t, err)
 	defer first.Release()
 
-	second, err := TryLock("dms-test-b")
+	second, err := TryLock("alpe-test-b")
 	require.NoError(t, err)
 	second.Release()
 }

@@ -720,10 +720,10 @@ func validateLockscreenPam(serviceName string, path string, deps lockscreenPamVa
 	}
 
 	if analysis.inlineFingerprint {
-		result.Warnings = append(result.Warnings, "pam_fprintd is present in the resolved stack; may double-prompt with DMS's separate fingerprint context")
+		result.Warnings = append(result.Warnings, "pam_fprintd is present in the resolved stack; may double-prompt with Alpe's separate fingerprint context")
 	}
 	if analysis.inlineU2f {
-		result.Warnings = append(result.Warnings, "pam_u2f is present in the resolved stack; may double-prompt with DMS's separate U2F context")
+		result.Warnings = append(result.Warnings, "pam_u2f is present in the resolved stack; may double-prompt with Alpe's separate U2F context")
 	}
 
 	result.Valid = len(result.Errors) == 0
@@ -938,7 +938,7 @@ func syncLockscreenU2FPamConfigWithDeps(logFunc func(string), sudoPassword strin
 }
 
 func writeManagedPamFile(content string, destPath string, sudoPassword string, deps syncDeps) error {
-	tmpFile, err := deps.createTemp("", "dms-pam-*.conf")
+	tmpFile, err := deps.createTemp("", "alpe-pam-*.conf")
 	if err != nil {
 		return err
 	}

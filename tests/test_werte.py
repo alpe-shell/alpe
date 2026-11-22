@@ -85,5 +85,28 @@ if os.path.isdir(os.path.join(REPO, "packaging")):
     if shutil.which("desktop-file-validate"):
         check(subprocess.run(["desktop-file-validate", desktop]).returncode == 0, "desktop-file-validate")
 
+# D7.7h: Der Dienst trägt die alten Namen weder in Verzeichnissen noch in go.mod (ausser den
+# fremden Modulen dux-go und dux-gop), und die Attrappen sind unverändert aus mockery erzeugt.
+core = os.path.join(REPO, "core")
+alt = re.compile(r"dms|dank|dux", re.IGNORECASE)
+ordner = []
+for wurzel, verzeichnisse, _dateien in os.walk(core):
+    verzeichnisse[:] = [v for v in verzeichnisse if v not in (".git", "bin")]
+    ordner += [os.path.relpath(os.path.join(wurzel, v), core) for v in verzeichnisse if alt.search(v)]
+check(ordner == [], "kein Paketverzeichnis mit altem Namen" + (": " + ", ".join(ordner) if ordner else ""))
+gomod = [z.strip() for z in read(core, "go.mod").splitlines() if alt.search(z)]
+erlaubt = [z for z in gomod if re.match(r"github\.com/duxlabs-dev/dux-(go|gop) v", z)]
+check(len(gomod) == 2 and gomod == erlaubt, "go.mod nennt alte Namen nur für die Module dux-go und dux-gop")
+check(read(core, "go.mod").splitlines()[0] == "module github.com/alpe-shell/alpe/core", "Modulpfad des Dienstes")
+attrappen = []
+for wurzel, _verzeichnisse, dateien in os.walk(os.path.join(core, "internal", "mocks")):
+    attrappen += [os.path.join(wurzel, d) for d in dateien if d.endswith(".go")]
+check(len(attrappen) > 10 and all("// template: testify (core/.mockery/testify.templ)" in read(a) for a in attrappen),
+      "alle Attrappen stammen aus der Vorlage core/.mockery/testify.templ")
+check(not any(re.search(r"_Expecter\) (Unm|M)arshalJSON\(", read(a)) for a in attrappen),
+      "keine Attrappe hat einen Expecter-Helfer für MarshalJSON (go vet, Plan 0.8 Nr. 62)")
+check("file://.mockery/testify.templ" in read(core, ".mockery.yml"), ".mockery.yml benutzt die eigene Vorlage")
+
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

@@ -2,7 +2,9 @@ dir: internal/mocks/{{.InterfaceDirRelative}}
 structname: Mock{{.InterfaceName}}
 pkgname: '{{.SrcPackageName}}'
 filename: 'mock_{{.InterfaceName}}.go'
-template: testify
+# Eigene Fassung der Vorlage «testify»: ohne Expecter-Helfer für MarshalJSON/UnmarshalJSON,
+# damit «go vet» (stdmethods) die Attrappen nicht meldet (Plan 0.8 Nr. 62). Erzeugen: mockery (v3.9.1) in core/.
+template: file://.mockery/testify.templ
 template-data:
   unroll-variadic: true
 packages:

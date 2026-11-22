@@ -1,0 +1,7 @@
+# D7.7h (Plan 2.3.5): Dienst intern – übrige Pakete.
+ohne	entwicklung/umbenennen/*,docs/plan/*,core/internal/mocks/*
+# Importname des fremden Moduls dux-go (Ausnahmeliste), wie duxlog
+wort	dankerrdefs	duxerrdefs	core/internal/errdefs/*
+# Plugin-Beschreibung: Feld wie in D7.1 (requires_alpe); das Feld hat im Dienst keinen Leser
+wort	RequiresDMS	RequiresAlpe	core/internal/plugins/*
+text	`json:"requires_dms,omitempty"`	`json:"requires_alpe,omitempty"`	core/internal/plugins/plugin.go

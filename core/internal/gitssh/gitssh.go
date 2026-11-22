@@ -76,7 +76,7 @@ func hostWithPort(u *url.URL) string {
 // x/crypto rejects a whole known_hosts file over one key type it cannot parse,
 // so entries like ssh-mldsa44-ed25519 are blanked before the file is loaded.
 func knownHostsDB() (*knownhosts.HostKeyDB, error) {
-	dir, err := os.MkdirTemp("", "dms-known-hosts-")
+	dir, err := os.MkdirTemp("", "alpe-known-hosts-")
 	if err != nil {
 		return nil, err
 	}

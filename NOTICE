@@ -61,6 +61,9 @@ Code
   shell/Common/suncalc.js             BSD-2-Clause, Copyright (c) 2025 Vladimir Agafonkin
   core/internal/highlight/            MIT, Copyright (C) 2017 Alec Thomas (COPYING im Ordner)
   core/pkg/ipp/                       Apache License 2.0 (LICENSE im Ordner)
+  core/.mockery/testify.templ         Vorlage «testify» aus mockery v3.9.1, BSD-3-Clause,
+                                      Copyright (c) 2014, Opinionated Architecture; mit einer
+                                      Änderung (im Kopf der Datei beschrieben)
   core/internal/proto/*               Wayland-Protokollbindungen; MIT-artige Lizenzen der
                                       Protokollautoren, im Kopf jeder Datei
   core/internal/matugen/sourcecolor.go  Gewichtungen der Farbwahl nach caelestia-cli, dort

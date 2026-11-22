@@ -1,0 +1,23 @@
+# D7.7h: Texte, Kommentare und Testdaten in den übrigen Paketen des Dienstes (texte-ersetzen.py, nur gemeldete Zeilen).
+"/var/tmp/dms/clipboard"	"/var/tmp/alpe/clipboard"
+"dms-clipboard-\*"	"alpe-clipboard-*"
+"dms-colorpicker"	"alpe-colorpicker"
+"dms-screenshot"	"alpe-screenshot"
+"dms-known-hosts-"	"alpe-known-hosts-"
+"dms-pam-\*\.conf"	"alpe-pam-*.conf"
+"dms-selection-overlay"	"alpe-selection-overlay"
+another dms selection overlay	another selection overlay
+"dms-test-(a|b)"	"alpe-test-\1"
+"dms-shm"	"alpe-shm"
+^dms-greeter:x:1002:	greeter-test:x:1002:
+on every dms$	on every alpe-dienst
+`dms icc list`	`alpe-dienst icc list`
+took the dms daemon down	took the service down
+DuxShell/1\.0 \(Linux\)	Alpe/1.0 (Linux)
+github\.com/duxlabs-dev/dux-shell/releases/latest	github.com/alpe-shell/alpe/releases/latest
+api\.github\.com/repos/duxlabs-dev/dux-shell/releases/latest	api.github.com/repos/alpe-shell/alpe/releases/latest
+DMS's separate	Alpe's separate
+DMS-managed file	managed file
+inside the dms binary	inside the alpe-dienst binary
+via dankgo/shellapp/shellfs	via the shellapp/shellfs package of the foreign Go module
+\(added for dankdots\)	(added for subscriptions)

@@ -250,18 +250,18 @@ func createClipboardCacheFile() (*os.File, error) {
 	if cacheDir, err := os.UserCacheDir(); err == nil {
 		preferredDirs = append(preferredDirs, filepath.Join(cacheDir, brand.DirName, "clipboard"))
 	}
-	preferredDirs = append(preferredDirs, "/var/tmp/dms/clipboard")
+	preferredDirs = append(preferredDirs, "/var/tmp/alpe/clipboard")
 
 	for _, dir := range preferredDirs {
 		if err := os.MkdirAll(dir, 0o700); err != nil {
 			continue
 		}
-		cachedData, err := os.CreateTemp(dir, "dms-clipboard-*")
+		cachedData, err := os.CreateTemp(dir, "alpe-clipboard-*")
 		if err == nil {
 			return cachedData, nil
 		}
 	}
-	return os.CreateTemp("", "dms-clipboard-*")
+	return os.CreateTemp("", "alpe-clipboard-*")
 }
 
 // serveOffers owns the Wayland selection until cancelled (or first paste when

@@ -9,13 +9,13 @@ import (
 // Plugin beschreibt ein installiertes Plugin. Alpe: Das Plugin-Register des Ursprungs ist
 // entfernt (Plan 0.4 Nr. 5); Plugins werden nur noch lokal geladen, aufgelistet und entfernt.
 type Plugin struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Repo        string `json:"repo"`
-	Path        string `json:"path,omitempty"`
-	Author      string `json:"author"`
-	Description string `json:"description"`
-	RequiresDMS string `json:"requires_dms,omitempty"`
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	Repo         string `json:"repo"`
+	Path         string `json:"path,omitempty"`
+	Author       string `json:"author"`
+	Description  string `json:"description"`
+	RequiresAlpe string `json:"requires_alpe,omitempty"`
 }
 
 // GitClient liest, woher ein per git installiertes Plugin stammt (für das Lockfile).

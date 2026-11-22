@@ -14,14 +14,14 @@ import (
 
 const (
 	// Shared by the screenshot region selector and the color picker: one grabbing overlay at a time.
-	SelectionOverlayLock = "dms-selection-overlay"
+	SelectionOverlayLock = "alpe-selection-overlay"
 	// Matches what the wayland client dials when WAYLAND_DISPLAY is unset.
 	defaultWaylandDisplay = "wayland-0"
 )
 
 var (
 	ErrLockHeld      = errors.New("lock is held by another process")
-	ErrOverlayActive = errors.New("another dms selection overlay is already open")
+	ErrOverlayActive = errors.New("another selection overlay is already open")
 )
 
 type FileLock struct {

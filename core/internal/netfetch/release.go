@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	latestReleaseRedirectURL = "https://github.com/duxlabs-dev/dux-shell/releases/latest"
-	latestReleaseAPIURL      = "https://api.github.com/repos/duxlabs-dev/dux-shell/releases/latest"
+	latestReleaseRedirectURL = "https://github.com/alpe-shell/alpe/releases/latest"
+	latestReleaseAPIURL      = "https://api.github.com/repos/alpe-shell/alpe/releases/latest"
 	releaseLookupTimeout     = 10 * time.Second
 )
 
