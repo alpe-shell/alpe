@@ -83,6 +83,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | D7.7b2 | Ausgabedateien für Fremdprogramme heissen `alpe*` (kitty, GTK, Alacritty, WezTerm, Ghostty, foot, Discord-Clients, pywalfox, fcitx5, KDE-Farbschema `AlpeMatugen*`, Zed «Alpe …», Emacs `alpe-emacs`), `design/kde` mit; `Theme.palette16`. **Übergang bis F1** (`altnamen.go`): alte Namen bleiben als Symlink bzw. zweite Fassung aktuell, solange es sie gibt; GTK- und KDE-Erkennung gelten auch für Einbindungen aus 1.0; `gtk.sh` erkennt Marken und Sicherungen aus 1.0. Neovim unverändert (Frage). Tabelle je Programm in 0.8 Nr. 48 (`d7-7b2-ausgaben.tsv`, 245 Ersetzungen in 36 Dateien, dazu `gtk.sh` und Dienst von Hand) | Go-Tests `altnamen_test.go` (kein alter Name → nichts; Link; zweite Fassung mit alten Namen; Erkennung); test.sh grün; go build/vet wie Ausgangsstand; Go-Tests matugen, config, cmd grün; Namensprüfung 1297 |
 | D7.7b3 | Fensterregeln: Marke `-- ALPE-RULE:`, IDs `alpe-floating-windows`, `alpe-window-opaque`, automatische IDs `alpe_rule_N`. Dateien aus 1.0 (`-- DMS-RULE:`, alte IDs) werden gelesen und beim nächsten Schreiben ersetzt, ohne zweiten Eintrag (`windowrules.CurrentRuleID`; Ausnahmeliste Umzug-Ende) | Go-Test `providers/altnamen_test.go`; test.sh grün; go build/vet wie Ausgangsstand; Go-Tests windowrules, cmd grün |
 | D7.7b4 | `packaging/alpe-open.desktop` (`Exec=alpe-dienst open %u`, ohne das Schema `dms://`) für die Auswahl «jedes Mal fragen» der Standardprogramme; Installation in E3, `mimeapps.list` in F1 (0.8 Nr. 50) | `tests/test_werte.py` (Name = Auswahl-Eintrag, `desktop-file-validate`); test.sh grün |
+| – | Plan: Entscheide nach D7.7b (0.8 Nr. 57–63), F1-Tabellen 7.6/7.7, `offene-faelle.md` (Vencord), `CLAUDE.md` (qmllint in der Haltprüfung) | – |
 <!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
@@ -288,7 +289,7 @@ der Liste «Nach C4»), dann D1–D3. **Halt nach D3.**
 | 3 | **Ersetzt durch 0.8.** ~~Plugin-Kompatibilität wie vorgeschlagen: die 40 `Dank*`-Weiterleitungen in `shell/Widgets/` bleiben, `requires_dms` wird weiter gelesen, **kein** `/usr/bin/dms`. **D7 entfällt:** Interne Bezeichner (`DMSService`, `DankBar`, `dmsBin`, `isDmsAction`, `source: "dms"` …) kommen auf die Ausnahmeliste der Namensprüfung (G1) und werden erst in Phase C angefasst. Ersetzt 0.4 Nr. 6 und Antwort 12.6.~~ |
 | 4 | Root-Helfer der Prozessliste (`process.restartService`, System-Dienste auf Klick) bleibt; 6.8 betrifft nur `alpe.service`. |
 | 5 | Werkzeuge mit `dms.service` und 1.0-Pfaden (`tools/alpe`, `entfernen.sh`, `install.sh`, `design.py`): wie geplant in E4. |
-| 6 | **Prüfregel ab D4:** `bash tools/test.sh` nach jedem Commit. Die Ladeprüfung läuft **einmal pro Halt** auf dem Endstand unter KWin und Hyprland; nur wenn sie neue Meldungen zeigt, werden die Commits dazwischen einzeln geprüft. Keine Überwachungen, die sich periodisch neu stellen. |
+| 6 | **Prüfregel ab D4:** `bash tools/test.sh` nach jedem Commit. Die Ladeprüfung läuft **einmal pro Halt** auf dem Endstand unter KWin und Hyprland; nur wenn sie neue Meldungen zeigt, werden die Commits dazwischen einzeln geprüft. Keine Überwachungen, die sich periodisch neu stellen. **Ergänzt (0.8 Nr. 63):** Zur Haltprüfung gehört qmllint (`/usr/lib/qt6/bin/qmllint`) über `shell/` gegen die Grundlinie von 5600 Meldungen; neue Meldungen werden einzeln eingeordnet. |
 | 7 | Mac-Test nach D6 statt nach D3. |
 
 ### 0.8 Entscheide nach dem Halt D6 (22.11.2026)
@@ -369,15 +370,27 @@ Entscheide nach dem Halt vor D7.7b (22.11.2026):
 | # | Entscheid |
 |---|---|
 | 47 | **Vorlagen-Variablen:** neu `palette16`/`palette16term`; `dank16`/`dank16term` werden bis F1 zusätzlich mit denselben Werten eingespeist (Test `altnamen_test.go`: beide Namen identisch). **F1 schreibt die eigenen matugen-Vorlagen der Nutzer um** (`~/.config/matugen/config.toml` und die dort genannten Vorlagen: `{{dank16.` → `{{palette16.`, `{{dank16term.` → `{{palette16term.`), nicht nur die mitgelieferten; danach fällt die doppelte Einspeisung. |
-| 48 | **Ausgabedateien für Fremdprogramme** heissen `alpe*`. Übergang bis F1 (`core/internal/matugen/altnamen.go`): **Solange es eine Datei unter dem alten Namen gibt** (Datei aus 1.0 oder der eigene Link), hält Alpe sie aktuell – als Symlink auf die neue Datei, oder als zweite Fassung, wo ein Link nicht trägt. Auf frisch eingerichteten Rechnern entsteht nichts. Auslöser ist die alte Datei, nicht die Einbindung selbst: Sie ist die Voraussetzung jeder funktionierenden alten Einbindung, und die Einbindung lässt sich nicht bei jedem Programm zuverlässig finden (Emacs, WezTerm). Die Erkennung «ist aktiv» (GTK, KDE) gilt auch für alte Einbindungen. Weg je Programm: Tabelle unten. **F1 schreibt die Einbindungen um und räumt Links und alte Dateien weg.** |
+| 48 | **Ausgabedateien für Fremdprogramme** heissen `alpe*`. Übergang bis F1 (`core/internal/matugen/altnamen.go`): **Solange es eine Datei unter dem alten Namen gibt** (Datei aus 1.0 oder der eigene Link), hält Alpe sie aktuell – als Symlink auf die neue Datei, oder als zweite Fassung, wo ein Link nicht trägt. Auf frisch eingerichteten Rechnern entsteht nichts. Auslöser ist die alte Datei, nicht die Einbindung selbst: Sie ist die Voraussetzung jeder funktionierenden alten Einbindung, und die Einbindung lässt sich nicht bei jedem Programm zuverlässig finden (Emacs, WezTerm). Die Erkennung «ist aktiv» (GTK, KDE) gilt auch für alte Einbindungen. Weg je Programm: Tabelle unten. **F1 schreibt die Einbindungen um** (Tabelle 7.6); Links und doppeltes Schreiben fallen mit «Umzug-Ende» weg (Nr. 59). |
 | 49 | **Null bekannte Go-Fehlschläge:** Alle drei bekannten Fehlschläge lasen die Oberfläche am Ursprungspfad `../../../quickshell/…` (`TestTerminalPaletteOnlyReachesTerminalTemplates`: Vorlagen; `TestLockScreenPasswordFieldBypassesTextInputIME`: prüft in `LockAuthWidget.qml`, dass das Passwortfeld die Eingabemethode umgeht; `TestLockScreenFprintProfileMatchesPamQml`: vergleicht `assets/pam/fprint` mit dem Profil in `Pam.qml`). Sie lesen jetzt `shell/…` und sind grün; der Katalogtest der Hyprland-Kürzel übersprang sich deshalb still und läuft jetzt mit. |
 | 50 | **`alpe-open.desktop`** kommt in D7.7b ins Repo (`packaging/`), installiert wird sie in E3, `mimeapps.list` schreibt F1 um. Befund am PC (nur gelesen): `/usr/share/applications/dms-open.desktop` gibt es, sie gehört zum Paket `dux-shell 2.1.2-1.1` (`Exec=dms open %u`); `mimeapps.list` nennt sie für Archive. «Jedes Mal fragen» funktioniert dort heute also nur, solange das Paket des Ursprungs installiert ist. |
 | 51 | **`i18nsync.py`, `i18nsync_plugins.py` entfernt.** Übersetzungen werden nur noch im Repo gepflegt. |
 | 52 | **Werkzeuge** `tools/backend.sh`, `entfernen.sh`, `alpe`, `maclock.sh` werden **vor D7.8** umgestellt (Schritt D7.7i): Namen, die Alpe selbst bezeichnen, werden umbenannt; Verweise auf 1.0-Artefakte bleiben mit Kommentar am Ort und je einem Eintrag auf der Ausnahmeliste (Frist «solange Update von 1.0 unterstützt wird»). Keine Ausnahme für ganze Dateien. |
 | 53 | **v44 lag nirgends:** `origin/phase-a` steht auf Version 43 (D7.6 ist nicht gepusht), Mac und VM beziehen den Stand nur von dort; am PC liegt Version 42 (1.0). Die Erweiterung von v44 um `settingsHiddenPages` bleibt darum v44. |
-| 54 | **`go vet` im Ausgangsstand:** Meldungen nur in `internal/mocks` (von mockery erzeugte `MarshalJSON`-Attrappen mit abweichender Signatur, Prüfung `stdmethods`). `go build` ohne Meldung. Behoben in **D7.7h** (dort wird `.mockery.yml` ohnehin angefasst): Die Attrappen werden von dieser einen Prüfung ausgenommen, alles andere muss ohne Meldung durchlaufen; Ziel zum Zwischenhalt: `go vet` ohne Meldung. |
+| 54 | **`go vet` im Ausgangsstand:** Meldungen nur in `internal/mocks` (von mockery erzeugte `MarshalJSON`-Attrappen mit abweichender Signatur, Prüfung `stdmethods`). `go build` ohne Meldung. Behoben in **D7.7h** (dort wird `.mockery.yml` ohnehin angefasst): ~~Die Attrappen werden von dieser einen Prüfung ausgenommen~~ – ersetzt durch Nr. 62 (neu erzeugen statt ausnehmen); Ziel zum Zwischenhalt: `go vet` ohne Meldung. |
 | 55 | **JSON-Schlüssel nach den Umbenennungen geprüft:** Alle in D7.4 umbenannten Felder, die über JSON laufen, tragen ein ausdrückliches Tag; die Schlüssel (`fragmentStatus`, `bindsAfterFragment` …) wurden in D7.4 bewusst auf beiden Seiten umgestellt. Ohne Tag sind nur `configfrag.Status` und die Parser-Ergebnisse (`HyprlandParseResult` …); sie werden nie serialisiert. Kein still geänderter Schlüssel. |
 | 56 | **qmllint** (Qt 6.12, erzeugte `qmldir` je Ordner) über `shell/`: 5600 Meldungen vor D7.7a, 5600 danach; die 17 abweichenden Zeilen unterscheiden sich nur im Temp-Pfad bzw. im umbenannten `CalendarDuxBackend.qml`. Keine neue Meldung. |
+
+Entscheide nach D7.7b (22.11.2026):
+
+| # | Entscheid |
+|---|---|
+| 57 | **Sicherungen werden nie umbenannt, gelöscht oder verändert.** `gtk-theme.dms-backup` und `icon-theme.dms-backup` werden nicht mehr auf `*.alpe-backup` umbenannt (so stand es in D7.7b2): Alpe liest den neuen Namen und, wenn es ihn nicht gibt, den alten; wo nötig, wird kopiert, nie umbenannt. Umsetzung (`shell/Common/settings/Sicherungen.js`): Die Sicherung des GTK-Themas schreibt die Shell nur – gibt es eine unter einem der beiden Namen, entsteht keine zweite. Die Sicherung des Symbolthemas verbraucht die Shell beim Zurückgeben (lesen, löschen); die Sicherung aus 1.0 wird darum genau einmal unter den neuen Namen kopiert, eine Marke `~/.local/state/alpe/sicherung-1.0-icon-theme.uebernommen` verhindert, dass sie nach dem Verbrauch der Kopie ein zweites Mal gilt. Den alten Namen (und die Marke) räumt erst «Umzug-Ende» ab (0.8 Nr. 23). Test `tests/test_sicherungen.mjs`: alte Sicherung nach jedem Zugriff unverändert vorhanden (Inhalt, Änderungszeit, Inode). **Dasselbe gilt in F1:** Beim Umschreiben alter IPC-Ziele und Befehle (7.4 Schritt 6) sind Sicherungsordner wie `~/.config/hypr/.dms-backups/` ausgenommen und werden nicht verändert. Am Mac kommt `dankdash` nur in einer solchen Sicherung vor, aktiv benutzt wird es nicht. Der Dienst legt neue Sicherungen der Hyprland-Dateien ab D7.7e unter `.alpe-backups/` an; der alte Ordner bleibt, wie er ist. |
+| 58 | **Fensterregeln, Rückweg:** `alpe umzug --zurueck` setzt `-- ALPE-RULE:` und die neuen Regel-IDs (`alpe-floating-windows`, `alpe-window-opaque`, `alpe_rule_N`) gezielt auf `-- DMS-RULE:` und die alten IDs zurück, damit 1.0 nach dem Rückweg auch Regeln bearbeiten kann, die nach dem Umzug geändert wurden. Mit Test in F1. **Allgemein (7.2 «Rückweg»):** Der Rückweg stellt den Zustand zum Zeitpunkt des Umzugs wieder her; was danach geändert wurde und nicht ausdrücklich zurückgesetzt wird, ist aufzuzählen (Liste in 7.7, vom Umzug am Ende von `--zurueck` ausgegeben). |
+| 59 | **Ausgabedateien: Auslöser «alte Datei existiert» bestätigt** (Nr. 48). F1 stellt je Programm die Einbindung auf den neuen Namen um (Tabelle 7.6); **Links und doppeltes Schreiben fallen erst mit «Umzug-Ende» weg**, nicht schon mit F1 (bis dahin trägt der alte Name auch den Rückweg). `alpe-shell` liefert `alpe-open.desktop` selbst aus (E3, 6.1); F1 stellt `mimeapps.list` von `dms-open.desktop` auf `alpe-open.desktop` um. Ob Vencord beim Wechsel über den Link neu lädt: `offene-faelle.md`, ohne Frist. |
+| 60 | **Neovim:** Die base46-Anbindung (`nvim/colors/dms.lua`, Lualine-Thema `dms`, `_DMS_SUPPORT`) bleibt unverändert und steht mit «solange die Anbindung besteht» auf der Ausnahmeliste. Keine offene Frage mehr. |
+| 61 | **`shell/translations/WORKFLOW.md` entfernt.** Ersatz: ein kurzer Absatz im README des Übersetzungsordners – `de` und `en` werden nur im Repo gepflegt, einen externen Abgleich gibt es nicht mehr. |
+| 62 | **`go vet` und die mockery-Attrappen** (ersetzt den Weg aus Nr. 54): Die Dateien in `internal/mocks` werden nicht von Hand geändert und nicht von der Prüfung ausgenommen, sondern mit dem aktuellen mockery neu erzeugt bzw. über `.mockery.yml` so eingestellt, dass die Meldung nicht mehr entsteht (D7.7h). Ziel bleibt `go vet ./...` ohne Meldung am Zwischenhalt. |
+| 63 | **qmllint wird Teil der Haltprüfung**, nicht von `tools/test.sh`: `/usr/lib/qt6/bin/qmllint` über `shell/`, Grundlinie 5600 Meldungen (Nr. 56). Bei jedem Halt vergleichen; neue Meldungen werden einzeln eingeordnet (behoben oder mit Begründung in die Grundlinie). Prüfregel 0.7 Nr. 6 und `CLAUDE.md` nachgeführt. |
 
 Ausgabedateien für Fremdprogramme (0.8 Nr. 48). Basis: `~/.config`, sofern nichts anderes steht.
 
@@ -395,9 +408,9 @@ Ausgabedateien für Fremdprogramme (0.8 Nr. 48). Basis: `~/.config`, sofern nich
 | KDE-Farbschema | `~/.local/share/color-schemes/DankMatugen{,Light,Dark}.colors` | `AlpeMatugen…` | doppelt schreiben, alter Name im Inhalt | Name steht in der Datei (`ColorScheme=`, `Name=`); `kdeglobals`, `qt5ct.conf`/`qt6ct.conf` (`color_scheme_path`) und qtengine verweisen darauf. Wer auf dem alten Schema steht, bekommt weiter das alte angewendet |
 | Zed | `zed/themes/dank-zed-theme.json` (Themen «DankShell …») | `alpe-zed-theme.json` («Alpe …») | doppelt schreiben, alte Themennamen | Auswahl in `settings.json` über den Themennamen im Inhalt; ein Link ergäbe dieselben Namen doppelt |
 | Emacs | `themes/dank-emacs-theme.el` (Thema `dank-emacs`) | `alpe-emacs-theme.el` | doppelt schreiben, alter Themenname | Dateiname und `provide-theme` müssen übereinstimmen |
-| Neovim | `nvim/colors/dms.lua`, `nvim/lua/lualine/themes/dms.lua` | unverändert | – | Anbindung an ein fremdes base46 mit `_DMS_SUPPORT`; Name von aussen vorgegeben (Ausnahmeliste, **offene Frage zum Zwischenhalt**) |
+| Neovim | `nvim/colors/dms.lua`, `nvim/lua/lualine/themes/dms.lua` | unverändert | – | Anbindung an ein fremdes base46 mit `_DMS_SUPPORT`; Name von aussen vorgegeben (Ausnahmeliste «solange die Anbindung besteht», Nr. 60) |
 | Shell selbst | `~/.cache/alpe/dms-colors.json`, `dms-typography.json` | `colors.json`, `typography.json` | kein Übergang | liest nur die Shell selbst; alte Dateien räumt F1 weg |
-| Sicherungen | `gtk-3.0/gtk-theme.dms-backup`, `icon-theme.dms-backup` | `*.alpe-backup` | wird beim ersten Zugriff umbenannt | enthält das Thema, das beim Abschalten zurückkommt |
+| Sicherungen | `gtk-3.0/gtk-theme.dms-backup`, `icon-theme.dms-backup` | `*.alpe-backup` | **alte bleibt unverändert** (Nr. 57): gelesen wird neu, sonst alt; Symbolthema einmal kopiert | enthält das Thema, das beim Abschalten zurückkommt; alter Name weg mit «Umzug-Ende» |
 
 Gespeicherte Kennungen aus D7 (0.8 Nr. 42): wo sie liegen können und was mit ihnen geschieht.
 
@@ -649,13 +662,14 @@ liegen; Session-Daten wie `builtInPluginState` im selben Zug).
 |---|---|---|
 | Go-Module `github.com/duxlabs-dev/dux-go`, `dux-gop` (Importpfade, `go.mod`/`go.sum`), Importname `duxlog` | fremde Bibliotheken (0.4 Nr. 9) | Abschluss von Phase B (Go-Dienst durch Rust ersetzt) |
 | Herkunft: NOTICE, LICENSE-Vermerk, `LICENSE_CHANGE_12_11_2025.md`, README «Herkunft», `CHANGELOG.md`, `Brand.upstream*`, Herkunftszeile der Über-Seite | Rechtspflicht bzw. historische Angabe | dauerhaft |
-| Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, `SESSION_BACKED_PLUGIN_IDS` (Altdaten von `dankNotepadModule`, 0.8 Nr. 37), Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Erkennung von `dms`-Befehlen in eigenen Kürzeln (`KeybindsContent.qml`, 0.8 Nr. 38), Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | sobald der Umzug von 1.0 nicht mehr unterstützt wird, frühestens mit dem ersten Release nach Abschluss von Phase B (0.8 Nr. 23) |
+| Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, `SESSION_BACKED_PLUGIN_IDS` (Altdaten von `dankNotepadModule`, 0.8 Nr. 37), Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Erkennung von `dms`-Befehlen in eigenen Kürzeln (`KeybindsContent.qml`, 0.8 Nr. 38), Sicherungen `gtk-theme.dms-backup`/`icon-theme.dms-backup` und Marken `.dms-copy` (nie umbenannt, 0.8 Nr. 57), alte Ausgabenamen für Fremdprogramme (Links und zweite Fassungen, 0.8 Nr. 59), Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | sobald der Umzug von 1.0 nicht mehr unterstützt wird, frühestens mit dem ersten Release nach Abschluss von Phase B (0.8 Nr. 23) |
 | Fremde App «Dux Calendar»: `dev.duxlabs.calendar`, Socket `dankcal`, `CalendarDuxBackend.qml` | Namen der fremden App | solange die Anbindung besteht |
 | Fremdes Programm `dsearch` («dux-search», `github.com/duxlabs-dev/dux-search`): Programmname, Bezugsquelle im Starter-Hinweis, doctor-Eintrag | Name und Quelle des fremden Programms (0.8 Nr. 26) | solange die Anbindung besteht; in E3 optionale Abhängigkeit (`optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec), keine harte |
 | PAM-Dienste `dankshell`, `dankshell-u2f`, Blockmarken «DMS LOCKSCREEN AUTH»; Richtlinien `/usr/share/dms`, `/etc/dms`; alle anderen paketierten Pfade | heute vom Paket `dux-shell`/`dms` belegt | **E1** (zwingend, 0.8 Nr. 16; alte Blöcke erkennen) |
 | CUPS `requesting-user-name` `dms` | Besitzerkennung von Abonnements in cupsd (Befund in `offene-faelle.md`) | D7.7: Benutzername zur Laufzeit (`os/user`, Rückfall `alpe`); `dms` nur noch beim einmaligen Kündigen alter Abonnements (siehe unten), Frist wie Migration |
 | Dateien fremder Plugins im Original, Herkunftsvermerke im README von `~/alpe-plugins` | Lizenz/Herkunft | dauerhaft |
 | `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) | Paketnamen des Ursprungs | **E4** (0.8 Nr. 17) |
+| Neovim: `nvim/colors/dms.lua`, Lualine-Thema `dms`, `_DMS_SUPPORT` | Anbindung an ein fremdes base46, das diese Namen erwartet (0.8 Nr. 60) | solange die Anbindung besteht |
 
 **Alte CUPS-Abonnements (0.8 Nr. 22), gewählt: einmal kündigen.** Der Dienst legte Abonnements
 mit Laufzeit 0 (Abfrageweg; bei cupsd bedeutet 0 «ohne Ende», sofern `MaxLeaseDuration` es
@@ -718,10 +732,10 @@ Bestätigung des Maintainers**, dass PC und Mac umgestellt sind.
 | D7.7b4 | `packaging/alpe-open.desktop` (Installation E3, `mimeapps.list` F1) |
 | D7.7c | Hotspot («Alpe Hotspot», alte Verbindung wird erkannt und weiter benutzt) und CUPS (Benutzername zur Laufzeit, einmaliges Kündigen alter Abonnements des Besitzers `dms`, Marke unter `~/.local/state/alpe/`) mit IPP-Attrappe als Test |
 | D7.7d | Dienst intern: Paket `internal/dank16` → `internal/palette16`, Befehl `alpe-dienst palette16` |
-| D7.7e | Dienst intern: `internal/config`, `configfrag`, `luaconfig`, `keybinds`, `windowrules` (`dmsDir` → `appDir`, `dmsPath` → `shellConfigPath`, `LoadDMSRules` → `LoadShellRules` …) |
+| D7.7e | Dienst intern: `internal/config`, `configfrag`, `luaconfig`, `keybinds`, `windowrules` (`dmsDir` → `appDir`, `dmsPath` → `shellConfigPath`, `LoadDMSRules` → `LoadShellRules` …), Marken `-- DMS_STARTUP_BEGIN`/`…_END` (alte werden gelesen), Sicherungsordner `.alpe-backups` (der alte bleibt unberührt, 0.8 Nr. 57) |
 | D7.7f | Dienst intern: `internal/matugen` (Rest nach D7.7b) |
 | D7.7g | Dienst intern: `cmd/alpe-dienst`, `internal/version`, `internal/log` und die Pakete unter `internal/server` |
-| D7.7h | Dienst intern: übrige Pakete, `core/README.md`, `Makefile`, `.mockery.yml`; Prüfung, dass weder Paketverzeichnisse noch `go.mod` alte Namen tragen (ausser Ausnahmeliste: `dux-go`, `dux-gop`) |
+| D7.7h | Dienst intern: übrige Pakete, `core/README.md`, `Makefile`, `.mockery.yml`; Attrappen in `internal/mocks` mit dem aktuellen mockery neu erzeugt bzw. Konfiguration angepasst, bis `go vet ./...` ohne Meldung läuft (0.8 Nr. 62); Prüfung, dass weder Paketverzeichnisse noch `go.mod` alte Namen tragen (ausser Ausnahmeliste: `dux-go`, `dux-gop`) |
 | D7.7i | Werkzeuge `tools/backend.sh`, `entfernen.sh`, `alpe`, `maclock.sh` (0.8 Nr. 52) – vor dem Zwischenhalt |
 | D7.8 | **Nach Bestätigung:** `Dank*`-Hüllen, Übergangs-Hüllen `DCommon/Widgets`, `Modules/DankBar`, `Modules/DankDash` und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
 
@@ -735,7 +749,10 @@ D7.8 erst nach Bestätigung. Nach jedem Commit wird «Stand» nachgeführt.
 
 Prüfung: je Commit `bash tools/test.sh`; Go-Tests wie bekannt; Ladeprüfung einmal auf dem
 Endstand unter KWin und Hyprland (Meldungen mit umbenannten Namen werden in den Grundlinien
-nachgeführt, jede andere Abweichung einzeln erklärt). **Halt nach D7**, Mac-Test, dann 6.7, E1.
+nachgeführt, jede andere Abweichung einzeln erklärt); dazu bei jedem Halt qmllint
+(`/usr/lib/qt6/bin/qmllint`) über `shell/` gegen die Grundlinie von 5600 Meldungen, neue Meldungen
+einzeln eingeordnet (0.8 Nr. 63), und `go vet ./...` ohne Meldung (0.8 Nr. 62).
+**Halt nach D7**, Mac-Test, dann 6.7, E1.
 
 Folgen für F1 (Umzug), zusätzlich zu 7.2: kitty-`include`-Zeilen, fcitx5- und Lualine-
 Themenwahl, **alle alten IPC-Ziele und Befehle in den Hyprland-Dateien und KWin-Kürzeln aller
@@ -743,8 +760,11 @@ Nutzer** (0.8 Nr. 44; Liste in 7.2 Schritt 6 und 7.4 Schritt 6), Regel-IDs und `
 Hyprland-Dateien; Nutzerkopien der Repo-Plugins nicht kopieren; Hotspot-Verbindung bleibt.
 Dazu aus D7.7a2: eigene Hyprland-Regeln mit Layer-Namensraum `dms:…` (`layerrule`, `layer_rule`)
 → `alpe:…` (`dms:dankisland` → `alpe:island`); `mimeapps.list` mit `dms-open.desktop` → `alpe-open.desktop`.
-Folgen für E3: Desktop-Datei `alpe-open.desktop` (Auswahl «jedes Mal fragen» der Standardprogramme,
-ruft `alpe-dienst open`) gehört ins Paket – im Repo gibt es sie nicht, bisher lieferte sie das Paket des Ursprungs.
+Dazu aus 0.8 Nr. 57–59: Sicherungsordner bleiben beim Umschreiben unberührt; der Rückweg setzt
+Marke und IDs der Fensterregeln gezielt zurück; Einbindungen der Ausgabedateien je Programm nach 7.6.
+Folgen für E3: `alpe-shell` liefert `alpe-open.desktop` selbst aus (`packaging/alpe-open.desktop`
+→ `/usr/share/applications/`; Auswahl «jedes Mal fragen» der Standardprogramme, ruft
+`alpe-dienst open`); bisher lieferte das Paket des Ursprungs `dms-open.desktop` (0.8 Nr. 50, 59).
 Folgen für E1: PAM-Dienste, Richtlinien und alle paketierten Pfade mit `alpe`-Namen (2.3.3).
 
 ---
@@ -869,6 +889,7 @@ oder fälschlich Entferntes übrig bleibt, und führe danach die Ladeprüfung de
 /usr/share/plasma/shells/org.alpe.desktop/   KDE-Sperre, beim Bau mit der Ansicht aus shell/Modules/Lock/Alpe zusammengesetzt
 /usr/lib/systemd/user/alpe.service
 /usr/share/applications/io.github.alpe_shell.Alpe{,.Notepad,.Open}.desktop
+/usr/share/applications/alpe-open.desktop    Auswahl «jedes Mal fragen» (packaging/alpe-open.desktop, 0.8 Nr. 59)
 /usr/share/icons/hicolor/scalable/apps/io.github.alpe_shell.Alpe.svg
 /usr/share/{bash-completion,zsh,fish}/…/alpe-dienst
 /usr/share/licenses/alpe-shell/{LICENSE,NOTICE,…}
@@ -1094,8 +1115,9 @@ Ohne 1.0-Spuren sagt `install.sh` nur, dass es durch Paket + `alpe einrichten` e
 8. **Hyprland (Mac)**: siehe 7.4.
 9. **Aufräumen**: Link `~/.local/bin/alpe` (zeigt ins Repo, verdeckt `/usr/bin/alpe`) entfernen,
    `~/.local/lib/alpe/`, `~/.local/share/applications/dev.duxlabs.shell.desktop` in die
-   Sicherung. kitty: `dank-theme.conf`/`dank-tabs.conf` → `alpe-*.conf`, `include`-Zeilen
-   nachziehen. Erst jetzt, nach erfolgreichem Start und `alpe doctor` ohne Fehler:
+   Sicherung. Einbindungen der Ausgabedateien in den Fremdprogrammen auf die neuen Namen
+   umstellen (Tabelle 7.6; die Dateien unter den alten Namen bleiben bis «Umzug-Ende» liegen und
+   aktuell). `mimeapps.list`: `dms-open.desktop` → `alpe-open.desktop`. Erst jetzt, nach erfolgreichem Start und `alpe doctor` ohne Fehler:
    **`dux-shell` (und `dux-gop`) zum Entfernen anbieten** – `pacman -Rs --print dux-shell dux-gop`
    zeigen, dann `sudo pacman -Rns …`; Fedora: `dnf remove dms dms-cli dgop` zeigen. Hinweis auf
    die `IgnorePkg`-Zeile in `/etc/pacman.conf` (die fasse ich nicht an).
@@ -1105,6 +1127,10 @@ Ohne 1.0-Spuren sagt `install.sh` nur, dass es durch Paket + `alpe einrichten` e
 **Rückweg** `alpe umzug --zurueck` (solange `dux-shell` noch installiert ist): `alpe.service`
 aus, Sicherung zurückspielen, `dms.service` + Drop-ins an, Kürzel `dms-*` wieder setzen,
 Hyprland-Zeilen zurück. Danach läuft 1.0 wie vorher.
+
+**Was der Rückweg leistet (0.8 Nr. 58):** Er stellt den Zustand **zum Zeitpunkt des Umzugs**
+wieder her. Was nach dem Umzug geändert wurde, kommt nur zurück, wenn es ausdrücklich
+zurückgesetzt wird; beides zählt 7.7 auf, und `--zurueck` gibt die Liste am Ende aus.
 
 **Sicherheitsnetz** `alpe umzug --nur-dateien` (aufgerufen von `alpe start`): Gibt es
 `~/.config/dms/settings.json`, aber kein `~/.config/alpe/settings.json`, nur Schritt 4 – damit
@@ -1149,7 +1175,12 @@ Umzug:
 6. **Alte IPC-Ziele und Befehle umschreiben (0.8 Nr. 44), für jeden Nutzer:** in
    `hyprland.conf`/`hyprland.lua`, allen von dort eingebundenen Dateien, `hypr/alpe/*.lua`
    (auch `binds-user.lua`), `hypridle.conf` und `hyprlock.conf` (Sicherung `*.vor-alpe-1.1`,
-   Protokoll, `--zurueck`). Tabelle, gemeinsam mit 7.2 Schritt 6 e:
+   Protokoll, `--zurueck`). **Ausgenommen sind Sicherungen (0.8 Nr. 57):** Ordner wie
+   `~/.config/hypr/.dms-backups/` und `.alpe-backups/`, Dateien `*.vor-alpe-1.1`, `*.vor-umzug`,
+   `*.bak`, `*.dms-backup`, `*.alpe-backup` werden weder umgeschrieben noch sonst verändert, auch
+   wenn sie alte Ziele enthalten (am Mac steht `dankdash` nur in einer solchen Sicherung). Der
+   Test prüft, dass ein Sicherungsordner mit alten Zielen nach dem Umzug Byte für Byte gleich ist.
+   Tabelle, gemeinsam mit 7.2 Schritt 6 e:
 
    | Alt | Neu |
    |---|---|
@@ -1178,7 +1209,70 @@ nach bootstrap.sh, solange keine Mac-Dateien vorliegen). Stubs für `systemctl`,
 - zweiter Lauf ändert nichts;
 - `--zurueck` ergibt Byte für Byte den Ausgangsbaum;
 - fremdes Plugin bleibt, Alpe-Plugins nicht als Nutzerkopie;
-- Kollision in `~/.config/alpe` → Alpe-Datei gewinnt, Protokolleintrag.
+- Kollision in `~/.config/alpe` → Alpe-Datei gewinnt, Protokolleintrag;
+- Sicherungsordner (`hypr/.dms-backups/` mit alten IPC-Zielen) und `*.dms-backup` nach Umzug und
+  nach `--zurueck` unverändert (0.8 Nr. 57);
+- Fensterregeln: Nach dem Umzug wird eine Regel geändert und eine neue angelegt (`-- ALPE-RULE:`,
+  `alpe_rule_N`); `--zurueck` setzt Marke und IDs auf `-- DMS-RULE:` und die alten IDs, der
+  Parser von 1.0 (Marke `DMS-RULE`) findet alle Regeln (0.8 Nr. 58);
+- Einbindungen je Programm aus 7.6 stehen nach dem Umzug auf dem neuen Namen, nach `--zurueck`
+  wieder auf dem alten; `mimeapps.list` ebenso.
+
+### 7.6 Einbindungen der Ausgabedateien (0.8 Nr. 48, 59)
+
+Der Umzug stellt die Einbindung in jedem Programm auf den neuen Namen um – nur dort, wo die alte
+Einbindung tatsächlich steht (Muster, keine feste Zeile), je Datei mit Sicherung `*.vor-alpe-1.1`
+und Protokolleintrag. Die Dateien unter den alten Namen (Links bzw. zweite Fassungen aus
+`core/internal/matugen/altnamen.go`) bleiben liegen und aktuell; **Links und doppeltes Schreiben
+fallen mit «Umzug-Ende» weg** (0.8 Nr. 23), dann räumt Alpe auch die alten Namen ab.
+
+| Programm | Datei mit der Einbindung | Alt → neu |
+|---|---|---|
+| KDE-Farbschema | `~/.config/kdeglobals` (`[General] ColorScheme`) | `DankMatugen{,Light,Dark}` → `AlpeMatugen{,Light,Dark}` |
+| qt5ct, qt6ct | `~/.config/qt5ct/qt5ct.conf`, `~/.config/qt6ct/qt6ct.conf` (`color_scheme_path`); qtengine-Konfiguration, falls sie das Schema nennt | `…/color-schemes/DankMatugen….colors` → `…/AlpeMatugen….colors` |
+| Zed | `~/.config/zed/settings.json` (`theme`, auch die Form mit `light`/`dark`) | Themennamen «… DankShell …» → «… Alpe …» (dieselben Paare wie `altnamen.go`) |
+| kitty | `~/.config/kitty/kitty.conf` und eingebundene Dateien (`include`) | `dank-theme.conf`, `dank-tabs.conf` → `alpe-theme.conf`, `alpe-tabs.conf` |
+| Ghostty | `~/.config/ghostty/config` (`theme =`) | `dankcolors` → `alpecolors` |
+| Alacritty | `~/.config/alacritty/alacritty.toml` (`import` bzw. `general.import`) | `dank-theme.toml` → `alpe-theme.toml` |
+| foot | `~/.config/foot/foot.ini` (`include=`) | `dank-colors.ini` → `alpe-colors.ini` |
+| WezTerm | `~/.config/wezterm/wezterm.lua` bzw. `~/.wezterm.lua` (`color_scheme`) | `"dank-theme"` → `"alpe-theme"` |
+| Emacs | `init.el`/`early-init.el` im Emacs-Ordner, `~/.emacs` (`load-theme`, `custom-enabled-themes`) | `dank-emacs` → `alpe-emacs` |
+| GTK 3/4 | `~/.config/gtk-3.0/gtk.css`, `gtk-4.0/gtk.css` (`@import`; oder `gtk.css` als Link auf die Farbdatei) | `dank-colors.css` → `alpe-colors.css` |
+| fcitx5 | `~/.config/fcitx5/conf/classicui.conf` (`Theme=`, `DarkTheme=`) | `dms` → `alpe` |
+| Discord-Clients | Equibop, Vesktop: `settings/settings.json` (`enabledThemes`); Vencord: dieselbe Liste in seinen Einstellungen | `dank-discord.css` → `alpe-discord.css` |
+| Standardprogramme | `~/.config/mimeapps.list` | `dms-open.desktop` → `alpe-open.desktop` (liefert `alpe-shell`, 6.1) |
+
+Nicht umgestellt: Neovim (Namen bleiben, 0.8 Nr. 60), pywalfox (liest `wal/colors.json`).
+Läuft ein Programm während des Umzugs, sieht es die Umstellung je nach Programm erst nach
+Neuladen; ob Vencord beim Wechsel über den Link neu lädt, steht in `offene-faelle.md`.
+
+### 7.7 Rückweg: was zurückgesetzt wird und was nicht (0.8 Nr. 58)
+
+Grundsatz: `alpe umzug --zurueck` stellt den Zustand zum Zeitpunkt des Umzugs wieder her
+(Sicherung, Protokoll). Stand der Liste: D7.7; F1 führt sie zu Ende und gibt sie aus.
+
+Ausdrücklich zurückgesetzt, auch wenn nach dem Umzug geändert:
+- **Fensterregeln:** `-- ALPE-RULE:` → `-- DMS-RULE:`, `alpe-floating-windows` →
+  `dms-floating-windows`, `alpe-window-opaque` → `dms-window-opaque`, `alpe_rule_N` → `dms_rule_N` (die Form
+  der automatischen IDs von 1.0) – im aktuellen Stand der Regeldatei, nicht aus der Sicherung;
+  so bleiben Regeln erhalten, die nach dem Umzug geändert oder angelegt wurden.
+- Alles, was der Umzug selbst umgeschrieben hat (Protokoll): Hyprland-Zeilen, Kürzel und ihre
+  Befehle, Einbindungen nach 7.6, `mimeapps.list`, Verknüpfungen der Dienste, zur Seite gelegte
+  Plugin-Kopien.
+
+Nicht zurückgesetzt (bleibt auf dem Stand des Umzugs bzw. geht 1.0 verloren):
+- Einstellungen und Session, die nach dem Umzug in `~/.config/alpe` und `~/.local/state/alpe`
+  geändert wurden (1.0 liest `~/.config/dms` und `~/.local/state/dms` im Stand des Umzugs);
+- Kürzel und Anzeigeprofile, die nach dem Umzug unter `hypr/alpe/` bzw. über die KWin-Brücke
+  `alpe-*` angelegt wurden;
+- nach dem Umzug installierte oder geänderte Plugins unter `~/.config/alpe/plugins`;
+- Zwischenablage und Mitteilungsverlauf seit dem Umzug;
+- eigene matugen-Vorlagen, die nach dem Umzug mit `palette16` geschrieben wurden (1.0 kennt nur
+  `dank16`);
+- Sicherungen unter neuem Namen (`*.alpe-backup`, `hypr/.alpe-backups/`), die 1.0 nicht kennt;
+  die Sicherungen aus 1.0 liegen unverändert daneben (0.8 Nr. 57);
+- die Hotspot-Verbindung «Alpe Hotspot», falls sie nach dem Umzug neu angelegt wurde (1.0 legt
+  seine eigene wieder an), und gekündigte CUPS-Abonnements des Besitzers `dms` (1.0 abonniert neu).
 
 ---
 

@@ -63,6 +63,10 @@ Ladeprüfung (`entwicklung/ladepruefung/ladepruefung.py`) einmal pro Halt auf de
 KWin und Hyprland; im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet, damit
 Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33).
 
+Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `shell/` – nicht in
+`tools/test.sh`. Grundlinie: 5600 Meldungen. Bei jedem Halt vergleichen und jede neue Meldung
+einzeln einordnen (Plan 0.8 Nr. 63).
+
 ## Projektregeln
 
 - Version und Codename: Alle Fassungen heissen «Zugerberg», gezählt wird nur die Nummer

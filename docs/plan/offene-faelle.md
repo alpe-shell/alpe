@@ -349,6 +349,17 @@ Benutzerkopie (Plan 0.8 Nr. 32). Ist die Benutzerkopie älter als die mitgeliefe
 (Vergleich der `version` aus beiden `plugin.json`), soll die Plugin-Seite einen Hinweis zeigen
 (Plan 0.8 Nr. 39). Nicht in Phase A terminiert.
 
+## Vencord: lädt das Thema beim Wechsel über den Link neu? (ohne Frist)
+
+Bis «Umzug-Ende» zeigt `themes/dank-discord.css` als Link auf `alpe-discord.css` (Plan 0.8
+Nr. 48, 59). Ungeklärt ist, ob Vencord (und Vesktop, Equibop) eine Änderung der Zieldatei
+bemerkt, wenn das gewählte Thema der Link ist, oder ob das Thema dann erst nach einem Neuladen
+des Clients (Strg+R) die neuen Farben zeigt. Nicht geprüft, auch nicht am Quelltext der Clients. Zu prüfen
+an einem Rechner mit laufendem Client: Farbwechsel in Alpe auslösen, einmal mit dem alten Namen
+(Link) und einmal mit `alpe-discord.css` als gewähltem Thema. Lädt der Client über den Link
+nicht neu, genügt bis zum Umzug ein Hinweis im CHANGELOG; nach F1 steht die Auswahl ohnehin auf
+dem neuen Namen (Plan 7.6).
+
 ## Hyprland: `hyprctl descriptions` (nach Phase A)
 
 Unter Hyprland 0.57.2 meldet `HyprlandService.qml:257` `hyprctl descriptions parse failed:
