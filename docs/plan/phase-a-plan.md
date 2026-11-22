@@ -112,7 +112,8 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
 - **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
   nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
-- **Erledigt bis D7.0. Nächster Schritt: D7.1** (Plugin-Beschreibung `requires_alpe`/`bar-widget`).
+- **Erledigt bis D7.1** (dazu 0.8 Nr. 25–30). **Nächster Schritt: D7.2a** (Module nur per `git mv`
+  plus Symlinks), dann D7.2b mit allen Importen im selben Commit und Ladeprüfung KWin (0.8 Nr. 27/28).
   Für jeden Bereich eine Tabelle `entwicklung/umbenennen/<bereich>.tsv` anlegen, Probelauf mit
   `--liste` prüfen, dann `--schreiben`; `bash tools/test.sh` muss grün sein, Namensprüfung zeigt
   die sinkende Zahl. D7.2a: nur `git mv` plus Symlinks unter den alten Pfaden (Werkzeug-Art
