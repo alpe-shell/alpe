@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 failures = 0
@@ -130,7 +131,7 @@ try:
         lang = subprocess.run([sys.executable, lp.__file__, "hyprland"], capture_output=True, text=True,
                               env=dict(os.environ, ALPE_LP_TMP=os.path.join(tmp, "ein-langer-ordner")))
         check(lang.returncode == 2 and "zu lang" in lang.stdout, "hyprland mit zu langem $ALPE_LP_TMP bricht vor dem Start ab")
-    gut = {"abbruch": "", "hung": False, "limit": 1, "shell.log": "Configuration Loaded\nbackend ready\n", "ipc.log": "--- bereit\nEnde nach Plan\n",
+    gut = {"abbruch": "", "hung": False, "limit": 1, "shell.log": "Configuration Loaded\nbackend ready\n INFO ShellBackend: Connected (API v2, CLI 1.1) - []\n", "ipc.log": "--- bereit\nEnde nach Plan\n",
            "compositor": "hyprland", "umgebung.log": "HYPRLAND_INSTANCE_SIGNATURE=abc_1_2\nXDG_RUNTIME_DIR=/r\nSocket .socket.sock da\nSocket .socket2.sock da\n"}
     check(lp.health(gut) == [], "Lauf unter Hyprland mit Signatur und beiden Sockets ist in Ordnung")
     check(len(lp.health(dict(gut, **{"umgebung.log": "HYPRLAND_INSTANCE_SIGNATURE=abc\nSocket .socket.sock da\nSocket .socket2.sock fehlt\n"}))) == 1,
@@ -140,6 +141,37 @@ try:
     check(len(lp.health(dict(gut, **{"shell.log": gut["shell.log"] + "WARN quickshell.hyprland.ipc: Error making request: QLocalSocket::ServerNotFoundError\n"}))) == 1,
           "ServerNotFoundError der Shell: Lauf gescheitert, nichts für die Grundlinie")
     check(lp.health(dict(gut, compositor="kwin", **{"umgebung.log": ""})) == [], "unter KWin spielt das keine Rolle")
+    # Mit Verbindung zum Dienst erscheinen dessen Fehlermeldungen; die Nummer der Anfrage darf den Vergleich nicht stören.
+    check(lp.normalize("ERROR  go: ipc error: id=1795378623798 method-error=loginctl manager not initialized", "/x")
+          == lp.normalize("ERROR  go: ipc error: id=17 method-error=loginctl manager not initialized", "/x")
+          == "ERROR  go: ipc error: id=<ID> method-error=loginctl manager not initialized", "Nummer der Anfrage in Fehlermeldungen des Dienstes wird ausgeblendet")
+    # Verbindung zum Dienst (Plan 0.8 Nr. 81): ohne «Connected» ist der Lauf gescheitert, unter beiden Compositors.
+    for compositor in ("kwin", "hyprland"):
+        ohne = lp.health(dict(gut, compositor=compositor, **{"shell.log": "Configuration Loaded\nbackend ready\n"}))
+        check(len(ohne) == 1 and "Connected" in ohne[0], "%s: Lauf ohne «Connected (API v…)» gilt als gescheitert" % compositor)
+    # Der Ersatz-Systembus muss antworten: Ohne die receive-Regeln wartet ein Client endlos auf die Antwort zu «Hello».
+    check('<type>system</type>' in lp.SYSTEMBUS and all(regel in lp.SYSTEMBUS for regel in (
+        '<allow user="*"/>', '<allow send_destination="*"/>', '<allow receive_type="method_return"/>', '<allow receive_type="error"/>',
+        '<allow receive_type="signal"/>', '<allow send_requested_reply="true" send_type="method_return"/>')),
+        "Richtlinie des Ersatz-Systembusses erlaubt Antworten")
+    if shutil.which("dbus-daemon") and shutil.which("dbus-send"):
+        # Echte Probe im Temp-Ordner: Der Bus beendet sich über timeout selbst, beendet wird nichts über Namen.
+        kurz = tempfile.mkdtemp(prefix="sb")
+        sock = os.path.join(kurz, "sb")
+        with open(os.path.join(kurz, "systembus.conf"), "w") as handle:
+            handle.write(lp.SYSTEMBUS.format(sock=sock))
+        bus = subprocess.Popen(["timeout", "10", "dbus-daemon", "--config-file=" + os.path.join(kurz, "systembus.conf"), "--nofork"],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(50):
+            if os.path.exists(sock):
+                break
+            time.sleep(0.1)
+        antwort = subprocess.run(["timeout", "5", "dbus-send", "--bus=unix:path=" + sock, "--print-reply", "--reply-timeout=3000",
+                                  "--dest=org.freedesktop.DBus", "/", "org.freedesktop.DBus.ListNames"], capture_output=True, text=True)
+        bus.terminate()
+        bus.wait()
+        shutil.rmtree(kurz, ignore_errors=True)
+        check(antwort.returncode == 0 and "org.freedesktop.DBus" in antwort.stdout, "Ersatz-Systembus antwortet auf einen Aufruf\n" + antwort.stdout + antwort.stderr)
 
     # Auswertung nach dem Lauf: erkennt eine umgezogene und eine nicht umgezogene Session.
     check(any(line.startswith("FEHLER") for line in lp.probe_report(home)), "Auswertung meldet eine Session, die nicht umgezogen ist")

@@ -29,7 +29,10 @@ denselben Namen. Nach einer harten Obergrenze stoppt die Prüfung ihren Scope un
 
 Die Testumgebung gilt erst im Scope: eigenes HOME, eigene XDG-Ordner und XDG_RUNTIME_DIR, eigener
 Session-Bus (dbus-run-session), ein leerer Ersatz für den Systembus (kein logind, NetworkManager,
-polkit, BlueZ), Attrappen für systemctl, loginctl, pkexec, sudo. Als Erstes prüft der Lauf, dass er
+polkit, BlueZ; er antwortet aber, sein Protokoll steht in systembus.log), Attrappen für systemctl,
+loginctl, pkexec, sudo. Ein Lauf gilt nur, wenn die Oberfläche die Verbindung zum Dienst meldet
+(«Connected (API v…)»); sonst ist er gescheitert und liefert nichts für die Grundlinie
+(Plan 0.8 Nr. 81). Als Erstes prüft der Lauf, dass er
 den echten systemd-Benutzerdienst nicht erreicht (sonst Abbruch). Der Compositor läuft virtuell
 (kwin_wayland --virtual); Hyprland läuft verschachtelt darin, weil es keinen eigenständigen
 Headless-Betrieb mehr kennt. Vorher wird das ausgelieferte Design (design/kde) ins Temp-HOME gespielt,
@@ -176,7 +179,20 @@ SYSTEMBUS = """<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configu
   <type>system</type>
   <listen>unix:path={sock}</listen>
   <auth>EXTERNAL</auth>
-  <policy context="default"><allow send_destination="*"/><allow own="*"/></policy>
+  <!-- Ein Systembus verweigert ohne Regeln alles, auch die eigenen Antworten: Ohne die receive-Regeln
+       bekommt ein Client auf «Hello» nie eine Antwort und wartet (Plan 0.8 Nr. 81). -->
+  <policy context="default">
+    <allow user="*"/>
+    <allow own="*"/>
+    <allow send_destination="*"/>
+    <allow send_type="signal"/>
+    <allow send_requested_reply="true" send_type="method_return"/>
+    <allow send_requested_reply="true" send_type="error"/>
+    <allow receive_type="method_call"/>
+    <allow receive_type="method_return"/>
+    <allow receive_type="error"/>
+    <allow receive_type="signal"/>
+  </policy>
 </busconfig>
 """
 
@@ -311,7 +327,7 @@ cp -r {repo}/plugins/. "$XDG_CONFIG_HOME/alpe/plugins/"
     python3 "$base/vorbereitung.py" - {extra} {probe} {session10} {entsperrt} {logo}
 }} > "$base/vorbereitung.log" 2>&1
 # 3. Leerer Ersatz für den Systembus.
-dbus-daemon --config-file="$base/systembus.conf" --nofork >/dev/null 2>&1 &
+dbus-daemon --config-file="$base/systembus.conf" --nofork > "$base/systembus.log" 2>&1 &
 i=0; while [ ! -S {sock} ] && [ $i -lt 50 ]; do i=$((i + 1)); sleep 0.1; done
 # 4. Compositor ohne Bildschirm; endet mit dem Sitzungsskript.
 dbus-run-session -- kwin_wayland --virtual --width 1920 --height 1080 --socket lp --no-lockscreen \\
@@ -506,6 +522,8 @@ def normalize(line, base):
     # Zeilennummern verschieben sich bei jeder Änderung am Code; verglichen wird der Wortlaut.
     line = re.sub(r"(\.(?:qml|js))\[-?\d+:-?\d+\]", r"\1[<Z>]", line)
     line = re.sub(r"\[([A-Za-z_]\w*):\d+\]", r"[\1:<Z>]", line)
+    # Fehlermeldungen des Dienstes tragen die laufende Nummer der Anfrage; sie ist in jedem Lauf anders.
+    line = re.sub(r"\bipc error: id=\d+", "ipc error: id=<ID>", line)
     return line.strip()
 
 
@@ -559,6 +577,10 @@ def health(result):
         problems.append("Oberfläche nicht geladen («Configuration Loaded» fehlt)")
     if "backend ready" not in log:
         problems.append("Dienst nicht bereit")
+    if "Connected (API v" not in log:
+        # Ohne Verbindung zum Dienst bleibt alles ungeprüft, was ihn braucht (Netzwerk, Systemmonitor,
+        # Plugins, Farbschema); so liefen die Hyprland-Läufe bis zum Halt nach D7 (Plan 0.8 Nr. 81).
+        problems.append("Oberfläche meldet keine Verbindung zum Dienst («Connected (API v…)» fehlt)")
     if "--- bereit" not in result["ipc.log"]:
         problems.append("Oberfläche hat nicht auf IPC geantwortet")
     if "Ende nach Plan" not in result["ipc.log"]:

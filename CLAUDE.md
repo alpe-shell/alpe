@@ -75,6 +75,8 @@ Grundlinie (Plan 0.8 Nr. 70). Grundlinien können Meldungen als sporadisch kennz
 wird vor dem Einordnen mehrfach gegen den Stand vor der Änderung gegengemessen (Plan 0.8 Nr. 76).
 Unter Hyprland `ALPE_LP_TMP=/tmp/claude-1000` (höchstens 19 Zeichen, sonst legt Hyprland seinen
 Socket nicht an); ein Lauf ohne Hyprland-IPC gilt als gescheitert.
+Unter beiden Compositors gilt ein Lauf nur, wenn die Oberfläche die Verbindung zum Dienst meldet
+(`Connected (API v…)`); sonst ist er gescheitert und liefert nichts für die Grundlinie (Plan 0.8 Nr. 81).
 Im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet,
 damit Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33). Zum Halt gehört ein Bild der Variante
 «offen» unter Hyprland (`--offen --bild DATEI`, aufgenommen mit `alpe-dienst screenshot full`;
