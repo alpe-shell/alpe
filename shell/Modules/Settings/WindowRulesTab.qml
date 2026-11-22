@@ -219,8 +219,8 @@ Item {
                 const result = JSON.parse(output.trim());
                 const allRules = result.rules || [];
                 CompositorService.syncDmsWindowFloatingRule(allRules);
-                windowRules = allRules.filter(r => (r.source || "").includes("dms/windowrules") && r.id !== CompositorService.dmsOpaqueRuleId);
-                externalRules = allRules.filter(r => !(r.source || "").includes("dms/windowrules"));
+                windowRules = allRules.filter(r => (r.source || "").includes("/" + Paths.appDir + "/windowrules") && r.id !== CompositorService.dmsOpaqueRuleId);
+                externalRules = allRules.filter(r => !(r.source || "").includes("/" + Paths.appDir + "/windowrules"));
                 windowRulesInclude.applyStatus(result.dmsStatus);
             } catch (e) {
                 windowRules = [];

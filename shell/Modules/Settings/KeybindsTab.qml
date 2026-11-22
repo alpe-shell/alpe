@@ -80,9 +80,9 @@ Item {
     function bindsFileLabel() {
         switch (KeybindsService.currentProvider) {
         case "hyprland":
-            return "dms/binds-user.lua";
+            return "alpe/binds-user.lua";
         default:
-            return "dms/binds.conf";
+            return "alpe/binds.conf";
         }
     }
 
@@ -175,7 +175,7 @@ Item {
     function confirmRemoveBind(key) {
         removeBindConfirm.showWithOptions({
             "title": I18n.tr("Remove Shortcut?"),
-            "message": KeybindsService.currentProvider === "hyprland" ? I18n.tr("Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across Alpe updates.", "hyprland remove shortcut confirmation, %1 is the key combination, %2 the override file").arg(key).arg("dms/binds-user.lua") : I18n.tr("Remove the shortcut %1?", "remove shortcut confirmation, %1 is the key combination").arg(key),
+            "message": KeybindsService.currentProvider === "hyprland" ? I18n.tr("Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across Alpe updates.", "hyprland remove shortcut confirmation, %1 is the key combination, %2 the override file").arg(key).arg("alpe/binds-user.lua") : I18n.tr("Remove the shortcut %1?", "remove shortcut confirmation, %1 is the key combination").arg(key),
             "confirmText": I18n.tr("Remove"),
             "onConfirm": () => KeybindsService.removeBind(key)
         });
@@ -467,7 +467,7 @@ Item {
                                     if (warningBox.showLegacy)
                                         return I18n.tr("Run %1 to create it before changing these settings.", "hyprland.lua missing warning, %1 is a command").arg("dms setup");
                                     if (warningBox.showSetup)
-                                        return I18n.tr("Click 'Setup' to create %1 and add include to your compositor config.", "include setup banner, %1 is the dms config file name").arg("dms/binds");
+                                        return I18n.tr("Click 'Setup' to create %1 and add include to your compositor config.", "include setup banner, %1 is the config file name").arg("alpe/binds");
                                     if (warningBox.showWarning) {
                                         const count = warningBox.status.overriddenBy;
                                         return (count === 1 ? I18n.tr("%1 Alpe bind may be overridden by config binds that come after the include.", "singular, keybinds warning, %1 is 1") : I18n.tr("%1 Alpe binds may be overridden by config binds that come after the include.", "plural, keybinds warning, %1 is a count")).arg(count);
