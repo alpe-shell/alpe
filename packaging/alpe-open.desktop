@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Alpe
+Name[de]=Alpe
+Comment=Select an application to open links and files
+Comment[de]=Programm zum Öffnen von Links und Dateien wählen
+Exec=alpe-dienst open %u
+Icon=io.github.alpe_shell.Alpe
+Terminal=false
+NoDisplay=true
+MimeType=x-scheme-handler/http;x-scheme-handler/https;text/html;application/xhtml+xml;
+Categories=Utility;

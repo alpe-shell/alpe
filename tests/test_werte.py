@@ -66,5 +66,24 @@ check('`app-alpe-${' in read(SHELL, "Common", "LaunchUnit.js"), "gestartete Prog
 insel = read(SHELL, "Modules", "Island", "Island.qml")
 check('"DOT" : "ISLAND"' in insel and "DANK" not in insel, "IPC-Antworten der Insel: ISLAND_…/DOT_…")
 
+# ---------------------------------------------------------------- D7.7b4: «jedes Mal fragen»
+# Die Standardprogramme bieten den Eintrag alpe-open an; die Desktop-Datei dazu liegt im Repo
+# (Installation: E3, mimeapps.list: F1 – Plan 0.8 Nr. 50).
+desktop = os.path.join(REPO, "packaging", "alpe-open.desktop")
+if os.path.isdir(os.path.join(REPO, "packaging")):
+    eintrag = dict(zeile.split("=", 1) for zeile in read(desktop).splitlines() if "=" in zeile)
+    tab = read(SHELL, "Modules", "Settings", "DefaultAppsTab.qml")
+    kennung = re.search(r'shellChooserId: "([\w-]+)"', tab)
+    check(kennung is not None and kennung.group(1) + ".desktop" == os.path.basename(desktop),
+          "Desktop-Datei heisst wie der Auswahl-Eintrag der Standardprogramme")
+    check(eintrag.get("Exec") == "alpe-dienst open %u" and eintrag.get("NoDisplay") == "true",
+          "ruft alpe-dienst open, erscheint nicht im Starter")
+    check("x-scheme-handler/http;" in eintrag.get("MimeType", "") and "dms" not in read(desktop).lower(),
+          "meldet sich für Links an, kein Schema des Ursprungs")
+    import shutil
+    import subprocess
+    if shutil.which("desktop-file-validate"):
+        check(subprocess.run(["desktop-file-validate", desktop]).returncode == 0, "desktop-file-validate")
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)
