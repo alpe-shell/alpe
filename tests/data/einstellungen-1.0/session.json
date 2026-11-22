@@ -1,0 +1,80 @@
+{
+  "brightnessExponentialDevices": {},
+  "brightnessUserSetValues": {
+    "backlight:beispiel": 70
+  },
+  "configVersion": 7,
+  "desktopWidgetInstancePositions": {},
+  "dockPins": {
+    "dock": [
+      "org.kde.dolphin",
+      "kitty",
+      "dms_settings",
+      "dms_notepad"
+    ]
+  },
+  "barPinnedApps": [
+    "firefox",
+    "dms_sysmon"
+  ],
+  "hiddenApps": [
+    "dms_vpn",
+    "org.kde.kwalletmanager"
+  ],
+  "appOverrides": {
+    "dms_colorpicker": {
+      "name": "Pipette"
+    }
+  },
+  "builtInPluginState": {
+    "dankNotepadModule": {
+      "tabs": 2
+    }
+  },
+  "hiddenTrayIds": [
+    "nm-applet"
+  ],
+  "idleInhibited": false,
+  "lastAppliedIconTheme": "Papirus-Dark",
+  "lastPlayerIdentity": "Firefox",
+  "launcherLastQuery": "dms",
+  "launcherQueryHistory": [
+    "dank",
+    "dms",
+    "dms_settings öffnen"
+  ],
+  "materialWallpapers": {
+    "": {
+      "shared": {
+        "preset": "dank",
+        "seed": "#d0bcff"
+      },
+      "dark": {
+        "preset": "bloom",
+        "seed": "#d0bcff"
+      }
+    }
+  },
+  "materialWallpaperProfiles": {
+    "eigen": {
+      "name": "dank",
+      "layers": [
+        {
+          "shape": "dankLogo",
+          "x": 0.5
+        },
+        {
+          "shape": "circle",
+          "x": 0.1
+        }
+      ]
+    }
+  },
+  "recentColors": [
+    "#d0bcff",
+    "#ff0000"
+  ],
+  "showThirdPartyPlugins": true,
+  "wallpaperPath": "",
+  "wallpaperTransition": "fade"
+}

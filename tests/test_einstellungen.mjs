@@ -5,7 +5,8 @@
 //
 //     node --test tests/test_einstellungen.mjs      nimmt shell/ im Repository (oder ALPE_SHELL_DIR)
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -159,6 +160,74 @@ test("Session Version 8: Starter-Einträge in Pins, Material-Vorlage «Alpe», F
     assert.deepEqual(migrated.materialWallpaperProfiles.eigen, { name: "dank", layers: [{ shape: "alpeLogo", x: 0.5 }, { shape: "circle", x: 0.1 }] });
     assert.deepEqual(migrated.launcherQueryHistory, ["dank", "dms"]);
     assert.equal(sessionStore.migrateToVersion(migrated, sessionVersion, null), null, "nicht noch einmal");
+});
+
+// ---------------------------------------------------------------- Session aus 1.0 als Datei
+
+// Derselbe Ablauf wie SessionData.loadSettings()/_onWritableCheckComplete(): lesen, migrieren, die alte
+// Datei als session.v<alt>.json sichern (SessionStore.backupFor), den migrierten Stand schreiben.
+function loadSessionFile(dir) {
+    const file = path.join(dir, "session.json");
+    const obj = JSON.parse(readFileSync(file, "utf8"));
+    const oldVersion = obj.configVersion ?? 0;
+    const migrated = oldVersion < sessionVersion ? sessionStore.migrateToVersion(obj, sessionVersion, null) : null;
+    if (!migrated)
+        return false;
+    const backup = sessionStore.backupFor(obj, oldVersion);
+    if (backup)
+        writeFileSync(path.join(dir, backup.name), backup.text);
+    writeFileSync(file, JSON.stringify(migrated, null, 2));
+    return true;
+}
+
+test("session.json aus 1.0: migriert, Sicherung session.v7.json, zweiter Lauf ändert nichts", () => {
+    const source = path.join(here, "data", "einstellungen-1.0", "session.json");
+    const original = readFileSync(source, "utf8");
+    const before = JSON.parse(original);
+    assert.equal(before.configVersion, 7, "Testdatei ist Session-Version 7 (Alpe 1.0)");
+    const dir = mkdtempSync(path.join(os.tmpdir(), "alpe-session-"));
+    try {
+        writeFileSync(path.join(dir, "session.json"), original);
+        assert.equal(loadSessionFile(dir), true, "erster Lauf migriert");
+        assert.deepEqual(readdirSync(dir).sort(), ["session.json", "session.v7.json"]);
+        assert.deepEqual(JSON.parse(readFileSync(path.join(dir, "session.v7.json"), "utf8")), before, "Sicherung = Datei aus 1.0");
+
+        const after = JSON.parse(readFileSync(path.join(dir, "session.json"), "utf8"));
+        assert.equal(after.configVersion, sessionVersion);
+        assert.deepEqual(after.dockPins, { dock: ["org.kde.dolphin", "kitty", "alpe_settings", "alpe_notepad"] });
+        assert.deepEqual(after.barPinnedApps, ["firefox", "alpe_sysmon"]);
+        assert.deepEqual(after.hiddenApps, ["alpe_vpn", "org.kde.kwalletmanager"]);
+        assert.deepEqual(after.appOverrides, { alpe_colorpicker: { name: "Pipette" } });
+        assert.equal(after.materialWallpapers[""].shared.preset, "alpe");
+        assert.equal(after.materialWallpapers[""].dark.preset, "bloom");
+        assert.deepEqual(after.materialWallpaperProfiles.eigen.layers.map(layer => layer.shape), ["alpeLogo", "circle"]);
+        assert.equal(after.materialWallpaperProfiles.eigen.name, "dank", "eigener Profilname bleibt");
+        // alles andere bleibt Wort für Wort (Verläufe, Altdaten des Notizblock-Plugins, Geräte …)
+        const touched = ["configVersion", "dockPins", "barPinnedApps", "hiddenApps", "appOverrides", "materialWallpapers", "materialWallpaperProfiles"];
+        for (const key of Object.keys(before)) {
+            if (!touched.includes(key))
+                assert.deepEqual(after[key], before[key], key);
+        }
+        assert.deepEqual(Object.keys(after).sort(), Object.keys(before).sort(), "kein Schlüssel kommt dazu oder fällt weg");
+        assert.equal(/"dms_[a-z_]+"|"dankLogo"/.test(JSON.stringify(after)), false, "keine alte Kennung mehr");
+
+        const migratedText = readFileSync(path.join(dir, "session.json"), "utf8");
+        const backupText = readFileSync(path.join(dir, "session.v7.json"), "utf8");
+        assert.equal(loadSessionFile(dir), false, "zweiter Lauf migriert nicht");
+        assert.deepEqual(readdirSync(dir).sort(), ["session.json", "session.v7.json"], "keine weitere Sicherung");
+        assert.equal(readFileSync(path.join(dir, "session.json"), "utf8"), migratedText);
+        assert.equal(readFileSync(path.join(dir, "session.v7.json"), "utf8"), backupText);
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+    assert.equal(sessionStore.backupFor({}, 7), null, "leere Datei: keine Sicherung");
+});
+
+test("SessionData.qml sichert über SessionStore.backupFor und schreibt den migrierten Stand", () => {
+    const data = readFileSync(path.join(shellDir, "Common", "SessionData.qml"), "utf8");
+    assert.match(data, /Store\.backupFor\(obj, oldVersion\)/);
+    assert.match(data, /sessionBackup\.setText\(backup\.text\)/);
+    assert.match(data, /else if \(_pendingMigration\)\s+settingsFile\.setText\(getCurrentSessionJson\(\)\)/);
 });
 
 test("die neuen Kennungen gibt es in der Shell, die alten nur noch in der Migration", () => {

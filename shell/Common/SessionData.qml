@@ -376,10 +376,11 @@ Singleton {
 
     // Alpe: Die Datei vor der Migration bleibt als session.v<alt>.json liegen (wie settings.v<alt>.json).
     function _backupBeforeMigration(obj, oldVersion) {
-        if (sessionBackup.path.toString() !== "" || !obj || Object.keys(obj).length === 0)
+        const backup = Store.backupFor(obj, oldVersion);
+        if (sessionBackup.path.toString() !== "" || !backup)
             return;
-        sessionBackup.path = StandardPaths.writableLocation(StandardPaths.GenericStateLocation) + "/" + Paths.appDir + "/session.v" + oldVersion + ".json";
-        sessionBackup.setText(JSON.stringify(obj, null, 2));
+        sessionBackup.path = StandardPaths.writableLocation(StandardPaths.GenericStateLocation) + "/" + Paths.appDir + "/" + backup.name;
+        sessionBackup.setText(backup.text);
     }
 
     function _onWritableCheckComplete(writable) {
@@ -392,6 +393,10 @@ Singleton {
             _hasUnsavedChanges = false;
             if (wasReadOnly && _pendingMigration)
                 settingsFile.setText(JSON.stringify(_pendingMigration, null, 2));
+            // Alpe: Nach einer Migration den geladenen Stand gleich schreiben (nicht erst beim nächsten
+            // Speichern), damit der nächste Start nichts mehr migriert und die Sicherung nicht neu anlegt.
+            else if (_pendingMigration)
+                settingsFile.setText(getCurrentSessionJson());
         }
         _pendingMigration = null;
     }

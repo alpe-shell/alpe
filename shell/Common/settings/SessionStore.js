@@ -146,3 +146,14 @@ function migrateToVersion(obj, targetVersion, settingsData) {
     }
     return session;
 }
+
+// Alpe: Sicherung der Datei vor einer Migration (session.v<alt>.json, wie settings.v<alt>.json).
+// Gibt Dateiname und Inhalt zurück; nichts bei leerer Datei. Geschrieben wird in SessionData.qml.
+function backupFor(obj, oldVersion) {
+    if (!obj || typeof obj !== "object" || Object.keys(obj).length === 0)
+        return null;
+    return {
+        name: "session.v" + oldVersion + ".json",
+        text: JSON.stringify(obj, null, 2)
+    };
+}
