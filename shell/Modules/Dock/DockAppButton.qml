@@ -187,7 +187,7 @@ Item {
     function showContextMenu() {
         if (!contextMenu)
             return;
-        const shouldHidePin = Paths.isDmsAppId(appData.appId);
+        const shouldHidePin = Paths.isShellAppId(appData.appId);
         contextMenu.showForButton(root, appData, root.height, shouldHidePin, cachedDesktopEntry, parentDockScreen, dockApps);
     }
     function activate() {
@@ -483,7 +483,7 @@ Item {
             Image {
                 id: iconImg
 
-                readonly property real displaySize: appData && Paths.isDmsAppId(appData.appId) ? actualIconSize * 0.85 : actualIconSize
+                readonly property real displaySize: appData && Paths.isShellAppId(appData.appId) ? actualIconSize * 0.85 : actualIconSize
 
                 anchors.centerIn: parent
                 width: displaySize
@@ -504,7 +504,7 @@ Item {
                 asynchronous: true
                 visible: status === Image.Ready && !coreIcon.visible
                 opacity: root.isMinimized ? 0.4 : 1
-                layer.enabled: appData && Paths.isDmsAppId(appData.appId)
+                layer.enabled: appData && Paths.isShellAppId(appData.appId)
                 layer.smooth: true
                 layer.mipmap: true
                 layer.effect: MultiEffect {

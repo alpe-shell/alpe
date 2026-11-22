@@ -163,15 +163,15 @@ Singleton {
         return desktopIconResolver(appId);
     }
 
-    readonly property var dmsAppIds: ["org.quickshell", Brand.appId]
+    readonly property var shellAppIds: ["org.quickshell", Brand.appId]
 
-    function isDmsAppId(appId: string): bool {
-        return dmsAppIds.includes(appId);
+    function isShellAppId(appId: string): bool {
+        return shellAppIds.includes(appId);
     }
 
     function getAppName(appId: string, desktopEntry: var): string {
-        if (isDmsAppId(appId)) {
-            return "dms";
+        if (isShellAppId(appId)) {
+            return "alpe";
         }
 
         return desktopEntry && desktopEntry.name ? desktopEntry.name : appId;

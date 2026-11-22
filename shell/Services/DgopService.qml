@@ -497,7 +497,7 @@ Singleton {
             helper.stdinEnabled = false;
     }
 
-    // Through the unlocked helper while it runs, otherwise through the DMS background process.
+    // Through the unlocked helper while it runs, otherwise through the Alpe background process.
     function request(method, params, callback) {
         if (!unlocked) {
             ShellBackend.sendRequest(method, params, callback);

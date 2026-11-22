@@ -18,7 +18,7 @@ Variants {
         visible: true
         color: "transparent"
 
-        WlrLayershell.namespace: "dms:monitor-identify"
+        WlrLayershell.namespace: "alpe:monitor-identify"
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.exclusiveZone: -1
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.None

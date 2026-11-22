@@ -5,7 +5,7 @@ import qs.Modals.Common
 AlpeModal {
     id: root
 
-    layerNamespace: "dms:confirm-modal"
+    layerNamespace: "alpe:confirm-modal"
     keepPopoutsOpen: true
 
     property string confirmTitle: ""

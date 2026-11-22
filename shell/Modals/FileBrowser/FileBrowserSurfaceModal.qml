@@ -32,7 +32,7 @@ AlpeModal {
     signal rejected
     signal fileSelected(string path)
 
-    layerNamespace: "dms:filebrowser"
+    layerNamespace: "alpe:filebrowser"
     modalWidth: 860
     modalHeight: 620
     backgroundColor: Theme.floatingWindowSurface

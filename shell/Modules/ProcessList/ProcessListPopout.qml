@@ -10,7 +10,7 @@ import "ProcessColumns.js" as ProcessColumns
 AlpePopout {
     id: processListPopout
 
-    layerNamespace: "dms:process-list-popout"
+    layerNamespace: "alpe:process-list-popout"
 
     property var parentWidget: null
     property var triggerScreen: null

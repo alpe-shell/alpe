@@ -237,7 +237,7 @@ function keyFromToken(token) {
 // A compositor resolves a bind's keysym on the first level of the active layout,
 // so a keysym that lives only above it can never match: de:neo puts every
 // bracket on layer 4, which is how "Mod+bracketleft" gets stored and then never
-// fires (#3585). keymap is what `dms keybinds keymap` reports, and a key outside
+// fires (#3585). keymap is what `alpe-dienst keybinds keymap` reports, and a key outside
 // its `named` vocabulary is one we could not name, so it counts as fine.
 function keysymUnreachable(key, keymap) {
     if (!key || !keymap)

@@ -31,7 +31,7 @@ Item {
 
         property string targetWindow: ""
 
-        layerNamespace: "dms:overview-window-context-menu"
+        layerNamespace: "alpe:overview-window-context-menu"
         menuItems: CompositorService.specialWorkspaceNames.map(name => ({
                     type: "item",
                     icon: "inbox",

@@ -10,11 +10,11 @@ func TestSnapTargetDisplayName(t *testing.T) {
 		expected string
 	}{
 		{
-			target:   SnapTarget{Name: "dms:control-center", Type: "popout"},
+			target:   SnapTarget{Name: "alpe:control-center", Type: "popout"},
 			expected: "control center",
 		},
 		{
-			target:   SnapTarget{Name: "dms:clipboard-popout", Type: "popout"},
+			target:   SnapTarget{Name: "alpe:clipboard-popout", Type: "popout"},
 			expected: "clipboard",
 		},
 		{
@@ -50,7 +50,7 @@ func TestUpdateHoverTarget(t *testing.T) {
 
 	targets := []SnapTarget{
 		{
-			Name:   "dms:control-center",
+			Name:   "alpe:control-center",
 			Type:   "popout",
 			X:      1400,
 			Y:      48,
@@ -58,7 +58,7 @@ func TestUpdateHoverTarget(t *testing.T) {
 			Height: 580,
 		},
 		{
-			Name:   "dms:clipboard-popout",
+			Name:   "alpe:clipboard-popout",
 			Type:   "popout",
 			X:      500,
 			Y:      100,
@@ -81,13 +81,13 @@ func TestUpdateHoverTarget(t *testing.T) {
 
 	// 2. Inside control center
 	r.updateHoverTarget(1500, 100)
-	if r.hoveredTarget == nil || r.hoveredTarget.Name != "dms:control-center" {
+	if r.hoveredTarget == nil || r.hoveredTarget.Name != "alpe:control-center" {
 		t.Fatalf("expected control-center target, got %+v", r.hoveredTarget)
 	}
 
 	// 3. Move inside clipboard
 	r.updateHoverTarget(600, 200)
-	if r.hoveredTarget == nil || r.hoveredTarget.Name != "dms:clipboard-popout" {
+	if r.hoveredTarget == nil || r.hoveredTarget.Name != "alpe:clipboard-popout" {
 		t.Fatalf("expected clipboard target, got %+v", r.hoveredTarget)
 	}
 
@@ -109,7 +109,7 @@ func TestUpdateHoverTarget(t *testing.T) {
 	r.selection.hasSelection = true
 	r.selection.fromPreSelect = true
 	r.updateHoverTarget(1500, 100)
-	if r.hoveredTarget == nil || r.hoveredTarget.Name != "dms:control-center" {
+	if r.hoveredTarget == nil || r.hoveredTarget.Name != "alpe:control-center" {
 		t.Fatalf("expected control-center hover over preselection, got %+v", r.hoveredTarget)
 	}
 }
@@ -132,7 +132,7 @@ func TestSelectionRenderBoundsHoveredTarget(t *testing.T) {
 	}
 
 	target := &SnapTarget{
-		Name:   "dms:control-center",
+		Name:   "alpe:control-center",
 		Type:   "popout",
 		X:      1400,
 		Y:      48,

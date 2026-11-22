@@ -41,7 +41,7 @@ Item {
     property bool explicitQuerySession: false
 
     // dmenu mode items
-    // come from a socket opened by `dms dmenu`, not from AppSearchService
+    // come from a socket opened by `alpe-dienst dmenu`, not from AppSearchService
     property string dmenuSocketPath: ""
     property var dmenuItems: []
     property string dmenuPrompt: "dmenu"

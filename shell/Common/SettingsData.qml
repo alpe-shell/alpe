@@ -1477,7 +1477,7 @@ Singleton {
         return "'" + String(arg).replace(/'/g, "'\\''") + "'";
     }
 
-    // Hand back the theme DMS replaced, unless something else changed it since.
+    // Hand back the theme Alpe replaced, unless something else changed it since.
     function restoreIconTheme() {
         const current = GSettings.getCmd("org.gnome.desktop.interface", "icon-theme");
         const script = `b=${_shellQuote(_iconThemeBackup)}; cur=$(${current}); if saved=$(cat "$b" 2>/dev/null); then rm -f "$b"; [ "$cur" = ${_shellQuote(SessionData.lastAppliedIconTheme)} ] && { printf 'restore:%s' "$saved"; exit 0; }; fi; printf '%s' "$cur"`;

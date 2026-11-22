@@ -19,7 +19,7 @@ Item {
     property var menuItems: []
     property Component customContent: null
     property real customContentWidth: 0
-    property string layerNamespace: "dms:context-menu"
+    property string layerNamespace: "alpe:context-menu"
     property real menuMargin: Theme.spacingS
     property real minMenuWidth: Theme.fieldDefaultWidth
     property real itemHeight: Alpe.Style.menuRowHeight

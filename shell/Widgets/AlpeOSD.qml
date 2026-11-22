@@ -8,7 +8,7 @@ PanelWindow {
     id: root
     readonly property var log: Log.scoped("AlpeOSD")
 
-    property string blurNamespace: "dms:osd"
+    property string blurNamespace: "alpe:osd"
     WlrLayershell.namespace: blurNamespace
 
     property alias content: contentLoader.sourceComponent

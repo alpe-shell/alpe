@@ -393,7 +393,7 @@ Singleton {
             "text": I18n.tr("Network", "noun, settings page and widget title"),
             "icon": root.wifiShown ? "wifi" : "lan",
             "hint": root.wifiShown ? I18n.tr("Wi-Fi, Ethernet, VPN", "settings sidebar hint for the network page") : "Ethernet, VPN",
-            "dmsOnly": true,
+            "networkOnly": true,
             "children": [
                 {
                     "id": "network_wifi",
@@ -886,7 +886,7 @@ Singleton {
             return false;
         if (entry.kwinOnly && !CompositorService.isKwin)
             return false;
-        if (entry.dmsOnly && !NetworkService.networkAvailable)
+        if (entry.networkOnly && !NetworkService.networkAvailable)
             return false;
         if (entry.cupsOnly && !CupsService.cupsAvailable)
             return false;

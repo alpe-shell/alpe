@@ -8,7 +8,7 @@ import qs.Widgets
 AlpeModal {
     id: root
 
-    layerNamespace: "dms:wifi-password"
+    layerNamespace: "alpe:wifi-password"
     keepPopoutsOpen: true
     allowStacking: true
     shouldBeVisible: false

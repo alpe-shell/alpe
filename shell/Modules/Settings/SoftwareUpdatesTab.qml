@@ -316,7 +316,7 @@ Item {
             title: "Systemaktualisierung"
             iconName: "system_update_alt"
             settingKey: "softwareUpdatesShell"
-            tags: ["dms", "shell", "version", "channel", "restart"]
+            tags: ["alpe", "shell", "version", "channel", "restart"]
 
             SettingsRow {
                 readonly property bool failed: SystemUpdateService.hasError && !root.busy

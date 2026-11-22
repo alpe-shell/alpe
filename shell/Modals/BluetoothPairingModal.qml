@@ -8,7 +8,7 @@ AlpeModal {
     id: root
     readonly property var log: Log.scoped("BluetoothPairingModal")
 
-    layerNamespace: "dms:bluetooth-pairing"
+    layerNamespace: "alpe:bluetooth-pairing"
 
     property string deviceName: ""
     property string deviceAddress: ""

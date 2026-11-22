@@ -19,7 +19,7 @@ Singleton {
         case "dankcal":
             return "dankcal";
         default:
-            if (dankBackend.connected)
+            if (duxBackend.connected)
                 return "dankcal";
             if (khalBackend.installed)
                 return "khal";
@@ -28,15 +28,15 @@ Singleton {
     }
 
     readonly property bool calendarAvailable: activeBackend !== "none"
-    readonly property bool isDankActive: activeBackend === "dankcal"
-    readonly property bool canCreateEvents: isDankActive && dankBackend.connected
+    readonly property bool isDuxActive: activeBackend === "dankcal"
+    readonly property bool canCreateEvents: isDuxActive && duxBackend.connected
     property bool khalAvailable: true // compatibility alias - calendar card UI gate
 
-    readonly property bool dankConnected: dankBackend.connected
-    readonly property bool dankBinaryExists: dankBackend.binaryExists
-    readonly property bool dankNeedsLaunch: backendPref === "dankcal" && !dankBackend.connected && !dankBackend.socketFound
+    readonly property bool duxConnected: duxBackend.connected
+    readonly property bool duxBinaryExists: duxBackend.binaryExists
+    readonly property bool duxNeedsLaunch: backendPref === "dankcal" && !duxBackend.connected && !duxBackend.socketFound
 
-    property var calendars: dankBackend.calendars
+    property var calendars: duxBackend.calendars
     property var eventsByDate: ({})
     property var taskEventsByDate: ({})
     property var localTasks: ({})
@@ -60,8 +60,8 @@ Singleton {
         onEventsByDateChanged: root.mergeEvents()
     }
 
-    CalendarDankBackend {
-        id: dankBackend
+    CalendarDuxBackend {
+        id: duxBackend
         enabled: root.backendPref === "dankcal" || root.backendPref === "auto"
         preferred: root.backendPref === "dankcal"
         onEventsByDateChanged: root.mergeEvents()
@@ -78,7 +78,7 @@ Singleton {
         root._rangeSet = true;
         switch (activeBackend) {
         case "dankcal":
-            dankBackend.loadEvents(startDate, endDate);
+            duxBackend.loadEvents(startDate, endDate);
             break;
         case "khal":
             khalBackend.loadEvents(startDate, endDate);
@@ -89,7 +89,7 @@ Singleton {
     function _activeBackendEventsByDate() {
         switch (activeBackend) {
         case "dankcal":
-            return dankBackend.eventsByDate;
+            return duxBackend.eventsByDate;
         case "khal":
             return khalBackend.eventsByDate;
         default:
@@ -107,20 +107,20 @@ Singleton {
     }
 
     function writableCalendars() {
-        return isDankActive ? dankBackend.writableCalendars() : [];
+        return isDuxActive ? duxBackend.writableCalendars() : [];
     }
 
     function defaultCalendar() {
-        return isDankActive ? dankBackend.defaultCalendar() : null;
+        return isDuxActive ? duxBackend.defaultCalendar() : null;
     }
 
-    function launchDankCalendar() {
-        dankBackend.launch();
+    function launchDuxCalendar() {
+        duxBackend.launch();
     }
 
     function createEvent(fields, callback) {
-        if (isDankActive) {
-            dankBackend.createEvent(fields, callback);
+        if (isDuxActive) {
+            duxBackend.createEvent(fields, callback);
             return;
         }
         if (callback)
@@ -130,8 +130,8 @@ Singleton {
     }
 
     function updateEvent(id, fields, callback) {
-        if (isDankActive) {
-            dankBackend.updateEvent(id, fields, callback);
+        if (isDuxActive) {
+            duxBackend.updateEvent(id, fields, callback);
             return;
         }
         if (callback)
@@ -141,8 +141,8 @@ Singleton {
     }
 
     function deleteEvent(id, callback) {
-        if (isDankActive) {
-            dankBackend.deleteEvent(id, callback);
+        if (isDuxActive) {
+            duxBackend.deleteEvent(id, callback);
             return;
         }
         if (callback)
@@ -201,10 +201,10 @@ Singleton {
     }
 
     function addTaskForDate(date, text) {
-        const taskCal = isDankActive && dankBackend.connected ? dankBackend.defaultTaskCalendar() : null;
+        const taskCal = isDuxActive && duxBackend.connected ? duxBackend.defaultTaskCalendar() : null;
         if (taskCal) {
             const due = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-            dankBackend.createTask({
+            duxBackend.createTask({
                 "calendarId": taskCal.id,
                 "summary": text,
                 "allDay": true,
@@ -216,7 +216,7 @@ Singleton {
         let tasks = Object.assign({}, root.localTasks);
         if (!tasks[dateKey])
             tasks[dateKey] = [];
-        let taskId = (new Date().getTime()) + "-dms";
+        let taskId = (new Date().getTime()) + "-alpe";
         tasks[dateKey].push({
             "id": taskId,
             "text": text,
@@ -230,9 +230,9 @@ Singleton {
     function toggleTask(taskId) {
         if (taskId.startsWith("vtodo_")) {
             const id = taskId.slice(6);
-            const task = dankBackend.taskById(id);
+            const task = duxBackend.taskById(id);
             if (task)
-                dankBackend.completeTask(id, !task.completed);
+                duxBackend.completeTask(id, !task.completed);
             return;
         }
         let cleanId = taskId.replace("task_", "");
@@ -259,7 +259,7 @@ Singleton {
 
     function removeTask(taskId) {
         if (taskId.startsWith("vtodo_")) {
-            dankBackend.deleteTask(taskId.slice(6));
+            duxBackend.deleteTask(taskId.slice(6));
             return;
         }
         let cleanId = taskId.replace("task_", "");
@@ -309,7 +309,7 @@ Singleton {
 
     function editTask(taskId, newText) {
         if (taskId.startsWith("vtodo_")) {
-            dankBackend.updateTask(taskId.slice(6), {
+            duxBackend.updateTask(taskId.slice(6), {
                 "summary": newText
             });
             return;
@@ -355,8 +355,8 @@ Singleton {
             merged[dateKey] = [].concat(backendEvents[dateKey]);
 
         _mergeInto(merged, root.taskEventsByDate);
-        if (isDankActive)
-            _mergeInto(merged, dankBackend.tasksByDate);
+        if (isDuxActive)
+            _mergeInto(merged, duxBackend.tasksByDate);
 
         for (let dateKey in merged) {
             let list = merged[dateKey];

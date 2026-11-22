@@ -81,7 +81,7 @@ Item {
 
     AlpeContextMenu {
         id: contextMenu
-        layerNamespace: "dms:control-center-widget-options"
+        layerNamespace: "alpe:control-center-widget-options"
         minMenuWidth: CcMetrics.configMenuWidth
         customContentWidth: CcMetrics.configMenuWidth
         keyboardNavigable: true

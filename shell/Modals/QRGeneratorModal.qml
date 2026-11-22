@@ -11,7 +11,7 @@ import qs.Alpe.Widgets
 AlpeModal {
     id: root
     visible: false
-    layerNamespace: "dms:qr-generator"
+    layerNamespace: "alpe:qr-generator"
 
     property bool disablePopupTransparency: true
     property bool generating: false

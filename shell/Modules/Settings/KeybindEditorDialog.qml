@@ -56,8 +56,8 @@ AlpeDialog {
 
     readonly property var argConfig: Actions.getActionArgConfig(KeybindsService.currentProvider, editAction)
     readonly property var shellParsedArgs: argConfig?.type === "shell-action" ? Actions.parseShellActionArgs(editAction) : null
-    readonly property var dmsArgDefs: shellParsedArgs?.base ? (Actions.getDmsActionArgs()[shellParsedArgs.base]?.args ?? []) : []
-    readonly property var dmsFlagArgs: dmsArgDefs.filter(arg => arg.type === "flag")
+    readonly property var shellArgDefs: shellParsedArgs?.base ? (Actions.getShellActionArgs()[shellParsedArgs.base]?.args ?? []) : []
+    readonly property var shellFlagArgs: shellArgDefs.filter(arg => arg.type === "flag")
     readonly property bool showShellArgs: actionType === "shell-action" && argConfig?.type === "shell-action"
     readonly property bool showCompositorPicker: actionType === "compositor" && !useCustomCompositor
     readonly property var compositorParsedArgs: Actions.parseCompositorActionArgs(KeybindsService.currentProvider, editAction)
@@ -345,23 +345,23 @@ AlpeDialog {
         return "";
     }
 
-    function setDmsArgs(changes) {
+    function setShellArgs(changes) {
         if (!shellParsedArgs)
             return;
         const args = Object.assign({}, shellParsedArgs.args, changes);
         updateEdit({
-            "action": Actions.buildDmsAction(shellParsedArgs.base, args)
+            "action": Actions.buildShellIpcAction(shellParsedArgs.base, args)
         });
     }
 
-    function commitDmsAmount(text) {
+    function commitShellAmount(text) {
         if (!shellParsedArgs)
             return;
         const oldAction = editAction;
         const args = Object.assign({}, shellParsedArgs.args, {
             "amount": text || "5"
         });
-        const newAction = Actions.buildDmsAction(shellParsedArgs.base, args);
+        const newAction = Actions.buildShellIpcAction(shellParsedArgs.base, args);
         const changes = {
             "action": newAction
         };
@@ -396,7 +396,7 @@ AlpeDialog {
         }
     }
 
-    function dmsFlagLabel(name) {
+    function shellFlagLabel(name) {
         switch (name) {
         case "no-file":
             return I18n.tr("Save");
@@ -409,7 +409,7 @@ AlpeDialog {
         }
     }
 
-    function dmsFlagTooltip(name) {
+    function shellFlagTooltip(name) {
         switch (name) {
         case "no-file":
             return saveTooltip;
@@ -422,15 +422,15 @@ AlpeDialog {
         }
     }
 
-    function dmsFlagChecked(flag) {
+    function shellFlagChecked(flag) {
         const set = shellParsedArgs?.args[flag.name] === true;
         return flag.inverted ? !set : set;
     }
 
-    function setDmsFlag(flag, checked) {
+    function setShellFlag(flag, checked) {
         const changes = {};
         changes[flag.name] = flag.inverted ? !checked : checked;
-        setDmsArgs(changes);
+        setShellArgs(changes);
     }
 
     function compositorCategory() {
@@ -654,7 +654,7 @@ AlpeDialog {
     }
 
     Binding {
-        target: dmsActionDropdown
+        target: shellActionDropdown
         property: "currentValue"
         value: root.actionLabel
     }
@@ -922,13 +922,13 @@ AlpeDialog {
             visible: root.actionType === "shell-action"
 
             body: AlpeDropdown {
-                id: dmsActionDropdown
+                id: shellActionDropdown
                 width: parent.width
                 compactMode: true
                 enableFuzzySearch: true
-                options: KeybindsService.getDmsActions().map(action => action.label)
+                options: KeybindsService.getShellActions().map(action => action.label)
                 onValueChanged: value => {
-                    const action = KeybindsService.getDmsActions().find(entry => entry.label === value);
+                    const action = KeybindsService.getShellActions().find(entry => entry.label === value);
                     if (!action)
                         return;
                     root.updateEdit({
@@ -1033,7 +1033,7 @@ AlpeDialog {
         }
 
         SettingsRow {
-            visible: root.showShellArgs && root.dmsArgDefs.some(arg => arg.name === "amount")
+            visible: root.showShellArgs && root.shellArgDefs.some(arg => arg.name === "amount")
 
             body: AlpeTextField {
                 id: amountField
@@ -1051,7 +1051,7 @@ AlpeDialog {
                         text = amount;
                 }
                 Component.onCompleted: text = amount
-                onEditingFinished: root.commitDmsAmount(text)
+                onEditingFinished: root.commitShellAmount(text)
 
                 FieldUnit {
                     id: amountUnit
@@ -1062,7 +1062,7 @@ AlpeDialog {
         }
 
         SettingsRow {
-            visible: root.showShellArgs && root.dmsArgDefs.some(arg => arg.name === "device")
+            visible: root.showShellArgs && root.shellArgDefs.some(arg => arg.name === "device")
 
             body: AlpeTextField {
                 readonly property string device: root.shellParsedArgs?.args?.device || ""
@@ -1077,40 +1077,40 @@ AlpeDialog {
                         text = device;
                 }
                 Component.onCompleted: text = device
-                onEditingFinished: root.setDmsArgs({
+                onEditingFinished: root.setShellArgs({
                     "device": text
                 })
             }
         }
 
         SettingsRow {
-            visible: root.showShellArgs && root.dmsArgDefs.some(arg => arg.name === "tab")
+            visible: root.showShellArgs && root.shellArgDefs.some(arg => arg.name === "tab")
             title: I18n.tr("Tab", "noun, keybind argument label for a dashboard tab")
 
             AlpeDropdown {
                 id: dashTabDropdown
                 compactMode: true
                 options: [I18n.tr("Overview"), I18n.tr("Media"), I18n.tr("Wallpaper"), I18n.tr("Weather")]
-                onValueChanged: value => root.setDmsArgs({
+                onValueChanged: value => root.setShellArgs({
                         "tab": root.dashTabValue(value)
                     })
             }
         }
 
         SettingsRow {
-            visible: root.showShellArgs && root.dmsFlagArgs.length > 0
+            visible: root.showShellArgs && root.shellFlagArgs.length > 0
 
             body: AlpeFilterChips {
                 width: parent.width
                 multiSelect: true
                 showCounts: false
-                model: root.dmsFlagArgs.map(flag => ({
-                            "label": root.dmsFlagLabel(flag.name),
+                model: root.shellFlagArgs.map(flag => ({
+                            "label": root.shellFlagLabel(flag.name),
                             "value": flag.name,
-                            "tooltip": root.dmsFlagTooltip(flag.name)
+                            "tooltip": root.shellFlagTooltip(flag.name)
                         }))
-                selectedValues: root.dmsFlagArgs.filter(flag => root.dmsFlagChecked(flag)).map(flag => flag.name)
-                onSelectionToggled: (index, selected) => root.setDmsFlag(root.dmsFlagArgs[index], selected)
+                selectedValues: root.shellFlagArgs.filter(flag => root.shellFlagChecked(flag)).map(flag => flag.name)
+                onSelectionToggled: (index, selected) => root.setShellFlag(root.shellFlagArgs[index], selected)
             }
         }
 

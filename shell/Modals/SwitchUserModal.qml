@@ -51,7 +51,7 @@ AlpeModal {
         close();
     }
 
-    layerNamespace: "dms:switch-user-modal"
+    layerNamespace: "alpe:switch-user-modal"
     shouldBeVisible: false
     allowStacking: true
     modalWidth: Math.min(Theme.dialogMaxWidth, screenWidth - Theme.spacingXL * 2)

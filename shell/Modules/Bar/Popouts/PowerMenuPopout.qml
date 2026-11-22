@@ -10,7 +10,7 @@ AlpePopout {
     signal lockRequested
     signal switchUserRequested
 
-    layerNamespace: "dms:power-menu"
+    layerNamespace: "alpe:power-menu"
     popupWidth: contentLoader.item?.desiredWidth ?? 400
     popupHeight: contentLoader.item ? contentLoader.item.implicitHeight : 300
     triggerWidth: 40

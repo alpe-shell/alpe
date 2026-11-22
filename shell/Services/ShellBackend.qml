@@ -497,7 +497,7 @@ Singleton {
 
     signal dbusSignalReceived(string subscriptionId, var data)
 
-    readonly property string dbusClientId: "dms-qml-" + Date.now() + "-" + Math.floor(Math.random() * 0xffffffff)
+    readonly property string dbusClientId: "alpe-qml-" + Date.now() + "-" + Math.floor(Math.random() * 0xffffffff)
     property var dbusSubscriptions: ({})
 
     function dbusCall(bus, dest, path, iface, method, args, callback) {

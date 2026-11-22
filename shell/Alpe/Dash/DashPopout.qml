@@ -12,7 +12,7 @@ import qs.Alpe.Dash.Overview
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:dash"
+    layerNamespace: "alpe:dash"
     fullHeightSurface: true
     contentHandlesKeys: true
     closesWithSource: false

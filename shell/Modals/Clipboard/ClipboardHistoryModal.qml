@@ -9,7 +9,7 @@ import qs.Services
 AlpeModal {
     id: clipboardHistoryModal
 
-    layerNamespace: "dms:clipboard"
+    layerNamespace: "alpe:clipboard"
 
     function toggle() {
         if (shouldBeVisible) {

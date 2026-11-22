@@ -703,7 +703,7 @@ Item {
             bucket: "theme"
             filters: ["*.json"]
             mode: "save"
-            defaultName: "dms-extracted-theme.json"
+            defaultName: "alpe-extracted-theme.json"
             onAccepted: paths => saveExtractedTheme(pendingExtractJson, paths[0])
         }
     }

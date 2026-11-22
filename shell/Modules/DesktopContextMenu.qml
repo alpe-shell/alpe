@@ -29,7 +29,7 @@ AlpeContextMenu {
     readonly property var materialEntry: SessionData.materialWallpaperEntry(materialTarget)
     readonly property string currentKey: materialWallpaper ? Art.resolvePreset(materialEntry.preset, SessionData.materialWallpaperProfiles) : currentWallpaper
 
-    layerNamespace: "dms:desktop-context-menu"
+    layerNamespace: "alpe:desktop-context-menu"
     keyboardNavigable: true
     itemFontSize: Theme.fontSizeMedium
     minMenuWidth: stripUnit * (stripCount + 1) + Theme.spacingS * (stripCount + 1)

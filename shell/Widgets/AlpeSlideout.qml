@@ -10,7 +10,7 @@ import qs.Widgets
 PanelWindow {
     id: root
 
-    property string layerNamespace: "dms:slideout"
+    property string layerNamespace: "alpe:slideout"
     WlrLayershell.namespace: layerNamespace
 
     property bool isVisible: false

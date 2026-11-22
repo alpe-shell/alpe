@@ -15,7 +15,7 @@ AlpeContextMenu {
     readonly property bool hasTextAlternative: !!entry && (entry.altMimeType ?? "") !== ""
     readonly property bool pinned: entry?.pinned || hasPinnedDuplicate
 
-    layerNamespace: "dms:clipboard-context-menu"
+    layerNamespace: "alpe:clipboard-context-menu"
 
     menuItems: {
         const items = [

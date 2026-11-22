@@ -10,7 +10,7 @@ import qs.Services
 AlpeModal {
     id: notificationModal
 
-    layerNamespace: "dms:notification-center-modal"
+    layerNamespace: "alpe:notification-center-modal"
 
     modalWidth: Math.min(NotificationMetrics.modalWidth, screenWidth - Theme.spacingL * 2)
     modalHeight: Math.min(NotificationMetrics.modalHeight, screenHeight * NotificationMetrics.modalScreenRatio)

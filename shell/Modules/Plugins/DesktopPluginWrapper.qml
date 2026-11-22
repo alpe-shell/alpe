@@ -64,7 +64,7 @@ Item {
 
         mask: root.clickThrough ? emptyMask : null
 
-        WlrLayershell.namespace: "dms:desktop-widget:" + root.pluginId + (root.instanceId ? ":" + root.instanceId : "")
+        WlrLayershell.namespace: "alpe:desktop-widget:" + root.pluginId + (root.instanceId ? ":" + root.instanceId : "")
         WlrLayershell.layer: {
             if (root.showOnOverlay)
                 return WlrLayer.Overlay;

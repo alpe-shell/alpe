@@ -67,7 +67,7 @@ Singleton {
 
     readonly property int updateCount: availableUpdates.length
     readonly property var systemUpdates: availableUpdates.filter(p => !shellUpdate || p.name !== shellUpdate.name)
-    // The feed never flips this: DMS only updates through the package manager.
+    // The feed never flips this: Alpe only updates through the package manager.
     readonly property bool shellUpdateAvailable: shellUpdate !== null
     readonly property string shellUpdateVersion: shellUpdate?.toVersion || ""
     readonly property bool shellManagedExternally: shellInstallMethod === "nix"

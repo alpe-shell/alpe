@@ -157,7 +157,7 @@ Scope {
         printErrors: false
     }
 
-    // Fallback stack written by `dms auth resolve-lock` when no managed
+    // Fallback stack written by `alpe-dienst auth resolve-lock` when no managed
     // /etc/pam.d/dankshell exists. See #2789.
     readonly property string userPamDir: Paths.strip(Paths.state) + "/pam"
 

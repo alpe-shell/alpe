@@ -1258,14 +1258,14 @@ EOFCONFIG
     function playLoginSoundIfApplicable() {
         if (SettingsData.soundsEnabled && SettingsData.soundLogin && !notificationsAudioMuted) {
             // plays login sound on session start, but only if a specific file doesn't exist,
-            // to prevent it from playing on every DMS restart during the session
+            // to prevent it from playing on every Alpe restart during the session
             const runtimeDir = Quickshell.env("XDG_RUNTIME_DIR");
             const sessionId = Quickshell.env("XDG_SESSION_ID") || "0";
 
             if (!runtimeDir)
                 return;
 
-            const loginFile = `${runtimeDir}/dms.login-${sessionId}`;
+            const loginFile = `${runtimeDir}/alpe.login-${sessionId}`;
             const legacyLoginFile = `${runtimeDir}/danklinux.login-${sessionId}`;
 
             // if file doesn't exist, touch it (0)

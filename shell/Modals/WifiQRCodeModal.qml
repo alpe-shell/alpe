@@ -11,7 +11,7 @@ import qs.Alpe.Widgets
 AlpeModal {
     id: root
     visible: false
-    layerNamespace: "dms:wifi-qrcode"
+    layerNamespace: "alpe:wifi-qrcode"
 
     property bool disablePopupTransparency: true
     property string wifiSSID: ""

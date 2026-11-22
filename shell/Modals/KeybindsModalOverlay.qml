@@ -10,7 +10,7 @@ AlpeModal {
 
     signal floatingToggleRequested
 
-    layerNamespace: "dms:keybinds"
+    layerNamespace: "alpe:keybinds"
     useOverlayLayer: true
     property real _maxW: Math.min(overlay.screenWidth * 0.92, 1200)
     property real _maxH: Math.min(overlay.screenHeight * 0.92, 900)

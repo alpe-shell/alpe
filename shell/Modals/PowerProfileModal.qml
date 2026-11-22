@@ -8,7 +8,7 @@ import Quickshell.Services.UPower
 AlpeModal {
     id: root
 
-    layerNamespace: "dms:power-profiles"
+    layerNamespace: "alpe:power-profiles"
     keepPopoutsOpen: true
 
     property int selectedIndex: 0

@@ -6,7 +6,7 @@ import qs.Widgets
 AlpePopout {
     id: appDrawerPopout
 
-    layerNamespace: "dms:app-launcher"
+    layerNamespace: "alpe:app-launcher"
 
     property string _pendingMode: ""
     property string _pendingQuery: ""

@@ -57,7 +57,7 @@ Item {
             return 0;
         return parentScreen.y > 0 ? barThickness + barSpacing : 0;
     }
-    readonly property bool barUsesOverlayLayer: LayerShell.envUsesOverlay("ALPE_DANKBAR_LAYER", (barConfig?.useOverlayLayer ?? false) || CompositorService.framePeerSurfacesUseOverlayForScreen(parentScreen))
+    readonly property bool barUsesOverlayLayer: LayerShell.envUsesOverlay("ALPE_BAR_LAYER", (barConfig?.useOverlayLayer ?? false) || CompositorService.framePeerSurfacesUseOverlayForScreen(parentScreen))
 
     readonly property bool mirrored: !isVerticalOrientation && LayoutMirroring.enabled
     readonly property bool leadingJoined: segmentRole === "middle" || segmentRole === "last"

@@ -50,8 +50,8 @@ Item {
             [root.appCategory.Terminal]: ["terminal"] // Special
         })
 
-    readonly property string dmsChooserId: "dms-open"
-    readonly property string dmsChooserLabel: I18n.tr("Alpe chooser")
+    readonly property string shellChooserId: "alpe-open"
+    readonly property string shellChooserLabel: I18n.tr("Alpe chooser")
     readonly property string terminalsListPath: (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/xdg-terminals.list"
 
     function stripDesktopSuffix(id) {
@@ -69,8 +69,8 @@ Item {
     }
 
     function getAppDisplayName(appId) {
-        if (stripDesktopSuffix(appId) === root.dmsChooserId) {
-            return root.dmsChooserLabel;
+        if (stripDesktopSuffix(appId) === root.shellChooserId) {
+            return root.shellChooserLabel;
         }
         return lookupEntry(appId)?.name || appId;
     }
@@ -87,12 +87,12 @@ Item {
         };
     }
 
-    function withDmsChooser(entries) {
-        const filtered = (entries || []).filter(e => e.value !== root.dmsChooserId);
+    function withShellChooser(entries) {
+        const filtered = (entries || []).filter(e => e.value !== root.shellChooserId);
         return [
             {
-                name: root.dmsChooserLabel,
-                value: root.dmsChooserId,
+                name: root.shellChooserLabel,
+                value: root.shellChooserId,
                 icon: "material:apps"
             }
         ].concat(filtered);
@@ -100,7 +100,7 @@ Item {
 
     function setModel(category, entries) {
         const models = Object.assign({}, root.categoryModels);
-        models[category] = category === root.appCategory.Terminal ? entries : withDmsChooser(entries);
+        models[category] = category === root.appCategory.Terminal ? entries : withShellChooser(entries);
         root.categoryModels = models;
     }
 

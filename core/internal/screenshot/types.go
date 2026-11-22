@@ -68,7 +68,7 @@ type SnapTarget struct {
 }
 
 func (s SnapTarget) DisplayName() string {
-	name := strings.TrimPrefix(s.Name, "dms:")
+	name := strings.TrimPrefix(s.Name, "alpe:")
 	for _, suffix := range []string{"-popout", "-modal", "-surface"} {
 		name = strings.TrimSuffix(name, suffix)
 	}

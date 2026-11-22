@@ -465,7 +465,7 @@ Singleton {
             return;
         }
 
-        // The DMS backend actually implements a bluez agent, so we can pair anything
+        // The Alpe backend actually implements a bluez agent, so we can pair anything
         if (enhancedPairingAvailable) {
             const devicePath = getDevicePath(device);
             ShellBackend.bluetoothPair(devicePath, callback);

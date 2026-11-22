@@ -1826,7 +1826,7 @@
     "page": "theme_surfaces"
   },
   {
-    "section": "dmsWindowsFloating",
+    "section": "shellWindowsFloating",
     "label": "Open floating",
     "tabIndex": -1,
     "category": "Interface style",
@@ -11136,7 +11136,7 @@
     ],
     "parentLabel": "System & integrations",
     "icon": "tune",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "clipboardAppearance",
@@ -11157,7 +11157,7 @@
     ],
     "parentLabel": "System & integrations",
     "icon": "tune",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "autoClearDays",
@@ -11178,7 +11178,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "clipboardClickToPaste",
@@ -11197,7 +11197,7 @@
     ],
     "parentLabel": "System & integrations",
     "icon": "settings",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "clearAtStartup",
@@ -11216,7 +11216,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "_tab_23",
@@ -11238,7 +11238,7 @@
     "icon": "content_paste",
     "parentLabel": "System & integrations",
     "description": "History size, retention, paste behavior",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "clipboardEnterToPaste",
@@ -11257,7 +11257,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "disabled",
@@ -11276,7 +11276,7 @@
     ],
     "parentLabel": "System & integrations",
     "icon": "history",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "maxHistory",
@@ -11297,7 +11297,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "maxEntrySize",
@@ -11318,7 +11318,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "maxPinned",
@@ -11340,7 +11340,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "clipboardSize",
@@ -11362,7 +11362,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "clipboardUseOverlayLayer",
@@ -11383,7 +11383,7 @@
       "system"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "clipboardVisibleEntryActions",
@@ -11409,7 +11409,7 @@
       "visible"
     ],
     "parentLabel": "System & integrations",
-    "conditionKey": "dmsConnected"
+    "conditionKey": "backendConnected"
   },
   {
     "section": "displaySnapToEdge",

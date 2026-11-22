@@ -7,7 +7,7 @@ import qs.Widgets
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:control-center"
+    layerNamespace: "alpe:control-center"
     fullHeightSurface: true
     resizeCurve: Theme.expressiveCurves.standard
     resizeDuration: CcMetrics.transitionDuration

@@ -51,7 +51,7 @@ Singleton {
 
     // What the active layout puts on the first level of every physical key,
     // plus the keysym vocabulary that answer is drawn from. See
-    // `dms keybinds keymap`. Empty until something asks for it.
+    // `alpe-dienst keybinds keymap`. Empty until something asks for it.
     property var firstLevelKeymap: ({})
 
     property var _rawData: null
@@ -76,17 +76,17 @@ Singleton {
     }
     readonly property string includeCompositor: currentProvider
     readonly property var includePaths: ConfigIncludeResolve.includePaths("binds", includeCompositor, configDir, "")
-    readonly property string dmsBindsPath: includePaths?.fragmentFiles[0] ?? ""
+    readonly property string shellBindsPath: includePaths?.fragmentFiles[0] ?? ""
     readonly property string mainConfigPath: includePaths?.configFile ?? ""
     readonly property bool readOnly: currentProvider === "hyprland" && CompositorService.isHyprland && !HyprlandService.luaConfigActive
     readonly property var actionTypes: Actions.getActionTypes()
-    readonly property var shellActions: getDmsActions()
+    readonly property var shellActions: getShellActions()
 
     signal bindsLoaded
     signal bindSaved(string key)
     signal bindSaveCompleted(bool success)
     signal bindRemoved(string key)
-    signal dmsBindsFixed
+    signal shellBindsFixed
     signal cheatsheetLoaded
 
     property int _consumers: 0
@@ -261,13 +261,13 @@ Singleton {
             }
             root.lastError = "";
             root.bindsFragmentIncluded = true;
-            root.dmsBindsFixed();
+            root.shellBindsFixed();
             ToastService.showInfo(I18n.tr("Binds include added"), I18n.tr("%1 is now included in config", "keybinds toast, %1 is the binds file path").arg("alpe/" + root.includePaths.fragmentFiles[0].split("/").pop()), "", "keybinds");
             Qt.callLater(root.forceReload);
         }
     }
 
-    function fixDmsBindsInclude() {
+    function fixShellBindsInclude() {
         if (fixing || bindsFragmentIncluded || !compositorConfigDir)
             return;
         if (readOnly) {
@@ -275,7 +275,7 @@ Singleton {
             return;
         }
         const timestamp = Math.floor(Date.now() / 1000);
-        const backupPath = `${mainConfigPath}.dmsbackup${timestamp}`;
+        const backupPath = `${mainConfigPath}.alpebackup${timestamp}`;
         const script = ConfigIncludeResolve.repairScriptFor("binds", includeCompositor, configDir, backupPath, "", Proc.backendBin);
         if (!script)
             return;
@@ -623,8 +623,8 @@ Singleton {
         return Actions.getCompositorActions(currentProvider, category);
     }
 
-    function getDmsActions() {
-        const actions = Actions.getDmsActions(CompositorService.isHyprland);
+    function getShellActions() {
+        const actions = Actions.getShellActions(CompositorService.isHyprland);
         if (!AdminPolicy.disableLockIpcUnlock)
             return actions;
         return actions.filter(action => action.id !== "spawn alpe-dienst ipc call lock demo");

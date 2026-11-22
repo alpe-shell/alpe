@@ -109,9 +109,9 @@ Singleton {
 
     readonly property bool isKnownCompositor: configKey !== ""
     readonly property bool supportsWindowRules: isHyprland
-    readonly property string dmsFloatingRuleId: "dms-floating-windows"
-    property bool dmsWindowFloatingActive: false
-    readonly property string dmsOpaqueRuleId: "dms-window-opaque"
+    readonly property string shellFloatingRuleId: "dms-floating-windows"
+    property bool shellWindowFloatingActive: false
+    readonly property string shellOpaqueRuleId: "dms-window-opaque"
     readonly property bool supportsLayoutConfig: isHyprland
     readonly property bool supportsCursorConfig: isHyprland
     readonly property bool supportsDisplayConfig: isHyprland
@@ -370,7 +370,7 @@ Singleton {
             }
             // Sent by the move/resize wrappers in alpe/binds.lua; Hyprland has no geometry event of its own
             if (event.name === "custom") {
-                if (event.data !== "dms:geometry")
+                if (event.data !== "alpe:geometry")
                     return;
                 try {
                     Hyprland.refreshToplevels();
@@ -1177,27 +1177,27 @@ Singleton {
         isKwin = name === "kwin";
         compositor = name;
         compositorDetected = true;
-        Qt.callLater(seedDmsWindowFloatingRule);
+        Qt.callLater(seedShellWindowFloatingRule);
     }
 
-    function seedDmsWindowFloatingRule() {
+    function seedShellWindowFloatingRule() {
         if (!supportsWindowRules)
             return;
         if (SettingsData.shellWindowsFloatingSeeded.includes(compositor)) {
-            refreshDmsWindowFloatingRule(true);
+            refreshShellWindowFloatingRule(true);
             return;
         }
         const seeded = compositor;
-        setDmsWindowFloatingRule(true, () => {
+        setShellWindowFloatingRule(true, () => {
             SettingsData.set("shellWindowsFloatingSeeded", SettingsData.shellWindowsFloatingSeeded.concat([seeded]));
-            refreshDmsWindowFloatingRule(true);
+            refreshShellWindowFloatingRule(true);
         });
     }
 
-    function refreshDmsWindowFloatingRule(ensureOpaque) {
+    function refreshShellWindowFloatingRule(ensureOpaque) {
         if (!supportsWindowRules)
             return;
-        const procId = ensureOpaque ? "dms-windowrule-startup-list" : "dms-windowrule-float-list";
+        const procId = ensureOpaque ? "alpe-windowrule-startup-list" : "alpe-windowrule-float-list";
         Proc.runCommand(procId, [Proc.backendBin, "config", "windowrules", "list", compositor], (output, exitCode) => {
             if (exitCode !== 0) {
                 if (ensureOpaque)
@@ -1212,25 +1212,25 @@ Singleton {
                 return;
             }
             // Each rule write rewrites the whole rules file, so writes must not overlap.
-            syncDmsWindowFloatingRule(rules, () => {
+            syncShellWindowFloatingRule(rules, () => {
                 if (ensureOpaque)
-                    ensureDmsOpaqueRule(rules);
+                    ensureShellOpaqueRule(rules);
             });
         });
     }
 
-    function dmsRuleMatchesCurrentAppId(rule) {
+    function shellRuleMatchesCurrentAppId(rule) {
         return (rule.matchCriteria?.appId || "").includes("alpe_shell");
     }
 
-    function syncDmsWindowFloatingRule(rules, onDone) {
-        const rule = rules.find(rule => rule.id === dmsFloatingRuleId && rule.enabled !== false && rule.actions?.openFloating === true);
-        dmsWindowFloatingActive = rule !== undefined;
-        if (!rule || dmsRuleMatchesCurrentAppId(rule)) {
+    function syncShellWindowFloatingRule(rules, onDone) {
+        const rule = rules.find(rule => rule.id === shellFloatingRuleId && rule.enabled !== false && rule.actions?.openFloating === true);
+        shellWindowFloatingActive = rule !== undefined;
+        if (!rule || shellRuleMatchesCurrentAppId(rule)) {
             onDone?.();
             return;
         }
-        setDmsWindowFloatingRule(true, onDone);
+        setShellWindowFloatingRule(true, onDone);
     }
 
     function reloadAfterWindowRuleWrite() {
@@ -1238,14 +1238,14 @@ Singleton {
             HyprlandService.reloadConfig();
     }
 
-    function setDmsRule(id, rule, onDone) {
+    function setShellRule(id, rule, onDone) {
         if (!supportsWindowRules)
             return;
         const args = rule ? ["add", compositor, JSON.stringify(Object.assign({
                 "id": id,
                 "enabled": true
             }, rule))] : ["remove", compositor, id];
-        Proc.runCommand("dms-windowrule-" + id, [Proc.backendBin, "config", "windowrules", ...args], (output, exitCode) => {
+        Proc.runCommand("alpe-windowrule-" + id, [Proc.backendBin, "config", "windowrules", ...args], (output, exitCode) => {
             if (exitCode !== 0) {
                 log.warn("failed to update the shell window rule", id, exitCode, output);
                 return;
@@ -1255,8 +1255,8 @@ Singleton {
         });
     }
 
-    function setDmsWindowFloatingRule(enabled, onDone) {
-        setDmsRule(dmsFloatingRuleId, enabled ? {
+    function setShellWindowFloatingRule(enabled, onDone) {
+        setShellRule(shellFloatingRuleId, enabled ? {
             "name": "Alpe: Fenster der Shell schwebend",
             "matchCriteria": {
                 "appId": "^io\\.github\\.alpe_shell\\.Alpe$"
@@ -1265,15 +1265,15 @@ Singleton {
                 "openFloating": true
             }
         } : null, () => {
-            dmsWindowFloatingActive = enabled;
+            shellWindowFloatingActive = enabled;
             onDone?.();
         });
     }
 
-    function ensureDmsOpaqueRule(rules) {
-        if (rules.some(rule => rule.id === dmsOpaqueRuleId && dmsRuleMatchesCurrentAppId(rule)))
+    function ensureShellOpaqueRule(rules) {
+        if (rules.some(rule => rule.id === shellOpaqueRuleId && shellRuleMatchesCurrentAppId(rule)))
             return;
-        // DMS windows are translucent via client alpha; Hyprland's opaque keeps that alpha, force_rgbx would drop it.
+        // Alpe windows are translucent via client alpha; Hyprland's opaque keeps that alpha, force_rgbx would drop it.
         let actions;
         if (isHyprland)
             actions = {
@@ -1281,7 +1281,7 @@ Singleton {
             };
         else
             return;
-        setDmsRule(dmsOpaqueRuleId, {
+        setShellRule(shellOpaqueRuleId, {
             "name": "Alpe: Fenster der Shell deckend",
             "matchCriteria": {
                 "appId": "^io\\.github\\.alpe_shell\\.Alpe$"

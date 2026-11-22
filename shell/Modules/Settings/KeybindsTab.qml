@@ -488,7 +488,7 @@ Item {
                             text: KeybindsService.fixing ? I18n.tr("Setting up...") : I18n.tr("Setup", "verb, button that creates the dms include config file")
                             enabled: !KeybindsService.fixing
                             anchors.verticalCenter: parent.verticalCenter
-                            onClicked: KeybindsService.fixDmsBindsInclude()
+                            onClicked: KeybindsService.fixShellBindsInclude()
                         }
                     }
                 }

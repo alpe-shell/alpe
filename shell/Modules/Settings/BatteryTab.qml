@@ -17,7 +17,7 @@ Item {
         return Theme.surfaceText;
     }
 
-    // The sysfs names DMS can write, in the order they are tried. Hardware that
+    // The sysfs names Alpe can write, in the order they are tried. Hardware that
     // exposes none of them, a Lenovo IdeaPad on ideapad_laptop for instance,
     // used to run the apply script to completion without writing anything, and
     // sh exiting 0 was indistinguishable from a successful write.

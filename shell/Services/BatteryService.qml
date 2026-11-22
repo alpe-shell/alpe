@@ -45,7 +45,7 @@ Singleton {
 
     function applyFreeBsdBatteryState(output) {
         const text = output || "";
-        const blocks = text.split(/__DMS_BATTERY_\d+__\n?/).filter(b => /Remaining capacity:/i.test(b));
+        const blocks = text.split(/__ALPE_BATTERY_\d+__\n?/).filter(b => /Remaining capacity:/i.test(b));
         let weightedPct = 0;
         let weight = 0;
         let pctSum = 0;
@@ -94,7 +94,7 @@ Singleton {
             }
         }
 
-        const acMatch = text.match(/__DMS_AC__:(\d+)/);
+        const acMatch = text.match(/__ALPE_AC__:(\d+)/);
 
         root.freebsdBatteryAvailable = blocks.length > 0;
         root.freebsdBatteryLevel = blocks.length > 0 ? Math.max(0, Math.min(100, weight > 0 ? weightedPct / weight : (pctCount > 0 ? pctSum / pctCount : 0))) : 0;
@@ -110,7 +110,7 @@ Singleton {
         if (!root.isBSD || root.batteries.length > 0)
             return;
 
-        const script = 'units=$(sysctl -n hw.acpi.battery.units 2>/dev/null || echo 0); i=0; while [ "$i" -lt "$units" ]; do echo "__DMS_BATTERY_${i}__"; acpiconf -i "$i" 2>/dev/null; i=$((i+1)); done; printf "__DMS_AC__:"; sysctl -n hw.acpi.acline 2>/dev/null || echo 1';
+        const script = 'units=$(sysctl -n hw.acpi.battery.units 2>/dev/null || echo 0); i=0; while [ "$i" -lt "$units" ]; do echo "__ALPE_BATTERY_${i}__"; acpiconf -i "$i" 2>/dev/null; i=$((i+1)); done; printf "__ALPE_AC__:"; sysctl -n hw.acpi.acline 2>/dev/null || echo 1';
 
         Proc.runCommand("battery-freebsd-acpi", ["nice", "-n", "10", "sh", "-c", script], (output, exitCode) => {
             root.freebsdBatteryProbeComplete = true;

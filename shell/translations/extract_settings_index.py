@@ -173,9 +173,9 @@ SIDEBAR_GATE_CONDITIONS = [
     ("soundsOnly", "soundsAvailable"),
     ("cupsOnly", "cupsAvailable"),
     ("greeterOnly", "greeterAvailable"),
-    ("dmsOnly", "networkAvailable"),
+    ("networkOnly", "networkAvailable"),
     ("hyprlandNiriOnly", "isHyprlandOrNiri"),
-    ("clipboardOnly", "dmsConnected"),
+    ("clipboardOnly", "backendConnected"),
     ("inputCapable", "inputCapable"),
     ("pointerCapable", "pointerCapable"),
     ("windowRulesCapable", "windowRulesCapable"),
@@ -576,7 +576,7 @@ def find_settings_components(content, filename, wrappers, tab_meta, hub_meta):
                 elif "NetworkService.networkAvailable" in visible_raw:
                     condition_key = "networkAvailable"
                 elif "ShellBackend.isConnected" in visible_raw:
-                    condition_key = "dmsConnected"
+                    condition_key = "backendConnected"
                 elif "Theme.matugenAvailable" in visible_raw:
                     condition_key = "matugenAvailable"
                 elif "dock.config.enabled" in visible_raw:

@@ -102,7 +102,7 @@ Singleton {
 
     // Follow only genuine portal transitions, debounced by the settle window — the
     // opt-in GTK4-refresh toggle reverts within ~400ms, and a stale portal value
-    // (broken gsettings→portal bridge) must never revert a DMS-initiated change.
+    // (broken gsettings→portal bridge) must never revert a Alpe-initiated change.
     function handlePortalColorScheme(scheme) {
         const isTransition = colorSchemeInitialized && scheme !== systemColorScheme;
         colorSchemeInitialized = true;

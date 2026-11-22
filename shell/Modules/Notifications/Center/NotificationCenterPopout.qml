@@ -8,7 +8,7 @@ import qs.Widgets
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:notification-center-popout"
+    layerNamespace: "alpe:notification-center-popout"
     fullHeightSurface: true
     contentHandlesKeys: true
     onOpened: contentFocusTimer.restart()

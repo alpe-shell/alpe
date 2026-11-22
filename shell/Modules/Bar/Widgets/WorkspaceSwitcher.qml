@@ -124,7 +124,7 @@ BasePill {
             const key = groupThisWs ? moddedId : `${moddedId}_${i}`;
 
             if (!byApp[key]) {
-                const isQuickshell = Paths.isDmsAppId(keyBase);
+                const isQuickshell = Paths.isShellAppId(keyBase);
                 const isSteamApp = Paths.isSteamApp(moddedId);
                 const desktopEntry = DesktopEntries.heuristicLookup(moddedId);
                 const icon = Paths.getAppIcon(moddedId, desktopEntry);

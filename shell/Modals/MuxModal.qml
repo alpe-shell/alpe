@@ -13,7 +13,7 @@ import qs.Widgets
 AlpeModal {
     id: muxModal
 
-    layerNamespace: "dms:mux"
+    layerNamespace: "alpe:mux"
 
     property int selectedIndex: -1
     property string searchText: ""

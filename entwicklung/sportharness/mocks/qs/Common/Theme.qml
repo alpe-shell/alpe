@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-// Dunkles Material-3-Schema wie aus matugen, Abstaende und Schriften wie in DMS.
+// Dunkles Material-3-Schema wie aus matugen, Abstaende und Schriften wie in Alpe.
 QtObject {
     function withAlpha(c, a) { return Qt.rgba(c.r, c.g, c.b, a) }
     property color surface: "#111318"

@@ -137,7 +137,7 @@ Item {
     readonly property string screenName: root.screen?.name ?? ""
     readonly property bool floating: root.setting("islandFloating")
     readonly property bool notch: !root.embedded && !root.freeMode && !root.dotMode && root.setting("islandNotch")
-    readonly property bool usesOverlayLayer: root.dotMode || CompositorService.framePeerSurfacesUseOverlayForScreen(root.screen) || LayerShell.envUsesOverlay("ALPE_DANKISLAND_LAYER", root.setting("islandUseOverlayLayer"))
+    readonly property bool usesOverlayLayer: root.dotMode || CompositorService.framePeerSurfacesUseOverlayForScreen(root.screen) || LayerShell.envUsesOverlay("ALPE_ISLAND_LAYER", root.setting("islandUseOverlayLayer"))
     // A free island's position only picks the orientation; a dot is always a circle.
     readonly property bool isVertical: !root.dotMode && SettingsData.islandVertical(root.barConfig)
     readonly property string edge: root.freeMode ? (root.isVertical ? "left" : "top") : SettingsData.islandEdge(root.barConfig)

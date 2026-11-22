@@ -7,7 +7,7 @@ import qs.Alpe.Widgets
 AlpeModal {
     id: root
 
-    layerNamespace: "dms:icc-profile-info"
+    layerNamespace: "alpe:icc-profile-info"
     keepPopoutsOpen: true
 
     property string outputName: ""

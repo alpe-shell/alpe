@@ -192,9 +192,9 @@ Card {
     }
 
     Rectangle {
-        id: dankWarning
+        id: duxWarning
 
-        readonly property bool showWarning: CalendarService.dankNeedsLaunch ?? false
+        readonly property bool showWarning: CalendarService.duxNeedsLaunch ?? false
 
         anchors.left: parent.left
         anchors.right: parent.right
@@ -223,7 +223,7 @@ Card {
             StyledText {
                 width: parent.width - Theme.iconSizeSmall - Theme.spacingS - (launchButton.visible ? launchButton.width + Theme.spacingS : 0)
                 anchors.verticalCenter: parent.verticalCenter
-                text: CalendarService.dankBinaryExists ? I18n.tr("Dux Calendar isn't running") : I18n.tr("Dux Calendar isn't installed")
+                text: CalendarService.duxBinaryExists ? I18n.tr("Dux Calendar isn't running") : I18n.tr("Dux Calendar isn't installed")
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.surfaceText
                 wrapMode: Text.Wrap
@@ -232,10 +232,10 @@ Card {
             AlpeButton {
                 id: launchButton
                 anchors.verticalCenter: parent.verticalCenter
-                visible: CalendarService.dankBinaryExists
+                visible: CalendarService.duxBinaryExists
                 text: I18n.tr("Launch")
                 buttonHeight: Theme.buttonHeightXS
-                onClicked: CalendarService.launchDankCalendar()
+                onClicked: CalendarService.launchDuxCalendar()
             }
         }
     }
@@ -245,8 +245,8 @@ Card {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: dankWarning.bottom
-        anchors.topMargin: dankWarning.visible ? Theme.spacingS : 0
+        anchors.top: duxWarning.bottom
+        anchors.topMargin: duxWarning.visible ? Theme.spacingS : 0
         height: DashMetrics.monthNavSize
 
         Item {
@@ -540,10 +540,10 @@ Card {
 
         readonly property string taskId: modelData?.id ?? ""
         readonly property bool isLocalTask: taskId.startsWith("task_")
-        readonly property bool isDankTask: taskId.startsWith("vtodo_")
-        readonly property bool isTask: isLocalTask || isDankTask
+        readonly property bool isDuxTask: taskId.startsWith("vtodo_")
+        readonly property bool isTask: isLocalTask || isDuxTask
         readonly property bool completed: isTask && !!modelData?.completed
-        readonly property bool canModify: isLocalTask || (isDankTask && !!modelData && !modelData.readOnly)
+        readonly property bool canModify: isLocalTask || (isDuxTask && !!modelData && !modelData.readOnly)
         readonly property string quickUrl: {
             if (isTask || !modelData)
                 return "";

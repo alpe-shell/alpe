@@ -195,7 +195,7 @@ Item {
 
             SettingsToggleRow {
                 tab: "theme"
-                tags: ["matugen", "dms", "templates"]
+                tags: ["matugen", "alpe", "templates"]
                 settingKey: "runMatugenTemplates"
                 text: I18n.tr("Run Alpe templates")
                 checked: SettingsData.runMatugenTemplates

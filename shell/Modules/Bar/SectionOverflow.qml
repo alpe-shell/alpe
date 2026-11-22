@@ -114,7 +114,7 @@ Item {
         onLoaded: root.showPopout()
         sourceComponent: Component {
             AlpePopout {
-                layerNamespace: "dms:bar-overflow"
+                layerNamespace: "alpe:bar-overflow"
                 screen: root.sectionContext.parentScreen
                 popupWidth: root.popupWidth
                 popupHeight: root.popupHeight

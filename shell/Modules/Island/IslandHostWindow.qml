@@ -51,7 +51,7 @@ Item {
             right: true
         }
 
-        WlrLayershell.namespace: "dms:dankisland:dismiss"
+        WlrLayershell.namespace: "alpe:island:dismiss"
         WlrLayershell.layer: root.islandLayer
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 

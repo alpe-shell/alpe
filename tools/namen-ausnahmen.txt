@@ -11,10 +11,17 @@ shell/Common/Brand.qml	upstream|Dux Modular Shell|duxlabs-dev/dux-shell	dauerhaf
 shell/Common/Brand.qml	heldPackages	E4	Paketnamen des Ursprungs (0.8 Nr. 17)
 shell/Modules/Settings/AlpeMaintenanceTab.qml	heldPackages	E4	Paketnamen des Ursprungs
 core/internal/server/sysupdate/*.go	"dms(-git|-cli)?"|LookPath\("dms"\)|dms-shell|dux-shell	E4	Paketnamen des Ursprungs (Erkennung der Shell-Aktualisierung)
-*	DMSerifDisplay|DM Serif|dm-serif-display	dauerhaft	fremder Schriftname DM Serif Display
-*	dev\.duxlabs\.calendar|dankcal|Dux Calendar|CalendarDuxBackend	solange die Anbindung besteht	fremde App Dux Calendar
+*	DMSerifDisplay|DM Serif|dm-serif-display|dmSerifDisplayFont	dauerhaft	fremder Schriftname DM Serif Display
+*	dev\.duxlabs\.calendar|dankcal|Dux Calendar|CalendarDuxBackend|\b(dux(Backend|BinaryExists|NeedsLaunch|Warning|Connected)|isDux(Task|Active)|launchDuxCalendar)\b	solange die Anbindung besteht	fremde App Dux Calendar
 core/*	dankshell|LOCKSCREEN (U2F )?AUTH	E1	PAM-Dienste und Blockmarken auf Systemen mit 1.0 (0.8 Nr. 16)
 *	/usr/share/dms|/etc/dms	E1	Richtlinienpfade des Pakets dms (0.8 Nr. 16)
+*	\b\w*[a-z]dMs\b	dauerhaft	kein Name: Bezeichner auf …dMs (Millisekunden, z. B. scrollHoldMs)
+shell/LICENSE_CHANGE_12_11_2025.md	*	dauerhaft	Herkunft: Lizenzwechsel des Ursprungs
+shell/*	dankshell	E1	PAM-Dienste und ihre Dateien auf Systemen mit 1.0 (0.8 Nr. 16)
+shell/Common/KeybindActions.js	DMS- und Alpe-1\.0|«dms |spawn dms 	Umzug-Ende	Kürzel aus 1.0 lesen (normalizeLegacyAction)
+shell/tests/keybinds-legacy-actions.test.mjs	*	Umzug-Ende	Test dazu
+shell/Common/ConfigIncludeResolve.js	DMS bzw\. Alpe 1\.0	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
+shell/Common/OutputModel.js	DMS used to write|DMS 1\.x|hypr/dms/profiles	Umzug-Ende	Anzeigeprofile aus 1.0 lesen
 shell/Common/ConfigIncludeResolve.js	DMS Include Configs	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/tests/config-include.test.mjs	DMS Include Configs|dms\.colors	Umzug-Ende	Test dazu
 shell/Common/settings/SettingsStore.js	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|=== "dms"	Umzug-Ende	Migration v43 (alte Schlüssel lesen)

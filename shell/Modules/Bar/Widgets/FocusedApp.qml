@@ -157,7 +157,7 @@ BasePill {
                 smooth: true
                 mipmap: true
                 asynchronous: true
-                layer.enabled: activeWindow && Paths.isDmsAppId(activeWindow.appId)
+                layer.enabled: activeWindow && Paths.isShellAppId(activeWindow.appId)
                 layer.smooth: true
                 layer.mipmap: true
                 layer.effect: MultiEffect {
@@ -217,7 +217,7 @@ BasePill {
                         smooth: true
                         mipmap: true
                         asynchronous: true
-                        layer.enabled: activeWindow && Paths.isDmsAppId(activeWindow.appId)
+                        layer.enabled: activeWindow && Paths.isShellAppId(activeWindow.appId)
                         layer.smooth: true
                         layer.mipmap: true
                         layer.effect: MultiEffect {

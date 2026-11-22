@@ -10,7 +10,7 @@ import "../Common/Format.js" as Format
 PanelWindow {
     id: root
 
-    WlrLayershell.namespace: "dms:toast"
+    WlrLayershell.namespace: "alpe:toast"
 
     property var modelData
     property bool shouldBeVisible: false

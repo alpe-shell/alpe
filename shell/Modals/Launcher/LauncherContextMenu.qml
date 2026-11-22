@@ -29,7 +29,7 @@ AlpeContextMenu {
 
     signal editAppRequested(var app)
 
-    layerNamespace: "dms:launcher-context-menu"
+    layerNamespace: "alpe:launcher-context-menu"
     keyboardNavigable: true
 
     menuItems: {

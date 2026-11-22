@@ -49,7 +49,7 @@ Variants {
             screen: zoneLoader.modelData
             color: "transparent"
 
-            WlrLayershell.namespace: "dms:frame-launcher-hover"
+            WlrLayershell.namespace: "alpe:frame-launcher-hover"
             WlrLayershell.layer: WlrLayer.Top
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.None

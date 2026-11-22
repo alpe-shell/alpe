@@ -108,7 +108,7 @@ Item {
     }
 
     function ipcTag(kind) {
-        return kind === "dot" ? "DANK_DOT" : "DANK_ISLAND";
+        return kind === "dot" ? "DOT" : "ISLAND";
     }
 
     function activityName(activity) {

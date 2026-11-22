@@ -6,7 +6,7 @@ Item {
     id: root
     readonly property var log: Log.scoped("AlpePopout")
 
-    property string layerNamespace: "dms:popout"
+    property string layerNamespace: "alpe:popout"
     property Component content: null
     property Component overlayContent: null
     property real popupWidth: 400
@@ -269,7 +269,7 @@ Item {
     function _triggerBarUsesOverlayLayer(targetScreen, barConfig) {
         const frameHostsBar = CompositorService.frameHostsBarForConfig(targetScreen, barConfig);
         const frameRequiresOverlay = CompositorService.framePeerSurfacesUseOverlayForScreen(targetScreen) && !frameHostsBar;
-        return LayerShell.envUsesOverlay("ALPE_DANKBAR_LAYER", (barConfig?.useOverlayLayer ?? false) || frameRequiresOverlay);
+        return LayerShell.envUsesOverlay("ALPE_BAR_LAYER", (barConfig?.useOverlayLayer ?? false) || frameRequiresOverlay);
     }
 
     function dockClearance(side, popupGap) {

@@ -1068,7 +1068,7 @@ Singleton {
     FileView {
         id: extrasFile
 
-        path: Paths.strip(Paths.cache).replace(/\/dms$/, "") + "/alpe/weather-extras.json"
+        path: Paths.strip(Paths.cache).replace(/\/alpe$/, "") + "/alpe/weather-extras.json"
         blockLoading: true
         watchChanges: false
         printErrors: false

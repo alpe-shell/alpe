@@ -21,7 +21,7 @@ PanelWindow {
     visible: win._frameVisible
     updatesEnabled: win._frameVisible
 
-    WlrLayershell.namespace: "dms:frame"
+    WlrLayershell.namespace: "alpe:frame"
     readonly property bool _dockEditActive: frameDockHostLoader.item?.editActive ?? false
     // The frame, not the bar, supplies this island's focus, grab and input mask.
     readonly property Item _islandHost: {

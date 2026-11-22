@@ -23,7 +23,7 @@ const ACTION_TYPES = [
     }
 ];
 
-const DMS_ACTIONS = [
+const SHELL_ACTIONS = [
     {
         id: "spawn alpe-dienst ipc call spotlight toggle",
         label: "Default Launcher: Toggle"
@@ -1949,7 +1949,7 @@ const SHELL_ACTION_ARGS = {
     }
 };
 
-const DMS_AMOUNT_LABELS = {
+const SHELL_AMOUNT_LABELS = {
     "audio increment": "Volume Up",
     "audio decrement": "Volume Down",
     "mpris increment": "Player Volume Up",
@@ -1958,9 +1958,9 @@ const DMS_AMOUNT_LABELS = {
     "brightness decrement": "Brightness Down"
 };
 
-function getDmsAmountLabel(action) {
+function getShellAmountLabel(action) {
     var parsed = parseShellActionArgs(action);
-    var label = DMS_AMOUNT_LABELS[parsed.base];
+    var label = SHELL_AMOUNT_LABELS[parsed.base];
     if (!label)
         return null;
     var amount = parsed.args?.amount;
@@ -1973,14 +1973,14 @@ function getActionTypes() {
     return ACTION_TYPES;
 }
 
-function getDmsActionArgs() {
+function getShellActionArgs() {
     return SHELL_ACTION_ARGS;
 }
 
-function getDmsActions(isHyprland) {
+function getShellActions(isHyprland) {
     const result = [];
-    for (let i = 0; i < DMS_ACTIONS.length; i++) {
-        const action = DMS_ACTIONS[i];
+    for (let i = 0; i < SHELL_ACTIONS.length; i++) {
+        const action = SHELL_ACTIONS[i];
         if (!action.compositor) {
             result.push(action);
             continue;
@@ -2013,10 +2013,10 @@ function getCategoryOrder() {
     return CATEGORY_ORDER;
 }
 
-function findDmsAction(actionId) {
-    for (let i = 0; i < DMS_ACTIONS.length; i++) {
-        if (DMS_ACTIONS[i].id === actionId)
-            return DMS_ACTIONS[i];
+function findShellAction(actionId) {
+    for (let i = 0; i < SHELL_ACTIONS.length; i++) {
+        if (SHELL_ACTIONS[i].id === actionId)
+            return SHELL_ACTIONS[i];
     }
     return null;
 }
@@ -2039,16 +2039,16 @@ function getActionLabel(action, compositor) {
     if (!action)
         return "";
 
-    var amountLabel = getDmsAmountLabel(action);
+    var amountLabel = getShellAmountLabel(action);
     if (amountLabel)
         return amountLabel;
 
-    var dmsAct = findDmsAction(action);
-    if (dmsAct)
-        return dmsAct.label;
+    var shellAct = findShellAction(action);
+    if (shellAct)
+        return shellAct.label;
 
     var shellKey = findShellArgKey(action);
-    var baseAct = shellKey ? findDmsAction(SHELL_ACTION_ARGS[shellKey].base) : null;
+    var baseAct = shellKey ? findShellAction(SHELL_ACTION_ARGS[shellKey].base) : null;
     if (baseAct)
         return baseAct.label;
 
@@ -2095,7 +2095,7 @@ function isShellAction(action) {
     return action.startsWith("spawn alpe-dienst ipc call ") || /^spawn alpe-dienst screenshot( |$)/.test(action);
 }
 
-// Kürzel aus DMS- und Alpe-1.0-Konfigurationen rufen noch «dms ipc call …» bzw. «dms screenshot»
+// Kürzel aus DMS- und Alpe-1.0-Konfigurationen rufen noch «alpe-dienst ipc call …» bzw. «dms screenshot»
 // auf. Beim Einlesen gelten sie als die gleichnamige Alpe-Aktion; der Umzug schreibt die Dateien um.
 function normalizeLegacyAction(action) {
     if (!action)
@@ -2485,7 +2485,7 @@ function parseShellActionArgs(action) {
     return result;
 }
 
-function buildDmsAction(baseKey, args) {
+function buildShellIpcAction(baseKey, args) {
     var config = SHELL_ACTION_ARGS[baseKey];
     if (!config)
         return "";

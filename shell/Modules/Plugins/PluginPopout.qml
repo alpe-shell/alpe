@@ -5,7 +5,7 @@ import qs.Widgets
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:plugins:" + layerNamespacePlugin
+    layerNamespace: "alpe:plugins:" + layerNamespacePlugin
 
     property string pluginId: ""
     property var triggerScreen: null

@@ -8,7 +8,7 @@ import qs.Modules.ControlCenter.Details
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:vpn"
+    layerNamespace: "alpe:vpn"
 
     property bool wasVisible: false
     property var triggerScreen: null

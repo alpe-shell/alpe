@@ -24,6 +24,6 @@ test("other actions stay untouched", () => {
 });
 
 test("every shell action uses alpe-dienst", () => {
-    for (const action of Actions.getDmsActions(true))
+    for (const action of Actions.getShellActions(true))
         assert.ok(!/^spawn dms /.test(action.id), action.id);
 });

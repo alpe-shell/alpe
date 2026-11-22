@@ -1,0 +1,95 @@
+# D7.7a2 (Plan 2.3.5): übrige Bezeichner der Oberfläche und nach aussen sichtbare Kennungen.
+# Regel 2.3.0: interne Bezeichner ohne Marke (shell…/backend…), sichtbare Kennungen mit alpe
+# (Layer-Namensräume alpe:…, systemd-Einheit app-alpe-…, IPC-Antworten ISLAND_…/DOT_…).
+# Kalender: «Dux» ist der Name der fremden App (Ausnahmeliste). Erzeugte Dateien, Regel-IDs und
+# matugen folgen in D7.7b; PAM-Namen in E1; Migration, Hüllen (D7.8) und Übersetzungen bleiben.
+ohne	entwicklung/umbenennen/*,docs/plan/*,tests/test_umbenennen.py,tests/data/*,shell/Common/settings/SettingsStore.js,shell/Common/settings/Namen44.js,shell/Modules/DankBar/*,shell/Modules/DankDash/*,shell/DCommon/*,shell/matugen/*,shell/scripts/gtk.sh,shell/scripts/i18nsync*.py,shell/translations/*.md,shell/translations/en.json,shell/translations/template.json,shell/translations/poexports/*,shell/Widgets/Dank*.qml,tools/*,tests/test_einstellungen.mjs,tests/test_design.py,CHANGELOG.md
+wort	dmsFloatingRuleId	shellFloatingRuleId
+wort	dmsOpaqueRuleId	shellOpaqueRuleId
+wort	dmsRuleMatchesCurrentAppId	shellRuleMatchesCurrentAppId
+wort	dmsWindowFloatingActive	shellWindowFloatingActive
+wort	ensureDmsOpaqueRule	ensureShellOpaqueRule
+wort	refreshDmsWindowFloatingRule	refreshShellWindowFloatingRule
+wort	seedDmsWindowFloatingRule	seedShellWindowFloatingRule
+wort	setDmsRule	setShellRule
+wort	setDmsWindowFloatingRule	setShellWindowFloatingRule
+wort	syncDmsWindowFloatingRule	syncShellWindowFloatingRule
+wort	dmsWindowsFloating	shellWindowsFloating
+wort	dmsChooserId	shellChooserId
+wort	dmsChooserLabel	shellChooserLabel
+wort	withDmsChooser	withShellChooser
+wort	isDmsAppId	isShellAppId
+wort	isDmsWindow	isShellWindow
+wort	dmsAppIds	shellAppIds
+wort	findMatchingDmsRule	findMatchingShellRule
+wort	dmsBlurLines	shellBlurLines
+wort	ensureDmsLuaConfigs	ensureShellLuaConfigs
+wort	DMS_ACTIONS	SHELL_ACTIONS
+wort	DMS_AMOUNT_LABELS	SHELL_AMOUNT_LABELS
+wort	buildDmsAction	buildShellIpcAction
+wort	dmsAct	shellAct
+wort	findDmsAction	findShellAction
+wort	getDmsActionArgs	getShellActionArgs
+wort	getDmsActions	getShellActions
+wort	getDmsAmountLabel	getShellAmountLabel
+wort	commitDmsAmount	commitShellAmount
+wort	dmsActionDropdown	shellActionDropdown
+wort	dmsArgDefs	shellArgDefs
+wort	dmsFlagArgs	shellFlagArgs
+wort	dmsFlagChecked	shellFlagChecked
+wort	dmsFlagLabel	shellFlagLabel
+wort	dmsFlagTooltip	shellFlagTooltip
+wort	setDmsArgs	setShellArgs
+wort	setDmsFlag	setShellFlag
+wort	dmsBindsFixed	shellBindsFixed
+wort	dmsBindsPath	shellBindsPath
+wort	fixDmsBindsInclude	fixShellBindsInclude
+wort	useDMSService	useBackendService
+wort	dmsIcon	isShellIcon
+wort	dmsConnected	backendConnected
+wort	dmsOnly	networkOnly
+wort	dmsRows	shellRows
+wort	dmsRulesFileName	shellRulesFileName
+wort	dmsShellLoader	shellMainLoader
+wort	followingDms	followingShell
+wort	dmsView	shellSettingsView
+wort	CalendarDankBackend	CalendarDuxBackend
+wort	dankBackend	duxBackend
+wort	dankBinaryExists	duxBinaryExists
+wort	dankNeedsLaunch	duxNeedsLaunch
+wort	dankWarning	duxWarning
+wort	isDankTask	isDuxTask
+wort	launchDankCalendar	launchDuxCalendar
+wort	dankConnected	duxConnected
+wort	isDankActive	isDuxActive
+wort	ALPE_DANKBAR_LAYER	ALPE_BAR_LAYER
+wort	ALPE_DANKISLAND_LAYER	ALPE_ISLAND_LAYER
+datei	shell/Services/CalendarDankBackend.qml	shell/Services/CalendarDuxBackend.qml
+# FontSource (geteilte Bibliothek): Einstellungen der Shell als Quelle der Schrift
+regex	\bdmsPath\b	shellSettingsPath	shell/Alpe/*,shell/Modules/Lock/*,lockscreen/*,entwicklung/*,shell/Common/*
+regex	\bdms\b(?=( !== null|\.font|\.monoFont|\.displayFont|: null| = ))	shellSettings	shell/Alpe/Common/FontSource.qml
+# Layer-Namensräume (Hyprland-Regeln, Bildschirmfoto-Ziele): alpe:…
+text	"dms:launcher-v2"	"alpe:launcher"
+text	dms:dankisland	alpe:island
+regex	(["'^`])dms:(?=[a-z.$"])	\1alpe:	shell/*,core/internal/screenshot/*,entwicklung/*
+# IPC-Antworten der Insel
+text	"DANK_DOT" : "DANK_ISLAND"	"DOT" : "ISLAND"	shell/Modules/Island/Island.qml
+# einzelne Werte
+text	return "dms";	return "alpe";	shell/Common/Paths.qml
+text	`app-dms-${	`app-alpe-${	shell/Common/LaunchUnit.js
+text	/dms.login-${	/alpe.login-${	shell/Services/AudioService.qml
+text	+ "-dms";	+ "-alpe";	shell/Services/CalendarService.qml
+text	/dms-cava-${	/alpe-cava-${	shell/Services/CavaService.qml
+text	"dms-qml-"	"alpe-qml-"	shell/Services/ShellBackend.qml
+text	"dms-windowrule-	"alpe-windowrule-	shell/Services/CompositorService.qml
+text	"dms-extracted-theme.json"	"alpe-extracted-theme.json"	shell/Modules/Settings/ThemeColorsTab.qml
+text	"dms-open"	"alpe-open"	shell/Modules/Settings/DefaultAppsTab.qml
+text	tags: ["dms", 	tags: ["alpe", 	shell/Modules/Settings/SoftwareUpdatesTab.qml
+text	["matugen", "dms", "templates"]	["matugen", "alpe", "templates"]	shell/Modules/Settings/ThemeAppsTab.qml
+text	.dmsbackup${	.alpebackup${	shell/Services/KeybindsService.qml
+text	.replace(/\/dms$/, "") + "/alpe/weather-extras.json"	.replace(/\/alpe$/, "") + "/alpe/weather-extras.json"	shell/Services/WeatherService.qml
+regex	__DMS_(AC|BATTERY)_	__ALPE_\1_	shell/Services/BatteryService.qml
+# Kommentare (nur Kommentarzeilen; I18n-Kontexte bleiben wegen der Übersetzungsschlüssel)
+regex	(?m)^(\s*(?://|#|\*).*?)\bDMS\b	\1Alpe	shell/*.qml,shell/*.js,entwicklung/sportharness/*
+regex	(?m)^(\s*(?://|#|\*).*?)\bDMS\b	\1Alpe	shell/*.qml,shell/*.js
+regex	(?m)^(\s*(?://|#|\*).*?[`("«] ?)dms (?=[a-z])	\1alpe-dienst 	shell/*.qml,shell/*.js

@@ -15,7 +15,7 @@ AlpeContextMenu {
     signal dismissRequested
     signal appMuted
 
-    layerNamespace: "dms:notification-context-menu"
+    layerNamespace: "alpe:notification-context-menu"
     minMenuWidth: NotificationMetrics.menuWidth
     menuItems: actions.items.map(item => ({
                 type: "item",

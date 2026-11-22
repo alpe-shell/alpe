@@ -11,7 +11,7 @@ Singleton {
     property var currentPopoutsByScreen: ({})
     property var currentPopoutTriggers: ({})
 
-    // Set by the screenshot IPC handshake (dms screenshot region select); cleared by end() or any popout/modal open.
+    // Set by the screenshot IPC handshake (alpe-dienst screenshot region select); cleared by end() or any popout/modal open.
     property bool screenshotActive: false
 
     signal popoutOpening
@@ -425,7 +425,7 @@ Singleton {
             if (right <= left || bottom <= top)
                 continue;
             results.push({
-                "name": "dms:dankisland-surface",
+                "name": "alpe:island-surface",
                 "type": "island",
                 "x": Math.round((screen.x ?? 0) + left),
                 "y": Math.round((screen.y ?? 0) + top),

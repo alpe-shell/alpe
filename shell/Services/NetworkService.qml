@@ -138,7 +138,7 @@ Singleton {
         }
         if (BackendNetworkService.networkAvailable) {
             log.info("Network capability already available, using BackendNetworkService");
-            useDMSService();
+            useBackendService();
             return;
         }
         log.debug("ALPE_SOCKET found, waiting for capabilities...");
@@ -150,12 +150,12 @@ Singleton {
         function onNetworkAvailableChanged() {
             if (!activeService && BackendNetworkService.networkAvailable) {
                 log.info("Network capability detected, using BackendNetworkService");
-                useDMSService();
+                useBackendService();
             }
         }
     }
 
-    function useDMSService() {
+    function useBackendService() {
         activeService = BackendNetworkService;
         log.info("Switched to BackendNetworkService, networkAvailable:", networkAvailable);
         connectSignals();

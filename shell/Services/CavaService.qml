@@ -26,7 +26,7 @@ Singleton {
     property bool _cavaChecked: false
     readonly property bool cavaWanted: SettingsData.audioVisualizerEnabled || refCount > 0
     onCavaWantedChanged: _checkCava()
-    readonly property string _confPath: `${Paths.strip(StandardPaths.writableLocation(StandardPaths.TempLocation))}/dms-cava-${Date.now()}-${Math.floor(Math.random() * 1000000)}.conf`
+    readonly property string _confPath: `${Paths.strip(StandardPaths.writableLocation(StandardPaths.TempLocation))}/alpe-cava-${Date.now()}-${Math.floor(Math.random() * 1000000)}.conf`
 
     Process {
         id: cavaCheck

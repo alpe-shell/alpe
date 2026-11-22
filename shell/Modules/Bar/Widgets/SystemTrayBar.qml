@@ -420,7 +420,7 @@ BasePill {
 
     AlpePopout {
         id: overflowPopout
-        layerNamespace: "dms:tray-overflow"
+        layerNamespace: "alpe:tray-overflow"
         screen: root.parentScreen
         popupWidth: root.overflowRawWidth
         popupHeight: root.overflowRawHeight
@@ -429,7 +429,7 @@ BasePill {
 
     AlpePopout {
         id: trayMenuPopout
-        layerNamespace: "dms:tray-menu"
+        layerNamespace: "alpe:tray-menu"
         screen: root.parentScreen
         popupWidth: trayMenuState.computedWidth
         popupHeight: trayMenuState.computedHeight

@@ -6,7 +6,7 @@ import qs.Widgets
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:color-picker"
+    layerNamespace: "alpe:color-picker"
     popupWidth: Math.min(Theme.dialogMaxWidth, (screen?.width ?? Theme.dialogMaxWidth + Theme.spacingXL * 2) - Theme.spacingXL * 2)
     popupHeight: Math.min(contentLoader.item?.implicitHeight ?? Theme.fieldDefaultWidth * 3, (screen?.height ?? 1080) - Theme.barHeight - Theme.spacingXL * 2)
     contentHandlesKeys: true

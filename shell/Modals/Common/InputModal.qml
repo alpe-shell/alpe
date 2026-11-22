@@ -6,7 +6,7 @@ import qs.Alpe.Widgets
 AlpeModal {
     id: root
 
-    layerNamespace: "dms:input-modal"
+    layerNamespace: "alpe:input-modal"
     keepPopoutsOpen: true
 
     property string inputTitle: ""

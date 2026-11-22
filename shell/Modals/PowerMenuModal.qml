@@ -8,7 +8,7 @@ import qs.Alpe.Session
 AlpeModal {
     id: root
 
-    layerNamespace: "dms:power-menu"
+    layerNamespace: "alpe:power-menu"
     keepPopoutsOpen: true
     useOverlayLayer: true
     animationType: "fade"

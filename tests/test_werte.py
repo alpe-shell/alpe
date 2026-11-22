@@ -43,5 +43,28 @@ if os.path.exists(doctor):
     text = read(doctor)
     check("getShellVersion()" in text and "getDMSShellVersion" not in text, "doctor: getShellVersion")
 
+# ---------------------------------------------------------------- D7.7a2: sichtbare Kennungen
+# Layer-Namensräume heissen alpe:…; der Dienst schneidet denselben Vorsatz ab (Bildschirmfoto-Ziele).
+alt, neu = [], 0
+for ordner, _dirs, dateien in os.walk(SHELL):
+    if any(teil in ordner for teil in ("/Modules/DankBar", "/Modules/DankDash", "/DCommon", "/translations", "/tests")):
+        continue
+    for datei in dateien:
+        if not datei.endswith((".qml", ".js")):
+            continue
+        text = read(ordner, datei)
+        neu += len(re.findall(r'["^]alpe:[a-z]', text))
+        if re.search(r'["^\'`]dms:[a-z.$"]', text):
+            alt.append(os.path.relpath(os.path.join(ordner, datei), SHELL))
+check(not alt and neu > 80, "Layer-Namensräume: %d mal alpe:…, keiner mehr mit dms: %s" % (neu, alt[:5]))
+types = os.path.join(REPO, "core", "internal", "screenshot", "types.go")
+if os.path.exists(types):
+    check('strings.TrimPrefix(s.Name, "alpe:")' in read(types), "Dienst: Bildschirmfoto-Ziele ohne Vorsatz alpe:")
+hypr = read(SHELL, "Services", "HyprlandService.qml")
+check('"^alpe:.*$"' in hypr and '"^alpe:island$"' in hypr, "Hyprland-Regeln der Shell treffen alpe:…")
+check('`app-alpe-${' in read(SHELL, "Common", "LaunchUnit.js"), "gestartete Programme laufen als app-alpe-…")
+insel = read(SHELL, "Modules", "Island", "Island.qml")
+check('"DOT" : "ISLAND"' in insel and "DANK" not in insel, "IPC-Antworten der Insel: ISLAND_…/DOT_…")
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

@@ -9,7 +9,7 @@ Item {
     readonly property var log: Log.scoped("AlpeModal")
 
     readonly property bool useHyprlandFocusGrab: CompositorService.useHyprlandFocusGrab
-    property string layerNamespace: "dms:modal"
+    property string layerNamespace: "alpe:modal"
     property Component content: null
     property Item directContent: null
     property real modalWidth: 400

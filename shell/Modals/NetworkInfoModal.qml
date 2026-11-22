@@ -13,7 +13,7 @@ AlpeModal {
     property var networkData: null
     readonly property string details: wired ? NetworkService.networkWiredInfoDetails : NetworkService.networkInfoDetails
 
-    layerNamespace: wired ? "dms:network-info-wired" : "dms:network-info"
+    layerNamespace: wired ? "alpe:network-info-wired" : "alpe:network-info"
     keepPopoutsOpen: true
 
     function showNetworkInfo(name, data) {

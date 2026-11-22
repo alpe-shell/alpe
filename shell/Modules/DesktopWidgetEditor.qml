@@ -24,7 +24,7 @@ Scope {
                 right: true
             }
 
-            WlrLayershell.namespace: "dms:desktop-widget-editor"
+            WlrLayershell.namespace: "alpe:desktop-widget-editor"
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusiveZone: -1
             WlrLayershell.keyboardFocus: PopoutManager.screenshotActive ? WlrKeyboardFocus.None : WlrKeyboardFocus.Exclusive

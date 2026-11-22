@@ -17,7 +17,7 @@ Item {
     readonly property var router: PopoutService.islandRouter
     readonly property bool spotlightOpen: usingFallback ? fallback.spotlightOpen : (router?.launcherOpen ?? false)
     readonly property bool shouldBeVisible: usingFallback ? fallback.shouldBeVisible : false
-    readonly property string layerNamespace: usingFallback ? fallback.layerNamespace : "dms:launcher"
+    readonly property string layerNamespace: usingFallback ? fallback.layerNamespace : "alpe:launcher"
     readonly property bool isClosing: usingFallback ? fallback.isClosing : false
     readonly property bool keyboardActive: usingFallback ? fallback.keyboardActive : spotlightOpen
     readonly property bool contentVisible: usingFallback ? fallback.contentVisible : spotlightOpen

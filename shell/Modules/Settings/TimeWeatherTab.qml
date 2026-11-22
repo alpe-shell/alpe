@@ -410,7 +410,7 @@ Item {
                 tab: "time"
                 tags: ["calendar", "tasks", "list", "default", "caldav", "todo"]
                 settingKey: "defaultTaskCalendarId"
-                visible: CalendarService.isDankActive && _taskLists.length > 0
+                visible: CalendarService.isDuxActive && _taskLists.length > 0
                 text: I18n.tr("Default task list")
                 readonly property var _taskLists: (CalendarService.calendars || []).filter(c => c.holdsTasks && !c.readOnly && !c.hidden)
                 readonly property var _labels: [I18n.tr("Auto")].concat(_taskLists.map(c => c.name))

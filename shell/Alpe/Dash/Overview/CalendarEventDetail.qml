@@ -112,8 +112,8 @@ Column {
 
     function openLocation() {
         const url = root.locationUrl;
-        if (url.startsWith("geo:") && CalendarDankBackend.connected) {
-            CalendarDankBackend.sendRequest("system.openUri", {
+        if (url.startsWith("geo:") && CalendarDuxBackend.connected) {
+            CalendarDuxBackend.sendRequest("system.openUri", {
                 "uri": url
             }, response => {
                 if (response && response.error)

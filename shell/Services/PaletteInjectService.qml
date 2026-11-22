@@ -8,7 +8,7 @@ import Quickshell.Io
 import qs.Common
 
 // PaletteInjectService owns ~/.config/matugen/palette-inject.json, the file the
-// DMS core reads on each theme build to run external palette commands. The UI
+// Alpe core reads on each theme build to run external palette commands. The UI
 // edits this list; the core consumes it. The file uses the {"palettes": [...]}
 // shape; a legacy single-object file is read transparently and rewritten as a
 // list on the next save.

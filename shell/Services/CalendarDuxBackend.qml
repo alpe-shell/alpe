@@ -9,7 +9,7 @@ import qs.Alpe.Common as Alpe
 
 Item {
     id: root
-    readonly property var log: Log.scoped("CalendarDankBackend")
+    readonly property var log: Log.scoped("CalendarDuxBackend")
 
     property bool enabled: false
     property bool preferred: false

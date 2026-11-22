@@ -11,10 +11,10 @@ DockContextMenuBase {
     property bool hidePin: false
     property var desktopEntry: null
     property var dockApps: null
-    readonly property bool isDmsWindow: Paths.isDmsAppId(appData?.appId)
+    readonly property bool isShellWindow: Paths.isShellAppId(appData?.appId)
     readonly property var settingsJumpGroups: visible && appData?.appId === "alpe_settings" ? buildSettingsJumpGroups() : []
 
-    layerNamespace: "dms:dock-context-menu"
+    layerNamespace: "alpe:dock-context-menu"
 
     function showForButton(button, data, dockHeight, hidePinOption, entry, dockScreen, parentDockApps) {
         appData = Qt.binding(() => button?.appData ?? null);
@@ -286,7 +286,7 @@ DockContextMenuBase {
             if (!root.desktopEntry?.actions || root.desktopEntry.actions.length === 0) {
                 return false;
             }
-            return !root.hidePin || (!root.isDmsWindow && root.desktopEntry && SessionService.nvidiaCommand);
+            return !root.hidePin || (!root.isShellWindow && root.desktopEntry && SessionService.nvidiaCommand);
         }
         width: parent.width
         height: 1
@@ -355,7 +355,7 @@ DockContextMenuBase {
 
     Rectangle {
         visible: {
-            const hasNvidia = !root.isDmsWindow && root.desktopEntry && SessionService.nvidiaCommand;
+            const hasNvidia = !root.isShellWindow && root.desktopEntry && SessionService.nvidiaCommand;
             const hasWindow = root.appData && (root.appData.type === "window" || (root.appData.type === "grouped" && root.appData.windowCount > 0));
             const hasPinOption = !root.hidePin;
             const hasContentAbove = hasPinOption || hasNvidia;
@@ -367,7 +367,7 @@ DockContextMenuBase {
     }
 
     Rectangle {
-        visible: !root.isDmsWindow && root.desktopEntry && SessionService.nvidiaCommand
+        visible: !root.isShellWindow && root.desktopEntry && SessionService.nvidiaCommand
         implicitWidth: Theme.spacingS * 2 + nvidiaIcon.width + Theme.spacingXS + nvidiaLabel.implicitWidth
         width: parent.width
         height: 28

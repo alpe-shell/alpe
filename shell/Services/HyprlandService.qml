@@ -51,7 +51,7 @@ Singleton {
     property int _frameTransitionRevision: 0
     readonly property bool frameLayoutReady: _layoutAppliedRevision >= _frameTransitionRevision
 
-    // dms/layout.lua is the source of truth for xray; parsed once before the first regeneration
+    // alpe/layout.lua is the source of truth for xray; parsed once before the first regeneration
     property bool layoutXrayEnabled: false
     property bool layoutBarXrayEnabled: true
     property bool _layoutXrayLoaded: false
@@ -78,7 +78,7 @@ Singleton {
 
     onLuaConfigActiveChanged: {
         if (luaConfigActive)
-            ensureDmsLuaConfigs();
+            ensureShellLuaConfigs();
     }
 
     // workspaceString + monitor pairs from `hyprctl workspacerules`, refreshed on configreloaded
@@ -110,11 +110,11 @@ Singleton {
             refreshWorkspaceRules();
             refreshLuaConfigStatus();
             if (luaConfigActive)
-                ensureDmsLuaConfigs();
+                ensureShellLuaConfigs();
         }
     }
 
-    function ensureDmsLuaConfigs() {
+    function ensureShellLuaConfigs() {
         Qt.callLater(generateLayoutConfig);
         Qt.callLater(generateInputConfig);
         Qt.callLater(ensureWindowrulesConfig);
@@ -148,7 +148,7 @@ Singleton {
                 refreshFollowMouse();
                 refreshLuaConfigStatus();
                 if (luaConfigActive)
-                    ensureDmsLuaConfigs();
+                    ensureShellLuaConfigs();
                 generateLayoutConfig();
                 return;
             }
@@ -482,7 +482,7 @@ Singleton {
             _layoutXrayLoading = false;
             if (!_layoutXrayLoaded) {
                 const content = exitCode === 0 ? output : "";
-                layoutXrayEnabled = content.includes('"^dms:.*$"');
+                layoutXrayEnabled = content.includes('"^alpe:.*$"');
                 layoutBarXrayEnabled = !content.includes("-- bar-xray off");
                 _layoutXrayLoaded = true;
             }
@@ -537,12 +537,12 @@ Singleton {
         const resizeOnBorder = (typeof SettingsData !== "undefined" && SettingsData.hyprlandResizeOnBorder) ? true : false;
         const frameEnabled = typeof SettingsData !== "undefined" && SettingsData.frameEnabled;
         // Hyprland `xray = false` is still early-development; unset already samples real content, so only force xray=true
-        // dms:frame only in separate mode — connected-mode frame blur overlaps windows via popouts/arcs
-        const xrayNamespaces = ["dms:bar"];
+        // alpe:frame only in separate mode — connected-mode frame blur overlaps windows via popouts/arcs
+        const xrayNamespaces = ["alpe:bar"];
         if (typeof SettingsData !== "undefined" && SettingsData.islandEnabled)
-            xrayNamespaces.push("dms:dankisland");
+            xrayNamespaces.push("alpe:island");
         if (frameEnabled && SettingsData.frameMode !== "connected")
-            xrayNamespaces.push("dms:frame");
+            xrayNamespaces.push("alpe:frame");
 
         const tilingLayout = typeof SettingsData !== "undefined" ? SettingsData.hyprlandTilingLayout : "";
 
@@ -578,13 +578,13 @@ ${sections.join("\n")}
 })
 
 -- Hand-written or migrated hyprland.lua often lacks this; tweened island lifts misplace the drag pointer.
-hl.layer_rule({ match = { namespace = "^dms:dankisland$" }, no_anim = true })
+hl.layer_rule({ match = { namespace = "^alpe:island$" }, no_anim = true })
 `;
 
         if (layoutXrayEnabled) {
             content += `
 hl.layer_rule({
-	match = { namespace = "^dms:.*$" },
+	match = { namespace = "^alpe:.*$" },
 	xray = true,
 })
 `;
@@ -668,10 +668,10 @@ hl.layer_rule({
     }
 
     function blurLines(s) {
-        return alpeBlurLines(s, dmsBlurLines(s));
+        return alpeBlurLines(s, shellBlurLines(s));
     }
 
-    function dmsBlurLines(s) {
+    function shellBlurLines(s) {
         const blur = BlurStrength.hyprlandBlur(s.blurStrength || BlurStrength.HYPRLAND_DEFAULT);
         const lines = [];
         if (blur.size !== 8)

@@ -416,8 +416,8 @@ func (p *HyprlandParser) ParseWithDMS() (*HyprlandSection, error) {
 		return nil, err
 	}
 
-	dmsBindsPath := filepath.Join(expandedDir, brand.DirName, "binds.lua")
-	if _, err := os.Stat(dmsBindsPath); err == nil {
+	shellBindsPath := filepath.Join(expandedDir, brand.DirName, "binds.lua")
+	if _, err := os.Stat(shellBindsPath); err == nil {
 		p.dmsBindsExists = true
 	}
 
@@ -431,7 +431,7 @@ func (p *HyprlandParser) ParseWithDMS() (*HyprlandSection, error) {
 	}
 
 	if p.dmsBindsExists && !p.dmsProcessed {
-		p.parseDMSBindsDirectly(dmsBindsPath, section)
+		p.parseDMSBindsDirectly(shellBindsPath, section)
 	}
 	p.removeShadowedDMSBinds(section)
 	p.removeUnboundDMSBinds(section)
@@ -512,8 +512,8 @@ func (p *HyprlandParser) parseFileWithSource(filePath, sectionName string) (*Hyp
 	return p.parseLuaLines(string(data), filepath.Dir(absPath), absPath, sectionName)
 }
 
-func (p *HyprlandParser) parseDMSBindsDirectly(dmsBindsPath string, section *HyprlandSection) {
-	sub, err := p.parseLuaLinesFromPath(dmsBindsPath)
+func (p *HyprlandParser) parseDMSBindsDirectly(shellBindsPath string, section *HyprlandSection) {
+	sub, err := p.parseLuaLinesFromPath(shellBindsPath)
 	if err != nil {
 		return
 	}

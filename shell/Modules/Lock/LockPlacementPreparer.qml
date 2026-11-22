@@ -30,7 +30,7 @@ Variants {
                 anchors.left: true
                 anchors.right: true
                 color: "transparent"
-                WlrLayershell.namespace: "dms:lock-placement"
+                WlrLayershell.namespace: "alpe:lock-placement"
                 WlrLayershell.layer: WlrLayer.Background
                 WlrLayershell.exclusionMode: ExclusionMode.Ignore
                 WlrLayershell.keyboardFocus: WlrKeyboardFocus.None

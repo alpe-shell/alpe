@@ -40,7 +40,7 @@ Item {
 
     AlpeContextMenu {
         id: menu
-        layerNamespace: "dms:control-center-menu"
+        layerNamespace: "alpe:control-center-menu"
         minMenuWidth: CcMetrics.menuMinWidth
         keyboardNavigable: true
         transientSurfaceTracker: root.transientSurfaceTracker

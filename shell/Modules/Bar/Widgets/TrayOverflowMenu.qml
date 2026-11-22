@@ -13,7 +13,7 @@ AlpeContextMenu {
 
     signal itemActivated(var item)
 
-    layerNamespace: "dms:tray-overflow-menu"
+    layerNamespace: "alpe:tray-overflow-menu"
     minMenuWidth: 0
 
     readonly property real iconSize: Theme.iconSizeSmall

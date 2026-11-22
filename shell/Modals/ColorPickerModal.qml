@@ -7,7 +7,7 @@ import qs.Modules.ColorPicker
 AlpeModal {
     id: root
 
-    layerNamespace: "dms:color-picker"
+    layerNamespace: "alpe:color-picker"
 
     property string pickerTitle: I18n.tr("Choose color", "color picker title")
     property color selectedColor: SessionData.recentColors.length > 0 ? SessionData.recentColors[0] : Theme.primary

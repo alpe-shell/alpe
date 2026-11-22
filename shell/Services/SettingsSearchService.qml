@@ -79,7 +79,7 @@ Singleton {
             "soundsAvailable": () => !MultimediaService.unavailable,
             "cupsAvailable": () => CupsService.cupsAvailable,
             "networkAvailable": () => NetworkService.networkAvailable,
-            "dmsConnected": () => ShellBackend.isConnected && ShellBackend.apiVersion >= 23,
+            "backendConnected": () => ShellBackend.isConnected && ShellBackend.apiVersion >= 23,
             "matugenAvailable": () => Theme.matugenAvailable,
             "frameEnabled": () => SettingsData.frameEnabled,
             "islandEnabled": () => root.islandBarFor("islandEnabled") !== null,

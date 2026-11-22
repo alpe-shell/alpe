@@ -39,7 +39,7 @@ Scope {
                 right: true
             }
 
-            WlrLayershell.namespace: "dms:lock-demo"
+            WlrLayershell.namespace: "alpe:lock-demo"
             WlrLayershell.layer: WlrLayershell.Overlay
             WlrLayershell.exclusiveZone: -1
             WlrLayershell.keyboardFocus: PopoutManager.screenshotActive ? WlrKeyboardFocus.None : WlrKeyboardFocus.Exclusive

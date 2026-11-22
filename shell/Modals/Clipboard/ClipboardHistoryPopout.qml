@@ -11,7 +11,7 @@ import qs.Widgets
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:clipboard-popout"
+    layerNamespace: "alpe:clipboard-popout"
 
     property var parentWidget: null
     property var triggerScreen: null

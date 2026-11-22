@@ -130,7 +130,7 @@ BasePill {
 
     AlpeContextMenu {
         id: contextMenu
-        layerNamespace: "dms:notepad-context-menu"
+        layerNamespace: "alpe:notepad-context-menu"
         menuItems: root.savedTabEntries.map(entry => ({
                     type: "item",
                     icon: "description",

@@ -34,7 +34,7 @@ PanelWindow {
         clipHeight: innerH
     }
 
-    WlrLayershell.namespace: "dms:notification-popup"
+    WlrLayershell.namespace: "alpe:notification-popup"
 
     required property var notificationData
     required property string notificationId

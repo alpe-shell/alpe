@@ -27,7 +27,7 @@ function prefixArgs(prefix, desktopId, suffix) {
     const args = prefix.split(" ");
     if (args[0] !== "systemd-run" || !args.includes("--scope") || !desktopId || hasUnitName(args))
         return args;
-    const unit = `app-dms-${escape(desktopId)}-${suffix}`;
+    const unit = `app-alpe-${escape(desktopId)}-${suffix}`;
     if (unit.length + ".scope".length > 255)
         return args;
     return [args[0], `--unit=${unit}`].concat(args.slice(1));

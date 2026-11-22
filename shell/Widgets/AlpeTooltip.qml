@@ -8,7 +8,7 @@ import qs.Widgets
 PanelWindow {
     id: root
 
-    WlrLayershell.namespace: "dms:tooltip"
+    WlrLayershell.namespace: "alpe:tooltip"
 
     property string text: ""
     property real targetX: 0

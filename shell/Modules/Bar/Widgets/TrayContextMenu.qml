@@ -11,7 +11,7 @@ AlpeContextMenu {
     property var bar: null
     readonly property var menuHandle: trayItem?.menu ?? null
 
-    layerNamespace: "dms:tray-context-menu"
+    layerNamespace: "alpe:tray-context-menu"
     customContentWidth: Theme.fieldDefaultWidth
 
     onOpenStateChanged: {

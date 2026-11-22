@@ -22,7 +22,7 @@ ShellRoot {
 
     readonly property bool disableHotReload: Quickshell.env("ALPE_DISABLE_HOT_RELOAD") === "1" || Quickshell.env("ALPE_DISABLE_HOT_RELOAD") === "true"
 
-    readonly property bool shellReady: !!Quickshell.env("NOTIFY_SOCKET") && dmsShellLoader.status === Loader.Ready && ShellBackend.isConnected && ShellBackend.apiVersion >= 38
+    readonly property bool shellReady: !!Quickshell.env("NOTIFY_SOCKET") && shellMainLoader.status === Loader.Ready && ShellBackend.isConnected && ShellBackend.apiVersion >= 38
 
     onShellReadyChanged: {
         if (shellReady)
@@ -69,13 +69,13 @@ ShellRoot {
         id: shellCoreLoader
         asynchronous: true
         source: "ShellCore.qml"
-        onLoaded: dmsShellLoader.setSource("ShellMain.qml", {
+        onLoaded: shellMainLoader.setSource("ShellMain.qml", {
             core: item
         })
     }
 
     Loader {
-        id: dmsShellLoader
+        id: shellMainLoader
         asynchronous: true
     }
 }

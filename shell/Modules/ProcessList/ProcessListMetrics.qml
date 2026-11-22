@@ -25,7 +25,7 @@ Singleton {
     property string processTab: "overview"
     property bool cpuPerThread: false
 
-    // Desktop entries by the program their Exec= runs, plus its first fixed argument ("dms run" is the shell).
+    // Desktop entries by the program their Exec= runs, plus its first fixed argument ("alpe-dienst run" is the shell).
     readonly property var execEntries: {
         const map = {};
         for (const entry of DesktopEntries.applications?.values ?? []) {

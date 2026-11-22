@@ -134,7 +134,7 @@ BasePill {
 
     AlpeContextMenu {
         id: contextMenu
-        layerNamespace: "dms:clipboard-context-menu"
+        layerNamespace: "alpe:clipboard-context-menu"
         menuItems: [
             {
                 type: "item",

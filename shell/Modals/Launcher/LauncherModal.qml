@@ -8,7 +8,7 @@ Item {
 
     readonly property bool spotlightOpen: impl.item ? impl.item.spotlightOpen : false
     readonly property bool shouldBeVisible: impl.item ? impl.item.shouldBeVisible : false
-    readonly property string layerNamespace: impl.item ? (impl.item.layerNamespace ?? "dms:launcher") : "dms:launcher"
+    readonly property string layerNamespace: impl.item ? (impl.item.layerNamespace ?? "alpe:launcher") : "alpe:launcher"
     readonly property bool isClosing: impl.item ? impl.item.isClosing : false
     readonly property bool keyboardActive: impl.item ? impl.item.keyboardActive : false
     readonly property bool contentVisible: impl.item ? impl.item.contentVisible : false

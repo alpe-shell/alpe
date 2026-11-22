@@ -315,7 +315,7 @@ BasePill {
                     asynchronous: true
                     visible: status === Image.Ready
                     opacity: delegateItem.isMinimized ? 0.4 : 1
-                    layer.enabled: Paths.isDmsAppId(appId)
+                    layer.enabled: Paths.isShellAppId(appId)
                     layer.smooth: true
                     layer.mipmap: true
                     layer.effect: MultiEffect {
@@ -476,7 +476,7 @@ BasePill {
 
         property var currentWindow: null
 
-        layerNamespace: "dms:running-apps-context-menu"
+        layerNamespace: "alpe:running-apps-context-menu"
         menuItems: {
             const items = [];
             if (CompositorService.canMinimize(currentWindow))

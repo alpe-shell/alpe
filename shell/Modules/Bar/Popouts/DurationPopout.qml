@@ -12,7 +12,7 @@ AlpePopout {
     property string triggerSource: "dndDuration"
     readonly property var presets: triggerSource === "idleInhibit" ? IdleInhibitPresets : DndPresets
 
-    layerNamespace: "dms:duration"
+    layerNamespace: "alpe:duration"
     popupWidth: 340
     popupHeight: contentLoader.item ? contentLoader.item.implicitHeight : 0
     triggerWidth: 40

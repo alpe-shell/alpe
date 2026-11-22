@@ -19,7 +19,7 @@ AlpeModal {
         flow.cancelAuthenticationRequest();
     }
 
-    layerNamespace: "dms:polkit-auth-surface"
+    layerNamespace: "alpe:polkit-auth-surface"
     modalWidth: Math.min(Theme.dialogMaxWidth, screenWidth - Theme.spacingXL * 2)
     modalHeight: Math.min(screenHeight - Theme.spacingXL * 2, Math.max(220, contentLoader?.item?.implicitHeight ?? 0))
     closeOnEscapeKey: false

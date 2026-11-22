@@ -60,7 +60,7 @@ Item {
 
     property bool spotlightOpen: false
     readonly property bool shouldBeVisible: spotlightOpen
-    readonly property string layerNamespace: spotlight ? "dms:spotlight" : "dms:launcher"
+    readonly property string layerNamespace: spotlight ? "alpe:spotlight" : "alpe:launcher"
     property bool keyboardActive: false
     property bool contentVisible: false
     property bool _surfaceFrameReady: false
@@ -270,7 +270,7 @@ Item {
         active: root.connected
         sourceComponent: ConnectedModalChrome {
             modalHandle: root.modalHandle
-            claimPrefix: "dms:launcher-v2"
+            claimPrefix: "alpe:launcher"
             surfaceKind: "launcher"
             screenName: root._currentScreenName()
             enabled: root.frameOwnsConnectedChrome
@@ -761,7 +761,7 @@ Item {
                 color: "transparent"
                 updatesEnabled: false
 
-                WlrLayershell.namespace: "dms:spotlight:clickcatcher"
+                WlrLayershell.namespace: "alpe:spotlight:clickcatcher"
                 WlrLayershell.layer: root.effectiveLauncherLayer
                 WlrLayershell.exclusiveZone: -1
                 WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
@@ -823,7 +823,7 @@ Item {
                 root._releaseModalChrome();
         }
 
-        WlrLayershell.namespace: "dms:spotlight"
+        WlrLayershell.namespace: "alpe:spotlight"
         WlrLayershell.layer: root.effectiveLauncherLayer
         WlrLayershell.exclusiveZone: -1
         WlrLayershell.keyboardFocus: KeyboardFocus.keyboardFocus(root.keyboardActive, null)

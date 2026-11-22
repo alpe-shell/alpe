@@ -18,14 +18,14 @@ Column {
 
     Component.onCompleted: {
         BlurService.probe();
-        CompositorService.refreshDmsWindowFloatingRule();
+        CompositorService.refreshShellWindowFloatingRule();
     }
 
     ConfigInclude {
         id: windowRulesInclude
         includeKind: "windowrules"
         procTag: "windowrules-include-theme"
-        onFixed: CompositorService.seedDmsWindowFloatingRule()
+        onFixed: CompositorService.seedShellWindowFloatingRule()
     }
 
     readonly property var opacityTargets: {
@@ -557,14 +557,14 @@ Column {
         SettingsToggleRow {
             tab: "theme"
             tags: ["floating", "window", "tile", "tiling", "compositor", "rule", "hyprland"]
-            settingKey: "dmsWindowsFloating"
+            settingKey: "shellWindowsFloating"
             text: I18n.tr("Open floating")
             description: I18n.tr("Adds a compositor window rule so Alpe windows such as Settings open floating", "theme floating windows section, open floating toggle description")
             visible: windowRulesInclude.compositorSupported
-            checked: CompositorService.dmsWindowFloatingActive
+            checked: CompositorService.shellWindowFloatingActive
             modified: !checked
             onToggled: checked => {
-                CompositorService.setDmsWindowFloatingRule(checked);
+                CompositorService.setShellWindowFloatingRule(checked);
                 if (checked)
                     windowRulesInclude.check();
             }
@@ -572,7 +572,7 @@ Column {
 
         IncludeSetupBanner {
             include: windowRulesInclude
-            visibleCondition: windowRulesInclude.compositorSupported && CompositorService.dmsWindowFloatingActive
+            visibleCondition: windowRulesInclude.compositorSupported && CompositorService.shellWindowFloatingActive
         }
     }
 

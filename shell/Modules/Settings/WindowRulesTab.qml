@@ -26,7 +26,7 @@ Item {
     property var externalRules: []
     property var activeWindows: getActiveWindows()
     property string expandedExternalId: ""
-    readonly property string dmsRulesFileName: "alpe/" + (ConfigIncludeResolve.includeSpec("windowrules", CompositorService.compositor)?.fragmentNames[0] ?? "windowrules.lua")
+    readonly property string shellRulesFileName: "alpe/" + (ConfigIncludeResolve.includeSpec("windowrules", CompositorService.compositor)?.fragmentNames[0] ?? "windowrules.lua")
 
     Component.onDestruction: SettingsSearchService.unregisterCard("windowRules")
 
@@ -218,8 +218,8 @@ Item {
             try {
                 const result = JSON.parse(output.trim());
                 const allRules = result.rules || [];
-                CompositorService.syncDmsWindowFloatingRule(allRules);
-                windowRules = allRules.filter(r => (r.source || "").includes("/" + Paths.appDir + "/windowrules") && r.id !== CompositorService.dmsOpaqueRuleId);
+                CompositorService.syncShellWindowFloatingRule(allRules);
+                windowRules = allRules.filter(r => (r.source || "").includes("/" + Paths.appDir + "/windowrules") && r.id !== CompositorService.shellOpaqueRuleId);
                 externalRules = allRules.filter(r => !(r.source || "").includes("/" + Paths.appDir + "/windowrules"));
                 windowRulesInclude.applyStatus(result.fragmentStatus);
             } catch (e) {
@@ -383,7 +383,7 @@ Item {
             iconName: "select_window"
 
             SettingsRow {
-                subtitle: I18n.tr("Define rules for window behavior. Saves to %1", "window rules settings description, %1 is a config file name").arg(root.dmsRulesFileName)
+                subtitle: I18n.tr("Define rules for window behavior. Saves to %1", "window rules settings description, %1 is a config file name").arg(root.shellRulesFileName)
             }
 
             SettingsRow {
@@ -722,7 +722,7 @@ Item {
         onLoaded: root.presentEditor()
 
         sourceComponent: WindowRuleEditorDialog {
-            supportingText: I18n.tr("Changes save to %1", "hint under the keybind and window rule editors, %1 is the config file the changes are written to").arg(root.dmsRulesFileName)
+            supportingText: I18n.tr("Changes save to %1", "hint under the keybind and window rule editors, %1 is the config file the changes are written to").arg(root.shellRulesFileName)
             onRejected: root.closeEditor()
             onRuleApplied: root.loadWindowRules()
             onRuleSubmitted: {

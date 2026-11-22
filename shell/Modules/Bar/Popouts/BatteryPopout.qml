@@ -6,7 +6,7 @@ import qs.Widgets
 AlpePopout {
     id: root
 
-    layerNamespace: "dms:battery"
+    layerNamespace: "alpe:battery"
     property var triggerScreen: null
 
     popupWidth: Math.min(Theme.iconButtonSize * 11, (screen?.width ?? Screen.width) - Theme.spacingL * 2)

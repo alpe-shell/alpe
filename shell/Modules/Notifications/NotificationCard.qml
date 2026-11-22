@@ -37,7 +37,7 @@ Rectangle {
     readonly property bool hasMoreText: bodyText.truncated || summaryText.truncated
     readonly property bool hasBody: (notificationData?.htmlBody || "").replace(/<[^>]*>/g, "").trim().length > 0
     readonly property string appIcon: NotificationService.notificationAppIcon(notificationData?.appIcon || "", notificationData?.desktopEntry || "")
-    readonly property bool dmsIcon: appIcon === Brand.appId
+    readonly property bool isShellIcon: appIcon === Brand.appId
     readonly property string contentImageSource: notificationData?.hasDisplayImage ? notificationData?.displayImage || "" : ""
     readonly property bool hasContentImage: contentImageSource.length > 0 && contentImage.status !== Image.Error
     readonly property bool contentVisible: !headerOnly && (!privacyMode || descriptionExpanded)
@@ -173,10 +173,10 @@ Rectangle {
         AppIconRenderer {
             anchors.fill: parent
             visible: !appImage.visible
-            iconValue: root.dmsIcon ? "svg:" + Theme.shellDir + "/assets/alpe-zeichen.svg" : NotificationService.notificationFallbackIcon(root.notificationData?.image || "", root.appIcon)
+            iconValue: root.isShellIcon ? "svg:" + Theme.shellDir + "/assets/alpe-zeichen.svg" : NotificationService.notificationFallbackIcon(root.notificationData?.image || "", root.appIcon)
             iconSize: NotificationMetrics.appIconSize
             iconColor: Theme.onSurfaceVariant
-            colorOverride: root.dmsIcon ? Theme.primary : "transparent"
+            colorOverride: root.isShellIcon ? Theme.primary : "transparent"
             fallbackText: (root.notificationData?.appName || "?").charAt(0).toUpperCase()
             fallbackRadius: Theme.fullRadius(width, height)
             fallbackBackgroundColor: Theme.secondaryContainer

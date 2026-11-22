@@ -9,7 +9,7 @@ import qs.Widgets
 AlpePopout {
     id: systemUpdatePopout
 
-    layerNamespace: "dms:system-update"
+    layerNamespace: "alpe:system-update"
     property var parentWidget: null
     property var triggerScreen: null
     property bool _reopenAfterUpgrade: false

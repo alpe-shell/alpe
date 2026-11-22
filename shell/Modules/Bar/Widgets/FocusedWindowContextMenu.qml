@@ -20,7 +20,7 @@ AlpePopout {
     readonly property int pid: processId
     readonly property string scratchpadName: CompositorService.windowScratchpadName(currentWindow)
 
-    layerNamespace: "dms:focused-window-popout"
+    layerNamespace: "alpe:focused-window-popout"
     popupWidth: 340
     popupHeight: contentLoader.item ? contentLoader.item.implicitHeight : 260
     triggerWidth: 40
@@ -46,11 +46,11 @@ AlpePopout {
         return testPattern(match.appId, window.appId) && testPattern(match.title, window.title);
     }
 
-    function findMatchingDmsRule(rules, window) {
+    function findMatchingShellRule(rules, window) {
         if (!rules || !window)
             return null;
         return rules.find(rule => {
-            if (!(rule.source || "").includes("/" + Paths.appDir + "/windowrules") || [CompositorService.dmsFloatingRuleId, CompositorService.dmsOpaqueRuleId].includes(rule.id))
+            if (!(rule.source || "").includes("/" + Paths.appDir + "/windowrules") || [CompositorService.shellFloatingRuleId, CompositorService.shellOpaqueRuleId].includes(rule.id))
                 return false;
             const matches = (rule.matches && rule.matches.length > 0) ? rule.matches : (rule.matchCriteria ? [rule.matchCriteria] : []);
             return matches.some(m => matchesCriteria(m, window));
@@ -71,7 +71,7 @@ AlpePopout {
                 return;
             try {
                 const result = JSON.parse(output.trim());
-                matchingRule = findMatchingDmsRule(result.rules, currentWindow);
+                matchingRule = findMatchingShellRule(result.rules, currentWindow);
             } catch (e) {
                 matchingRule = null;
             }

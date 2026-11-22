@@ -193,7 +193,7 @@ Scope {
         log.info("Handing the lock to the custom lock command instead of the session lock");
         IdleService.lockPowerOffRequested = false;
         Quickshell.execDetached(["sh", "-c", SettingsData.customPowerActionLock]);
-        // The custom locker manages its own surface; DMS never engages
+        // The custom locker manages its own surface; Alpe never engages
         // WlSessionLock here, so isShellLocked stays false and the fade
         // overlay would never be dismissed. Hand off by dismissing it now.
         IdleService.dismissFadeToLock();
