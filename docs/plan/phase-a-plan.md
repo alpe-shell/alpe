@@ -220,8 +220,11 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      `SessionSpec.js`, dazu die geteilten aus `SharedSessionSpec.js`) in Gestaltung und Zustand einordnen,
      Liste im Code festlegen, Test in `tests/test_design.py`, Liste hier im Plan; `recentColors` kommt damit
      auch aus `design/kde/session.json`. Eigener Commit.
-  5. Vorschlagsdatei für die 42 fehlenden deutschen Texte zusammen mit `docs/plan/sie-form.md` (Du-Form,
-     Schweizer Schreibweise); Freigabe durch den Maintainer vor G1.
+  5. **Vorgelegt, nicht freigegeben:** `docs/plan/sie-form.md` (103 Übersetzungen in Sie-Form, je Schlüssel,
+     heutiger Text und Vorschlag; vier Fragen am Ende) und `docs/plan/uebersetzung-luecken.md` (Vorschlag für
+     die 42 fehlenden deutschen Texte). Schlüssel und heutige Texte beider Listen sind maschinell mit dem
+     Katalog bzw. `tests/data/uebersetzung-bekannte-luecken.txt` abgeglichen. Freigabe durch den Maintainer
+     vor G1, Umsetzung in `de.json` danach.
   6. **Neumessung erledigt (`9685ebe`, 22.11.2026).** Endstand `ad91d3f` und `ba4ddbc` (Worktree `wt-alt`
      mit der Ladeprüfung des Endstands), je «gesperrt» und «offen» unter Hyprland und KWin, je 3 Läufe,
      dazu der Lauf für das Bild: 25 Läufe, alle gültig (Compositor und Dienst mit Exit 0, `Connected`,
