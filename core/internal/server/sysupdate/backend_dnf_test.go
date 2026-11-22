@@ -43,12 +43,12 @@ bash.x86_64       5.2.40-1.fc41       updates`,
 		},
 		{
 			name: "one package offered by two repos is reported once",
-			input: `dux-greeter.x86_64   1.5.1-1.fc44   copr:copr.fedorainfracloud.org:avengemedia:danklinux
-dux-greeter.x86_64   1.5.1-1.fc44   coprdep:copr.fedorainfracloud.org:avengemedia:danklinux`,
+			input: `alpe-shell.x86_64   1.5.1-1.fc44   copr:copr.fedorainfracloud.org:alpe-shell:alpe
+alpe-shell.x86_64   1.5.1-1.fc44   coprdep:copr.fedorainfracloud.org:alpe-shell:alpe`,
 			backendID: "dnf5",
-			installed: map[string]string{"dux-greeter": "1.5.0-1.fc44"},
+			installed: map[string]string{"alpe-shell": "1.5.0-1.fc44"},
 			want: []Package{
-				{Name: "dux-greeter.x86_64", Repo: RepoSystem, Backend: "dnf5", FromVersion: "1.5.0-1.fc44", ToVersion: "1.5.1-1.fc44"},
+				{Name: "alpe-shell.x86_64", Repo: RepoSystem, Backend: "dnf5", FromVersion: "1.5.0-1.fc44", ToVersion: "1.5.1-1.fc44"},
 			},
 		},
 		{

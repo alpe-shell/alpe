@@ -61,10 +61,10 @@ func TestServeSysmonHelperAnswersEachLine(t *testing.T) {
 }
 
 func TestIsRootHelper(t *testing.T) {
-	assert.True(t, isRootHelper([]string{"dms", "sysmon-helper"}))
-	assert.False(t, isRootHelper([]string{"dms", "run"}))
-	assert.False(t, isRootHelper([]string{"dms", "ipc", "sysmon-helper"}))
-	assert.False(t, isRootHelper([]string{"dms"}))
+	assert.True(t, isRootHelper([]string{"alpe-dienst", "sysmon-helper"}))
+	assert.False(t, isRootHelper([]string{"alpe-dienst", "run"}))
+	assert.False(t, isRootHelper([]string{"alpe-dienst", "ipc", "sysmon-helper"}))
+	assert.False(t, isRootHelper([]string{"alpe-dienst"}))
 }
 
 func TestTreeOrderSurvivesParentCycle(t *testing.T) {

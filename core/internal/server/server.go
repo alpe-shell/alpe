@@ -82,7 +82,7 @@ var notifyActionsManager *notifyactions.Manager
 var wellbeingManager *wellbeing.Manager
 var geoClientInstance geolocation.Client
 
-const dbusClientID = "dms-dbus-client"
+const dbusClientID = "alpe-dbus-client"
 
 var capabilitySubscribers syncmap.Map[string, chan ServerInfo]
 var cupsMu sync.Mutex
@@ -1191,8 +1191,8 @@ func (s *Server) Serve(printDocs bool) error {
 			return
 		}
 
-		ch := loginctlManager.Subscribe("dms-lock-bridge")
-		defer loginctlManager.Unsubscribe("dms-lock-bridge")
+		ch := loginctlManager.Subscribe("alpe-lock-bridge")
+		defer loginctlManager.Unsubscribe("alpe-lock-bridge")
 
 		initial := loginctlManager.GetState()
 		lastLocked := initial.Locked

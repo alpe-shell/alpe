@@ -518,7 +518,7 @@ func TestManager_ICCStatusServesPublishedSnapshot(t *testing.T) {
 }
 
 // Outputs that go away (unplugged, monitor sleep) must not stay in the name
-// maps: they are what `dms icc listOutputs` and `status` enumerate, and a
+// maps: they are what `alpe-dienst icc listOutputs` and `status` enumerate, and a
 // rebound wl_output reusing the object ID would attach the previous monitor's
 // profile from the stale name.
 func TestManager_RemoveOutputByRegistryNamePrunesNames(t *testing.T) {

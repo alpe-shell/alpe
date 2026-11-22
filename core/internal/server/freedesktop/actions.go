@@ -45,7 +45,7 @@ func stageIconFile(iconPath string) (string, func(), error) {
 	}
 	defer src.Close()
 
-	tmp, err := os.CreateTemp("", "dms-profile-icon-*")
+	tmp, err := os.CreateTemp("", "alpe-profile-icon-*")
 	if err != nil {
 		return "", noop, fmt.Errorf("failed to stage icon file: %w", err)
 	}

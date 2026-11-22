@@ -24,7 +24,7 @@ func HandleRequest(ctx context.Context, conn *ipc.ConnWriter, req ipc.Request) {
 const pluginPrefix = "plugin_"
 
 var client = coreweather.New(coreweather.Options{
-	UserAgent: "Dux Modular Shell Weather Widget (+https://github.com/duxlabs-dev/dux-shell)",
+	UserAgent: "Alpe Weather Widget (+https://github.com/alpe-shell/alpe)",
 	Resolve:   pluginSource,
 })
 

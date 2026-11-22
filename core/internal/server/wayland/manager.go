@@ -437,7 +437,7 @@ func (m *Manager) removeOutputByRegistryName(registryName uint32) {
 		return
 	}
 
-	// The name entries go first: they are what `dms icc status`/`listOutputs`
+	// The name entries go first: they are what `alpe-dienst icc status`/`listOutputs`
 	// report, and a rebound wl_output reusing a released object ID would
 	// otherwise attach the previous monitor's profile from the stale name.
 	m.outputNames.Delete(foundID)
@@ -1866,7 +1866,7 @@ func (m *Manager) SetOutputTemp(outputName string, temp int) error {
 		}
 
 		// Without controls there are no outputs to write a ramp for, which is
-		// why the slider and `dms icc set-temp` used to do nothing until a
+		// why the slider and `alpe-dienst icc set-temp` used to do nothing until a
 		// restart on an install that had never enabled the night light.
 		m.ensureOutputControls()
 

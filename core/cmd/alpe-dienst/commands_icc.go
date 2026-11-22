@@ -191,7 +191,7 @@ func runICCList(cmd *cobra.Command, args []string) {
 			}
 			// A profile without a vcgt table has no video card gamma ramp, so the
 			// daemon refuses to apply it: say so here instead of letting the user
-			// find out from a rejected `dms icc apply`.
+			// find out from a rejected `alpe-dienst icc apply`.
 			note := ""
 			if !profile.HasVCGT {
 				note = "  (no vcgt table: cannot be applied)"

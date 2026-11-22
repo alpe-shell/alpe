@@ -48,16 +48,16 @@ written as PNG bytes to stdout when piped. Use flags to also copy to the
 clipboard, save a PNG, or tune encoding and colors.
 
 Input:
-  dms qr "https://example.com"     # encode an argument
-  echo -n "data" | dms qr          # encode stdin
-  dms qr -                         # encode stdin explicitly
+  alpe-dienst qr "https://example.com"     # encode an argument
+  echo -n "data" | alpe-dienst qr          # encode stdin
+  alpe-dienst qr -                         # encode stdin explicitly
 
 Output (combine freely):
-  dms qr "text" --clipboard        # copy PNG image to clipboard
-  dms qr "text" --copy-text        # copy the source text to clipboard
-  dms qr "text" -o code.png        # save a PNG file
-  dms qr "text" > code.png         # PNG to stdout (piped)
-  dms qr "text" --render           # force terminal render
+  alpe-dienst qr "text" --clipboard        # copy PNG image to clipboard
+  alpe-dienst qr "text" --copy-text        # copy the source text to clipboard
+  alpe-dienst qr "text" -o code.png        # save a PNG file
+  alpe-dienst qr "text" > code.png         # PNG to stdout (piped)
+  alpe-dienst qr "text" --render           # force terminal render
 
 Encoding & style:
   --ecc L|M|Q|H                    # error correction (default M)
@@ -68,8 +68,8 @@ Encoding & style:
   --invert                         # flip colors for light terminals
 
 WiFi:
-  dms qr wifi MySSID -p secret     # build from an explicit password
-  dms qr wifi MySSID               # pull the saved secret from the shell`,
+  alpe-dienst qr wifi MySSID -p secret     # build from an explicit password
+  alpe-dienst qr wifi MySSID               # pull the saved secret from the shell`,
 	Args: cobra.ArbitraryArgs,
 	Run:  runQR,
 }

@@ -1,0 +1,43 @@
+# D7.7g: Texte, Kommentare und Testdaten in cmd/alpe-dienst, internal/version, internal/log, internal/server
+# (texte-ersetzen.py, nur gemeldete Zeilen). D-Bus-Pfade, Paketnamen und Richtlinien-Präfix sind von Hand gesetzt.
+# Nicht angefasst: Paketnamen des Ursprungs in internal/server/sysupdate (Ausnahmeliste, Frist E4).
+\[\]string\{"dms"	[]string{"alpe-dienst"
+exec\.Command\("dms", 	exec.Command("alpe-dienst", 
+"quickshell", "dms"\)	"quickshell", "alpe")
+\./dms/colors\.conf	./alpe/colors.conf
+"hypr", "dms", 	"hypr", "alpe", 
+x-dms-tag	x-alpe-tag
+\(default dms-backup-<timestamp>	(default alpe-backup-<timestamp>
+~/\.config/dms 	~/.config/alpe 
+ or dms \(2025 accents	 or alpe (2025 accents
+^(\s*)(echo -n "data" \| )?dms qr	\1\2alpe-dienst qr
+\(is dms server running\?\)	(is alpe-dienst running?)
+`dms icc	`alpe-dienst icc
+such as dms screenshot	such as alpe-dienst screenshot
+made dms screenshot	made alpe-dienst screenshot
+this dms binary	this alpe-dienst binary
+other dms processes	other alpe-dienst processes
+while dms wasn.t running	while the service was not running
+reach dms\.service	reach alpe.service
+"dms scheme"	"alpe scheme"
+"dms-dbus-client"	"alpe-dbus-client"
+"dms-lock-bridge"	"alpe-lock-bridge"
+"dms-profile-icon-\*"	"alpe-profile-icon-*"
+"dms-wpa-"	"alpe-wpa-"
+/tmp/dank-(text|wifi)-qrcode-	/tmp/alpe-\1-qrcode-
+"dms-checkup-db-%d"	"alpe-checkup-db-%d"
+<title>DMS VPN</title>	<title>Alpe VPN</title>
+"DMS Music"	"Alpe Music"
+"Dux Shell"	"Alpe"
+"Dux Modular Shell"	"Alpe"
+"identity":       "DMS"	"identity":       "Alpe"
+DuxShell/1 \(\+https://github\.com/duxlabs-dev/dux-shell\)	Alpe/1 (+https://github.com/alpe-shell/alpe)
+Dux Modular Shell Weather Widget \(\+https://github\.com/duxlabs-dev/dux-shell\)	Alpe Weather Widget (+https://github.com/alpe-shell/alpe)
+/com/danklinux/	/io/github/alpe_shell/Alpe/
+dux-greeter	alpe-shell
+avengemedia:danklinux	alpe-shell:alpe
+/opt/it's/dms	/opt/it's/alpe-dienst
+/opt/it'\\''s/dms'	/opt/it'\\''s/alpe-dienst'
+no dms package	no shell package
+\bDMS-native\b	native
+\bDMS\b	Alpe

@@ -985,7 +985,7 @@ func TestHandleCopyEntry_OversizedFileEntryRestoresExactPath(t *testing.T) {
 }
 
 // A manager built with tracking disabled never binds data control but still
-// serves clipboard.copyFile; answering success there made dms screenshot skip
+// serves clipboard.copyFile; answering success there made alpe-dienst screenshot skip
 // its local copy and leave the clipboard empty.
 func TestCopyFile_DisabledTrackingRefusesCopy(t *testing.T) {
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())

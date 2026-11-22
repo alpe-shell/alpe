@@ -144,14 +144,14 @@ func wrapInTerminal(term, title, shellCmd string, extraArgs []string) []string {
 		`printf '\033[1;36m=== %s ===\033[0m\n'; printf '\033[2m$ %s\033[0m\n'; printf '\033[33mYou may be prompted for your sudo password to apply system updates.\033[0m\n\n'`,
 		title, shellCmd,
 	)
-	closer := `dms_update_status=$?
-if [ "$dms_update_status" -eq 0 ]; then
+	closer := `update_status=$?
+if [ "$update_status" -eq 0 ]; then
     printf '\n\033[1;32m=== Done. Press Enter to close. ===\033[0m\n'
 else
-    printf '\n\033[1;31m=== Update failed (exit %s). Press Enter to close. ===\033[0m\n' "$dms_update_status"
+    printf '\n\033[1;31m=== Update failed (exit %s). Press Enter to close. ===\033[0m\n' "$update_status"
 fi
-read -r dms_update_reply
-exit "$dms_update_status"`
+read -r update_reply
+exit "$update_status"`
 	export := `export SUDO_PROMPT="[Alpe] sudo password for %u: "; `
 	full := export + banner + "; " + shellCmd + "; " + closer
 

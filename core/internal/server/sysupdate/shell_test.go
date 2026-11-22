@@ -89,7 +89,7 @@ func TestFindShellPackagePrefersOwner(t *testing.T) {
 		t.Errorf("fallback = %v", got)
 	}
 	if got := findShellPackage([]Package{{Name: "firefox"}}, "dms"); got != nil {
-		t.Errorf("no dms package = %v", got)
+		t.Errorf("no shell package = %v", got)
 	}
 }
 

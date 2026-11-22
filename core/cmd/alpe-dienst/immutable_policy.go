@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/alpe-shell/alpe/core/internal/brand"
 	"github.com/alpe-shell/alpe/core/internal/clipolicy"
 	"github.com/alpe-shell/alpe/core/internal/osinfo"
 	"github.com/alpe-shell/alpe/core/internal/privesc"
@@ -33,7 +34,7 @@ type immutableCommandPolicy struct {
 
 func normalizeCommandSpec(raw string) string {
 	normalized := strings.ToLower(strings.TrimSpace(raw))
-	normalized = strings.TrimPrefix(normalized, "dms ")
+	normalized = strings.TrimPrefix(normalized, brand.Binary+" ")
 	return strings.Join(strings.Fields(normalized), " ")
 }
 
@@ -157,7 +158,7 @@ func requireMutableSystemCommand(cmd *cobra.Command, _ []string) error {
 		reason = "Detected immutable system: " + policy.ImmutableReason + "\n"
 	}
 
-	return fmt.Errorf("%s%s\nCommand: dms %s\nPolicy files:\n  %s\n  %s", reason, policy.Message, commandPath, clipolicy.PackagedPath, clipolicy.AdminPath)
+	return fmt.Errorf("%s%s\nCommand: %s %s\nPolicy files:\n  %s\n  %s", reason, policy.Message, brand.Binary, commandPath, clipolicy.PackagedPath, clipolicy.AdminPath)
 }
 
 // preRunPrivileged combines the immutable-system check with a privesc tool

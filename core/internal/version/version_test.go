@@ -32,14 +32,14 @@ func TestCompareVersions(t *testing.T) {
 	}
 }
 
-func TestGetDMSVersionInfo_Structure(t *testing.T) {
-	// Create a temp directory with a fake DMS installation
+func TestGetShellVersionInfo_Structure(t *testing.T) {
+	// Create a temp directory with a fake Alpe installation
 	tempDir := t.TempDir()
-	dmsPath := filepath.Join(tempDir, ".config", "quickshell", "dms")
-	os.MkdirAll(dmsPath, 0o755)
+	shellConfigPath := filepath.Join(tempDir, ".config", "quickshell", "alpe")
+	os.MkdirAll(shellConfigPath, 0o755)
 
 	// Create a .git directory to simulate git installation
-	os.MkdirAll(filepath.Join(dmsPath, ".git"), 0o755)
+	os.MkdirAll(filepath.Join(shellConfigPath, ".git"), 0o755)
 
 	originalHome := os.Getenv("HOME")
 	defer os.Setenv("HOME", originalHome)
@@ -47,12 +47,12 @@ func TestGetDMSVersionInfo_Structure(t *testing.T) {
 
 	// Create mock fetcher
 	mockFetcher := mocks_version.NewMockVersionFetcher(t)
-	mockFetcher.EXPECT().GetCurrentVersion(dmsPath).Return("v0.1.0", nil)
-	mockFetcher.EXPECT().GetLatestVersion(dmsPath).Return("v0.1.1", nil)
+	mockFetcher.EXPECT().GetCurrentVersion(shellConfigPath).Return("v0.1.0", nil)
+	mockFetcher.EXPECT().GetLatestVersion(shellConfigPath).Return("v0.1.1", nil)
 
-	info, err := GetDMSVersionInfoWithFetcher(mockFetcher)
+	info, err := GetShellVersionInfoWithFetcher(mockFetcher)
 	if err != nil {
-		t.Fatalf("GetDMSVersionInfoWithFetcher() failed: %v", err)
+		t.Fatalf("GetShellVersionInfoWithFetcher() failed: %v", err)
 	}
 
 	if !info.HasUpdate {
@@ -64,23 +64,23 @@ func TestGetDMSVersionInfo_Structure(t *testing.T) {
 	}
 }
 
-func TestGetDMSVersionInfo_BranchVersion(t *testing.T) {
+func TestGetShellVersionInfo_BranchVersion(t *testing.T) {
 	tempDir := t.TempDir()
-	dmsPath := filepath.Join(tempDir, ".config", "quickshell", "dms")
-	os.MkdirAll(dmsPath, 0o755)
-	os.MkdirAll(filepath.Join(dmsPath, ".git"), 0o755)
+	shellConfigPath := filepath.Join(tempDir, ".config", "quickshell", "alpe")
+	os.MkdirAll(shellConfigPath, 0o755)
+	os.MkdirAll(filepath.Join(shellConfigPath, ".git"), 0o755)
 
 	originalHome := os.Getenv("HOME")
 	defer os.Setenv("HOME", originalHome)
 	os.Setenv("HOME", tempDir)
 
 	mockFetcher := mocks_version.NewMockVersionFetcher(t)
-	mockFetcher.EXPECT().GetCurrentVersion(dmsPath).Return("master@abc1234", nil)
-	mockFetcher.EXPECT().GetLatestVersion(dmsPath).Return("master@def5678", nil)
+	mockFetcher.EXPECT().GetCurrentVersion(shellConfigPath).Return("master@abc1234", nil)
+	mockFetcher.EXPECT().GetLatestVersion(shellConfigPath).Return("master@def5678", nil)
 
-	info, err := GetDMSVersionInfoWithFetcher(mockFetcher)
+	info, err := GetShellVersionInfoWithFetcher(mockFetcher)
 	if err != nil {
-		t.Fatalf("GetDMSVersionInfoWithFetcher() failed: %v", err)
+		t.Fatalf("GetShellVersionInfoWithFetcher() failed: %v", err)
 	}
 
 	if !info.IsBranch {
@@ -96,23 +96,23 @@ func TestGetDMSVersionInfo_BranchVersion(t *testing.T) {
 	}
 }
 
-func TestGetDMSVersionInfo_NoUpdate(t *testing.T) {
+func TestGetShellVersionInfo_NoUpdate(t *testing.T) {
 	tempDir := t.TempDir()
-	dmsPath := filepath.Join(tempDir, ".config", "quickshell", "dms")
-	os.MkdirAll(dmsPath, 0o755)
-	os.MkdirAll(filepath.Join(dmsPath, ".git"), 0o755)
+	shellConfigPath := filepath.Join(tempDir, ".config", "quickshell", "alpe")
+	os.MkdirAll(shellConfigPath, 0o755)
+	os.MkdirAll(filepath.Join(shellConfigPath, ".git"), 0o755)
 
 	originalHome := os.Getenv("HOME")
 	defer os.Setenv("HOME", originalHome)
 	os.Setenv("HOME", tempDir)
 
 	mockFetcher := mocks_version.NewMockVersionFetcher(t)
-	mockFetcher.EXPECT().GetCurrentVersion(dmsPath).Return("v0.1.0", nil)
-	mockFetcher.EXPECT().GetLatestVersion(dmsPath).Return("v0.1.0", nil)
+	mockFetcher.EXPECT().GetCurrentVersion(shellConfigPath).Return("v0.1.0", nil)
+	mockFetcher.EXPECT().GetLatestVersion(shellConfigPath).Return("v0.1.0", nil)
 
-	info, err := GetDMSVersionInfoWithFetcher(mockFetcher)
+	info, err := GetShellVersionInfoWithFetcher(mockFetcher)
 	if err != nil {
-		t.Fatalf("GetDMSVersionInfoWithFetcher() failed: %v", err)
+		t.Fatalf("GetShellVersionInfoWithFetcher() failed: %v", err)
 	}
 
 	if info.HasUpdate {
@@ -120,15 +120,15 @@ func TestGetDMSVersionInfo_NoUpdate(t *testing.T) {
 	}
 }
 
-func TestGetCurrentDMSVersion_NotInstalled(t *testing.T) {
+func TestGetInstalledShellVersion_NotInstalled(t *testing.T) {
 	originalHome := os.Getenv("HOME")
 	defer os.Setenv("HOME", originalHome)
 
 	tempDir := t.TempDir()
 	os.Setenv("HOME", tempDir)
 
-	_, err := GetCurrentDMSVersion()
+	_, err := GetInstalledShellVersion()
 	if err == nil {
-		t.Error("Expected error when DMS not installed, got nil")
+		t.Error("Expected error when Alpe not installed, got nil")
 	}
 }

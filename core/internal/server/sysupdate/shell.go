@@ -16,7 +16,7 @@ import (
 
 const ownerQueryTimeout = 10 * time.Second
 
-var dmsPackageNames = map[string]bool{
+var shellPackageNames = map[string]bool{
 	"dms": true, "dms-git": true,
 	"dux-shell": true, "dux-shell-git": true,
 }
@@ -39,7 +39,7 @@ func GitBuildCount(version string) int {
 }
 
 // "/usr/bin/dms (deleted)" after a package upgrade.
-func dmsBinaryPath() string {
+func serviceBinaryPath() string {
 	path, err := os.Executable()
 	if err != nil {
 		path, err = exec.LookPath(brand.Binary)
@@ -76,10 +76,10 @@ func unprobedShell(running string) ShellInfo {
 	return info
 }
 
-// Unowned binaries (manual copy, dev checkout) stay unknown: DMS only updates through packages.
+// Unowned binaries (manual copy, dev checkout) stay unknown: Alpe only updates through packages.
 func ProbeShell(ctx context.Context, running string) ShellInfo {
 	info := unprobedShell(running)
-	path := dmsBinaryPath()
+	path := serviceBinaryPath()
 
 	if strings.HasPrefix(path, "/nix/store/") {
 		info.InstallMethod = InstallNix
@@ -169,7 +169,7 @@ func findShellPackage(pkgs []Package, ownerName string) *Package {
 		if ownerName != "" && p.Name == ownerName {
 			return &p
 		}
-		if fallback == nil && dmsPackageNames[p.Name] {
+		if fallback == nil && shellPackageNames[p.Name] {
 			fallback = &p
 		}
 	}

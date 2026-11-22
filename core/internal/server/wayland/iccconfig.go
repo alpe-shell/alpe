@@ -21,16 +21,16 @@ type iccConfig struct {
 	OutputBrightness map[string]int    `json:"outputBrightness,omitempty"`
 }
 
-func dmsConfigDir() string {
+func appConfigDir() string {
 	return filepath.Join(utils.XDGConfigHome(), brand.DirName)
 }
 
 func iccConfigPath() string {
-	return filepath.Join(dmsConfigDir(), "icc.json")
+	return filepath.Join(appConfigDir(), "icc.json")
 }
 
 func ICCProfilesDir() string {
-	return filepath.Join(dmsConfigDir(), "icc")
+	return filepath.Join(appConfigDir(), "icc")
 }
 
 func resolveICCProfile(name string) string {

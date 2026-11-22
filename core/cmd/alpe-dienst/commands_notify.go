@@ -46,7 +46,7 @@ Examples:
   alpe-dienst notify -a "Backup" -i drive-harddisk -c transfer.complete "Backup finished"
   alpe-dienst notify "File received" "photo.jpg" --file ~/Downloads/photo.jpg
   alpe-dienst notify -A retry=Retry -A "Dismiss" "Build failed"
-  alpe-dienst notify -h string:x-dms-tag:build -h int:value:42 "Hinted"`,
+  alpe-dienst notify -h string:x-alpe-tag:build -h int:value:42 "Hinted"`,
 	Args: cobra.MinimumNArgs(1),
 	Run:  runNotify,
 }

@@ -23,15 +23,15 @@ type VersionInfo struct {
 
 // VersionFetcher is an interface for fetching version information
 type VersionFetcher interface {
-	GetCurrentVersion(dmsPath string) (string, error)
-	GetLatestVersion(dmsPath string) (string, error)
+	GetCurrentVersion(shellConfigPath string) (string, error)
+	GetLatestVersion(shellConfigPath string) (string, error)
 }
 
 // DefaultVersionFetcher is the default implementation that uses git and the GitHub API
 type DefaultVersionFetcher struct{}
 
-func (d *DefaultVersionFetcher) GetCurrentVersion(dmsPath string) (string, error) {
-	if _, err := os.Stat(filepath.Join(dmsPath, ".git")); err == nil {
+func (d *DefaultVersionFetcher) GetCurrentVersion(shellConfigPath string) (string, error) {
+	if _, err := os.Stat(filepath.Join(shellConfigPath, ".git")); err == nil {
 		originalDir, err := os.Getwd()
 		if err != nil {
 			return "", err
@@ -42,8 +42,8 @@ func (d *DefaultVersionFetcher) GetCurrentVersion(dmsPath string) (string, error
 			}
 		}()
 
-		if err := os.Chdir(dmsPath); err != nil {
-			return "", fmt.Errorf("failed to change to DMS directory: %w", err)
+		if err := os.Chdir(shellConfigPath); err != nil {
+			return "", fmt.Errorf("failed to change to Alpe directory: %w", err)
 		}
 
 		tagCmd := exec.Command("git", "describe", "--exact-match", "--tags", "HEAD")
@@ -63,7 +63,7 @@ func (d *DefaultVersionFetcher) GetCurrentVersion(dmsPath string) (string, error
 		}
 	}
 
-	cmd := exec.Command("dms", "--version")
+	cmd := exec.Command("alpe-dienst", "--version")
 	if output, err := cmd.Output(); err == nil {
 		return strings.TrimSpace(string(output)), nil
 	}
@@ -71,8 +71,8 @@ func (d *DefaultVersionFetcher) GetCurrentVersion(dmsPath string) (string, error
 	return "unknown", nil
 }
 
-func (d *DefaultVersionFetcher) GetLatestVersion(dmsPath string) (string, error) {
-	if _, err := os.Stat(filepath.Join(dmsPath, ".git")); err == nil {
+func (d *DefaultVersionFetcher) GetLatestVersion(shellConfigPath string) (string, error) {
+	if _, err := os.Stat(filepath.Join(shellConfigPath, ".git")); err == nil {
 		originalDir, err := os.Getwd()
 		if err != nil {
 			return "", err
@@ -83,8 +83,8 @@ func (d *DefaultVersionFetcher) GetLatestVersion(dmsPath string) (string, error)
 			}
 		}()
 
-		if err := os.Chdir(dmsPath); err != nil {
-			return "", fmt.Errorf("failed to change to DMS directory: %w", err)
+		if err := os.Chdir(shellConfigPath); err != nil {
+			return "", fmt.Errorf("failed to change to Alpe directory: %w", err)
 		}
 
 		currentRefCmd := exec.Command("git", "symbolic-ref", "-q", "HEAD")
@@ -142,51 +142,51 @@ func (d *DefaultVersionFetcher) GetLatestVersion(dmsPath string) (string, error)
 // defaultFetcher is used by the public functions
 var defaultFetcher VersionFetcher = &DefaultVersionFetcher{}
 
-func GetCurrentDMSVersion() (string, error) {
+func GetInstalledShellVersion() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("failed to get home directory: %w", err)
 	}
 
-	dmsPath := filepath.Join(homeDir, ".config", "quickshell", "dms")
-	if _, err := os.Stat(dmsPath); os.IsNotExist(err) {
-		return "", fmt.Errorf("DMS not installed")
+	shellConfigPath := filepath.Join(homeDir, ".config", "quickshell", "alpe")
+	if _, err := os.Stat(shellConfigPath); os.IsNotExist(err) {
+		return "", fmt.Errorf("Alpe not installed")
 	}
 
-	return defaultFetcher.GetCurrentVersion(dmsPath)
+	return defaultFetcher.GetCurrentVersion(shellConfigPath)
 }
 
-func GetLatestDMSVersion() (string, error) {
+func GetLatestShellVersion() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("failed to get home directory: %w", err)
 	}
 
-	dmsPath := filepath.Join(homeDir, ".config", "quickshell", "dms")
-	return defaultFetcher.GetLatestVersion(dmsPath)
+	shellConfigPath := filepath.Join(homeDir, ".config", "quickshell", "alpe")
+	return defaultFetcher.GetLatestVersion(shellConfigPath)
 }
 
-func GetDMSVersionInfo() (*VersionInfo, error) {
-	return GetDMSVersionInfoWithFetcher(defaultFetcher)
+func GetShellVersionInfo() (*VersionInfo, error) {
+	return GetShellVersionInfoWithFetcher(defaultFetcher)
 }
 
-func GetDMSVersionInfoWithFetcher(fetcher VersionFetcher) (*VersionInfo, error) {
+func GetShellVersionInfoWithFetcher(fetcher VersionFetcher) (*VersionInfo, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get home directory: %w", err)
 	}
 
-	dmsPath := filepath.Join(homeDir, ".config", "quickshell", "dms")
-	if _, err := os.Stat(dmsPath); os.IsNotExist(err) {
-		return nil, fmt.Errorf("DMS not installed")
+	shellConfigPath := filepath.Join(homeDir, ".config", "quickshell", "alpe")
+	if _, err := os.Stat(shellConfigPath); os.IsNotExist(err) {
+		return nil, fmt.Errorf("Alpe not installed")
 	}
 
-	current, err := fetcher.GetCurrentVersion(dmsPath)
+	current, err := fetcher.GetCurrentVersion(shellConfigPath)
 	if err != nil {
 		return nil, err
 	}
 
-	latest, err := fetcher.GetLatestVersion(dmsPath)
+	latest, err := fetcher.GetLatestVersion(shellConfigPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get latest version: %w", err)
 	}

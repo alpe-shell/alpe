@@ -154,22 +154,22 @@ func runWindowrulesList(cmd *cobra.Command, args []string) {
 		allRules := providers.ConvertHyprlandRulesToWindowRules(parseResult.Rules)
 
 		provider := providers.NewHyprlandWritableProvider(configDir)
-		dmsRulesPath := provider.GetOverridePath()
-		dmsRules, _ := provider.LoadShellRules()
+		shellRulesPath := provider.GetOverridePath()
+		shellRules, _ := provider.LoadShellRules()
 
-		dmsRuleMap := make(map[int]windowrules.WindowRule)
-		for i, dr := range dmsRules {
-			dmsRuleMap[i] = dr
+		shellRuleMap := make(map[int]windowrules.WindowRule)
+		for i, dr := range shellRules {
+			shellRuleMap[i] = dr
 		}
 
-		dmsIdx := 0
+		shellIdx := 0
 		for i, r := range allRules {
-			if r.Source == dmsRulesPath {
-				if dmr, ok := dmsRuleMap[dmsIdx]; ok {
+			if r.Source == shellRulesPath {
+				if dmr, ok := shellRuleMap[shellIdx]; ok {
 					allRules[i].ID = dmr.ID
 					allRules[i].Name = dmr.Name
 				}
-				dmsIdx++
+				shellIdx++
 			}
 		}
 

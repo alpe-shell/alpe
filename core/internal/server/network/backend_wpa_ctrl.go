@@ -29,7 +29,7 @@ type wpaCtrlConn struct {
 }
 
 func newWpaCtrlConn(sockPath string) (*wpaCtrlConn, error) {
-	localDir, err := os.MkdirTemp(utils.RuntimeDir(), "dms-wpa-")
+	localDir, err := os.MkdirTemp(utils.RuntimeDir(), "alpe-wpa-")
 	if err != nil {
 		return nil, fmt.Errorf("create wpa_ctrl socket dir: %w", err)
 	}

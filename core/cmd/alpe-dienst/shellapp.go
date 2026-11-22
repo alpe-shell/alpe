@@ -28,9 +28,9 @@ var shellApp = shellapp.New(shellapp.Config{
 	Embedded:               embeddedShell{},
 	Boot:                   bootBackend,
 	PreLaunch:              preLaunch,
-	ExtraEnv:               dmsExtraEnv,
+	ExtraEnv:               shellExtraEnv,
 	OnUIExit:               logStartupFailure,
-	SessionRestartExitCode: dmsSessionRestartExitCode,
+	SessionRestartExitCode: sessionRestartExitCode,
 	TryManagedRestart:      refuseUnitRestart,
 })
 
@@ -42,20 +42,20 @@ func (embeddedShell) Extract(baseDir string) (string, error) { return shellembed
 
 func (embeddedShell) Prune(baseDir, keep string) { shellembed.Prune(baseDir, keep) }
 
-type dmsBackend struct {
+type serverBackend struct {
 	srv    *server.Server
 	done   chan error
 	cancel context.CancelFunc
 }
 
-func (b *dmsBackend) SocketPath() string { return b.srv.SocketPath() }
+func (b *serverBackend) SocketPath() string { return b.srv.SocketPath() }
 
-func (b *dmsBackend) Close() {
+func (b *serverBackend) Close() {
 	b.cancel()
 	b.srv.Close()
 }
 
-func (b *dmsBackend) Done() <-chan error { return b.done }
+func (b *serverBackend) Done() <-chan error { return b.done }
 
 func bootBackend(ctx context.Context) (shellapp.Backend, error) {
 	server.CLIVersion = Version
@@ -67,7 +67,7 @@ func bootBackend(ctx context.Context) (shellapp.Backend, error) {
 	}
 
 	ctx, cancel := context.WithCancel(ctx)
-	backend := &dmsBackend{srv: srv, done: make(chan error, 1), cancel: cancel}
+	backend := &serverBackend{srv: srv, done: make(chan error, 1), cancel: cancel}
 	go srv.WaitReady(ctx)
 	go func() {
 		defer cancel()
@@ -115,7 +115,7 @@ func wantsSimpleAnimationDriver(settings []byte) bool {
 // creating it, which overflows the 4 MiB default and breaks early handlers (#4175).
 const qmlJSStackSize = 16 << 20
 
-func dmsExtraEnv(string) []string {
+func shellExtraEnv(string) []string {
 	var env []string
 	if selfPath, err := os.Executable(); err == nil {
 		env = append(env, brand.Env("EXECUTABLE")+"="+selfPath)

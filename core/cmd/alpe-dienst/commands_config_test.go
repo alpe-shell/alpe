@@ -19,8 +19,8 @@ func writeConfigFile(t *testing.T, path, content string) {
 func TestCheckHyprlandIncludeIgnoresLegacyConf(t *testing.T) {
 	xdg := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", xdg)
-	writeConfigFile(t, filepath.Join(xdg, "hypr", "hyprland.conf"), "source = ./dms/colors.conf\n")
-	writeConfigFile(t, filepath.Join(xdg, "hypr", "dms", "colors.conf"), "")
+	writeConfigFile(t, filepath.Join(xdg, "hypr", "hyprland.conf"), "source = ./alpe/colors.conf\n")
+	writeConfigFile(t, filepath.Join(xdg, "hypr", "alpe", "colors.conf"), "")
 
 	got, err := checkHyprlandInclude("colors.conf")
 	if err != nil {

@@ -36,7 +36,7 @@ func handleWatchAction(conn *ipc.ConnWriter, req ipc.Request, manager *Manager) 
 }
 
 // The shell can't post its own: notify-send blocks until the notification closes, and the shell is the server.
-// Only the arguments come from the client; the executable is always this dms binary.
+// Only the arguments come from the client; the executable is always this alpe-dienst binary.
 func handleSend(conn *ipc.ConnWriter, req ipc.Request, manager *Manager) {
 	summary, ok := req.Get[string]("summary")
 	if !ok || summary == "" {

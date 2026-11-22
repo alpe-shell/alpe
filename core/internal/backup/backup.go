@@ -23,7 +23,7 @@ func ConfigDir() (string, error) {
 }
 
 func DefaultArchiveName() string {
-	return fmt.Sprintf("dms-backup-%s.tar.gz", time.Now().Format("20060102-150405"))
+	return fmt.Sprintf("alpe-backup-%s.tar.gz", time.Now().Format("20060102-150405"))
 }
 
 func Create(outputPath string) error {

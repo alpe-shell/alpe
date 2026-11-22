@@ -9,7 +9,7 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/qrcode"
 )
 
-const qrCodeTmpPrefix = "/tmp/dank-wifi-qrcode-"
+const qrCodeTmpPrefix = "/tmp/alpe-wifi-qrcode-"
 
 func FormatWiFiQRString(securityType, ssid, password string) string {
 	return qrcode.WiFiString(securityType, ssid, password, false)

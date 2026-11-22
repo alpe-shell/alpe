@@ -35,7 +35,7 @@ func TestValidatePlayerSnapshot(t *testing.T) {
 func TestPlayerProperties(t *testing.T) {
 	snapshot := PlayerSnapshot{
 		Enabled:        true,
-		Identity:       "DMS Music",
+		Identity:       "Alpe Music",
 		PlaybackStatus: "Playing",
 		Title:          "Title",
 		Artist:         "Artist",
@@ -81,7 +81,7 @@ func TestPlayerProperties(t *testing.T) {
 	assert.Equal(t, int64(3_000_000), properties["Position"].Value())
 	assert.Equal(t, 1.0, properties["MinimumRate"].Value())
 	assert.Equal(t, 1.0, properties["MaximumRate"].Value())
-	assert.Equal(t, "DMS Music", properties["Identity"].Value())
+	assert.Equal(t, "Alpe Music", properties["Identity"].Value())
 	assert.Equal(t, false, properties["CanSeek"].Value())
 	assert.Equal(t, true, properties["CanControl"].Value())
 	assert.Equal(t, false, properties["CanGoPrevious"].Value())
@@ -124,7 +124,7 @@ func TestPlayerTrackIDIsStableAndMetadataDependent(t *testing.T) {
 func TestStalePlayerPropertiesClearMetadataAndCapabilities(t *testing.T) {
 	old := PlayerSnapshot{
 		Enabled:        true,
-		Identity:       "Dux Shell",
+		Identity:       "Alpe",
 		PlaybackStatus: "Playing",
 		Title:          "Title",
 		Artist:         "Artist",
@@ -366,7 +366,7 @@ func TestPlayerCommandOwnerLossWithoutWaiterDisablesPlayer(t *testing.T) {
 	player := newMPRISPlayer(nil, nil)
 	player.snapshot = PlayerSnapshot{
 		Enabled:        true,
-		Identity:       "Dux Shell",
+		Identity:       "Alpe",
 		PlaybackStatus: "Playing",
 		Title:          "Title",
 		CanControl:     true,
@@ -388,7 +388,7 @@ func TestPlayerCommandOwnerLossClearsStaleStateAndPromotesWaiter(t *testing.T) {
 	player := newMPRISPlayer(nil, nil)
 	player.snapshot = PlayerSnapshot{
 		Enabled:        true,
-		Identity:       "Dux Shell",
+		Identity:       "Alpe",
 		PlaybackStatus: "Playing",
 		Title:          "Title",
 		Artist:         "Artist",
@@ -412,7 +412,7 @@ func TestPlayerCommandOwnerLossClearsStaleStateAndPromotesWaiter(t *testing.T) {
 	manager.UnsubscribePlayerCommands("owner")
 	assert.Equal(t, PlayerSnapshot{
 		Enabled:        true,
-		Identity:       "Dux Shell",
+		Identity:       "Alpe",
 		PlaybackStatus: "Stopped",
 	}, player.currentSnapshot())
 	waiterLease := (<-waiter).Lease
@@ -508,7 +508,7 @@ func TestRegistrationChanges(t *testing.T) {
 func TestPlayerSnapshotFromParamsRequiresCompleteIntegralSnapshot(t *testing.T) {
 	params := map[string]any{
 		"enabled":        true,
-		"identity":       "DMS",
+		"identity":       "Alpe",
 		"playbackStatus": "Paused",
 		"title":          "Title",
 		"artist":         "Artist",

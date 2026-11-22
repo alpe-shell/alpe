@@ -178,7 +178,7 @@ func (b *DDCBackend) probeDDCDevice(bus int, readEDID bool) (*ddcDevice, error) 
 	return dev, nil
 }
 
-// flock on the device node is how ddc tools and other dms processes take turns on a bus.
+// flock on the device node is how ddc tools and other alpe-dienst processes take turns on a bus.
 func openDDCBus(bus int) (int, error) {
 	// Without O_CLOEXEC a process spawned mid-probe inherits the fd and the flock with it.
 	fd, err := syscall.Open(fmt.Sprintf("/dev/i2c-%d", bus), syscall.O_RDWR|syscall.O_CLOEXEC, 0)

@@ -1,0 +1,35 @@
+# D7.7g (Plan 2.3.5): Dienst intern – cmd/alpe-dienst, internal/version, internal/log, internal/server/**.
+# internal/mocks/version wird nicht von Hand geändert (0.8 Nr. 62), sondern in D7.7h neu erzeugt.
+ohne	entwicklung/umbenennen/*,docs/plan/*,core/internal/mocks/*
+# internal/version
+wort	GetDMSVersionInfoWithFetcher	GetShellVersionInfoWithFetcher	core/*
+wort	GetDMSVersionInfo	GetShellVersionInfo	core/*
+wort	GetCurrentDMSVersion	GetInstalledShellVersion	core/*
+wort	GetLatestDMSVersion	GetLatestShellVersion	core/*
+wort	TestGetDMSVersionInfo_Structure	TestGetShellVersionInfo_Structure	core/internal/version/*
+wort	TestGetDMSVersionInfo_NoUpdate	TestGetShellVersionInfo_NoUpdate	core/internal/version/*
+wort	TestGetDMSVersionInfo_BranchVersion	TestGetShellVersionInfo_BranchVersion	core/internal/version/*
+wort	TestGetCurrentDMSVersion_NotInstalled	TestGetInstalledShellVersion_NotInstalled	core/internal/version/*
+wort	dmsPath	shellConfigPath	core/internal/version/*
+# internal/log: Importname des fremden Moduls dux-go (Ausnahmeliste)
+wort	danklog	duxlog	core/internal/log/*
+# cmd/alpe-dienst
+wort	dmsState	appState	core/cmd/alpe-dienst/*
+wort	dmsDir	appDir	core/cmd/alpe-dienst/*
+wort	dmsBackend	serverBackend	core/cmd/alpe-dienst/*
+wort	dmsExtraEnv	shellExtraEnv	core/cmd/alpe-dienst/*
+wort	dmsSessionRestartExitCode	sessionRestartExitCode	core/cmd/alpe-dienst/*
+wort	dmsServiceState	shellServiceState	core/cmd/alpe-dienst/*
+wort	dmsCliDetails	cliDetails	core/cmd/alpe-dienst/*
+wort	dmsCliPath	cliPath	core/cmd/alpe-dienst/*
+wort	checkDMSInstallation	checkShellInstallation	core/cmd/alpe-dienst/*
+wort	dmsRuleMap	shellRuleMap	core/cmd/alpe-dienst/*
+wort	dmsIdx	shellIdx	core/cmd/alpe-dienst/*
+wort	dmsRulesPath	shellRulesPath	core/cmd/alpe-dienst/*
+wort	dmsRules	shellRules	core/cmd/alpe-dienst/*
+# internal/server
+wort	dmsConfigDir	appConfigDir	core/internal/server/*
+wort	dmsBinaryPath	serviceBinaryPath	core/internal/server/*
+wort	dmsPackageNames	shellPackageNames	core/internal/server/*
+wort	dms_update_status	update_status	core/internal/server/sysupdate/*
+wort	dms_update_reply	update_reply	core/internal/server/sysupdate/*

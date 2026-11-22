@@ -292,11 +292,11 @@ func TestWrapInTerminal(t *testing.T) {
 }
 
 func TestInteractiveUpgradeCommand(t *testing.T) {
-	got := interactiveUpgradeCommand("/opt/it's/dms", UpgradeOptions{
+	got := interactiveUpgradeCommand("/opt/it's/alpe-dienst", UpgradeOptions{
 		IncludeFlatpak: true,
 		Ignored:        []string{"linux", "bad;name", "discord"},
 	})
-	want := `'/opt/it'\''s/dms' system update --interactive --no-aur --ignore linux,discord`
+	want := `'/opt/it'\''s/alpe-dienst' system update --interactive --no-aur --ignore linux,discord`
 	if got != want {
 		t.Fatalf("command = %q, want %q", got, want)
 	}

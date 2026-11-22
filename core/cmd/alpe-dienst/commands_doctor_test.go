@@ -341,7 +341,7 @@ func TestCheckQtengineConfig(t *testing.T) {
 		{"empty", "\n", statusInfo, "Not found"},
 		{"unparseable", "{", statusWarn, "Unreadable"},
 		{"theme is not an object", `{"theme": 1}`, statusWarn, "Unreadable"},
-		{"dms scheme", `{"theme": {"colorScheme": "` + scheme + `"}}`, statusOK, "Uses Alpe colors"},
+		{"alpe scheme", `{"theme": {"colorScheme": "` + scheme + `"}}`, statusOK, "Uses Alpe colors"},
 		{"other scheme", `{"theme": {"colorScheme": "/usr/share/color-schemes/BreezeDark.colors"}}`, statusInfo, "Not using Alpe colors"},
 		{"no scheme", `{"theme": {}}`, statusInfo, "Not using Alpe colors"},
 	}

@@ -356,7 +356,7 @@ func (m *Manager) runRefresh(parent context.Context, manual bool) {
 	wg.Wait()
 
 	now := time.Now().Unix()
-	replaced := binaryReplaced(dmsBinaryPath())
+	replaced := binaryReplaced(serviceBinaryPath())
 	m.mu.Lock()
 	m.state.LastCheckUnix = now
 	prev := m.state.Packages
@@ -381,7 +381,7 @@ func (m *Manager) runRefresh(parent context.Context, manual bool) {
 	m.state.Count = len(next)
 	m.state.NextCheckUnix = now + int64(m.state.IntervalSeconds)
 	m.state.Shell.UpdatePackage = findShellPackage(next, m.state.Shell.PackageName)
-	// An upgrade outside DMS changes the installed version only the probe knows.
+	// An upgrade outside Alpe changes the installed version only the probe knows.
 	reprobe := replaced && !m.state.Shell.RestartPending
 	m.state.Shell.RestartPending = replaced
 	switch {

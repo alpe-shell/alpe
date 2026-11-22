@@ -142,7 +142,7 @@ func (m *Manager) SetKeepAwake(enabled bool) error {
 		return fmt.Errorf("manager object not available")
 	}
 
-	file, err := m.inhibit("sleep:handle-lid-switch", "Dux Shell", "Keep Awake", "block")
+	file, err := m.inhibit("sleep:handle-lid-switch", "Alpe", "Keep Awake", "block")
 	if err != nil {
 		return fmt.Errorf("failed to inhibit sleep: %w", err)
 	}

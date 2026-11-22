@@ -298,48 +298,48 @@ func TestNormalizeDmenuArgv(t *testing.T) {
 	}{
 		{
 			"not the dmenu subcommand: untouched",
-			[]string{"dms", "ipc", "-password"},
-			[]string{"dms", "ipc", "-password"},
+			[]string{"alpe-dienst", "ipc", "-password"},
+			[]string{"alpe-dienst", "ipc", "-password"},
 		},
 		{
 			"rofi-style single-dash long flags get a second dash",
-			[]string{"dms", "dmenu", "-only-match", "-password", "-sep", ","},
-			[]string{"dms", "dmenu", "--only-match", "--password", "--sep", ","},
+			[]string{"alpe-dienst", "dmenu", "-only-match", "-password", "-sep", ","},
+			[]string{"alpe-dienst", "dmenu", "--only-match", "--password", "--sep", ","},
 		},
 		{
 			"= form is preserved",
-			[]string{"dms", "dmenu", "-format=i"},
-			[]string{"dms", "dmenu", "--format=i"},
+			[]string{"alpe-dienst", "dmenu", "-format=i"},
+			[]string{"alpe-dienst", "dmenu", "--format=i"},
 		},
 		{
 			"already-double-dash flags are untouched",
-			[]string{"dms", "dmenu", "--password", "-p", "hi"},
-			[]string{"dms", "dmenu", "--password", "-p", "hi"},
+			[]string{"alpe-dienst", "dmenu", "--password", "-p", "hi"},
+			[]string{"alpe-dienst", "dmenu", "--password", "-p", "hi"},
 		},
 		{
 			"single-char shorthands are untouched",
-			[]string{"dms", "dmenu", "-p", "hi", "-l", "5", "-i"},
-			[]string{"dms", "dmenu", "-p", "hi", "-l", "5", "-i"},
+			[]string{"alpe-dienst", "dmenu", "-p", "hi", "-l", "5", "-i"},
+			[]string{"alpe-dienst", "dmenu", "-p", "hi", "-l", "5", "-i"},
 		},
 		{
 			"negative --active/--urgent spec values are not mistaken for flag names",
-			[]string{"dms", "dmenu", "--active", "-3:"},
-			[]string{"dms", "dmenu", "--active", "-3:"},
+			[]string{"alpe-dienst", "dmenu", "--active", "-3:"},
+			[]string{"alpe-dienst", "dmenu", "--active", "-3:"},
 		},
 		{
-			"DMS-native long flags also get the single-dash alias",
-			[]string{"dms", "dmenu", "-icon", "star"},
-			[]string{"dms", "dmenu", "--icon", "star"},
+			"native long flags also get the single-dash alias",
+			[]string{"alpe-dienst", "dmenu", "-icon", "star"},
+			[]string{"alpe-dienst", "dmenu", "--icon", "star"},
 		},
 		{
 			"rofi's -a/-u abbreviations are real shorthands, untouched by the rewrite",
-			[]string{"dms", "dmenu", "-a", "1,3", "-u", "2"},
-			[]string{"dms", "dmenu", "-a", "1,3", "-u", "2"},
+			[]string{"alpe-dienst", "dmenu", "-a", "1,3", "-u", "2"},
+			[]string{"alpe-dienst", "dmenu", "-a", "1,3", "-u", "2"},
 		},
 		{
 			"stops rewriting after a bare --",
-			[]string{"dms", "dmenu", "--", "-password"},
-			[]string{"dms", "dmenu", "--", "-password"},
+			[]string{"alpe-dienst", "dmenu", "--", "-password"},
+			[]string{"alpe-dienst", "dmenu", "--", "-password"},
 		},
 	} {
 		got := normalizeDmenuArgv(tc.args)

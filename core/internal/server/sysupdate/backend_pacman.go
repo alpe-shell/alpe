@@ -257,7 +257,7 @@ func pacmanPrivateDB() (string, error) {
 	if tmp == "" {
 		tmp = "/tmp"
 	}
-	dir := filepath.Join(tmp, fmt.Sprintf("dms-checkup-db-%d", os.Getuid()))
+	dir := filepath.Join(tmp, fmt.Sprintf("alpe-checkup-db-%d", os.Getuid()))
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", err
 	}

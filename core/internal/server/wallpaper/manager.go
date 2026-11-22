@@ -185,7 +185,7 @@ func (m *Manager) schedulerLoop() {
 						m.lastFires[key] = now
 						firesDirty = true
 					case valid && last.Before(prev):
-						// Scheduled time passed while dms wasn't running.
+						// Scheduled time passed while the service was not running.
 						s.nextFire = now.Add(catchUpDelay)
 					}
 				}

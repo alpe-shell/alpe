@@ -209,7 +209,7 @@ func runDoctor(cmd *cobra.Command, args []string) {
 	results := slices.Concat(
 		checkSystemInfo(),
 		versions,
-		checkDMSInstallation(),
+		checkShellInstallation(),
 		checkWindowManagers(qsVersion),
 		qsFeatures,
 		checkOptionalDependencies(),
@@ -332,11 +332,11 @@ func checkEnvVar(name string) []checkResult {
 }
 
 func checkXDGMenuPrefix() []checkResult {
-	shellUnderSystemd := dmsServiceState().active == "active"
+	shellUnderSystemd := shellServiceState().active == "active"
 	return xdgMenuPrefixResult(os.Getenv("XDG_MENU_PREFIX"), shellUnderSystemd, sessionEnvValue)
 }
 
-// Compositor environment blocks never reach dms.service or anything DMS launches.
+// Compositor environment blocks never reach alpe.service or anything Alpe launches.
 func xdgMenuPrefixResult(menuPrefix string, shellUnderSystemd bool, sessionEnv func(string) string) []checkResult {
 	url := ""
 	if menuPrefix != "" {
@@ -390,7 +390,7 @@ var qtQueryBinaries = []struct{ bin, flag string }{
 }
 
 // checkQtengineConfig reports whether qtengine's config points Qt apps at the
-// DMS color scheme, which DMS writes there when it generates a theme.
+// Alpe color scheme, which Alpe writes there when it generates a theme.
 func checkQtengineConfig() []checkResult {
 	url := ""
 	path := matugen.QtengineConfigPath()
@@ -459,7 +459,7 @@ func checkQtPlatformThemePlugin(varName string) []checkResult {
 }
 
 // qtPlatformThemeMajors lists the Qt majors whose plugin a variable's value
-// must provide. DMS themes Qt6 through these variables and qt5ct is the Qt5
+// must provide. Alpe themes Qt6 through these variables and qt5ct is the Qt5
 // counterpart. qtengine ships both, and Qt5 reads only QT_QPA_PLATFORMTHEME, so
 // its Qt5 plugin is checked there when a Qt5 build tool can be asked.
 func qtPlatformThemeMajors(varName, value string, roots map[string]qtInstall) []string {
@@ -666,14 +666,14 @@ func checkXDGMenuFile(prefix string) bool {
 }
 
 func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver string) {
-	dmsCliPath, _ := os.Executable()
-	dmsCliDetails := ""
+	cliPath, _ := os.Executable()
+	cliDetails := ""
 	if doctorVerbose {
-		dmsCliDetails = dmsCliPath
+		cliDetails = cliPath
 	}
 
 	results = []checkResult{
-		{catVersions, brand.Binary, statusOK, formatVersion(Version), dmsCliDetails, ""},
+		{catVersions, brand.Binary, statusOK, formatVersion(Version), cliDetails, ""},
 	}
 
 	qsVersion, qsStatus, qsPath, qsDetails, qsSemver := getQuickshellVersionInfo(qsMissingFeatures)
@@ -749,7 +749,7 @@ func quickshellVersionFailureDetails(stderr string) string {
 	return "Run 'qs --version' to inspect the failure."
 }
 
-func checkDMSInstallation() []checkResult {
+func checkShellInstallation() []checkResult {
 	var results []checkResult
 
 	shellConfigPath := resolveDoctorShellPath()
@@ -1342,14 +1342,14 @@ func checkAdwGtk3() checkResult {
 func checkConfigurationFiles() []checkResult {
 	configDir, _ := os.UserConfigDir()
 	cacheDir, _ := os.UserCacheDir()
-	dmsDir := brand.DirName
+	appDir := brand.DirName
 
 	configFiles := []struct{ name, path string }{
-		{"settings.json", filepath.Join(configDir, dmsDir, "settings.json")},
-		{"clsettings.json", filepath.Join(configDir, dmsDir, "clsettings.json")},
-		{"plugin_settings.json", filepath.Join(configDir, dmsDir, "plugin_settings.json")},
-		{"session.json", filepath.Join(utils.XDGStateHome(), dmsDir, "session.json")},
-		{"colors.json", filepath.Join(cacheDir, dmsDir, "colors.json")},
+		{"settings.json", filepath.Join(configDir, appDir, "settings.json")},
+		{"clsettings.json", filepath.Join(configDir, appDir, "clsettings.json")},
+		{"plugin_settings.json", filepath.Join(configDir, appDir, "plugin_settings.json")},
+		{"session.json", filepath.Join(utils.XDGStateHome(), appDir, "session.json")},
+		{"colors.json", filepath.Join(cacheDir, appDir, "colors.json")},
 	}
 
 	var results []checkResult
@@ -1383,27 +1383,27 @@ func checkSystemdServices() []checkResult {
 
 	var results []checkResult
 
-	dmsState := dmsServiceState()
+	appState := shellServiceState()
 	wanted := config.SessionWanted()
-	if !dmsState.exists {
+	if !appState.exists {
 		results = append(results, checkResult{catServices, brand.Unit, statusInfo, "Not installed", "Optional user service", ""})
 	} else {
-		status, message := statusOK, dmsState.enabled
-		if dmsState.active != "" {
-			message = fmt.Sprintf("%s, %s", dmsState.enabled, dmsState.active)
+		status, message := statusOK, appState.enabled
+		if appState.active != "" {
+			message = fmt.Sprintf("%s, %s", appState.enabled, appState.active)
 		}
 		switch {
-		case dmsState.active == "failed":
+		case appState.active == "failed":
 			status = statusError
-		case dmsState.active == "active":
-		case dmsState.enabled == "disabled" && len(wanted) > 0:
+		case appState.active == "active":
+		case appState.enabled == "disabled" && len(wanted) > 0:
 			message = "Started with " + strings.Join(wanted, ", ")
-			if dmsState.active != "" {
-				message += ", " + dmsState.active
+			if appState.active != "" {
+				message += ", " + appState.active
 			}
-		case dmsState.enabled == "disabled":
+		case appState.enabled == "disabled":
 			status, message = statusWarn, "Disabled"
-		case dmsState.active == "inactive":
+		case appState.active == "inactive":
 			status = statusError
 		}
 		details := ""
@@ -1418,7 +1418,7 @@ func checkSystemdServices() []checkResult {
 		results = append(results, checkResult{catServices, brand.Unit, status, message, details, ""})
 	}
 
-	if dmsState.exists && dmsState.enabled == "enabled" {
+	if appState.exists && appState.enabled == "enabled" {
 		gsState := getServiceState("graphical-session.target", true)
 		if gsState.exists && gsState.active != "active" {
 			results = append(results, checkResult{catServices, "graphical-session.target", statusWarn, "Inactive", "Compositor session never activated it, so alpe.service cannot autostart. On Hyprland, hyprland-session.target must exist and be started by the compositor.", ""})
@@ -1452,7 +1452,7 @@ type serviceState struct {
 	active  string
 }
 
-var dmsServiceState = sync.OnceValue(func() serviceState { return getServiceState(brand.Unit, true) })
+var shellServiceState = sync.OnceValue(func() serviceState { return getServiceState(brand.Unit, true) })
 
 func getServiceState(name string, userService bool) serviceState {
 	args := []string{"is-enabled", name}

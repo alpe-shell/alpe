@@ -17,7 +17,7 @@ var backupCmd = &cobra.Command{
 
 var backupCreateCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Create a tar.gz backup of ~/.config/dms (settings, plugins, themes)",
+	Short: "Create a tar.gz backup of ~/.config/alpe (settings, plugins, themes)",
 	Args:  cobra.NoArgs,
 	Run:   runBackupCreate,
 }
@@ -30,7 +30,7 @@ var backupRestoreCmd = &cobra.Command{
 }
 
 func init() {
-	backupCreateCmd.Flags().StringVarP(&backupOutputPath, "output", "o", "", "Output archive path (default dms-backup-<timestamp>.tar.gz)")
+	backupCreateCmd.Flags().StringVarP(&backupOutputPath, "output", "o", "", "Output archive path (default alpe-backup-<timestamp>.tar.gz)")
 	backupCmd.AddCommand(backupCreateCmd, backupRestoreCmd)
 	rootCmd.AddCommand(backupCmd)
 }

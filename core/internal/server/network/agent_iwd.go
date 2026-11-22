@@ -14,7 +14,7 @@ const (
 	iwdAgentManagerPath  = "/net/connman/iwd"
 	iwdAgentManagerIface = "net.connman.iwd.AgentManager"
 	iwdAgentInterface    = "net.connman.iwd.Agent"
-	iwdAgentObjectPath   = "/com/danklinux/iwdagent"
+	iwdAgentObjectPath   = "/io/github/alpe_shell/Alpe/iwdagent"
 )
 
 type ConnectionStateChecker interface {

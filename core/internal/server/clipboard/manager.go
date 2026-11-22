@@ -1244,7 +1244,7 @@ var (
 )
 
 // A disabled manager still serves copy requests; failing here lets callers
-// such as dms screenshot fall back to their own copy.
+// such as alpe-dienst screenshot fall back to their own copy.
 func (m *Manager) canTakeSelection() bool {
 	return m.deviceBound.Load() && !m.getConfig().Disabled
 }

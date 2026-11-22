@@ -10,7 +10,7 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/log"
 )
 
-const dmsSessionRestartExitCode = 75 // EX_TEMPFAIL
+const sessionRestartExitCode = 75 // EX_TEMPFAIL
 
 // Plan 6.8: alpe-dienst startet, stoppt oder startet nie eine systemd-Unit neu. Den bewussten
 // Neustart von alpe.service übernimmt allein die CLI «alpe restart».
