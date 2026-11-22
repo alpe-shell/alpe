@@ -203,7 +203,7 @@ nur «nicht gefunden».)
 
 ## Nach D4–D6: Fragen zum Halt
 
-1. **Kennungen der eingebauten Starter-Plugins** `dms_settings`, `dms_notepad`, `dms_sysmon`,
+1. ~~**Kennungen der eingebauten Starter-Plugins**~~ → D7.5 (Plan 0.8). **Kennungen der eingebauten Starter-Plugins** `dms_settings`, `dms_notepad`, `dms_sysmon`,
    `dms_colorpicker`, `dms_settings_search`, `dms_clipboard_search`, `dms_power`,
    `dms_qr_generator`, `dms_vpn` (≈50 Stellen; gespeichert in `builtInPluginSettings`,
    `launcherPluginVisibility`, `launcherPluginOrder`, Session `builtInPluginState`, Starter-
@@ -214,7 +214,7 @@ nur «nicht gefunden».)
    (`DCommon/Widgets/DLogoShape.js`). **Vorschlag:** Form durch das Alpe-Zeichen ersetzen
    (Kurven aus `alpe-zeichen.svg`), Bezeichnung «Alpe»; der gespeicherte Wert `"dank"` bleibt
    intern. Alternative: Vorlage entfernen (Vorgabe wird «bloom», Migration nötig).
-3. **Logo-Modus `"dank"`** (Starter-Knopf, Apps-Dock, Dot: `launcherLogoMode`,
+3. ~~**Logo-Modus `"dank"`**~~ → D7.5 (Plan 0.8). **Logo-Modus `"dank"`** (Starter-Knopf, Apps-Dock, Dot: `launcherLogoMode`,
    `islandFreeIconMode`): zeigt seit 1.0 das Alpe-Zeichen, der Wert ist nicht sichtbar, liegt
    aber verschachtelt in Leisten-/Dock-Konfigurationen. **Vorschlag:** Ausnahmeliste, Phase C.
 4. **Webdienste des Ursprungs** (`Common/Site.qml`, `duxlabs.dev`): Doku-Link auf der
@@ -240,6 +240,27 @@ Dazu, ohne Frage: Die deutschen Kataloge hatten «ß» (ersetzt), Importreihenfo
 seit D3 (`bca3795`, Import von `internal/brand`) nicht gofmt-sauber (kosmetisch, vor G1), `Theme.qml` kennt die Kategorie «registry»
 weiter (unverändert seit C4).
 
+## Vor D7: Fragen (Plan 0.8, 2.3)
+
+Freigabe von Plan 2.3 (Zuordnung 2.3.2, Commits 2.3.5) und dazu:
+
+1. **claudeCodeUsage** (PC, MIT, Nicolas Bellamy) steht nicht in 0.8, benutzt aber `DankTextField`,
+   `DankIcon`, `DankButton` und lädt nach D7.8 nicht mehr. Die Lizenz erlaubt die Aufnahme.
+   **Vorschlag:** wie die anderen behandeln, also ins Repo.
+2. **calculator ist AGPL-3.0.** Aufnahme erlaubt, aber Alpe liefert dann einen AGPL-Teil mit
+   (eigener Ordner mit LICENSE, Vermerk in NOTICE und im Paket; Änderungen bleiben AGPL, der
+   Quelltext liegt ohnehin offen). Der Rest von Alpe bleibt MIT. Einverstanden, oder lieber
+   Anleitung für die lokale Kopie?
+3. **sathiAi:** README nennt MIT, die LICENSE-Datei fehlt, das Quell-Repo habe ich nicht gefunden
+   (das Plugin-Register des Ursprungs ist umgezogen). Kennst du die Repo-URL? Mit belegter
+   Lizenz kommt es ins Repo, sonst bekommst du eine Anleitung.
+4. **hueManager** hat keine Lizenz (Repo geprüft, laut README nicht mehr gepflegt): nicht ins Repo,
+   Anleitung in D7.2.
+5. **Namen** in Plan 2.3.2, vor allem `ShellBackend` (statt `DMSService`), Seiten-ID `dash`
+   (statt `dank_dash`), `alpe_*` für die Starter-Plugins, `palette16` für `dank16` – passt das?
+6. Frage 2 zum Halt D6 (Material-Vorlage «Dank»: Alpe-Zeichen als Form oder Vorlage entfernen)
+   bestimmt D7.5 mit.
+
 ## Hyprland: `hyprctl descriptions` (nach Phase A)
 
 Unter Hyprland 0.57.2 meldet `HyprlandService.qml:257` `hyprctl descriptions parse failed:
@@ -248,7 +269,7 @@ nicht durch Phase A verursacht. Folge: `hyprOptionNames` bleibt leer; die Layout
 Erzeugung läuft trotzdem weiter. Vermutung: Hyprland 0.57 liefert für `hyprctl -j descriptions`
 kein gültiges JSON (oder Text vor dem JSON). Nicht in Phase A beheben (Plan 0.6 Nr. 3).
 
-## Plugin-Kompatibilität (entschieden, Plan 0.7 Nr. 3)
+## Plugin-Kompatibilität (0.7 Nr. 3, **ersetzt durch Plan 0.8**: keine Weiterleitungen, D7)
 
 Fremde Plugins: am Mac hueManager, calculator; am PC sathiAi, claudeCodeUsage (am PC am
 21.11. dazugekommen). Was sie vom Ursprung benutzen (am PC gelesen):
@@ -265,7 +286,7 @@ Fremde Plugins: am Mac hueManager, calculator; am PC sathiAi, claudeCodeUsage (a
 
 (`DankRectangle` in sathiAi ist eine eigene Datei des Plugins, kein Shell-Typ.)
 
-**Vorschlag (am 22.11.2026 angenommen; D7 entfällt, interne Namen auf die Ausnahmeliste):** Kompatibilität gezielt behalten, wo sie nichts kostet, sonst bewusst brechen.
+**Nach Halt D6 verworfen (Plan 0.8):** Weiterleitungen und `requires_dms` entfallen in D7, fremde Plugins werden angepasst (Plan 2.3.4). Kein `/usr/bin/dms` bleibt. Früherer Vorschlag, nur noch zur Nachvollziehbarkeit:
 
 1. **`Dank*`-Widgets behalten** (40 kleine Weiterleitungen, kein eigener Code). Sie stehen als
    «Plugin-Schnittstelle» auf der Ausnahmeliste der Namensprüfung; D7 fasst sie nicht an.
