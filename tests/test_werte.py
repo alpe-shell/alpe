@@ -132,6 +132,9 @@ for wurzel, _verzeichnisse, dateien in os.walk(core):
         if datei.endswith(".go") and not datei.endswith("_test.go") and os.sep + "mocks" not in wurzel:
             raeume += [(datei, m) for m in re.findall(r'GetLayerSurface\(\s*[^,]+,\s*[^,]+,\s*[^,]+,\s*"([^"]*)"', read(wurzel, datei))]
 check(len(raeume) >= 2, "Dienst: Layer-Flächen gefunden (%d)" % len(raeume))
+# Plan 0.8 Nr. 75: Die Pipette des Dienstes heisst alpe:eyedropper, klar verschieden vom Modal alpe:color-picker.
+check(sorted(r for _d, r in raeume) == ["alpe:eyedropper", "alpe:screenshot"], "Dienst: Layer alpe:eyedropper und alpe:screenshot: " + str(raeume))
+check('layerNamespace: "alpe:color-picker"' in read(SHELL, "Modals", "ColorPickerModal.qml"), "Oberfläche: das Farbwähler-Modal behält alpe:color-picker")
 for wurzel, _verzeichnisse, dateien in os.walk(SHELL):
     for datei in dateien:
         if datei.endswith(".qml"):
