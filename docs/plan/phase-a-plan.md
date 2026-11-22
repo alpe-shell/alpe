@@ -8,7 +8,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 
 ---
 
-## Stand (22.11.2026, Halt nach D7 abgenommen, vorbehaltlich Mac-Test; Vorlage 6.7 liegt zur Entscheidung vor)
+## Stand (23.11.2026, Halt nach D7 abgenommen, vorbehaltlich Mac-Test; 6.7 vollständig entschieden)
 
 ### Erledigt
 
@@ -299,17 +299,67 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   - **Dock (Frist jetzt vor E1):** Gegenprobe mit vier Anheftungen im Temp-HOME, Bild angesehen:
     Mit Anheftungen gerundete dunkle Dock-Fläche um alle Symbole, der Papierkorb darin weiterhin
     auf schwarzem Quadrat. Also: Das Quadrat gehört zum Papierkorb-Symbol und ist keine Folge von
-    `dockPins`; ohne Anheftungen fehlt aber die Dock-Fläche ganz, darum sieht ein neuer Nutzer nur
-    den Papierkorb auf dem Quadrat. Beides nicht behoben (`offene-faelle.md`, «Ladeprüfung»).
+    `dockPins`; ~~ohne Anheftungen fehlt aber die Dock-Fläche ganz~~ **berichtigt am 23.11.2026:
+    Die Fläche ist auch ohne Anheftungen da** (klein, gerundet, auf dem dunklen Hintergrund fast
+    unsichtbar; siehe unten). Nicht behoben (`offene-faelle.md`, «Ladeprüfung»).
   - `56fcedd` und `016d986` je auf dem Commit im Temp-Worktree mit `tools/test.sh` grün (32 Schritte).
-- **E1 beginnt erst** nach dem Entscheid zu 6.7 (offen: Fragen 1 und 2) **und** dem Ergebnis des
-  Mac-Tests (0.8 Nr. 6); davor ist ausserdem das Dock zu beheben.
-  Bis dahin offen beim Maintainer: Mac-Test, Entscheid 6.7 (Fragen 1 und 2), Entscheid zur
-  Geschichte mit den persönlichen Pfaden, Durchsicht der beiden Übersetzungslisten. Kein Schritt
-  wurde wegen fehlender Freigabe übersprungen; von E1 ist nichts begonnen.
-- **Angehalten (22.11.2026, nachts).** `1d91c2b`, `554fd44`, `e9c62c1`, `56fcedd`, `016d986` je
-  auf dem Commit im Temp-Worktree mit `tools/test.sh` grün (32 Schritte); keine Läufe und keine
-  Scopes der Ladeprüfung mehr offen; Worktrees: nur der Arbeitsbaum und `wt-alt`.
+- **6.7 ist vollständig entschieden (0.8 Nr. 86):** Variante A; eigene `hyprlock.conf` einmal
+  übernehmen (F1); `layout.js` neutral (`56fcedd`, bestätigt); Version des Sperrpakets mit E1.
+  **Die Geschichte wird nicht umgeschrieben** (0.8 Nr. 87), Behebung nur nach vorne.
+- **E1 beginnt erst** nach dem Ergebnis des Mac-Tests (0.8 Nr. 6); davor ist ausserdem der
+  Entscheid zum Dock nötig (0.8 Nr. 89).
+  Offen beim Maintainer: Mac-Test, Entscheid zum Papierkorb-Symbol und zum Dock ohne Anheftungen
+  (Möglichkeiten in `offene-faelle.md`, «Ladeprüfung»), Durchsicht der beiden Übersetzungslisten.
+  Kein Schritt wurde wegen fehlender Freigabe übersprungen; von E1 ist nichts begonnen.
+- **Nachprüfungen vom 23.11.2026:**
+  - **Patch-Datei:** `shell/0001-Alpe-1.0-Zugerberg.patch` gibt es auf `phase-a` nicht mehr (in
+    `bfc7243` lag sie unter `schichten/`, entfernt in `4a9a1c2` «Schichten aufgelöst»); sie steht
+    in keiner Ausnahmeliste, nichts liest sie. Nichts zu löschen. Nebenbefund: `docs/technik.md`
+    beschreibt noch `tools/upstream.sh` und `schichten/*.patch`, die es nicht mehr gibt (Doku, 8.).
+  - **Werteprüfung (0.8 Nr. 88):** `16ff71d` Ausnahmen je Datei, Art und erwartetem Wert in
+    `tools/werte-ausnahmen.txt` (24 Einträge: 20 dauerhaft, 2 «Phase B», je 1 «Umzug-Ende» und
+    «G1»), Suche in `tools/werte-pruefen.py`. **Zwischenfall:** `16ff71d` war mit `tools/test.sh`
+    im Temp-Worktree **rot** – die Liste nennt die ausgenommenen Werte und wurde, einmal
+    versioniert, selbst als Fund gemeldet (im Arbeitsbaum war sie noch unversioniert und darum
+    grün). Behoben nach vorne in `d96b0ae` (die Liste wird nicht durchsucht), grün. Nur lokal.
+    **Gegenproben** (Temp-Worktrees, wieder entfernt): `bfc7243` 49 Funde in 15 Dateien, darunter
+    je 8 Pfade in `layout.js` und `schichten/0001-Alpe-1.0-Zugerberg.patch`; `v1.0` 25 Funde in
+    8 Dateien, darunter 8 Pfade in `shell/0001-Alpe-1.0-Zugerberg.patch`. `~/alpe-plugins` (nur
+    gelesen): 19 Dateien, kein Fund. Die erfundene `pciId` in den Umzugs-Testdaten hat das Format der echten
+    (zweimal vier Hex-Stellen); der Umzug wertet den Wert nicht aus, die Shell vergleicht ihn nur
+    auf Gleichheit mit der Kennung, die der Dienst meldet.
+  - **`wt-alt`:** `/tmp/claude-1000/h7/wt-alt` ist ein Git-Worktree dieses Repos auf `ba4ddbc`
+    («Plan: Stand nach D7.1, Einstieg D7.2a», der Vergleichsstand vor D7.2), losgelöst; darin
+    unversioniert `entwicklung/lp-offen/`, die heutige Ladeprüfung, mit der die Grundlinien auf
+    dem alten Stand gegengemessen wurden. Bleibt bis nach dem Mac-Test.
+  - **Dock:** Ursachen untersucht, Berichtigung und Möglichkeiten in `offene-faelle.md`,
+    «Ladeprüfung»: Das schwarze Quadrat ist das Papierkorb-Symbol aus dem Ersatzthema Adwaita, das
+    Qt 6.12 mit schwarzem Grund rendert (kein Fehler im Code von Alpe, 1.0 gleich; das Design
+    nennt das Symbolthema kora, das niemand mitliefert); **die Dock-Fläche fehlt ohne
+    Anheftungen nicht** – die Angabe vom 22.11.2026 war falsch. Nichts behoben, Entscheid offen.
+- **Haltprüfung auf dem Endstand `d96b0ae` (23.11.2026):** Ladeprüfung, je 1 Lauf, alle gültig
+  (`Connected`, Exit 0, 143–151 s): Hyprland «gesperrt» 39 gleich (von 41 Einträgen, 2
+  `SPORADISCH`, keine gesehen), Hyprland «offen» 39 gleich (von 40, 1 `SPORADISCH`), KWin
+  «gesperrt» 39 von 39, KWin «offen» 38 von 38 – **nirgends etwas neu oder weg.** Gegenprobe mit
+  stummem Systembus unter KWin bestanden (263 s, verbunden, Ausfall einmal gemeldet). qmllint
+  4900 gegen 4902, nichts neu (dieselben zwei weg). `go vet ./...` ohne Meldung.
+  **Bild «offen» unter Hyprland:** wie am 22.11.2026 ohne Hinweisbalken – Leiste, Material-Vorlage
+  mit Alpe-Zeichen, unten der Papierkorb auf schwarzem Quadrat in der kleinen Dock-Fläche.
+  **Sperrbildschirm mit der neuen `layout.js`** (Bild unter Hyprland, Variante «gesperrt», aus
+  einem Temp-Worktree mit aufgehobener Sperre für `--bild`): unscharfes Bergbild als Hintergrund,
+  in der Mitte die Uhr in zwei Zeilen (Stunde über Minute, Alfa Slab One), darunter «Montag,
+  23. November» und das Passwortfeld; keine leeren Bildstellen. **Unter KWin gibt es kein Bild:**
+  `alpe-dienst screenshot full` meldet dort `compositor does not support
+  wlr-screencopy-unstable-v1` (im virtuellen `kwin_wayland`; offener Fall in `offene-faelle.md`).
+  Der Lauf «gesperrt» unter KWin lädt die Sperre mit der neuen Vorlage ohne neue Meldung.
+- **Zweiter Zwischenfall (23.11.2026):** Der Plan-Commit `f5a5256` war ebenfalls **rot** – der
+  «Stand» zitierte die erfundene Gerätekennung der Testdaten, und die Werteprüfung meldete sie
+  (so soll sie arbeiten). Der Fehllauf im Arbeitsbaum blieb unbemerkt, weil die Ausgabe durch
+  `tail` lief und dessen Rückgabewert galt. Behoben nach vorne im folgenden Commit. Nur lokal.
+- **Angehalten (23.11.2026).** `1d91c2b`, `554fd44`, `e9c62c1`, `56fcedd`, `016d986`, `669d08f`,
+  `d96b0ae` je auf dem Commit im Temp-Worktree mit `tools/test.sh` grün (32 Schritte), `16ff71d`
+  und `f5a5256` rot (siehe oben); keine Läufe und keine Scopes der Ladeprüfung mehr offen; Worktrees: nur der
+  Arbeitsbaum und `wt-alt`.
 
 ---
 
@@ -583,6 +633,10 @@ Entscheide nach D7.7b (22.11.2026):
 | 83 | **Einspielen filtert die Session wie der Export** (Entscheid 22.11.2026, ergänzt Nr. 79): `tools/design.py` wendet die feste Liste `SESSION_GESTALTUNG` auch beim Einspielen an. Zustandswerte aus einem Design (etwa Anheftungen aus älteren Designs) werden nicht übernommen. Mit Test. Eigener Commit, **nach der Behebung im Dienst**; danach die Neumessung der Grundlinien wie geplant (Nr. 80). |
 | 84 | **Plan `docs/plan/dienst-systembus.md` freigegeben wie vorgeschlagen** (22.11.2026): NetworkManager-Backend erst, wenn die Verbindung steht, kein Patch von `gonetworkmanager`; 3 s für den Aufbau, erneute Versuche ab 2 s verdoppelnd bis 60 s, ohne Ende; Abriss der Verbindung im Betrieb bleibt draussen (offener Fall). **Gegenprobe mit stummem Systembus** in der Ladeprüfung (Schalter `ALPE_LP_STUMMER_BUS=1`): läuft einmal nach der Behebung unter beiden Compositors, **danach nur bei Bedarf, nicht bei jedem Halt** (Prüfregel 0.7 Nr. 6 nachgeführt). Reihenfolge: Behebung im Dienst, Commit zum Einspielen (Nr. 83), Neumessung der Grundlinien. |
 | 85 | **Gegenprobe mit stummem Systembus bei jedem Halt** (Entscheid 22.11.2026, ersetzt in Nr. 84 «danach nur bei Bedarf, nicht bei jedem Halt»): Sie läuft bei jedem Halt einmal mit, unter einem Compositor. Grund: Der Go-Test prüft nur die Bausteine; eine Rückkehr des Fehlers in der Startreihenfolge des Dienstes bliebe sonst unbemerkt. Prüfregel 0.7 Nr. 6 und `CLAUDE.md` nachgeführt. **Für G1 vermerkt:** `CHANGELOG.md`, Abschnitt 1.1, Eintrag zur Behebung «Dienst hing bei stummem Systembus, Oberfläche verband sich nie». |
+| 86 | **6.7 vollständig entschieden** (22./23.11.2026, Vorlage `docs/plan/sperrbildschirm-dateien.md`). **Frage 1: Variante A** – das Systempaket des KDE-Sperrbildschirms (`/usr/share/plasma/shells/org.alpe.desktop`) bleibt unverändert, Eigenes steht in `kscreenlockerrc`, unter `~/.local/share/plasma/shells` liegt nichts mehr von Alpe. **Frage 2:** Eine vorhandene eigene `~/.config/alpe/hyprlock.conf` wird einmal übernommen (wenn `Layout` leer ist), danach nicht mehr gelesen; Umsetzung in F1. **Frage 3:** `layout.js` sofort aus der neutralen Vorlage – mit `56fcedd` erledigt und nachträglich bestätigt; die Prüfung auf persönliche Werte gilt für das ganze Repo (Nr. 88). **Frage 4:** Die Version in `metadata.json` des Sperrpakets wird beim Paketbau aus derselben Quelle wie `Brand.version` gesetzt; Umsetzung mit E1. |
+| 87 | **Geschichte wird nicht umgeschrieben** (23.11.2026): weder `phase-a` noch `main` noch `v1.0`. Die persönlichen Pfade, die dort stehen (`layout.js` ab `bfc7243` auf `phase-a`; `shell/0001-Alpe-1.0-Zugerberg.patch` und fünf weitere Dateien in `v1.0`/`main`), bleiben in der Geschichte; **Behebung nur nach vorne.** |
+| 88 | **Prüfung auf persönliche Werte im ganzen Repo** (22./23.11.2026): `tests/test_werte.py` durchsucht über `tools/werte-pruefen.py` alle versionierten Textdateien nach Pfaden in ein Home-Verzeichnis, Benutzer- und Rechnernamen, IP- und MAC-Adressen und Gerätekennungen. Ausnahmen in `tools/werte-ausnahmen.txt`, aufgebaut wie `tools/namen-ausnahmen.txt`: je Datei, Art und **erwartetem Wert**, dauerhafte mit Begründung, vorübergehende mit Frist; ein neuer Fund in derselben Datei schlägt an, eine Ausnahme ohne Fund gilt als überholt. |
+| 89 | **Dock ohne angeheftete Programme: Frist vor E1** statt vor G1 (22.11.2026), weil es das Erste ist, was ein neuer Nutzer sieht. Ursachen untersucht am 23.11.2026 (`offene-faelle.md`, «Ladeprüfung»); über die Behebung entscheidet der Maintainer. |
 
 Ausgabedateien für Fremdprogramme (0.8 Nr. 48). Basis: `~/.config`, sofern nichts anderes steht.
 
@@ -1219,7 +1273,11 @@ absolutem Pfad); nutzerspezifisch ist dort allein `layout.js`, und nur mit einer
 `~/.config/alpe/hyprlock.conf`. **Entschieden (22.11.2026):** Frage 4 – die Version in
 `metadata.json` des Sperrpakets wird beim Paketbau aus derselben Quelle wie `Brand.version`
 gesetzt, umgesetzt mit E1; Frage 3 – neutrale `layout.js` und Prüfung des ganzen Repos sind
-erledigt (`56fcedd`, `016d986`). Offen: Fragen 1 und 2.
+erledigt (`56fcedd`, `016d986`). **Vollständig entschieden am 23.11.2026 (0.8 Nr. 86): Frage 1
+Variante A** (Systempaket unverändert, Eigenes in `kscreenlockerrc`, nichts mehr unter
+`~/.local/share/plasma/shells`); **Frage 2:** eine vorhandene eigene `hyprlock.conf` wird einmal
+übernommen, Umsetzung in F1. Aufteilung: Zusammenbau des Pakets und Version in E1,
+`lockscreen.sh`/`AlpeLockTab.qml`/`entfernen` in E4, Übernahme im Umzug in F1 (7.2 Nr. 5).
 
 ### 6.8 `alpe-dienst` startet nie eine systemd-Unit (D1)
 

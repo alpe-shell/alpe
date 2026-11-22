@@ -1,7 +1,9 @@
 # Vorlage 6.7 – Sperrbildschirm unter KDE: wo nutzerspezifische Dateien liegen
 
-Stand: 22.11.2026. **Zur Entscheidung vorgelegt, nicht freigegeben.** Vor E1 zu entscheiden
-(Plan 0.8 Nr. 6); bis dahin wird nichts davon umgesetzt. Vier Fragen am Ende.
+Stand: 23.11.2026. **Entschieden (Plan 0.8 Nr. 86, 87): Variante A;** eine eigene `hyprlock.conf`
+wird einmal übernommen (F1); `layout.js` ist neutral neu erzeugt; die Version des Sperrpakets
+kommt mit E1 aus derselben Quelle wie `Brand.version`; die Geschichte wird nicht umgeschrieben.
+Der Text unten ist die Vorlage, wie sie vorgelegt wurde, mit Vermerken zu den Entscheiden.
 
 Betrifft nur den PC-Weg (KWin, `kscreenlocker_greet`). Unter Hyprland sperrt hyprlock mit
 `~/.config/hypr/hyprlock.conf`; daran ändert die Vorlage nichts.
@@ -75,8 +77,15 @@ durchsucht seit `016d986` das ganze Repo.
   mit Platzhalternamen: `entwicklung/lint.sh`, `entwicklung/pageharness/td2.qml`, `th.qml`,
   `tl2.qml`, `entwicklung/sportharness/fixtures/match-nba-31.json`.
 
-Ein Umschreiben nur von `phase-a` entfernte die Pfade also nicht aus dem Veröffentlichten. Über
-die Geschichte entscheidet der Maintainer; hier ist nichts umgeschrieben.
+Ein Umschreiben nur von `phase-a` entfernte die Pfade also nicht aus dem Veröffentlichten.
+**Entschieden (23.11.2026, Plan 0.8 Nr. 87): Es wird nichts umgeschrieben,** weder `phase-a` noch
+`main` noch `v1.0`; Behebung nur nach vorne. Auf `phase-a` gibt es die Patch-Datei nicht mehr
+(entfernt in `4a9a1c2`, «Schichten aufgelöst»; dort lag sie unter `schichten/`), nichts liest sie.
+
+Zur Zählung: Die alte `layout.js` (`bfc7243`) hatte **acht** Pfade – Zeile 10 das Hintergrundbild
+(`background.path`), Zeilen 32, 56, 80, 104, 128, 152 die **sechs** Bild-Elemente (`type: image`),
+Zeile 292 den Quellpfad. «Sieben Bildpfade» sind Hintergrund plus sechs Elemente; die neutrale
+Vorlage hat weder Hintergrundbild noch Bild-Elemente.
 
 ## 3. Varianten
 
@@ -147,8 +156,10 @@ eigene `hyprlock.conf`.
 
 ## 5. Fragen
 
-**Stand 22.11.2026:** Frage 3 ist erledigt (siehe Abschnitt 2), Frage 4 entschieden: ja, beim
-Paketbau aus derselben Quelle wie `Brand.version`, umgesetzt mit E1. Offen sind 1 und 2.
+**Alle vier beantwortet (23.11.2026):** 1 – Variante A. 2 – (a), einmal übernehmen, Umsetzung
+in F1. 3 – ja, sofort; erledigt mit `56fcedd` (siehe Abschnitt 2), Prüfung des ganzen Repos in
+`016d986`/`16ff71d`/`d96b0ae`. 4 – ja, beim Paketbau aus derselben Quelle wie `Brand.version`,
+umgesetzt mit E1.
 
 1. **Variante A oder B?** (Empfehlung: A.)
 2. **Eigene `~/.config/alpe/hyprlock.conf` bei A:** (a) einmal übernehmen, wenn `Layout` leer ist,

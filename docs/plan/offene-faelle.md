@@ -211,9 +211,10 @@ Neu seit D6 – bitte gezielt ansehen:
   dazuschreiben. Findet das Thema das Symbol nicht, zeichnet `DockTrashButton.qml` ersatzweise
   ein Schriftsymbol (`delete`) – auch das ist kein Quadrat. Am PC zeigt das Bild der Ladeprüfung
   (verschachteltes Hyprland, 22.11.2026) das richtige Symbol, aber auf einem schwarzen Quadrat,
-  mit und ohne Anheftungen; ohne Anheftungen fehlt zudem die Dock-Fläche – siehe «Ladeprüfung»
-  unten. Am Mac beides festhalten: Quadrat hinter dem Papierkorb ja/nein, Dock-Fläche ohne
-  Anheftungen ja/nein.
+  mit und ohne Anheftungen. Ursache ist das Symbol aus dem Ersatzthema Adwaita, das Qt mit
+  schwarzem Grund rendert – siehe «Ladeprüfung» unten; am Mac ist Adwaita die Vorgabe von
+  Fedora. Am Mac festhalten: Quadrat hinter dem Papierkorb ja/nein, eingestelltes Symbolthema,
+  und wie das kleine Dock nur mit dem Papierkorb wirkt.
 - **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
 
 Die Ladeprüfung in den Varianten «gesperrt» und «offen» (Plan 0.8 Nr. 70) läuft nur am PC.
@@ -654,18 +655,61 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   schwarzen, scharfkantigen Quadrat von etwa 68 px. **Gegenprobe (22.11.2026, Stand `016d986`,
   im Temp-HOME vier Programme angeheftet, sonst gleich; Lauf gültig, 39 gleich, nichts neu):** Mit
   Anheftungen zeichnet das Dock eine gerundete, dunkle Fläche um alle Symbole; der Papierkorb
-  sitzt darin weiterhin auf seinem schwarzen Quadrat. Es sind also zwei Dinge:
-  (1) **Das schwarze Quadrat gehört zum Papierkorb-Symbol, nicht zum Dock,** und ist auch mit
-  Anheftungen da – es ist keine Folge des Entfernens von `dockPins`. Die anderen Symbole
-  (Systemeinstellungen, kitty, Konsole, Steam) haben keinen solchen Grund. Ob 1.0 es auch zeigt,
-  ist nicht geprüft (`DockTrashButton.qml` ist seit dem Einverleiben nur in D7.2b angefasst).
-  (2) **Ohne Anheftungen fehlt die Dock-Fläche ganz** (`dockBackground` ist nur sichtbar, wenn
-  `hasApps`, also `widgetStrip.preferredLength > 0`; mit dem Papierkorb allein offenbar nicht).
-  Das ist die Folge von `dockPins` weg: Übrig bleibt der Papierkorb ohne Dock, und damit fällt
-  sein schwarzes Quadrat erst auf. Ursachen beider Punkte nicht untersucht (beim Symbol
-  naheliegend: Bild aus dem Symbolthema ohne Transparenz oder die Darstellung mit `mipmap`
-  unter dem verschachtelten Compositor). Unter KWin gibt es kein Bild; Gegenprobe am Mac steht
-  in der Anleitung für den Stand nach D7.
+  sitzt darin weiterhin auf seinem schwarzen Quadrat. Die Gegenprobe lief unter Hyprland in der
+  Variante «offen» gegen `grundlinie-hyprland-offen.txt` (40 Einträge, davon einer `SPORADISCH`;
+  «39 gleich» sind die 39 festen – die Zahl gleicht nur zufällig den 39 Einträgen von KWin
+  «gesperrt»).
+  **Untersucht am 23.11.2026:**
+  (1) **Schwarzes Quadrat – Ursache gefunden, liegt nicht im Code von Alpe.** Es ist das Symbol
+  selbst: `user-trash.svg` aus `adwaita-icon-theme` 51.0 (128 px, mit `<mask>`, `<filter>` und
+  `<clipPath>`), das Qt 6.12 mit deckend schwarzem Grund rendert. Nachgemessen ausserhalb der
+  Shell (Qt-Bildleser, offscreen, 72 px): alle vier Ecken (0, 0, 0) mit Alpha 255; dieselbe Probe
+  mit `user-trash` aus breeze-dark, Papirus, char-white und AdwaitaLegacy und mit 16 anderen
+  Adwaita-Symbolen: Ecken durchsichtig. Im Bild sind die Ecken des Quadrats ebenfalls (0, 0, 0).
+  **Warum Adwaita:** Das Design setzt `iconThemeDark: "kora"`; kora liefert niemand mit (nur im
+  Home des Maintainers installiert, kein Paket, keine Abhängigkeit, nichts in `get.sh`). Fehlt das
+  Thema, sucht `IconThemeService` nur noch in hicolor und übergibt an `Quickshell.iconPath`, also
+  an das Ersatzthema von Qt – in der Ladeprüfung Adwaita. **1.0 verhält sich gleich:**
+  `DockTrashButton.qml` unterscheidet sich vom Stand 1.0 (`~/dux-shell`, Zweig `alpe`) nur in
+  den Namen `DIcon`/`qs.DCommon.Widgets`; am PC des Maintainers ist das Quadrat nie zu sehen,
+  weil dort kora installiert ist. **Nicht behoben, weil die Behebung eine Wahl ist:** (a) kora aus
+  dem Design nehmen (dann gilt das Thema des Systems, unter KDE breeze) oder kora als
+  Abhängigkeit ausliefern – behebt die Ursache, dass ein neuer Nutzer überhaupt beim Ersatzthema
+  landet, und betrifft alle Symbole, nicht nur den Papierkorb; (b) für den Papierkorb ein eigenes
+  Symbol (Schriftsymbol `delete` wie im heutigen Rückfall, oder ein eigenes SVG) – unabhängig vom
+  Thema, aber nicht mehr im Stil des Themas; (c) nichts tun und auf Qt/Adwaita warten – am Mac
+  (Fedora, Adwaita als Vorgabe) dann voraussichtlich sichtbar. Vorschlag: (a) ohne kora im Design,
+  dazu der Mac-Test als Gegenprobe.
+  (2) **Dock-Fläche ohne Anheftungen – Berichtigung: Sie fehlt nicht.** Die Vergrösserung des
+  Bildes ohne Anheftungen zeigt um den Papierkorb eine gerundete Fläche von rund 100 × 100 px
+  (kaum heller als der Hintergrund daneben, also auf der dunklen Material-Vorlage fast
+  unsichtbar; das Design zeichnet keinen Rand, `borderEnabled: false`, Deckkraft 0,8). Die
+  Angabe vom 22.11.2026, die Fläche fehle ganz, war falsch gelesen; `hasApps`
+  (`widgetStrip.preferredLength > 0`) ist mit dem Papierkorb allein wahr. Ein neuer Nutzer sieht
+  also ein kleines, quadratisches Dock nur mit dem Papierkorb (der Starter im Dock ist im Design
+  aus, `launcherEnabled: false`). **Möglichkeiten, nicht umgesetzt:** (i) so lassen – richtig
+  gezeichnet, wirkt aber wie ein vergessener Rest, bis der Nutzer etwas anheftet oder ein Fenster
+  öffnet (laufende Programme erscheinen im Dock); (ii) Dock ohne Anheftungen und ohne laufende
+  Programme verbergen – ruhiger Schreibtisch, aber der Papierkorb ist dann nur da, wenn
+  Programme laufen, und das Dock «springt» beim ersten Fenster herein; braucht neuen Code in
+  `DockBody.qml` und eine Regel für die reservierte Fläche; (iii) im Design den Starter im Dock
+  einschalten (`launcherEnabled`) – kein neuer Code, das Dock hat dann zwei Einträge und einen
+  erkennbaren Zweck, verdoppelt aber den Starter-Knopf der Leiste, sobald der sichtbar ist;
+  (iv) Vorgabe-Anheftungen, die es auf jedem Rechner gibt – unter KDE etwa Dolphin, Konsole,
+  Systemeinstellungen; unter Hyprland am Mac gibt es keine gemeinsame Auswahl, und das Einspielen
+  übernimmt Anheftungen seit 0.8 Nr. 83 bewusst nicht aus einem Design (bräuchte eine Ausnahme
+  für den ersten Start); (v) Rand oder höhere Deckkraft für das Dock im Design, damit die Fläche
+  erkennbar ist – ändert das Aussehen auch mit Anheftungen.
+  Unter KWin: Bild in der Haltprüfung vom 23.11.2026 (Plan, «Stand»). Gegenprobe am Mac steht in
+  der Anleitung für den Stand nach D7.
+- **Offen (23.11.2026): kein Bild unter KWin.** `alpe-dienst screenshot full` meldet im virtuellen
+  `kwin_wayland` der Ladeprüfung `compositor does not support wlr-screencopy-unstable-v1`; das
+  Bild zum Halt (Plan 0.8 Nr. 71) gibt es darum nur unter Hyprland. Der Lauf selbst bleibt
+  gültig und ohne neue Meldung. Zu klären: ob das Bildschirmfoto des Dienstes unter KWin
+  überhaupt geht (auch auf dem echten Schreibtisch) oder ob die Ladeprüfung dort einen anderen
+  Weg braucht (KWin-Schnittstelle `org.kde.KWin.ScreenShot2`, verlangt eine Freigabe über die
+  Desktop-Datei). Ebenso: `--bild` gibt es nur in der Variante «offen»; ein Bild des
+  Sperrbildschirms brauchte am 23.11.2026 einen Temp-Worktree mit aufgehobener Sperre.
 - **Hinweisbalken von Hyprland in der Ladeprüfung: erledigt (`1d91c2b`).** Die Testkonfiguration
   setzt `misc.disable_watchdog_warning`; das Bild danach zeigt keinen Balken mehr, der Lauf
   gegen die Grundlinie «offen» 39 gleich, nichts neu.
