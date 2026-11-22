@@ -269,12 +269,15 @@ echo "--- bereit" >> {base}/ipc.log
 {calls}
 sleep {ende}
 echo "--- Ende nach Plan" >> {base}/ipc.log
-kill -TERM $pid 2>/dev/null
+kill -{signal} $pid 2>/dev/null
 for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 $pid 2>/dev/null || break; sleep 0.5; done
 kill -KILL $pid 2>/dev/null
 wait $pid
 echo "exit $?" > {base}/dienst.exit
-""".format(dienst=q(dienst), base=q(base), shell=q(SHELL), start=DAUER_START, ende=DAUER_ENDE, calls="\n".join(calls))
+""".format(dienst=q(dienst), base=q(base), shell=q(SHELL), start=DAUER_START, ende=DAUER_ENDE, calls="\n".join(calls),
+           # Diagnose: Mit ALPE_LP_STAPEL=1 beendet das Sitzungsskript den Dienst (sein eigenes Kind) mit QUIT statt
+           # TERM; Go schreibt dann die Stapel aller Goroutinen ins Protokoll. Der Lauf gilt damit nicht als Prüfung.
+           signal="QUIT" if os.environ.get("ALPE_LP_STAPEL") == "1" else "TERM")
 
 
 def logo_mode(shell=None):
