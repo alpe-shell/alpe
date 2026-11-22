@@ -32,7 +32,8 @@ Column {
     width: parent?.width ?? 0
     spacing: 0
 
-    SettingsSearchRegistration {
+    // Als Eigenschaft statt als Kind in `data` (Begründung in SettingsRow.qml).
+    readonly property SettingsSearchRegistration searchRegistration: SettingsSearchRegistration {
         target: root
         settingKey: root.settingKey
     }

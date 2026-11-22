@@ -136,7 +136,10 @@ T.Control {
     height: implicitHeight
     implicitHeight: paddingV * 2 + headerLine.height + (hasBody ? bodySlot.height + (headerLine.height > 0 ? Theme.spacingM : 0) : 0)
 
-    SettingsSearchRegistration {
+    // Als Eigenschaft statt als Kind: Ein Kind hängt Qt über die Liste `data` an die Zeile. Wird die
+    // Zeile abgebaut, während ihre Erzeugung noch läuft (Seitenwechsel in den Einstellungen), findet
+    // Qt `data` nicht mehr und meldet «Cannot find member data». Eine Eigenschaft braucht die Liste nicht.
+    readonly property SettingsSearchRegistration searchRegistration: SettingsSearchRegistration {
         target: root
         settingKey: root.settingKey
     }

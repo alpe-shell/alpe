@@ -93,7 +93,8 @@ Column {
     width: parent?.width ?? 0
     spacing: SettingsMetrics.groupGap
 
-    SettingsSearchRegistration {
+    // Als Eigenschaft statt als Kind in `data` (Begründung in SettingsRow.qml).
+    readonly property SettingsSearchRegistration searchRegistration: SettingsSearchRegistration {
         target: root
         settingKey: root.settingKey
     }

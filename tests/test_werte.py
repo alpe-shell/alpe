@@ -162,5 +162,17 @@ check(not any("Deprecation." in read(ordner, d) for ordner, _dirs, dateien in os
       "nichts in der Oberfläche ruft Deprecation auf")
 check("bash tools/namen-pruefen.sh --streng" in read(REPO, "tools", "test.sh"), "tools/test.sh ruft die Namensprüfung streng auf (D7.8)")
 
+# Halt nach D7: Die Registrierung für die Einstellungssuche hängt als Eigenschaft an Zeile und Karte, nicht als
+# Kind in `data` – sonst meldet Qt beim Abbau einer halb erzeugten Zeile sporadisch «Cannot find member data».
+kinder, eigenschaften = [], 0
+for ordner, _dirs, dateien in os.walk(SHELL):
+    for d in dateien:
+        if d.endswith(".qml"):
+            for zeile in read(ordner, d).splitlines():
+                if re.match(r"\s*SettingsSearchRegistration\s*\{", zeile):
+                    kinder.append(d)
+                eigenschaften += bool(re.match(r"\s*readonly property SettingsSearchRegistration \w+: SettingsSearchRegistration\s*\{", zeile))
+check(kinder == [] and eigenschaften >= 3, "SettingsSearchRegistration nur als Eigenschaft (%d), nie als Kind: %s" % (eigenschaften, kinder))
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

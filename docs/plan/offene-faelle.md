@@ -579,6 +579,16 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   sporadische Meldung beim Abbau der Einstellungsseiten; nicht in der Grundlinie. Möglicher
   nächster Schritt: Registrierung als Eigenschaft statt als Kind in `data` anhängen und über
   viele Läufe vergleichen.
+  **Erledigt – Halt nach D7 (22.11.2026):** In der Variante «offen» unter Hyprland erschien die Meldung auf
+  dem Endstand in 1 von 3 Läufen, auf `ba4ddbc` in 0 von 3. Sie ist kein Fehler aus D7: Der Fund
+  oben auf `d3343e9` liegt 29 Commits vor `ba4ddbc`. Ein `git bisect` zwischen `ba4ddbc` und dem
+  Endstand hätte darum keinen verlässlich «guten» Anfang und wurde nicht gefahren (ein Lauf dauert
+  gut 5 Minuten; bei einer Rate um ein Drittel bräuchte jeder Schritt viele Läufe und bliebe
+  unsicher). Behoben an der Ursache: `SettingsRow`, `SettingsCard` und `IslandHomeLayoutEditor`
+  halten die Registrierung als Eigenschaft (`readonly property SettingsSearchRegistration …`),
+  Qt hängt sie nicht mehr über `data` an. Belegt ist die Behebung durch den Strukturtest in
+  `tests/test_werte.py` (keine Registrierung mehr als Kind); die Messläufe danach stützen sie nur,
+  weil bei einer Rate um ein Drittel wenige Läufe allein nichts beweisen (Plan 0.8 Nr. 76).
 - Seit D3 (`bca3795`) meldet Qt beim Anmelden am Portal `App info not found for
   'io.github.alpe_shell.Alpe'` statt `Connection already associated with an application ID`: Zur
   neuen App-ID gibt es noch keine Desktop-Datei. In beiden Fällen scheitert die Anmeldung, wie
