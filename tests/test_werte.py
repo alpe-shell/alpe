@@ -222,89 +222,36 @@ check(PERSOENLICHE_SCHLUESSEL.search('"weatherLocation": "Ort"') and not PERSOEN
 # im Test (sie wären selbst ein persönlicher Wert), sondern kommen vom Rechner, auf dem er läuft; Allerweltsnamen
 # und Namen unter vier Zeichen werden dabei nicht gesucht. Die strengeren Muster oben (Bildschirmnamen,
 # Koordinaten, E-Mail-Adressen, Schlüssel mit Wert) gelten weiterhin nur für design/.
-import fnmatch
-import pwd
-import socket
-import subprocess
+# Suche und Muster stehen in tools/werte-pruefen.py (läuft auch gegen andere Ordner), die Ausnahmen in
+# tools/werte-ausnahmen.txt: je Datei, Art und erwartetem Wert, mit Frist und Grund.
+import importlib.util
 
-PLATZHALTER = {"u", "x", "me", "user", "nutzer", "test", "name", "benutzer"}          # /home/<Platzhalter>/… ist kein Fund
-ALLERWELTSNAMEN = {"root", "user", "nutzer", "runner", "build", "builder", "mockbuild", "nobody", "claude", "localhost", "archlinux", "fedora", "cachyos"}
-HOME_PFAD = re.compile(r"(?<![\w.-])/(?:home|Users)/([^/\s\"'<>$*{}\\)|`,;:]+)")
-REPO_MUSTER = [
-    ("IP-Adresse", re.compile(r"(?<![\d.\w])(?!127\.|0\.0\.0\.0|255\.)(?:\d{1,3}\.){3}\d{1,3}(?![\d.\w])")),
-    ("MAC-Adresse", re.compile(r"(?<![0-9A-Fa-f:.-])[0-9A-Fa-f]{2}(?:[:-][0-9A-Fa-f]{2}){5}(?![0-9A-Fa-f:-])")),
-    ("Gerätekennung", re.compile(r"(?<![0-9A-Fa-f:\w])[0-9a-f]{4}:[0-9a-f]{4}(?![0-9A-Fa-f:\w])")),
-]
-# Kurze Ausnahmeliste: Muster für Pfade, betroffene Arten ("*" = alle), Begründung.
-REPO_AUSNAHMEN = [
-    ("core/*_test.go", ("IP-Adresse", "MAC-Adresse"), "Testdaten des Dienstes: erfundene Netze und Geräte"),
-    ("shell/tests/*", ("IP-Adresse", "MAC-Adresse", "Gerätekennung"), "Testdaten der Oberfläche: erfundene Geräte"),
-    ("tests/test_werte.py", ("*",), "dieser Test: Proben für die Muster"),
-    ("tests/test_design.py", ("Gerätekennung",), "Probe für den Export-Filter pciId"),
-    ("tests/data/einstellungen-*/settings.json", ("Gerätekennung",), "Umzugs-Testdaten: erfundene pciId 1234:abcd"),
-    ("core/internal/server/network/API.md", ("IP-Adresse",), "Beispielantwort in der Schnittstellen-Doku"),
-    ("core/cmd/alpe-dienst/commands_clipboard.go", ("IP-Adresse",), "Versionsnummer eines Browsers im User-Agent"),
-    ("shell/Modules/ProcessList/Connections.js", ("IP-Adresse",), "Beispiel 1.2.3.4 im Kommentar"),
-    ("docs/technik.md", ("Gerätekennung",), "USB-Modellkennungen eines Headsets (Produkt, kein einzelnes Gerät)"),
-    ("entwicklung/umbenennen/d7-8a-fundstellen.tsv", ("Pfad in ein Home-Verzeichnis",), "Protokoll: nennt den entfernten fremden Pfad"),
-    ("LICENSE", ("Benutzername",), "Urheberzeile"),
-]
-REPO_ENDUNGEN = TEXT_ENDUNGEN + (".py", ".sh", ".js", ".mjs", ".go", ".tsv", ".yml", ".yaml", ".xml", ".desktop", ".service",
-                                 ".spec", ".fish", ".templ", ".mod", ".kvconfig", ".theme", ".html")
-
-
-def ausgenommen(pfad, art):
-    return any(fnmatch.fnmatch(pfad, muster) and ("*" in arten or art in arten) for muster, arten, _grund in REPO_AUSNAHMEN)
-
-
-def eigener_name(name):
-    name = (name or "").split(".")[0]
-    return name if len(name) >= 4 and name.lower() not in ALLERWELTSNAMEN | PLATZHALTER else ""
-
-
-def repo_funde(pfad, text, benutzer="", rechner=""):
-    """Persönliche Werte in einem Text, als Liste «pfad:zeile Art»."""
-    namen = [(art, re.compile(r"(?i)(?<![A-Za-z0-9])%s(?![A-Za-z0-9])" % re.escape(n))) for art, n in (("Benutzername", benutzer), ("Rechnername", rechner)) if n]
-    ergebnis = []
-    for nummer, zeile in enumerate(text.splitlines(), 1):
-        zeile_arten = [("Pfad in ein Home-Verzeichnis", any(m.group(1) not in PLATZHALTER for m in HOME_PFAD.finditer(zeile)))]
-        zeile_arten += [(art, bool(muster.search(zeile))) for art, muster in REPO_MUSTER + namen]
-        ergebnis += ["%s:%d %s" % (pfad, nummer, art) for art, treffer in zeile_arten if treffer and not ausgenommen(pfad, art)]
-    return ergebnis
-
-
-liste = subprocess.run(["git", "-C", REPO, "ls-files", "-z"], capture_output=True)
-if liste.returncode == 0 and liste.stdout:
-    versioniert = [p for p in liste.stdout.decode("utf-8", "replace").split("\0") if p]
-else:   # ohne Git (entpacktes Archiv): alles ausser .git
-    versioniert = [os.path.relpath(os.path.join(o, d), REPO) for o, dirs, ds in os.walk(REPO) for d in ds if ".git" not in o.split(os.sep)]
-benutzer, rechner = eigener_name(pwd.getpwuid(os.getuid()).pw_name), eigener_name(socket.gethostname())
-repo_treffer, repo_gelesen = [], 0
-for pfad in sorted(versioniert):
-    voll = os.path.join(REPO, pfad)
-    if not (pfad.endswith(REPO_ENDUNGEN) or "." not in os.path.basename(pfad)) or not os.path.isfile(voll) or os.path.islink(voll):
-        continue
-    try:
-        text = read(voll)
-    except (UnicodeDecodeError, OSError):
-        continue
-    repo_gelesen += 1
-    repo_treffer += repo_funde(pfad, text, benutzer, rechner)
+_spec = importlib.util.spec_from_file_location("werte_pruefen", os.path.join(REPO, "tools", "werte-pruefen.py"))
+wp = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(wp)
+ausnahmen = wp.lade_ausnahmen()
+repo_gelesen, repo_treffer = wp.durchsuche(REPO, ausnahmen)
+benutzer, rechner = wp.eigener_name(__import__("pwd").getpwuid(os.getuid()).pw_name), wp.eigener_name(__import__("socket").gethostname())
 check(repo_gelesen > 1500 and repo_treffer == [],
       "ganzes Repo ohne persönliche Werte (%d Dateien; Benutzername %s, Rechnername %s): %s"
-      % (repo_gelesen, "gesucht" if benutzer else "nicht gesucht", "gesucht" if rechner else "nicht gesucht", repo_treffer[:12]))
+      % (repo_gelesen, "gesucht" if benutzer else "nicht gesucht", "gesucht" if rechner else "nicht gesucht", [wp.zeile(f) for f in repo_treffer[:12]]))
+ueberholt = ["%s %s %s" % (a["glob"], a["art"], a["text"]) for a in ausnahmen if a["treffer"] == 0
+             and not (a["art"] in ("Benutzername", "Rechnername") and not (benutzer if a["art"] == "Benutzername" else rechner))]
+check(ueberholt == [], "jede Ausnahme trifft mindestens einen Fund (sonst ist sie überholt): %s" % ueberholt)
+check(len(ausnahmen) <= 30 and all(a["frist"] and len(a["grund"]) >= 15 for a in ausnahmen),
+      "Ausnahmeliste kurz (%d Einträge), jede mit Frist und Begründung" % len(ausnahmen))
 for art, probe in (("Pfad in ein Home-Verzeichnis", "source = /home/erika/bild.png"), ("IP-Adresse", "host 192.168.1.20"), ("MAC-Adresse", "aa:bb:cc:dd:ee:ff"),
                    ("Gerätekennung", '"1234:abcd"'), ("Benutzername", "Ordner von Erika."), ("Rechnername", "ssh werkbank")):
-    check(any(f.endswith(art) for f in repo_funde("x/probe.txt", probe, "erika", "werkbank")), "Repo-Muster erkennt: " + art)
-check(repo_funde("x/probe.txt", "/home/nutzer/a ~/b $HOME/c 127.0.0.1 0.0.0.0 v1.2.3 12:34:56 erikas instances/home/projekt", "erika", "werkbank") == [],
+    check(any(f[2] == art for f in wp.funde("x/probe.txt", probe, "erika", "werkbank")), "Repo-Muster erkennt: " + art)
+check(wp.funde("x/probe.txt", "/home/nutzer/a ~/b $HOME/c 127.0.0.1 0.0.0.0 v1.2.3 12:34:56 erikas instances/home/projekt", "erika", "werkbank") == [],
       "Repo-Muster: Platzhalter, Loopback, Versionen, Uhrzeiten und Wortteile sind kein Fund")
-check(repo_funde("LICENSE", "Copyright Erika", "erika") == [] and repo_funde("tests/test_werte.py", "/home/erika/x") == []
-      and repo_funde("core/a/b_test.go", "/home/erika/x 10.0.0.2") == ["core/a/b_test.go:1 Pfad in ein Home-Verzeichnis"],
-      "Ausnahmeliste gilt je Datei und Art, nicht darüber hinaus")
-check(eigener_name("pc") == "" and eigener_name("runner") == "" and eigener_name("werkbank.lan") == "werkbank",
+probe_ausnahme = [{"glob": "a/*_test.go", "art": "IP-Adresse", "muster": re.compile(r"10\.0\.0\.2"), "treffer": 0}]
+check(wp.funde("a/b_test.go", "10.0.0.2", ausnahmen=probe_ausnahme) == [] and probe_ausnahme[0]["treffer"] == 1
+      and [f[3] for f in wp.funde("a/b_test.go", "10.0.0.2 10.0.0.3 /home/erika/x", ausnahmen=probe_ausnahme)] == ["/home/erika", "10.0.0.3"]
+      and len(wp.funde("a/c.go", "10.0.0.2", ausnahmen=probe_ausnahme)) == 1,
+      "Ausnahme gilt nur für Datei, Art und genau den erwarteten Wert – ein neuer Fund in derselben Datei schlägt an")
+check(wp.eigener_name("pc") == "" and wp.eigener_name("runner") == "" and wp.eigener_name("werkbank.lan") == "werkbank",
       "kurze Namen und Allerweltsnamen werden nicht gesucht")
-ungenutzt = [m for m, _a, _g in REPO_AUSNAHMEN if not any(fnmatch.fnmatch(p, m) for p in versioniert)]
-check(ungenutzt == [], "jede Ausnahme trifft eine vorhandene Datei: %s" % ungenutzt)
 
 # Kein fremdes Plugin im Bar-Layout: sathiAi stand bis zum Halt nach D7 im ausgelieferten Design.
 FREMD_IM_DESIGN = set()
