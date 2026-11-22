@@ -111,6 +111,14 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
 - **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
   nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
+- **Erledigt bis D7.0. Nächster Schritt: D7.1** (Plugin-Beschreibung `requires_alpe`/`bar-widget`).
+  Für jeden Bereich eine Tabelle `entwicklung/umbenennen/<bereich>.tsv` anlegen, Probelauf mit
+  `--liste` prüfen, dann `--schreiben`; `bash tools/test.sh` muss grün sein, Namensprüfung zeigt
+  die sinkende Zahl. D7.2a: nur `git mv` plus Symlinks unter den alten Pfaden (Werkzeug-Art
+  `link`); D7.2b: Importe, Typen, Symlinks weg, Übergangs-Hüllen `shell/DCommon/Widgets/D*.qml`
+  für sathiAi (2.3.0). Go-Tests abgeschottet mit Temp-HOME (Socket-Pfade unter 108 Zeichen).
+  Fehlschläge der Node-Tests stehen in `tests/data/node-bekannte-fehlschlaege.txt`; ändern sich
+  Testnamen durch die Umbenennung, die Liste im selben Commit nachführen.
 - Halt nach D7 → Mac-Test → Vorlage 6.7 → E1 (0.8 Nr. 6).
 
 ---
