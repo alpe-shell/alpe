@@ -1,68 +1,36 @@
-> **Alpe:** Gepflegt werden nur Deutsch (`poexports/de.json`) und die englischen Quelltexte
-> (`en.json`), beide ausschliesslich in diesem Repository. Einen Abgleich mit einem externen
-> Übersetzungsdienst gibt es nicht mehr; der Rest dieser Datei beschreibt das Dateiformat und die
-> Skripte.
+# Übersetzungen der Oberfläche
 
-# Alpe Translations
+Gepflegt werden nur Deutsch und die englischen Quelltexte, beide von Hand und ausschliesslich in
+diesem Repository. Einen Abgleich mit einem Übersetzungsdienst gibt es nicht.
 
-This directory contains translation files for Alpe extracted from all qsTr() and I18n.tr() calls in the QML codebase.
+## Dateien
 
-## Files
+- `en.json` – alle Quelltexte aus `qsTr()` und `I18n.tr()` der ganzen Oberfläche (auch `Alpe/`),
+  erzeugt von `extract_translations.py`. Die Oberfläche liest die Datei nicht; sie ist die Liste,
+  gegen die die deutschen Kataloge geprüft werden.
+- `poexports/de.json` – Deutsch für die Oberfläche: `{ "Kontext": { "Text": "Übersetzung" } }`.
+- `../Alpe/translations/poexports/de.json` – Deutsch für die Bibliothek `Alpe/`, gleiches Format.
+  `I18n.tr()` schlägt zuerst im Katalog der Oberfläche nach, dann in diesem.
+- `settings_search_index.json` – Suchindex der Einstellungen, erzeugt von
+  `extract_settings_index.py`; die Suche in den Einstellungen liest ihn.
 
-- **en.json** - Source language file with English strings and file references
-- **template.json** - Empty template for creating new translations
-- **extract_translations.py** - Script to regenerate translation files
+## Felder in `en.json`
 
-## POEditor Format
+- `term` – der englische Quelltext
+- `context` – gleich `term`, ausser bei `I18n.tr(text, kontext, true)`: Dann ist der Kontext ein
+  eigener Schlüssel mit eigener Übersetzung.
+- `reference` – Dateien, in denen der Text vorkommt (ohne Zeilennummern)
+- `comment` – Hinweis aus `I18n.tr(text, hinweis)` für Übersetzende
 
-The JSON files follow POEditor's import format:
-
-```json
-[
-  {
-    "term": "string to translate",
-    "context": "file:line",
-    "reference": "Modules/Settings/AboutTab.qml:45",
-    "comment": ""
-  }
-]
-```
-
-### Field Descriptions
-
-- **term**: The source string in English (from qsTr() calls)
-- **context**: Primary location where the string appears (file:line)
-- **reference**: All locations where this string is used (comma-separated)
-- **comment**: Additional notes for translators (currently empty)
-
-## How to Create a New Translation
-
-1. Copy `template.json` to your language code (e.g., `es.json` for Spanish)
-2. Fill in the `translation` field for each entry:
-   ```json
-   {
-     "term": "Settings",
-     "translation": "Configuración",
-     "context": "Modals/Settings/SettingsModal.qml:147",
-     "reference": "Modals/Settings/SettingsModal.qml:147",
-     "comment": ""
-   }
-   ```
-3. Import to POEditor or use directly in your translation workflow
-
-## Regenerating Translation Files
-
-To update the translation files after code changes:
+## Nach Änderungen an Texten
 
 ```bash
-python3 shell/translations/extract_translations.py
+python3 shell/translations/extract_translations.py            # en.json neu schreiben
+python3 shell/translations/extract_translations.py --pruefen  # nur prüfen, nennt Texte ohne Deutsch
 ```
 
-This will scan all QML files and regenerate `en.json` and `template.json`.
-
-## Notes
-
-- Strings are deduplicated - if the same string appears in multiple locations, references are merged
-- File paths are relative to the project root
-- Line numbers are preserved for accurate context
-- Empty strings and comments are reserved for translator notes
+Neue Texte danach in `poexports/de.json` übersetzen (Schweizer Schreibweise). `tests/test_uebersetzung.py`
+(in `tools/test.sh`) schlägt fehl, wenn `en.json` veraltet ist, ein neuer Text keine Übersetzung hat
+oder zwei Texte sich nur in Gross-/Kleinschreibung oder Schlusszeichen unterscheiden
+(`check_term_variants.py`). Die bei der Einführung der Prüfung offenen Lücken stehen in
+`tests/data/uebersetzung-bekannte-luecken.txt`.

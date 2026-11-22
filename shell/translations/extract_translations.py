@@ -1,7 +1,19 @@
 #!/usr/bin/env python3
+"""Alpe: Texte der Oberfläche aus qsTr() und I18n.tr() herausziehen (Plan 0.8 Nr. 74).
+
+    python3 shell/translations/extract_translations.py            en.json neu schreiben
+    python3 shell/translations/extract_translations.py --pruefen  nichts schreiben: Ist en.json aktuell?
+                                                                  Welche Texte haben keine deutsche Übersetzung?
+
+en.json ist die Liste aller Quelltexte (englisch) der ganzen Oberfläche, auch von Alpe/. Deutsch steht
+in poexports/de.json und, für die Bibliothek, in Alpe/translations/poexports/de.json – I18n.qml schlägt
+in beiden nach, die Prüfung ebenso. Gepflegt werden die Dateien von Hand in diesem Repository; einen
+Abgleich mit einem Übersetzungsdienst gibt es nicht. Plugins bringen ihre Texte selbst mit.
+"""
 import ast
 import re
 import json
+import sys
 from pathlib import Path
 from collections import defaultdict
 
@@ -31,23 +43,14 @@ def call_patterns(func, arg_count, trailing_true=False):
 
 
 QSTR_PATTERNS = call_patterns(r'qsTr', 1)
-# I18n.tr(term, context, true) -- the literal `true` flag uploads the
-# context as a real POEditor context, giving (term, context) its own
-# translation slot. Must be on one line with a literal `true`.
+# I18n.tr(term, context, true): Mit dem wörtlichen `true` (auf derselben Zeile) ist der Kontext ein
+# eigener Schlüssel – (term, context) bekommt eine eigene Übersetzung. Ohne `true` ist der Kontext nur
+# ein Hinweis für Übersetzende und landet im Feld "comment".
 TR_REAL_CONTEXT_PATTERNS = call_patterns(r'I18n\.tr', 2, trailing_true=True)
 TR_CONTEXT_PATTERNS = call_patterns(r'I18n\.tr', 2)
 TR_SIMPLE_PATTERNS = call_patterns(r'I18n\.tr', 1)
-# I18n.trFor(pluginId, term[, context[, true]]) -- plugin-scoped lookup,
-# owned by the DankPlugins POEditor project keyed "<pluginId>:<context>".
-TRFOR_REAL_CONTEXT_PATTERNS = call_patterns(r'I18n\.trFor', 3, trailing_true=True)
-TRFOR_CONTEXT_PATTERNS = call_patterns(r'I18n\.trFor', 3)
-TRFOR_SIMPLE_PATTERNS = call_patterns(r'I18n\.trFor', 2)
 
-# Plugin checkouts under quickshell/: official monorepo terms still use
-# I18n.tr and belong to the shell catalog; external plugins are owned by
-# the DankPlugins project and never enter the shell catalog.
-OFFICIAL_PLUGINS_DIR = 'dms-plugins'
-EXTERNAL_PLUGINS_DIR = 'dms-plugins-external'
+CATALOGS = ('translations/poexports/de.json', 'Alpe/translations/poexports/de.json')
 
 
 def new_translation_bucket():
@@ -96,15 +99,10 @@ def scan_line(line, occ, translations, real_patterns, context_patterns, simple_p
 def extract_qstr_strings(root_dir):
     translations = defaultdict(new_translation_bucket)
 
-    # Alpe terms have their own catalog (Alpe/translations). Alpe: Alpe
-    # is a plain folder now, not a symlink, so it is skipped explicitly.
-    for qml_file in Path(root_dir).rglob('*.qml'):
+    # Die ganze Oberfläche, auch Alpe/ (Bibliothek, Dash, Dateiwähler): Seit D7.2 liegt dort mehr als
+    # die frühere Bibliothek, und I18n.tr() schlägt ohnehin in beiden Katalogen nach.
+    for qml_file in sorted(Path(root_dir).rglob('*.qml')):
         relative_path = qml_file.relative_to(root_dir)
-
-        # PLUGINS/ holds developer examples demonstrating plugin-local
-        # translations; their strings never enter the central catalog.
-        if relative_path.parts[0] in ('PLUGINS', 'Alpe', EXTERNAL_PLUGINS_DIR):
-            continue
 
         with open(qml_file, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
@@ -119,139 +117,101 @@ def extract_qstr_strings(root_dir):
     return {key[0]: data for key, data in translations.items()}
 
 
-def extract_plugin_strings(checkout):
-    checkout = Path(checkout)
-    scoped = defaultdict(new_translation_bucket)
-    plain = defaultdict(list)
-
-    for qml_file in checkout.rglob('*.qml'):
-        relative_path = qml_file.relative_to(checkout)
-        with open(qml_file, 'r', encoding='utf-8') as f:
-            for line_num, line in enumerate(f, 1):
-                occ = {'file': f"{checkout.name}/{relative_path}", 'line': line_num}
-                scan_line(line, occ, scoped, TRFOR_REAL_CONTEXT_PATTERNS, TRFOR_CONTEXT_PATTERNS, TRFOR_SIMPLE_PATTERNS, key_offset=1)
-                shell_terms = defaultdict(new_translation_bucket)
-                scan_line(line, occ, shell_terms, TR_REAL_CONTEXT_PATTERNS, TR_CONTEXT_PATTERNS, TR_SIMPLE_PATTERNS)
-                for (term,), data in shell_terms.items():
-                    plain[term].extend(data['occurrences'])
-
-    return scoped, plain
-
-
-def area_tags(occurrences):
-    tags = set()
-    for occ in occurrences:
-        path = occ['file']
-        if path.startswith(OFFICIAL_PLUGINS_DIR + '/'):
-            tags.add('plugin-' + path.split('/')[1].lower())
-        elif path.startswith(('Modules/Settings/', 'Modals/Settings/')):
-            tags.add('settings')
-        else:
-            tags.add('shell')
-    return sorted(tags)
-
-
 def references(occurrences):
-    return ", ".join(f"{occ['file']}:{occ['line']}" for occ in occurrences)
+    # Nur Dateien, ohne Zeilennummern: sonst änderte jede verschobene Zeile en.json.
+    return ", ".join(sorted({occ['file'] for occ in occurrences}))
 
 
-def create_poeditor_json(translations):
-    poeditor_data = []
+def create_catalog(translations):
+    """Einträge von en.json: je Text einer mit context == term, dazu einer je echtem Kontext."""
+    entries = []
 
     for term, data in sorted(translations.items()):
         if data['plain_occurrences']:
             contexts = sorted(data['contexts']) if data['contexts'] else []
-            poeditor_data.append({
+            entries.append({
                 "term": term,
                 "context": term,
                 "reference": references(data['plain_occurrences']),
-                "comment": " | ".join(contexts),
-                "tags": area_tags(data['plain_occurrences'])
+                "comment": " | ".join(contexts)
             })
 
         for context in sorted(data['real_contexts']):
-            poeditor_data.append({
+            entries.append({
                 "term": term,
                 "context": context,
                 "reference": references(data['real_contexts'][context]),
-                "comment": "",
-                "tags": area_tags(data['real_contexts'][context])
-            })
-
-    return poeditor_data
-
-
-def create_plugin_poeditor_json(scoped):
-    entries = []
-    for (plugin_id, term), data in sorted(scoped.items()):
-        if data['plain_occurrences']:
-            entries.append({
-                "term": term,
-                "context": f"{plugin_id}:{term}",
-                "reference": references(data['plain_occurrences']),
-                "comment": " | ".join(sorted(data['contexts']))
-            })
-        for context in sorted(data['real_contexts']):
-            entries.append({
-                "term": term,
-                "context": f"{plugin_id}:{context}",
-                "reference": references(data['real_contexts'][context]),
                 "comment": ""
             })
+
     return entries
 
 
-def split_plugin_context(context):
-    plugin_id, sep, rest = context.partition(':')
-    if not sep:
-        return None, context
-    return plugin_id, rest
+def entry_key(entry):
+    return (entry["context"], entry["term"], entry.get("comment", ""))
 
 
-def create_template_json(translations):
-    return [
-        {
-            "term": entry["term"],
-            "translation": "",
-            "context": entry["context"],
-            "reference": "",
-            "comment": entry["comment"]
-        }
-        for entry in create_poeditor_json(translations)
-    ]
+def load_json(path, default):
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return default
 
-def main():
+
+def translated(tables, context, term):
+    """Wie I18n.qml nachschlägt: (Kontext, Text), dann (Text, Text), dann der Text in irgendeinem Kontext."""
+    for table in tables:
+        if table.get(context, {}).get(term) or table.get(term, {}).get(term):
+            return True
+        if any(bucket.get(term) for bucket in table.values() if isinstance(bucket, dict)):
+            return True
+    return False
+
+
+def check(root_dir):
+    """Vergleicht die Oberfläche mit en.json und den deutschen Katalogen, ohne etwas zu schreiben.
+
+    Ergebnis: (neu, weg, luecken, ueberzaehlig) – Einträge, die in en.json fehlen bzw. dort zu viel sind,
+    Paare (Kontext, Text) ohne deutsche Übersetzung, und Paare in den Katalogen, die kein Text mehr braucht.
+    """
+    root_dir = Path(root_dir)
+    entries = create_catalog(extract_qstr_strings(root_dir))
+    current = {entry_key(entry) for entry in entries}
+    stored = {entry_key(entry) for entry in load_json(root_dir / 'translations' / 'en.json', [])}
+    tables = [load_json(root_dir / name, {}) for name in CATALOGS]
+    pairs = {(entry["context"], entry["term"]) for entry in entries}
+    terms = {term for _context, term in pairs}
+    gaps = sorted(pair for pair in pairs if not translated(tables, *pair))
+    surplus = sorted({(context, term) for table in tables for context, bucket in table.items() if isinstance(bucket, dict)
+                      for term in bucket if (context, term) not in pairs and term not in terms})
+    return sorted(current - stored), sorted(stored - current), gaps, surplus
+
+
+def main(argv):
     script_dir = Path(__file__).parent
     root_dir = script_dir.parent
-    translations_dir = script_dir
 
-    print("Extracting qsTr() strings from QML files...")
+    if '--pruefen' in argv:
+        new, gone, gaps, surplus = check(root_dir)
+        for label, items in (("fehlt in en.json", new), ("in en.json, aber nicht mehr in der Oberfläche", gone)):
+            for context, term, _comment in items:
+                print(f"{label}: {term!r}" + ("" if context == term else f" (Kontext {context!r})"))
+        for label, items in (("ohne deutsche Übersetzung", gaps), ("überzählig in de.json", surplus)):
+            for context, term in items:
+                print(f"{label}: {term!r}" + ("" if context == term else f" (Kontext {context!r})"))
+        print(f"en.json: {len(new)} fehlen, {len(gone)} überzählig; Deutsch: {len(gaps)} ohne Übersetzung, {len(surplus)} überzählig")
+        return 1 if new or gone else 0
+
     translations = extract_qstr_strings(root_dir)
-
-    print(f"Found {len(translations)} unique strings")
-
-    poeditor_data = create_poeditor_json(translations)
-    en_json_path = translations_dir / 'en.json'
+    entries = create_catalog(translations)
+    en_json_path = script_dir / 'en.json'
     with open(en_json_path, 'w', encoding='utf-8') as f:
-        json.dump(poeditor_data, f, indent=2, ensure_ascii=False)
+        json.dump(entries, f, indent=2, ensure_ascii=False)
         f.write('\n')
-    print(f"Created source language file: {en_json_path}")
+    print(f"{en_json_path}: {len(entries)} Einträge aus {len(translations)} Texten")
+    return 0
 
-    template_data = create_template_json(translations)
-    template_json_path = translations_dir / 'template.json'
-    with open(template_json_path, 'w', encoding='utf-8') as f:
-        json.dump(template_data, f, indent=2, ensure_ascii=False)
-        f.write('\n')
-    print(f"Created template file: {template_json_path}")
-
-    print("\nSummary:")
-    print(f"  - Unique strings: {len(translations)}")
-    print(f"  - Total occurrences: {sum(len(data['occurrences']) for data in translations.values())}")
-    print(f"  - Strings with contexts: {sum(1 for data in translations.values() if data['contexts'])}")
-    print(f"  - Real-context entries: {sum(len(data['real_contexts']) for data in translations.values())}")
-    print(f"  - POEditor entries: {len(poeditor_data)}")
-    print(f"  - Source file: {en_json_path}")
-    print(f"  - Template file: {template_json_path}")
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main(sys.argv[1:]))

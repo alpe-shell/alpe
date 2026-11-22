@@ -246,7 +246,7 @@ Singleton {
     }
 
     // isRealContext is consumed by translations/extract_translations.py only:
-    // pass a literal `true` (same line) to give (term, context) its own POEditor
+    // pass a literal `true` (same line) to give (term, context) its own
     // translation slot. Lookup ignores it -- a real context exists as a bucket
     // in the export, a comment-only context does not.
     function tr(term, context, isRealContext) {

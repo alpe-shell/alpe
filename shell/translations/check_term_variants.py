@@ -18,8 +18,6 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent.parent
 
-EXTERNAL_PLUGIN_PREFIX = "dms-plugins-external/"
-
 # Intentional pairs that survive normalization on purpose.
 ALLOWED = [
     {"PIN", "Pin"},            # WPS PIN acronym vs the verb "pin"
@@ -27,8 +25,11 @@ ALLOWED = [
     {"Until %1", "until %1"},  # sentence-initial vs mid-sentence position
     {"Up", "up"},              # scroll direction vs uptime prefix
     {"New", "new"},            # create action vs lowercase plugin recency badge
-    {"Custom Color", "Custom color"},  # dms-plugins checkout, not this repo
-    {"Media Player", "Media player"},  # dms-plugins checkout, not this repo
+    # Alpe: Bibliothek (Alpe/) und Oberfläche hatten beim Ursprung getrennte Kataloge; seit die
+    # Extraktion beide liest, treffen diese Paare aufeinander. Beide Fassungen sind übersetzt.
+    {"Log Out", "Log out"},
+    {"Power Off", "Power off"},
+    {"Sort By", "Sort by"},
 ]
 
 
@@ -39,18 +40,9 @@ def normalize(term):
     return t + "..." if ellipsis else t
 
 
-def owned_occurrences(data):
-    return [occ for occ in data["occurrences"]
-            if not occ["file"].startswith(EXTERNAL_PLUGIN_PREFIX)]
-
-
 def main():
     extracted = extract_qstr_strings(ROOT_DIR)
-    translations = {}
-    for term, data in extracted.items():
-        occurrences = owned_occurrences(data)
-        if occurrences:
-            translations[term] = occurrences
+    translations = {term: data["occurrences"] for term, data in extracted.items() if data["occurrences"]}
 
     groups = defaultdict(set)
     for term in translations:
