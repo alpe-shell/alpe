@@ -86,6 +86,17 @@ write("shell/Alt2.qml", "import qs." + "DCommon.Widgets\n")  # geteilt, damit di
 subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
 check("shell/Alt2.qml:1:" in run(np, "--liste").stdout, "Namensprüfung meldet Import über das alte Modul")
 os.remove(os.path.join(repo, "shell/Alt2.qml"))
+alt_name = "D" + "Knopf"  # zusammengesetzt, damit diese Datei kein Fund ist
+write("tools/namen-verboten.txt", "# Kommentar\n" + alt_name + "\n")
+write("shell/Alt3.qml", alt_name + " {}\n" + alt_name + "Gross {}\nAlpe" + alt_name[1:] + " {}\n")
+write("shell/" + alt_name + ".qml", "Item {}\n")
+subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
+ausgabe = run(np, "--liste").stdout
+check("shell/Alt3.qml:1:" in ausgabe and "shell/Alt3.qml:2:" not in ausgabe and "shell/Alt3.qml:3:" not in ausgabe,
+      "verbotener alter Name nur als ganzer Bezeichner gemeldet")
+check("shell/%s.qml: (Dateiname)" % alt_name in ausgabe, "verbotener alter Name im Dateinamen gemeldet")
+os.remove(os.path.join(repo, "shell/Alt3.qml"))
+os.remove(os.path.join(repo, "shell/" + alt_name + ".qml"))
 os.remove(os.path.join(repo, "shell/Rest.qml"))
 subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
 check(run(np, "--streng").returncode == 0, "--streng: grün ohne Fund")

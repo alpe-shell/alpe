@@ -29,3 +29,4 @@ tools/namen-ausnahmen.txt	*	dauerhaft	diese Liste
 entwicklung/umbenennen/*	*	dauerhaft	Zuordnungstabellen der Umbenennung (D7)
 *	dsearch|dux-search|duxlabs-dev/dux-search	solange die Anbindung besteht (E3/E4 vermerkt)	fremdes Programm dsearch (0.8 Nr. 26)
 shell/DCommon/Widgets/*	*	D7.8	Übergangs-Hüllen für fremde Plugins (sathiAi), die noch qs.DCommon.Widgets importieren (0.8 Nr. 27)
+tools/namen-verboten.txt	*	dauerhaft	Liste der verbotenen alten Typnamen selbst (0.8 Nr. 34)

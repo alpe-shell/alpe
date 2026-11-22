@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Alpe: Namensprüfung (Plan 9, 2.3.3). Sucht dms/dank/dux (Gross/klein) und Importe über das alte
-Modul qs.DCommon (0.8 Nr. 27) in Inhalt und Pfaden der
+Modul qs.DCommon (0.8 Nr. 27) sowie die alten D*-Typnamen aus tools/namen-verboten.txt (ganze
+Bezeichner, 0.8 Nr. 34) in Inhalt und Pfaden der
 versionierten Dateien unter shell, core, plugins, tools, tests, entwicklung, design, lockscreen,
 packaging und meldet alles, was nicht auf der Ausnahmeliste tools/namen-ausnahmen.txt steht.
 
@@ -22,6 +23,17 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BEREICH = ["shell", "core", "plugins", "tools", "tests", "entwicklung", "design", "lockscreen", "packaging"]
 SUCHE = re.compile(r"dms|dank|dux|qs\.DCommon", re.IGNORECASE)
 AUSNAHMEN = os.path.join(REPO, "tools", "namen-ausnahmen.txt")
+VERBOTEN = os.path.join(REPO, "tools", "namen-verboten.txt")
+
+
+def verbotene_namen():
+    if not os.path.exists(VERBOTEN):
+        return None
+    with open(VERBOTEN, encoding="utf-8") as handle:
+        namen = [z.strip() for z in handle if z.strip() and not z.startswith("#")]
+    if not namen:
+        return None
+    return re.compile(r"(?<![A-Za-z0-9_])(?:" + "|".join(map(re.escape, sorted(namen, key=len, reverse=True))) + r")(?![A-Za-z0-9_])")
 
 
 def ausnahmen():
@@ -48,11 +60,15 @@ def main():
     liste_zeigen = "--liste" in sys.argv
     streng = "--streng" in sys.argv
     regeln = ausnahmen()
+    alt = verbotene_namen()
+
+    def fund(text):
+        return SUCHE.search(text) or (alt is not None and alt.search(text))
     namen = subprocess.run(["git", "-C", REPO, "ls-files", "-z", "--"] + BEREICH, capture_output=True, text=True, check=True).stdout.split("\0")
     funde = collections.Counter()
     zeilen = []
     for pfad in filter(None, namen):
-        if SUCHE.search(pfad) and not erlaubt(pfad, None, regeln):
+        if fund(pfad) and not erlaubt(pfad, None, regeln):
             funde[pfad] += 1
             zeilen.append("%s: (Dateiname)" % pfad)
         voll = os.path.join(REPO, pfad)
@@ -63,7 +79,7 @@ def main():
         if b"\0" in daten[:8192]:
             continue
         for nummer, zeile in enumerate(daten.decode("utf-8", "replace").splitlines(), 1):
-            if SUCHE.search(zeile) and not erlaubt(pfad, zeile, regeln):
+            if fund(zeile) and not erlaubt(pfad, zeile, regeln):
                 funde[pfad] += 1
                 zeilen.append("%s:%d: %s" % (pfad, nummer, zeile.strip()[:140]))
     gesamt = sum(funde.values())
