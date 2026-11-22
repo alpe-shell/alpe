@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Alpe: zwei Gipfel. Eigenes Zeichen, ersetzt das Logo des Ursprungsprojekts unter gleichem Dateinamen. -->
+<!-- Alpe: zwei Gipfel. Eigenes Zeichen. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <g fill="#D0BCFF">
+  <g fill="#ffffff">
     <!-- grosser Gipfel: Schneekappe -->
     <path d="M318 62 L392 196 L352 172 L318 214 L286 170 L246 198 Z"/>
     <!-- grosser Gipfel: Fels -->

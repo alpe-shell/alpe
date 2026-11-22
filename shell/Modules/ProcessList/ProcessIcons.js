@@ -7,7 +7,7 @@ const PROGRAM_ICONS = [
     {
         programs: ["alpe-dienst", "dsearch"],
         passesIcon: true,
-        logo: "danklogo.svg"
+        logo: "alpe-zeichen.svg"
     },
     {
         programs: ["hyprland", "start-hyprland"],

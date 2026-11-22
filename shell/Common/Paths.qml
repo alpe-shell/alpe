@@ -143,7 +143,7 @@ Singleton {
 
     function getAppIcon(appId: string, desktopEntry: var): string {
         if (appId === "org.quickshell") {
-            return Qt.resolvedUrl("../assets/danklogo.svg");
+            return Qt.resolvedUrl("../assets/alpe-zeichen.svg");
         }
 
         const moddedId = moddedAppId(appId);

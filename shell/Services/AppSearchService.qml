@@ -187,7 +187,7 @@ Singleton {
         });
     }
 
-    readonly property string dmsLogoPath: Qt.resolvedUrl("../assets/danklogo2.svg")
+    readonly property string dmsLogoPath: Qt.resolvedUrl("../assets/alpe-zeichen-akzent.svg")
 
     readonly property var builtInPlugins: ({
             "dms_settings": {
