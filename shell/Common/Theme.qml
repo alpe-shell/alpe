@@ -15,6 +15,7 @@ import qs.Alpe.Common as Alpe
 import qs.Services
 import "StockThemes.js" as StockThemes
 import "GSettings.js" as GSettings
+import "settings/Sicherungen.js" as Sicherungen
 
 Singleton {
     id: root
@@ -2154,12 +2155,10 @@ Singleton {
         // HighContrast* latches GTK4 to prefers-contrast until restart.
         const reset = GSettings.setCmd(schema, key, isLight ? "Adwaita" : "adw-gtk3");
         const apply = GSettings.setCmd(schema, key, theme);
-        const backup = `${configDir}/gtk-3.0/gtk-theme.alpe-backup`;
-        // Alpe: Sicherung aus 1.0 (gtk-theme.dms-backup) unter dem neuen Namen weiterführen (bis F1).
-        const adopt = `[ -e '${backup}' ] || mv '${configDir}/gtk-3.0/gtk-theme.dms-backup' '${backup}' 2>/dev/null; `;
-        const guard = claimTheme ? `case "$cur" in adw-gtk3|adw-gtk3-dark|'') ;; *) [ -e '${backup}' ] || printf '%s\\n' "$cur" > '${backup}' ;; esac; ` : `case "$cur" in adw-gtk3|adw-gtk3-dark) ;; *) exit 0 ;; esac; `;
+        // Alpe: Eine Sicherung aus 1.0 gilt weiter und bleibt unverändert (Plan 0.8 Nr. 57).
+        const guard = claimTheme ? `case "$cur" in adw-gtk3|adw-gtk3-dark|'') ;; *) ${Sicherungen.gtkThemeBackupStep(configDir)} ;; esac; ` : `case "$cur" in adw-gtk3|adw-gtk3-dark) ;; *) exit 0 ;; esac; `;
         const reload = colorsChanged ? `${reset}; ${apply}` : ":";
-        const script = `${adopt}cur=$(${GSettings.getCmd(schema, key)}); ${guard}if [ "$cur" != "${theme}" ]; then ${apply}; else ${reload}; fi`;
+        const script = `cur=$(${GSettings.getCmd(schema, key)}); ${guard}if [ "$cur" != "${theme}" ]; then ${apply}; else ${reload}; fi`;
 
         Proc.runCommand("gtkRefresher", ["sh", "-c", script], (output, exitCode) => {
             if (exitCode !== 0) {
