@@ -79,7 +79,7 @@ var alpePalettes = map[dynamic.Variant]struct {
 	dynamic.VariantNeutral:    {dynamic.VariantNeutral, 20, 12, 28},
 }
 
-func newDMSScheme(seed color.Hct, variant dynamic.Variant, contrast float64, dark bool) *dynamic.Scheme {
+func newAlpeScheme(seed color.Hct, variant dynamic.Variant, contrast float64, dark bool) *dynamic.Scheme {
 	neutral := dynamic.NewDynamicScheme(seed, dynamic.VariantTonalSpot, contrast, dark, dynamic.PlatformPhone, dynamic.Version2025)
 	recipe, ok := alpePalettes[variant]
 	if !ok {
@@ -103,7 +103,7 @@ func newDMSScheme(seed color.Hct, variant dynamic.Variant, contrast float64, dar
 func newScheme(seed color.Hct, variant dynamic.Variant, contrast float64, dark bool, version string) *dynamic.Scheme {
 	switch version {
 	case SpecAlpe:
-		return newDMSScheme(seed, variant, contrast, dark)
+		return newAlpeScheme(seed, variant, contrast, dark)
 	case Spec2025:
 		return dynamic.NewDynamicScheme(seed, variant, contrast, dark, dynamic.PlatformPhone, dynamic.Version2025)
 	default:

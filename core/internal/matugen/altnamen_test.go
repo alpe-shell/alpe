@@ -164,7 +164,7 @@ func TestLegacyOutputsWrittenTwiceWithOldNames(t *testing.T) {
 func TestLegacyReferencesCountAsActive(t *testing.T) {
 	config, _, _, _ := legacyTestDirs(t)
 	writeTestFile(t, filepath.Join(config, "gtk-3.0", "gtk.css"), "@import url(\"dank-colors.css\");\n")
-	assert.True(t, isDMSGTKActive(config))
+	assert.True(t, isGTKColorsActive(config))
 
 	writeTestFile(t, filepath.Join(config, "kdeglobals"), "[General]\nColorScheme=DankMatugenDark\n")
 	assert.Equal(t, "DankMatugen", activeKDESchemePrefix(config), "altes Schema bleibt das Schema des Nutzers")

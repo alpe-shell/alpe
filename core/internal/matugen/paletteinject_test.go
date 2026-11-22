@@ -10,35 +10,35 @@ import (
 )
 
 func TestBuildImportDataInjections(t *testing.T) {
-	const dank16 = `{"color0":"#000000"}`
+	const palette = `{"color0":"#000000"}`
 	const pal = `{"color0":"#111111"}`
 	const pal2 = `{"color0":"#222222"}`
 
 	assert.Equal(t,
 		`{"palette16": {"color0":"#000000"}, "wallust": {"color0":"#111111"}}`,
-		buildImportData(dank16, "", "", []paletteInjection{{Namespace: "wallust", JSON: pal}}),
+		buildImportData(palette, "", "", []paletteInjection{{Namespace: "wallust", JSON: pal}}),
 		"palette lands under its namespace")
 
 	assert.Equal(t,
 		`{"palette16": {"color0":"#000000"}, "image": "/w.png", "mypalette": {"color0":"#111111"}}`,
-		buildImportData(dank16, "/w.png", "", []paletteInjection{{Namespace: "mypalette", JSON: pal}}),
+		buildImportData(palette, "/w.png", "", []paletteInjection{{Namespace: "mypalette", JSON: pal}}),
 		"custom namespace coexists with image")
 
 	assert.Equal(t,
 		`{"palette16": {"color0":"#000000"}, "wallust": {"color0":"#111111"}, "mytool": {"color0":"#222222"}}`,
-		buildImportData(dank16, "", "", []paletteInjection{{Namespace: "wallust", JSON: pal}, {Namespace: "mytool", JSON: pal2}}),
+		buildImportData(palette, "", "", []paletteInjection{{Namespace: "wallust", JSON: pal}, {Namespace: "mytool", JSON: pal2}}),
 		"each palette lands under its own namespace, in order")
 
 	dup := []paletteInjection{{Namespace: "wallust", JSON: pal}, {Namespace: "wallust", JSON: pal2}, {Namespace: "palette16", JSON: pal2}}
 	assert.Equal(t,
 		`{"palette16": {"color0":"#000000"}, "wallust": {"color0":"#111111"}}`,
-		buildImportData(dank16, "", "", dup),
+		buildImportData(palette, "", "", dup),
 		"duplicate and reserved namespaces are dropped")
 
 	empty := []paletteInjection{{Namespace: "wallust", JSON: ""}, {Namespace: "", JSON: pal}}
 	assert.Equal(t,
 		`{"palette16": {"color0":"#000000"}}`,
-		buildImportData(dank16, "", "", empty),
+		buildImportData(palette, "", "", empty),
 		"injections missing a namespace or JSON are skipped")
 }
 

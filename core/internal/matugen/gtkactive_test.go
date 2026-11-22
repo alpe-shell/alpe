@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestIsDMSGTKActive(t *testing.T) {
-	const dankImport = "@import url(\"alpe-colors.css\");\n"
+func TestIsGTKColorsActive(t *testing.T) {
+	const colorsImport = "@import url(\"alpe-colors.css\");\n"
 
 	tests := []struct {
 		name  string
@@ -18,10 +18,10 @@ func TestIsDMSGTKActive(t *testing.T) {
 		want  bool
 	}{
 		{
-			name: "home-manager symlink to a stylesheet importing dank colors",
+			name: "home-manager symlink to a stylesheet importing the shell colors",
 			setup: func(t *testing.T, configDir, storeDir string) {
 				target := filepath.Join(storeDir, "hm-gtk.css")
-				require.NoError(t, os.WriteFile(target, []byte(dankImport+"window { margin: 0; }\n"), 0o644))
+				require.NoError(t, os.WriteFile(target, []byte(colorsImport+"window { margin: 0; }\n"), 0o644))
 				require.NoError(t, os.Symlink(target, filepath.Join(configDir, "gtk-4.0", "gtk.css")))
 			},
 			want: true,
@@ -29,12 +29,12 @@ func TestIsDMSGTKActive(t *testing.T) {
 		{
 			name: "gtk-3.0 import only",
 			setup: func(t *testing.T, configDir, _ string) {
-				require.NoError(t, os.WriteFile(filepath.Join(configDir, "gtk-3.0", "gtk.css"), []byte(dankImport), 0o644))
+				require.NoError(t, os.WriteFile(filepath.Join(configDir, "gtk-3.0", "gtk.css"), []byte(colorsImport), 0o644))
 			},
 			want: true,
 		},
 		{
-			name: "user stylesheet without dank colors",
+			name: "user stylesheet without the shell colors",
 			setup: func(t *testing.T, configDir, storeDir string) {
 				target := filepath.Join(storeDir, "hm-gtk.css")
 				require.NoError(t, os.WriteFile(target, []byte("window { margin: 0; }\n"), 0o644))
@@ -51,7 +51,7 @@ func TestIsDMSGTKActive(t *testing.T) {
 				require.NoError(t, os.MkdirAll(filepath.Join(configDir, dir), 0o755))
 			}
 			tt.setup(t, configDir, t.TempDir())
-			assert.Equal(t, tt.want, isDMSGTKActive(configDir))
+			assert.Equal(t, tt.want, isGTKColorsActive(configDir))
 		})
 	}
 }

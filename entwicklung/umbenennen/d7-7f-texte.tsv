@@ -1,0 +1,9 @@
+# D7.7f: Texte und Kommentare in internal/matugen (texte-ersetzen.py, nur gemeldete Zeilen).
+importing dank colors	importing the shell colors
+without dank colors	without the shell colors
+user templates keep dank16\.	user templates keep palette16.
+terminal templates read dank16term	terminal templates read palette16term
+dank_colors_active in quickshell/scripts/gtk\.sh	colors_active in shell/scripts/gtk.sh
+^(\s*)dms := 	\1alpe := 
+, dms\["	, alpe["
+\bDMS\b	Alpe

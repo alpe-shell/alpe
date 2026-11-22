@@ -372,7 +372,7 @@ func buildOnce(opts *Options) (bool, error) {
 	oldColors, _ := os.ReadFile(opts.ColorsOutput())
 
 	var primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight string
-	var dank16JSON string
+	var paletteJSON string
 	var importArgs, args []string
 
 	if opts.StockColors == "" && opts.SeedColor != "" {
@@ -415,9 +415,9 @@ func buildOnce(opts *Options) (bool, error) {
 			primaryLight = primaryDark
 		}
 
-		dank16JSON = generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, "")
-		dank16TermJSON := generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, opts.TerminalPalette)
-		importData := fmt.Sprintf(`{"colors": %s, "palette16": %s, "palette16term": %s}`, opts.StockColors, dank16JSON, dank16TermJSON)
+		paletteJSON = generatePaletteVariants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, "")
+		paletteTermJSON := generatePaletteVariants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, opts.TerminalPalette)
+		importData := fmt.Sprintf(`{"colors": %s, "palette16": %s, "palette16term": %s}`, opts.StockColors, paletteJSON, paletteTermJSON)
 		importArgs = []string{"--import-json-string", withLegacyPaletteNames(importData)}
 
 		log.Info("Running matugen color hex with stock color overrides")
@@ -485,11 +485,11 @@ func buildOnce(opts *Options) (bool, error) {
 			primaryLight = primaryDark
 		}
 
-		dank16JSON = generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, "")
-		// The terminal palette only reaches the terminal templates; editor themes and user templates keep dank16.
-		dank16Term := paletteInjection{Namespace: "palette16term", JSON: generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, opts.TerminalPalette)}
-		injections := append([]paletteInjection{dank16Term}, InjectedPalettes(opts.ConfigDir, sourceImage, opts.Mode)...)
-		importArgs = []string{"--import-json-string", withLegacyPaletteNames(buildImportData(dank16JSON, sourceImage, specColors, injections))}
+		paletteJSON = generatePaletteVariants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, "")
+		// The terminal palette only reaches the terminal templates; editor themes and user templates keep palette16.
+		paletteTerm := paletteInjection{Namespace: "palette16term", JSON: generatePaletteVariants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, opts.TerminalPalette)}
+		injections := append([]paletteInjection{paletteTerm}, InjectedPalettes(opts.ConfigDir, sourceImage, opts.Mode)...)
+		importArgs = []string{"--import-json-string", withLegacyPaletteNames(buildImportData(paletteJSON, sourceImage, specColors, injections))}
 
 		log.Infof("Running matugen %s with palette16 injection", opts.Kind)
 		switch opts.Kind {
@@ -519,7 +519,7 @@ func buildOnce(opts *Options) (bool, error) {
 		return false, nil
 	}
 
-	if isDMSGTKActive(opts.ConfigDir) {
+	if isGTKColorsActive(opts.ConfigDir) {
 		switch opts.Mode {
 		case ColorModeLight:
 			syncAccentColor(primaryLight)
@@ -545,7 +545,7 @@ func buildOnce(opts *Options) (bool, error) {
 
 	// kcolorscheme writes the .colors file qtengine is pointed at, so with that
 	// template off there is nothing to point to and the config would name a
-	// scheme DMS no longer generates.
+	// scheme Alpe no longer generates.
 	if !opts.ShouldSkipTemplate("qtengine") && !opts.ShouldSkipTemplate("kcolorscheme") && QtengineActive() {
 		if err := SyncQtengineConfigAt(opts.ConfigDir, opts.IconTheme); err != nil {
 			log.Warnf("Failed to sync qtengine config: %v", err)
@@ -616,8 +616,8 @@ func appendContrastArg(args []string, contrast float64) []string {
 // colors, when set, is a full role map that replaces matugen's own palette.
 // Each injection is exposed under its own namespace (e.g. {{mypalette.color0}}),
 // skipping any name already emitted so the object stays valid.
-func buildImportData(dank16JSON, image, colors string, injections []paletteInjection) string {
-	fields := []string{fmt.Sprintf(`"palette16": %s`, dank16JSON)}
+func buildImportData(paletteJSON, image, colors string, injections []paletteInjection) string {
+	fields := []string{fmt.Sprintf(`"palette16": %s`, paletteJSON)}
 	if image != "" {
 		path, _ := json.Marshal(image)
 		fields = append(fields, fmt.Sprintf(`"image": %s`, path))
@@ -1324,7 +1324,7 @@ func extractNestedColor(jsonStr, colorName, variant string) string {
 	return color
 }
 
-func generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight string, mode ColorMode, profile string) string {
+func generatePaletteVariants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight string, mode ColorMode, profile string) string {
 	variantOpts := palette16.VariantOptions{
 		PrimaryDark:     primaryDark,
 		PrimaryLight:    primaryLight,
@@ -1340,10 +1340,10 @@ func generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight
 	return palette16.GenerateVariantJSON(variantColors)
 }
 
-// Must match dank_colors_active in quickshell/scripts/gtk.sh.
-func isDMSGTKActive(configDir string) bool {
+// Must match colors_active in shell/scripts/gtk.sh.
+func isGTKColorsActive(configDir string) bool {
 	for _, dir := range []string{"gtk-4.0", "gtk-3.0"} {
-		if cssUsesDankColors(filepath.Join(configDir, dir, "gtk.css")) {
+		if cssUsesShellColors(filepath.Join(configDir, dir, "gtk.css")) {
 			return true
 		}
 	}
@@ -1351,7 +1351,7 @@ func isDMSGTKActive(configDir string) bool {
 }
 
 // A user-managed symlink (home-manager) points elsewhere but can still import us.
-func cssUsesDankColors(path string) bool {
+func cssUsesShellColors(path string) bool {
 	if target, err := os.Readlink(path); err == nil && namesColorsCSS(target) {
 		return true
 	}

@@ -155,7 +155,7 @@ managed_css() {
 }
 
 # Opted in when either gtk.css uses our colors, including through a user-managed
-# symlink. Must match isDMSGTKActive in core/internal/matugen.
+# symlink. Must match isGTKColorsActive in core/internal/matugen.
 colors_active() {
 	local config_dir="$1" gtk_css
 	for gtk_css in "$config_dir/gtk-4.0/gtk.css" "$config_dir/gtk-3.0/gtk.css"; do

@@ -265,14 +265,14 @@ func TestBuildMatugenArgsSourceModes(t *testing.T) {
 }
 
 func TestBuildImportData(t *testing.T) {
-	const dank16 = `{"color0":"#000000"}`
+	const palette = `{"color0":"#000000"}`
 
-	assert.Equal(t, `{"palette16": {"color0":"#000000"}}`, buildImportData(dank16, "", "", nil),
+	assert.Equal(t, `{"palette16": {"color0":"#000000"}}`, buildImportData(palette, "", "", nil),
 		"no image must produce byte-identical import data to pre-feature behavior")
 	assert.Equal(t, `{"palette16": {"color0":"#000000"}, "image": "/home/u/My Wallpaper.png"}`,
-		buildImportData(dank16, "/home/u/My Wallpaper.png", "", nil))
+		buildImportData(palette, "/home/u/My Wallpaper.png", "", nil))
 	assert.Equal(t, `{"palette16": {"color0":"#000000"}, "image": "/home/u/a\"b\\c.png"}`,
-		buildImportData(dank16, `/home/u/a"b\c.png`, "", nil), "paths must be escaped, not interpolated raw")
+		buildImportData(palette, `/home/u/a"b\c.png`, "", nil), "paths must be escaped, not interpolated raw")
 }
 
 // writeTestPNG encodes img as a PNG at path, failing the test on any error.
@@ -756,7 +756,7 @@ func TestSyncQtengineConfig(t *testing.T) {
 			},
 		},
 		{
-			name:          "leaves a hand set colorScheme alone when DMS generated none",
+			name:          "leaves a hand set colorScheme alone when Alpe generated none",
 			existing:      existingConfig,
 			noColorScheme: true,
 			iconTheme:     "Papirus-Dark",
@@ -1197,9 +1197,9 @@ func TestAppendTerminalConfigOpacity(t *testing.T) {
 	assert.True(t, os.IsNotExist(err))
 }
 
-func TestGenerateDank16VariantsProfile(t *testing.T) {
+func TestGeneratePaletteVariantsProfile(t *testing.T) {
 	gen := func(profile string) map[string]any {
-		out := generateDank16Variants("#8ad0ee", "#1c5070", "#0f1417", "#f5fafd", "#1b2023", "#e9eef2", ColorModeDark, profile)
+		out := generatePaletteVariants("#8ad0ee", "#1c5070", "#0f1417", "#f5fafd", "#1b2023", "#e9eef2", ColorModeDark, profile)
 		var m map[string]any
 		if err := json.Unmarshal([]byte(out), &m); err != nil {
 			t.Fatal(err)
@@ -1230,7 +1230,7 @@ func TestTerminalPaletteOnlyReachesTerminalTemplates(t *testing.T) {
 			}
 			content := string(data)
 			if def.Kind == TemplateKindTerminal {
-				assert.NotContains(t, content, "{{palette16.", "%s: terminal templates read dank16term", m[1])
+				assert.NotContains(t, content, "{{palette16.", "%s: terminal templates read palette16term", m[1])
 			} else {
 				assert.NotContains(t, content, "palette16term", "%s: only terminal templates follow the terminal palette", m[1])
 			}

@@ -26,12 +26,12 @@ func QtengineConfigPath() string {
 	return qtengineConfigPath("")
 }
 
-// QtengineColorSchemePath returns the KColorScheme file DMS points qtengine at.
+// QtengineColorSchemePath returns the KColorScheme file Alpe points qtengine at.
 func QtengineColorSchemePath() string {
 	return filepath.Join(utils.XDGDataHome(), "color-schemes", "AlpeMatugen.colors")
 }
 
-// SyncQtengineConfig merges the DMS colour scheme path and icon theme into
+// SyncQtengineConfig merges the Alpe colour scheme path and icon theme into
 // qtengine's config, preserving every other key, and writes it atomically. The
 // write's mtime bump is what trips qtengine's watcher and repaints running apps.
 // Map round trip rather than a typed struct so keys from qtengine versions we

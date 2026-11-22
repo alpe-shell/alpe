@@ -1,0 +1,16 @@
+# D7.7f (Plan 2.3.5): Dienst intern – internal/matugen (Rest nach D7.7b und D7.7d).
+# Die alten Vorlagen-Namen "dank16"/"dank16term" (legacyPaletteNames) und altnamen.go bleiben (Ausnahmeliste).
+ohne	entwicklung/umbenennen/*,docs/plan/*
+wort	dank16JSON	paletteJSON	core/internal/matugen/*
+wort	dank16TermJSON	paletteTermJSON	core/internal/matugen/*
+wort	dank16Term	paletteTerm	core/internal/matugen/*
+wort	generateDank16Variants	generatePaletteVariants	core/internal/matugen/*
+wort	TestGenerateDank16VariantsProfile	TestGeneratePaletteVariantsProfile	core/internal/matugen/*
+wort	isDMSGTKActive	isGTKColorsActive	core/internal/matugen/*,shell/scripts/gtk.sh
+wort	TestIsDMSGTKActive	TestIsGTKColorsActive	core/internal/matugen/*
+wort	cssUsesDankColors	cssUsesShellColors	core/internal/matugen/*
+wort	dankImport	colorsImport	core/internal/matugen/gtkactive_test.go
+wort	newDMSScheme	newAlpeScheme	core/internal/matugen/*
+wort	TestGenerateSpecColorsDMSKeepsVibrantAccentsOnTonalSpotSurfaces	TestGenerateSpecColorsAlpeKeepsVibrantAccentsOnTonalSpotSurfaces	core/internal/matugen/*
+regex	\bconst dank16 = 	const palette = 	core/internal/matugen/matugen_test.go,core/internal/matugen/paletteinject_test.go
+regex	buildImportData\(dank16, 	buildImportData(palette, 	core/internal/matugen/matugen_test.go,core/internal/matugen/paletteinject_test.go

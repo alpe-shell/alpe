@@ -17,7 +17,7 @@ import (
 // paletteEntry runs an external command that emits a JSON object of colors and
 // merges it into matugen's render data under Namespace, so user templates can
 // reference e.g. {{mypalette.color0}}. The palette logic stays entirely in the
-// command; DMS only runs it and forwards the result.
+// command; Alpe only runs it and forwards the result.
 type paletteEntry struct {
 	Enabled bool   `json:"enabled"`
 	Command string `json:"command"`
@@ -25,7 +25,7 @@ type paletteEntry struct {
 	// values are exported as $ALPE_WALLPAPER and $ALPE_MODE.
 	Args []string `json:"args"`
 	// OutputFile is where the command writes its JSON (also exported as
-	// $ALPE_PALETTE_OUT); when empty DMS reads the command's stdout instead.
+	// $ALPE_PALETTE_OUT); when empty Alpe reads the command's stdout instead.
 	// {image}/{mode} are substituted here too.
 	OutputFile string `json:"output_file"`
 	// Namespace is the palette's key in matugen's import data. When empty it
