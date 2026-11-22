@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # alpe – Befehl für Alpe. Eigene Befehle hier; alles andere geht an den Hintergrunddienst
-# (eigener Bau ~/.local/lib/alpe/alpe, sonst dms aus dem Paket), etwa «alpe ipc call …».
+# (eigener Bau ~/.local/lib/alpe/alpe, sonst alpe-dienst aus dem Paket), etwa «alpe ipc call …».
 #
 #   alpe version [--short]  Alpe, Shell-Stand, Hintergrunddienst (--short: eine Zeile, für fastfetch)
 #   alpe doctor             prüft die Einrichtung und nennt, was fehlt
@@ -37,7 +37,8 @@ have() { command -v "$1" >/dev/null 2>&1; }
 backend() {
     if [ -x "$OWN" ] && [ -e "$DROPIN" ]; then printf '%s' "$OWN"; return 0; fi
     local candidate
-    for candidate in /usr/bin/dms /usr/local/bin/dms "$HOME/.local/bin/dms"; do
+    # Alpe 1.0: Dort heisst der Dienst aus dem Paket noch «dms» (bis zum Umzug, Plan 7).
+    for candidate in /usr/bin/alpe-dienst /usr/local/bin/alpe-dienst /usr/bin/dms /usr/local/bin/dms "$HOME/.local/bin/dms"; do
         [ -x "$candidate" ] && [ "$(readlink -f "$candidate")" != "$(readlink -f "${BASH_SOURCE[0]}")" ] && { printf '%s' "$candidate"; return 0; }
     done
     [ -x "$OWN" ] && { printf '%s' "$OWN"; return 0; }
@@ -67,7 +68,8 @@ cmd_version() {
 cmd_ram() {
     local pid name rss pss priv cpu arena total=0
     say "Prozess                 PID         RSS      PSS   privat   CPU-Zeit"
-    for pid in $(pgrep -u "$USER" -f 'quickshell|/alpe/alpe|bin/dms|dms run' 2>/dev/null); do
+    # «bin/dms», «dms run»: Dienst einer Einrichtung aus Alpe 1.0 (bis zum Umzug).
+    for pid in $(pgrep -u "$USER" -f 'quickshell|/alpe/alpe|alpe-dienst|bin/dms|dms run' 2>/dev/null); do
         name="$(ps -o comm= -p "$pid" 2>/dev/null)" || continue
         rss="$(awk '/^VmRSS:/ {print $2}' "/proc/$pid/status" 2>/dev/null)"
         pss="$(awk '/^Pss:/ {print $2}' "/proc/$pid/smaps_rollup" 2>/dev/null)"
@@ -120,12 +122,13 @@ cmd_doctor() {
     say ""
     say "Dienst"
     if systemctl --user is-active --quiet dms.service 2>/dev/null; then ok "dms.service läuft"
-    elif pgrep -u "$USER" -x quickshell >/dev/null || pgrep -u "$USER" -f 'dms run' >/dev/null; then ok "Shell läuft (nicht als Dienst)"
+    elif pgrep -u "$USER" -x quickshell >/dev/null || pgrep -u "$USER" -f 'alpe-dienst run|dms run' >/dev/null; then ok "Shell läuft (nicht als Dienst)"  # «dms run»: Alpe 1.0
     else bad "Shell läuft nicht"; fi
     if b="$(backend)"; then
         v="$("$b" version 2>/dev/null | head -1)"
         want="$(sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' "$SHELL_DIR/Common/Brand.qml" 2>/dev/null | head -1)"
-        case "$v" in "dms $want"|"alpe-dienst $want") ok "Hintergrunddienst passt: $v" ;; *) warn "Hintergrunddienst: $v (Oberfläche $want) – bash $ALPE_DIR/tools/backend.sh status" ;; esac
+        # «dms <Version>» meldet der Dienst aus dem Paket von Alpe 1.0.
+        case "$v" in "alpe-dienst $want"|"dms $want") ok "Hintergrunddienst passt: $v" ;; *) warn "Hintergrunddienst: $v (Oberfläche $want) – bash $ALPE_DIR/tools/backend.sh status" ;; esac
     else bad "kein Hintergrunddienst gefunden"; fi
     say ""
     say "Werkzeuge"

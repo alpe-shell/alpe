@@ -30,6 +30,14 @@ files = {
 for name, body in files.items():
     open(os.path.join(hypr, name), "w").write(body)
 open(os.path.join(cfg, "alpe", "settings.json"), "w").write('{"x": 1}')
+# Sicherungen (Plan 0.8 Nr. 57): Ordner des Dienstes, auch der aus Alpe 1.0, bleiben unberührt.
+backups = {
+    ".dms-backups/2026-03-01_12-00-00/hyprland.lua": 'hl.bind("SUPER", "L", hl.exec("hyprlock"))\nhl.exec_once("hyprlock --immediate")\n',
+    ".alpe-backups/2026-11-22_09-00-00/alpe/binds.lua": 'hl.bind("SUPER", "L", hl.exec("pidof hyprlock || hyprlock"))\n',
+}
+for name, body in backups.items():
+    os.makedirs(os.path.dirname(os.path.join(hypr, name)), exist_ok=True)
+    open(os.path.join(hypr, name), "w").write(body)
 env = dict(os.environ, XDG_CONFIG_HOME=cfg)
 
 
@@ -47,14 +55,17 @@ check(read("hyprland.conf") == files["hyprland.conf"], "Probe schreibt nichts")
 
 run("apply")
 idle, conf, lua = read("hypridle.conf"), read("hyprland.conf"), read("user/binds.lua")
-check("lock_cmd = dms ipc call lock lock" in idle and "loginctl lock-session" in idle, "hypridle: lock_cmd ersetzt, before_sleep bleibt")
-check("bind = SUPER, L, exec, dms ipc call lock lock" in conf, "Tastenkürzel ruft die Sperre der Shell")
+check("lock_cmd = alpe-dienst ipc call lock lock" in idle and "loginctl lock-session" in idle, "hypridle: lock_cmd ersetzt, before_sleep bleibt")
+check("bind = SUPER, L, exec, alpe-dienst ipc call lock lock" in conf, "Tastenkürzel ruft die Sperre der Shell")
 check("# Alpe:" in conf and "exec-once = dms run" in conf, "Sperren beim Start auskommentiert, dms run bleibt")
 check("source = ~/.config/hypr/hyprlock.conf" in conf and "# hyprlock im Kommentar" in conf, "hyprlock.conf-Verweis und Kommentare unberührt")
-check('hl.exec("dms ipc call lock lock")' in lua and "-- Alpe:" in lua, "Lua: Aufruf ersetzt, exec_once auskommentiert")
+check('hl.exec("alpe-dienst ipc call lock lock")' in lua and "-- Alpe:" in lua, "Lua: Aufruf ersetzt, exec_once auskommentiert")
 check(read("hyprlock.conf") == files["hyprlock.conf"], "hyprlock.conf selbst unberührt")
 check(json.load(open(os.path.join(cfg, "alpe", "settings.json"))).get("lockAtStartup") is True, "lockAtStartup eingeschaltet, übrige Einstellungen bleiben")
 check(os.path.exists(os.path.join(hypr, "hyprland.conf.vor-alpe")), "Sicherung angelegt")
+check(all(read(name) == body for name, body in backups.items()), "Sicherungsordner (.dms-backups, .alpe-backups) unverändert")
+check(not any(os.path.exists(os.path.join(hypr, name + ".vor-alpe")) for name in backups), "in den Sicherungsordnern entsteht nichts")
+check(".dms-backups" not in out.stdout and ".alpe-backups" not in out.stdout, "die Probe nennt keine Datei aus einer Sicherung")
 
 second = run("apply")
 check("nichts zu tun" in second.stdout, "zweiter Lauf: nichts mehr zu tun")

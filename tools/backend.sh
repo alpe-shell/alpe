@@ -2,7 +2,7 @@
 # Alpe – eigener Hintergrunddienst.
 #
 # Die Shell besteht aus Oberfläche (QML, shell/ im Alpe-Ordner) und einem Hintergrunddienst
-# (Go, Befehl "dms"). Beide müssen zueinander passen. Statt des Dienstes aus dem Paket des
+# (Go, Befehl "alpe-dienst"). Beide müssen zueinander passen. Statt des Dienstes aus dem Paket des
 # Ursprungsprojekts baut dieses Skript ihn aus demselben Quellbaum wie die Oberfläche; danach
 # ist Alpe vom Paketstand unabhängig, und eine Paketaktualisierung kann nichts mehr verschieben.
 #
@@ -24,6 +24,9 @@ BIN="$LIB/alpe"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
 DROPIN="$CONFIG/systemd/user/dms.service.d/zz-alpe-backend.conf"
 LINKDIR="$HOME/.local/bin"
+# Alpe 1.0: Die Einrichtung startet den Dienst noch als dms.service bzw. über den Befehl «dms»
+# (Hyprland: «dms run»). Darum stellt «use alpe» den eigenen Bau auch unter ~/.local/bin/dms
+# bereit. Fällt mit der Einrichtung von 1.1 weg (Plan 6.5, E4).
 
 say() { printf '%s\n' "$*"; }
 die() { say "FEHLER: $*"; exit 1; }
@@ -41,7 +44,8 @@ status)
     if [ -e "$DROPIN" ]; then say "dms.service:      startet den eigenen Dienst ($DROPIN)"
     elif uses_systemd; then say "dms.service:      startet den Dienst aus dem Paket"; fi
     if [ -L "$LINKDIR/dms" ] && [ "$(readlink "$LINKDIR/dms")" = "$BIN" ]; then say "Befehl dms:       ~/.local/bin/dms -> eigener Dienst"; fi
-    running="$( { pgrep -a -x alpe; pgrep -a -x dms; } 2>/dev/null | grep ' run' | head -1 || true)"
+    # «dms»: Dienst aus dem Paket einer Einrichtung von Alpe 1.0.
+    running="$( { pgrep -a -x alpe; pgrep -a -x alpe-dienst; pgrep -a -x dms; } 2>/dev/null | grep ' run' | head -1 || true)"
     say "Läuft gerade:     ${running:-nichts gefunden}"
     ;;
 build)
@@ -57,7 +61,7 @@ build)
     built="$CORE/bin/alpe-dienst"
     [ -x "$built" ] || die "Kein Ergebnis in $built"
     got="$(version_of "$built")"
-    case "$got" in "alpe-dienst $version"|"dms $version") ;; *) die "Der neue Bau meldet «$got» statt $version – nicht übernommen" ;; esac
+    case "$got" in "alpe-dienst $version") ;; *) die "Der neue Bau meldet «$got» statt $version – nicht übernommen" ;; esac
     mkdir -p "$LIB"
     [ -x "$BIN" ] && cp -f "$BIN" "$BIN.prev"
     install -m755 "$built" "$BIN.new" && mv -f "$BIN.new" "$BIN"

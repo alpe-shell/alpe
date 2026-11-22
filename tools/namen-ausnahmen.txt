@@ -76,3 +76,17 @@ core/internal/highlight/lexers/embedded/*	*	dauerhaft	kein Name: fremde Lexer-De
 *	%dms\b	dauerhaft	kein Name: Formatangabe %d vor «ms»
 core/internal/clipboard/store.go	\.cache/dms/clipboard	Umzug-Ende	Kommentar: Verlauf aus 1.0 holt der Umzug
 core/README.md	github\.com/duxlabs-dev/dux-go|\[dux-go\]	Phase B	Werkzeug aus dux-go zum Erzeugen der Wayland-Bindungen
+tools/alpe	/usr/local/bin/dms|\.local/bin/dms|bin/dms\||dms run|"dms \$want"|«dms»|«dms <Version>»	Umzug-Ende	Dienst einer Einrichtung aus 1.0 erkennen (0.8 Nr. 52); Kommentar am Ort
+tools/backend.sh	LINKDIR/dms|\.local/bin/dms|dms\.vor-alpe|Befehl dms:|«dms( run)?»|pgrep -a -x dms|"dms run"	Umzug-Ende	eigener Bau unter dem Befehlsnamen von 1.0 (0.8 Nr. 52); Kommentar am Ort, ersetzt in E4
+tools/entfernen.sh	\$(CONFIG|STATE|CACHE)/dms|dms/\$f|dms/session\.json|DMS-Paket|DMS-Einstellungen|Einstellungen von DMS|Ordner von DMS|Plugin-Ordner von DMS|gehört zu DMS|dms run	Umzug-Ende	Einrichtung von 1.0 zurückbauen (0.8 Nr. 52); Kommentar am Ort, ersetzt in E4
+tools/maclock.sh	\.dms-backups	Umzug-Ende	Sicherungsordner aus 1.0 überspringen (0.8 Nr. 57)
+tests/test_maclock.py	dms run|\.dms-backups	Umzug-Ende	Testdaten: Zeile und Sicherungsordner einer Einrichtung aus 1.0
+tools/design.py	"dankbar[a-z_]*"|"dank_dash"	Umzug-Ende	alte Seiten-IDs beim Einspielen eines 1.0-Designs (Version 44)
+tests/test_umbenennen.py	*	dauerhaft	Test des Umbenennungswerkzeugs: alte Namen als Testdaten
+tests/test_pfade.py	*	Umzug-Ende	Test: keine Pfade der 1.0-Einrichtung in der Oberfläche
+tests/test_werte.py	*	Umzug-Ende	Test: alte Werte und Namen kommen nicht mehr vor bzw. nur als Übergang
+tests/test_logoform.mjs	dankLogo|"dank"	Umzug-Ende	Test: alte Form und Vorlage gibt es nicht mehr
+tests/test_design.py	"dms_"|dank_dash|dankbar_dot	Umzug-Ende	Test: alte Kennungen ziehen beim Einspielen um
+tests/test_bridge.js	dms	Umzug-Ende	Test: keine alte Zeichenkette im Brückenskript
+tests/test_kwin.py	dms\.service|"dms"|\["dms-launcher"|by\["dms"\]	E4	Testdaten: Kürzel-Komponente und Dienst der Einrichtung von 1.0 (wie tools/*)
+

@@ -70,6 +70,7 @@ if [ -n "$oldest" ]; then
     for f in kwinrc kwinrulesrc kdeglobals kscreenlockerrc; do
         [ -f "$oldest/$f" ] && run cp "$oldest/$f" "$CONFIG/$f" && say "zurück: $f"
     done
+    # Alpe 1.0: Die Einstellungen von vorher gehören in die Ordner von DMS (~/.config/dms, ~/.local/state/dms).
     [ "$ALL" = 0 ] && for f in settings.json plugin_settings.json; do
         [ -f "$oldest/$f" ] && run cp "$oldest/$f" "$CONFIG/dms/$f" && say "zurück: dms/$f"
     done
@@ -112,6 +113,7 @@ run systemctl --user daemon-reload 2>/dev/null
 bold "Dateien von Alpe"
 gone "$DATA/applications/dev.duxlabs.shell.desktop" "$DATA/plasma/shells/org.alpe.desktop" \
      "$DATA/alpe" "$HOME/.local/lib/alpe"
+# Alpe 1.0 legte seine Plugins in den Plugin-Ordner von DMS.
 for p in "$HERE"/plugins/*/; do gone "$CONFIG/dms/plugins/$(basename "$p")"; done
 if [ -L "$HOME/.local/bin/alpe" ]; then
     gone "$HOME/.local/bin/alpe"
@@ -120,6 +122,7 @@ fi
 
 if [ "$ALL" = 1 ]; then
     bold "Alles übrige"
+    # «--alles» nimmt auch die Ordner von DMS weg, in denen Alpe 1.0 seine Einstellungen hielt.
     gone "$CONFIG/dms" "$STATE/dms" "$CACHE/dms" "$CONFIG/alpe"
 else
     say "bleibt: ~/.config/alpe (Sicherungen), Einstellungen von DMS – ganz weg mit «alpe entfernen --alles»"

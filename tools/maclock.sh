@@ -8,11 +8,12 @@
 #   bash maclock.sh undo       Sicherungen zurückspielen
 #
 # Was geändert wird:
-#   - hypridle: lock_cmd = dms ipc call lock lock
-#   - Aufrufe von hyprlock (Tastenkürzel usw.), auch «pidof hyprlock || hyprlock»: dms ipc call lock lock
+#   - hypridle: lock_cmd = alpe-dienst ipc call lock lock
+#   - Aufrufe von hyprlock (Tastenkürzel usw.), auch «pidof hyprlock || hyprlock»: alpe-dienst ipc call lock lock
 #   - Sperren beim Start (exec-once … hyprlock): Zeile auskommentiert; stattdessen sperrt die Shell
 #     selbst nach der Anmeldung (Einstellung lockAtStartup in ~/.config/alpe/settings.json)
 # hyprlock.conf und das Paket hyprlock bleiben unberührt; «undo» stellt alles wieder her.
+# Sicherungsordner (.alpe-backups, .dms-backups) werden nie angefasst (Plan 0.8 Nr. 57).
 set -euo pipefail
 HYPR="${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
 SETTINGS="${XDG_CONFIG_HOME:-$HOME/.config}/alpe/settings.json"
@@ -34,13 +35,16 @@ python3 -I - "$HYPR" "$SETTINGS" "$MODE" <<'PY'
 import json, os, re, sys
 
 hypr, settings, mode = sys.argv[1:4]
-LOCK = "dms ipc call lock lock"
+LOCK = "alpe-dienst ipc call lock lock"
+# Sicherungen bleiben, wie sie sind: Ordner des Dienstes (auch der aus 1.0) werden übersprungen.
+BACKUP_DIRS = {".alpe-backups", ".dms-backups"}
 # hyprlock als Befehl, nicht hyprlock.conf, hyprlock-Pfade oder -Optionen anderer Programme
 TOKEN = re.compile(r"(?<![\w./-])hyprlock(?:\s+--immediate(?:-render)?)?(?![\w.-])")
 PIDOF = re.compile(r"pidof\s+hyprlock\s*\|\|\s*")
 changes, boot = [], False
 
-for base, _, files in os.walk(hypr):
+for base, dirs, files in os.walk(hypr):
+    dirs[:] = [d for d in dirs if d not in BACKUP_DIRS]
     for name in sorted(files):
         if not name.endswith((".conf", ".lua")) or name == "hyprlock.conf":
             continue
