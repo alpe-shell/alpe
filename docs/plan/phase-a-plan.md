@@ -116,7 +116,7 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
 - **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
   nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
-- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. **Nächster Schritt: D7.4** (Schnittstelle Dienst ↔ Oberfläche, 2.3.5). Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
+- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. Entscheide nach D7.3: 0.8 Nr. 31–35. **Nächster Schritt:** verbotene `D*`-Namen (0.8 Nr. 34), dann **D7.4** (Schnittstelle Dienst ↔ Oberfläche, 2.3.5). Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
   Für jeden Bereich eine Tabelle `entwicklung/umbenennen/<bereich>.tsv` anlegen, Probelauf mit
   `--liste` prüfen, dann `--schreiben`; `bash tools/test.sh` muss grün sein, Namensprüfung zeigt
   die sinkende Zahl. D7.2a: nur `git mv` plus Symlinks unter den alten Pfaden (Werkzeug-Art
@@ -323,7 +323,11 @@ Entscheide zum Start von D7 (22.11.2026):
 | 28 | **Ladeprüfung nach D7.2b** (Ausnahme von 0.7 Nr. 6): unter KWin auf diesem Stand gegen die Grundlinie, bevor D7.3 beginnt; neue Meldungen werden vor D7.3 behoben. |
 | 29 | **Zwischenhalt nach D7.7:** hueManager, calculator, sathiAi und claudeCodeUsage werden ins Temp-HOME der Ladeprüfung kopiert und mitgeladen – einmal auf dem Stand D7.7, einmal mit einem nicht committeten Probelauf von D7.8 ohne Hüllen, beide Male mit den Anpassungen aus den Anleitungen. Bericht: laden alle vier ohne neue Meldungen? |
 | 30 | **CUPS-Marke** nach der einmaligen Kündigung liegt unter `~/.local/state/alpe/` (nicht unter `~/.config`). |
-
+| 31 | **`requires_alpe` in G1, als Regel:** Jedes Plugin, das mit Alpe ausgeliefert oder von Alpe gepflegt wird (alles unter `plugins/` im Repo und alles in `~/alpe-plugins`), verlangt ab G1 mindestens die Fassung, für die es zuletzt angepasst wurde, also `>=1.1`. G1 hebt `Brand.version` und alle diese Angaben im selben Commit. |
+| 32 | **Benutzerkopien ausgelieferter Plugins.** Befund (22.11.2026): Einen Befehl `alpe start` gibt es noch nicht (kommt mit E4/F1, 7.2 «Sicherheitsnetz»); heute kopiert nichts aus `~/.config/dms` nach `~/.config/alpe`. Nach 7.2 Schritt 4 wird `plugins/` nicht übernommen (`alpe*` ausgenommen, fremde bleiben unberührt). Liegt ein Plugin mit derselben ID im Benutzerordner und im Systemordner, **gewinnt die Benutzerkopie** (`PluginService._onManifestParsed`: `user` ersetzt `system`, die Systemfassung gilt als verdeckt). Darum für F1: Benutzerkopien von Plugins, die Alpe selbst mitliefert (jede ID unter `/usr/share/alpe/plugins`, heute alpeSport, alpeRadar, alpeMeteoSwiss, claudeCodeUsage), werden beim Umzug **nicht übernommen, sondern mit Rückweg zur Seite gelegt** (protokolliert, `alpe umzug --zurueck` holt sie zurück). Die Mac-Test-Anleitung für den D7-Stand legt die alten Kopien von alpeSport und alpeRadar für den Test zur Seite und holt sie danach zurück (`offene-faelle.md`, «Mac-Test»). |
+| 33 | **Ladeprüfung mit allen Repo-Plugins:** Im Temp-HOME werden alle Plugins unter `plugins/` eingeschaltet, nicht nur die drei, die `activate-plugins.py` für Nutzer einschaltet. So werden Plugins im Repo bei jedem Halt mitgeprüft. Umgesetzt spätestens für den Zwischenhalt nach D7.7 (Prüfregel 9/10, `CLAUDE.md`). |
+| 34 | **Alte `D*`-Namen verboten:** Die 115 alten Typnamen aus `d7-2b-importe.tsv` kommen als verbotene Namen in `namen-pruefen` (ganze Bezeichner, kein allgemeines Muster wie `D[A-Z]`); ausgenommen bis D7.8 die Hüllen unter `shell/DCommon/Widgets/`. Eigener Commit mit Test vor D7.4. |
+| 35 | **`DLogoShape.js`** wird in D7.5 umbenannt. Befund: Die Datei zeichnet die Logoform des Ursprungs (Kommentar «Dux Shell logo (assets/danklogonormal.svg)», benutzt von `MaterialShapes.js`). Darum stellt D7.6 sie zusammen mit der Material-Vorlage auf das Alpe-Zeichen um; beides wird gemeinsam geprüft. |
 ---
 
 ## 1. Zielstruktur des Repos
@@ -610,8 +614,8 @@ Bestätigung des Maintainers**, dass PC und Mac umgestellt sind.
 | D7.2b | Importe auf die neuen Module, **alle** Importe und Symlinks im selben Commit (0.8 Nr. 27); danach Ladeprüfung KWin gegen die Grundlinie, neue Meldungen vor D7.3 beheben (0.8 Nr. 28); `D*` → `Alpe*` bzw. ohne «D» (Dateien per `git mv`, dann Bezüge); Übergangs-Hüllen `shell/DCommon/Widgets/D*.qml` und umgestellte `Dank*`-Hüllen bis D7.8 |
 | D7.3 | Plugins: claudeCodeUsage ins Repo und angepasst, NOTICE; `~/alpe-plugins` mit calculator; `docs/plugins-anpassen.md` für hueManager und sathiAi |
 | D7.4 | Schnittstelle Dienst ↔ Oberfläche: `ShellBackend`, `BackendNetworkService`, `backendBin`, JSON-Felder (`fragmentStatus`, Kürzel-Quelle) samt Go-Gegenstücken |
-| D7.5 | Oberfläche: `ShellMain.qml`/`ShellIpc.qml`, Bezeichner Bar/Dash/Island/Launcher, Kürzel-Aktionen; `dankNotepadModule`-Anbindung, «Wallpaper creator», `dms://` und Doku-Links nach `duxlabs.dev` weg |
-| D7.6 | Gespeicherte Kennungen, Migration v44 (Seiten-IDs, Starter-Plugins, Logo-Modus, Material-Vorlage «Alpe» mit Alpe-Zeichen, matugen-Spec), IPC-Ziel `dankdash` weg; Test mit Einstellungen aus 1.0 und v43 |
+| D7.5 | Oberfläche: `ShellMain.qml`/`ShellIpc.qml`, Bezeichner Bar/Dash/Island/Launcher, Kürzel-Aktionen; `DLogoShape.js` umbenennen (0.8 Nr. 35); `dankNotepadModule`-Anbindung, «Wallpaper creator», `dms://` und Doku-Links nach `duxlabs.dev` weg |
+| D7.6 | Gespeicherte Kennungen, Migration v44 (Seiten-IDs, Starter-Plugins, Logo-Modus, Material-Vorlage «Alpe» mit Alpe-Zeichen samt Logoform aus D7.5 statt der des Ursprungs, gemeinsam geprüft (0.8 Nr. 35), matugen-Spec), IPC-Ziel `dankdash` weg; Test mit Einstellungen aus 1.0 und v43 |
 | D7.7 | Erzeugte Dateien und Fremdprogramm-Vorlagen (Cache-Namen, matugen, Regel-IDs, `-- ALPE-RULE:`), Hotspot-Name, CUPS-Benutzer; Dienst intern (Bezeichner, `palette16`, `duxlog`) |
 | D7.8 | **Nach Bestätigung:** `Dank*`-Hüllen, Übergangs-Hüllen `DCommon/Widgets`, `Modules/DankBar`, `Modules/DankDash` und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
 
@@ -935,7 +939,10 @@ Ohne 1.0-Spuren sagt `install.sh` nur, dass es durch Paket + `alpe einrichten` e
 4. **Dateien**: `~/.config/dms/*` → `~/.config/alpe/` kopieren (nie überschreiben; Kollisionen
    ins Protokoll, Alpe-Datei gewinnt, DMS-Datei bleibt in der Sicherung). Ausnahme
    `plugins/alpe*` (kommen jetzt aus `/usr/share/alpe/plugins`; eine Nutzerkopie würde das Paket
-   verdecken). **Fremde Plugins und `.repos` bleiben unberührt** in `~/.config/dms/plugins`
+   verdecken). **Allgemein (0.8 Nr. 32):** Kopien von Plugins, deren ID Alpe selbst mitliefert,
+   werden weder übernommen noch gelöscht, sondern – auch wenn sie schon in `~/.config/alpe/plugins`
+   liegen – nach `~/.config/alpe/plugins.beiseite/<Zeitpunkt>/` gelegt und protokolliert; der
+   Rückweg holt sie zurück. **Fremde Plugins und `.repos` bleiben unberührt** in `~/.config/dms/plugins`
    (weder kopiert noch verschoben); `alpe doctor` nennt sie, damit man sie bei Bedarf selbst
    nach `~/.config/alpe/plugins` holt. Auch `alpe entfernen --alles` lässt sie stehen.
    `~/.local/state/dms/*` → `~/.local/state/alpe/`. Aus `~/.cache/dms` nur Zwischenablage und
@@ -1075,7 +1082,8 @@ Modular Shell 2.1.2, MIT»), `docs/technik.md` (neue Struktur, Namen, Dienst, En
 
 Jeder Commit: `bash tools/test.sh` grün (ab F1 zusätzlich Umzugstest). Ladeprüfung: von C3 bis D3
 je Commit; **ab D4 einmal pro Halt auf dem Endstand** unter KWin und Hyprland, bei neuen
-Meldungen die Commits dazwischen einzeln (0.7 Nr. 6).
+Meldungen die Commits dazwischen einzeln (0.7 Nr. 6). Im Temp-HOME sind dabei **alle Plugins
+unter `plugins/`** eingeschaltet (0.8 Nr. 33).
 
 | # | Commit | Inhalt |
 |---|---|---|
@@ -1101,9 +1109,9 @@ Meldungen die Commits dazwischen einzeln (0.7 Nr. 6).
 | E2 | PKGBUILD | CI-Bau |
 | E3 | RPM-Spec; `dsearch` (dux-search) wird **optionale** Abhängigkeit, keine harte, weil die Dateisuche ohne das Programm läuft: `optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec (0.8 Nr. 26) | CI-Bau x86_64 |
 | E4 | Werkzeuge: `alpe` CLI, einrichten.sh, entwicklung, doctor/update/entfernen/backup, kde-sitzung, lockscreen, kuerzel, titelleisten, design.py | bestehende Tests nachgeführt |
-| F1 | Umzug: `tools/umzug.py`, `install.sh`-Übergang, Testdaten, Test | |
+| F1 | Umzug: `tools/umzug.py`, `install.sh`-Übergang, Testdaten, Test; Benutzerkopien ausgelieferter Plugins mit Rückweg zur Seite legen (0.8 Nr. 32) | |
 | F2 | get.sh neu | Probelauf `--check` in Temp-`HOME` mit Attrappen |
-| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `Brand.version` auf 1.1 und `requires_alpe` der drei Alpe-Plugins auf `>=1.1` **im selben Commit** heben (D7.1 setzt `>=1.0`, solange `Brand.version` noch 1.0 meldet) | |
+| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `Brand.version` auf 1.1 und **im selben Commit** `requires_alpe: >=1.1` für jedes Plugin, das Alpe ausliefert oder pflegt (`plugins/` im Repo, `~/alpe-plugins`; 0.8 Nr. 31). Bis dahin `>=1.0`, solange `Brand.version` noch 1.0 meldet | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
 (Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D3 (0.6, abgenommen), nach D6, nach D7 (0.8), nach E4, nach F2, zuletzt G1. Vor B2 zusätzlich,

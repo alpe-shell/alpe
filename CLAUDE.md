@@ -56,6 +56,10 @@ bash tools/test.sh          # = alpe test, dieselben Prüfungen wie auf GitHub A
 Alles muss grün sein. Neue Funktion → neuer Test. Shell-Skripte: `bash -n`, QML-Seiten laden
 in den Harnessen unter `entwicklung/`.
 
+Ladeprüfung (`entwicklung/ladepruefung/ladepruefung.py`) einmal pro Halt auf dem Endstand unter
+KWin und Hyprland; im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet, damit
+Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33).
+
 ## Projektregeln
 
 - Version und Codename: Alle Fassungen heissen «Zugerberg», gezählt wird nur die Nummer

@@ -131,6 +131,31 @@ mv ~/.local/state/alpe.vor-phase-a ~/.local/state/alpe
 (Gab es `~/.local/state/alpe` vor dem Test nicht, meldet das erste `cp` bzw. das letzte `mv`
 nur «nicht gefunden».)
 
+**Zusatz für den Stand nach D7** (Plan 0.8 Nr. 32). Ab D7.2b importieren die Repo-Plugins
+`qs.Alpe.*`; die alten Kopien von alpeSport und alpeRadar (aus 1.0, über `cp -rn` oben auch in
+`~/.config/alpe/plugins`) laden damit nicht mehr und würden als Benutzerkopie die Repo-Fassung
+verdecken. Für den Test zur Seite legen und die Repo-Fassung einsetzen, nach dem `cp -rn` und vor
+dem Start der Testshell:
+
+```
+mkdir -p ~/.config/alpe/plugins.beiseite-d7
+mv ~/.config/alpe/plugins/alpeSport ~/.config/alpe/plugins.beiseite-d7/
+mv ~/.config/alpe/plugins/alpeRadar ~/.config/alpe/plugins.beiseite-d7/
+cp -r ~/alpe-phase-a/plugins/alpeSport ~/.config/alpe/plugins/
+cp -r ~/alpe-phase-a/plugins/alpeRadar ~/.config/alpe/plugins/
+```
+
+(Meldet `mv`, dass es eine Kopie nicht gibt, ist sie nicht da – dann nur die Repo-Fassung
+kopieren.) `~/.config/dms/plugins` bleibt unberührt; dort liest 1.0 weiter seine Kopien.
+Nach dem Test die alten Kopien zurückholen:
+
+```
+rm -r ~/.config/alpe/plugins/alpeSport ~/.config/alpe/plugins/alpeRadar
+mv ~/.config/alpe/plugins.beiseite-d7/alpeSport ~/.config/alpe/plugins/
+mv ~/.config/alpe/plugins.beiseite-d7/alpeRadar ~/.config/alpe/plugins/
+rmdir ~/.config/alpe/plugins.beiseite-d7
+```
+
 ## Nach C4: Liste für D
 
 - ~~**Hinweise auf entfernte Befehle** (`dms setup`)~~ erledigt in D6: Oberfläche und Dienst
