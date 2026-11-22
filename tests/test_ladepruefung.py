@@ -74,7 +74,7 @@ try:
           "Probe: Starter-Knopf eingeschaltet mit Logo-Modus alpe")
     session = read(state, "alpe", "session.json")
     check(session.get("configVersion") == 7 and session["materialWallpapers"][""]["shared"]["preset"] == "dank"
-          and session["wallpaperPath"].startswith("#"), "Probe: Session aus 1.0 (Version 7, Vorlage des Ursprungs) mit einfarbigem Hintergrund")
+          and session["wallpaperPath"] == "", "Probe: Session aus 1.0 (Version 7, Vorlage des Ursprungs) ohne Bild und Farbe, damit die Material-Vorlage gezeichnet wird")
     ebene = session["materialWallpaperProfiles"]["eigen"]["layers"][0]
     check(ebene["shape"] == "dankLogo" and all(k in ebene for k in ("x", "y", "size", "fill")), "Probe: eigenes Profil vollständig, Form noch die des Ursprungs")
     check(read(session_1_0)["wallpaperPath"] == "", "die Testdaten selbst bleiben unverändert")

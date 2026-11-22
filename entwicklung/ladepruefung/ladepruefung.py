@@ -10,6 +10,8 @@ einer Grundlinie vergleichen.
               --plugins ORDNER[,ORDNER…]  weitere Plugins mitladen (Kopien fremder Plugins, Plan 0.8 Nr. 29)
               --probe-zeichen             Logo-Modus "alpe" im Starter-Knopf, Material-Vorlage «Alpe» als
                                           Hintergrund, Session aus 1.0 (Plan 0.8 Nr. 41, 45)
+              --bild DATEI                Bildschirmfoto (PNG) des geladenen Schreibtischs, bevor etwas geöffnet
+                                          wird: mit grim, sonst mit «alpe-dienst screenshot» (Haltprüfung)
 
 Jeder Lauf läuft in einem eigenen systemd-Scope (alpe-ladepruefung-<zeit>-<n>.scope). Aufgeräumt wird
 nur über diesen Scope (systemctl --user stop …), nie über Prozessnamen: Die echte Shell läuft unter
@@ -58,6 +60,7 @@ folder = os.path.join(config, "alpe")
 plugin_dir = os.path.join(folder, "plugins")
 extra = [p for p in sys.argv[2].split(os.pathsep) if p]
 probe, session_1_0 = sys.argv[3] == "1", sys.argv[4]
+entsperrt = len(sys.argv) > 5 and sys.argv[5] == "1"
 
 def load(path):
     try:
@@ -87,6 +90,15 @@ for name in sorted(os.listdir(plugin_dir)):
     print("Plugin eingeschaltet: %s (%s)" % (manifest["id"], name))
 save(settings_path, plugins)
 
+if entsperrt:
+    # Für das Bildschirmfoto (--bild): Das ausgelieferte Design sperrt beim Start (lockAtStartup); die
+    # Läufe ohne --bild bleiben so, damit sie mit der Grundlinie vergleichbar sind.
+    path = os.path.join(folder, "settings.json")
+    settings = load(path)
+    settings["lockAtStartup"] = False
+    save(path, settings)
+    print("Bild: lockAtStartup für diesen Lauf ausgeschaltet")
+
 if probe:
     # Starter-Knopf mit dem Alpe-Zeichen (Logo-Modus "alpe") in jeder Leiste, in der er steht.
     path = os.path.join(folder, "settings.json")
@@ -103,9 +115,11 @@ if probe:
     save(path, settings)
     print("Probe: Starter-Knopf mit Logo-Modus alpe in %d Leiste(n)" % hits)
     # Session aus 1.0 (Version 7, Material-Vorlage "dank" mit Form dankLogo): Die Shell zieht sie beim
-    # Laden auf Version 8 um. Einfarbiger Hintergrund, damit die Material-Vorlage gezeichnet wird.
+    # Laden auf Version 8 um. Kein Bild und keine Farbe als Hintergrund: Nur dann zeichnet die Shell die
+    # Material-Vorlage (eine Farbe verdeckt sie – so war es bis zum Halt nach D7 eingestellt, und die
+    # Form war darum nie zu sehen).
     session = load(session_1_0)
-    session["wallpaperPath"] = "#1d2a33"
+    session["wallpaperPath"] = ""
     # Eigene Profile der Testdaten haben nur Form und x; ohne y, Grösse und Füllung verwirft die
     # Shell sie beim Laden. Hier vervollständigt, damit auch die Form dankLogo den Umzug mitmacht.
     for profile in (session.get("materialWallpaperProfiles") or {}).values():
@@ -173,9 +187,21 @@ def stop_scope(unit):
 
 # ---------------------------------------------------------------- Skripte für den Lauf (laufen im Scope)
 
-def session_script(base, dienst):
+def session_script(base, dienst, bild=None):
     """Startet den Dienst mit der Oberfläche, öffnet Popouts und Einstellungsseiten, beendet den Dienst."""
     calls = []
+    if bild:
+        # Bildschirmfoto des geladenen Schreibtischs, bevor etwas geöffnet wird (--bild): mit grim, wenn es
+        # installiert ist, sonst mit dem Bildschirmfoto des Dienstes. Welches Werkzeug lief, steht in bild.log.
+        calls.append("""if command -v grim >/dev/null 2>&1; then
+    grim {bild} >> {base}/bild.log 2>&1 && echo "grim: {bild}" >> {base}/bild.log
+else
+    mkdir -p {base}/bild
+    {dienst} screenshot full --no-clipboard --no-notify -d {base}/bild -f png >> {base}/bild.log 2>&1
+    f=$(ls {base}/bild/*.png 2>/dev/null | head -1)
+    [ -n "$f" ] && cp "$f" {bild} && echo "alpe-dienst screenshot (grim fehlt): {bild}" >> {base}/bild.log
+fi
+sleep 1""".format(bild=q(bild), base=q(base), dienst=q(dienst)))
     for target, func, *rest in POPOUTS:
         args = " ".join(q(a) for a in rest)
         calls.append("ipc %s %s %s; sleep 1.5; ipc %s %s %s; sleep 0.5" % (target, func, args, target, func, args))
@@ -209,7 +235,7 @@ echo "exit $?" > {base}/dienst.exit
 """.format(dienst=q(dienst), base=q(base), shell=q(SHELL), start=DAUER_START, ende=DAUER_ENDE, calls="\n".join(calls))
 
 
-def runner_script(base, compositor, sock, session, extra_plugins=(), probe=False):
+def runner_script(base, compositor, sock, session, extra_plugins=(), probe=False, entsperrt=False):
     """Alles im Scope: Selbstprüfung, Vorbereitung des Temp-HOME, Ersatz-Systembus, Compositor."""
     if compositor == "kwin":
         start = session
@@ -228,7 +254,7 @@ cp -r {repo}/plugins/. "$XDG_CONFIG_HOME/alpe/plugins/"
 {{
     python3 {repo}/tools/activate-plugins.py
     ALPE_DESIGN_NO_SERVICE=1 ALPE_SHELL_DIR={shell} python3 {repo}/tools/design.py apply --ja --variante kde --bilder nein </dev/null
-    python3 "$base/vorbereitung.py" - {extra} {probe} {session10}
+    python3 "$base/vorbereitung.py" - {extra} {probe} {session10} {entsperrt}
 }} > "$base/vorbereitung.log" 2>&1
 # 3. Leerer Ersatz für den Systembus.
 dbus-daemon --config-file="$base/systembus.conf" --nofork >/dev/null 2>&1 &
@@ -238,7 +264,7 @@ dbus-run-session -- kwin_wayland --virtual --width 1920 --height 1080 --socket l
     --exit-with-session {start} > "$base/compositor.log" 2>&1
 echo "$?" > "$base/compositor.exit"
 """.format(base=q(base), repo=q(REPO), shell=q(SHELL), sock=q(sock), start=q(start),
-           extra=q(os.pathsep.join(extra_plugins)), probe="1" if probe else "0",
+           extra=q(os.pathsep.join(extra_plugins)), probe="1" if probe else "0", entsperrt="1" if entsperrt else "0",
            session10=q(os.path.join(REPO, "tests", "data", "einstellungen-1.0", "session.json")))
 
 
@@ -332,7 +358,7 @@ def probe_report(home):
     return lines
 
 
-def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False):
+def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=None):
     root = os.environ.get("ALPE_LP_TMP") or tempfile.gettempdir()
     base = tempfile.mkdtemp(prefix="alpe-lp-", dir=root)
     home, stubs = os.path.join(base, "h"), os.path.join(base, "s")
@@ -356,13 +382,13 @@ def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False):
         handle.write(SYSTEMBUS.format(sock=sock))
     session = os.path.join(base, "sitzung.sh")
     with open(session, "w") as handle:
-        handle.write(session_script(base, dienst))
+        handle.write(session_script(base, dienst, bild))
     os.chmod(session, 0o755)
     if compositor == "hyprland":
         hyprland_files(base, session)
     runner = os.path.join(base, "lauf.sh")
     with open(runner, "w") as handle:
-        handle.write(runner_script(base, compositor, sock, session, extra_plugins, probe))
+        handle.write(runner_script(base, compositor, sock, session, extra_plugins, probe, bool(bild)))
     os.chmod(runner, 0o755)
     with open(os.path.join(base, "vorbereitung.py"), "w", encoding="utf-8") as handle:
         handle.write(VORBEREITUNG)
@@ -390,7 +416,7 @@ def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False):
     release_rundir(rundir)
     result = {"base": base, "seconds": round(time.time() - started), "hung": hung, "limit": limit}
     result["probe"] = probe_report(home) if probe else []
-    for name in ("shell.log", "ipc.log", "stubs.log", "dienst.exit", "compositor.exit", "abbruch", "scope.log", "vorbereitung.log"):
+    for name in ("shell.log", "ipc.log", "stubs.log", "dienst.exit", "compositor.exit", "abbruch", "scope.log", "vorbereitung.log", "bild.log"):
         path = os.path.join(base, name)
         result[name] = open(path, errors="replace").read() if os.path.exists(path) else ""
     if not keep:
@@ -474,8 +500,9 @@ def main(argv):
         if not os.path.isfile(os.path.join(folder, "plugin.json")):
             say("FEHLER: %s ist kein Plugin-Ordner (plugin.json fehlt)" % folder)
             return 2
-    if write and (probe or extra_plugins):
-        say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins und --probe-zeichen")
+    bild = os.path.abspath(args[args.index("--bild") + 1]) if "--bild" in args else None
+    if write and (probe or extra_plugins or bild):
+        say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins, --probe-zeichen und --bild")
         return 2
     for need in ("kwin_wayland", "systemd-run", "dbus-run-session") + (("Hyprland",) if compositor == "hyprland" else ()):
         if not shutil.which(need):
@@ -500,7 +527,7 @@ def main(argv):
         for n in range(runs):
             unit = "%s%s-%s-%d.scope" % (UNIT_PREFIX, stamp, compositor, n + 1)
             say("== Lauf %d/%d unter %s (%s)" % (n + 1, runs, compositor, unit))
-            result = one_run(compositor, dienst, keep, unit, extra_plugins, probe)
+            result = one_run(compositor, dienst, keep, unit, extra_plugins, probe, bild)
             say("   %d s, Compositor-Exit %s, Dienst %s" % (result["seconds"], result["compositor.exit"].strip() or "?",
                                                          result["dienst.exit"].strip() or "?"))
             if keep:
@@ -510,6 +537,8 @@ def main(argv):
                     say("   " + line)
             for line in result["probe"]:
                 say("   Probe nach dem Lauf – " + line)
+            if bild:
+                say("   Bildschirmfoto – " + (result["bild.log"].strip().splitlines() or ["FEHLER: keines entstanden"])[-1])
             if any(line.startswith("FEHLER") for line in result["probe"]):
                 return 2
             if result["stubs.log"]:

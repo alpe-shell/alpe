@@ -142,6 +142,11 @@ ausserhalb = sorted(set((d, r) for d, r in raeume if not r.startswith("alpe:")))
 check(len(raeume) > 60 and ausserhalb == [], "alle Layer-Namensräume folgen dem Schema alpe:<name> (%d geprüft): %s" % (len(raeume), ausserhalb))
 check(all(any(regel.search(r) for regel in regeln) for _d, r in raeume), "die Regeln der Hyprland-Vorlage erfassen jeden Layer-Namensraum")
 
+# Der Schriftzug in der Hilfe des Dienstes ist Blockgrafik – die Namensprüfung sieht ihn nicht.
+schriftzug = read(core, "cmd", "alpe-dienst", "ui.go")
+check("██████╗ ███╗   ███╗███████╗" not in schriftzug and " █████╗ ██╗     ██████╗ ███████╗" in schriftzug,
+      "Hilfe des Dienstes zeigt den Schriftzug ALPE, nicht den des Ursprungs")
+
 # D7.8: Hüllen und Weiterleitungen für fremde Plugins sind weg, die Namensprüfung ist streng.
 reste = []
 for ordner, _dirs, dateien in os.walk(SHELL):

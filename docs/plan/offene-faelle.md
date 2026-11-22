@@ -131,7 +131,81 @@ mv ~/.local/state/alpe.vor-phase-a ~/.local/state/alpe
 (Gab es `~/.local/state/alpe` vor dem Test nicht, meldet das erste `cp` bzw. das letzte `mv`
 nur «nicht gefunden».)
 
-**Zusatz für den Stand nach D7** (Plan 0.8 Nr. 32). Ab D7.2b importieren die Repo-Plugins
+**Anleitung für den Stand nach D7 (Halt nach D7.8, 22.11.2026).** Ablauf wie oben für D6, mit
+`/tmp/alpe-d7` statt `/tmp/alpe-d6` und diesen Änderungen. Seit D7.8 gibt es keine Hüllen mehr:
+Ein fremdes Plugin lädt nur noch in der angepassten Fassung.
+
+*Schritt 0, einmalig und bleibend – vor dem Sichern:* die angepassten Fassungen von hueManager
+und calculator unter `~/.config/alpe/plugins` anlegen, genau nach `docs/plugins-anpassen.md`,
+Abschnitt «Mac» (je `cp -r` aus `~/.config/dms/plugins`, dann die `sed`-Zeilen). Die Kopien unter
+`~/.config/dms/plugins` bleiben unverändert, 1.0 läuft damit weiter. Weil das vor dem Sichern
+geschieht, liegen die angepassten Fassungen auch in `~/.config/alpe.vor-phase-a` und überstehen
+das Zurückholen am Ende. Prüfen (beide Befehle geben nichts aus):
+
+```
+grep -rn -E --include='*.qml' --include='plugin.json' '\bDank[A-Z]|qs\.DCommon|\["dms"|requires_dms' ~/.config/alpe/plugins/hueManager ~/.config/alpe/plugins/calculator
+git -C ~/.config/dms/plugins/hueManager status --short
+```
+
+Danach sichern, bauen und die DMS-Dateien dazukopieren wie oben (`cp -rn` überschreibt die
+angepassten Fassungen nicht), dann die alten Kopien von alpeSport und alpeRadar zur Seite legen
+(Zusatz unten). Bauen und starten:
+
+```
+cd ~/alpe-phase-a/core
+make dev BUILD_DIR=/tmp/alpe-d7
+/tmp/alpe-d7/alpe-dienst --help
+/tmp/alpe-d7/alpe-dienst dl --help
+systemctl --user stop dms.service
+/tmp/alpe-d7/alpe-dienst -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-d7.log
+```
+
+`--help` zeigt oben den Schriftzug «ALPE» (nicht mehr «DMS»), `dl --help` bei `--user-agent`
+den Vorgabewert `Alpe/1.0.0 (+https://github.com/alpe-shell/alpe)`.
+
+Neu seit D6 – bitte gezielt ansehen:
+
+- **Fremde Plugins:** Einstellungen → Plugins: hueManager und calculator sind geladen (kein
+  Fehlerhinweis beim Plugin). Rechner im Starter ausprobieren, Ergebnis kopieren (ruft
+  `alpe-dienst cl copy`); Hue-Widget öffnen.
+- **Alpe-Zeichen im Starter-Knopf:** Einstellungen → Leisten-Widgets → Starter-Knopf, Auswahl
+  «Symbol» (im Code `launcherLogoMode`, Werte Apps, OS-Logo, Alpe, Compositor, Eigenes): «Alpe»
+  wählen. In der Leiste steht dann das Alpe-Zeichen, nicht das Zeichen des Ursprungs und kein
+  leerer Platz. War unter 1.0 das Logo des Ursprungs gewählt, ist nach dem Start schon «Alpe»
+  gewählt (Migration v44).
+- **Alpe-Zeichen als Material-Hintergrund:** Einstellungen → Hintergrund, Zeile «Material»
+  (erscheint, wenn als Hintergrund das Material-Bild gewählt ist): Vorlage «Alpe». Auf dem
+  Schreibtisch erscheint das Alpe-Zeichen als grosse Form (`alpeLogo`). Danach den bisherigen
+  Hintergrund wieder wählen. So sah es in der Ladeprüfung am PC aus: siehe «Halt nach D7» im
+  Plan, Abschnitt «Stand».
+- **Punkt-Symbol:** Einstellungen → Seite «Punkt» (Leisten-Layout): Die Auswahl «Symbol» nennt
+  den dritten Eintrag «Alpe» (bis D7.8a stand dort «Dux»).
+- **Einstellungen und Session umgezogen** (zweites Terminal): `grep configVersion
+  ~/.config/alpe/settings.json` zeigt 44; `grep -c -E 'dankLauncherV2|"dms_|dankLogo'
+  ~/.config/alpe/settings.json ~/.local/state/alpe/session.json` zeigt zweimal 0;
+  `ls ~/.local/state/alpe/session.v7.json` (Sicherung der Session vor dem Umzug auf Version 8).
+- **Notizblock:** eine gespeicherte Notiz öffnen, neben dem Dateinamen den Knopf «Pfad kopieren»
+  drücken und in einem Terminal einfügen – der Pfad der Datei muss kommen (der Knopf rief bis
+  D7.8a noch `dms clipboard copy` und tat unter 1.1 nichts).
+- **Bildschirmfoto und Pipette ohne Animation:** `/tmp/alpe-d7/alpe-dienst screenshot region`
+  starten und während der Auswahl im zweiten Terminal `hyprctl layers | grep alpe:` – die Fläche
+  heisst `alpe:screenshot` (Pipette: `alpe:colorpicker`); sie soll ohne Einblenden erscheinen,
+  wenn in der eigenen Hyprland-Datei eine Regel für `^alpe:.*` steht.
+- **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
+
+Auswerten wie oben, mit `/tmp/alpe-d7.log`; zusätzlich darf der erste Befehl nichts finden. Der
+zweite zeigt, was das Protokoll zu den beiden Plugins sagt (am PC meldet hueManager dort eine
+Warnung aus eigenem Code, `Color.js … used before its declaration` – die gab es schon unter 1.0):
+
+```
+grep -E "is not a type|is not installed|is deprecated" /tmp/alpe-d7.log
+grep -E "hueManager|calculator" /tmp/alpe-d7.log
+```
+
+Beenden und zurückholen wie oben. Die angepassten Plugins bleiben dabei unter
+`~/.config/alpe/plugins` (sie stecken in der Sicherung von Schritt 0 an).
+
+**Zusatz zu den Repo-Plugins** (Plan 0.8 Nr. 32). Ab D7.2b importieren die Repo-Plugins
 `qs.Alpe.*`; die alten Kopien von alpeSport und alpeRadar (aus 1.0, über `cp -rn` oben auch in
 `~/.config/alpe/plugins`) laden damit nicht mehr und würden als Benutzerkopie die Repo-Fassung
 verdecken. Für den Test zur Seite legen und die Repo-Fassung einsetzen, nach dem `cp -rn` und vor
