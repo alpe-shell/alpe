@@ -65,6 +65,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | D7.N | Alle Node-Tests der Oberfläche in test.sh (`tools/node-tests.py`), feste Liste der 10 bekannten Fehlschläge `tests/data/node-bekannte-fehlschlaege.txt`; neuer Fehlschlag = rot | Test `tests/test_node_tests.py` |
 | D7.0 | Werkzeug `entwicklung/umbenennen/umbenennen.py` (Tabellen je Bereich, Probelauf, `--liste`, Kollisionsprüfung gegen Repo, Qt, Quickshell); `tools/namen-pruefen.sh` mit Ausnahmeliste `tools/namen-ausnahmen.txt` (Fristen), in test.sh nur meldend. Ausgangswert: 4048 Fundstellen in 596 Dateien | Test `tests/test_umbenennen.py` |
 | D7.1 | Plugin-Beschreibung: `requires_alpe` (gegen `Brand.version`, Hinweis statt Ladesperre), `requires_dms` nicht mehr gelesen; alpeSport `bar-widget`; Alpe-Plugins `requires_alpe: >=1.0` (G1 hebt auf 1.1); Tabelle `d7-1-plugins.tsv` | plugin-reload-Test angepasst |
+| D7.2a | Module nur per `git mv` (463 Dateien, inhaltlich unverändert): `DCommon/` → `Alpe/`, `Modules/DDash/` → `Alpe/Dash/`, `DBar` → `Bar`, `DIsland` → `Island`, `Modals/DLauncherV2` → `Modals/Launcher`, Harness-Ordner; Symlinks unter den alten Pfaden (Tabelle `d7-2a-module.tsv`) | test.sh grün |
 <!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
@@ -112,8 +113,7 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
 - **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
   nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
-- **Erledigt bis D7.1** (dazu 0.8 Nr. 25–30). **Nächster Schritt: D7.2a** (Module nur per `git mv`
-  plus Symlinks), dann D7.2b mit allen Importen im selben Commit und Ladeprüfung KWin (0.8 Nr. 27/28).
+- **Erledigt bis D7.2a** (dazu 0.8 Nr. 25–30). **Nächster Schritt: D7.2b** mit allen Importen im selben Commit und Ladeprüfung KWin (0.8 Nr. 27/28).
   Für jeden Bereich eine Tabelle `entwicklung/umbenennen/<bereich>.tsv` anlegen, Probelauf mit
   `--liste` prüfen, dann `--schreiben`; `bash tools/test.sh` muss grün sein, Namensprüfung zeigt
   die sinkende Zahl. D7.2a: nur `git mv` plus Symlinks unter den alten Pfaden (Werkzeug-Art

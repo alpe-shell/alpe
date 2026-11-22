@@ -1,0 +1,20 @@
+# D7.2a (Plan 2.3.5): Module nur per git mv verschieben, Symlinks unter den alten Pfaden.
+# Dateien bleiben inhaltlich unverändert; D7.2b stellt die Importe um und entfernt die Symlinks.
+datei	shell/DCommon	shell/Alpe
+datei	shell/Modules/DDash	shell/Alpe/Dash
+datei	shell/Modules/DBar	shell/Modules/Bar
+datei	shell/Modules/DIsland	shell/Modules/Island
+datei	shell/Modals/DLauncherV2	shell/Modals/Launcher
+datei	entwicklung/pageharness/qs/DCommon	entwicklung/pageharness/qs/Alpe
+datei	entwicklung/pageharness/qs/Modules/DDash	entwicklung/pageharness/qs/Alpe/Dash
+datei	entwicklung/sportharness/mocks/qs/DCommon	entwicklung/sportharness/mocks/qs/Alpe
+datei	entwicklung/sportharness/mocks/qs/Modules/DDash	entwicklung/sportharness/mocks/qs/Alpe/Dash
+link	shell/DCommon	Alpe
+link	shell/Modules/DDash	../Alpe/Dash
+link	shell/Modules/DBar	Bar
+link	shell/Modules/DIsland	Island
+link	shell/Modals/DLauncherV2	Launcher
+link	entwicklung/pageharness/qs/DCommon	Alpe
+link	entwicklung/pageharness/qs/Modules/DDash	../Alpe/Dash
+link	entwicklung/sportharness/mocks/qs/DCommon	Alpe
+link	entwicklung/sportharness/mocks/qs/Modules/DDash	../Alpe/Dash
