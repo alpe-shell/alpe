@@ -545,7 +545,7 @@ Item {
         SettingsCard {
             width: parent.width
             iconName: "apps"
-            title: I18n.tr("Built-in apps", "launcher settings card, DMS tools listed with the installed apps")
+            title: I18n.tr("Built-in apps", "launcher settings card, Alpe tools listed with the installed apps")
             settingKey: "launcherBuiltInApps"
             tags: ["launcher", "apps", "builtin", "settings", "notepad", "system monitor", "color picker"]
 
@@ -658,7 +658,7 @@ Item {
                     DBadge {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: pluginRow.modelData.isBuiltIn
-                        text: I18n.tr("Built-in", "badge on launcher plugins that ship with DMS")
+                        text: I18n.tr("Built-in", "badge on launcher plugins that ship with Alpe")
                         color: Theme.primaryHover
                         textColor: Theme.primary
                     }

@@ -175,7 +175,7 @@ Item {
     function confirmRemoveBind(key) {
         removeBindConfirm.showWithOptions({
             "title": I18n.tr("Remove Shortcut?"),
-            "message": KeybindsService.currentProvider === "hyprland" ? I18n.tr("Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across DMS updates.", "hyprland remove shortcut confirmation, %1 is the key combination, %2 the override file").arg(key).arg("dms/binds-user.lua") : I18n.tr("Remove the shortcut %1?", "remove shortcut confirmation, %1 is the key combination").arg(key),
+            "message": KeybindsService.currentProvider === "hyprland" ? I18n.tr("Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across Alpe updates.", "hyprland remove shortcut confirmation, %1 is the key combination, %2 the override file").arg(key).arg("dms/binds-user.lua") : I18n.tr("Remove the shortcut %1?", "remove shortcut confirmation, %1 is the key combination").arg(key),
             "confirmText": I18n.tr("Remove"),
             "onConfirm": () => KeybindsService.removeBind(key)
         });
@@ -184,7 +184,7 @@ Item {
     function confirmResetBind(key) {
         removeBindConfirm.showWithOptions({
             "title": I18n.tr("Reset to default"),
-            "message": I18n.tr("Drop your override for %1 so the DMS default action re-applies?", "reset shortcut confirmation, %1 is the key combination").arg(key),
+            "message": I18n.tr("Drop your override for %1 so the Alpe default action re-applies?", "reset shortcut confirmation, %1 is the key combination").arg(key),
             "confirmText": I18n.tr("Reset"),
             "onConfirm": () => {
                 KeybindsService.resetBind(key);
@@ -470,7 +470,7 @@ Item {
                                         return I18n.tr("Click 'Setup' to create %1 and add include to your compositor config.", "include setup banner, %1 is the dms config file name").arg("dms/binds");
                                     if (warningBox.showWarning) {
                                         const count = warningBox.status.overriddenBy;
-                                        return (count === 1 ? I18n.tr("%1 DMS bind may be overridden by config binds that come after the include.", "singular, keybinds warning, %1 is 1") : I18n.tr("%1 DMS binds may be overridden by config binds that come after the include.", "plural, keybinds warning, %1 is a count")).arg(count);
+                                        return (count === 1 ? I18n.tr("%1 Alpe bind may be overridden by config binds that come after the include.", "singular, keybinds warning, %1 is 1") : I18n.tr("%1 Alpe binds may be overridden by config binds that come after the include.", "plural, keybinds warning, %1 is a count")).arg(count);
                                     }
                                     return "";
                                 }

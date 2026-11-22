@@ -663,7 +663,7 @@ Item {
         SettingsCard {
             tab: "theme"
             tags: ["matugen", "startup", "theming"]
-            title: I18n.tr("Startup Behavior", "theme settings card title, what happens to the dynamic theme when DMS starts")
+            title: I18n.tr("Startup Behavior", "theme settings card title, what happens to the dynamic theme when Alpe starts")
             settingKey: "themeStartupBehavior"
             iconName: "power_settings_new"
             visible: Theme.matugenAvailable
@@ -673,7 +673,7 @@ Item {
                 tags: ["matugen", "startup", "generate"]
                 settingKey: "generateThemeAtStartup"
                 text: I18n.tr("Generate Theme at Startup", "theme settings toggle, rerun matugen on every shell start")
-                description: I18n.tr("Regenerate matugen colors when DMS starts, even if nothing changed.", "generate theme at startup toggle description")
+                description: I18n.tr("Regenerate matugen colors when Alpe starts, even if nothing changed.", "generate theme at startup toggle description")
                 checked: SettingsData.generateThemeAtStartup
                 onToggled: checked => SettingsData.set("generateThemeAtStartup", checked)
             }

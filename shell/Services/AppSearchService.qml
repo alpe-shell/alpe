@@ -271,9 +271,9 @@ Singleton {
             },
             "dms_settings_search": {
                 id: "dms_settings_search",
-                name: I18n.tr("Search settings", "launcher plugin name that searches DMS settings"),
+                name: I18n.tr("Search settings", "launcher plugin name that searches Alpe settings"),
                 cornerIcon: "search",
-                comment: I18n.tr("DMS Settings"),
+                comment: I18n.tr("Alpe Settings"),
                 defaultTrigger: "?",
                 isLauncher: true
             },

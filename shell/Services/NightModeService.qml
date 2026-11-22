@@ -35,7 +35,7 @@ Singleton {
     function _setNightModeEnabled(enabled, quiet, onComplete) {
         if (!gammaControlAvailable) {
             if (!quiet && enabled)
-                ToastService.showWarning(I18n.tr("Night mode failed: DMS gamma control not available"));
+                ToastService.showWarning(I18n.tr("Night mode failed: Alpe gamma control not available"));
             if (onComplete)
                 onComplete(false);
             return;

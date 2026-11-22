@@ -545,7 +545,7 @@ Item {
             SettingsRow {
                 body: StyledText {
                     width: parent.width
-                    text: I18n.tr("Rules found in your compositor config. These are read-only here, use Convert to DMS to make an editable copy.")
+                    text: I18n.tr("Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.")
                     font.pixelSize: Theme.fontSizeSmall
                     color: Theme.surfaceVariantText
                     wrapMode: Text.WordWrap
@@ -610,7 +610,7 @@ Item {
                         iconColor: Theme.surfaceVariantText
                         enabled: !root.readOnly
                         anchors.verticalCenter: parent.verticalCenter
-                        tooltipText: I18n.tr("Convert to DMS")
+                        tooltipText: I18n.tr("Convert to Alpe")
                         tooltipSide: "left"
                         onClicked: root.copyRuleToDms(externalCard.modelData)
                     }

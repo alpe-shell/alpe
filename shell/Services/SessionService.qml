@@ -736,7 +736,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
         case "restart":
             return {
                 "icon": "refresh",
-                "label": I18n.tr("Restart DMS"),
+                "label": I18n.tr("Restart Alpe"),
                 "key": "D"
             };
         case "switchuser":

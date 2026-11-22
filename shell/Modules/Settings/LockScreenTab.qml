@@ -880,7 +880,7 @@ Item {
             SettingsRow {
                 visible: !SessionService.loginctlAvailable
                 body: StyledText {
-                    text: I18n.tr("%1 not available - lock integration requires the DMS socket connection", "lock screen warning, %1 is the loginctl binary").arg("loginctl")
+                    text: I18n.tr("%1 not available - lock integration requires the Alpe socket connection", "lock screen warning, %1 is the loginctl binary").arg("loginctl")
                     font.pixelSize: Theme.fontSizeSmall
                     color: Theme.warning
                     width: parent.width

@@ -549,7 +549,7 @@ Column {
             tags: ["floating", "window", "title", "bar", "header", "csd", "decoration", "compositor", "kwin", "controls"]
             settingKey: "floatingWindowTitleBars"
             text: I18n.tr("Title bars")
-            description: I18n.tr("Off lets the compositor decorate DMS windows. Open windows update when reopened.", "theme floating windows section, title bars toggle description")
+            description: I18n.tr("Off lets the compositor decorate Alpe windows. Open windows update when reopened.", "theme floating windows section, title bars toggle description")
             checked: SettingsData.floatingWindowTitleBars
             onToggled: checked => SettingsData.set("floatingWindowTitleBars", checked)
         }
@@ -559,7 +559,7 @@ Column {
             tags: ["floating", "window", "tile", "tiling", "compositor", "rule", "hyprland"]
             settingKey: "dmsWindowsFloating"
             text: I18n.tr("Open floating")
-            description: I18n.tr("Adds a compositor window rule so DMS windows such as Settings open floating", "theme floating windows section, open floating toggle description")
+            description: I18n.tr("Adds a compositor window rule so Alpe windows such as Settings open floating", "theme floating windows section, open floating toggle description")
             visible: windowRulesInclude.compositorSupported
             checked: CompositorService.dmsWindowFloatingActive
             modified: !checked

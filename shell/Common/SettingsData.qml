@@ -1516,7 +1516,7 @@ Singleton {
             if (platform === SessionData.lastAppliedIconTheme || platform === root.iconThemeDark || platform === root.iconThemeLight)
                 return;
             root.setIconThemeUnmanaged();
-            ToastService.showWarning(I18n.tr("Icon theme changed outside DMS; switched to System Default", "shown when an external tool overrides the icon theme DMS applied"));
+            ToastService.showWarning(I18n.tr("Icon theme changed outside Alpe; switched to System Default", "shown when an external tool overrides the icon theme Alpe applied"));
         });
     }
 

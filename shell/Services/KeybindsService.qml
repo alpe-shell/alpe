@@ -574,7 +574,7 @@ Singleton {
         if (!dmsStatus.exists || dmsStatus.included)
             return;
         _hyprlandLegacyWarnShown = true;
-        ToastService.showWarning(I18n.tr("Hyprland config include missing"), I18n.tr("DMS Settings writes Lua keybinds. Add the DMS include so edits apply."), "dms setup", "hyprland-migration");
+        ToastService.showWarning(I18n.tr("Hyprland config include missing"), I18n.tr("Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply."), "dms setup", "hyprland-migration");
     }
 
     function showHyprlandReadOnlyWarning() {

@@ -72,7 +72,7 @@ DDialog {
     readonly property string saveTooltip: I18n.tr("Also saves the screenshot to disk", "keybind screenshot option tooltip")
 
     readonly property var typeTooltips: ({
-            "dms": I18n.tr("DMS shell actions (launcher, clipboard, etc.)"),
+            "dms": I18n.tr("Alpe shell actions (launcher, clipboard, etc.)"),
             "compositor": I18n.tr("Compositor actions (focus, move, etc.)", "keybind action type tooltip"),
             "spawn": I18n.tr("Run a program (e.g., firefox, kitty)"),
             "shell": I18n.tr("Run a shell command (e.g., notify-send)")
@@ -706,7 +706,7 @@ DDialog {
         SettingsRow {
             iconName: "warning"
             title: I18n.tr("This bind is overridden by %1", "keybind conflict notice, %1 is the compositor config file").arg("config.kdl")
-            subtitle: I18n.tr("Config action: %1", "keybind conflict notice, %1 is the action from the compositor config").arg(root.configConflict?.action ?? "") + "\n" + I18n.tr("To use this DMS bind, remove or change the keybind in your %1", "keybind conflict hint, %1 is the compositor config file").arg("config.kdl")
+            subtitle: I18n.tr("Config action: %1", "keybind conflict notice, %1 is the action from the compositor config").arg(root.configConflict?.action ?? "") + "\n" + I18n.tr("To use this Alpe bind, remove or change the keybind in your %1", "keybind conflict hint, %1 is the compositor config file").arg("config.kdl")
         }
     }
 

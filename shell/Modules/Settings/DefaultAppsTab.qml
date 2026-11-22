@@ -51,7 +51,7 @@ Item {
         })
 
     readonly property string dmsChooserId: "dms-open"
-    readonly property string dmsChooserLabel: I18n.tr("DMS chooser")
+    readonly property string dmsChooserLabel: I18n.tr("Alpe chooser")
     readonly property string terminalsListPath: (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/xdg-terminals.list"
 
     function stripDesktopSuffix(id) {

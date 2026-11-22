@@ -46,7 +46,7 @@ Item {
         SettingsCard {
             SettingsRow {
                 body: StyledText {
-                    text: I18n.tr('DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.', 'about page blurb, %1 is a Quickshell link, %2 is a Go link').arg(`<a href="https://quickshell.org" style="text-decoration:none; color:${Theme.primary};">Quickshell</a>`).arg(`<a href="https://go.dev" style="text-decoration:none; color:${Theme.primary};">Go</a>`)
+                    text: I18n.tr('Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.', 'about page blurb, %1 is a Quickshell link, %2 is a Go link').arg(`<a href="https://quickshell.org" style="text-decoration:none; color:${Theme.primary};">Quickshell</a>`).arg(`<a href="https://go.dev" style="text-decoration:none; color:${Theme.primary};">Go</a>`)
                     textFormat: Text.RichText
                     font.pixelSize: Theme.fontSizeMedium
                     linkColor: Theme.primary
@@ -125,7 +125,7 @@ Item {
 
             SettingsNavRow {
                 iconName: "system_update_alt"
-                title: I18n.tr("Software updates", "settings page, modal and bar widget title, DMS and system package updates")
+                title: I18n.tr("Software updates", "settings page, modal and bar widget title, Alpe and system package updates")
                 hint: root.updateHint()
                 onClicked: keyboard => root.parentModal?.navigateTo("updater", keyboard)
             }

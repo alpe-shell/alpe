@@ -5,11 +5,11 @@
   "%1 (+%2 more)": {
     "%1 (+%2 more)": "%1 (+%2 weitere)"
   },
-  "%1 DMS bind may be overridden by config binds that come after the include.": {
-    "%1 DMS bind may be overridden by config binds that come after the include.": "%1 DMS-Bindung wird möglicherweise durch Konfigurationsbindungen ausser Kraft gesetzt, die nach dem Include stehen."
+  "%1 Alpe bind may be overridden by config binds that come after the include.": {
+    "%1 Alpe bind may be overridden by config binds that come after the include.": "%1 Alpe-Bindung wird möglicherweise durch Konfigurationsbindungen ausser Kraft gesetzt, die nach dem Include stehen."
   },
-  "%1 DMS binds may be overridden by config binds that come after the include.": {
-    "%1 DMS binds may be overridden by config binds that come after the include.": "%1 DMS-Bindungen werden möglicherweise durch Konfigurationsbindungen ausser Kraft gesetzt, die nach dem Include stehen."
+  "%1 Alpe binds may be overridden by config binds that come after the include.": {
+    "%1 Alpe binds may be overridden by config binds that come after the include.": "%1 Alpe-Bindungen werden möglicherweise durch Konfigurationsbindungen ausser Kraft gesetzt, die nach dem Include stehen."
   },
   "%1 Flatpak": {
     "%1 Flatpak": "%1 Flatpak"
@@ -155,8 +155,8 @@
   "%1 not available": {
     "%1 not available": "%1 nicht verfügbar"
   },
-  "%1 not available - lock integration requires the DMS socket connection": {
-    "%1 not available - lock integration requires the DMS socket connection": "%1 nicht verfügbar - Sperrintegration erfordert die DMS-Socket-Verbindung"
+  "%1 not available - lock integration requires the Alpe socket connection": {
+    "%1 not available - lock integration requires the Alpe socket connection": "%1 nicht verfügbar - Sperrintegration erfordert die Alpe-Socket-Verbindung"
   },
   "%1 not available or disabled - cannot apply %2 colors": {
     "%1 not available or disabled - cannot apply %2 colors": "%1 nicht verfügbar oder deaktiviert - %2 Farben können nicht angewendet werden"
@@ -299,8 +299,8 @@
   "A notification must match every condition": {
     "A notification must match every condition": "Eine Benachrichtigung muss jeder Bedingung entsprechen"
   },
-  "A plugin file was added or renamed while the shell was running. Restart DMS to load it. If the plugin was not updated, check that its imports match the file name capitalization.": {
-    "A plugin file was added or renamed while the shell was running. Restart DMS to load it. If the plugin was not updated, check that its imports match the file name capitalization.": ""
+  "A plugin file was added or renamed while the shell was running. Restart Alpe to load it. If the plugin was not updated, check that its imports match the file name capitalization.": {
+    "A plugin file was added or renamed while the shell was running. Restart Alpe to load it. If the plugin was not updated, check that its imports match the file name capitalization.": ""
   },
   "A tiled or fullscreen window dragged into floating centers on the cursor": {
     "A tiled or fullscreen window dragged into floating centers on the cursor": "Ein gekacheltes oder Vollbildfenster, gezogen auf schwebende Zentren am Cursor"
@@ -467,8 +467,8 @@
   "Added in front of every app launch command": {
     "Added in front of every app launch command": "Wird jedem App-Startbefehl vorangestellt"
   },
-  "Adds a compositor window rule so DMS windows such as Settings open floating": {
-    "Adds a compositor window rule so DMS windows such as Settings open floating": "Fügt eine Compositor-Fensterregel hinzu, damit DMS-Fenster wie Einstellungen schwebend geöffnet werden"
+  "Adds a compositor window rule so Alpe windows such as Settings open floating": {
+    "Adds a compositor window rule so Alpe windows such as Settings open floating": "Fügt eine Compositor-Fensterregel hinzu, damit Alpe-Fenster wie Einstellungen schwebend geöffnet werden"
   },
   "Adds concave curves where the bar meets the screen edge": {
     "Adds concave curves where the bar meets the screen edge": "Fügt konkave Kurven hinzu, wo die Leiste auf den Bildschirmrand trifft"
@@ -1775,8 +1775,8 @@
   "Controls": {
     "Controls": "Steuerung"
   },
-  "Convert to DMS": {
-    "Convert to DMS": "In DMS konvertieren"
+  "Convert to Alpe": {
+    "Convert to Alpe": "In Alpe konvertieren"
   },
   "Convertible": {
     "Convertible": "Convertible"
@@ -1997,38 +1997,38 @@
   "DDC/CI monitor": {
     "DDC/CI monitor": "DDC/CI-Monitor"
   },
-  "DMS %1 available": {
-    "DMS %1 available": "DMS %1 verfügbar"
+  "Alpe %1 available": {
+    "Alpe %1 available": "Alpe %1 verfügbar"
   },
-  "DMS Settings": {
-    "DMS Settings": "DMS-Einstellungen"
+  "Alpe Settings": {
+    "Alpe Settings": "Alpe-Einstellungen"
   },
-  "DMS Settings writes Lua keybinds. Add the DMS include so edits apply.": {
-    "DMS Settings writes Lua keybinds. Add the DMS include so edits apply.": "DMS-Einstellungen schreibt Lua-Tastenkombinationen. Fügen Sie den DMS-Include hinzu, damit Bearbeitungen angwendet werden."
+  "Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply.": {
+    "Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply.": "Alpe-Einstellungen schreibt Lua-Tastenkombinationen. Fügen Sie den Alpe-Include hinzu, damit Bearbeitungen angwendet werden."
   },
-  "DMS and system updates": {
-    "DMS and system updates": "DMS- und Systeaktualisierungen"
+  "Alpe and system updates": {
+    "Alpe and system updates": "Alpe- und Systeaktualisierungen"
   },
-  "DMS chooser": {
-    "DMS chooser": "DMS-Auswahl"
+  "Alpe chooser": {
+    "Alpe chooser": "Alpe-Auswahl"
   },
-  "DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": {
-    "DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": "DMS ist eine moderne, hochgradig anpassbare Desktop-Shell, die direkt nach der Installation grossartig aussieht, ohne dabei die Freiheit einzuschränken, sie ganz nach Ihren Wünschen zu gestalten.<br/><br/>Entwickelt mit %1 und %2, vereint sie Panels, Widgets, Systemsteuerungen und mehr zu einem stimmigen Desktop-Erlebnis."
+  "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": {
+    "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": "Alpe ist eine moderne, hochgradig anpassbare Desktop-Shell, die direkt nach der Installation grossartig aussieht, ohne dabei die Freiheit einzuschränken, sie ganz nach Ihren Wünschen zu gestalten.<br/><br/>Entwickelt mit %1 und %2, vereint sie Panels, Widgets, Systemsteuerungen und mehr zu einem stimmigen Desktop-Erlebnis."
   },
-  "DMS out of date": {
-    "DMS out of date": "DMS ist veraltet"
+  "Alpe out of date": {
+    "Alpe out of date": "Alpe ist veraltet"
   },
-  "DMS server is outdated (API v%1, expected v%2)": {
-    "DMS server is outdated (API v%1, expected v%2)": "DMS-Server ist veraltet (API v%1, erwartet v%2)"
+  "Alpe server is outdated (API v%1, expected v%2)": {
+    "Alpe server is outdated (API v%1, expected v%2)": "Alpe-Server ist veraltet (API v%1, erwartet v%2)"
   },
-  "DMS service is not connected. Clipboard settings are unavailable.": {
-    "DMS service is not connected. Clipboard settings are unavailable.": "DMS-Dienst ist nicht verbunden. Zwischenablage-Einstellungen sind nicht verfügbar."
+  "Alpe service is not connected. Clipboard settings are unavailable.": {
+    "Alpe service is not connected. Clipboard settings are unavailable.": "Alpe-Dienst ist nicht verbunden. Zwischenablage-Einstellungen sind nicht verfügbar."
   },
-  "DMS shell actions (launcher, clipboard, etc.)": {
-    "DMS shell actions (launcher, clipboard, etc.)": "DMS Shell-Aktionen (Launcher, Zwischenablage etc.)"
+  "Alpe shell actions (launcher, clipboard, etc.)": {
+    "Alpe shell actions (launcher, clipboard, etc.)": "Alpe Shell-Aktionen (Launcher, Zwischenablage etc.)"
   },
-  "DMS stops drawing wallpapers on every display": {
-    "DMS stops drawing wallpapers on every display": "DMS stoppt das Zeichnen von Hintergrundbilder auf jedem Display"
+  "Alpe stops drawing wallpapers on every display": {
+    "Alpe stops drawing wallpapers on every display": "Alpe stoppt das Zeichnen von Hintergrundbilder auf jedem Display"
   },
   "Daily": {
     "Daily": "Täglich"
@@ -2501,8 +2501,8 @@
   "Drop here": {
     "Drop here": "Hier ablegen"
   },
-  "Drop your override for %1 so the DMS default action re-applies?": {
-    "Drop your override for %1 so the DMS default action re-applies?": "Ihre Ausserkraftsetzung für %1 aufheben, damit die DMS-Standardaktion wieder angewendet wird?"
+  "Drop your override for %1 so the Alpe default action re-applies?": {
+    "Drop your override for %1 so the Alpe default action re-applies?": "Ihre Ausserkraftsetzung für %1 aufheben, damit die Alpe-Standardaktion wieder angewendet wird?"
   },
   "Drops": {
     "Drops": "Tropfen"
@@ -3284,8 +3284,8 @@
   "Folders": {
     "Folders": "Ordner"
   },
-  "Follow DMS background color": {
-    "Follow DMS background color": "DMS-Hintergrundfarbe folgen"
+  "Follow Alpe background color": {
+    "Follow Alpe background color": "Alpe-Hintergrundfarbe folgen"
   },
   "Follow display focus": {
     "Follow display focus": "Display-Fokus folgen"
@@ -3485,8 +3485,8 @@
   "Gamma control": {
     "Gamma control": "Gamma-Steuerung"
   },
-  "Gamma control not available. Requires DMS API v6+.": {
-    "Gamma control not available. Requires DMS API v6+.": "Gamma-Steuerung nicht verfügbar. Erfordert DMS API v6+."
+  "Gamma control not available. Requires Alpe API v6+.": {
+    "Gamma control not available. Requires Alpe API v6+.": "Gamma-Steuerung nicht verfügbar. Erfordert Alpe API v6+."
   },
   "Gap": {
     "Gap": "Lücke"
@@ -3518,8 +3518,8 @@
   "Generate Theme at Startup": {
     "Generate Theme at Startup": "Theme beim Start generieren"
   },
-  "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow DMS colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.": {
-    "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow DMS colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.": "Generieren Sie Baseline-Konfigurationen für GTK3/4, QT5/QT6 oder qtengine, um den DMS-Farben zu folgen (nur qt6ct benötigt qt6ct-kde). Nur einmal erforderlich.<br /><br />Es wird empfohlen, %1 zu konfigurieren, bevor GTK-Themes angewendet werden."
+  "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow Alpe colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.": {
+    "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow Alpe colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.": "Generieren Sie Baseline-Konfigurationen für GTK3/4, QT5/QT6 oder qtengine, um den Alpe-Farben zu folgen (nur qt6ct benötigt qt6ct-kde). Nur einmal erforderlich.<br /><br />Es wird empfohlen, %1 zu konfigurieren, bevor GTK-Themes angewendet werden."
   },
   "Generate override": {
     "Generate override": "Ausserkraftsetzung generieren"
@@ -3878,8 +3878,8 @@
   "Icon spacing": {
     "Icon spacing": "Icon-Abstand"
   },
-  "Icon theme changed outside DMS; switched to System Default": {
-    "Icon theme changed outside DMS; switched to System Default": "Icon-Theme ausserhalb von DMS geändert; auf Systemvorgabe gewechselt"
+  "Icon theme changed outside Alpe; switched to System Default": {
+    "Icon theme changed outside Alpe; switched to System Default": "Icon-Theme ausserhalb von Alpe geändert; auf Systemvorgabe gewechselt"
   },
   "Icons": {
     "Icons": "Icons"
@@ -3908,8 +3908,8 @@
   "Idle timeouts, power menu, custom actions": {
     "Idle timeouts, power menu, custom actions": "Leerlauf-Timeouts, Energiemenü, benutzerdefinierte Aktionen"
   },
-  "If autostart app icons don't appear in the system tray, generate a systemd override to ensure DMS starts before autostart apps": {
-    "If autostart app icons don't appear in the system tray, generate a systemd override to ensure DMS starts before autostart apps": "Wenn Autostart-App-Icons nicht im System-Tray erscheinen, generieren Sie einen Systemd-Override, um sicherzustellen, dass DMS vor den Autostart-Apps startet"
+  "If autostart app icons don't appear in the system tray, generate a systemd override to ensure Alpe starts before autostart apps": {
+    "If autostart app icons don't appear in the system tray, generate a systemd override to ensure Alpe starts before autostart apps": "Wenn Autostart-App-Icons nicht im System-Tray erscheinen, generieren Sie einen Systemd-Override, um sicherzustellen, dass Alpe vor den Autostart-Apps startet"
   },
   "Ignore Completely": {
     "Ignore Completely": "Vollständig ignorieren"
@@ -5123,8 +5123,8 @@
   "Night mode exceptions": {
     "Night mode exceptions": "Ausnahmen für Nachtmodus"
   },
-  "Night mode failed: DMS gamma control not available": {
-    "Night mode failed: DMS gamma control not available": "Nachtmodus fehlgeschlagen: DMS-Gamma-Steuerung nicht verfügbar"
+  "Night mode failed: Alpe gamma control not available": {
+    "Night mode failed: Alpe gamma control not available": "Nachtmodus fehlgeschlagen: Alpe-Gamma-Steuerung nicht verfügbar"
   },
   "Night mode, gamma, contrast": {
     "Night mode, gamma, contrast": "Nachtmodus, Gamma, Kontrast"
@@ -5570,8 +5570,8 @@
   "Off keeps the bar hidden until turned back on or shown over IPC": {
     "Off keeps the bar hidden until turned back on or shown over IPC": "\"Aus\" hält die Leiste ausgeblendet, bis sie wieder eingeschaltet oder über IPC angezeigt wird"
   },
-  "Off lets the compositor decorate DMS windows. Open windows update when reopened.": {
-    "Off lets the compositor decorate DMS windows. Open windows update when reopened.": "\"Aus“ ermöglicht es dem Compositor, DMS-Fenster zu gestalten. Geöffnete Fenster werden beim erneuten Öffnen aktualisiert."
+  "Off lets the compositor decorate Alpe windows. Open windows update when reopened.": {
+    "Off lets the compositor decorate Alpe windows. Open windows update when reopened.": "\"Aus“ ermöglicht es dem Compositor, Alpe-Fenster zu gestalten. Geöffnete Fenster werden beim erneuten Öffnen aktualisiert."
   },
   "Office": {
     "Office": "Büro"
@@ -6539,8 +6539,8 @@
   "Refreshing...": {
     "Refreshing...": "Auffrischung ..."
   },
-  "Regenerate matugen colors when DMS starts, even if nothing changed.": {
-    "Regenerate matugen colors when DMS starts, even if nothing changed.": "Matugen-Farben beim Start von DMS neu generieren, auch wenn sich nichts geändert hat."
+  "Regenerate matugen colors when Alpe starts, even if nothing changed.": {
+    "Regenerate matugen colors when Alpe starts, even if nothing changed.": "Matugen-Farben beim Start von Alpe neu generieren, auch wenn sich nichts geändert hat."
   },
   "Regex": {
     "Regex": "Regex"
@@ -6614,8 +6614,8 @@
   "Remove the shortcut %1?": {
     "Remove the shortcut %1?": "Den Shortcut %1 entfernen?"
   },
-  "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across DMS updates.": {
-    "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across DMS updates.": "Den Shortcut %1 entfernen? Ein Unbind-Eintrag wird in %2 gespeichert, damit sie über DMS-Aktualisierungen hinweg entfernt bleibt."
+  "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across Alpe updates.": {
+    "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across Alpe updates.": "Den Shortcut %1 entfernen? Ein Unbind-Eintrag wird in %2 gespeichert, damit sie über Alpe-Aktualisierungen hinweg entfernt bleibt."
   },
   "Removed administrator privileges": {
     "Removed administrator privileges": "Administratorrechte entfernt"
@@ -6665,11 +6665,11 @@
   "Requires %1": {
     "Requires %1": "Erfordert %1"
   },
-  "Requires DMS %1": {
-    "Requires DMS %1": "Erfordert DMS %1"
+  "Requires Alpe %1": {
+    "Requires Alpe %1": "Erfordert Alpe %1"
   },
-  "Requires DMS server with sysupdate capability": {
-    "Requires DMS server with sysupdate capability": "Erfordert DMS-Server mit sysupdate-Fähigkeit"
+  "Requires Alpe server with sysupdate capability": {
+    "Requires Alpe server with sysupdate capability": "Erfordert Alpe-Server mit sysupdate-Fähigkeit"
   },
   "Requires night mode support": {
     "Requires night mode support": "Erfordert Nachtmodus-Unterstützung"
@@ -6713,8 +6713,8 @@
   "Restart": {
     "Restart": "Neu starten"
   },
-  "Restart DMS": {
-    "Restart DMS": "DMS neu starten"
+  "Restart Alpe": {
+    "Restart Alpe": "Alpe neu starten"
   },
   "Restarting audio system...": {
     "Restarting audio system...": "Audiosystem wird neu gestartet ..."
@@ -6782,8 +6782,8 @@
   "Rounded": {
     "Rounded": "Abgerundet"
   },
-  "Route Bluetooth headset controls to the active DMS media player": {
-    "Route Bluetooth headset controls to the active DMS media player": "Bluetooth-Headset-Steuerung an den aktiven DMS-Medienplayer leiten"
+  "Route Bluetooth headset controls to the active Alpe media player": {
+    "Route Bluetooth headset controls to the active Alpe media player": "Bluetooth-Headset-Steuerung an den aktiven Alpe-Medienplayer leiten"
   },
   "Routes launcher, dash, control center and notification shortcuts. Bar widget clicks always open their own popout": {
     "Routes launcher, dash, control center and notification shortcuts. Bar widget clicks always open their own popout": "Routet Launcher-, Dash-, Kontrollzentrum- und Benachrichtigungs-Shortcuts. Klicks auf Leisten-Widgets öffnen immer deren eigenes Popout"
@@ -6806,14 +6806,14 @@
   "Rules (%1)": {
     "Rules (%1)": "Regeln (%1)"
   },
-  "Rules found in your compositor config. These are read-only here, use Convert to DMS to make an editable copy.": {
-    "Rules found in your compositor config. These are read-only here, use Convert to DMS to make an editable copy.": "In Ihrer Compositor-Konfiguration gefundene Regeln. Diese sind hier schreibgeschützt. Verwenden Sie „In DMS konvertieren“, um eine editierbare Kopie anzulegen."
+  "Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.": {
+    "Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.": "In Ihrer Compositor-Konfiguration gefundene Regeln. Diese sind hier schreibgeschützt. Verwenden Sie „In Alpe konvertieren“, um eine editierbare Kopie anzulegen."
   },
   "Run %1 to create it before changing these settings.": {
     "Run %1 to create it before changing these settings.": "Führen Sie %1 aus, um es zu erstellen, bevor Sie diese Einstellungen ändern."
   },
-  "Run DMS templates": {
-    "Run DMS templates": "DMS-Vorlagen ausführen"
+  "Run Alpe templates": {
+    "Run Alpe templates": "Alpe-Vorlagen ausführen"
   },
   "Run a program (e.g., firefox, kitty)": {
     "Run a program (e.g., firefox, kitty)": "Ein Programm ausführen (bspw. firefox, kitty)"
@@ -7406,8 +7406,8 @@
   "Show remaining time": {
     "Show remaining time": "Verbleibende Zeit zeigen"
   },
-  "Show restart DMS": {
-    "Show restart DMS": "DMS-Neustart zeigen"
+  "Show restart Alpe": {
+    "Show restart Alpe": "Alpe-Neustart zeigen"
   },
   "Show scratchpads": {
     "Show scratchpads": "Scratchpads zeigen"
@@ -7568,8 +7568,8 @@
   "Solid": {
     "Solid": "Solid"
   },
-  "Some plugins require a newer version of DMS:": {
-    "Some plugins require a newer version of DMS:": "Einige Plugins erfordern eine neuere Version von DMS:"
+  "Some plugins require a newer version of Alpe:": {
+    "Some plugins require a newer version of Alpe:": "Einige Plugins erfordern eine neuere Version von Alpe:"
   },
   "Sort alphabetically": {
     "Sort alphabetically": "Alphabetisch sortieren"
@@ -8216,8 +8216,8 @@
   "To sign in as a different user, log out and pick the account from the greeter. Creating a fresh session in parallel needs a multi-session greeter (%1).": {
     "To sign in as a different user, log out and pick the account from the greeter. Creating a fresh session in parallel needs a multi-session greeter (%1).": "Um sich als anderer Benutzer anzumelden, melden Sie sich ab und wählen Sie das Konto aus dem Greeter. Um parallel eine neue Sitzung zu erstellen, benötigt es einen Mulit-Session-Greeter (%1)."
   },
-  "To use this DMS bind, remove or change the keybind in your %1": {
-    "To use this DMS bind, remove or change the keybind in your %1": "Um diese DMS-Bindung zu verwenden, entfernen oder ändern Sie die Tastenbelegung in Ihrem %1"
+  "To use this Alpe bind, remove or change the keybind in your %1": {
+    "To use this Alpe bind, remove or change the keybind in your %1": "Um diese Alpe-Bindung zu verwenden, entfernen oder ändern Sie die Tastenbelegung in Ihrem %1"
   },
   "Toast": {
     "Toast": "Toast"

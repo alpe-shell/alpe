@@ -147,7 +147,7 @@ Item {
             return I18n.tr("No supported package manager found.");
         case SystemUpdateService.shellUpdateAvailable:
             {
-                const shell = I18n.tr("DMS %1 available", "software updates hero, %1 is the new DMS version").arg(SystemUpdateService.shellUpdateVersion);
+                const shell = I18n.tr("Alpe %1 available", "software updates hero, %1 is the new Alpe version").arg(SystemUpdateService.shellUpdateVersion);
                 return root.systemCount > 0 ? shell + " · " + root.countText(root.systemCount) : shell;
             }
         case root.systemCount > 0:
@@ -198,7 +198,7 @@ Item {
         case root.offerReboot:
             return I18n.tr("Reboot", "verb, power menu action");
         case SystemUpdateService.restartPending:
-            return I18n.tr("Restart DMS");
+            return I18n.tr("Restart Alpe");
         default:
             return I18n.tr("Check for updates");
         }

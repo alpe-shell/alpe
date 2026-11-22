@@ -1072,7 +1072,7 @@ Column {
             tags: ["disable", "external", "management", "swww", "hyprpaper", "swaybg"]
             settingKey: "disableWallpapers"
             text: I18n.tr("Use external manager")
-            description: I18n.tr("DMS stops drawing wallpapers on every display", "use external wallpaper manager toggle description")
+            description: I18n.tr("Alpe stops drawing wallpapers on every display", "use external wallpaper manager toggle description")
             checked: {
                 const prefs = SettingsData.screenPreferences?.wallpaper;
                 return Array.isArray(prefs) && prefs.length === 0;

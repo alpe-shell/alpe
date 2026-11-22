@@ -243,7 +243,7 @@ Singleton {
             if (response.error.includes("unknown method") && response.error.includes("subscribe")) {
                 if (!shownOutdatedError) {
                     log.error("Server does not support subscribe method");
-                    ToastService.showError(I18n.tr("DMS out of date"), I18n.tr("Update the dms package with your package manager, then restart the shell.", "shown when the running shell is older than the installed dms binary"));
+                    ToastService.showError(I18n.tr("Alpe out of date"), I18n.tr("Update the dms package with your package manager, then restart the shell.", "shown when the running shell is older than the installed dms binary"));
                     shownOutdatedError = true;
                 }
             }
@@ -265,7 +265,7 @@ Singleton {
             log.info("Connected (API v" + apiVersion + ", CLI " + cliVersion + ") -", JSON.stringify(capabilities));
 
             if (apiVersion < expectedApiVersion) {
-                ToastService.showError(I18n.tr("DMS server is outdated (API v%1, expected v%2)", "error toast, %1 is current api version, %2 is required version").arg(apiVersion).arg(expectedApiVersion));
+                ToastService.showError(I18n.tr("Alpe server is outdated (API v%1, expected v%2)", "error toast, %1 is current api version, %2 is required version").arg(apiVersion).arg(expectedApiVersion));
             }
 
             capabilitiesReceived();

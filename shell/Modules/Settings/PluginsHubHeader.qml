@@ -215,7 +215,7 @@ Column {
         SettingsRow {
             iconName: "error"
             title: I18n.tr("Incompatible plugins loaded")
-            subtitle: I18n.tr("Some plugins require a newer version of DMS:") + " " + root.incompatiblePlugins.map(plugin => plugin.name + " (" + plugin.requires_dms + ")").join(", ")
+            subtitle: I18n.tr("Some plugins require a newer version of Alpe:") + " " + root.incompatiblePlugins.map(plugin => plugin.name + " (" + plugin.requires_dms + ")").join(", ")
             subtitleColor: Theme.error
         }
     }

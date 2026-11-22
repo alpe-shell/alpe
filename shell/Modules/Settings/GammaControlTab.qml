@@ -104,7 +104,7 @@ Item {
         SettingsCard {
             SettingsToggleRow {
                 text: I18n.tr("Night mode")
-                description: NightModeService.gammaControlAvailable ? "" : I18n.tr("Gamma control not available. Requires DMS API v6+.")
+                description: NightModeService.gammaControlAvailable ? "" : I18n.tr("Gamma control not available. Requires Alpe API v6+.")
                 checked: NightModeService.nightModeEnabled
                 enabled: NightModeService.gammaControlAvailable
                 onToggled: NightModeService.toggleNightMode()

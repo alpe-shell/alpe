@@ -577,10 +577,10 @@ Singleton {
             "children": [
                 {
                     "id": "updater",
-                    "text": I18n.tr("Software updates", "settings page, modal and bar widget title, DMS and system package updates"),
+                    "text": I18n.tr("Software updates", "settings page, modal and bar widget title, Alpe and system package updates"),
                     "icon": "system_update_alt",
                     "tabIndex": 20,
-                    "hint": I18n.tr("DMS and system updates", "settings sidebar hint for the software updates page")
+                    "hint": I18n.tr("Alpe and system updates", "settings sidebar hint for the software updates page")
                 },
                 {
                     "id": "alpe_desktop",

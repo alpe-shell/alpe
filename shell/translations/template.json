@@ -14,16 +14,16 @@
     "comment": "window rule summary, %1 is first match, %2 is remaining count"
   },
   {
-    "term": "%1 DMS bind may be overridden by config binds that come after the include.",
+    "term": "%1 Alpe bind may be overridden by config binds that come after the include.",
     "translation": "",
-    "context": "%1 DMS bind may be overridden by config binds that come after the include.",
+    "context": "%1 Alpe bind may be overridden by config binds that come after the include.",
     "reference": "",
     "comment": "singular, keybinds warning, %1 is 1"
   },
   {
-    "term": "%1 DMS binds may be overridden by config binds that come after the include.",
+    "term": "%1 Alpe binds may be overridden by config binds that come after the include.",
     "translation": "",
-    "context": "%1 DMS binds may be overridden by config binds that come after the include.",
+    "context": "%1 Alpe binds may be overridden by config binds that come after the include.",
     "reference": "",
     "comment": "plural, keybinds warning, %1 is a count"
   },
@@ -305,7 +305,7 @@
     "translation": "",
     "context": "%1 is running and will create duplicate Bluetooth players. Disable it with: %2",
     "reference": "",
-    "comment": "Warning shown when the legacy BlueZ MPRIS proxy conflicts with DMS Bluetooth media controls, %1 is the service name, %2 a shell command"
+    "comment": "Warning shown when the legacy BlueZ MPRIS proxy conflicts with Alpe Bluetooth media controls, %1 is the service name, %2 a shell command"
   },
   {
     "term": "%1 job",
@@ -385,9 +385,9 @@
     "comment": "%1 is a tool or environment variable name"
   },
   {
-    "term": "%1 not available - lock integration requires the DMS socket connection",
+    "term": "%1 not available - lock integration requires the Alpe socket connection",
     "translation": "",
-    "context": "%1 not available - lock integration requires the DMS socket connection",
+    "context": "%1 not available - lock integration requires the Alpe socket connection",
     "reference": "",
     "comment": "lock screen warning, %1 is the loginctl binary"
   },
@@ -728,9 +728,9 @@
     "comment": "hint in the notification rule editor, all match conditions must apply"
   },
   {
-    "term": "A plugin file was added or renamed while the shell was running. Restart DMS to load it. If the plugin was not updated, check that its imports match the file name capitalization.",
+    "term": "A plugin file was added or renamed while the shell was running. Restart Alpe to load it. If the plugin was not updated, check that its imports match the file name capitalization.",
     "translation": "",
-    "context": "A plugin file was added or renamed while the shell was running. Restart DMS to load it. If the plugin was not updated, check that its imports match the file name capitalization.",
+    "context": "A plugin file was added or renamed while the shell was running. Restart Alpe to load it. If the plugin was not updated, check that its imports match the file name capitalization.",
     "reference": "",
     "comment": "plugin load error hint shown under Qt's 'File name case mismatch' error"
   },
@@ -1134,9 +1134,9 @@
     "comment": "launcher launch prefix field description"
   },
   {
-    "term": "Adds a compositor window rule so DMS windows such as Settings open floating",
+    "term": "Adds a compositor window rule so Alpe windows such as Settings open floating",
     "translation": "",
-    "context": "Adds a compositor window rule so DMS windows such as Settings open floating",
+    "context": "Adds a compositor window rule so Alpe windows such as Settings open floating",
     "reference": "",
     "comment": "theme floating windows section, open floating toggle description"
   },
@@ -1293,6 +1293,83 @@
     "context": "Allowed cores",
     "reference": "",
     "comment": "CPU affinity list"
+  },
+  {
+    "term": "Alpe %1 available",
+    "translation": "",
+    "context": "Alpe %1 available",
+    "reference": "",
+    "comment": "software updates hero, %1 is the new Alpe version"
+  },
+  {
+    "term": "Alpe Settings",
+    "translation": "",
+    "context": "Alpe Settings",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply.",
+    "translation": "",
+    "context": "Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply.",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Alpe and system updates",
+    "translation": "",
+    "context": "Alpe and system updates",
+    "reference": "",
+    "comment": "settings sidebar hint for the software updates page"
+  },
+  {
+    "term": "Alpe chooser",
+    "translation": "",
+    "context": "Alpe chooser",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
+    "translation": "",
+    "context": "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
+    "reference": "",
+    "comment": "about page blurb, %1 is a Quickshell link, %2 is a Go link"
+  },
+  {
+    "term": "Alpe out of date",
+    "translation": "",
+    "context": "Alpe out of date",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Alpe server is outdated (API v%1, expected v%2)",
+    "translation": "",
+    "context": "Alpe server is outdated (API v%1, expected v%2)",
+    "reference": "",
+    "comment": "error toast, %1 is current api version, %2 is required version"
+  },
+  {
+    "term": "Alpe service is not connected. Clipboard settings are unavailable.",
+    "translation": "",
+    "context": "Alpe service is not connected. Clipboard settings are unavailable.",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Alpe shell actions (launcher, clipboard, etc.)",
+    "translation": "",
+    "context": "Alpe shell actions (launcher, clipboard, etc.)",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Alpe stops drawing wallpapers on every display",
+    "translation": "",
+    "context": "Alpe stops drawing wallpapers on every display",
+    "reference": "",
+    "comment": "use external wallpaper manager toggle description"
   },
   {
     "term": "Already on that session",
@@ -2566,7 +2643,7 @@
     "translation": "",
     "context": "Bluetooth media controls",
     "reference": "",
-    "comment": "Title for the setting that routes Bluetooth headset media buttons through DMS"
+    "comment": "Title for the setting that routes Bluetooth headset media buttons through Alpe"
   },
   {
     "term": "Bluetooth not available",
@@ -2811,14 +2888,14 @@
     "translation": "",
     "context": "Built-in",
     "reference": "",
-    "comment": "badge on launcher plugins that ship with DMS | sound theme option, the sounds bundled with the shell"
+    "comment": "badge on launcher plugins that ship with Alpe | sound theme option, the sounds bundled with the shell"
   },
   {
     "term": "Built-in apps",
     "translation": "",
     "context": "Built-in apps",
     "reference": "",
-    "comment": "launcher settings card, DMS tools listed with the installed apps"
+    "comment": "launcher settings card, Alpe tools listed with the installed apps"
   },
   {
     "term": "Built-in plugins",
@@ -3735,7 +3812,7 @@
     "translation": "",
     "context": "Codename",
     "reference": "",
-    "comment": "DMS release codename"
+    "comment": "Alpe release codename"
   },
   {
     "term": "Collapse",
@@ -4256,9 +4333,9 @@
     "comment": "media widget style with play, previous and next buttons"
   },
   {
-    "term": "Convert to DMS",
+    "term": "Convert to Alpe",
     "translation": "",
-    "context": "Convert to DMS",
+    "context": "Convert to Alpe",
     "reference": "",
     "comment": ""
   },
@@ -4786,83 +4863,6 @@
     "context": "DDC/CI monitor",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "DMS %1 available",
-    "translation": "",
-    "context": "DMS %1 available",
-    "reference": "",
-    "comment": "software updates hero, %1 is the new DMS version"
-  },
-  {
-    "term": "DMS Settings",
-    "translation": "",
-    "context": "DMS Settings",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "DMS Settings writes Lua keybinds. Add the DMS include so edits apply.",
-    "translation": "",
-    "context": "DMS Settings writes Lua keybinds. Add the DMS include so edits apply.",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "DMS and system updates",
-    "translation": "",
-    "context": "DMS and system updates",
-    "reference": "",
-    "comment": "settings sidebar hint for the software updates page"
-  },
-  {
-    "term": "DMS chooser",
-    "translation": "",
-    "context": "DMS chooser",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
-    "translation": "",
-    "context": "DMS is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
-    "reference": "",
-    "comment": "about page blurb, %1 is a Quickshell link, %2 is a Go link"
-  },
-  {
-    "term": "DMS out of date",
-    "translation": "",
-    "context": "DMS out of date",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "DMS server is outdated (API v%1, expected v%2)",
-    "translation": "",
-    "context": "DMS server is outdated (API v%1, expected v%2)",
-    "reference": "",
-    "comment": "error toast, %1 is current api version, %2 is required version"
-  },
-  {
-    "term": "DMS service is not connected. Clipboard settings are unavailable.",
-    "translation": "",
-    "context": "DMS service is not connected. Clipboard settings are unavailable.",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "DMS shell actions (launcher, clipboard, etc.)",
-    "translation": "",
-    "context": "DMS shell actions (launcher, clipboard, etc.)",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "DMS stops drawing wallpapers on every display",
-    "translation": "",
-    "context": "DMS stops drawing wallpapers on every display",
-    "reference": "",
-    "comment": "use external wallpaper manager toggle description"
   },
   {
     "term": "Daily",
@@ -5999,9 +5999,9 @@
     "comment": ""
   },
   {
-    "term": "Drop your override for %1 so the DMS default action re-applies?",
+    "term": "Drop your override for %1 so the Alpe default action re-applies?",
     "translation": "",
-    "context": "Drop your override for %1 so the DMS default action re-applies?",
+    "context": "Drop your override for %1 so the Alpe default action re-applies?",
     "reference": "",
     "comment": "reset shortcut confirmation, %1 is the key combination"
   },
@@ -7854,9 +7854,9 @@
     "comment": "launcher file search section title and filter option"
   },
   {
-    "term": "Follow DMS background color",
+    "term": "Follow Alpe background color",
     "translation": "",
-    "context": "Follow DMS background color",
+    "context": "Follow Alpe background color",
     "reference": "",
     "comment": ""
   },
@@ -8316,9 +8316,9 @@
     "comment": ""
   },
   {
-    "term": "Gamma control not available. Requires DMS API v6+.",
+    "term": "Gamma control not available. Requires Alpe API v6+.",
     "translation": "",
-    "context": "Gamma control not available. Requires DMS API v6+.",
+    "context": "Gamma control not available. Requires Alpe API v6+.",
     "reference": "",
     "comment": ""
   },
@@ -8393,9 +8393,9 @@
     "comment": "theme settings toggle, rerun matugen on every shell start"
   },
   {
-    "term": "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow DMS colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.",
+    "term": "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow Alpe colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.",
     "translation": "",
-    "context": "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow DMS colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.",
+    "context": "Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow Alpe colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.",
     "reference": "",
     "comment": "app theming help text, %1 is a link to adw-gtk3"
   },
@@ -9275,11 +9275,11 @@
     "comment": ""
   },
   {
-    "term": "Icon theme changed outside DMS; switched to System Default",
+    "term": "Icon theme changed outside Alpe; switched to System Default",
     "translation": "",
-    "context": "Icon theme changed outside DMS; switched to System Default",
+    "context": "Icon theme changed outside Alpe; switched to System Default",
     "reference": "",
-    "comment": "shown when an external tool overrides the icon theme DMS applied"
+    "comment": "shown when an external tool overrides the icon theme Alpe applied"
   },
   {
     "term": "Icons",
@@ -9352,9 +9352,9 @@
     "comment": ""
   },
   {
-    "term": "If autostart app icons don't appear in the system tray, generate a systemd override to ensure DMS starts before autostart apps",
+    "term": "If autostart app icons don't appear in the system tray, generate a systemd override to ensure Alpe starts before autostart apps",
     "translation": "",
-    "context": "If autostart app icons don't appear in the system tray, generate a systemd override to ensure DMS starts before autostart apps",
+    "context": "If autostart app icons don't appear in the system tray, generate a systemd override to ensure Alpe starts before autostart apps",
     "reference": "",
     "comment": ""
   },
@@ -12257,9 +12257,9 @@
     "comment": "settings card title: windows and apps that pause night mode while focused"
   },
   {
-    "term": "Night mode failed: DMS gamma control not available",
+    "term": "Night mode failed: Alpe gamma control not available",
     "translation": "",
-    "context": "Night mode failed: DMS gamma control not available",
+    "context": "Night mode failed: Alpe gamma control not available",
     "reference": "",
     "comment": ""
   },
@@ -13314,9 +13314,9 @@
     "comment": "bar manual visibility toggle description"
   },
   {
-    "term": "Off lets the compositor decorate DMS windows. Open windows update when reopened.",
+    "term": "Off lets the compositor decorate Alpe windows. Open windows update when reopened.",
     "translation": "",
-    "context": "Off lets the compositor decorate DMS windows. Open windows update when reopened.",
+    "context": "Off lets the compositor decorate Alpe windows. Open windows update when reopened.",
     "reference": "",
     "comment": "theme floating windows section, title bars toggle description"
   },
@@ -15645,9 +15645,9 @@
     "comment": "status row while the user list reloads"
   },
   {
-    "term": "Regenerate matugen colors when DMS starts, even if nothing changed.",
+    "term": "Regenerate matugen colors when Alpe starts, even if nothing changed.",
     "translation": "",
-    "context": "Regenerate matugen colors when DMS starts, even if nothing changed.",
+    "context": "Regenerate matugen colors when Alpe starts, even if nothing changed.",
     "reference": "",
     "comment": "generate theme at startup toggle description"
   },
@@ -15820,9 +15820,9 @@
     "comment": "remove shortcut confirmation, %1 is the key combination"
   },
   {
-    "term": "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across DMS updates.",
+    "term": "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across Alpe updates.",
     "translation": "",
-    "context": "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across DMS updates.",
+    "context": "Remove the shortcut %1? An unbind entry will be saved to %2 so it stays removed across Alpe updates.",
     "reference": "",
     "comment": "hyprland remove shortcut confirmation, %1 is the key combination, %2 the override file"
   },
@@ -15960,16 +15960,16 @@
     "comment": ""
   },
   {
-    "term": "Requires DMS %1",
+    "term": "Requires Alpe %1",
     "translation": "",
-    "context": "Requires DMS %1",
+    "context": "Requires Alpe %1",
     "reference": "",
-    "comment": "plugin incompatibility notice, %1 is the required DMS version"
+    "comment": "plugin incompatibility notice, %1 is the required Alpe version"
   },
   {
-    "term": "Requires DMS server with sysupdate capability",
+    "term": "Requires Alpe server with sysupdate capability",
     "translation": "",
-    "context": "Requires DMS server with sysupdate capability",
+    "context": "Requires Alpe server with sysupdate capability",
     "reference": "",
     "comment": ""
   },
@@ -16072,9 +16072,9 @@
     "comment": "process action: start the process again"
   },
   {
-    "term": "Restart DMS",
+    "term": "Restart Alpe",
     "translation": "",
-    "context": "Restart DMS",
+    "context": "Restart Alpe",
     "reference": "",
     "comment": ""
   },
@@ -16240,9 +16240,9 @@
     "comment": "bar corner style option"
   },
   {
-    "term": "Route Bluetooth headset controls to the active DMS media player",
+    "term": "Route Bluetooth headset controls to the active Alpe media player",
     "translation": "",
-    "context": "Route Bluetooth headset controls to the active DMS media player",
+    "context": "Route Bluetooth headset controls to the active Alpe media player",
     "reference": "",
     "comment": "Description of how Bluetooth headset media buttons select a player"
   },
@@ -16296,9 +16296,9 @@
     "comment": "window rules settings card title, %1 is a count"
   },
   {
-    "term": "Rules found in your compositor config. These are read-only here, use Convert to DMS to make an editable copy.",
+    "term": "Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.",
     "translation": "",
-    "context": "Rules found in your compositor config. These are read-only here, use Convert to DMS to make an editable copy.",
+    "context": "Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.",
     "reference": "",
     "comment": ""
   },
@@ -16310,9 +16310,9 @@
     "comment": "hyprland.lua missing warning, %1 is a command"
   },
   {
-    "term": "Run DMS templates",
+    "term": "Run Alpe templates",
     "translation": "",
-    "context": "Run DMS templates",
+    "context": "Run Alpe templates",
     "reference": "",
     "comment": ""
   },
@@ -16783,7 +16783,7 @@
     "translation": "",
     "context": "Search settings",
     "reference": "",
-    "comment": "launcher plugin name that searches DMS settings | settings search field placeholder"
+    "comment": "launcher plugin name that searches Alpe settings | settings search field placeholder"
   },
   {
     "term": "Search shortcuts...",
@@ -17738,9 +17738,9 @@
     "comment": ""
   },
   {
-    "term": "Show restart DMS",
+    "term": "Show restart Alpe",
     "translation": "",
-    "context": "Show restart DMS",
+    "context": "Show restart Alpe",
     "reference": "",
     "comment": ""
   },
@@ -18106,7 +18106,7 @@
     "translation": "",
     "context": "Software updates",
     "reference": "",
-    "comment": "settings page, modal and bar widget title, DMS and system package updates"
+    "comment": "settings page, modal and bar widget title, Alpe and system package updates"
   },
   {
     "term": "Software updates are ready to install.",
@@ -18123,9 +18123,9 @@
     "comment": "island settings: filled battery meter style"
   },
   {
-    "term": "Some plugins require a newer version of DMS:",
+    "term": "Some plugins require a newer version of Alpe:",
     "translation": "",
-    "context": "Some plugins require a newer version of DMS:",
+    "context": "Some plugins require a newer version of Alpe:",
     "reference": "",
     "comment": ""
   },
@@ -18435,7 +18435,7 @@
     "translation": "",
     "context": "Startup Behavior",
     "reference": "",
-    "comment": "theme settings card title, what happens to the dynamic theme when DMS starts"
+    "comment": "theme settings card title, what happens to the dynamic theme when Alpe starts"
   },
   {
     "term": "State",
@@ -19677,9 +19677,9 @@
     "comment": "switch user note, %1 lists multi-session greeters"
   },
   {
-    "term": "To use this DMS bind, remove or change the keybind in your %1",
+    "term": "To use this Alpe bind, remove or change the keybind in your %1",
     "translation": "",
-    "context": "To use this DMS bind, remove or change the keybind in your %1",
+    "context": "To use this Alpe bind, remove or change the keybind in your %1",
     "reference": "",
     "comment": "keybind conflict hint, %1 is the compositor config file"
   },

@@ -97,7 +97,7 @@ Item {
             },
             "systemUpdate": {
                 "enabled": SystemUpdateService.sysupdateAvailable,
-                "warning": SystemUpdateService.sysupdateAvailable ? undefined : I18n.tr("Requires DMS server with sysupdate capability")
+                "warning": SystemUpdateService.sysupdateAvailable ? undefined : I18n.tr("Requires Alpe server with sysupdate capability")
             }
         };
     }

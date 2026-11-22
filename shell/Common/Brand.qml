@@ -24,13 +24,4 @@ Singleton {
     readonly property var heldPackages: ["dux-shell", "dms", "dms-cli"]
     // Die Systemprüfung des Ursprungsprojekts kennt KWin nicht und meldet dort Fehler, die keine sind.
     readonly property bool systemCheck: false
-
-    // Ersetzt den Namen des Ursprungsprojekts in fertigen Texten. Das läuft über die
-    // Ausgabe der Übersetzung statt über die Quelltexte, damit alle Sprachen stimmen
-    // und Änderungen des Ursprungsprojekts sich weiter konfliktfrei übernehmen lassen.
-    readonly property var _pattern: /\bDMS\b|Dux Modular Shell|DankMaterialShell/g
-
-    function apply(text) {
-        return text.indexOf("D") === -1 ? text : text.replace(_pattern, name);
-    }
 }

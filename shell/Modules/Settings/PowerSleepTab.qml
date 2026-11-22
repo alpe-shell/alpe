@@ -218,7 +218,7 @@ Item {
                 settingKey: "powerMenuDefaultAction"
                 tags: ["power", "menu", "default", "action", "reboot", "logout", "shutdown"]
                 text: I18n.tr("Default selected action")
-                options: [I18n.tr("Reboot"), I18n.tr("Log out"), I18n.tr("Power off"), I18n.tr("Lock"), I18n.tr("Suspend"), I18n.tr("Restart DMS"), I18n.tr("Hibernate"), I18n.tr("Soft reboot")]
+                options: [I18n.tr("Reboot"), I18n.tr("Log out"), I18n.tr("Power off"), I18n.tr("Lock"), I18n.tr("Suspend"), I18n.tr("Restart Alpe"), I18n.tr("Hibernate"), I18n.tr("Soft reboot")]
                 currentValue: {
                     const index = actionValues.indexOf(SettingsData.powerMenuDefaultAction || "logout");
                     return index >= 0 ? options[index] : I18n.tr("Log out");
@@ -255,7 +255,7 @@ Item {
                     },
                     {
                         key: "restart",
-                        label: I18n.tr("Show restart DMS")
+                        label: I18n.tr("Show restart Alpe")
                     },
                     {
                         key: "switchuser",

@@ -91,7 +91,7 @@ Item {
 
             SettingsRow {
                 body: StyledText {
-                    text: I18n.tr('Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow DMS colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.', 'app theming help text, %1 is a link to adw-gtk3').arg(`<a href="https://duxlabs.dev/docs/dms/application-themes#gtk-applications" style="text-decoration:none; color:${Theme.primary};">adw-gtk3</a>`)
+                    text: I18n.tr('Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow Alpe colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.', 'app theming help text, %1 is a link to adw-gtk3').arg(`<a href="https://duxlabs.dev/docs/dms/application-themes#gtk-applications" style="text-decoration:none; color:${Theme.primary};">adw-gtk3</a>`)
                     textFormat: Text.RichText
                     linkColor: Theme.primary
                     onLinkActivated: url => Qt.openUrlExternally(url)
@@ -197,7 +197,7 @@ Item {
                 tab: "theme"
                 tags: ["matugen", "dms", "templates"]
                 settingKey: "runMatugenTemplates"
-                text: I18n.tr("Run DMS templates")
+                text: I18n.tr("Run Alpe templates")
                 checked: SettingsData.runMatugenTemplates
                 onToggled: checked => SettingsData.set("runMatugenTemplates", checked)
             }
@@ -451,7 +451,7 @@ Item {
 
             SettingsToggleRow {
                 enabled: neovimThemeToggle.visible && neovimThemeToggle.checked
-                text: I18n.tr("Follow DMS background color")
+                text: I18n.tr("Follow Alpe background color")
                 tags: ["matugen", "neovim", "terminal", "template"]
                 settingKey: "matugenTemplateNeovimSetBackground"
                 checked: SettingsData.matugenTemplateNeovimSetBackground ?? true

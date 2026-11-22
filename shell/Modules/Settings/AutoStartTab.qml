@@ -592,7 +592,7 @@ Item {
 
                         StyledText {
                             width: parent.width
-                            text: I18n.tr("If autostart app icons don't appear in the system tray, generate a systemd override to ensure DMS starts before autostart apps")
+                            text: I18n.tr("If autostart app icons don't appear in the system tray, generate a systemd override to ensure Alpe starts before autostart apps")
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.surfaceVariantText
                             wrapMode: Text.WordWrap

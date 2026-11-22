@@ -164,7 +164,7 @@ Item {
             settingKey: "alpeMaintenanceUpdate"
 
             SettingsNavRow {
-                title: I18n.tr("Software updates", "settings page, modal and bar widget title, DMS and system package updates")
+                title: I18n.tr("Software updates", "settings page, modal and bar widget title, Alpe and system package updates")
                 hint: (SystemUpdateService.scriptMode ? SystemUpdateService.scriptCommand + " · " : "") + root.lastRunText()
                 iconName: "system_update_alt"
                 onClicked: keyboard => root.parentModal?.navigateTo("updater", keyboard)

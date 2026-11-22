@@ -261,7 +261,7 @@ Item {
         SettingsNoteRow {
             paintBackground: false
             visible: !DMSService.isConnected || configError
-            text: !DMSService.isConnected ? I18n.tr("DMS service is not connected. Clipboard settings are unavailable.") : I18n.tr("Failed to load clipboard configuration.")
+            text: !DMSService.isConnected ? I18n.tr("Alpe service is not connected. Clipboard settings are unavailable.") : I18n.tr("Failed to load clipboard configuration.")
         }
 
         SettingsCard {
