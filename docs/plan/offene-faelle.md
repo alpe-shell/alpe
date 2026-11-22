@@ -170,6 +170,19 @@ rmdir ~/.config/alpe/plugins.beiseite-d7
 - Theme-Kategorie «registry»: Die Auswahl ist weg, `Theme.qml` kennt die Kategorie aber noch
   (wer ein Register-Theme aktiv hatte, behält es als eigene Datei). Mit D6/D7 bereinigen.
 
+**Kürzel am Mac im D7-Stand (Plan 0.8 Nr. 44):** Kürzel mit alten Zielen greifen in der
+Testshell erwartungsgemäss **nicht** – das ist kein Befund. Betroffen sind alle Hyprland-Zeilen
+mit `dms ipc call …`, `dms screenshot …` (das Programm `dms` erreicht nur die Shell 1.0), das
+IPC-Ziel `dankdash` (entfällt ohne Übergang; neu `dash toggle wallpaper`) und Seiten-IDs wie
+`dank_dash` oder `dankbar_widgets` als Argument von `settings`. Erst der Umzug (F1, Plan 7.4
+Schritt 6) schreibt sie um. Zum Prüfen im Terminal:
+
+```
+alpe-dienst ipc call dash toggle overview
+alpe-dienst ipc call dash toggle wallpaper
+alpe-dienst ipc call settings tabs
+```
+
 ## Nach D1: Folgen der neuen Namen
 
 - **Kürzel in Hyprland-Dateien:** Die Kürzel-Aktionen heissen jetzt `alpe-dienst ipc call …` bzw.

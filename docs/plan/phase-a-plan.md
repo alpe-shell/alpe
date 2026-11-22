@@ -75,6 +75,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | D7.5b | Notizblock: Anbindung an `dankNotepadModule` samt nur davon gespeister Vorschau weg (`SESSION_BACKED_PLUGIN_IDS` in `SettingsStore.js` bleibt für Altdaten); «Create»-Knopf (Wallpaper creator), `dms://wallpaper/install/` in Shell und `alpe-dienst open`, Installations-Nutzlast in `MaterialWallpaper.js`; Doku-Links (`Site.qml`, Go-Paket `internal/site`, doctor-URLs, Hilfetexte, Autostart-Hinweis, Themen-Fehlermeldung); adw-gtk3-Link auf die Projektseite | test.sh grün |
 | – | Plan: Entscheide nach D7.5 (0.8 Nr. 36–40), `offene-faelle.md` (Markdown-Vorschau vor G1, Hinweis bei veralteter Benutzerkopie), `CLAUDE.md` (Go-Modul-Cache) | – |
 | D7.6 | Gespeicherte Kennungen: Starter-Einträge `alpe_*`, Seiten-IDs `bar…`/`dash` (Selbst-Aliasse und Aliasse `dank_island`/`dankdot` weg), Logo-Modus `"alpe"`, Material-Vorlage «Alpe» mit Form `alpeLogo`, matugen-Spec `"alpe"` (`SpecAlpe`), IPC-Ziel `dankdash` weg (Tabelle `d7-6-kennungen.tsv`, 142 Ersetzungen in 30 Dateien). **Migration v44** (Einstellungen) und **Session v8** über `Common/settings/Namen44.js`; Sicherung `settings.v<alt>.json` wie in D5, neu auch `session.v<alt>.json`; `design.py` führt dieselben Tabellen, `design/kde` auf v44. **Alpe-Zeichen:** `Alpe/Widgets/LogoShape.js` ist die einzige Quelle der Pfaddaten (Vielecke); daraus die Form `alpeLogo` (Material-Vorlage), der Logo-Modus (zeichnet die Form statt die SVG-Datei zu laden) und die beiden SVG-Dateien (byte-gleich, vom Test geprüft). Übersetzungsbegriff «Dank» weg, Suchindex neu erzeugt | Tests `tests/test_einstellungen.mjs` (Datei aus 1.0 und auf v43, Session), `tests/test_logoform.mjs`, `tests/test_design.py`; test.sh grün; Go `internal/matugen` wie bekannt; Namensprüfung 2665 |
+| D7.6 (Nachtrag) | Session-Migration v8 mit Dateitest (`session.json` aus 1.0, Sicherung `session.v7.json`, zweiter Lauf), migrierter Stand wird gleich geschrieben; v44 zieht die Seiten-IDs in `settingsHiddenPages` mit; Prüfung aller in D7 umbenannten Kennungen auf gespeicherte Vorkommen (0.8 Nr. 41–42) | test.sh grün; Go: die drei bekannten Fehlschläge (0.8 Nr. 43) |
 <!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
@@ -122,7 +123,7 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
 - **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
   nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
-- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. Entscheide nach D7.3: 0.8 Nr. 31–35. Verbotene `D*`-Namen in der Namensprüfung (0.8 Nr. 34). D7.4, D7.5 erledigt. Entscheide nach D7.5: 0.8 Nr. 36–40. D7.6 erledigt. **Nächster Schritt: D7.7** (erzeugte Dateien, Fremdprogramm-Vorlagen, Hotspot, CUPS, Dienst intern, restliche `"dms"`-Werte nach 0.8 Nr. 38), danach Ladeprüfung mit allen Repo-Plugins (0.8 Nr. 33) und Zwischenhalt. Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
+- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. Entscheide nach D7.3: 0.8 Nr. 31–35. Verbotene `D*`-Namen in der Namensprüfung (0.8 Nr. 34). D7.4, D7.5 erledigt. Entscheide nach D7.5: 0.8 Nr. 36–40. D7.6 erledigt, Nachträge dazu 0.8 Nr. 41–46. **Nächster Schritt: D7.7a** (Aufteilung D7.7a–D7.7h in 2.3.5), danach Ladeprüfung mit allen Repo-Plugins (0.8 Nr. 33) und Zwischenhalt (0.8 Nr. 29, 45). Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
   Für jeden Bereich eine Tabelle `entwicklung/umbenennen/<bereich>.tsv` anlegen, Probelauf mit
   `--liste` prüfen, dann `--schreiben`; `bash tools/test.sh` muss grün sein, Namensprüfung zeigt
   die sinkende Zahl. D7.2a: nur `git mv` plus Symlinks unter den alten Pfaden (Werkzeug-Art
@@ -344,6 +345,37 @@ Entscheide nach D7.5 (22.11.2026):
 | 38 | **Restliche `"dms"`-Werte gehören zu D7.7:** Kategorie `"dms"` und `lower.includes("dms")` in `KeybindsContent.qml`, `case "dms"` in `ProcessActions.qml`, `getDMSShellVersion` in doctor. Die Erkennung in `KeybindsContent.qml` erkennt künftig `alpe` und übergangsweise zusätzlich `dms` (die Hyprland-Binds des Maintainers enthalten bis F1 noch `dms`-Befehle); der Übergang steht mit Frist «Umzug-Ende» auf der Ausnahmeliste. |
 | 39 | **Veraltete Benutzerkopie eines Plugins:** Ist eine Benutzerkopie älter als die mitgelieferte Fassung, zeigt die Plugin-Seite einen Hinweis. Ohne Frist in Phase A (`offene-faelle.md`). |
 | 40 | **Go-Modul-Cache:** Abgeschottete Go-Tests (Temp-HOME) verwenden `GOMODCACHE` auf den bestehenden Cache oder `GOFLAGS=-modcacherw`, damit nichts schreibgeschützt im Temp-Ordner liegen bleibt. Merkregel in `CLAUDE.md`. |
+
+Entscheide und Befunde vor D7.7 (22.11.2026):
+
+| # | Entscheid |
+|---|---|
+| 41 | **Session-Migration v8 mit Dateitest** wie die Einstellungen: `tests/data/einstellungen-1.0/session.json` (Version 7) wird migriert, `session.v7.json` entsteht, ein zweiter Lauf ändert nichts (`tests/test_einstellungen.mjs`). Dazu: Die Sicherung läuft über `SessionStore.backupFor` (im Node-Test prüfbar), und `SessionData` schreibt den migrierten Stand gleich nach dem Laden zurück statt erst beim nächsten Speichern – vorher blieb `session.json` bis zur ersten Änderung auf Version 7 und die Sicherung wurde bei jedem Start neu geschrieben. Das Schreiben über `FileView` selbst prüft die Ladeprüfung (Session aus 1.0 im Temp-HOME, Zwischenhalt). |
+| 42 | **Gespeicherte Kennungen aus D7, geprüft** (Tabelle unten). Einziger Nachzug: `settingsHiddenPages` (Seitenauswahl) speichert Seiten-IDs; v44 zieht `dankbar`, `dankbar_settings`, `dankbar_appearance`, `dankbar_dot`, `dankbar_widgets`, `dank_dash` mit (`Namen44.PAGE_IDS`, `design.py` dieselbe Tabelle, Tests). v44 war noch nicht gepusht und lief auf keinem Rechner, darum Erweiterung von v44 statt v45. |
+| 43 | **`TestTerminalPaletteOnlyReachesTerminalTemplates` gehört zu den drei bekannten Go-Fehlschlägen** (`offene-faelle.md`, seit dem Stand nach C3 geführt). Ursache unverändert: Der Test liest `../../../quickshell/matugen/configs/*.toml` am Ursprungspfad. Lauf vor D7.7: genau diese drei (matugen 1, qmlchecks 2), sonst alles grün. |
+| 44 | **`dankdash` bekommt keinen Übergang.** F1 schreibt **alle** alten IPC-Ziele und Befehle in den Hyprland-Konfigurationen und in den KWin-Kürzeln **aller Nutzer** um, nicht nur in denen des Maintainers (7.2 Schritt 6, 7.4 Schritt 6). Die Mac-Test-Anleitung für den D7-Stand vermerkt, dass Kürzel mit alten Zielen dort erwartungsgemäss nicht greifen. |
+| 45 | **Zwischenhalt nach D7.7 prüft zusätzlich** den Logo-Modus `"alpe"` mit einem Widget (Starter-Knopf in der Leiste) und die Materialform `alpeLogo` als Hintergrund (Material-Vorlage «Alpe» in der Session des Temp-HOME). |
+| 46 | **Aufteilung von D7.7** in D7.7a–D7.7h (2.3.5). Go-Bezeichner typbewusst: `gopls` ist auf dem PC nicht installiert, darum `umbenennen.py` mit ganzen Bezeichnern je Paketgruppe; nach jedem Schritt `go build ./...` und `go vet ./...` (bekannte Signaturwarnungen in `internal/mocks` ausgenommen), Go-Tests abgeschottet mit denselben drei Fehlschlägen. |
+
+Gespeicherte Kennungen aus D7 (0.8 Nr. 42): wo sie liegen können und was mit ihnen geschieht.
+
+| Kennung (alt → neu) | Kann gespeichert sein in | Ergebnis |
+|---|---|---|
+| Starter-Einträge `dms_*` → `alpe_*` | `settings.json` (`builtInPluginSettings`, überall im Baum), `session.json` (`dockPins`, `barPinnedApps`, `hiddenApps`, `appOverrides` …) | v44 / Session v8, ganzer Baum; Tests mit Dateien aus 1.0 |
+| dieselben | `~/.cache/…/launcher_cache.json` | keine Migration nötig: Kern-Einträge werden beim Laden gegen die lebenden Einträge geprüft, veraltete fallen weg, der Cache wird neu geschrieben |
+| dieselben | `appusage.json` | kommt nicht vor: Starter-Einträge werden nicht gezählt (nur Desktop-Einträge) |
+| Seiten-IDs `dankbar…`, `dank_dash` → `bar…`, `dash` | `settings.json` `settingsHiddenPages` | **neu in v44** (Nr. 42) |
+| dieselben und die Aliasse `dank_island`, `dankdot` | Argument von `ipc call settings …` in eigenen Kürzeln | nicht in Dateien der Shell; F1 (Nr. 44) |
+| Logo-Modus und Punkt-Symbol `"dank"` → `"alpe"` | `settings.json` (`launcherLogoMode`, `islandFreeIconMode` in Leisten-, Dock-, Insel-Widgets) | v44, unter diesen Schlüsseln in jeder Tiefe |
+| Material-Vorlage `"dank"`, Form `dankLogo` | `session.json` (`materialWallpapers`, `materialWallpaperProfiles`) | Session v8 |
+| matugen-Spec `"dms"` → `"alpe"` | `settings.json` `matugenSpec`; `cache.json` (`matugenAppliedKey`, Vorschauen) | v44; der Cache-Schlüssel passt einmal nicht, matugen läuft dann einmal neu |
+| Einstellungsschlüssel `dankLauncherV2*`, `runDmsMatugenTemplates`, `dmsWindowsFloatingSeeded`, Werte `"dms"` | `settings.json` | v43 (D5) |
+| Plugin `dankNotepadModule` | `session.json` `builtInPluginState`, `plugin_settings.json` | bleibt als Altdaten liegen (0.8 Nr. 37), wird nicht mehr gelesen |
+| IPC-Ziel `dankdash`, Befehle `dms …`, `dank16`, `dms://` | Hyprland-Dateien, KWin-Kürzel (`alpe-cmd-*`, `net.local.*`), `hypridle.conf`, eigene Skripte | F1 (Nr. 44) |
+| Bar-Widget-Kennungen (`launcherButton`, `clock` …) | `settings.json` `barConfigs` | in D7 nicht umbenannt (geprüft: kein Widget-ID-Literal mit altem Namen entfernt) |
+| Fähigkeit `dankbar-widget`, `requires_dms` | `plugin.json` fremder Plugins | keine Migration: Die Fähigkeit wertet die Shell nicht aus, `requires_dms` wird nicht mehr gelesen (Hinweis entfällt); Anleitung `docs/plugins-anpassen.md` |
+| Module und Typen `qs.DCommon.*`, `D*`, `Dank*`, Funktionen `PopoutService.toggleDankLauncherV2` u. ä. | QML fremder Plugins | Hüllen bis D7.8, Anleitung; nicht in Datendateien |
+| Kürzel-Quelle `"dms"`, Aktionsart `"dms"`, JSON-Felder `dmsStatus` … | nur zur Laufzeit zwischen Dienst und Oberfläche | nichts gespeichert |
 ---
 
 ## 1. Zielstruktur des Repos
@@ -632,12 +664,20 @@ Bestätigung des Maintainers**, dass PC und Mac umgestellt sind.
 | D7.4 | Schnittstelle Dienst ↔ Oberfläche: `ShellBackend`, `BackendNetworkService`, `backendBin`, JSON-Felder (`fragmentStatus`, Kürzel-Quelle) samt Go-Gegenstücken |
 | D7.5 | Oberfläche: `ShellMain.qml`/`ShellIpc.qml`, Bezeichner Bar/Dash/Island/Launcher, Kürzel-Aktionen; `DLogoShape.js` umbenennen (0.8 Nr. 35); `dankNotepadModule`-Anbindung, «Wallpaper creator», `dms://` und Doku-Links nach `duxlabs.dev` weg |
 | D7.6 | Gespeicherte Kennungen, Migration v44 (Seiten-IDs, Starter-Plugins, Logo-Modus, Material-Vorlage «Alpe» mit Alpe-Zeichen samt Logoform aus D7.5 statt der des Ursprungs, gemeinsam geprüft (0.8 Nr. 35), matugen-Spec), IPC-Ziel `dankdash` weg; Test mit Einstellungen aus 1.0 und v43 |
-| D7.7 | Erzeugte Dateien und Fremdprogramm-Vorlagen (Cache-Namen, matugen, Regel-IDs, `-- ALPE-RULE:`), Hotspot-Name, CUPS-Benutzer; Dienst intern (Bezeichner, `palette16`, `duxlog`); restliche `"dms"`-Werte: Kürzel-Kategorie und -Erkennung (`alpe`, übergangsweise auch `dms`), `case "dms"` in `ProcessActions.qml`, `getDMSShellVersion` (0.8 Nr. 38) |
+| D7.7a | Restliche `"dms"`-Werte (0.8 Nr. 38) und übrige Bezeichner der Oberfläche: Kürzel-Kategorie und -Erkennung (`alpe`, übergangsweise auch `dms`), `case "dms"` in `ProcessActions.qml`, `getDMSShellVersion` in doctor, verbliebene `dms…`/`dank…`-Bezeichner in `shell/` |
+| D7.7b | Erzeugte Dateien und Vorlagen: Cache `colors.json`/`typography.json`, matugen-Vorlagen und -Ausgaben (`alpe*.json`, kitty, GTK, fcitx5, Lualine), Vorlagen-Variablen `dank16.*` → `palette16.*`, Regel-IDs `alpe-*`, Marke `-- ALPE-RULE:` (alte wird gelesen) – Oberfläche und Dienst gemeinsam, weil beide Seiten dieselben Dateinamen kennen |
+| D7.7c | Hotspot («Alpe Hotspot», alte Verbindung wird erkannt und weiter benutzt) und CUPS (Benutzername zur Laufzeit, einmaliges Kündigen alter Abonnements des Besitzers `dms`, Marke unter `~/.local/state/alpe/`) mit IPP-Attrappe als Test |
+| D7.7d | Dienst intern: Paket `internal/dank16` → `internal/palette16`, Befehl `alpe-dienst palette16` |
+| D7.7e | Dienst intern: `internal/config`, `configfrag`, `luaconfig`, `keybinds`, `windowrules` (`dmsDir` → `appDir`, `dmsPath` → `shellConfigPath`, `LoadDMSRules` → `LoadShellRules` …) |
+| D7.7f | Dienst intern: `internal/matugen` (Rest nach D7.7b) |
+| D7.7g | Dienst intern: `cmd/alpe-dienst`, `internal/version`, `internal/log` und die Pakete unter `internal/server` |
+| D7.7h | Dienst intern: übrige Pakete, `core/README.md`, `Makefile`, `.mockery.yml`; Prüfung, dass weder Paketverzeichnisse noch `go.mod` alte Namen tragen (ausser Ausnahmeliste: `dux-go`, `dux-gop`) |
 | D7.8 | **Nach Bestätigung:** `Dank*`-Hüllen, Übergangs-Hüllen `DCommon/Widgets`, `Modules/DankBar`, `Modules/DankDash` und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
 
 Dazu im Lauf von D7 (Doku, kein Code): `docs/plan/sie-form.md` (0.8 Nr. 15).
 
-Zwischenhalt nach D7.7: `~/alpe-plugins` mit calculator lokal fertig, Anleitungen für
+Zwischenhalt nach D7.7 (dazu 0.8 Nr. 45: Logo-Modus `"alpe"` mit einem Widget, Materialform
+`alpeLogo` als Hintergrund, Session aus 1.0 im Temp-HOME): `~/alpe-plugins` mit calculator lokal fertig, Anleitungen für
 hueManager und sathiAi (PC und Mac, fish-tauglich) in `offene-faelle.md`; Ladeprobe aller vier
 fremden Plugins im Temp-HOME auf D7.7 und mit nicht committetem D7.8-Probelauf (0.8 Nr. 29);
 D7.8 erst nach Bestätigung. Nach jedem Commit wird «Stand» nachgeführt.
@@ -647,7 +687,8 @@ Endstand unter KWin und Hyprland (Meldungen mit umbenannten Namen werden in den 
 nachgeführt, jede andere Abweichung einzeln erklärt). **Halt nach D7**, Mac-Test, dann 6.7, E1.
 
 Folgen für F1 (Umzug), zusätzlich zu 7.2: kitty-`include`-Zeilen, fcitx5- und Lualine-
-Themenwahl, Hyprland-Kürzel mit `dankdash`, Regel-IDs und `-- DMS-RULE:` in eigenen
+Themenwahl, **alle alten IPC-Ziele und Befehle in den Hyprland-Dateien und KWin-Kürzeln aller
+Nutzer** (0.8 Nr. 44; Liste in 7.2 Schritt 6 und 7.4 Schritt 6), Regel-IDs und `-- DMS-RULE:` in eigenen
 Hyprland-Dateien; Nutzerkopien der Repo-Plugins nicht kopieren; Hotspot-Verbindung bleibt.
 Folgen für E1: PAM-Dienste, Richtlinien und alle paketierten Pfade mit `alpe`-Namen (2.3.3).
 
@@ -979,7 +1020,12 @@ Ohne 1.0-Spuren sagt `install.sh` nur, dass es durch Paket + `alpe einrichten` e
    c) `alpe.service` starten → `alpe-bridge` meldet `alpe-*` an;
    d) gemerkte Tasten mit `setForeignShortcutKeys` auf `alpe-*` setzen (damit bleiben auch
       eigene Änderungen, nicht nur die Vorgaben).
-   Eigene Programm-/Befehlskürzel (`net.local.*`) und Meta+Q/Meta+M sind nicht betroffen.
+   e) **Befehle in Kürzeln umschreiben (0.8 Nr. 44), für jeden Nutzer, nicht nur für den
+      Maintainer:** In allen Befehlskürzeln (`alpe-cmd-*`/`dms-cmd-*` der Brücke, eigene
+      `net.local.*`-Einträge samt ihren `.desktop`-Dateien) werden alte Befehle und IPC-Ziele nach
+      derselben Tabelle wie in 7.4 Schritt 6 ersetzt. Der Umzug sucht nach dem Muster, nicht nach
+      einer festen Liste von Kürzeln; jede Ersetzung steht im Protokoll, `--zurueck` nimmt sie zurück.
+   Tasten der eigenen Programm-/Befehlskürzel (`net.local.*`) und Meta+Q/Meta+M sind nicht betroffen.
    `kwinrc [Effect-better-blur-dx] WindowClasses` und `kwinrulesrc`: Fensterklasse
    `dev.duxlabs.shell` → neue App-ID, falls vorhanden (auf dem PC heute nicht).
 7. **Dienste**: `dms.service` disable; Drop-ins aus `dms.service.d/` in die Sicherung;
@@ -1045,6 +1091,23 @@ Umzug:
    eine, wird sie auskommentiert (sonst zwei Shells).
 5. Wirksam nach Ab-/Anmelden; `--jetzt` stoppt `dms.service` und startet `alpe.service` (nur
    mit dieser Option und nach Rückfrage im Umzug).
+6. **Alte IPC-Ziele und Befehle umschreiben (0.8 Nr. 44), für jeden Nutzer:** in
+   `hyprland.conf`/`hyprland.lua`, allen von dort eingebundenen Dateien, `hypr/alpe/*.lua`
+   (auch `binds-user.lua`), `hypridle.conf` und `hyprlock.conf` (Sicherung `*.vor-alpe-1.1`,
+   Protokoll, `--zurueck`). Tabelle, gemeinsam mit 7.2 Schritt 6 e:
+
+   | Alt | Neu |
+   |---|---|
+   | `dms ipc …`, `dms ipc call …` | `alpe-dienst ipc …` |
+   | `dms screenshot …`, `dms cl …`, `dms notify …` und alle übrigen Unterbefehle von `dms` | `alpe-dienst …` |
+   | `dms run`, `dms restart`, `dms kill` | `alpe start` bzw. `alpe restart` (6.8); eine `exec-once`-Zeile wird auskommentiert (Schritt 4) |
+   | IPC-Ziel `dankdash` (`ipc call dankdash wallpaper`) | `dash` (`ipc call dash toggle wallpaper`) |
+   | Seiten-IDs als Argument (`ipc call settings …`): `dankbar`, `dankbar_settings`, `dankbar_appearance`, `dankbar_dot`, `dankbar_widgets`, `dank_dash`, Aliasse `dank_island`, `dankdot` | `bar`, `bar_settings`, `bar_appearance`, `bar_dot`, `bar_widgets`, `dash`, `island`, `dot` |
+   | `dms dank16 …` | `alpe-dienst palette16 …` |
+   | `dms://…` (Aufruf über `dms open`) | entfällt (0.8 Nr. 14): Zeile bleibt, Hinweis im Protokoll |
+
+   Ohne Übergang in der Shell: Bis zum Umzug greifen Kürzel mit alten Zielen nicht (`dms` spricht
+   nur DMS-Sockets an; `dankdash` gibt es nicht mehr).
 
 ### 7.5 Test
 
