@@ -200,6 +200,19 @@ Neu seit D6 – bitte gezielt ansehen:
 - **Pipette:** Farbwähler der Leiste öffnen und die Pipette starten; während der Auswahl zeigt
   `hyprctl layers | grep alpe:` die Fläche `alpe:eyedropper` (das Modal selbst heisst weiterhin
   `alpe:color-picker`). Eine eigene Regel für `dms-colorpicker` schreibt erst F1 um.
+- **Dock ohne angeheftete Programme** (das ausgelieferte Design heftet nichts mehr an): Im Dock
+  alle Anheftungen lösen (Rechtsklick → «Aus Dock loslösen») und offene Fenster schliessen. Ansehen und
+  festhalten, am besten mit Bild: Breite und Form des Docks nur mit dem Papierkorb, Abstände,
+  Trennstrich, ob es leer wirkt oder verrutscht. Danach wieder anheften – oder es bleiben
+  lassen, das Zurückholen am Ende stellt die Session wieder her.
+- **Papierkorb im Dock:** Er muss ein richtiges Symbol zeigen (leer `user-trash`, mit Inhalt
+  `user-trash-full` aus dem Symbolthema), kein schwarzes Quadrat und keinen leeren Platz. Beides
+  ansehen: Papierkorb leer, dann eine Datei hineinlegen. Welches Symbolthema eingestellt ist,
+  dazuschreiben. Findet das Thema das Symbol nicht, zeichnet `DockTrashButton.qml` ersatzweise
+  ein Schriftsymbol (`delete`) – auch das ist kein Quadrat. Am PC zeigt das Bild der Ladeprüfung
+  (verschachteltes Hyprland, 22.11.2026) das richtige Symbol, aber auf einer schwarzen,
+  scharfkantigen Fläche statt auf einem gerundeten Dock – siehe «Ladeprüfung» unten; am Mac
+  darauf achten, ob das Dock dort ebenso aussieht.
 - **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
 
 Die Ladeprüfung in den Varianten «gesperrt» und «offen» (Plan 0.8 Nr. 70) läuft nur am PC.
@@ -609,20 +622,42 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   einmal mit, unter einem Compositor (0.8 Nr. 85). Die Grundlinien sind danach neu gemessen
   (`9685ebe`, 0.8 Nr. 80). **Für G1:** Changelog-Eintrag 1.1 zur Behebung «Dienst hing bei stummem
   Systembus, Oberfläche verband sich nie».
-- **Sporadische Meldungen unter Hyprland aus der Neumessung (22.11.2026), nicht behoben:** je in
+- **Sporadische Meldungen unter Hyprland aus der Neumessung (22.11.2026), nicht behoben –
+  Herkunft offen, Frist: vor G1:** je in
   1 von 3 Läufen (a) `NotepadStorageService`: «Tab file does not exist …/untitled-<ID>.txt» samt
   der zugehörigen `FileView`-Meldung (Variante «gesperrt»; der erste Reiter wird gelesen, bevor
   seine Datei angelegt ist), (b) `DeferredAction.qml`: «Property 'flush' of object … is not a
   function» (Variante «offen»; vermutlich feuert der Timer, während das Objekt abgebaut wird).
   Beide Dateien sind seit `ba4ddbc` unverändert; in den sechs Gegenläufen auf `ba4ddbc` unter
   Hyprland trat keine auf, unter KWin in zwölf Läufen keine. Sechs Gegenläufe schliessen bei
-  dieser Häufigkeit nicht aus, dass die Meldungen schon vorher auftraten – die Zuordnung «nicht
-  aus Phase A» stützt sich auf den unveränderten Code, nicht auf die Messung. In den Grundlinien
-  als `SPORADISCH 1/3` geführt. Ursache der beiden Wettläufe nicht untersucht.
+  dieser Häufigkeit weder aus, dass die Meldungen schon vorher auftraten, noch belegen sie es.
+  **Herkunft offen** (Entscheid des Maintainers nach dem Halt D7; die frühere Einordnung, sie
+  stammten nicht aus Phase A, ist zurückgenommen): Dass die beiden Dateien unverändert sind, sagt
+  nichts über ihre Aufrufer, und D7 hat Aufrufer umbenannt. In den Grundlinien als
+  `SPORADISCH 1/3` geführt. Ursache der beiden Wettläufe nicht untersucht.
+  **Vor G1 zu klären:** (a) Notizblock: Reihenfolge von Anlegen und Lesen des ersten Reiters,
+  gegen den Stand vor Phase A. (b) `DeferredAction`: alle Aufrufer prüfen, die `flush` erwarten
+  (Objekte, die als `DeferredAction` angelegt sind oder waren, samt den in D7 umbenannten
+  Typen, Kennungen und Importen), ob `flush` dort noch auf ein `DeferredAction` trifft; dazu der
+  eigene Zeitgeber der Datei (`onTriggered: root.flush()`) beim Abbau. Vorabblick ohne Befund,
+  ersetzt die Prüfung nicht: 16 QML-Dateien nennen `DeferredAction`, `.flush()` ruft von aussen
+  nur `Modules/SurfaceWidgets/ApplicationStrip.qml` (`modelUpdate.flush()`), dazu zweimal
+  `socket.flush()` (anderer Typ). Danach je beheben oder mit Begründung einordnen.
   **Am Mac prüfen (zur Anleitung für den Stand nach D7):** Nachtlicht ein- und ausschalten und über
   die Zeitsteuerung laufen lassen; Deckel zu und wieder auf – die Farbtemperatur muss nach dem
   Aufwachen stimmen (die Überwachung des Ruhezustands hängt jetzt erst Augenblicke nach dem Start
   am Bus); WLAN-Liste, Bluetooth, Helligkeitstasten, Sperren beim Zuklappen.
+- **Offen (22.11.2026, Frist: vor G1): Dock ohne angeheftete Programme zeigt eine schwarze
+  Fläche.** Im Bild der Variante «offen» unter dem verschachtelten Hyprland (`1d91c2b`, Bild ohne
+  Hinweisbalken) steht unten in der Mitte nur der Papierkorb: das Symbol stimmt (grüner Eimer aus
+  dem Symbolthema), dahinter liegt aber ein schwarzes, scharfkantiges Quadrat von etwa 68 px
+  statt eines gerundeten, durchscheinenden Docks. Nicht untersucht: ob das am Dock mit nur einem
+  Eintrag liegt, an der Darstellung unter dem verschachtelten Hyprland (Unschärfe, Transparenz
+  der Ebene) oder am Stil des Designs. Gegenprobe am Mac steht in der Anleitung für den Stand
+  nach D7; unter KWin gibt es bisher kein Bild.
+- **Hinweisbalken von Hyprland in der Ladeprüfung: erledigt (`1d91c2b`).** Die Testkonfiguration
+  setzt `misc.disable_watchdog_warning`; das Bild danach zeigt keinen Balken mehr, der Lauf
+  gegen die Grundlinie «offen» 39 gleich, nichts neu.
 - **Offen, nicht belegt (22.11.2026): Kann der Wayland-Teil von Gamma bei einem stummen
   Compositor hängen?** `wayland.NewManager` läuft synchron im Start des Dienstes, vor
   `s.ipc.Serve` (Registry, Ausgaben, Gamma-Steuerung über die geteilte Wayland-Verbindung). Ob

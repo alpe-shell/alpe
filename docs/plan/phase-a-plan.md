@@ -8,7 +8,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 
 ---
 
-## Stand (22.11.2026, Halt nach D7: D7.8 erledigt)
+## Stand (22.11.2026, Halt nach D7 abgenommen, vorbehaltlich Mac-Test)
 
 ### Erledigt
 
@@ -232,9 +232,10 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      38; auf `ba4ddbc` 39 / 39 / 39 / 38. **Unterschiede Endstand gegen `ba4ddbc`: nur umbenannte Namen**
      (`alpe-floating-windows`, `FileSearchService`, `BarTab.qml`, `colors.json`,
      `@Alpe/Widgets/CachingImage.qml`), dazu drei sporadische Meldungen unter Hyprland, je 1 von 3 Läufen
-     (Notizblock-Reiter ohne Datei, zwei Zeilen, «gesperrt»; `DeferredAction` `flush`, «offen») aus seit
-     `ba4ddbc` unverändertem Code – `offene-faelle.md`; die Gegenmessung (0 von 6 auf `ba4ddbc`) kann bei
-     dieser Häufigkeit nicht belegen, dass sie neu oder alt sind. Die Normalisierung blendet den Zeitstempel
+     (Notizblock-Reiter ohne Datei, zwei Zeilen, «gesperrt»; `DeferredAction` `flush`, «offen») –
+     **Herkunft offen, Frist vor G1** (`offene-faelle.md`): Die beiden Dateien sind seit `ba4ddbc`
+     unverändert, ihre Aufrufer nicht zwingend (D7 hat Aufrufer umbenannt); die Gegenmessung (0 von 6 auf
+     `ba4ddbc`) kann bei dieser Häufigkeit nicht belegen, dass sie neu oder alt sind. Die Normalisierung blendet den Zeitstempel
      im Reiternamen und die Nummer des QML-Typs aus. **SettingsRow («Cannot find member data»): in keinem
      der 25 Läufe.** Gegenüber den alten Grundlinien neu: die Meldungen des Dienstes (kein logind, BlueZ,
      NetworkManager, GeoClue am Ersatz-Systembus) statt der Zeitüberschreitungen. **Bild** («offen»,
@@ -250,7 +251,26 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   und `WindowClasses` des Unschärfe-Effekts ganz entfernt sind bestätigt; `recentColors` kommt aus
   `design/kde/session.json` heraus; der Export nimmt aus `session.json` nur die feste Liste der
   Gestaltungs-Schlüssel (Punkt 4).
-- Danach: Vorlage 6.7 → E1 (0.8 Nr. 6).
+- **Halt nach D7 abgenommen (22.11.2026), vorbehaltlich des Mac-Tests.** Nachgeführt danach:
+  1. Sporadische Meldungen (Notizblock «Tab file does not exist» samt `FileView`-Meldung,
+     `DeferredAction` `flush`): **Herkunft offen, Frist vor G1**; bei `DeferredAction` vor G1 die
+     Aufrufer prüfen, die `flush` erwarten (`offene-faelle.md`, «Ladeprüfung»).
+  2. Mac-Anleitung für den Stand nach D7 ergänzt: Dock ohne angeheftete Programme, Symbol des
+     Papierkorbs.
+  3. Hinweisbalken von Hyprland in der Ladeprüfung abgeschaltet (`1d91c2b`,
+     `misc.disable_watchdog_warning`, mit Test; test.sh auf dem Commit im Temp-Worktree grün).
+     Bildlauf «offen» unter Hyprland danach: gültig, 148 s, gegen die Grundlinie 39 gleich, nichts
+     neu. **Bild:** kein Balken mehr; Leiste oben links mit Arbeitsflächen-Anzeige (leere Pille),
+     Starter mit Alpe-Zeichen, drei Systemwerten (48°, 47°, 3 %), in der Mitte Uhr und Wetter,
+     rechts Ton (stumm) und Mikrofon; Material-Vorlage mit grossem Alpe-Zeichen rechts. **Unten
+     in der Mitte der Papierkorb mit richtigem Symbol, aber auf einem schwarzen, scharfkantigen
+     Quadrat statt in einem gerundeten Dock** – offener Fall mit Frist vor G1
+     (`offene-faelle.md`, «Ladeprüfung»), Gegenprobe am Mac.
+  4. `docs/plan/sie-form.md` und `docs/plan/uebersetzung-luecken.md`: **nicht freigegeben**; die
+     drei Stilfragen beantwortet der Maintainer nach der Durchsicht. Bis dahin nichts in `de.json`.
+  5. Der Worktree `/tmp/claude-1000/h7/wt-alt` (`ba4ddbc`) bleibt bis nach dem Mac-Test stehen.
+- Danach: Vorlage 6.7 → E1 (0.8 Nr. 6); E1 erst nach dem Entscheid zu 6.7 **und** dem Ergebnis
+  des Mac-Tests.
 
 ---
 
