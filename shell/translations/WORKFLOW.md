@@ -1,3 +1,6 @@
+> **Alpe: veraltet.** Diese Anleitung beschreibt den Abgleich über POEditor, den Alpe nicht verwendet.
+> Übersetzungen werden nur im Repository gepflegt, siehe `README.md`.
+
 # Translation Workflow for Dux Shell
 
 ## POEditor Integration Guide

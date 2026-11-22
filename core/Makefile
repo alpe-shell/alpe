@@ -45,7 +45,7 @@ sync-shell:
 	@rm -rf $(EMBED_DIR)/.git* $(EMBED_DIR)/.github
 	@rm -rf $(EMBED_DIR)/tests
 	@find $(EMBED_DIR) -type d \( -name .claude -o -name .vscode \) -prune -exec rm -rf {} +
-	@rm -f $(EMBED_DIR)/scripts/i18nsync.py $(EMBED_DIR)/scripts/qmllint-entrypoints.sh
+	@rm -f $(EMBED_DIR)/scripts/qmllint-entrypoints.sh
 	@rm -f $(EMBED_DIR)/translations/*.py $(EMBED_DIR)/translations/WORKFLOW.md
 	@cd $(EMBED_DIR) && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16 > .dankrev
 
