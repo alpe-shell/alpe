@@ -711,6 +711,7 @@ liegen; Session-Daten wie `builtInPluginState` im selben Zug).
 | Dateien fremder Plugins im Original, Herkunftsvermerke im README von `~/alpe-plugins` | Lizenz/Herkunft | dauerhaft |
 | `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) | Paketnamen des Ursprungs | **E4** (0.8 Nr. 17) |
 | Neovim: `nvim/colors/dms.lua`, Lualine-Thema `dms`, `_DMS_SUPPORT` | Anbindung an ein fremdes base46, das diese Namen erwartet (0.8 Nr. 60) | solange die Anbindung besteht |
+| WirePlumber: `~/.config/wireplumber/wireplumber.conf.d/51-dms-audio-aliases.conf` (`AudioService.qml`) | Datei aus 1.0, liegt auf den Rechnern schon dort; WirePlumber liest jede Datei im Ordner, eine zweite unter neuem Namen würde sich mit ihr überlagern | **F1** (0.8 Nr. 73): Der Umzug benennt sie in `51-alpe-audio-aliases.conf` um, im selben Schritt stellt F1 `AudioService` auf den neuen Namen um; nie beide gleichzeitig |
 
 **Alte CUPS-Abonnements (0.8 Nr. 22), gewählt: einmal kündigen.** Der Dienst legte Abonnements
 mit Laufzeit 0 (Abfrageweg; bei cupsd bedeutet 0 «ohne Ende», sofern `MaxLeaseDuration` es
@@ -1142,6 +1143,14 @@ Ohne 1.0-Spuren sagt `install.sh` nur, dass es durch Paket + `alpe einrichten` e
    Schlüssel/Werte in `settings.json` benennt die Shell selbst beim ersten Start um
    (`SettingsData`-Migration, legt `settings.v<alt>.json` an) – eine Stelle, auch für Leute,
    die alte Sicherungen zurückspielen.
+   **WirePlumber (0.8 Nr. 73):** `~/.config/wireplumber/wireplumber.conf.d/51-dms-audio-aliases.conf`
+   wird in `51-alpe-audio-aliases.conf` **umbenannt** (nicht kopiert; Inhalt unverändert, Eintrag
+   im Protokoll). Liegt der neue Name schon vor, bleibt er, und die alte Datei geht in die
+   Sicherung und wird entfernt – **es liegen nie beide im Ordner**, weil WirePlumber jede Datei dort
+   liest. Mit F1 schreibt und löscht `AudioService` nur noch den neuen Namen (bis dahin den alten,
+   Ausnahmeliste 2.3.3); der Eintrag der Ausnahmeliste fällt im selben Commit weg. Test in F1:
+   nur alte Datei, nur neue Datei, beide, keine; danach jeweils höchstens eine, und der Rückweg
+   stellt den alten Namen wieder her. WirePlumber wird vom Umzug nicht neu gestartet (6.8).
 5. **Sperrbildschirm (KDE)**: Nutzerkopie `~/.local/share/plasma/shells/org.alpe.desktop` in die
    Sicherung verschieben (sie würde das Paket verdecken), dann `lockscreen.sh install` – Probe mit
    dem Systempaket, `ShellPackage` nur bei Erfolg. Layout in `kscreenlockerrc` bleibt.
@@ -1318,6 +1327,10 @@ Ausdrücklich zurückgesetzt, auch wenn nach dem Umzug geändert:
 - Alles, was der Umzug selbst umgeschrieben hat (Protokoll): Hyprland-Zeilen, Kürzel und ihre
   Befehle, Einbindungen nach 7.6, `mimeapps.list`, Verknüpfungen der Dienste, zur Seite gelegte
   Plugin-Kopien.
+- **WirePlumber (0.8 Nr. 73):** `51-alpe-audio-aliases.conf` → `51-dms-audio-aliases.conf`, im
+  aktuellen Stand der Datei (Gerätenamen, die nach dem Umzug vergeben wurden, bleiben erhalten);
+  auch hier nie beide Dateien gleichzeitig. Hat der Umzug eine alte Datei neben einer schon
+  vorhandenen neuen entfernt, kommt die alte aus der Sicherung zurück und die neue geht weg.
 
 Nicht zurückgesetzt (bleibt auf dem Stand des Umzugs bzw. geht 1.0 verloren):
 - Einstellungen und Session, die nach dem Umzug in `~/.config/alpe` und `~/.local/state/alpe`
