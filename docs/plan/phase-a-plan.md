@@ -198,6 +198,9 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      `dbus.SystemBus()`, gehalten vom Loginctl-Manager in `Hello` (Goroutinen-Stapel). Eintrag in
      `offene-faelle.md` berichtigt, drei offene Fälle dazu (stummer Compositor, Session-Bus,
      gonetworkmanager/Abriss im Betrieb). **Hier angehalten; weiter erst nach der Freigabe.**
+     **Nach der Behebung, vor der Neumessung (0.8 Nr. 83):** eigener Commit, `tools/design.py` wendet
+     `SESSION_GESTALTUNG` auch beim Einspielen an (Zustand aus einem Design wird nicht übernommen), mit Test;
+     7.8 und der Test zu Anheftungen aus älteren Designs werden dabei umgestellt.
   2. Behebung im Dienst als eigener Commit mit Test und Eintrag in `offene-faelle.md` (Fehler aus der Zeit vor
      Phase A); Mac-Anleitung: Nachtlicht prüfen.
   3. Prüfen: `Connected` im Protokoll unter dem verschachtelten Hyprland, `cpuUsage` links in der Leiste.
@@ -492,6 +495,7 @@ Entscheide nach D7.7b (22.11.2026):
 | 80 | **Dienst hängt am Systembus – Reihenfolge der Behebung** (Entscheid 22.11.2026): (1) zuerst die Prüfumgebung, (2) dann der Dienst, (3) die Grundlinien der Ladeprüfung erst messen, wenn beides committet ist. |
 | 81 | **Prüfumgebung** (eigener Commit): Die Richtlinie des Ersatz-Systembusses der Ladeprüfung wird so ergänzt, dass er antwortet. **Jeder Lauf prüft, dass die Oberfläche `Connected` meldet; fehlt die Meldung, gilt der Lauf als gescheitert und liefert nichts für die Grundlinie** (wie beim fehlenden Hyprland-IPC, Nr. 77). Prüfregel 0.7 Nr. 6 und `CLAUDE.md` nachgeführt. |
 | 82 | **Dienst: Zeitgrenze für alle Verbindungen zum Systembus**, nicht nur für Gamma. Zuerst ein kurzer Plan unter `docs/plan/` (`dienst-systembus.md`), Umsetzung erst nach Freigabe. Als erster Vorschlag zu prüfen: eine einzige, vom Dienst selbst aufgebaute Systembus-Verbindung mit Zeitgrenze über einen Context (godbus v5), an alle Manager weitergereicht, kein Aufruf von `dbus.SystemBus()` mehr; bei Scheitern gelten die betroffenen Manager als nicht verfügbar (eine Meldung, erneute Versuche im Hintergrund mit wachsendem Abstand); der Wayland-Teil von Gamma bleibt synchron, nur die Überwachung des Ruhezustands wird nach dem Start der Schnittstelle nebenher eingerichtet; Grundsatz: keine Sperre über einen Bus- oder Netzaufruf hinweg. Ob der Wayland-Teil bei einem stummen Compositor hängen kann, ist nicht belegt und bleibt ein offener Fall ohne Umbau. Grundlinien, Vorschlagsdatei der Übersetzungen und der Rest des Halts kommen nach der Behebung. |
+| 83 | **Einspielen filtert die Session wie der Export** (Entscheid 22.11.2026, ergänzt Nr. 79): `tools/design.py` wendet die feste Liste `SESSION_GESTALTUNG` auch beim Einspielen an. Zustandswerte aus einem Design (etwa Anheftungen aus älteren Designs) werden nicht übernommen. Mit Test. Eigener Commit, **nach der Behebung im Dienst**; danach die Neumessung der Grundlinien wie geplant (Nr. 80). |
 
 Ausgabedateien für Fremdprogramme (0.8 Nr. 48). Basis: `~/.config`, sofern nichts anderes steht.
 
