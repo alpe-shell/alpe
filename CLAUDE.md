@@ -65,11 +65,14 @@ Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33).
 
 Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `shell/` – nicht in
 `tools/test.sh`: `python3 entwicklung/qmllint/qmllint-pruefung.py` vergleicht mit
-`entwicklung/qmllint/grundlinie.txt`. Bei jedem Halt vergleichen und jede neue Meldung einzeln
+`entwicklung/qmllint/grundlinie.txt` (4902 Meldungen, gezählt mit diesem Skript auf `6305cb1`; eine
+andere Zahl aus früheren Notizen gilt nicht). Bei jedem Halt vergleichen und jede neue Meldung einzeln
 einordnen (beheben oder mit Begründung in die Grundlinie; Plan 0.8 Nr. 63).
 
 Ebenfalls am Halt: `go vet ./...` in `core/` ohne Meldung. Attrappen unter `core/internal/mocks`
-nie von Hand ändern, sondern mit `mockery` in `core/` neu erzeugen (Plan 0.8 Nr. 62).
+nie von Hand ändern, sondern mit `make -C core mocks` neu erzeugen: genau **mockery v3.9.1**
+(`MOCKERY_VERSION` im Makefile, das Ziel bricht bei einer anderen Version ab), Vorlage
+`core/.mockery/testify.templ` (Plan 0.8 Nr. 62, 66).
 
 ## Projektregeln
 

@@ -333,6 +333,17 @@ am 22.11.2026 keines.
 Denkbar später: eigener Gestalter in den Einstellungen (Material-Vorlagen gibt es schon) oder
 ein eigenes Schema `alpe://` mit Handler im Paket.
 
+## Mögliche eigene Funktion: Aktualisierungsprüfung im Dienst (allenfalls Phase B)
+
+Der Dienst trug aus dem Ursprung eine Aktualisierungsprüfung ohne Aufrufer: installierte Version
+aus dem Git-Stand der Oberfläche, neueste Version über die Release-Seite bzw. die GitHub-API
+(`internal/version`, `internal/netfetch/release.go`). In D7.8a entfernt (Plan 0.8 Nr. 65);
+`CompareVersions` bleibt für `doctor` und die Hyprland-Vorlagen. Aktualisierungen laufen in 1.1
+über das Paket (`alpe update`, Wartungsseite). Eine eigene Prüfung gegen `alpe-shell/alpe`
+(Hinweis in der Oberfläche, wenn eine neue Fassung erschienen ist) käme allenfalls in Phase B
+mit dem neuen Dienst; dann gegen die Releases des eigenen Repos und mit dem User-Agent nach
+0.8 Nr. 67.
+
 ## Notizblock: Markdown-Vorschau neu bauen (Frist: vor G1)
 
 Die Vorschau im Notizblock wurde nur vom Store-Plugin `dankNotepadModule` gespeist und ist mit
