@@ -748,5 +748,11 @@
   ],
   "windowGripSkipDecorated": true,
   "lockFollowWallpaper": false,
-  "useAutoLocation": true
+  "useAutoLocation": true,
+  "settingsHiddenPages": [
+    "auto",
+    "dank_dash",
+    "dankbar_dot",
+    "printers"
+  ]
 }

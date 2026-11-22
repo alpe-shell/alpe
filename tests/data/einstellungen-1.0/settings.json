@@ -755,5 +755,11 @@
   ],
   "dankLauncherV2ShowFooter": false,
   "alpeLockStyle": "dms",
-  "alpeHyprBlurMode": "dms"
+  "alpeHyprBlurMode": "dms",
+  "settingsHiddenPages": [
+    "auto",
+    "dank_dash",
+    "dankbar_dot",
+    "printers"
+  ]
 }

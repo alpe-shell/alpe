@@ -65,7 +65,7 @@ test("ein schon vorhandener neuer Schlüssel gewinnt", () => {
 test("übrige Einstellungen bleiben unverändert", () => {
     const migrated = store.migrateToVersion(old, version);
     for (const key of Object.keys(old)) {
-        if (key in renamed || key === "configVersion" || key === "alpeLockStyle" || key === "alpeHyprBlurMode" || key === "builtInPluginSettings")
+        if (key in renamed || key === "configVersion" || key === "alpeLockStyle" || key === "alpeHyprBlurMode" || key === "builtInPluginSettings" || key === "settingsHiddenPages")
             continue;
         assert.equal(JSON.stringify(migrated[key]), JSON.stringify(old[key]), key);
     }
@@ -107,11 +107,11 @@ for (const [label, file] of [["1.0", old], ["v43", v43]]) {
     test("alles andere bleibt (Datei " + label + ")", () => {
         const migrated = plain(store.migrateToVersion(file, version));
         const expected = plain(store.migrateToVersion(file, 43) ?? file);
-        delete expected.builtInPluginSettings;
-        delete expected.configVersion;
         const rest = Object.assign({}, migrated);
-        delete rest.builtInPluginSettings;
-        delete rest.configVersion;
+        for (const key of ["builtInPluginSettings", "configVersion", "settingsHiddenPages"]) {
+            delete expected[key];
+            delete rest[key];
+        }
         assert.deepEqual(rest, expected);
     });
 }
@@ -160,6 +160,24 @@ test("Session Version 8: Starter-Einträge in Pins, Material-Vorlage «Alpe», F
     assert.deepEqual(migrated.materialWallpaperProfiles.eigen, { name: "dank", layers: [{ shape: "alpeLogo", x: 0.5 }, { shape: "circle", x: 0.1 }] });
     assert.deepEqual(migrated.launcherQueryHistory, ["dank", "dms"]);
     assert.equal(sessionStore.migrateToVersion(migrated, sessionVersion, null), null, "nicht noch einmal");
+});
+
+test("ausgeblendete Seiten (settingsHiddenPages) tragen die neuen Seiten-IDs", () => {
+    const tabs = readFileSync(path.join(shellDir, "Common", "SettingsTabs.qml"), "utf8");
+    for (const [from, to] of Object.entries(names.PAGE_IDS)) {
+        assert.ok(tabs.includes('"id": "' + to + '"'), "Seite " + to + " gibt es");
+        assert.equal(tabs.includes('"' + from + '"'), false, from + " kennt die Shell nicht mehr");
+    }
+    assert.ok(Array.isArray(old.settingsHiddenPages) && old.settingsHiddenPages.includes("dank_dash"), "Testdatei aus 1.0 blendet dank_dash aus");
+    const fromOld = plain(store.migrateToVersion(old, version));
+    assert.deepEqual(fromOld.settingsHiddenPages, old.settingsHiddenPages.map(id => names.PAGE_IDS[id] ?? id));
+    const file = { configVersion: 43, settingsHiddenPages: ["auto", "dankbar", "dankbar_settings", "dankbar_appearance", "dankbar_dot", "dankbar_widgets", "dank_dash", "dash", "printers"], launcherLastPage: "dank_dash", andere: ["dankbar"] };
+    const migrated = plain(store.migrateToVersion(file, version));
+    assert.deepEqual(migrated.settingsHiddenPages, ["auto", "bar", "bar_settings", "bar_appearance", "bar_dot", "bar_widgets", "dash", "printers"], "umbenannt, ohne Doppel, Reihenfolge bleibt");
+    assert.equal(migrated.launcherLastPage, "dank_dash", "nur in der Seitenliste");
+    assert.deepEqual(migrated.andere, ["dankbar"]);
+    assert.equal(store.migrateToVersion(migrated, version), null, "nicht noch einmal");
+    assert.deepEqual(plain(store.migrateToVersion({ configVersion: 43, settingsHiddenPages: "auto" }, version)).settingsHiddenPages, "auto", "kaputter Wert bleibt, wie er ist");
 });
 
 // ---------------------------------------------------------------- Session aus 1.0 als Datei

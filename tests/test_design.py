@@ -225,13 +225,17 @@ werkzeug = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(werkzeug)
 quelle = open(os.path.join(SHELL, "Common", "settings", "Namen44.js"), encoding="utf-8").read()
 paare_shell = set(re.findall(r'"(\w+)": "(\w+)"', quelle))
-paare_werkzeug = set(werkzeug.STARTER_IDS.items()) | {("dms", "alpe")}
+paare_werkzeug = set(werkzeug.STARTER_IDS.items()) | {("dms", "alpe")} | set(werkzeug.PAGE_IDS.items())
 for tabelle in (werkzeug.VALUES_BY_KEY, werkzeug.MATERIAL_VALUES):
     for werte in tabelle.values():
         paare_werkzeug |= set(werte.items())
-check(paare_shell == paare_werkzeug and len(paare_shell) == 12, "design.py und Namen44.js führen dieselben Kennungen\n%s" % sorted(paare_shell ^ paare_werkzeug))
-check(werkzeug.RENAMED_VALUES["matugenSpec"] == {"dms": "alpe"} and all(key in quelle for key in list(werkzeug.VALUES_BY_KEY) + list(werkzeug.MATERIAL_KEYS) + list(werkzeug.MATERIAL_VALUES)),
+check(paare_shell == paare_werkzeug and len(paare_shell) == 18, "design.py und Namen44.js führen dieselben Kennungen\n%s" % sorted(paare_shell ^ paare_werkzeug))
+check(werkzeug.RENAMED_VALUES["matugenSpec"] == {"dms": "alpe"} and all(key in quelle for key in list(werkzeug.VALUES_BY_KEY) + list(werkzeug.PAGE_LIST_KEYS) + list(werkzeug.MATERIAL_KEYS) + list(werkzeug.MATERIAL_VALUES)),
       "dieselben Schlüssel in beiden Tabellen")
+
+seiten = werkzeug.renamed({"settingsHiddenPages": ["auto", "dank_dash", "dankbar_dot", "dash", "printers"], "anderes": ["dank_dash"]})
+check(seiten == {"settingsHiddenPages": ["auto", "dash", "bar_dot", "printers"], "anderes": ["dank_dash"]},
+      "ausgeblendete Seiten tragen die neuen Seiten-IDs, ohne Doppel; andere Listen bleiben\n%s" % seiten)
 
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

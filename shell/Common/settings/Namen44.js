@@ -35,6 +35,18 @@ var SETTINGS_VALUES = {
     }
 };
 
+// Seiten der Einstellungen: Listen von Seiten-IDs auf der obersten Ebene der Einstellungen
+// (settingsHiddenPages, Seitenauswahl unter «Alpe»).
+var PAGE_LIST_KEYS = ["settingsHiddenPages"];
+var PAGE_IDS = {
+    "dankbar": "bar",
+    "dankbar_settings": "bar_settings",
+    "dankbar_appearance": "bar_appearance",
+    "dankbar_dot": "bar_dot",
+    "dankbar_widgets": "bar_widgets",
+    "dank_dash": "dash"
+};
+
 // Material-Hintergründe in der Session: Vorlage und Form des Zeichens.
 var MATERIAL_KEYS = ["materialWallpapers", "materialWallpaperProfiles"];
 var MATERIAL_VALUES = {
@@ -86,6 +98,18 @@ function migrateSettings(settings) {
     for (var key in SETTINGS_VALUES) {
         if (typeof settings[key] === "string" && own(SETTINGS_VALUES[key], settings[key]))
             settings[key] = SETTINGS_VALUES[key][settings[key]];
+    }
+    for (var p = 0; p < PAGE_LIST_KEYS.length; p++) {
+        var list = settings[PAGE_LIST_KEYS[p]];
+        if (!Array.isArray(list))
+            continue;
+        var pages = [];
+        for (var i = 0; i < list.length; i++) {
+            var id = typeof list[i] === "string" && own(PAGE_IDS, list[i]) ? PAGE_IDS[list[i]] : list[i];
+            if (pages.indexOf(id) === -1)
+                pages.push(id);
+        }
+        settings[PAGE_LIST_KEYS[p]] = pages;
     }
     return settings;
 }

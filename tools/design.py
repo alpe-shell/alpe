@@ -79,6 +79,9 @@ STARTER_IDS = {"dms_" + name: "alpe_" + name for name in (
     "settings", "notepad", "sysmon", "colorpicker", "settings_search", "clipboard_search",
     "power", "vpn", "qr_generator")}
 VALUES_BY_KEY = {"launcherLogoMode": {"dank": "alpe"}, "islandFreeIconMode": {"dank": "alpe"}}
+PAGE_LIST_KEYS = ("settingsHiddenPages",)
+PAGE_IDS = {"dankbar": "bar", "dankbar_settings": "bar_settings", "dankbar_appearance": "bar_appearance",
+            "dankbar_dot": "bar_dot", "dankbar_widgets": "bar_widgets", "dank_dash": "dash"}
 MATERIAL_KEYS = ("materialWallpapers", "materialWallpaperProfiles")
 MATERIAL_VALUES = {"preset": {"dank": "alpe"}, "shape": {"dankLogo": "alpeLogo"}}
 # Wer eine Leiste oder ein Dock für einen bestimmten Bildschirm hat, bekommt sie auf allen
@@ -340,6 +343,9 @@ def renamed(settings):
     for key, values in RENAMED_VALUES.items():
         if isinstance(out.get(key), str) and out[key] in values:
             out[key] = values[out[key]]
+    for key in PAGE_LIST_KEYS:
+        if isinstance(out.get(key), list):
+            out[key] = list(dict.fromkeys(PAGE_IDS.get(page, page) if isinstance(page, str) else page for page in out[key]))
     return deep_renamed(out, STARTER_IDS, VALUES_BY_KEY)
 
 
