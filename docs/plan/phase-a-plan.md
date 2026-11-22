@@ -63,6 +63,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | | **D7** (Entscheide 0.8 Nr. 20–24, Commits nach 2.3.5; Hash siehe `git log`) | |
 | D7.G | `tools/neue-dateien-pruefen.sh` in test.sh: rot bei neuen Dateien > 1 MB oder ELF gegenüber `origin/phase-a` (auch vorgemerkt und unversioniert-nicht-ignoriert) | Test `tests/test_neue_dateien.py` |
 | D7.N | Alle Node-Tests der Oberfläche in test.sh (`tools/node-tests.py`), feste Liste der 10 bekannten Fehlschläge `tests/data/node-bekannte-fehlschlaege.txt`; neuer Fehlschlag = rot | Test `tests/test_node_tests.py` |
+| D7.0 | Werkzeug `entwicklung/umbenennen/umbenennen.py` (Tabellen je Bereich, Probelauf, `--liste`, Kollisionsprüfung gegen Repo, Qt, Quickshell); `tools/namen-pruefen.sh` mit Ausnahmeliste `tools/namen-ausnahmen.txt` (Fristen), in test.sh nur meldend. Ausgangswert: 4048 Fundstellen in 596 Dateien | Test `tests/test_umbenennen.py` |
 <!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene

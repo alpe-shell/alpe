@@ -1,0 +1,29 @@
+# Ausnahmeliste der Namensprüfung (Plan 2.3.3, 0.8 Nr. 18): nur von aussen vorgegebene Namen, je mit Frist.
+# Format: PFAD-GLOB<Tab>ZEILEN-MUSTER (regulärer Ausdruck, * = ganze Datei samt Pfad)<Tab>FRIST<Tab>GRUND
+# Fristen: «Phase B» = Abschluss von Phase B; «Umzug-Ende» = sobald der Umzug von 1.0 nicht mehr
+# unterstützt wird, frühestens erstes Release nach Phase B (0.8 Nr. 23); E1/E4/F1 = Etappe von Phase A.
+
+core/go.mod	*	Phase B	Go-Module dux-go/dux-gop (fremde Bibliotheken, 0.4 Nr. 9)
+core/go.sum	*	Phase B	Go-Module dux-go/dux-gop
+core/*.go	github\.com/duxlabs-dev/dux-go	Phase B	Importpfad dux-go/dux-gop
+core/*.go	\bduxlog\b	Phase B	Importname des Log-Pakets aus dux-go
+shell/Common/Brand.qml	upstream|Dux Modular Shell|duxlabs-dev/dux-shell	dauerhaft	Herkunft
+shell/Common/Brand.qml	heldPackages	E4	Paketnamen des Ursprungs (0.8 Nr. 17)
+shell/Modules/Settings/AlpeMaintenanceTab.qml	heldPackages	E4	Paketnamen des Ursprungs
+core/internal/server/sysupdate/*.go	"dms(-git|-cli)?"|LookPath\("dms"\)|dms-shell|dux-shell	E4	Paketnamen des Ursprungs (Erkennung der Shell-Aktualisierung)
+*	DMSerifDisplay|DM Serif|dm-serif-display	dauerhaft	fremder Schriftname DM Serif Display
+*	dev\.duxlabs\.calendar|dankcal|Dux Calendar|CalendarDuxBackend	solange die Anbindung besteht	fremde App Dux Calendar
+core/*	dankshell|LOCKSCREEN (U2F )?AUTH	E1	PAM-Dienste und Blockmarken auf Systemen mit 1.0 (0.8 Nr. 16)
+*	/usr/share/dms|/etc/dms	E1	Richtlinienpfade des Pakets dms (0.8 Nr. 16)
+shell/Common/ConfigIncludeResolve.js	DMS Include Configs	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
+shell/tests/config-include.test.mjs	DMS Include Configs|dms\.colors	Umzug-Ende	Test dazu
+shell/Common/settings/SettingsStore.js	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|=== "dms"	Umzug-Ende	Migration v43 (alte Schlüssel lesen)
+tools/design.py	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|\{"dms": "standard"\}	Umzug-Ende	alte Schlüssel beim Einspielen eines 1.0-Designs
+tests/test_design.py	dankLauncherV2ShowFooter|"dms"	Umzug-Ende	Test dazu
+tests/data/einstellungen-1.0/*	*	Umzug-Ende	Einstellungen aus 1.0 als Testdaten
+tests/test_einstellungen.mjs	*	Umzug-Ende	Test der Migration v43/v44
+tools/*	dms\.service|\.config/dms|state/dms|cache/dms|hypr/dms|/usr/bin/dms|dux-shell|dms-cli|DankMaterialShell|dev\.duxlabs\.shell	E4	1.0-Einrichtung in den Werkzeugen (0.7 Nr. 5), ersetzt in E4/F1
+entwicklung/ladepruefung/ladepruefung.py	dms	Umzug-Ende	Schutzprüfung gegen den laufenden 1.0-Dienst
+tools/namen-pruefen.py	*	dauerhaft	das Suchmuster selbst
+tools/namen-ausnahmen.txt	*	dauerhaft	diese Liste
+entwicklung/umbenennen/*	*	dauerhaft	Zuordnungstabellen der Umbenennung (D7)

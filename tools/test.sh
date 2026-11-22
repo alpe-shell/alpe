@@ -30,6 +30,9 @@ for t in tests/test_*.py; do
     run python3 "$t"
 done
 
+step "Namensprüfung (meldet nur, bis D7.8; Plan 2.3.3)"
+run bash tools/namen-pruefen.sh
+
 step "Skripte (bash -n)"
 run bash -n get.sh install.sh bootstrap.sh tools/*.sh tools/alpe
 run python3 tools/hyprlock2qml.py lockscreen/hyprlock.conf --json >/dev/null
