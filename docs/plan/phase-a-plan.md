@@ -120,7 +120,7 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
 - **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
   nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
-- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. Entscheide nach D7.3: 0.8 Nr. 31–35. Verbotene `D*`-Namen in der Namensprüfung (0.8 Nr. 34). D7.4, D7.5 erledigt. **Nächster Schritt: D7.6** (gespeicherte Kennungen, Migration v44, Material-Vorlage mit Alpe-Zeichen und `LogoShape.js`, 0.8 Nr. 35). Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
+- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. Entscheide nach D7.3: 0.8 Nr. 31–35. Verbotene `D*`-Namen in der Namensprüfung (0.8 Nr. 34). D7.4, D7.5 erledigt. Entscheide nach D7.5: 0.8 Nr. 36–40. **Nächster Schritt: D7.6** (gespeicherte Kennungen, Migration v44, Material-Vorlage mit Alpe-Zeichen und `LogoShape.js`, 0.8 Nr. 35). Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
   Für jeden Bereich eine Tabelle `entwicklung/umbenennen/<bereich>.tsv` anlegen, Probelauf mit
   `--liste` prüfen, dann `--schreiben`; `bash tools/test.sh` muss grün sein, Namensprüfung zeigt
   die sinkende Zahl. D7.2a: nur `git mv` plus Symlinks unter den alten Pfaden (Werkzeug-Art
@@ -332,6 +332,16 @@ Entscheide zum Start von D7 (22.11.2026):
 | 33 | **Ladeprüfung mit allen Repo-Plugins:** Im Temp-HOME werden alle Plugins unter `plugins/` eingeschaltet, nicht nur die drei, die `activate-plugins.py` für Nutzer einschaltet. So werden Plugins im Repo bei jedem Halt mitgeprüft. Umgesetzt spätestens für den Zwischenhalt nach D7.7 (Prüfregel 9/10, `CLAUDE.md`). |
 | 34 | **Alte `D*`-Namen verboten:** Die 115 alten Typnamen aus `d7-2b-importe.tsv` kommen als verbotene Namen in `namen-pruefen` (ganze Bezeichner, kein allgemeines Muster wie `D[A-Z]`); ausgenommen bis D7.8 die Hüllen unter `shell/DCommon/Widgets/`. Eigener Commit mit Test vor D7.4. |
 | 35 | **`DLogoShape.js`** wird in D7.5 umbenannt. Befund: Die Datei zeichnet die Logoform des Ursprungs (Kommentar «Dux Shell logo (assets/danklogonormal.svg)», benutzt von `MaterialShapes.js`). Darum stellt D7.6 sie zusammen mit der Material-Vorlage auf das Alpe-Zeichen um; beides wird gemeinsam geprüft. |
+
+Entscheide nach D7.5 (22.11.2026):
+
+| # | Entscheid |
+|---|---|
+| 36 | **Aktionsart `"shell-action"` bestätigt** (statt `"shell"` aus 2.3.2; `"shell"` ist für `spawn_shell` vergeben). |
+| 37 | **Markdown-Vorschau im Notizblock:** Die Entfernung (D7.5b) bleibt in D7. Vor G1 wird die Vorschau ohne Plugin mit `Text.MarkdownText` neu gebaut, damit 1.1 gegenüber 1.0 keine Funktion verliert (`offene-faelle.md`, Frist vor G1). `SESSION_BACKED_PLUGIN_IDS` (`SettingsStore.js`, Altdaten von `dankNotepadModule`) steht mit Frist «Umzug-Ende» auf der Ausnahmeliste. |
+| 38 | **Restliche `"dms"`-Werte gehören zu D7.7:** Kategorie `"dms"` und `lower.includes("dms")` in `KeybindsContent.qml`, `case "dms"` in `ProcessActions.qml`, `getDMSShellVersion` in doctor. Die Erkennung in `KeybindsContent.qml` erkennt künftig `alpe` und übergangsweise zusätzlich `dms` (die Hyprland-Binds des Maintainers enthalten bis F1 noch `dms`-Befehle); der Übergang steht mit Frist «Umzug-Ende» auf der Ausnahmeliste. |
+| 39 | **Veraltete Benutzerkopie eines Plugins:** Ist eine Benutzerkopie älter als die mitgelieferte Fassung, zeigt die Plugin-Seite einen Hinweis. Ohne Frist in Phase A (`offene-faelle.md`). |
+| 40 | **Go-Modul-Cache:** Abgeschottete Go-Tests (Temp-HOME) verwenden `GOMODCACHE` auf den bestehenden Cache oder `GOFLAGS=-modcacherw`, damit nichts schreibgeschützt im Temp-Ordner liegen bleibt. Merkregel in `CLAUDE.md`. |
 ---
 
 ## 1. Zielstruktur des Repos
@@ -515,7 +525,7 @@ letzten Spalte mit der Ausweichlösung.
 | `CalendarDankBackend.qml` | `CalendarDuxBackend.qml` | – | keine; «Dux» ist hier der Name der fremden App (Ausnahmeliste) |
 | `Proc.dmsBin`, `checkDMSCapabilities` | `backendBin`, `checkBackendCapabilities` | 1 | keine |
 | `dmsAvailable` | `backendReachable` | 1 | `backendAvailable` gibt es schon (`ThemeAutoService`, andere Bedeutung) |
-| `isDmsAction`, `dmsActions`, `DMS_ACTION_ARGS`, Aktionsart `"dms"` | `isShellAction`, `shellActions`, `SHELL_ACTION_ARGS`, `"shell"` | 1 | keine |
+| `isDmsAction`, `dmsActions`, `DMS_ACTION_ARGS`, Aktionsart `"dms"` | `isShellAction`, `shellActions`, `SHELL_ACTION_ARGS`, `"shell-action"` | 1 | `"shell"` ist schon die Aktionsart von `spawn_shell` → `"shell-action"` (0.8 Nr. 36) |
 | `DankBar…`, `dankBar…` (Rest-Bezeichner) | `Bar…`, `bar…` | 1 | keine (`Bar` ist weder Qt- noch Quickshell-Typ) |
 | `DankDash…`, `dankDashPopout(Loader)` | `Dash…`, `dashPopout(Loader)` | 1 | keine |
 | `DankIsland…`, `dankIsland…`, `DankDot` | `Island…`, `island…`, `Dot` | 1 | keine |
@@ -558,7 +568,7 @@ liegen; Session-Daten wie `builtInPluginState` im selben Zug).
 |---|---|---|
 | Go-Module `github.com/duxlabs-dev/dux-go`, `dux-gop` (Importpfade, `go.mod`/`go.sum`), Importname `duxlog` | fremde Bibliotheken (0.4 Nr. 9) | Abschluss von Phase B (Go-Dienst durch Rust ersetzt) |
 | Herkunft: NOTICE, LICENSE-Vermerk, `LICENSE_CHANGE_12_11_2025.md`, README «Herkunft», `CHANGELOG.md`, `Brand.upstream*`, Herkunftszeile der Über-Seite | Rechtspflicht bzw. historische Angabe | dauerhaft |
-| Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | sobald der Umzug von 1.0 nicht mehr unterstützt wird, frühestens mit dem ersten Release nach Abschluss von Phase B (0.8 Nr. 23) |
+| Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, `SESSION_BACKED_PLUGIN_IDS` (Altdaten von `dankNotepadModule`, 0.8 Nr. 37), Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Erkennung von `dms`-Befehlen in eigenen Kürzeln (`KeybindsContent.qml`, 0.8 Nr. 38), Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | sobald der Umzug von 1.0 nicht mehr unterstützt wird, frühestens mit dem ersten Release nach Abschluss von Phase B (0.8 Nr. 23) |
 | Fremde App «Dux Calendar»: `dev.duxlabs.calendar`, Socket `dankcal`, `CalendarDuxBackend.qml` | Namen der fremden App | solange die Anbindung besteht |
 | Fremdes Programm `dsearch` («dux-search», `github.com/duxlabs-dev/dux-search`): Programmname, Bezugsquelle im Starter-Hinweis, doctor-Eintrag | Name und Quelle des fremden Programms (0.8 Nr. 26) | solange die Anbindung besteht; in E3 optionale Abhängigkeit (`optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec), keine harte |
 | PAM-Dienste `dankshell`, `dankshell-u2f`, Blockmarken «DMS LOCKSCREEN AUTH»; Richtlinien `/usr/share/dms`, `/etc/dms`; alle anderen paketierten Pfade | heute vom Paket `dux-shell`/`dms` belegt | **E1** (zwingend, 0.8 Nr. 16; alte Blöcke erkennen) |
@@ -620,7 +630,7 @@ Bestätigung des Maintainers**, dass PC und Mac umgestellt sind.
 | D7.4 | Schnittstelle Dienst ↔ Oberfläche: `ShellBackend`, `BackendNetworkService`, `backendBin`, JSON-Felder (`fragmentStatus`, Kürzel-Quelle) samt Go-Gegenstücken |
 | D7.5 | Oberfläche: `ShellMain.qml`/`ShellIpc.qml`, Bezeichner Bar/Dash/Island/Launcher, Kürzel-Aktionen; `DLogoShape.js` umbenennen (0.8 Nr. 35); `dankNotepadModule`-Anbindung, «Wallpaper creator», `dms://` und Doku-Links nach `duxlabs.dev` weg |
 | D7.6 | Gespeicherte Kennungen, Migration v44 (Seiten-IDs, Starter-Plugins, Logo-Modus, Material-Vorlage «Alpe» mit Alpe-Zeichen samt Logoform aus D7.5 statt der des Ursprungs, gemeinsam geprüft (0.8 Nr. 35), matugen-Spec), IPC-Ziel `dankdash` weg; Test mit Einstellungen aus 1.0 und v43 |
-| D7.7 | Erzeugte Dateien und Fremdprogramm-Vorlagen (Cache-Namen, matugen, Regel-IDs, `-- ALPE-RULE:`), Hotspot-Name, CUPS-Benutzer; Dienst intern (Bezeichner, `palette16`, `duxlog`) |
+| D7.7 | Erzeugte Dateien und Fremdprogramm-Vorlagen (Cache-Namen, matugen, Regel-IDs, `-- ALPE-RULE:`), Hotspot-Name, CUPS-Benutzer; Dienst intern (Bezeichner, `palette16`, `duxlog`); restliche `"dms"`-Werte: Kürzel-Kategorie und -Erkennung (`alpe`, übergangsweise auch `dms`), `case "dms"` in `ProcessActions.qml`, `getDMSShellVersion` (0.8 Nr. 38) |
 | D7.8 | **Nach Bestätigung:** `Dank*`-Hüllen, Übergangs-Hüllen `DCommon/Widgets`, `Modules/DankBar`, `Modules/DankDash` und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
 
 Dazu im Lauf von D7 (Doku, kein Code): `docs/plan/sie-form.md` (0.8 Nr. 15).

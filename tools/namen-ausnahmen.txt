@@ -18,6 +18,7 @@ core/*	dankshell|LOCKSCREEN (U2F )?AUTH	E1	PAM-Dienste und Blockmarken auf Syste
 shell/Common/ConfigIncludeResolve.js	DMS Include Configs	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/tests/config-include.test.mjs	DMS Include Configs|dms\.colors	Umzug-Ende	Test dazu
 shell/Common/settings/SettingsStore.js	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|=== "dms"	Umzug-Ende	Migration v43 (alte Schlüssel lesen)
+shell/Common/settings/SettingsStore.js	SESSION_BACKED_PLUGIN_IDS = \["dankNotepadModule"\]	Umzug-Ende	Altdaten des Store-Plugins dankNotepadModule (0.8 Nr. 37)
 tools/design.py	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|\{"dms": "standard"\}	Umzug-Ende	alte Schlüssel beim Einspielen eines 1.0-Designs
 tests/test_design.py	dankLauncherV2ShowFooter|"dms"	Umzug-Ende	Test dazu
 tests/data/einstellungen-1.0/*	*	Umzug-Ende	Einstellungen aus 1.0 als Testdaten

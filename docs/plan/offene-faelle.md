@@ -297,6 +297,22 @@ am 22.11.2026 keines.
 Denkbar später: eigener Gestalter in den Einstellungen (Material-Vorlagen gibt es schon) oder
 ein eigenes Schema `alpe://` mit Handler im Paket.
 
+## Notizblock: Markdown-Vorschau neu bauen (Frist: vor G1)
+
+Die Vorschau im Notizblock wurde nur vom Store-Plugin `dankNotepadModule` gespeist und ist mit
+dessen Anbindung in D7.5b entfallen (Plan 0.8 Nr. 37). Damit 1.1 gegenüber 1.0 keine Funktion
+verliert, wird sie **vor G1** ohne Plugin neu gebaut: Anzeige des Notiztexts über
+`Text.MarkdownText` (Umschalter Bearbeiten/Vorschau wie in 1.0), neuer Test. Die Altdaten des
+Plugins behandelt weiterhin `SESSION_BACKED_PLUGIN_IDS` in `SettingsStore.js` (Ausnahmeliste,
+Frist «Umzug-Ende»).
+
+## Plugin-Seite: Hinweis bei veralteter Benutzerkopie (ohne Frist in Phase A)
+
+Liegt ein Plugin mit derselben ID im Benutzerordner und im Systemordner, gewinnt die
+Benutzerkopie (Plan 0.8 Nr. 32). Ist die Benutzerkopie älter als die mitgelieferte Fassung
+(Vergleich der `version` aus beiden `plugin.json`), soll die Plugin-Seite einen Hinweis zeigen
+(Plan 0.8 Nr. 39). Nicht in Phase A terminiert.
+
 ## Hyprland: `hyprctl descriptions` (nach Phase A)
 
 Unter Hyprland 0.57.2 meldet `HyprlandService.qml:257` `hyprctl descriptions parse failed:

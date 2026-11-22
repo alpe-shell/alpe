@@ -42,6 +42,9 @@ Der Maintainer arbeitet auf dem PC, auf dem du läufst, und Alpe ist seine aktiv
 - Lesen von `~/.config/dms`, `~/.local/state/dms`, `~/.config/alpe`, `~/.config/kwinrulesrc`
   ist erlaubt (für Migrationstests: Kopie in ein Temp-`$HOME` ziehen und dort arbeiten).
 - Tests laufen mit eigenem `HOME`/`XDG_*` in einem Temp-Verzeichnis, nie gegen das echte.
+- Abgeschottete Go-Tests (eigenes `HOME`): `GOMODCACHE` (und `GOCACHE`, `GOPATH`) auf den
+  bestehenden Cache aus `go env` setzen oder `GOFLAGS=-modcacherw` verwenden, damit kein
+  schreibgeschützter Modul-Cache im Temp-Ordner liegen bleibt (Plan 0.8 Nr. 40).
 - Kein `pkill`, `killall` oder `pkill -f`, auch nicht mit Pfadmustern: Die echte Shell läuft unter
   denselben Programmnamen (`qs`/`quickshell`, `dms`/`alpe`). Prozesse der Ladeprüfung nur über ihren
   Scope beenden (`systemctl --user stop alpe-ladepruefung-<zeit>.scope`).
