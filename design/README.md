@@ -9,7 +9,8 @@ bestehenden Einstellungen nur auf Nachfrage), später jederzeit mit `alpe design
 | `hyprland/` | MacBook mit Hyprland | Einstellungen der Shell, hyprlock.conf |
 
 Jeder Ordner enthält `settings.json` (Farben, Schriften, Leiste, Dock, Dash), `session.json`
-(Hintergrund, Hell/Dunkel, angeheftete Programme), `plugins.json` (Alpe-Plugins), `programme/`
+(nur Gestaltung: Hintergrund, Material-Vorlage, Hell/Dunkel, Nachtlicht – kein Zustand wie angeheftete
+Programme, Verläufe, Ort oder Bildschirme; Liste `SESSION_GESTALTUNG` in `tools/design.py`), `plugins.json` (Alpe-Plugins), `programme/`
 (Einstellungen von kitty und fastfetch; unter KDE wird kitty Standard-Terminal), bei KDE `kwin.json`,
 eigene Bilder unter `bilder/` und ein `manifest.json` mit Stand, Schriften und Hinweisen.
 

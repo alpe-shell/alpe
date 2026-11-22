@@ -186,7 +186,9 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   2. Behebung im Dienst als eigener Commit mit Test und Eintrag in `offene-faelle.md` (Fehler aus der Zeit vor
      Phase A); Mac-Anleitung: Nachtlicht prüfen.
   3. Prüfen: `Connected` im Protokoll unter dem verschachtelten Hyprland, `cpuUsage` links in der Leiste.
-  4. **Export-Ergänzung (Auftrag vom 22.11.2026, nicht begonnen):** `tools/design.py` nimmt aus `session.json`
+  4. **Export-Ergänzung: erledigt** (0.8 Nr. 79, Liste in 7.8; `recentColors` aus `design/kde/session.json`
+     entfernt; kein Stash `export-liste-abgebrochen` vorhanden). Ursprünglicher Auftrag:
+     `tools/design.py` nimmt aus `session.json`
      nur eine feste Liste von Schlüsseln, die zur Gestaltung gehören (etwa Material-Vorlage und Form), statt
      einzelne Zustandswerte herauszufiltern. Befund beim Einlesen: Die Liste `SESSION_KEEP` gibt es schon, sie
      enthält aber Zustand (`dockPins`, `barPinnedApps`, `trayItemOrder`, `recentColors`) und kennt
@@ -1389,6 +1391,45 @@ Nicht zurückgesetzt (bleibt auf dem Stand des Umzugs bzw. geht 1.0 verloren):
   die Sicherungen aus 1.0 liegen unverändert daneben (0.8 Nr. 57);
 - die Hotspot-Verbindung «Alpe Hotspot», falls sie nach dem Umzug neu angelegt wurde (1.0 legt
   seine eigene wieder an), und gekündigte CUPS-Abonnements des Besitzers `dms` (1.0 abonniert neu).
+
+### 7.8 Design-Export: Schlüssel der Session (0.8 Nr. 79)
+
+`tools/design.py export` übernimmt aus `session.json` nur die Schlüssel der Liste `SESSION_GESTALTUNG`.
+Alle 100 Schlüssel der Session (88 in `SessionSpec.js`, 12 in `SharedSessionSpec.js`) sind im Code
+eingeordnet; `tests/test_design.py` verlangt die Einordnung für jeden Schlüssel und prüft, dass
+`design/*/session.json` nur Gestaltung enthält. Ein Schlüssel, den die Spec nicht kennt, wird nicht
+exportiert.
+
+**Gestaltung (26, werden exportiert):**
+
+| Gruppe | Schlüssel |
+|---|---|
+| Hell/Dunkel, Hintergrund | `isLightMode`, `wallpaperPath`, `wallpaperPathLight`, `wallpaperPathDark` (die beiden letzten nur mit `perModeWallpaper`), `perModeWallpaper`, `wallpaperTransition`, `includedTransitions` |
+| Material-Vorlage und Formen | `materialWallpapers` (nur der Eintrag `""` für alle Bildschirme; Einträge je Bildschirm fallen weg, mit Hinweis), `materialWallpaperProfiles` |
+| Zeitplan Hell/Dunkel | `themeModeAutoEnabled`, `themeModeAutoMode`, `themeModeStartHour`, `themeModeStartMinute`, `themeModeEndHour`, `themeModeEndMinute`, `themeModeShareGammaSettings` |
+| Nachtlicht | `nightModeEnabled`, `nightModeTemperature`, `nightModeHighTemperature`, `nightModeAutoEnabled`, `nightModeAutoMode`, `nightModeStartHour`, `nightModeStartMinute`, `nightModeEndHour`, `nightModeEndMinute`, `nightModeTransitionMinutes` |
+
+**Zustand (74, bleiben beim Nutzer):** Augenblickszustand (Nicht stören, Wachhalten, Hinweise des
+Aktualisierers, `builtInPluginState`, `lastAppliedIconTheme`, `showConfigReloadToast`); Verläufe und
+zuletzt Benutztes (`recentColors`, Starter- und Notizblock-Verläufe, VPN, Medienspieler,
+`lastBrightnessDevice`); Programme des Nutzers (`dockPins`, `barPinnedApps`, `hiddenTrayIds`,
+`trayItemOrder`, `hiddenApps`, `appOverrides`, `searchAppActions`, `terminalOverride`); Ort und Sprache
+(`weatherLocation`, `weatherCoordinates`, `latitude`, `longitude`, `nightModeUseIPLocation`,
+`nightModeLocationName`, `locale`, `timeLocale`); alles mit Bildschirmnamen oder -modellen als Schlüssel
+(`perMonitorWallpaper`, `monitorWallpapers*`, `monitorWallpaperFillModes`, `monitorCyclingSettings`,
+`desktopWidgetInstancePositions`, `lockScreenAutoPositions`, `desktopWidgetGridSettings`,
+`lockScreenWidgetGridSettings`, `islandFreePositions`, `hyprlandOutputSettings`, `activeDisplayProfile*`,
+`displayGamma`, `displayContrast`); Hintergrundwechsel aus einem eigenen Ordner (`wallpaperCycling*`);
+Geräte (Helligkeit, Grafikkarten, WLAN, Bluetooth, Lautstärken, ausgeblendete Audiogeräte).
+
+**Gegenüber der früheren Liste `SESSION_KEEP` geändert:** neu dabei `materialWallpapers`,
+`materialWallpaperProfiles`; nicht mehr exportiert `dockPins`, `barPinnedApps`, `trayItemOrder`,
+`recentColors` (Zustand), `desktopWidgetGridSettings`, `lockScreenWidgetGridSettings`,
+`islandFreePositions` (Schlüssel sind Bildschirmnamen), `locale`, `timeLocale` (Sprache des Nutzers);
+gestrichen `wallpaperFillMode` (kein Schlüssel der Session, steht in `settings.json`).
+**Einspielen:** Eigene Formen des Nutzers (`materialWallpaperProfiles`) bleiben neben denen des Designs
+bestehen. Das Einspielen filtert die Session eines Designs nicht; Anheftungen in einem Design aus einem
+älteren Export werden wie bisher auf installierte Programme beschränkt und übernommen.
 
 ---
 

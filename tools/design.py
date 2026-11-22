@@ -92,18 +92,52 @@ SCREEN_KEYS = {"screenPreferences": ["all"], "frameScreenPreferences": ["all"]}
 # settings.json: so beim neuen Nutzer, egal wie beim Exportierenden
 SETTINGS_FORCE = {"useAutoLocation": True}
 
-# session.json: nur das Aussehen (alles andere – Wetterort, Geräte, Verläufe – bleibt beim Nutzer)
-SESSION_KEEP = [
+# session.json: Übernommen wird nur, was hier als Gestaltung steht (Plan 0.8 Nr. 79, Liste in 7.8). Jeder
+# Schlüssel aus SessionSpec.js und SharedSessionSpec.js steht in genau einer der beiden Listen; ein neuer
+# Schlüssel der Shell muss hier eingeordnet werden, sonst schlägt tests/test_design.py fehl.
+SESSION_GESTALTUNG = [
+    # Hell/Dunkel und Hintergrund
     "isLightMode", "wallpaperPath", "wallpaperPathLight", "wallpaperPathDark", "perModeWallpaper",
-    "wallpaperFillMode", "wallpaperTransition", "includedTransitions",
+    "wallpaperTransition", "includedTransitions",
+    # Material-Vorlage und eigene Formen (nur der Eintrag für alle Bildschirme, siehe export)
+    "materialWallpapers", "materialWallpaperProfiles",
+    # Zeitplan für Hell/Dunkel
     "themeModeAutoEnabled", "themeModeAutoMode", "themeModeStartHour", "themeModeStartMinute",
     "themeModeEndHour", "themeModeEndMinute", "themeModeShareGammaSettings",
+    # Nachtlicht: Farbtemperatur und Zeitplan
     "nightModeEnabled", "nightModeTemperature", "nightModeHighTemperature", "nightModeAutoEnabled",
     "nightModeAutoMode", "nightModeStartHour", "nightModeStartMinute", "nightModeEndHour",
     "nightModeEndMinute", "nightModeTransitionMinutes",
-    "dockPins", "barPinnedApps", "trayItemOrder", "recentColors",
-    "desktopWidgetGridSettings", "lockScreenWidgetGridSettings", "islandFreePositions",
-    "locale", "timeLocale",
+]
+# Zustand: Verläufe, Anheftungen, Ort, Geräte, Bildschirme, Sprache – bleibt beim Nutzer.
+SESSION_ZUSTAND = [
+    # Augenblickszustand
+    "doNotDisturb", "doNotDisturbUntil", "doNotDisturbHeldByScreenShare", "screenShareDndDismissed",
+    "screenShareDismissedIds", "idleInhibited", "idleInhibitedUntil", "updaterNotifiedUnix",
+    "updaterNotifiedCount", "showConfigReloadToast", "lastAppliedIconTheme", "builtInPluginState",
+    # Verläufe und zuletzt Benutztes
+    "recentColors", "launcherLastMode", "launcherLastFileSearchType", "launcherLastQuery",
+    "launcherQueryHistory", "appDrawerLastMode", "notepadLastMode", "vpnLastConnected",
+    "lastPlayerIdentity", "pinnedPlayerIdentity", "lastBrightnessDevice",
+    # Programme des Nutzers
+    "dockPins", "barPinnedApps", "hiddenTrayIds", "trayItemOrder", "hiddenApps", "appOverrides",
+    "searchAppActions", "terminalOverride",
+    # Ort und Sprache
+    "weatherLocation", "weatherCoordinates", "latitude", "longitude", "nightModeUseIPLocation",
+    "nightModeLocationName", "locale", "timeLocale",
+    # Bildschirme (Schlüssel sind Bildschirmnamen oder -modelle)
+    "perMonitorWallpaper", "monitorWallpapers", "monitorWallpapersLight", "monitorWallpapersDark",
+    "monitorWallpaperFillModes", "monitorCyclingSettings", "desktopWidgetInstancePositions",
+    "lockScreenAutoPositions", "desktopWidgetGridSettings", "lockScreenWidgetGridSettings",
+    "islandFreePositions", "hyprlandOutputSettings", "activeDisplayProfile", "activeDisplayProfileModes",
+    "displayGamma", "displayContrast",
+    # Wechsel des Hintergrunds aus einem eigenen Ordner
+    "wallpaperCyclingEnabled", "wallpaperCyclingRandom", "wallpaperCyclingRecursive", "wallpaperCyclingMode",
+    "wallpaperCyclingInterval", "wallpaperCyclingTime", "wallpaperCyclingFolderPath", "wallpaperCyclingVideoEnd",
+    # Geräte
+    "brightnessExponentialDevices", "brightnessUserSetValues", "brightnessExponentValues",
+    "nvidiaGpuTempEnabled", "nonNvidiaGpuTempEnabled", "enabledGpuPciIds", "wifiDeviceOverride",
+    "bluetoothAdapterOverride", "deviceMaxVolumes", "hiddenOutputDeviceNames", "hiddenInputDeviceNames",
 ]
 WALLPAPER_KEYS = ("wallpaperPath", "wallpaperPathLight", "wallpaperPathDark")
 
@@ -462,7 +496,20 @@ def export(variant, mode, ask=input):
     save_json(os.path.join(target, "settings.json"), out)
 
     session = renamed_session(load_json(SESSION, {}) or {})
-    kept = {k: session[k] for k in SESSION_KEEP if k in session}
+    kept = {k: session[k] for k in SESSION_GESTALTUNG if k in session}
+    for key in MATERIAL_KEYS:
+        if personal(kept.get(key)):
+            kept.pop(key)
+            notes.append(f"session.json: {key} verweist in den eigenen Ordner und wird nicht übernommen.")
+    material = kept.get("materialWallpapers")
+    if isinstance(material, dict):
+        # Der Eintrag "" gilt für alle Bildschirme; die übrigen Schlüssel sind Bildschirmnamen oder -modelle
+        if set(material) - {""}:
+            notes.append("Material-Vorlage je Bildschirm wird nicht übernommen (Bildschirme sind beim neuen Nutzer andere).")
+        if "" in material:
+            kept["materialWallpapers"] = {"": material[""]}
+        else:
+            kept.pop("materialWallpapers")
     if not session.get("perModeWallpaper"):
         # Getrennte Bilder für Hell und Dunkel nutzt nur, wer perModeWallpaper eingeschaltet hat
         kept.pop("wallpaperPathLight", None)
@@ -780,6 +827,10 @@ def write_design(variant, source, base):
     for key in ("dockPins", "barPinnedApps"):
         if key in design_session:
             design_session[key] = installed_pins(design_session[key], ids)
+    # Eigene Formen des Nutzers bleiben neben denen des Designs bestehen (bei gleicher Kennung gewinnt das Design)
+    own_profiles = session.get("materialWallpaperProfiles")
+    if isinstance(own_profiles, dict) and isinstance(design_session.get("materialWallpaperProfiles"), dict):
+        design_session["materialWallpaperProfiles"] = {**own_profiles, **design_session["materialWallpaperProfiles"]}
     session.update(design_session)
     save_json(SESSION, session)
 

@@ -83,7 +83,17 @@ write(os.path.join(a, ".local", "state", "alpe", "session.json"), {
     "vpnLastConnected": "ProtonVPN CH",
     "launcherQueryHistory": ["kontoauszug"],
     "dockPins": {"dock": ["kitty", "org.kde.dolphin", "gibtsnicht"]},
+    "barPinnedApps": ["kitty"],
+    "trayItemOrder": ["nm-applet"],
+    "recentColors": ["#720a0a"],
+    "locale": "de_CH",
+    "islandFreePositions": {"DP-2:default": {"x": 0.5, "y": 0.1}},
+    "desktopWidgetGridSettings": {"DP-2": {"size": 40}},
+    "materialWallpapers": {"": {"shared": {"preset": "alpe", "seed": "#d52b1e"}}, "DP-2": {"shared": {"preset": "wellen", "seed": "#112233"}}},
+    "materialWallpaperProfiles": {"gipfel": {"name": "Gipfel", "layers": [{"shape": "alpeLogo"}]}},
     "nightModeEnabled": True,
+    "nightModeTemperature": 4200,
+    "unbekannterSchluessel": 1,
 })
 write(os.path.join(a, ".config", "alpe", "plugin_settings.json"), {
     "alpeSport": {"favorites": ["hockey:101144"], "favoriteNames": {"hockey:101144": {"name": "EV Zug"}},
@@ -124,6 +134,12 @@ check(s["customThemeFile"] == "@DESIGN@/farben.json" and os.path.isfile(os.path.
 se = json.load(open(os.path.join(d, "session.json")))
 check(se["wallpaperPath"] == "@DESIGN@/bilder/berg.jpg" and os.path.isfile(os.path.join(d, "bilder", "berg.jpg")), "bestätigtes eigenes Hintergrundbild kommt mit")
 check(not {"weatherLocation", "weatherCoordinates", "latitude", "deviceMaxVolumes", "vpnLastConnected", "launcherQueryHistory"} & set(se), "Wetterort, Geräte, VPN, Suchverlauf weg")
+check(set(se) == {"isLightMode", "wallpaperPath", "perModeWallpaper", "materialWallpapers", "materialWallpaperProfiles", "nightModeEnabled", "nightModeTemperature"},
+      "Session: nur Schlüssel der Gestaltung – keine Anheftungen, Tray-Reihenfolge, Farbverlauf, Sprache, Bildschirm-Positionen, nichts Unbekanntes\n%s" % sorted(se))
+check(se["materialWallpapers"] == {"": {"shared": {"preset": "alpe", "seed": "#d52b1e"}}} and se["materialWallpaperProfiles"] == {"gipfel": {"name": "Gipfel", "layers": [{"shape": "alpeLogo"}]}},
+      "Material-Vorlage und eigene Form kommen mit, der Eintrag je Bildschirm nicht")
+check("DP-2" not in open(os.path.join(d, "session.json")).read() and "Material-Vorlage je Bildschirm" in out.stdout + open(os.path.join(d, "manifest.json")).read(),
+      "kein Bildschirmname in der Session, Hinweis dazu")
 p = json.load(open(os.path.join(d, "plugins.json")))
 check(p["alpeSport"] == {"order": ["nl", "nba"], "growDetail": True, "notifyGoals": False}, "Sport: Reihenfolge und Schalter, keine Favoriten und Streams")
 check(p["alpeMeteoSwiss"] == {"units": "metric", "showRain": True} and "fremdesPlugin" not in p, "MeteoSchweiz ohne Ort; fremde Plugins nicht")
@@ -145,6 +161,10 @@ check("AlfaSlabOne" in m["schriften"] and "Inter Variable" in m["schriften"] and
 
 # ---------------------------------------------------------------- neuer Nutzer
 b = home("neu")
+# Ein Design aus einem älteren Export kann noch Anheftungen tragen; der heutige Export schreibt keine mehr.
+aelter = json.load(open(os.path.join(d, "session.json")))
+aelter["dockPins"] = {"dock": ["kitty", "org.kde.dolphin", "gibtsnicht"]}
+write(os.path.join(d, "session.json"), aelter)
 for app in ("kitty.desktop", "org.kde.dolphin.desktop"):
     write(os.path.join(b, "sys", "applications", app), "[Desktop Entry]\nName=x\nExec=x\n")
 write(os.path.join(b, ".config", "alpe", "settings.json"), {"fontFamily": "Noto Sans", "eigenerSchluessel": 1, "useAutoLocation": False,
@@ -167,6 +187,8 @@ check(not any(key.startswith("dms_") for key in s2.get("builtInPluginSettings", 
 se2 = json.load(open(os.path.join(b, ".local", "state", "alpe", "session.json")))
 check(se2["materialWallpapers"][""]["shared"]["preset"] == "alpe" and se2["materialWallpaperProfiles"]["eigen"] == {"name": "dank", "layers": [{"shape": "alpeLogo"}]},
       "Session: Material-Vorlage «Alpe» und Form alpeLogo, eigene Namen bleiben")
+check(se2["materialWallpaperProfiles"].get("gipfel") == {"name": "Gipfel", "layers": [{"shape": "alpeLogo"}]} and len(se2["materialWallpaperProfiles"]) == 2,
+      "Session: die Form des Designs kommt dazu, die eigene Form des Nutzers bleibt")
 check(se2["wallpaperPath"] == os.path.join(base, "bilder", "berg.jpg") and os.path.isfile(se2["wallpaperPath"]), "Hintergrund eingespielt")
 check(se2["weatherLocation"] == "Bern" and s2["useAutoLocation"] is False, "eigener Wetterort bleibt (kein Umschalten auf Standort)")
 c = home("leer")
@@ -239,6 +261,25 @@ for tabelle in (werkzeug.VALUES_BY_KEY, werkzeug.MATERIAL_VALUES):
 check(paare_shell == paare_werkzeug and len(paare_shell) == 18, "design.py und Namen44.js führen dieselben Kennungen\n%s" % sorted(paare_shell ^ paare_werkzeug))
 check(werkzeug.RENAMED_VALUES["matugenSpec"] == {"dms": "alpe"} and all(key in quelle for key in list(werkzeug.VALUES_BY_KEY) + list(werkzeug.PAGE_LIST_KEYS) + list(werkzeug.MATERIAL_KEYS) + list(werkzeug.MATERIAL_VALUES)),
       "dieselben Schlüssel in beiden Tabellen")
+
+# ---------------------------------------------------------------- Session: Gestaltung oder Zustand (Plan 0.8 Nr. 79)
+# Jeder Schlüssel der Session ist eingeordnet; exportiert wird nur die Gestaltung.
+schluessel = set()
+for datei in (os.path.join(SHELL, "Common", "settings", "SessionSpec.js"), os.path.join(SHELL, "Alpe", "Common", "settings", "SharedSessionSpec.js")):
+    schluessel |= set(re.findall(r'^    "?(\w+)"?: \{', open(datei, encoding="utf-8").read(), re.M))
+gestaltung, zustand = set(werkzeug.SESSION_GESTALTUNG), set(werkzeug.SESSION_ZUSTAND)
+check(len(schluessel) >= 100 and {"dockPins", "materialWallpapers", "wallpaperPathDark"} <= schluessel, "Schlüssel der Session aus beiden Spec-Dateien gelesen (%d)" % len(schluessel))
+check(not gestaltung & zustand and len(gestaltung) == len(werkzeug.SESSION_GESTALTUNG) and len(zustand) == len(werkzeug.SESSION_ZUSTAND),
+      "kein Schlüssel doppelt oder in beiden Listen\n%s" % sorted(gestaltung & zustand))
+check(schluessel == gestaltung | zustand, "jeder Schlüssel der Session ist als Gestaltung oder Zustand eingeordnet, keiner ist erfunden\n%s" % sorted(schluessel ^ (gestaltung | zustand)))
+check(not gestaltung & {"dockPins", "barPinnedApps", "trayItemOrder", "recentColors", "locale", "weatherLocation", "islandFreePositions", "desktopWidgetGridSettings"},
+      "Anheftungen, Verläufe, Ort, Sprache und Bildschirm-Positionen sind Zustand")
+check(set(werkzeug.MATERIAL_KEYS) <= gestaltung, "Material-Vorlage und Formen sind Gestaltung")
+for variante in sorted(os.listdir(os.path.join(os.path.dirname(HERE), "design"))):
+    pfad = os.path.join(os.path.dirname(HERE), "design", variante, "session.json")
+    if os.path.isfile(pfad):
+        fremd = set(json.load(open(pfad, encoding="utf-8"))) - gestaltung
+        check(not fremd, "design/%s/session.json enthält nur Gestaltung\n%s" % (variante, sorted(fremd)))
 
 seiten = werkzeug.renamed({"settingsHiddenPages": ["auto", "dank_dash", "dankbar_dot", "dash", "printers"], "anderes": ["dank_dash"]})
 check(seiten == {"settingsHiddenPages": ["auto", "dash", "bar_dot", "printers"], "anderes": ["dank_dash"]},
