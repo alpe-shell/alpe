@@ -199,6 +199,16 @@ try:
         shutil.rmtree(kurz, ignore_errors=True)
         check(antwort.returncode == 0 and "org.freedesktop.DBus" in antwort.stdout, "Ersatz-Systembus antwortet auf einen Aufruf\n" + antwort.stdout + antwort.stderr)
 
+    # Testkonfiguration für Hyprland: ohne Logo, ohne Hinweisbalken zum Start ohne start-hyprland (er läge im Bild).
+    hypr = os.path.join(tmp, "hypr")
+    os.makedirs(hypr)
+    lp.hyprland_files(hypr, "/bin/true")
+    with open(os.path.join(hypr, "hyprland.lua"), encoding="utf-8") as handle:
+        lua = handle.read()
+    check("disable_watchdog_warning = true" in lua and "disable_hyprland_logo = true" in lua and 'hl.exec_cmd("/bin/true")' in lua,
+          "Hyprland-Testkonfiguration schaltet Logo und Hinweisbalken ab und startet die Session")
+    check(os.access(os.path.join(hypr, "hyprland-start.sh"), os.X_OK), "Startskript für Hyprland ist ausführbar")
+
     # Auswertung nach dem Lauf: erkennt eine umgezogene und eine nicht umgezogene Session.
     check(any(line.startswith("FEHLER") for line in lp.probe_report(home)), "Auswertung meldet eine Session, die nicht umgezogen ist")
     migrated = {"configVersion": 8, "materialWallpapers": {"": {"shared": {"preset": "alpe"}}},

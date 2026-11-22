@@ -371,7 +371,9 @@ echo "$?" > "$base/compositor.exit"
 def hyprland_files(base, session):
     conf = os.path.join(base, "hyprland.lua")
     with open(conf, "w") as handle:
-        handle.write('hl.config({ misc = { disable_hyprland_logo = true, disable_splash_rendering = true } })\n'
+        # disable_watchdog_warning: ohne den Hinweisbalken zum Start ohne start-hyprland, der sonst im Bild liegt.
+        handle.write('hl.config({ misc = { disable_hyprland_logo = true, disable_splash_rendering = true,'
+                     ' disable_watchdog_warning = true } })\n'
                      'hl.on("hyprland.start", function()\n    hl.exec_cmd(%s)\nend)\n' % ('"%s"' % session))
     starter = os.path.join(base, "hyprland-start.sh")
     with open(starter, "w") as handle:
