@@ -89,18 +89,25 @@ try:
 
     # Variante «offen» (Plan 0.8 Nr. 70): ohne Sperre beim Start, Hintergrund leer. «gesperrt» lässt beides stehen.
     with open(os.path.join(config, "alpe", "settings.json"), "w") as handle:
-        json.dump({"lockAtStartup": True, "barConfigs": []}, handle)
+        json.dump({"lockAtStartup": True, "barConfigs": [{"leftWidgets": [{"id": "workspaceSwitcher", "enabled": False},
+                                                                          {"id": "launcherButton", "enabled": False}, {"id": "clock", "enabled": False}]}]}, handle)
     with open(os.path.join(state, "alpe", "session.json"), "w") as handle:
         json.dump({"wallpaperPath": "#101010", "monitorWallpapers": {"DP-1": "/bild.png"},
                    "materialWallpapers": {"": {"shared": {"preset": "alpe"}}}}, handle)
     out = run(False)
     check(out.returncode == 0 and read(config, "alpe", "settings.json")["lockAtStartup"] is True
-          and read(state, "alpe", "session.json")["wallpaperPath"] == "#101010", "gesperrt: Sperre beim Start und Hintergrund bleiben")
+          and read(state, "alpe", "session.json")["wallpaperPath"] == "#101010"
+          and not any(w["enabled"] for w in read(config, "alpe", "settings.json")["barConfigs"][0]["leftWidgets"]),
+          "gesperrt: Sperre beim Start, Hintergrund und Leiste bleiben wie im Design")
     out = run(False, offen=True)
     session = read(state, "alpe", "session.json")
     check(out.returncode == 0 and read(config, "alpe", "settings.json")["lockAtStartup"] is False, "offen: lockAtStartup ausgeschaltet")
     check(session["wallpaperPath"] == "" and session["monitorWallpapers"] == {} and session["materialWallpapers"][""]["shared"]["preset"] == "alpe",
           "offen: kein Bild und keine Farbe, die Material-Vorlage bleibt")
+    check(read(config, "alpe", "settings.json")["barConfigs"][0]["leftWidgets"] ==
+          [{"id": "workspaceSwitcher", "enabled": True}, {"id": "launcherButton", "enabled": True, "launcherLogoMode": "alpe"}, {"id": "clock", "enabled": False}],
+          "offen: Abdeckungs-Zusätze – Arbeitsflächen-Anzeige und Starter-Knopf mit Logo-Modus alpe an, sonst nichts (0.8 Nr. 77)")
+    check(lp.logo_mode() == "alpe" and lp.logo_mode(tmp) == "alpe", "Logo-Modus des Endstands ist alpe")
     skript = lp.session_script("/b", "/d", "/b/x.png")
     check("grim" not in skript and "screenshot full" in skript, "Bild: fester Weg alpe-dienst screenshot full, ohne grim (0.8 Nr. 71)")
     aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)

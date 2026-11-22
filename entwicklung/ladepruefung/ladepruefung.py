@@ -11,7 +11,9 @@ einer Grundlinie vergleichen.
               --probe-zeichen             Logo-Modus "alpe" im Starter-Knopf, Material-Vorlage «Alpe» als
                                           Hintergrund, Session aus 1.0 (Plan 0.8 Nr. 41, 45)
               --offen                     Variante «offen»: ohne Sperre beim Start, Hintergrund leer und damit
-                                          Material-Vorlage sichtbar; eigene Grundlinie grundlinie-<c>-offen.txt.
+                                          Material-Vorlage sichtbar; dazu als Abdeckungs-Zusätze Arbeitsflächen-
+                                          Anzeige und Starter-Knopf (Logo-Modus "alpe") eingeschaltet – also nicht
+                                          das ausgelieferte Design selbst; eigene Grundlinie grundlinie-<c>-offen.txt.
                                           Ohne --offen: Variante «gesperrt». Beide bei jedem Halt (0.8 Nr. 70)
               --bild DATEI                nur mit --offen: Bildschirmfoto (PNG) des geladenen Schreibtischs,
                                           bevor etwas geöffnet wird, mit «alpe-dienst screenshot full» (0.8 Nr. 71)
@@ -105,8 +107,23 @@ if entsperrt:
     path = os.path.join(folder, "settings.json")
     settings = load(path)
     settings["lockAtStartup"] = False
+    # Abdeckungs-Zusätze (Plan 0.8 Nr. 77): Das ausgelieferte Design hat Arbeitsflächen-Anzeige und
+    # Starter-Knopf ausgeschaltet. Hier sind sie an, damit Lauf und Bild die Anbindung an den Compositor
+    # und das Alpe-Zeichen berühren. «offen» ist also das Design plus diese Zusätze, nicht das Design selbst.
+    logo = sys.argv[6] if len(sys.argv) > 6 else "alpe"
+    zusatz = {"workspaceSwitcher": 0, "launcherButton": 0}
+    for bar in settings.get("barConfigs", []):
+        for side in ("leftWidgets", "centerWidgets", "rightWidgets"):
+            for widget in bar.get(side, []):
+                if isinstance(widget, dict) and widget.get("id") in zusatz:
+                    widget["enabled"] = True
+                    if widget["id"] == "launcherButton":
+                        widget["launcherLogoMode"] = logo
+                    zusatz[widget["id"]] += 1
     save(path, settings)
     print("Offen: lockAtStartup ausgeschaltet")
+    print("Offen: Zusätze eingeschaltet – workspaceSwitcher %d, launcherButton %d (Logo-Modus %s)"
+          % (zusatz["workspaceSwitcher"], zusatz["launcherButton"], logo))
 
 if probe:
     # Starter-Knopf mit dem Alpe-Zeichen (Logo-Modus "alpe") in jeder Leiste, in der er steht.
@@ -260,6 +277,15 @@ echo "exit $?" > {base}/dienst.exit
 """.format(dienst=q(dienst), base=q(base), shell=q(SHELL), start=DAUER_START, ende=DAUER_ENDE, calls="\n".join(calls))
 
 
+def logo_mode(shell=None):
+    """Logo-Modus des Alpe-Zeichens im Starter-Knopf: "alpe"; auf einem Stand vor D7.6 (Gegenmessung) "dank"."""
+    for folder, _dirs, files in os.walk(shell or SHELL):
+        if "LauncherLogo.qml" in files:
+            with open(os.path.join(folder, "LauncherLogo.qml"), encoding="utf-8") as handle:
+                return "alpe" if 'case "alpe"' in handle.read() else "dank"
+    return "alpe"
+
+
 def runner_script(base, compositor, sock, session, extra_plugins=(), probe=False, entsperrt=False):
     """Alles im Scope: Selbstprüfung, Vorbereitung des Temp-HOME, Ersatz-Systembus, Compositor."""
     if compositor == "kwin":
@@ -279,7 +305,7 @@ cp -r {repo}/plugins/. "$XDG_CONFIG_HOME/alpe/plugins/"
 {{
     python3 {repo}/tools/activate-plugins.py
     ALPE_DESIGN_NO_SERVICE=1 ALPE_SHELL_DIR={shell} python3 {repo}/tools/design.py apply --ja --variante kde --bilder nein </dev/null
-    python3 "$base/vorbereitung.py" - {extra} {probe} {session10} {entsperrt}
+    python3 "$base/vorbereitung.py" - {extra} {probe} {session10} {entsperrt} {logo}
 }} > "$base/vorbereitung.log" 2>&1
 # 3. Leerer Ersatz für den Systembus.
 dbus-daemon --config-file="$base/systembus.conf" --nofork >/dev/null 2>&1 &
@@ -289,7 +315,7 @@ dbus-run-session -- kwin_wayland --virtual --width 1920 --height 1080 --socket l
     --exit-with-session {start} > "$base/compositor.log" 2>&1
 echo "$?" > "$base/compositor.exit"
 """.format(base=q(base), repo=q(REPO), shell=q(SHELL), sock=q(sock), start=q(start),
-           extra=q(os.pathsep.join(extra_plugins)), probe="1" if probe else "0", entsperrt="1" if entsperrt else "0",
+           extra=q(os.pathsep.join(extra_plugins)), probe="1" if probe else "0", entsperrt="1" if entsperrt else "0", logo=logo_mode(),
            session10=q(os.path.join(REPO, "tests", "data", "einstellungen-1.0", "session.json")))
 
 

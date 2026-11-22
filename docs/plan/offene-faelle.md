@@ -191,7 +191,18 @@ Neu seit D6 – bitte gezielt ansehen:
   starten und während der Auswahl im zweiten Terminal `hyprctl layers | grep alpe:` – die Fläche
   heisst `alpe:screenshot` (Pipette: `alpe:eyedropper`, Plan 0.8 Nr. 75); sie soll ohne Einblenden erscheinen,
   wenn in der eigenen Hyprland-Datei eine Regel für `^alpe:.*` steht.
+- **Einstellungssuche (Abschluss des Halts nach D7):** Die Registrierung der Zeilen und Karten
+  für die Suche hängt neu als Eigenschaft an der Zeile. Einstellungen öffnen, im Suchfeld
+  «Sperre» und danach «Schrift» suchen, je einen Treffer wählen: Die Seite wechselt, rollt zur
+  Zeile und hebt sie kurz hervor. Danach zügig durch mehrere Seiten klicken (Abbau halb
+  erzeugter Seiten). Im Protokoll darf `Cannot find member data` nicht stehen (dritter Befehl
+  unten); die Meldung kam vorher sporadisch, ein sauberer Lauf allein beweist also nichts.
+- **Pipette:** Farbwähler der Leiste öffnen und die Pipette starten; während der Auswahl zeigt
+  `hyprctl layers | grep alpe:` die Fläche `alpe:eyedropper` (das Modal selbst heisst weiterhin
+  `alpe:color-picker`). Eine eigene Regel für `dms-colorpicker` schreibt erst F1 um.
 - **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
+
+Die Ladeprüfung in den Varianten «gesperrt» und «offen» (Plan 0.8 Nr. 70) läuft nur am PC.
 
 Auswerten wie oben, mit `/tmp/alpe-d7.log`; zusätzlich darf der erste Befehl nichts finden. Der
 zweite zeigt, was das Protokoll zu den beiden Plugins sagt (am PC meldet hueManager dort eine
@@ -200,6 +211,7 @@ Warnung aus eigenem Code, `Color.js … used before its declaration` – die gab
 ```
 grep -E "is not a type|is not installed|is deprecated" /tmp/alpe-d7.log
 grep -E "hueManager|calculator" /tmp/alpe-d7.log
+grep -c "Cannot find member data" /tmp/alpe-d7.log
 ```
 
 Beenden und zurückholen wie oben. Die angepassten Plugins bleiben dabei unter
@@ -565,6 +577,27 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   hyprland.lua not found …` (im Testprofil gibt es keine `hyprland.lua`; Text seit D6 ohne
   `dms setup`).
 
+- **Offen, gefunden beim Abschluss des Halts nach D7 (22.11.2026): Unter dem verschachtelten
+  Hyprland verbindet sich die Oberfläche nie mit dem Dienst.** Im Protokoll des Dienstes ist
+  `Attempting to initialize Wayland gamma control...` die letzte Zeile der Initialisierung; danach
+  kommt bis zum Ende des Laufs nichts mehr (unter KWin folgt `Failed to initialize wayland manager:
+  … compositor does not support gamma control`, und es geht weiter). Die Oberfläche meldet nie
+  `Connected (API v…)`; `ShellBackend.isConnected` bleibt falsch. Folgen im Lauf: Widgets, die
+  `DgopService.dgopAvailable` brauchen (`cpuUsage`, `cpuTemp`, `gpuTemp`, `memUsage`), bleiben
+  unsichtbar – darum ist die linke Leistenseite im Bild leer –, `[ProcessListModal] dgop is not
+  available` und `Theme worker: Server unavailable, running synchronously` stehen seit jeher in
+  der Hyprland-Grundlinie und nur dort. Gleich auf `ba4ddbc` und auf dem Endstand, also **kein
+  Fehler aus D7**; aber die Ladeprüfung unter Hyprland hat alles, was den Dienst braucht
+  (Netzwerk, Systemmonitor, Plugins-Verwaltung, Farbschema über den Dienst), nie geprüft. Nicht
+  geklärt: ob `wayland.NewManager` nur im verschachtelten Hyprland hängt (dann Sache der
+  Prüfumgebung) oder ob dem Dienst dort eine Zeitgrenze fehlt (dann auch am Mac denkbar, wenn
+  die Gamma-Schnittstelle nicht antwortet). Entscheid des Maintainers nötig, bevor die
+  Hyprland-Grundlinien als Abnahme von D7 gelten.
+- **Ausgeliefertes Design nennt ein fremdes Plugin:** `design/kde/settings.json` führt links in
+  der Leiste `sathiAi` (wird nicht mitgeliefert; auf einem frischen Rechner bleibt die Stelle
+  leer) und bei `gpuTemp` die Gerätekennung `pciId: 10de:2504`. `tests/test_werte.py` prüft die
+  Widget-Kennungen des Designs gegen die registrierten Widgets und führt `sathiAi` als bekannte
+  Ausnahme. Ob beides ins Design gehört, ist offen.
 - ~~Sporadisch: `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null`~~
   Behoben (Commit «Einstellungssuche: abgebaute Karten»): Bindung und `sync()` prüfen `target`
   auf null; `unregisterCard` ohne Karte entfernt nur einen Eintrag, dessen Karte schon weg ist,

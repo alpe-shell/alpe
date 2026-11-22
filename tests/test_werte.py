@@ -174,5 +174,24 @@ for ordner, _dirs, dateien in os.walk(SHELL):
                 eigenschaften += bool(re.match(r"\s*readonly property SettingsSearchRegistration \w+: SettingsSearchRegistration\s*\{", zeile))
 check(kinder == [] and eigenschaften >= 3, "SettingsSearchRegistration nur als Eigenschaft (%d), nie als Kind: %s" % (eigenschaften, kinder))
 
+# Halt nach D7: Jede Widget-Kennung im Bar-Layout des ausgelieferten Designs ist ein registriertes Widget der Leiste
+# (WidgetModel.js) oder ein Plugin aus plugins/. Eine umbenannte Kennung, die das Design nicht mitmacht, fiele sonst
+# nur als leere Stelle in der Leiste auf.
+import json
+registriert = set(re.findall(r'^\s*"([^"]+)"\s*:', re.search(r"componentNames\s*=\s*\{(.*?)\n\}", read(SHELL, "Modules", "Bar", "WidgetModel.js"), re.S).group(1), re.M))
+plugin_ids = {json.loads(read(REPO, "plugins", name, "plugin.json"))["id"] for name in os.listdir(os.path.join(REPO, "plugins"))
+              if os.path.isfile(os.path.join(REPO, "plugins", name, "plugin.json"))}
+# Bekannte Ausnahme: sathiAi ist ein fremdes Plugin des Maintainers, das Alpe nicht mitliefert (offene-faelle.md).
+FREMD_IM_DESIGN = {"sathiAi"}
+for variante in sorted(os.listdir(os.path.join(REPO, "design"))):
+    datei = os.path.join(REPO, "design", variante, "settings.json")
+    if not os.path.isfile(datei):
+        continue
+    kennungen = [(w["id"] if isinstance(w, dict) else w) for leiste in json.loads(read(datei)).get("barConfigs", [])
+                 for seite in ("leftWidgets", "centerWidgets", "rightWidgets") for w in leiste.get(seite, [])]
+    unbekannt = sorted(set(kennungen) - registriert - plugin_ids)
+    check(len(registriert) >= 25 and len(kennungen) >= 5 and set(unbekannt) <= FREMD_IM_DESIGN,
+          "design/%s: alle %d Widget-Kennungen der Leiste sind registriert oder Repo-Plugins (fremd: %s)" % (variante, len(kennungen), unbekannt))
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)
