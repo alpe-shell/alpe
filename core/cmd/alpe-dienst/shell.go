@@ -16,7 +16,6 @@ import (
 
 	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/alpe-shell/alpe/core/internal/qsipc"
-	"github.com/alpe-shell/alpe/core/internal/site"
 )
 
 type ipcTargets map[string]map[string][]string
@@ -250,7 +249,6 @@ func printIPCHelpFailure(err error) {
 		fmt.Printf("  %v\n", err)
 	}
 	fmt.Println()
-	fmt.Println("  Full docs:  " + site.Docs + "/dms/keybinds-ipc")
 	fmt.Println("  Try:        alpe-dienst ipc call <target> <function>")
 }
 

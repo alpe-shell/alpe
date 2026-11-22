@@ -876,14 +876,6 @@ Item {
     Connections {
         target: ShellBackend
         function onOpenUrlRequested(url) {
-            if (url.startsWith("dms://wallpaper/install/")) {
-                const payload = url.replace("dms://wallpaper/install/", "").split(/[?#]/)[0];
-                if (payload) {
-                    PopoutService.pendingWallpaperInstall = payload;
-                    PopoutService.openSettingsWithTab("wallpaper");
-                }
-                return;
-            }
             browserPickerModalLoader.active = true;
             const picker = browserPickerModalLoader.loadedModal;
             if (!picker)

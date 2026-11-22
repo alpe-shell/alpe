@@ -91,7 +91,7 @@ Item {
 
             SettingsRow {
                 body: StyledText {
-                    text: I18n.tr('Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow Alpe colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.', 'app theming help text, %1 is a link to adw-gtk3').arg(`<a href="https://duxlabs.dev/docs/dms/application-themes#gtk-applications" style="text-decoration:none; color:${Theme.primary};">adw-gtk3</a>`)
+                    text: I18n.tr('Generate baseline GTK3/4, QT5/QT6, or qtengine configurations to follow Alpe colors (only qt6ct requires qt6ct-kde). Only needed once.<br /><br />It is recommended to configure %1 prior to applying GTK themes.', 'app theming help text, %1 is a link to adw-gtk3').arg(`<a href="https://github.com/lassekongo83/adw-gtk3" style="text-decoration:none; color:${Theme.primary};">adw-gtk3</a>`)
                     textFormat: Text.RichText
                     linkColor: Theme.primary
                     onLinkActivated: url => Qt.openUrlExternally(url)

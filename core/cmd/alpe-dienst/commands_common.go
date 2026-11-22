@@ -7,7 +7,6 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/alpe-shell/alpe/core/internal/plugins"
 	"github.com/alpe-shell/alpe/core/internal/server"
-	"github.com/alpe-shell/alpe/core/internal/site"
 	"github.com/spf13/cobra"
 )
 
@@ -23,9 +22,7 @@ var ipcCmd = &cobra.Command{
 	Long: `Send IPC commands to the running Alpe shell.
 
   alpe-dienst ipc call <target> <function> [args...]   invoke a command
-  alpe-dienst ipc list                                 list all targets and functions
-
-Full reference: ` + site.Docs + "/dms/keybinds-ipc",
+  alpe-dienst ipc list                                 list all targets and functions`,
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return getShellIPCCompletions(args, toComplete), cobra.ShellCompDirectiveNoFileComp
 	},

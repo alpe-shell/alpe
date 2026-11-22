@@ -21,7 +21,6 @@ var maxLayers = 64;
 var maxProfiles = 128;
 var maxPathLength = 4000;
 var maxNameLength = 64;
-var maxPayloadLength = 262144;
 var idPattern = /^[A-Za-z0-9_-]{1,64}$/;
 var safePath = /^[MCLZ0-9eE.,\s+-]+$/;
 
@@ -319,44 +318,6 @@ function composition(value, profileStore) {
         preset: id,
         seed: normalized.seed
     }, layoutOf(id, profileStore) ?? builtinLayout(defaultPreset));
-}
-
-var base64Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-
-function decodePayload(text) {
-    if (typeof text !== "string" || !text || text.length > maxPayloadLength)
-        return "";
-    const input = text.replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
-    let bits = 0;
-    let buffer = 0;
-    let encoded = "";
-    for (const char of input) {
-        const value = base64Alphabet.indexOf(char);
-        if (value < 0)
-            return "";
-        buffer = (buffer << 6) | value;
-        bits += 6;
-        if (bits < 8)
-            continue;
-        bits -= 8;
-        encoded += "%" + ((buffer >> bits) & 0xff).toString(16).padStart(2, "0");
-    }
-    try {
-        return decodeURIComponent(encoded);
-    } catch (error) {
-        return "";
-    }
-}
-
-function parseInstallPayload(text) {
-    const json = decodePayload(text);
-    if (!json)
-        return null;
-    try {
-        return normalizeLayout(JSON.parse(json));
-    } catch (error) {
-        return null;
-    }
 }
 
 function roundPoints(points, t) {

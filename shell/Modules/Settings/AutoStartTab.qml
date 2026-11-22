@@ -382,15 +382,6 @@ Item {
                 text: I18n.tr("Autostart entries will not run at login because %1 is not active.", "autostart settings warning, %1 is a systemd target").arg("xdg-desktop-autostart.target")
             }
 
-            SettingsLinkRow {
-                width: parent.width
-                visible: root.autostartTargetInactive
-                iconName: "menu_book"
-                title: I18n.tr("Docs")
-                subtitle: Site.domain
-                url: Site.docs + "/dms/autostart#target-not-active"
-            }
-
             SettingsCard {
                 settingKey: "autostartAddEntry"
                 tags: ["autostart", "add", "entry", "command", "startup"]

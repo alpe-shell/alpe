@@ -23,7 +23,6 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/osinfo"
 	"github.com/alpe-shell/alpe/core/internal/server/brightness"
 	"github.com/alpe-shell/alpe/core/internal/server/network"
-	"github.com/alpe-shell/alpe/core/internal/site"
 	"github.com/alpe-shell/alpe/core/internal/tui"
 	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/alpe-shell/alpe/core/internal/version"
@@ -158,7 +157,6 @@ func (c category) String() string {
 
 const (
 	checkNameMaxLength = 21
-	doctorDocsURL      = site.Docs + "/dms/cli-doctor"
 )
 
 type checkResult struct {
@@ -254,7 +252,7 @@ func checkSystemInfo() []checkResult {
 	// Alpe: Nur anzeigen, welches System läuft; eine Distributionsprüfung gibt es nicht mehr (Plan 0.5 Nr. 1).
 	osInfo, err := osinfo.Get()
 	if err != nil {
-		results = append(results, checkResult{catSystem, "Operating System", statusWarn, fmt.Sprintf("Unknown (%v)", err), "", doctorDocsURL + "#operating-system"})
+		results = append(results, checkResult{catSystem, "Operating System", statusWarn, fmt.Sprintf("Unknown (%v)", err), "", ""})
 	} else {
 		message := osInfo.PrettyName
 		if message == "" {
@@ -264,7 +262,7 @@ func checkSystemInfo() []checkResult {
 		if osInfo.Immutable {
 			details += "; image-based (" + osInfo.ImmutableReason + ")"
 		}
-		results = append(results, checkResult{catSystem, "Operating System", statusOK, message, details, doctorDocsURL + "#operating-system"})
+		results = append(results, checkResult{catSystem, "Operating System", statusOK, message, details, ""})
 	}
 
 	arch := runtime.GOARCH
@@ -272,7 +270,7 @@ func checkSystemInfo() []checkResult {
 	if arch != "amd64" && arch != "arm64" {
 		archStatus = statusError
 	}
-	results = append(results, checkResult{catSystem, "Architecture", archStatus, arch, "", doctorDocsURL + "#architecture"})
+	results = append(results, checkResult{catSystem, "Architecture", archStatus, arch, "", ""})
 
 	waylandDisplay := os.Getenv("WAYLAND_DISPLAY")
 	xdgSessionType := os.Getenv("XDG_SESSION_TYPE")
@@ -282,15 +280,15 @@ func checkSystemInfo() []checkResult {
 		results = append(results, checkResult{
 			catSystem, "Display Server", statusOK, "Wayland",
 			fmt.Sprintf("WAYLAND_DISPLAY=%s", waylandDisplay),
-			doctorDocsURL + "#display-server",
+			"",
 		})
 	case xdgSessionType == "x11":
-		results = append(results, checkResult{catSystem, "Display Server", statusError, "X11 (Alpe requires Wayland)", "", doctorDocsURL + "#display-server"})
+		results = append(results, checkResult{catSystem, "Display Server", statusError, "X11 (Alpe requires Wayland)", "", ""})
 	default:
 		results = append(results, checkResult{
 			catSystem, "Display Server", statusWarn, "Unknown (ensure you're running Wayland)",
 			fmt.Sprintf("XDG_SESSION_TYPE=%s", xdgSessionType),
-			doctorDocsURL + "#display-server",
+			"",
 		})
 	}
 
@@ -309,7 +307,7 @@ func checkEnvironmentVars() []checkResult {
 		}
 	case os.Getenv("QT_QPA_PLATFORMTHEME") != "":
 		if doctorVerbose {
-			results = append(results, checkResult{catEnvironment, "QT_QPA_PLATFORMTHEME_QT6", statusInfo, "Not set, Qt6 uses QT_QPA_PLATFORMTHEME", "", doctorDocsURL + "#environment-variables"})
+			results = append(results, checkResult{catEnvironment, "QT_QPA_PLATFORMTHEME_QT6", statusInfo, "Not set, Qt6 uses QT_QPA_PLATFORMTHEME", "", ""})
 		}
 	default:
 		results = append(results, checkEnvVar("QT_QPA_PLATFORMTHEME_QT6")...)
@@ -325,10 +323,10 @@ func checkEnvironmentVars() []checkResult {
 func checkEnvVar(name string) []checkResult {
 	value := os.Getenv(name)
 	if value != "" {
-		return []checkResult{{catEnvironment, name, statusInfo, value, "", doctorDocsURL + "#environment-variables"}}
+		return []checkResult{{catEnvironment, name, statusInfo, value, "", ""}}
 	}
 	if doctorVerbose {
-		return []checkResult{{catEnvironment, name, statusInfo, "Not set", "", doctorDocsURL + "#environment-variables"}}
+		return []checkResult{{catEnvironment, name, statusInfo, "Not set", "", ""}}
 	}
 	return nil
 }
@@ -340,7 +338,7 @@ func checkXDGMenuPrefix() []checkResult {
 
 // Compositor environment blocks never reach dms.service or anything DMS launches.
 func xdgMenuPrefixResult(menuPrefix string, shellUnderSystemd bool, sessionEnv func(string) string) []checkResult {
-	url := doctorDocsURL + "#xdg-menu-prefix"
+	url := ""
 	if menuPrefix != "" {
 		if !checkXDGMenuFile(menuPrefix) {
 			return []checkResult{{catEnvironment, "XDG_MENU_PREFIX", statusWarn, fmt.Sprintf("%s (menu file not found)", menuPrefix), fmt.Sprintf("Dolphin 'Open with…' dialog may be empty. Ensure %sapplications.menu exists in ~/.config/menus or /etc/xdg/menus.", menuPrefix), url}}
@@ -394,7 +392,7 @@ var qtQueryBinaries = []struct{ bin, flag string }{
 // checkQtengineConfig reports whether qtengine's config points Qt apps at the
 // DMS color scheme, which DMS writes there when it generates a theme.
 func checkQtengineConfig() []checkResult {
-	url := doctorDocsURL + "#environment-variables"
+	url := ""
 	path := matugen.QtengineConfigPath()
 
 	data, err := os.ReadFile(path)
@@ -440,7 +438,7 @@ func checkQtPlatformThemePlugin(varName string) []checkResult {
 		return nil
 	}
 
-	url := doctorDocsURL + "#environment-variables"
+	url := ""
 
 	// qt6ct-kde is the AUR package name, not the theme value: with it set,
 	// Qt finds no platform theme at all and every Qt app falls back silently.
@@ -475,7 +473,7 @@ func qtPlatformThemeMajors(varName, value string, roots map[string]qtInstall) []
 }
 
 func checkQtPlatformThemePluginFor(varName, value, major string, qt qtInstall) checkResult {
-	url := doctorDocsURL + "#environment-variables"
+	url := ""
 	files := qtPlatformThemePluginFiles(value, major)
 	name := fmt.Sprintf("%s plugin (Qt%s)", value, major)
 
@@ -675,20 +673,20 @@ func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver stri
 	}
 
 	results = []checkResult{
-		{catVersions, brand.Binary, statusOK, formatVersion(Version), dmsCliDetails, doctorDocsURL + "#dms-cli"},
+		{catVersions, brand.Binary, statusOK, formatVersion(Version), dmsCliDetails, ""},
 	}
 
 	qsVersion, qsStatus, qsPath, qsDetails, qsSemver := getQuickshellVersionInfo(qsMissingFeatures)
 	if doctorVerbose && qsPath != "" && qsDetails == "" {
 		qsDetails = qsPath
 	}
-	results = append(results, checkResult{catVersions, "Quickshell", qsStatus, qsVersion, qsDetails, doctorDocsURL + "#quickshell"})
+	results = append(results, checkResult{catVersions, "Quickshell", qsStatus, qsVersion, qsDetails, ""})
 
 	dmsVersion, dmsPath := getDMSShellVersion()
 	if dmsVersion != "" {
-		results = append(results, checkResult{catVersions, "Alpe Shell", statusOK, dmsVersion, dmsPath, doctorDocsURL + "#dms-shell"})
+		results = append(results, checkResult{catVersions, "Alpe Shell", statusOK, dmsVersion, dmsPath, ""})
 	} else {
-		results = append(results, checkResult{catVersions, "Alpe Shell", statusError, "Not installed or not detected", "", doctorDocsURL + "#dms-shell"})
+		results = append(results, checkResult{catVersions, "Alpe Shell", statusError, "Not installed or not detected", "", ""})
 	}
 
 	return results, qsSemver
@@ -757,16 +755,16 @@ func checkDMSInstallation() []checkResult {
 	dmsPath := resolveDoctorShellPath()
 
 	if dmsPath == "" {
-		return []checkResult{{catInstallation, "Alpe Configuration", statusError, "Not found", "shell.qml not found in any config path", doctorDocsURL + "#dms-configuration"}}
+		return []checkResult{{catInstallation, "Alpe Configuration", statusError, "Not found", "shell.qml not found in any config path", ""}}
 	}
 
-	results = append(results, checkResult{catInstallation, "Alpe Configuration", statusOK, "Found", dmsPath, doctorDocsURL + "#dms-configuration"})
+	results = append(results, checkResult{catInstallation, "Alpe Configuration", statusOK, "Found", dmsPath, ""})
 
 	shellQml := filepath.Join(dmsPath, "shell.qml")
 	if _, err := os.Stat(shellQml); err != nil {
-		results = append(results, checkResult{catInstallation, "shell.qml", statusError, "Missing", shellQml, doctorDocsURL + "#dms-configuration"})
+		results = append(results, checkResult{catInstallation, "shell.qml", statusError, "Missing", shellQml, ""})
 	} else {
-		results = append(results, checkResult{catInstallation, "shell.qml", statusOK, "Present", shellQml, doctorDocsURL + "#dms-configuration"})
+		results = append(results, checkResult{catInstallation, "shell.qml", statusOK, "Present", shellQml, ""})
 	}
 
 	if doctorVerbose {
@@ -779,7 +777,7 @@ func checkDMSInstallation() []checkResult {
 		case strings.Contains(dmsPath, ".config"):
 			installType = "User config"
 		}
-		results = append(results, checkResult{catInstallation, "Install Type", statusInfo, installType, dmsPath, doctorDocsURL + "#dms-configuration"})
+		results = append(results, checkResult{catInstallation, "Install Type", statusInfo, installType, dmsPath, ""})
 	}
 
 	return results
@@ -817,14 +815,14 @@ func checkWindowManagers(qsVersion string) []checkResult {
 		display, ver := getVersionFromCommand(c.versionCmd, c.versionArg, c.parseVersion)
 		results = append(results, checkResult{
 			catCompositor, c.name, statusOK, display, details,
-			doctorDocsURL + "#compositor-checks",
+			"",
 		})
 		if c.name == "Hyprland" && hyprlandLacksLua(ver) {
 			results = append(results, checkResult{
 				catCompositor, "Hyprland Lua config", statusWarn,
 				fmt.Sprintf("Hyprland %s is older than 0.55", ver),
 				"Alpe writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer",
-				doctorDocsURL + "#compositor-checks",
+				"",
 			})
 		}
 		if c.name == "Hyprland" {
@@ -838,12 +836,12 @@ func checkWindowManagers(qsVersion string) []checkResult {
 			catCompositor, "Compositor", statusError,
 			"No supported Wayland compositor found",
 			"Install Hyprland or KWin",
-			doctorDocsURL + "#compositor-checks",
+			"",
 		})
 	}
 
 	if wm := detectRunningWM(); wm != "" {
-		results = append(results, checkResult{catCompositor, "Active", statusInfo, wm, "", doctorDocsURL + "#compositor"})
+		results = append(results, checkResult{catCompositor, "Active", statusInfo, wm, "", ""})
 	}
 
 	results = append(results, checkCompositorBlurSupport())
@@ -858,14 +856,14 @@ var (
 func checkCompositorBlurSupport() checkResult {
 	supported, err := blur.ProbeSupport()
 	if err != nil {
-		return checkResult{catCompositor, "Background Blur", statusInfo, "Unable to verify", err.Error(), doctorDocsURL + "#compositor-checks"}
+		return checkResult{catCompositor, "Background Blur", statusInfo, "Unable to verify", err.Error(), ""}
 	}
 
 	if supported {
-		return checkResult{catCompositor, "Background Blur", statusOK, "Supported", "Compositor supports ext-background-effect-v1", doctorDocsURL + "#compositor-checks"}
+		return checkResult{catCompositor, "Background Blur", statusOK, "Supported", "Compositor supports ext-background-effect-v1", ""}
 	}
 
-	return checkResult{catCompositor, "Background Blur", statusWarn, "Unsupported", "Compositor does not support ext-background-effect-v1", doctorDocsURL + "#compositor-checks"}
+	return checkResult{catCompositor, "Background Blur", statusWarn, "Unsupported", "Compositor does not support ext-background-effect-v1", ""}
 }
 
 func checkHyprlandQuickshellFloor(hyprVer, qsVer string) []checkResult {
@@ -876,7 +874,7 @@ func checkHyprlandQuickshellFloor(hyprVer, qsVer string) []checkResult {
 		catCompositor, "Quickshell for Hyprland 0.57", statusWarn,
 		fmt.Sprintf("Quickshell %s is older than 0.3.2", qsVer),
 		"Hyprland 0.57 sends workspace addresses that older Quickshell collapses to workspace 0, breaking named and special workspaces. Upgrade Quickshell.",
-		doctorDocsURL + "#compositor-checks",
+		"",
 	}}
 }
 
@@ -901,7 +899,7 @@ func hyprlandDeprecatedConfigResults(out []byte) []checkResult {
 		catCompositor, "Hyprland deprecated config", statusWarn,
 		fmt.Sprintf("%d deprecated option(s)", len(notices)),
 		strings.Join(notices, "; "),
-		doctorDocsURL + "#compositor-checks",
+		"",
 	}}
 }
 
@@ -1043,7 +1041,7 @@ ShellRoot {
 			status, message = statusInfo, "Not available"
 			missingFeatures = true
 		}
-		results = append(results, checkResult{catQuickshellFeatures, f.name, status, message, f.desc, doctorDocsURL + "#quickshell-features"})
+		results = append(results, checkResult{catQuickshellFeatures, f.name, status, message, f.desc, ""})
 	}
 
 	return results, missingFeatures
@@ -1052,20 +1050,20 @@ ShellRoot {
 func checkI2CAvailability() checkResult {
 	ddc, err := brightness.NewDDCBackend()
 	if err != nil {
-		return checkResult{catOptionalFeatures, "I2C/DDC", statusInfo, "Not available", "External monitor brightness control", doctorDocsURL + "#optional-features"}
+		return checkResult{catOptionalFeatures, "I2C/DDC", statusInfo, "Not available", "External monitor brightness control", ""}
 	}
 	defer ddc.Close()
 
 	devices, err := ddc.GetDevices()
 	if err != nil || len(devices) == 0 {
-		return checkResult{catOptionalFeatures, "I2C/DDC", statusInfo, "No monitors detected", "External monitor brightness control", doctorDocsURL + "#optional-features"}
+		return checkResult{catOptionalFeatures, "I2C/DDC", statusInfo, "No monitors detected", "External monitor brightness control", ""}
 	}
 
-	return checkResult{catOptionalFeatures, "I2C/DDC", statusOK, fmt.Sprintf("%d monitor(s) detected", len(devices)), "External monitor brightness control", doctorDocsURL + "#optional-features"}
+	return checkResult{catOptionalFeatures, "I2C/DDC", statusOK, fmt.Sprintf("%d monitor(s) detected", len(devices)), "External monitor brightness control", ""}
 }
 
 func checkImageFormatPlugins() []checkResult {
-	url := doctorDocsURL + "#optional-features"
+	url := ""
 
 	pluginDirs := findQtPluginDirs()
 	if len(pluginDirs) == 0 {
@@ -1207,7 +1205,7 @@ func getOptionalDBusStatus(busName string) (status, string) {
 func checkOptionalDependencies() []checkResult {
 	var results []checkResult
 
-	optionalFeaturesURL := doctorDocsURL + "#optional-features"
+	optionalFeaturesURL := ""
 
 	accountsStatus, accountsMsg := getOptionalDBusStatus("org.freedesktop.Accounts")
 	results = append(results, checkResult{catOptionalFeatures, "accountsservice", accountsStatus, accountsMsg, "User accounts", optionalFeaturesURL})
@@ -1292,7 +1290,7 @@ func checkOptionalDependencies() []checkResult {
 
 // Mirrors the search in quickshell/scripts/gtk.sh: user theme dirs, then XDG_DATA_DIRS.
 func checkAdwGtk3() checkResult {
-	optionalFeaturesURL := doctorDocsURL + "#optional-features"
+	optionalFeaturesURL := ""
 	home, _ := os.UserHomeDir()
 	dataHome := os.Getenv("XDG_DATA_HOME")
 	if dataHome == "" {
@@ -1358,7 +1356,7 @@ func checkConfigurationFiles() []checkResult {
 	for _, cf := range configFiles {
 		info, err := os.Stat(cf.path)
 		if err != nil {
-			results = append(results, checkResult{catConfigFiles, cf.name, statusInfo, "Not yet created", cf.path, doctorDocsURL + "#config-files"})
+			results = append(results, checkResult{catConfigFiles, cf.name, statusInfo, "Not yet created", cf.path, ""})
 			continue
 		}
 
@@ -1373,7 +1371,7 @@ func checkConfigurationFiles() []checkResult {
 			status = statusError
 			message = "Invalid JSON - the shell ignores this file and runs on defaults"
 		}
-		results = append(results, checkResult{catConfigFiles, cf.name, status, message, cf.path, doctorDocsURL + "#config-files"})
+		results = append(results, checkResult{catConfigFiles, cf.name, status, message, cf.path, ""})
 	}
 	return results
 }
@@ -1388,7 +1386,7 @@ func checkSystemdServices() []checkResult {
 	dmsState := dmsServiceState()
 	wanted := config.SessionWanted()
 	if !dmsState.exists {
-		results = append(results, checkResult{catServices, brand.Unit, statusInfo, "Not installed", "Optional user service", doctorDocsURL + "#services"})
+		results = append(results, checkResult{catServices, brand.Unit, statusInfo, "Not installed", "Optional user service", ""})
 	} else {
 		status, message := statusOK, dmsState.enabled
 		if dmsState.active != "" {
@@ -1417,13 +1415,13 @@ func checkSystemdServices() []checkResult {
 				details = fmt.Sprintf("Nothing starts alpe.service with %s. Run 'alpe-dienst systemd enable'.", unit)
 			}
 		}
-		results = append(results, checkResult{catServices, brand.Unit, status, message, details, doctorDocsURL + "#services"})
+		results = append(results, checkResult{catServices, brand.Unit, status, message, details, ""})
 	}
 
 	if dmsState.exists && dmsState.enabled == "enabled" {
 		gsState := getServiceState("graphical-session.target", true)
 		if gsState.exists && gsState.active != "active" {
-			results = append(results, checkResult{catServices, "graphical-session.target", statusWarn, "Inactive", "Compositor session never activated it, so alpe.service cannot autostart. On Hyprland, hyprland-session.target must exist and be started by the compositor.", doctorDocsURL + "#services"})
+			results = append(results, checkResult{catServices, "graphical-session.target", statusWarn, "Inactive", "Compositor session never activated it, so alpe.service cannot autostart. On Hyprland, hyprland-session.target must exist and be started by the compositor.", ""})
 		}
 	}
 
@@ -1442,10 +1440,10 @@ func checkSettingsPortal() []checkResult {
 		Call("org.freedesktop.portal.Settings.ReadOne", 0, "org.freedesktop.appearance", "color-scheme").
 		Store(&value)
 	if err == nil {
-		return []checkResult{{catServices, "xdg-desktop-portal", statusOK, "Settings portal reachable", "", doctorDocsURL + "#services"}}
+		return []checkResult{{catServices, "xdg-desktop-portal", statusOK, "Settings portal reachable", "", ""}}
 	}
 	hint := "Apps cannot follow light/dark mode. The portal is D-Bus activated and needs graphical-session.target; without systemd, or a compositor that never starts that target, exec the portal backend and xdg-desktop-portal at session start."
-	return []checkResult{{catServices, "xdg-desktop-portal", statusWarn, "Settings portal unreachable", hint, doctorDocsURL + "#services"}}
+	return []checkResult{{catServices, "xdg-desktop-portal", statusWarn, "Settings portal unreachable", hint, ""}}
 }
 
 type serviceState struct {
@@ -1772,7 +1770,7 @@ func checkConfiguredFont(label, family, shellPath string, fcFamilies map[string]
 
 func checkFonts() []checkResult {
 	var results []checkResult
-	url := doctorDocsURL + "#fonts"
+	url := ""
 
 	fontFamily := defaultDoctorFontFamily
 	monoFontFamily := defaultDoctorMonoFontFamily

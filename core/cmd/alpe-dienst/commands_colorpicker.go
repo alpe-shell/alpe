@@ -7,7 +7,6 @@ import (
 
 	"github.com/alpe-shell/alpe/core/internal/clipboard"
 	"github.com/alpe-shell/alpe/core/internal/colorpicker"
-	"github.com/alpe-shell/alpe/core/internal/site"
 	"github.com/spf13/cobra"
 )
 
@@ -25,9 +24,7 @@ var colorCmd = &cobra.Command{
 	Long: `Color utilities including picking colors from the screen.
 
 This is the screen eyedropper CLI. To open the in-shell color modal, use:
-  alpe-dienst ipc call color-picker toggle
-
-See: ` + site.Docs + "/dms/keybinds-ipc",
+  alpe-dienst ipc call color-picker toggle`,
 }
 
 var colorPickCmd = &cobra.Command{

@@ -32,7 +32,6 @@ Item {
     signal hideRequested
     signal popoutRequested
     signal dockRequested
-    signal previewRequested(string content)
 
     function externalSync() {
         textEditor.syncFromDisk();
@@ -499,10 +498,6 @@ Item {
             onNewRequested: {
                 textEditor.autoSaveToSession();
                 createNewTab();
-            }
-
-            onPreviewRequested: {
-                textEditor.togglePreview();
             }
 
             onEscapePressed: {

@@ -79,7 +79,7 @@ func runOpen(target string) {
 		}
 		log.Infof("Detected file:// URI, absolute path: %s", actualTarget)
 
-	case isScheme(target, "http://"), isScheme(target, "https://"), isScheme(target, "dms://"):
+	case isScheme(target, "http://"), isScheme(target, "https://"):
 		if detectedRequestType == "" {
 			detectedRequestType = "url"
 		}
@@ -118,7 +118,7 @@ func runOpen(target string) {
 	}
 
 	method := "apppicker.open"
-	if detectedMimeType == "" && len(openCategories) == 0 && (isScheme(target, "http://") || isScheme(target, "https://") || isScheme(target, "dms://")) {
+	if detectedMimeType == "" && len(openCategories) == 0 && (isScheme(target, "http://") || isScheme(target, "https://")) {
 		method = "browser.open"
 		params["url"] = target
 	}

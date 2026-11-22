@@ -32,7 +32,6 @@ Column {
     readonly property var materialEntry: SessionData.materialWallpaperEntry(materialTarget)
     readonly property string materialPreset: Art.resolvePreset(materialEntry.preset, SessionData.materialWallpaperProfiles)
     readonly property bool materialWallpaper: currentWallpaper === ""
-    readonly property string pendingWallpaperInstall: PopoutService.pendingWallpaperInstall
     readonly property bool dynamicTheme: Theme.currentTheme === Theme.dynamic
     readonly property var selectedDisplay: Quickshell.screens.find(screen => screen.name === selectedScreen) ?? Quickshell.screens[0]
     readonly property real displayAspectRatio: selectedDisplay ? selectedDisplay.width / selectedDisplay.height : Art.designWidth / Art.designHeight
@@ -133,28 +132,6 @@ Column {
 
     function clearWallpaper() {
         SessionData.setMaterialWallpaper(materialTarget, materialEntry);
-    }
-
-    onPendingWallpaperInstallChanged: Qt.callLater(offerPendingInstall)
-
-    function offerPendingInstall() {
-        const payload = PopoutService.pendingWallpaperInstall;
-        if (!payload)
-            return;
-        PopoutService.pendingWallpaperInstall = "";
-        const layout = Art.parseInstallPayload(payload);
-        if (!layout) {
-            ToastService.showError(I18n.tr("Invalid wallpaper layout", "material wallpaper import error"));
-            return;
-        }
-        const name = layout.name || Art.profileId("", SessionData.materialWallpaperProfiles);
-        profileConfirm.showWithOptions({
-            "title": I18n.tr("Install wallpaper", "material wallpaper install dialog title"),
-            "message": I18n.tr("Install wallpaper '%1'?", "material wallpaper install confirmation").arg(name),
-            "confirmText": I18n.tr("Install", "install action button"),
-            "cancelText": I18n.tr("Cancel"),
-            "onConfirm": () => root.installLayout(layout, "")
-        });
     }
 
     function installLayout(layout, fallbackName) {
@@ -384,13 +361,6 @@ Column {
                 text: I18n.tr("Restore")
                 iconName: "restore"
                 onClicked: SessionData.restoreMaterialWallpaperProfiles()
-            }
-
-            AlpeButton {
-                text: I18n.tr("Create")
-                iconName: "open_in_new"
-                tooltipText: Site.wallpaperCreator
-                onClicked: Qt.openUrlExternally(Site.wallpaperCreator)
             }
         }
 

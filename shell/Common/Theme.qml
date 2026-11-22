@@ -76,7 +76,6 @@ Singleton {
     property var _workerStderr: []
     property bool _workerStderrUsage: false
     readonly property int _workerStderrKeep: 8
-    readonly property string themeTroubleshootingUrl: "https://duxlabs.dev/docs/dms/application-themes#troubleshooting"
 
     property bool blurLayersActive: false
     property bool matugenToastSuppressed: false
@@ -1945,7 +1944,7 @@ Singleton {
     }
 
     function _reportWorkerFailure(message) {
-        const details = _workerStderr.concat(themeTroubleshootingUrl).join("\n");
+        const details = _workerStderr.join("\n");
         if (typeof ToastService !== "undefined")
             ToastService.showError(message, details, _workerReproduceCommand(), "theme-worker");
         log.warn(message);
