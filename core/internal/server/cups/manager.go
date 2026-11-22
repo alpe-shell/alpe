@@ -10,9 +10,15 @@ import (
 
 	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/alpe-shell/alpe/core/pkg/ipp"
+	"github.com/godbus/dbus/v5"
 )
 
-func NewManager() (*Manager, error) {
+// NewManager: systembus liefert die geteilte Systembus-Verbindung des Dienstes, ohne zu warten
+// (Fehler, wenn sie nicht steht); sie wird hier nie geschlossen. nil heisst ohne Systembus.
+func NewManager(systembus func() (*dbus.Conn, error)) (*Manager, error) {
+	if systembus == nil {
+		systembus = func() (*dbus.Conn, error) { return nil, fmt.Errorf("system bus not connected") }
+	}
 	host := os.Getenv("ALPE_IPP_HOST")
 	if host == "" {
 		host = "localhost"
@@ -34,8 +40,13 @@ func NewManager() (*Manager, error) {
 
 	var pkHelper PkHelper
 	if isLocalCUPS(host) {
-		var err error
-		pkHelper, err = NewPkHelper()
+		conn, err := systembus()
+		if err == nil {
+			var helper *DBusPkHelper
+			if helper, err = NewPkHelper(conn); err == nil {
+				pkHelper = helper
+			}
+		}
 		if err != nil {
 			log.Warnf("[CUPS] Failed to initialize pkhelper: %v", err)
 		}
@@ -59,7 +70,7 @@ func NewManager() (*Manager, error) {
 	}
 
 	if isLocalCUPS(host) {
-		m.subscription = NewDBusSubscriptionManager(client, baseURL)
+		m.subscription = NewDBusSubscriptionManager(client, baseURL, systembus)
 		log.Infof("[CUPS] Using D-Bus notifications for local CUPS")
 	} else {
 		m.subscription = NewSubscriptionManager(client, baseURL)

@@ -152,11 +152,10 @@ func (m *Manager) reapplyActiveConnections() {
 }
 
 func (m *Manager) setConnectionPriority(connType string, autoconnectPriority int32, routeMetric int64) error {
-	conn, err := dbus.ConnectSystemBus()
-	if err != nil {
-		return fmt.Errorf("failed to connect to system bus: %w", err)
+	conn := m.sysConn
+	if conn == nil {
+		return fmt.Errorf("failed to connect to system bus: %w", errSystemBusNotConnected)
 	}
-	defer conn.Close()
 
 	settingsObj := conn.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
 

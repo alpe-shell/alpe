@@ -148,6 +148,8 @@ type Manager struct {
 	notifierWg   sync.WaitGroup
 	lastNotified *State
 
+	dbusMu     sync.Mutex // nur um dbusConn und dbusZu, nie über einen Busaufruf hinweg
+	dbusZu     bool
 	dbusConn   *dbus.Conn
 	dbusSignal chan *dbus.Signal
 

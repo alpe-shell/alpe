@@ -15,10 +15,11 @@ type LogindBackend struct {
 	conn DBusConn
 }
 
-func NewLogindBackend() (*LogindBackend, error) {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("connect to system bus: %w", err)
+// NewLogindBackend arbeitet auf conn (im Dienst die geteilte Systembus-Verbindung); conn wird hier
+// nie geschlossen.
+func NewLogindBackend(conn *dbus.Conn) (*LogindBackend, error) {
+	if conn == nil {
+		return nil, fmt.Errorf("connect to system bus: not connected")
 	}
 
 	obj := conn.Object("org.freedesktop.login1", "/org/freedesktop/login1/session/auto")
@@ -38,11 +39,7 @@ func NewLogindBackendWithConn(conn DBusConn) *LogindBackend {
 
 func (b *LogindBackend) SetBrightness(subsystem, name string, brightness uint32) error {
 	if b.conn == nil {
-		conn, err := dbus.SystemBus()
-		if err != nil {
-			return fmt.Errorf("connect to system bus: %w", err)
-		}
-		b.conn = conn
+		return fmt.Errorf("connect to system bus: not connected")
 	}
 
 	obj := b.conn.Object("org.freedesktop.login1", "/org/freedesktop/login1/session/auto")

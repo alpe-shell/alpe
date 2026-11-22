@@ -68,10 +68,9 @@ type BluezAgent struct {
 	broker PromptBroker
 }
 
-func NewBluezAgent(broker PromptBroker) (*BluezAgent, error) {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("system bus connection failed: %w", err)
+func NewBluezAgent(conn *dbus.Conn, broker PromptBroker) (*BluezAgent, error) {
+	if conn == nil {
+		return nil, fmt.Errorf("system bus connection failed: not connected")
 	}
 
 	agent := &BluezAgent{

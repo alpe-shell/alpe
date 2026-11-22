@@ -29,17 +29,11 @@ func (b *NetworkManagerBackend) GetCellularEnabled() (bool, error) {
 
 func (b *NetworkManagerBackend) SetCellularEnabled(enabled bool) error {
 	conn := b.dbusConn
-	closeConn := false
 	if conn == nil {
-		var err error
-		conn, err = dbus.ConnectSystemBus()
-		if err != nil {
-			return fmt.Errorf("failed to connect to system bus: %w", err)
-		}
-		closeConn = true
+		conn = b.sysConn
 	}
-	if closeConn {
-		defer conn.Close()
+	if conn == nil {
+		return fmt.Errorf("failed to connect to system bus: %w", errSystemBusNotConnected)
 	}
 
 	obj := conn.Object(dbusNMInterface, dbus.ObjectPath(dbusNMPath))

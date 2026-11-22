@@ -192,6 +192,49 @@ da. Unterschiede:
   Zeitsteuerung prüfen; Deckel zu und auf – die Farbtemperatur muss nach dem Aufwachen wieder stimmen;
   WLAN-Liste, Bluetooth, Helligkeitstasten, Sperren beim Zuklappen.
 
+## 5a. Umsetzung (22.11.2026) und Abweichungen vom Vorschlag
+
+Umgesetzt in zwei Commits: Paket `core/internal/systembus` (`0dbeb27`), danach die Manager, Gamma und
+die Gegenprobe. Kein Aufruf von `dbus.SystemBus()`/`dbus.ConnectSystemBus()` mehr ausserhalb von
+`internal/systembus` (Strukturtest in `tests/test_werte.py`); `gonetworkmanager` ruft es weiterhin selbst
+auf, das NetworkManager-Backend entsteht aber erst mit stehender Verbindung.
+
+Wie die Verbindung zu den Managern kommt:
+
+| Manager | Übergabe | Bei stummem Bus |
+|---|---|---|
+| Loginctl, Freedesktop, BlueZ | `*dbus.Conn` als Argument, nach `Warten` | wartet still, kommt nach, sobald der Bus antwortet |
+| Netzwerk | `*dbus.Conn` als Argument, nach `Erstversuch` | wpa_supplicant über `wpa_ctrl`, falls vorhanden; sonst wartet es und kommt nach |
+| Gamma | `SystembusAnbinden(conn)` nebenher nach dem synchronen Wayland-Teil | Nachtlicht läuft, Ruhezustands-Überwachung kommt nach |
+| D-Bus-Brücke | `*dbus.Conn` oder nil, dann `SystembusAnbinden` | Session-Bus sofort, Systembus kommt nach |
+| Helligkeit | Funktion, die wartet (eigene Goroutine für logind) | sysfs und DDC sofort, logind kommt nach |
+| CUPS, Laufwerke | Funktion, die nicht wartet | pkhelper/Liste melden «nicht verfügbar» |
+| Ortung | `*dbus.Conn` oder nil nach `Erstversuch` | Ortung über die IP-Adresse |
+
+Abweichungen:
+
+1. **Freedesktop wartet als Ganzes** auf den Systembus, nicht nur sein Systembus-Teil (Accounts): Die
+   Felder dafür werden an einem Dutzend Stellen ohne Sperre gelesen; ein nachträgliches Anbinden hätte
+   einen Umbau des Pakets verlangt. Folge nur bei stummem Bus: Bildschirmschoner-Sperre und
+   Farbschema-Einstellung über den Session-Bus fehlen, bis der Systembus antwortet. Offener Fall.
+2. **Ortung:** Startet der Dienst mit stummem Bus, bleibt es bei der Ortung über die IP-Adresse, auch wenn
+   der Bus später antwortet (kein Wechsel auf GeoClue im Betrieb). Offener Fall.
+3. **Test 5 («Start mit stummem Bus» im `server`-Paket) ist kleiner als geplant:** `Serve()` lässt sich
+   in einem Go-Test nicht gefahrlos ganz starten (es richtet Zwischenablage, Tray, Aktualisierungen und
+   weitere Manager ein, die sich nicht alle abschalten lassen). Der Go-Test prüft darum die Bausteine am
+   stummen Bus (sofortiger Fehler für Anfragen, `Erstversuch` innerhalb der Frist, kein Manager und keine
+   Fähigkeit am Bus, `Warten` endet mit dem Context). Den ganzen Start prüft die Gegenprobe der
+   Ladeprüfung – unter beiden Compositors bestanden (Hyprland 319 s, KWin 263 s; die Oberfläche meldet
+   `Connected`, der Dienst den Ausfall genau einmal).
+4. **Kein Eintrag in `CHANGELOG.md`:** Dort gibt es noch keinen Abschnitt 1.1; der Hinweis kommt mit G1.
+5. **Zusätzlich:** `Halter.Erstversuch` (Ergebnis des ersten Versuchs abwarten, höchstens 3 s) für
+   Manager, die auch ohne Systembus etwas leisten; Test-Helfer `internal/systembus/bustest` (eigener
+   stummer oder echter Bus im Temp-Ordner, nie der Systembus des Rechners).
+
+Beobachtung, nicht eingeordnet: Die Läufe mit stummem Bus dauern etwa doppelt so lang wie mit antwortendem
+(319 s und 263 s gegen 149 s). Vermutet, nicht belegt: Die Oberfläche selbst (Qt/Quickshell: UPower,
+BlueZ, polkit) wartet je auf ihre eigene Zeitüberschreitung am Systembus.
+
 ## 6. Fragen an den Maintainer
 
 **Beantwortet am 22.11.2026:** (1) NetworkManager-Backend erst einrichten, wenn die Verbindung steht;

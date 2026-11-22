@@ -81,6 +81,9 @@ type NetworkManagerBackend struct {
 	modems     map[dbus.ObjectPath]modemInfo
 	modemMutex sync.RWMutex
 
+	// sysConn ist die geteilte Systembus-Verbindung des Dienstes (nie schliessen); dbusConn zeigt
+	// auf dieselbe Verbindung, solange die Signale abonniert sind.
+	sysConn  *dbus.Conn
 	dbusConn *dbus.Conn
 	signals  chan *dbus.Signal
 	sigWG    sync.WaitGroup

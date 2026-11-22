@@ -145,7 +145,9 @@ func newRequestMux(readiness *systemd.Readiness) *ipc.Mux {
 
 	mux.HandlePrefix("dgop.", requestHandler(serverDgop.HandleRequest))
 
-	mux.HandlePrefix("drives.", requestHandler(serverDrives.HandleRequest))
+	mux.HandlePrefix("drives.", requestHandler(func(conn *ipc.ConnWriter, req ipc.Request) {
+		serverDrives.HandleRequest(conn, req, systemBusJetzt)
+	}))
 
 	mux.HandlePrefix("lyrics.", requestHandler(serverLyrics.HandleRequest))
 

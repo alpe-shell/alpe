@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/godbus/dbus/v5"
 	"github.com/yeqown/go-qrcode/v2"
 	"github.com/yeqown/go-qrcode/writer/standard"
 )
@@ -20,8 +21,10 @@ var ErrNoNetworkBackend = errors.New("no supported network backend found")
 // hotspot operations.
 var ErrHotspotNotSupported = errors.New("hotspot not supported by active network backend")
 
-func NewManager() (*Manager, error) {
-	detection, err := DetectNetworkStack()
+// NewManager richtet das Netzwerk über die geteilte Systembus-Verbindung des Dienstes ein. sysConn
+// darf nil sein; dann bleibt nur ein Backend ohne Systembus (wpa_supplicant über wpa_ctrl).
+func NewManager(sysConn *dbus.Conn) (*Manager, error) {
+	detection, err := DetectNetworkStack(sysConn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to detect network stack: %w", err)
 	}
@@ -35,6 +38,7 @@ func NewManager() (*Manager, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to create NetworkManager backend: %w", err)
 		}
+		nm.sysConn = sysConn
 		backend = nm
 
 	case BackendIwd:
@@ -42,6 +46,7 @@ func NewManager() (*Manager, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to create iwd backend: %w", err)
 		}
+		iwd.conn = sysConn
 		backend = iwd
 
 	case BackendNetworkd:
@@ -54,6 +59,7 @@ func NewManager() (*Manager, error) {
 			if err != nil {
 				return nil, fmt.Errorf("failed to create networkd backend: %w", err)
 			}
+			wifi.conn, l3.conn = sysConn, sysConn
 			hybrid, err := NewHybridIwdNetworkdBackend(wifi, l3)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create hybrid backend: %w", err)
@@ -64,6 +70,7 @@ func NewManager() (*Manager, error) {
 			if err != nil {
 				return nil, fmt.Errorf("failed to create networkd backend: %w", err)
 			}
+			nd.conn = sysConn
 			backend = nd
 		}
 
@@ -79,6 +86,7 @@ func NewManager() (*Manager, error) {
 	}
 
 	m := &Manager{
+		sysConn: sysConn,
 		backend: backend,
 		state: &NetworkState{
 			NetworkStatus:     StatusDisconnected,

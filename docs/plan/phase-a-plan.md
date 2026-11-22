@@ -197,7 +197,13 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      darin). Geklärt: Die Sperre, auf die Gamma wartete, ist `systemBusLck` von godbus in
      `dbus.SystemBus()`, gehalten vom Loginctl-Manager in `Hello` (Goroutinen-Stapel). Eintrag in
      `offene-faelle.md` berichtigt, drei offene Fälle dazu (stummer Compositor, Session-Bus,
-     gonetworkmanager/Abriss im Betrieb). **Hier angehalten; weiter erst nach der Freigabe.**
+     gonetworkmanager/Abriss im Betrieb). **Freigegeben (0.8 Nr. 84) und umgesetzt:** `0dbeb27` (Paket
+     `systembus`), danach Manager, Gamma und Gegenprobe; Abweichungen in `dienst-systembus.md`, 5a
+     (Freedesktop wartet als Ganzes, Ortung wechselt nicht nachträglich, Go-Test 5 kleiner als geplant,
+     kein Changelog-Eintrag vor G1). `go vet ./...` ohne Meldung, `go test ./...` abgeschottet: alle
+     Pakete grün (vorher 56 mit `systembus`, nachher dieselben; neu Tests in `systembus`, `wayland`,
+     `server`, `server/dbus`, mit `-race`). **Gegenprobe mit stummem Systembus bestanden:** Hyprland
+     (319 s) und KWin (263 s), `Connected` und genau eine Meldung zum Ausfall.
      **Nach der Behebung, vor der Neumessung (0.8 Nr. 83):** eigener Commit, `tools/design.py` wendet
      `SESSION_GESTALTUNG` auch beim Einspielen an (Zustand aus einem Design wird nicht übernommen), mit Test;
      7.8 und der Test zu Anheftungen aus älteren Designs werden dabei umgestellt.

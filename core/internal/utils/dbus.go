@@ -1,13 +1,16 @@
 package utils
 
 import (
+	"context"
 	"slices"
 
-	"github.com/godbus/dbus/v5"
+	"github.com/alpe-shell/alpe/core/internal/systembus"
 )
 
+// Kurzlebige Abfragen (doctor): eigene Verbindung mit Zeitgrenze, danach geschlossen.
+
 func IsDBusServiceAvailable(busName string) bool {
-	conn, err := dbus.ConnectSystemBus()
+	conn, err := systembus.Verbinden(context.Background(), systembus.AufbauGrenze)
 	if err != nil {
 		return false
 	}
@@ -22,7 +25,7 @@ func IsDBusServiceAvailable(busName string) bool {
 }
 
 func IsDBusServiceActivatable(busName string) bool {
-	conn, err := dbus.ConnectSystemBus()
+	conn, err := systembus.Verbinden(context.Background(), systembus.AufbauGrenze)
 	if err != nil {
 		return false
 	}

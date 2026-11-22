@@ -1,13 +1,9 @@
 package systembus
 
 import (
-	"bufio"
 	"context"
 	"errors"
 	"fmt"
-	"net"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -15,69 +11,17 @@ import (
 	"testing"
 	"time"
 
+	"github.com/alpe-shell/alpe/core/internal/systembus/bustest"
 	"github.com/godbus/dbus/v5"
 )
 
 // kurzerOrdner: Unix-Sockets dürfen höchstens 107 Zeichen lang sein; t.TempDir() ist oft länger.
-func kurzerOrdner(t *testing.T) string {
-	t.Helper()
-	dir, err := os.MkdirTemp("", "sb")
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { os.RemoveAll(dir) })
-	return dir
-}
+func kurzerOrdner(t *testing.T) string { return bustest.KurzerOrdner(t) }
 
-// stummerBus nimmt Verbindungen an. anmelden=false: er sendet nie etwas. anmelden=true: er
-// beantwortet die Anmeldung (AUTH) und schweigt danach auf Hello – der Fall der Ladeprüfung.
-func stummerBus(t *testing.T, anmelden bool) {
-	t.Helper()
-	sock := filepath.Join(kurzerOrdner(t), "sb")
-	l, err := net.Listen("unix", sock)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var offen sync.WaitGroup
-	t.Cleanup(func() {
-		l.Close()
-		offen.Wait()
-	})
-	go func() {
-		for {
-			c, err := l.Accept()
-			if err != nil {
-				return
-			}
-			offen.Add(1)
-			go func() {
-				defer offen.Done()
-				defer c.Close()
-				r := bufio.NewReader(c)
-				for {
-					zeile, err := r.ReadString('\n')
-					if err != nil {
-						return
-					}
-					if !anmelden {
-						continue
-					}
-					zeile = strings.TrimSpace(strings.TrimLeft(zeile, "\x00"))
-					switch {
-					case zeile == "AUTH":
-						fmt.Fprint(c, "REJECTED EXTERNAL\r\n")
-					case strings.HasPrefix(zeile, "AUTH EXTERNAL"):
-						fmt.Fprint(c, "OK 0123456789abcdef0123456789abcdef\r\n")
-					case zeile == "NEGOTIATE_UNIX_FD":
-						fmt.Fprint(c, "ERROR\r\n")
-					}
-					// Nach BEGIN kommt Hello als Nachricht; darauf antwortet dieser Bus nie.
-				}
-			}()
-		}
-	}()
-	t.Setenv("DBUS_SYSTEM_BUS_ADDRESS", "unix:path="+sock)
-}
+// Die Busse der Tests stehen in bustest: ein stummer (nie eine Antwort, oder Anmeldung ja und
+// Hello nein) und ein echter dbus-daemon im Temp-Ordner.
+func stummerBus(t *testing.T, anmelden bool) { bustest.Stumm(t, anmelden) }
+func echterBus(t *testing.T)                 { bustest.Echt(t) }
 
 func pruefeZeitgrenze(t *testing.T) {
 	t.Helper()
@@ -126,59 +70,6 @@ func TestVerbindenOhneBus(t *testing.T) {
 	if time.Since(beginn) > time.Second {
 		t.Fatal("fehlender Socket darf nicht bis zur Zeitgrenze warten")
 	}
-}
-
-const busRichtlinie = `<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN"
- "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-<busconfig>
-  <type>system</type>
-  <listen>unix:path=%s</listen>
-  <auth>EXTERNAL</auth>
-  <policy context="default">
-    <allow user="*"/>
-    <allow own="*"/>
-    <allow send_destination="*"/>
-    <allow send_type="signal"/>
-    <allow send_requested_reply="true" send_type="method_return"/>
-    <allow send_requested_reply="true" send_type="error"/>
-    <allow receive_type="method_call"/>
-    <allow receive_type="method_return"/>
-    <allow receive_type="error"/>
-    <allow receive_type="signal"/>
-  </policy>
-</busconfig>
-`
-
-// echterBus startet einen eigenen dbus-daemon im Temp-Ordner. Er beendet sich über timeout
-// selbst; beendet wird sonst nur dieser eine Prozess.
-func echterBus(t *testing.T) {
-	t.Helper()
-	for _, programm := range []string{"dbus-daemon", "timeout"} {
-		if _, err := exec.LookPath(programm); err != nil {
-			t.Skipf("%s fehlt", programm)
-		}
-	}
-	dir := kurzerOrdner(t)
-	sock := filepath.Join(dir, "sb")
-	conf := filepath.Join(dir, "systembus.conf")
-	if err := os.WriteFile(conf, fmt.Appendf(nil, busRichtlinie, sock), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	cmd := exec.Command("timeout", "30", "dbus-daemon", "--config-file="+conf, "--nofork")
-	if err := cmd.Start(); err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() {
-		cmd.Process.Signal(os.Interrupt)
-		cmd.Wait()
-	})
-	for range 50 {
-		if _, err := os.Stat(sock); err == nil {
-			break
-		}
-		time.Sleep(100 * time.Millisecond)
-	}
-	t.Setenv("DBUS_SYSTEM_BUS_ADDRESS", "unix:path="+sock)
 }
 
 // Die Zeitgrenze gilt nur für den Aufbau: Nach ihrem Ablauf muss die Verbindung weiter stehen.
@@ -276,6 +167,35 @@ func TestHalterErneuteVersuche(t *testing.T) {
 	if len(*meldungen) != 2 || !strings.HasPrefix((*meldungen)[0], "WARN: System bus unavailable") || (*meldungen)[1] != "INFO: System bus connected" {
 		t.Fatalf("erwartet genau eine Meldung zum Ausfall und eine zur Verbindung: %q", *meldungen)
 	}
+}
+
+// Erstversuch: im Normalfall die Verbindung, bei einem stummen Bus nach der Zeitgrenze nil.
+func TestErstversuch(t *testing.T) {
+	t.Run("stumm", func(t *testing.T) {
+		stummerBus(t, false)
+		h, _, _ := testHalter(Verbinden)
+		ctx, abbrechen := context.WithCancel(context.Background())
+		defer abbrechen()
+		h.Starten(ctx)
+		beginn := time.Now()
+		if conn := h.Erstversuch(ctx); conn != nil {
+			t.Fatal("stummer Bus liefert eine Verbindung")
+		}
+		if dauer := time.Since(beginn); dauer > time.Second {
+			t.Fatalf("Erstversuch wartet über die Zeitgrenze hinaus: %s", dauer)
+		}
+	})
+	t.Run("echt", func(t *testing.T) {
+		echterBus(t)
+		h, _, _ := testHalter(Verbinden)
+		h.Grenze = time.Second
+		ctx, abbrechen := context.WithCancel(context.Background())
+		defer abbrechen()
+		h.Starten(ctx)
+		if conn := h.Erstversuch(ctx); conn == nil || !conn.Connected() {
+			t.Fatal("Erstversuch liefert am antwortenden Bus keine Verbindung")
+		}
+	})
 }
 
 func TestHalterOhneAusfallMeldetNichts(t *testing.T) {

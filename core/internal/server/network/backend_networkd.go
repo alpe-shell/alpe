@@ -128,11 +128,9 @@ func NewSystemdNetworkdBackend() (*SystemdNetworkdBackend, error) {
 }
 
 func (b *SystemdNetworkdBackend) Initialize() error {
-	c, err := dbus.SystemBus()
-	if err != nil {
-		return fmt.Errorf("connect bus: %w", err)
+	if b.conn == nil {
+		return fmt.Errorf("connect bus: %w", errSystemBusNotConnected)
 	}
-	b.conn = c
 
 	if err := b.enumerateLinks(); err != nil {
 		return fmt.Errorf("enumerate links: %w", err)

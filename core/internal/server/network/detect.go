@@ -1,6 +1,7 @@
 package network
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"runtime"
@@ -43,7 +44,13 @@ func wpaSupplicantCtrlDirPresent() bool {
 	return err == nil && info.IsDir()
 }
 
-func DetectNetworkStack() (*DetectResult, error) {
+// errSystemBusNotConnected: Die Verbindung zum Systembus kommt vom Dienst (internal/systembus) und
+// wird hereingereicht; hier baut niemand selbst eine auf, und niemand schliesst sie.
+var errSystemBusNotConnected = errors.New("system bus not connected")
+
+// DetectNetworkStack fragt über bus ab, welche Netzwerkdienste laufen. bus darf nil sein
+// (Systembus nicht erreichbar); bus wird nicht geschlossen.
+func DetectNetworkStack(bus *dbus.Conn) (*DetectResult, error) {
 	// FreeBSD uses the native ifconfig/wpa_supplicant backend regardless of
 	// whether unrelated Linux-oriented D-Bus services happen to be present.
 	if runtime.GOOS == "freebsd" {
@@ -59,8 +66,8 @@ func DetectNetworkStack() (*DetectResult, error) {
 		}, nil
 	}
 
-	bus, err := dbus.ConnectSystemBus()
-	if err != nil {
+	if bus == nil {
+		err := errSystemBusNotConnected
 		if runtime.GOOS == "freebsd" {
 			hasWpa := wpaSupplicantCtrlDirPresent()
 			reason := "FreeBSD detected. Using native Ethernet interfaces."
@@ -84,8 +91,6 @@ func DetectNetworkStack() (*DetectResult, error) {
 			ChosenReason: "System bus unreachable; wpa_supplicant control directory present. Using wpa_ctrl interface.",
 		}, nil
 	}
-
-	defer bus.Close()
 
 	hasNM, _ := nameHasOwner(bus, "org.freedesktop.NetworkManager")
 	hasIwd, _ := nameHasOwner(bus, "net.connman.iwd")

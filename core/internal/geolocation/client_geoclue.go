@@ -47,10 +47,9 @@ type GeoClueClient struct {
 	subscribers syncmap.Map[string, chan Location]
 }
 
-func newGeoClueClient() (*GeoClueClient, error) {
-	dbusConn, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("system bus connection failed: %w", err)
+func newGeoClueClient(dbusConn *dbus.Conn) (*GeoClueClient, error) {
+	if dbusConn == nil {
+		return nil, fmt.Errorf("system bus connection failed: not connected")
 	}
 
 	c := &GeoClueClient{

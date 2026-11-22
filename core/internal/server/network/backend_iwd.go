@@ -101,11 +101,9 @@ func NewIWDBackend() (*IWDBackend, error) {
 }
 
 func (b *IWDBackend) Initialize() error {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return fmt.Errorf("failed to connect to system bus: %w", err)
+	if b.conn == nil {
+		return fmt.Errorf("failed to connect to system bus: %w", errSystemBusNotConnected)
 	}
-	b.conn = conn
 
 	if err := b.discoverDevices(); err != nil {
 		return fmt.Errorf("failed to discover iwd devices: %w", err)

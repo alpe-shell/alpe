@@ -13,12 +13,9 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-func NewManager() (*Manager, error) {
-	systemConn, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to system bus: %w", err)
-	}
-
+// NewManager: systemConn ist die geteilte Systembus-Verbindung des Dienstes (nie schliessen) und
+// darf nil sein; dann arbeitet die Brücke nur am Session-Bus, bis SystembusAnbinden sie nachreicht.
+func NewManager(systemConn *dbus.Conn) (*Manager, error) {
 	sessionConn, err := dbus.SessionBus()
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to session bus: %w", err)
@@ -31,19 +28,43 @@ func NewManager() (*Manager, error) {
 		sessionSignals: make(chan *dbus.Signal, 256),
 	}
 
+	if systemConn != nil {
+		systemConn.Signal(m.systemSignals)
+	}
 	go m.processSystemSignals()
 	go m.processSessionSignals()
 
 	return m, nil
 }
 
+// SystembusAnbinden reicht die Systembus-Verbindung nach, wenn sie beim Start noch nicht stand.
+func (m *Manager) SystembusAnbinden(conn *dbus.Conn) {
+	if conn == nil {
+		return
+	}
+	m.systemMu.Lock()
+	defer m.systemMu.Unlock()
+	if m.systemConn != nil || m.systemZu {
+		return
+	}
+	m.systemConn = conn
+	conn.Signal(m.systemSignals) // kein Busaufruf, nur die Anmeldung des Kanals
+}
+
+func (m *Manager) system() *dbus.Conn {
+	m.systemMu.Lock()
+	defer m.systemMu.Unlock()
+	return m.systemConn
+}
+
 func (m *Manager) getConn(bus string) (*dbus.Conn, error) {
 	switch bus {
 	case "system":
-		if m.systemConn == nil {
+		conn := m.system()
+		if conn == nil {
 			return nil, fmt.Errorf("system bus not connected")
 		}
-		return m.systemConn, nil
+		return conn, nil
 	case "session":
 		if m.sessionConn == nil {
 			return nil, fmt.Errorf("session bus not connected")
@@ -317,11 +338,6 @@ func (m *Manager) UnsubscribeSignals(clientID string, ch chan SignalEvent) {
 }
 
 func (m *Manager) processSystemSignals() {
-	if m.systemConn == nil {
-		return
-	}
-	m.systemConn.Signal(m.systemSignals)
-
 	for sig := range m.systemSignals {
 		m.dispatchSignal("system", sig)
 	}
@@ -393,10 +409,15 @@ func (m *Manager) Close() {
 		return true
 	})
 
-	if m.systemConn != nil {
-		m.systemConn.RemoveSignal(m.systemSignals)
-		close(m.systemSignals)
+	m.systemMu.Lock()
+	systemConn := m.systemConn
+	m.systemConn = nil
+	m.systemZu = true
+	m.systemMu.Unlock()
+	if systemConn != nil {
+		systemConn.RemoveSignal(m.systemSignals)
 	}
+	close(m.systemSignals)
 	if m.sessionConn != nil {
 		m.sessionConn.RemoveSignal(m.sessionSignals)
 		close(m.sessionSignals)

@@ -9,10 +9,9 @@ import (
 
 var ErrNoAdapter = errors.New("no bluetooth adapter found")
 
-func WaitForAdapter() error {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return err
+func WaitForAdapter(conn *dbus.Conn) error {
+	if conn == nil {
+		return fmt.Errorf("system bus not connected")
 	}
 
 	signals := make(chan *dbus.Signal, 64)

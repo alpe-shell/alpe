@@ -228,5 +228,26 @@ for variante in sorted(os.listdir(os.path.join(REPO, "design"))):
     check(len(registriert) >= 25 and len(kennungen) >= 5 and set(unbekannt) <= FREMD_IM_DESIGN,
           "design/%s: alle %d Widget-Kennungen der Leiste sind registriert oder Repo-Plugins (fremd: %s)" % (variante, len(kennungen), unbekannt))
 
+# ---------------------------------------------------------------- Dienst: Systembus nur über internal/systembus
+# godbus hält in dbus.SystemBus() eine paketweite Sperre über den Verbindungsaufbau ohne Zeitgrenze; ein Bus,
+# der nicht antwortet, hielt so den Start des ganzen Dienstes auf (docs/plan/dienst-systembus.md). Die eine
+# Verbindung baut internal/systembus mit Zeitgrenze auf; sonst ruft im Dienst nichts diese Funktionen auf.
+eigene_verbindungen = []
+for ordner, _, dateien in os.walk(os.path.join(REPO, "core")):
+    if os.path.join("core", "internal", "systembus") in ordner or os.path.join("core", "internal", "mocks") in ordner:
+        continue
+    for datei in dateien:
+        if not datei.endswith(".go"):
+            continue
+        pfad = os.path.join(ordner, datei)
+        for nummer, zeile in enumerate(open(pfad, encoding="utf-8"), 1):
+            code = zeile.split("//")[0]
+            if re.search(r"\bdbus\.(SystemBus|ConnectSystemBus|SystemBusPrivate|SystemBusPrivateHandler)\(", code):
+                eigene_verbindungen.append("%s:%d" % (os.path.relpath(pfad, REPO), nummer))
+check(not eigene_verbindungen, "kein eigener Verbindungsaufbau zum Systembus ausserhalb von core/internal/systembus\n%s" % "\n".join(eigene_verbindungen))
+systembus_go = read(REPO, "core", "internal", "systembus", "systembus.go")
+check("dbus.ConnectSystemBus(dbus.WithContext(" in systembus_go and "time.AfterFunc(" in systembus_go and "context.WithTimeout" not in systembus_go.split("func Verbinden")[1].split("\nfunc ")[0].replace("Ein context.WithTimeout", ""),
+      "systembus.Verbinden: Zeitgrenze über Timer und abbrechbaren Context, nicht über WithTimeout (das schlösse die Verbindung auch nach Erfolg)")
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

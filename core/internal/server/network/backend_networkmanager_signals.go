@@ -17,9 +17,9 @@ const (
 )
 
 func (b *NetworkManagerBackend) startSignalPump() error {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return err
+	conn := b.sysConn
+	if conn == nil {
+		return errSystemBusNotConnected
 	}
 	b.dbusConn = conn
 

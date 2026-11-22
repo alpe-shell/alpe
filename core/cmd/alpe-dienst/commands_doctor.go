@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"debug/elf"
 	"encoding/json"
 	"errors"
@@ -23,6 +24,7 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/osinfo"
 	"github.com/alpe-shell/alpe/core/internal/server/brightness"
 	"github.com/alpe-shell/alpe/core/internal/server/network"
+	"github.com/alpe-shell/alpe/core/internal/systembus"
 	"github.com/alpe-shell/alpe/core/internal/tui"
 	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/alpe-shell/alpe/core/internal/version"
@@ -1243,7 +1245,12 @@ func checkOptionalDependencies() []checkResult {
 		results = append(results, checkResult{catOptionalFeatures, "Terminal", statusWarn, "None found", "Install ghostty, kitty, foot or alacritty", optionalFeaturesURL})
 	}
 
-	networkResult, err := network.DetectNetworkStack()
+	// Kurzlebiger Befehl: eigene Verbindung mit Zeitgrenze; bei einem stummen Bus ohne (nil).
+	sysConn, _ := systembus.Verbinden(context.Background(), systembus.AufbauGrenze)
+	if sysConn != nil {
+		defer sysConn.Close()
+	}
+	networkResult, err := network.DetectNetworkStack(sysConn)
 	networkStatus, networkMessage, networkDetails := statusOK, "Not available", "Network management"
 
 	if err == nil && networkResult.Backend != network.BackendNone {

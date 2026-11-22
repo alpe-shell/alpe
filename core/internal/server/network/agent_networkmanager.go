@@ -81,10 +81,10 @@ const introspectXML = `
 </node>`
 
 func NewSecretAgent(prompts PromptBroker, manager *Manager, backend *NetworkManagerBackend) (*SecretAgent, error) {
-	c, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to system bus: %w", err)
+	if backend == nil || backend.sysConn == nil {
+		return nil, fmt.Errorf("failed to connect to system bus: %w", errSystemBusNotConnected)
 	}
+	c := backend.sysConn
 
 	sa := &SecretAgent{
 		conn:    c,

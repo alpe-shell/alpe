@@ -11,10 +11,11 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-func NewManager(keepLockOnUnlock bool, lockPolicy LockPolicy) (*Manager, error) {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to system bus: %w", err)
+// NewManager arbeitet auf conn, der geteilten Systembus-Verbindung des Dienstes; sie wird hier nie
+// geschlossen.
+func NewManager(conn *dbus.Conn, keepLockOnUnlock bool, lockPolicy LockPolicy) (*Manager, error) {
+	if conn == nil {
+		return nil, fmt.Errorf("failed to connect to system bus: not connected")
 	}
 
 	m := &Manager{

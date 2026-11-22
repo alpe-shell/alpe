@@ -9,6 +9,8 @@ import (
 )
 
 type Manager struct {
+	systemMu       sync.Mutex // nur um systemConn und systemZu, nie über einen Busaufruf hinweg
+	systemZu       bool
 	systemConn     *dbus.Conn
 	sessionConn    *dbus.Conn
 	systemSignals  chan *dbus.Signal

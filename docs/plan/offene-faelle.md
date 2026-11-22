@@ -601,9 +601,16 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   behoben in `439de4f` (Richtlinie erlaubt Antworten; ein Lauf ohne `Connected` gilt als
   gescheitert, Plan 0.8 Nr. 81); Probelauf unter Hyprland meldet `Connected`. (2) Der Dienst
   selbst – **ein Fehler aus der Zeit vor Phase A**, am Mac bei einem hängenden Systembus ebenso
-  denkbar – bekommt eine Zeitgrenze für alle Verbindungen zum Systembus: Plan
-  `docs/plan/dienst-systembus.md`, zur Freigabe vorgelegt, noch nicht umgesetzt (0.8 Nr. 82).
-  Die Grundlinien werden erst danach neu gemessen (0.8 Nr. 80).
+  denkbar – hat eine Zeitgrenze für alle Verbindungen zum Systembus bekommen: Plan
+  `docs/plan/dienst-systembus.md` (freigegeben, 0.8 Nr. 84), **behoben am 22.11.2026**: Paket
+  `core/internal/systembus`, eine Verbindung für alle Manager, erneute Versuche im Hintergrund,
+  Ruhezustands-Überwachung von Gamma nebenher. Gegenprobe mit stummem Ersatz-Systembus
+  (`ALPE_LP_STUMMER_BUS=1`) unter Hyprland und KWin bestanden. Die Grundlinien werden danach neu
+  gemessen (0.8 Nr. 80).
+  **Am Mac prüfen (zur Anleitung für den Stand nach D7):** Nachtlicht ein- und ausschalten und über
+  die Zeitsteuerung laufen lassen; Deckel zu und wieder auf – die Farbtemperatur muss nach dem
+  Aufwachen stimmen (die Überwachung des Ruhezustands hängt jetzt erst Augenblicke nach dem Start
+  am Bus); WLAN-Liste, Bluetooth, Helligkeitstasten, Sperren beim Zuklappen.
 - **Offen, nicht belegt (22.11.2026): Kann der Wayland-Teil von Gamma bei einem stummen
   Compositor hängen?** `wayland.NewManager` läuft synchron im Start des Dienstes, vor
   `s.ipc.Serve` (Registry, Ausgaben, Gamma-Steuerung über die geteilte Wayland-Verbindung). Ob
@@ -614,7 +621,12 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   dieselbe Bauart (`dbus.SessionBus()` mit `sessionBusLck`, 10 Stellen im Dienst), aber keinen
   Befund. (b) `gonetworkmanager` ruft selbst `dbus.SystemBus()` auf und nimmt keine Verbindung
   entgegen (Frage 1 im Plan). (c) Nach einem Abriss der Systembus-Verbindung im Betrieb werden
-  die Manager nicht neu aufgebaut (heute auch nicht).
+  die Manager nicht neu aufgebaut (heute auch nicht). (d) Der Freedesktop-Manager wartet bei einem
+  stummen Systembus als Ganzes, auch mit seinem Session-Bus-Teil (Bildschirmschoner-Sperre,
+  Farbschema-Einstellung). (e) Startet der Dienst mit stummem Bus, bleibt die Ortung bei der
+  IP-Adresse, auch wenn der Bus später antwortet. (f) Läufe der Ladeprüfung mit stummem Bus dauern
+  etwa doppelt so lang (319 s und 263 s gegen 149 s); vermutet, nicht belegt: Zeitüberschreitungen der
+  Oberfläche selbst (Qt/Quickshell) am Systembus. Einzelheiten in `dienst-systembus.md`, 5a.
 - **Ausgeliefertes Design nennt ein fremdes Plugin:** `design/kde/settings.json` führt links in
   der Leiste `sathiAi` (wird nicht mitgeliefert; auf einem frischen Rechner bleibt die Stelle
   leer) und bei `gpuTemp` die Gerätekennung `pciId: 10de:2504`. `tests/test_werte.py` prüft die

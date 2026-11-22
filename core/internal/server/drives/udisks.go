@@ -24,8 +24,11 @@ var standby = struct {
 
 // List reads drives from UDisks2. It never calls SmartUpdate, and it asks rotating
 // ATA drives for their power state before reading attributes so a sleeping disk stays asleep.
-func List() (ListResult, error) {
-	conn, err := dbus.SystemBus()
+//
+// systembus liefert die geteilte Systembus-Verbindung des Dienstes, ohne zu warten; sie wird hier
+// nie geschlossen.
+func List(systembus func() (*dbus.Conn, error)) (ListResult, error) {
+	conn, err := systembus()
 	if err != nil {
 		return ListResult{}, fmt.Errorf("system bus: %w", err)
 	}

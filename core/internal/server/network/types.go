@@ -196,6 +196,7 @@ type PriorityUpdate struct {
 }
 
 type Manager struct {
+	sysConn               *dbus.Conn // geteilte Verbindung des Dienstes; nie schliessen
 	backend               Backend
 	state                 *NetworkState
 	stateMutex            sync.RWMutex

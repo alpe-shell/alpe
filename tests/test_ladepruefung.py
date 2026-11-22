@@ -154,6 +154,21 @@ try:
         '<allow user="*"/>', '<allow send_destination="*"/>', '<allow receive_type="method_return"/>', '<allow receive_type="error"/>',
         '<allow receive_type="signal"/>', '<allow send_requested_reply="true" send_type="method_return"/>')),
         "Richtlinie des Ersatz-Systembusses erlaubt Antworten")
+    # Gegenprobe mit stummem Bus (Plan 0.8 Nr. 84): eigene Richtlinie ohne Antwort-Regeln, nur über den Schalter;
+    # bestanden ist sie, wenn der Dienst den Ausfall genau einmal meldet.
+    check("receive_type" not in lp.SYSTEMBUS_STUMM and '<type>system</type>' in lp.SYSTEMBUS_STUMM, "stumme Richtlinie erlaubt keine Antworten")
+    schalter = os.environ.pop("ALPE_LP_STUMMER_BUS", None)
+    check(not lp.stummer_bus(), "ohne Schalter antwortet der Ersatz-Systembus")
+    os.environ["ALPE_LP_STUMMER_BUS"] = "1"
+    check(lp.stummer_bus(), "ALPE_LP_STUMMER_BUS=1 schaltet die Gegenprobe ein")
+    if schalter is None:
+        del os.environ["ALPE_LP_STUMMER_BUS"]
+    else:
+        os.environ["ALPE_LP_STUMMER_BUS"] = schalter
+    meldung = " WARN go: System bus unavailable (system bus unavailable: no answer within 3s); dependent managers disabled, retrying in background\n"
+    check(lp.stumm_probleme({"shell.log": gut["shell.log"] + meldung}) == [], "Gegenprobe: Ausfall einmal gemeldet")
+    check(len(lp.stumm_probleme({"shell.log": gut["shell.log"]})) == 1 and len(lp.stumm_probleme({"shell.log": gut["shell.log"] + meldung * 2})) == 1,
+          "Gegenprobe: keine oder mehrfache Meldung gilt als gescheitert")
     if shutil.which("dbus-daemon") and shutil.which("dbus-send"):
         # Echte Probe im Temp-Ordner: Der Bus beendet sich über timeout selbst, beendet wird nichts über Namen.
         kurz = tempfile.mkdtemp(prefix="sb")

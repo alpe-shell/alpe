@@ -21,11 +21,13 @@ type DBusSubscriptionManager struct {
 	baseURL        string
 	running        bool
 	mu             sync.Mutex
+	systembus      func() (*dbus.Conn, error) // geteilte Verbindung des Dienstes; nie schliessen
 	conn           *dbus.Conn
 }
 
-func NewDBusSubscriptionManager(client CUPSClientInterface, baseURL string) *DBusSubscriptionManager {
+func NewDBusSubscriptionManager(client CUPSClientInterface, baseURL string, systembus func() (*dbus.Conn, error)) *DBusSubscriptionManager {
 	return &DBusSubscriptionManager{
+		systembus: systembus,
 		client:    client,
 		eventChan: make(chan SubscriptionEvent, 100),
 		stopChan:  make(chan struct{}),
@@ -44,7 +46,11 @@ func (sm *DBusSubscriptionManager) Start() error {
 	sm.eventChan = make(chan SubscriptionEvent, 100)
 	sm.mu.Unlock()
 
-	conn, err := dbus.SystemBus()
+	var conn *dbus.Conn
+	err := fmt.Errorf("not connected")
+	if sm.systembus != nil {
+		conn, err = sm.systembus()
+	}
 	if err != nil {
 		sm.mu.Lock()
 		sm.running = false

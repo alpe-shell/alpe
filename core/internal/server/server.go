@@ -34,10 +34,12 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/server/wellbeing"
 	"github.com/alpe-shell/alpe/core/internal/server/wlcontext"
 	"github.com/alpe-shell/alpe/core/internal/server/wlroutput"
+	"github.com/alpe-shell/alpe/core/internal/systembus"
 	"github.com/alpe-shell/alpe/core/internal/systemd"
 	"github.com/alpe-shell/alpe/core/internal/utils"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/syncmap"
+	"github.com/godbus/dbus/v5"
 	"github.com/spf13/afero"
 )
 
@@ -95,8 +97,21 @@ func GetSocketPath() string {
 	return appPaths.SocketPath()
 }
 
-func InitializeNetworkManager() error {
-	manager, err := network.NewManager()
+// systemBus hält die eine Verbindung des Dienstes zum Systembus (internal/systembus): mit
+// Zeitgrenze aufgebaut, an alle Manager weitergereicht, von keinem geschlossen. Im Dienst ruft
+// nichts dbus.SystemBus() auf – dessen paketweite Sperre hielt früher den ganzen Start auf, wenn
+// der Bus nicht antwortete (docs/plan/dienst-systembus.md).
+var systemBus = systembus.Neu()
+var systemBusCtx = context.Background()
+
+// systemBusJetzt gibt die Verbindung heraus oder sofort einen Fehler; für Anfragen der Oberfläche.
+func systemBusJetzt() (*dbus.Conn, error) { return systemBus.Verlangen() }
+
+// systemBusWarten wartet, bis die Verbindung steht; nur in eigenen Goroutinen der Manager.
+func systemBusWarten() (*dbus.Conn, error) { return systemBus.Warten(systemBusCtx) }
+
+func InitializeNetworkManager(sysConn *dbus.Conn) error {
+	manager, err := network.NewManager(sysConn)
 	if err != nil {
 		log.Warnf("Failed to initialize network manager: %v", err)
 		return err
@@ -108,7 +123,7 @@ func InitializeNetworkManager() error {
 	return nil
 }
 
-func InitializeLoginctlManager() error {
+func InitializeLoginctlManager(sysConn *dbus.Conn) error {
 	keepLockOnUnlock, err := clipolicy.LogindUnlockDisabled(afero.NewOsFs())
 	if err != nil {
 		log.Errorf("CLI policy unreadable, keeping locks through logind Unlock: %v", err)
@@ -118,7 +133,7 @@ func InitializeLoginctlManager() error {
 	if err != nil {
 		log.Errorf("CLI policy unreadable, ignoring its lock settings: %v", err)
 	}
-	manager, err := loginctl.NewManager(keepLockOnUnlock, loginctl.LockPolicy{
+	manager, err := loginctl.NewManager(sysConn, keepLockOnUnlock, loginctl.LockPolicy{
 		LockBeforeSuspend:       clipolicy.LockSettingBool(lockSettings, "lockBeforeSuspend"),
 		LoginctlLockIntegration: clipolicy.LockSettingBool(lockSettings, "loginctlLockIntegration"),
 	})
@@ -133,8 +148,8 @@ func InitializeLoginctlManager() error {
 	return nil
 }
 
-func InitializeFreedeskManager() error {
-	manager, err := freedesktop.NewManager()
+func InitializeFreedeskManager(sysConn *dbus.Conn) error {
+	manager, err := freedesktop.NewManager(sysConn)
 	if err != nil {
 		log.Warnf("Failed to initialize freedesktop manager: %v", err)
 		return err
@@ -168,12 +183,24 @@ func InitializeWaylandManager() error {
 
 	waylandManager = manager
 
+	// Die Überwachung des Ruhezustands kommt nebenher dazu, sobald der Systembus steht; der
+	// Wayland-Teil oben bleibt synchron.
+	go func() {
+		conn, err := systemBusWarten()
+		if err != nil {
+			return
+		}
+		if err := manager.SystembusAnbinden(conn); err != nil {
+			log.Warnf("Failed to setup D-Bus monitoring: %v", err)
+		}
+	}()
+
 	log.Info("Wayland gamma control initialized successfully")
 	return nil
 }
 
-func InitializeBluezManager() error {
-	manager, err := bluez.NewManager()
+func InitializeBluezManager(sysConn *dbus.Conn) error {
+	manager, err := bluez.NewManager(sysConn)
 	if err != nil {
 		log.Warnf("Failed to initialize bluez manager: %v", err)
 		return err
@@ -197,7 +224,7 @@ func initializeCupsManagerLocked() (bool, error) {
 	if cupsManager != nil {
 		return false, nil
 	}
-	manager, err := cups.NewManager()
+	manager, err := cups.NewManager(systemBusJetzt)
 	if err != nil {
 		log.Warnf("Failed to initialize cups manager: %v", err)
 		return false, err
@@ -249,7 +276,7 @@ func releaseCupsSubscriber() {
 }
 
 func InitializeBrightnessManager() error {
-	manager, err := brightness.NewManager()
+	manager, err := brightness.NewManager(systemBusWarten)
 	if err != nil {
 		log.Warnf("Failed to initialize brightness manager: %v", err)
 		return err
@@ -327,13 +354,23 @@ func InitializeClipboardManager() error {
 }
 
 func InitializeDbusManager() error {
-	manager, err := serverDbus.NewManager()
+	// Im Normalfall mit Systembus; bei einem stummen Bus zuerst nur der Session-Bus, der Systembus
+	// wird nachgereicht.
+	sysConn := systemBus.Erstversuch(systemBusCtx)
+	manager, err := serverDbus.NewManager(sysConn)
 	if err != nil {
 		log.Warnf("Failed to initialize dbus manager: %v", err)
 		return err
 	}
 
 	dbusManager = manager
+	if sysConn == nil {
+		go func() {
+			if conn, err := systemBusWarten(); err == nil {
+				manager.SystembusAnbinden(conn)
+			}
+		}()
+	}
 
 	log.Info("DBus manager initialized")
 	return nil
@@ -952,6 +989,14 @@ func Start(printDocs bool) error {
 
 func (s *Server) Serve(printDocs bool) error {
 	defer s.ipc.Close()
+
+	// Die Systembus-Verbindung endet nach dem Aufräumen der Manager (defer läuft rückwärts).
+	busCtx, busEnde := context.WithCancel(context.Background())
+	defer busEnde()
+	systemBus = systembus.Neu()
+	systemBusCtx = busCtx
+	systemBus.Starten(busCtx)
+
 	defer cleanupManagers()
 
 	tuneRuntime()
@@ -1127,7 +1172,24 @@ func (s *Server) Serve(printDocs bool) error {
 	log.Info("")
 
 	go func() {
-		switch err := InitializeNetworkManager(); {
+		sysConn := systemBus.Erstversuch(busCtx)
+		if sysConn == nil {
+			// Stummer Systembus: Ohne ihn bleibt höchstens wpa_supplicant über wpa_ctrl. Sonst
+			// wartet das Netzwerk still auf den Bus; die eine Meldung dazu kommt vom Halter.
+			if manager, err := network.NewManager(nil); err == nil {
+				networkManager = manager
+				log.Info("Network manager initialized (without system bus)")
+				notifyCapabilityChange()
+				return
+			}
+			conn, err := systemBusWarten()
+			if err != nil {
+				return
+			}
+			sysConn = conn
+		}
+
+		switch err := InitializeNetworkManager(sysConn); {
 		case err == nil:
 			notifyCapabilityChange()
 			return
@@ -1146,7 +1208,7 @@ func (s *Server) Serve(printDocs bool) error {
 			if networkManager != nil {
 				return
 			}
-			switch err := InitializeNetworkManager(); {
+			switch err := InitializeNetworkManager(sysConn); {
 			case err == nil:
 				log.Info("Network manager initialized")
 				notifyCapabilityChange()
@@ -1164,7 +1226,11 @@ func (s *Server) Serve(printDocs bool) error {
 
 	go func() {
 		defer close(loginctlReady)
-		if err := InitializeLoginctlManager(); err != nil {
+		sysConn, err := systemBusWarten()
+		if err != nil {
+			return
+		}
+		if err := InitializeLoginctlManager(sysConn); err != nil {
 			log.Warnf("Loginctl manager unavailable: %v", err)
 		} else {
 			notifyCapabilityChange()
@@ -1173,7 +1239,11 @@ func (s *Server) Serve(printDocs bool) error {
 
 	go func() {
 		defer close(freedesktopReady)
-		if err := InitializeFreedeskManager(); err != nil {
+		sysConn, err := systemBusWarten()
+		if err != nil {
+			return
+		}
+		if err := InitializeFreedeskManager(sysConn); err != nil {
 			log.Warnf("Freedesktop manager unavailable: %v", err)
 		} else if freedesktopManager != nil {
 			freedesktopManager.NotifySubscribers()
@@ -1258,7 +1328,7 @@ func (s *Server) Serve(printDocs bool) error {
 		if alpeOff("location") {
 			return
 		}
-		geoClient := geolocation.NewClient()
+		geoClient := geolocation.NewClient(systemBus.Erstversuch(busCtx))
 		geoClientInstance = geoClient
 
 		if waylandManager != nil {
@@ -1279,8 +1349,12 @@ func (s *Server) Serve(printDocs bool) error {
 		if alpeOff("bluetooth") {
 			return
 		}
+		sysConn, err := systemBusWarten()
+		if err != nil {
+			return
+		}
 		for {
-			err := InitializeBluezManager()
+			err := InitializeBluezManager(sysConn)
 			if err == nil {
 				notifyCapabilityChange()
 				return
@@ -1289,7 +1363,7 @@ func (s *Server) Serve(printDocs bool) error {
 			if !errors.Is(err, bluez.ErrNoAdapter) {
 				return
 			}
-			if err := bluez.WaitForAdapter(); err != nil {
+			if err := bluez.WaitForAdapter(sysConn); err != nil {
 				log.Warnf("Bluetooth adapter watch failed: %v", err)
 				return
 			}

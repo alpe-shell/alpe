@@ -62,9 +62,8 @@ func NewManager(display wlclient.WaylandDisplay, config Config) (*Manager, error
 		return nil, err
 	}
 
-	if err := m.setupDBusMonitor(); err != nil {
-		log.Warnf("Failed to setup D-Bus monitoring: %v", err)
-	}
+	// Die Überwachung des Ruhezustands hängt am Systembus und kommt später über
+	// SystembusAnbinden – hier wartet nichts auf den Bus (docs/plan/dienst-systembus.md).
 
 	m.alive = true
 	// Publish before the first state push so the snapshot is never nil, and
@@ -79,10 +78,9 @@ func NewManager(display wlclient.WaylandDisplay, config Config) (*Manager, error
 	m.wg.Add(1)
 	go m.schedulerLoop()
 
-	if m.dbusConn != nil {
-		m.wg.Add(1)
-		go m.dbusMonitor()
-	}
+	// Läuft immer; Signale kommen erst, wenn SystembusAnbinden die Verbindung gesetzt hat.
+	m.wg.Add(1)
+	go m.dbusMonitor()
 
 	m.wg.Add(1)
 	go m.waylandActor()
@@ -171,18 +169,35 @@ func (m *Manager) anyOutputReady() bool {
 
 const prepareForSleepMatchRule = "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep',path='/org/freedesktop/login1'"
 
-func (m *Manager) setupDBusMonitor() error {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return fmt.Errorf("system bus: %w", err)
+// SystembusAnbinden richtet die Überwachung des Ruhezustands (PrepareForSleep) auf der geteilten
+// Systembus-Verbindung des Dienstes ein. Der Dienst ruft das nach dem Start nebenher auf, sobald
+// die Verbindung steht. conn gehört dem Dienst und wird hier nie geschlossen. Die Sperre dbusMu
+// schützt nur die Felder; kein Busaufruf läuft unter ihr.
+func (m *Manager) SystembusAnbinden(conn *dbus.Conn) error {
+	if conn == nil {
+		return fmt.Errorf("system bus: not connected")
+	}
+	m.dbusMu.Lock()
+	schon, zu := m.dbusConn != nil, m.dbusZu
+	m.dbusMu.Unlock()
+	if schon || zu {
+		return nil
 	}
 
 	if err := conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, prepareForSleepMatchRule).Err; err != nil {
 		return fmt.Errorf("add match: %w", err)
 	}
 
-	conn.Signal(m.dbusSignal)
+	m.dbusMu.Lock()
+	if m.dbusZu || m.dbusConn != nil {
+		// Inzwischen geschlossen oder von anderer Seite angebunden: die eigene Regel wieder abmelden.
+		m.dbusMu.Unlock()
+		conn.BusObject().Call("org.freedesktop.DBus.RemoveMatch", 0, prepareForSleepMatchRule)
+		return nil
+	}
 	m.dbusConn = conn
+	conn.Signal(m.dbusSignal)
+	m.dbusMu.Unlock()
 	return nil
 }
 
@@ -2000,8 +2015,19 @@ func (m *Manager) Close() {
 		manager.Destroy()
 	}
 
-	if m.dbusConn != nil {
-		m.dbusConn.RemoveSignal(m.dbusSignal)
-		m.dbusConn.BusObject().Call("org.freedesktop.DBus.RemoveMatch", 0, prepareForSleepMatchRule)
+	m.systembusAbbinden()
+}
+
+// systembusAbbinden meldet Signal und Match-Regel ab; die Verbindung selbst bleibt offen, sie
+// gehört dem Dienst. Ein späteres SystembusAnbinden bleibt ohne Wirkung.
+func (m *Manager) systembusAbbinden() {
+	m.dbusMu.Lock()
+	conn := m.dbusConn
+	m.dbusConn = nil
+	m.dbusZu = true
+	m.dbusMu.Unlock()
+	if conn != nil {
+		conn.RemoveSignal(m.dbusSignal)
+		conn.BusObject().Call("org.freedesktop.DBus.RemoveMatch", 0, prepareForSleepMatchRule)
 	}
 }

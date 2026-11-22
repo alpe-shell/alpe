@@ -35,10 +35,9 @@ type DBusPkHelper struct {
 	obj  dbus.BusObject
 }
 
-func NewPkHelper() (*DBusPkHelper, error) {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to system bus: %w", err)
+func NewPkHelper(conn *dbus.Conn) (*DBusPkHelper, error) {
+	if conn == nil {
+		return nil, fmt.Errorf("failed to connect to system bus: not connected")
 	}
 
 	return &DBusPkHelper{

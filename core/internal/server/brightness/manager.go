@@ -8,28 +8,39 @@ import (
 	"time"
 
 	"github.com/alpe-shell/alpe/core/internal/log"
+	"github.com/godbus/dbus/v5"
 )
 
-func NewManager() (*Manager, error) {
-	return NewManagerWithOptions(false)
+// NewManager: systembus liefert die geteilte Systembus-Verbindung des Dienstes und darf warten, bis
+// sie steht (es läuft in einer eigenen Goroutine); nil heisst ohne logind. Sysfs und DDC warten
+// nicht darauf.
+func NewManager(systembus func() (*dbus.Conn, error)) (*Manager, error) {
+	return NewManagerWithOptions(false, systembus)
 }
 
-func NewManagerWithOptions(exponential bool) (*Manager, error) {
+func NewManagerWithOptions(exponential bool, systembus func() (*dbus.Conn, error)) (*Manager, error) {
 	m := &Manager{
 		stopChan:    make(chan struct{}),
 		exponential: exponential,
 	}
 
-	go m.initLogind()
+	go m.initLogind(systembus)
 	go m.initNative()
 	go m.initDDC()
 
 	return m, nil
 }
 
-func (m *Manager) initLogind() {
+func (m *Manager) initLogind(systembus func() (*dbus.Conn, error)) {
 	log.Debug("Initializing logind backend...")
-	logind, err := NewLogindBackend()
+	var logind *LogindBackend
+	err := errors.New("no system bus")
+	if systembus != nil {
+		var conn *dbus.Conn
+		if conn, err = systembus(); err == nil {
+			logind, err = NewLogindBackend(conn)
+		}
+	}
 	if err != nil {
 		log.Infof("Logind backend not available: %v", err)
 		log.Info("Will use direct sysfs access for brightness control")

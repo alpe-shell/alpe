@@ -30,10 +30,11 @@ var bluezMatchRules = [][]dbus.MatchOption{
 	{dbus.WithMatchSender(dbusIface), dbus.WithMatchInterface(dbusIface), dbus.WithMatchMember("NameOwnerChanged"), dbus.WithMatchArg(0, bluezService)},
 }
 
-func NewManager() (*Manager, error) {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return nil, fmt.Errorf("system bus connection failed: %w", err)
+// NewManager arbeitet auf conn, der geteilten Systembus-Verbindung des Dienstes; sie wird hier nie
+// geschlossen.
+func NewManager(conn *dbus.Conn) (*Manager, error) {
+	if conn == nil {
+		return nil, fmt.Errorf("system bus connection failed: not connected")
 	}
 
 	m := &Manager{
@@ -285,7 +286,7 @@ func (m *Manager) startAgent() error {
 		return fmt.Errorf("prompt broker not initialized")
 	}
 
-	agent, err := NewBluezAgent(m.promptBroker)
+	agent, err := NewBluezAgent(m.dbusConn, m.promptBroker)
 	if err != nil {
 		return err
 	}

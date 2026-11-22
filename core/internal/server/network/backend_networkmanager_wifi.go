@@ -958,12 +958,10 @@ const nmPermissionModifySystem = dbusNMInterface + ".settings.modify.system"
 func (b *NetworkManagerBackend) canModifySystemConnections() bool {
 	conn := b.dbusConn
 	if conn == nil {
-		var err error
-		conn, err = dbus.ConnectSystemBus()
-		if err != nil {
-			return false
-		}
-		defer conn.Close()
+		conn = b.sysConn
+	}
+	if conn == nil {
+		return false
 	}
 
 	var permissions map[string]string

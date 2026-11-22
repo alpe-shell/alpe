@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
 
 	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/alpe-shell/alpe/core/internal/server/brightness"
+	"github.com/alpe-shell/alpe/core/internal/systembus"
 	"github.com/spf13/cobra"
 )
 
@@ -256,7 +258,14 @@ func tryLogindBrightness(subsystem, name, deviceID string, percent int, exponent
 		return false
 	}
 
-	logind, err := brightness.NewLogindBackend()
+	conn, err := systembus.Verbinden(context.Background(), systembus.AufbauGrenze)
+	if err != nil {
+		log.Debugf("system bus: %v", err)
+		return false
+	}
+	defer conn.Close()
+
+	logind, err := brightness.NewLogindBackend(conn)
 	if err != nil {
 		log.Debugf("NewLogindBackend failed: %v", err)
 		return false

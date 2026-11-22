@@ -74,10 +74,11 @@ type Halter struct {
 	warnen    func(format string, v ...any)
 	melden    func(format string, v ...any)
 
-	mu      sync.Mutex
-	conn    *dbus.Conn
-	bereit  chan struct{}
-	starten sync.Once
+	mu          sync.Mutex
+	conn        *dbus.Conn
+	bereit      chan struct{}
+	entschieden chan struct{}
+	starten     sync.Once
 }
 
 // Neu legt einen Halter mit den Fristen des Dienstes an. Er verbindet erst mit Starten.
@@ -90,6 +91,7 @@ func Neu() *Halter {
 		warnen:         log.Warnf,
 		melden:         log.Infof,
 		bereit:         make(chan struct{}),
+		entschieden:    make(chan struct{}),
 	}
 }
 
@@ -102,8 +104,13 @@ func (h *Halter) Starten(ctx context.Context) {
 func (h *Halter) lauf(ctx context.Context) {
 	abstand := h.ErsterAbstand
 	gemeldet := false
+	var erster sync.Once
+	defer erster.Do(func() { close(h.entschieden) })
 	for {
 		conn, err := h.verbinden(ctx, h.Grenze)
+		if err != nil {
+			erster.Do(func() { close(h.entschieden) })
+		}
 		if err == nil {
 			h.mu.Lock()
 			h.conn = conn
@@ -112,6 +119,7 @@ func (h *Halter) lauf(ctx context.Context) {
 				h.melden("System bus connected")
 			}
 			close(h.bereit)
+			erster.Do(func() { close(h.entschieden) })
 			return
 		}
 		if ctx.Err() != nil {
@@ -135,6 +143,18 @@ func (h *Halter) lauf(ctx context.Context) {
 
 // Bereit wird geschlossen, sobald die Verbindung zum ersten Mal steht.
 func (h *Halter) Bereit() <-chan struct{} { return h.bereit }
+
+// Erstversuch wartet das Ergebnis des ersten Versuchs ab (höchstens die Aufbau-Grenze) und gibt
+// die Verbindung oder nil zurück. Für Manager, die auch ohne Systembus etwas leisten: Sie starten
+// im Normalfall mit Verbindung und bei einem stummen Bus ohne.
+func (h *Halter) Erstversuch(ctx context.Context) *dbus.Conn {
+	select {
+	case <-h.entschieden:
+	case <-ctx.Done():
+	}
+	conn, _ := h.Conn()
+	return conn
+}
 
 // Conn gibt die Verbindung heraus, wenn sie steht. Nach einem Abriss im Betrieb meldet Conn
 // false; ein Neuaufbau der Manager gehört nicht hierher (offener Fall).

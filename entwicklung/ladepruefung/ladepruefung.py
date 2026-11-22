@@ -32,7 +32,9 @@ Session-Bus (dbus-run-session), ein leerer Ersatz für den Systembus (kein login
 polkit, BlueZ; er antwortet aber, sein Protokoll steht in systembus.log), Attrappen für systemctl,
 loginctl, pkexec, sudo. Ein Lauf gilt nur, wenn die Oberfläche die Verbindung zum Dienst meldet
 («Connected (API v…)»); sonst ist er gescheitert und liefert nichts für die Grundlinie
-(Plan 0.8 Nr. 81). Als Erstes prüft der Lauf, dass er
+(Plan 0.8 Nr. 81). Gegenprobe nur bei Bedarf, nicht bei jedem Halt: ALPE_LP_STUMMER_BUS=1 macht den
+Ersatz-Systembus stumm; der Lauf besteht, wenn die Oberfläche trotzdem verbunden ist und der Dienst den
+Ausfall genau einmal meldet (Plan 0.8 Nr. 84). Als Erstes prüft der Lauf, dass er
 den echten systemd-Benutzerdienst nicht erreicht (sonst Abbruch). Der Compositor läuft virtuell
 (kwin_wayland --virtual); Hyprland läuft verschachtelt darin, weil es keinen eigenständigen
 Headless-Betrieb mehr kennt. Vorher wird das ausgelieferte Design (design/kde) ins Temp-HOME gespielt,
@@ -195,6 +197,33 @@ SYSTEMBUS = """<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configu
   </policy>
 </busconfig>
 """
+
+
+# Gegenprobe (Plan 0.8 Nr. 84): Mit ALPE_LP_STUMMER_BUS=1 nimmt der Ersatz-Systembus Verbindungen an und
+# antwortet nie – ohne receive-Regeln verwirft er seine eigenen Antworten. So hing der Dienst bis zur Behebung
+# (docs/plan/dienst-systembus.md). Die Gegenprobe gehört nicht zur Haltprüfung; sie läuft nur bei Bedarf.
+SYSTEMBUS_STUMM = """<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+<busconfig>
+  <type>system</type>
+  <listen>unix:path={sock}</listen>
+  <auth>EXTERNAL</auth>
+  <policy context="default"><allow send_destination="*"/><allow own="*"/></policy>
+</busconfig>
+"""
+STUMM_MELDUNG = "System bus unavailable"
+
+
+def stummer_bus():
+    return os.environ.get("ALPE_LP_STUMMER_BUS") == "1"
+
+
+def stumm_probleme(result):
+    """Gegenprobe: Die Oberfläche ist verbunden (health), und der Dienst meldet den Ausfall genau einmal."""
+    zahl = ANSI.sub("", result["shell.log"]).count(STUMM_MELDUNG)
+    if zahl == 1:
+        return []
+    return ["Gegenprobe: «%s» steht %d-mal im Protokoll, erwartet genau einmal" % (STUMM_MELDUNG, zahl)]
 
 
 def say(text):
@@ -449,7 +478,7 @@ def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=
         os.chmod(path, 0o755)
     sock = os.path.join(rundir, "sb")
     with open(os.path.join(base, "systembus.conf"), "w") as handle:
-        handle.write(SYSTEMBUS.format(sock=sock))
+        handle.write((SYSTEMBUS_STUMM if stummer_bus() else SYSTEMBUS).format(sock=sock))
     session = os.path.join(base, "sitzung.sh")
     with open(session, "w") as handle:
         handle.write(session_script(base, dienst, bild))
@@ -631,6 +660,9 @@ def main(argv):
     if write and (probe or extra_plugins or bild):
         say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins, --probe-zeichen und --bild")
         return 2
+    if write and stummer_bus():
+        say("FEHLER: Mit ALPE_LP_STUMMER_BUS=1 (Gegenprobe) wird keine Grundlinie geschrieben")
+        return 2
     for need in ("kwin_wayland", "systemd-run", "dbus-run-session") + (("Hyprland",) if compositor == "hyprland" else ()):
         if not shutil.which(need):
             say("übersprungen: %s nicht installiert" % need)
@@ -681,6 +713,8 @@ def main(argv):
                 if any(" restart" in l or " stop" in l or " start" in l for l in result["stubs.log"].splitlines()):
                     say("   HINWEIS: Der Lauf wollte einen Dienst starten/stoppen (abgefangen, siehe stubs.log)")
             problems = health(result)
+            if stummer_bus() and not problems:
+                problems = stumm_probleme(result)
             if problems:
                 for p in problems:
                     say("   FEHLER: " + p)
@@ -693,6 +727,10 @@ def main(argv):
     finally:
         if tmpbin:
             shutil.rmtree(tmpbin, ignore_errors=True)
+    if stummer_bus():
+        say("== Gegenprobe mit stummem Systembus bestanden: Oberfläche verbunden, Ausfall einmal gemeldet "
+            "(kein Vergleich mit der Grundlinie)")
+        return 0
     if write:
         with open(baseline_path, "w", encoding="utf-8") as handle:
             handle.write("# Grundlinie der Ladeprüfung (%s): Warnungen und Fehler eines Laufs mit dem ausgelieferten\n"
