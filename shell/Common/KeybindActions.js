@@ -293,7 +293,7 @@ const DMS_ACTIONS = [
         label: "Dashboard: Digital Wellbeing"
     },
     {
-        id: "spawn alpe-dienst ipc call dankdash wallpaper",
+        id: "spawn alpe-dienst ipc call dash toggle wallpaper",
         label: "Wallpaper Browser"
     },
     {

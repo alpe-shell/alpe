@@ -164,7 +164,7 @@ Item {
         SettingsUiState.selectedWidgetTitle = widget?.text ?? widgetId;
         SettingsUiState.selectedWidgetDescription = widget?.description ?? "";
         SettingsUiState.selectedWidgetIcon = widget?.icon ?? "widgets";
-        pageRequested("dankbar_widgets");
+        pageRequested("bar_widgets");
         if (BarWidgetCatalog.hasOptions(widgetId))
             parentModal?.navigateTo("bar_widget");
     }

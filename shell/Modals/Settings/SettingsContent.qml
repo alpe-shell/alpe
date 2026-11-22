@@ -504,11 +504,11 @@ FocusScope {
             "weather": "WeatherSettingsTab.qml",
             // Alpe: unter KWin eigene Seiten für Tastenkürzel und Fensterregeln.
             "keybinds": CompositorService.isKwin ? "AlpeShortcutsTab.qml" : "KeybindsTab.qml",
-            "dankbar_widgets": "WidgetsTab.qml",
+            "bar_widgets": "WidgetsTab.qml",
             "window_rules": CompositorService.isKwin ? "AlpeWindowRulesTab.qml" : "WindowRulesTab.qml",
-            "dankbar_settings": "BarTab.qml",
-            "dankbar_appearance": "BarAppearanceTab.qml",
-            "dankbar_dot": "DotTab.qml",
+            "bar_settings": "BarTab.qml",
+            "bar_appearance": "BarAppearanceTab.qml",
+            "bar_dot": "DotTab.qml",
             "bar_widget": "BarWidgetTab.qml",
             "compositor_layout": "CompositorLayoutTab.qml",
             "dock_general": "DockGeneralTab.qml",
@@ -560,14 +560,14 @@ FocusScope {
             "user_create": "CreateUserTab.qml",
             "autostart": "AutoStartTab.qml",
             "battery": "BatteryTab.qml",
-            "dank_dash": "DashTab.qml",
+            "dash": "DashTab.qml",
             "wellbeing": "DigitalWellbeingTab.qml",
             "mouse_touchpad": "MouseTouchpadTab.qml",
             "keyboard": "KeyboardTab.qml",
             "plugins_manage": "PluginsManageTab.qml"
         })
 
-    readonly property var pagesWithParentModal: ["dankbar_widgets", "window_rules", "notification_rules", "display_config", "users", "time_weather", "weather", "lock_screen", "dank_dash", "wallpaper_cycling", "theme_schedule", "surface_shadows", "keybinds", "dankbar_settings", "dankbar_appearance", "bar_widget", "dock_general", "dock_widgets", "dock_appearance", "dock_advanced", "launcher", "theme", "theme_apps", "media_player", "desktop_widgets", "desktop_widget", "autostart", "compositor_layout", "updater", "display_gamma", "about", "alpe_desktop", "alpe_maintenance", "alpe_peripherals", "alpe_pages", "alpe_device", "power_sleep", "lock_design", "alpe_effects", "alpe_services", "alpe_performance"]
+    readonly property var pagesWithParentModal: ["bar_widgets", "window_rules", "notification_rules", "display_config", "users", "time_weather", "weather", "lock_screen", "dash", "wallpaper_cycling", "theme_schedule", "surface_shadows", "keybinds", "bar_settings", "bar_appearance", "bar_widget", "dock_general", "dock_widgets", "dock_appearance", "dock_advanced", "launcher", "theme", "theme_apps", "media_player", "desktop_widgets", "desktop_widget", "autostart", "compositor_layout", "updater", "display_gamma", "about", "alpe_desktop", "alpe_maintenance", "alpe_peripherals", "alpe_pages", "alpe_device", "power_sleep", "lock_design", "alpe_effects", "alpe_services", "alpe_performance"]
 
     // The page scroller stops at the Loader edges; wheel over the header and gutters lands here instead
     WheelHandler {

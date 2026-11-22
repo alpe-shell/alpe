@@ -6,6 +6,7 @@
 .import "./DockConfig.js" as DockConfig
 .import "./DensityPresets.js" as DensityPresets
 .import "../GridLayout.js" as GridLayout
+.import "./Namen44.js" as Namen44
 
 var PIN_KEYS = ["brightnessDevicePins", "wifiNetworkPins", "bluetoothDevicePins", "audioInputDevicePins", "audioOutputDevicePins"];
 
@@ -787,6 +788,12 @@ function migrateToVersion(obj, targetVersion) {
     if (currentVersion < 43 && targetVersion >= 43) {
         migrateAlpeNames(settings);
         settings.configVersion = 43;
+    }
+
+    // Alpe (v44): gespeicherte Kennungen – Starter-Einträge alpe_*, Logo-Modus "alpe", matugen-Spec "alpe".
+    if (currentVersion < 44 && targetVersion >= 44) {
+        Namen44.migrateSettings(settings);
+        settings.configVersion = 44;
     }
 
     return settings;

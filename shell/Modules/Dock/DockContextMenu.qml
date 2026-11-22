@@ -12,7 +12,7 @@ DockContextMenuBase {
     property var desktopEntry: null
     property var dockApps: null
     readonly property bool isDmsWindow: Paths.isDmsAppId(appData?.appId)
-    readonly property var settingsJumpGroups: visible && appData?.appId === "dms_settings" ? buildSettingsJumpGroups() : []
+    readonly property var settingsJumpGroups: visible && appData?.appId === "alpe_settings" ? buildSettingsJumpGroups() : []
 
     layerNamespace: "dms:dock-context-menu"
 

@@ -15,12 +15,12 @@ import (
 // default. Spec2025 is material-color-utilities' 2025 color spec, which matugen
 // 4.x cannot produce: the palette is generated in-process and handed to matugen
 // through --import-json-string, the same override path stock themes use.
-// SpecDMS is the 2025 palettes with raised accent chroma on Tonal Spot's
+// SpecAlpe is the 2025 palettes with raised accent chroma on Tonal Spot's
 // neutral surfaces. Vibrant only loses its tinted surfaces.
 const (
 	Spec2021 = "2021"
 	Spec2025 = "2025"
-	SpecDMS  = "dms"
+	SpecAlpe = "alpe"
 )
 
 var hexColorPattern = regexp.MustCompile(`^#?[0-9a-fA-F]{6}$`)
@@ -63,14 +63,14 @@ func SpecSupportsScheme(schemeType string) bool {
 // UsesSpecGenerator reports whether the palette comes from the in-process
 // generator instead of matugen's own output.
 func UsesSpecGenerator(spec, schemeType string) bool {
-	return (spec == Spec2025 || spec == SpecDMS) && SpecSupportsScheme(schemeType)
+	return (spec == Spec2025 || spec == SpecAlpe) && SpecSupportsScheme(schemeType)
 }
 
-// dmsPalettes are the accent chromas per scheme under SpecDMS, with the
+// alpePalettes are the accent chromas per scheme under SpecAlpe, with the
 // variant whose tone rules run. Vibrant's rules chase the most saturated tone
 // and only suit Vibrant and Tonal Spot; Expressive and Neutral keep their own
 // fixed tones so low-chroma palettes stay mid-tone instead of washing out.
-var dmsPalettes = map[dynamic.Variant]struct {
+var alpePalettes = map[dynamic.Variant]struct {
 	rules                        dynamic.Variant
 	primary, secondary, tertiary float64
 }{
@@ -81,7 +81,7 @@ var dmsPalettes = map[dynamic.Variant]struct {
 
 func newDMSScheme(seed color.Hct, variant dynamic.Variant, contrast float64, dark bool) *dynamic.Scheme {
 	neutral := dynamic.NewDynamicScheme(seed, dynamic.VariantTonalSpot, contrast, dark, dynamic.PlatformPhone, dynamic.Version2025)
-	recipe, ok := dmsPalettes[variant]
+	recipe, ok := alpePalettes[variant]
 	if !ok {
 		return dynamic.NewDynamicScheme(seed, variant, contrast, dark, dynamic.PlatformPhone, dynamic.Version2025,
 			nil, nil, nil, &neutral.NeutralPalette, &neutral.NeutralVariantPalette)
@@ -102,7 +102,7 @@ func newDMSScheme(seed color.Hct, variant dynamic.Variant, contrast float64, dar
 
 func newScheme(seed color.Hct, variant dynamic.Variant, contrast float64, dark bool, version string) *dynamic.Scheme {
 	switch version {
-	case SpecDMS:
+	case SpecAlpe:
 		return newDMSScheme(seed, variant, contrast, dark)
 	case Spec2025:
 		return dynamic.NewDynamicScheme(seed, variant, contrast, dark, dynamic.PlatformPhone, dynamic.Version2025)

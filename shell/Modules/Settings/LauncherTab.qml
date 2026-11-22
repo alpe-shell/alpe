@@ -20,7 +20,7 @@ Item {
     // Spotlight and island have no footer or border.
     readonly property bool fullLauncherUnused: SettingsData.launcherStyle !== "full" && !SettingsData.connectedFrameModeActive
     readonly property bool spotlightIgnoresSize: spotlightIgnoresRows
-    readonly property var builtInPluginIds: ["dms_settings", "dms_notepad", "dms_sysmon", "dms_colorpicker", "dms_settings_search", "dms_clipboard_search", "dms_power", "dms_vpn", "dms_qr_generator"]
+    readonly property var builtInPluginIds: ["alpe_settings", "alpe_notepad", "alpe_sysmon", "alpe_colorpicker", "alpe_settings_search", "alpe_clipboard_search", "alpe_power", "alpe_vpn", "alpe_qr_generator"]
 
     function openKeybindsSearch(query) {
         if (!root.parentModal)

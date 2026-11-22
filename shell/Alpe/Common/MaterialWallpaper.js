@@ -3,8 +3,8 @@
 .import "Accents.js" as Accents
 .import "Hct.js" as Hct
 
-var builtinIds = ["dank", "bloom", "orbit", "garden", "petal", "dune"];
-var defaultPreset = "dank";
+var builtinIds = ["alpe", "bloom", "orbit", "garden", "petal", "dune"];
+var defaultPreset = "alpe";
 var defaultPattern = "topography";
 var defaultStrength = 0.1;
 var defaultSeed = "#d0bcff";
@@ -48,8 +48,8 @@ function builtinLayout(id) {
     let pattern = defaultPattern;
     let strength = defaultStrength;
     switch (id) {
-    case "dank":
-        layers = [layer("softBurst", 0.842, 0.45, 1.5, 0, "primaryContainer"), layer("dankLogo", 0.842, 0.45, 0.38, 0, "primary"), layer("sunny", 0.133, 0.21, 0.26, 10, "tertiary"), layer("pill", 0.241, 0.91, 0.5, -25, "secondaryContainer")];
+    case "alpe":
+        layers = [layer("softBurst", 0.842, 0.45, 1.5, 0, "primaryContainer"), layer("alpeLogo", 0.842, 0.45, 0.38, 0, "primary"), layer("sunny", 0.133, 0.21, 0.26, 10, "tertiary"), layer("pill", 0.241, 0.91, 0.5, -25, "secondaryContainer")];
         break;
     case "bloom":
         layers = [layer("flower", 0.903, 0.495, 1.15, 12, "primaryContainer"), layer("circle", 0.497, 0.75, 0.7, 0, "secondary", "tertiaryContainer"), layer("cookie6", 0.144, 0.27, 0.3, 0, "primary")];

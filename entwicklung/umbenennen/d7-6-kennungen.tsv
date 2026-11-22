@@ -1,0 +1,32 @@
+# D7.6 (Plan 2.3.2/2.3.5, 0.8 Nr. 13/35): gespeicherte Kennungen – Starter-Plugins alpe_*, Seiten-IDs,
+# Logo-Modus "alpe", Material-Vorlage «Alpe» (Form alpeLogo), matugen-Spec "alpe".
+# Die alten Namen bleiben nur in der Migration v44 (SettingsStore.js, SessionStore.js, Namen44.js), in
+# design.py (Einspielen eines 1.0-Designs) und in deren Tests/Testdaten. design/ zieht über die Migration um.
+ohne	entwicklung/umbenennen/*,docs/plan/*,tests/test_umbenennen.py,shell/Common/settings/SettingsStore.js,shell/Common/settings/SessionStore.js,shell/Common/settings/Namen44.js,tests/data/*,tests/test_einstellungen.mjs,tests/test_design.py,tools/design.py,tools/namen-ausnahmen.txt,design/*,CHANGELOG.md
+wort	dms_settings	alpe_settings
+wort	dms_notepad	alpe_notepad
+wort	dms_sysmon	alpe_sysmon
+wort	dms_colorpicker	alpe_colorpicker
+wort	dms_settings_search	alpe_settings_search
+wort	dms_clipboard_search	alpe_clipboard_search
+wort	dms_power	alpe_power
+wort	dms_vpn	alpe_vpn
+wort	dms_qr_generator	alpe_qr_generator
+text	"dankbar_appearance"	"bar_appearance"
+text	"dankbar_settings"	"bar_settings"
+text	"dankbar_widgets"	"bar_widgets"
+text	"dankbar_dot"	"bar_dot"
+text	"dankbar"	"bar"
+text	"dank_dash"	"dash"
+text	"dank"	"alpe"	shell/Modules/Settings/BarWidgetOptions/AppsDockOptions.qml,shell/Modules/Settings/BarWidgetOptions/LauncherButtonOptions.qml,shell/Modules/Settings/DotTab.qml,shell/Widgets/LauncherLogo.qml,shell/Modules/Settings/WallpaperColorsTab.qml,shell/Alpe/Common/MaterialWallpaper.js,shell/Modules/Settings/Widgets/MaterialWallpaperOptions.qml
+erlaubt	alpeLogo
+wort	dankLogo	alpeLogo
+text	I18n.tr("Dank", "Material wallpaper preset")	"Alpe"	shell/Modules/Settings/Widgets/MaterialWallpaperOptions.qml
+text	"dms"	"alpe"	shell/Common/SettingsData.qml,shell/Modules/Settings/ThemeColorsTab.qml
+text	SpecDMS  = "dms"	SpecAlpe = "alpe"	core/internal/matugen/spec.go
+wort	SpecDMS	SpecAlpe
+wort	dmsPalettes	alpePalettes
+wort	tonalSpotDMS	tonalSpotAlpe
+wort	dmsLogoPath	starterLogoPath
+text	comment: "dms"	comment: "alpe"	shell/Services/AppSearchService.qml
+text	ipc call dankdash wallpaper	ipc call dash toggle wallpaper

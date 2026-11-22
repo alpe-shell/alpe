@@ -20,7 +20,7 @@ step "KWin-Brücke (node)"
 if command -v node >/dev/null; then run node tests/test_bridge.js; else echo "node fehlt – übersprungen"; fi
 
 step "Einstellungen: Migration (node)"
-if command -v node >/dev/null; then run node --test tests/test_einstellungen.mjs; else echo "node fehlt – übersprungen"; fi
+if command -v node >/dev/null; then run node --test tests/test_einstellungen.mjs tests/test_logoform.mjs; else echo "node fehlt – übersprungen"; fi
 
 step "Oberfläche: alle Node-Tests (bekannte Fehlschläge: tests/data/node-bekannte-fehlschlaege.txt)"
 if command -v node >/dev/null; then run python3 tools/node-tests.py; else echo "node fehlt – übersprungen"; fi

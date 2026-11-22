@@ -13,7 +13,7 @@ Column {
     property string editingBarId: ""
     property string renameDraft: ""
     readonly property bool dotEnabled: SettingsData.dotBarConfig?.enabled ?? false
-    readonly property var barPages: ["dankbar_settings", "dankbar_appearance"].map(id => SettingsTabs.page(id)).filter(page => page)
+    readonly property var barPages: ["bar_settings", "bar_appearance"].map(id => SettingsTabs.page(id)).filter(page => page)
 
     BarSelectionState {
         id: bar
@@ -206,14 +206,14 @@ Column {
 
     SettingsSplitRow {
         settingKey: "dotEnabled"
-        tags: ["dot", "dankdot", "companion", "floating", "island", "enable"]
+        tags: ["dot", "companion", "floating", "island", "enable"]
         iconName: "blur_on"
         iconColor: root.dotEnabled ? Theme.primary : Theme.onSurfaceVariant
         title: I18n.tr("Dot", "bar layout: free-floating dot that opens island activities")
         subtitle: I18n.tr("A floating companion that works alongside any bar layout", "bar settings: what the dot is")
         navigable: root.dotEnabled
         checked: root.dotEnabled
-        onNavigated: keyboard => root.parentModal?.navigateTo("dankbar_dot", keyboard)
+        onNavigated: keyboard => root.parentModal?.navigateTo("bar_dot", keyboard)
         onToggled: value => SettingsData.setDotEnabled(value, bar.selectedBarId)
     }
 }

@@ -141,8 +141,11 @@ b = home("neu")
 for app in ("kitty.desktop", "org.kde.dolphin.desktop"):
     write(os.path.join(b, "sys", "applications", app), "[Desktop Entry]\nName=x\nExec=x\n")
 write(os.path.join(b, ".config", "alpe", "settings.json"), {"fontFamily": "Noto Sans", "eigenerSchluessel": 1, "useAutoLocation": False,
-                                                         "dankLauncherV2ShowFooter": False, "alpeLockStyle": "dms"})
-write(os.path.join(b, ".local", "state", "alpe", "session.json"), {"weatherLocation": "Bern"})
+                                                         "dankLauncherV2ShowFooter": False, "alpeLockStyle": "dms",
+                                                         "matugenSpec": "dms", "eigeneListe": ["dms_power", "dms_powerx"],
+                                                         "eigeneWidgets": [{"id": "launcherButton", "launcherLogoMode": "dank"}]})
+write(os.path.join(b, ".local", "state", "alpe", "session.json"), {"weatherLocation": "Bern", "materialWallpapers": {"": {"shared": {"preset": "dank", "seed": "#d0bcff"}}},
+                                                                 "materialWallpaperProfiles": {"eigen": {"name": "dank", "layers": [{"shape": "dankLogo"}]}}})
 write(os.path.join(b, ".config", "kwinrulesrc"), "[General]\nOrder=eigen\n\n[eigen]\nDescription=Firefox\nwmclass=firefox\n")
 out = run(b, "apply", "--ja")
 check(out.returncode == 0 and "eingespielt" in out.stdout, "Einspielen läuft durch\n" + out.stdout + out.stderr)
@@ -151,7 +154,12 @@ s2 = json.load(open(os.path.join(b, ".config", "alpe", "settings.json")))
 check(s2["fontFamily"] == "Inter Variable" and s2["eigenerSchluessel"] == 1, "Design gewinnt, eigene andere Einstellungen bleiben")
 check(s2.get("launcherShowFooter") is False and "dankLauncherV2ShowFooter" not in s2 and s2.get("alpeLockStyle") == "standard", "Schlüssel und Werte aus 1.0 unter den neuen Namen")
 check(s2["customThemeFile"] == os.path.join(base, "farben.json") and os.path.isfile(s2["customThemeFile"]), "Farbschema an Ort und Stelle")
+check(s2["matugenSpec"] == "alpe" and s2["eigeneListe"] == ["alpe_power", "dms_powerx"] and s2["eigeneWidgets"][0]["launcherLogoMode"] == "alpe",
+      "Kennungen der Version 44: matugen-Spec, Starter-Einträge, Logo-Modus")
+check(not any(key.startswith("dms_") for key in s2.get("builtInPluginSettings", {})), "Starter-Einträge des Designs heissen alpe_*")
 se2 = json.load(open(os.path.join(b, ".local", "state", "alpe", "session.json")))
+check(se2["materialWallpapers"][""]["shared"]["preset"] == "alpe" and se2["materialWallpaperProfiles"]["eigen"] == {"name": "dank", "layers": [{"shape": "alpeLogo"}]},
+      "Session: Material-Vorlage «Alpe» und Form alpeLogo, eigene Namen bleiben")
 check(se2["wallpaperPath"] == os.path.join(base, "bilder", "berg.jpg") and os.path.isfile(se2["wallpaperPath"]), "Hintergrund eingespielt")
 check(se2["weatherLocation"] == "Bern" and s2["useAutoLocation"] is False, "eigener Wetterort bleibt (kein Umschalten auf Standort)")
 c = home("leer")
@@ -207,6 +215,23 @@ check("JetBrains Mono" in open(os.path.join(g, ".config", "kitty", "kitty.conf")
       and any(os.path.isfile(os.path.join(g, ".config", "alpe", "design-sicherung", d, "programme", "kitty", "kitty.conf")) for d in saved)
       and os.path.join(g, ".config", "fastfetch", "alpe-logo.txt") in ff and "alpe version --short" in ff,
       "kitty und fastfetch eingespielt, bisherige kitty.conf gesichert, fastfetch mit Logo und Version\n" + out.stdout + out.stderr)
+
+# ---------------------------------------------------------------- Tabellen der Version 44
+# design.py und die Migration der Shell (Namen44.js) führen dieselben Paare alt → neu.
+import importlib.util
+import re
+spec = importlib.util.spec_from_file_location("alpe_design", TOOL)
+werkzeug = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(werkzeug)
+quelle = open(os.path.join(SHELL, "Common", "settings", "Namen44.js"), encoding="utf-8").read()
+paare_shell = set(re.findall(r'"(\w+)": "(\w+)"', quelle))
+paare_werkzeug = set(werkzeug.STARTER_IDS.items()) | {("dms", "alpe")}
+for tabelle in (werkzeug.VALUES_BY_KEY, werkzeug.MATERIAL_VALUES):
+    for werte in tabelle.values():
+        paare_werkzeug |= set(werte.items())
+check(paare_shell == paare_werkzeug and len(paare_shell) == 12, "design.py und Namen44.js führen dieselben Kennungen\n%s" % sorted(paare_shell ^ paare_werkzeug))
+check(werkzeug.RENAMED_VALUES["matugenSpec"] == {"dms": "alpe"} and all(key in quelle for key in list(werkzeug.VALUES_BY_KEY) + list(werkzeug.MATERIAL_KEYS) + list(werkzeug.MATERIAL_VALUES)),
+      "dieselben Schlüssel in beiden Tabellen")
 
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

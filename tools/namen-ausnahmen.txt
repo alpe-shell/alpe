@@ -19,9 +19,12 @@ shell/Common/ConfigIncludeResolve.js	DMS Include Configs	Umzug-Ende	alte Kopfzei
 shell/tests/config-include.test.mjs	DMS Include Configs|dms\.colors	Umzug-Ende	Test dazu
 shell/Common/settings/SettingsStore.js	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|=== "dms"	Umzug-Ende	Migration v43 (alte Schlüssel lesen)
 shell/Common/settings/SettingsStore.js	SESSION_BACKED_PLUGIN_IDS = \["dankNotepadModule"\]	Umzug-Ende	Altdaten des Store-Plugins dankNotepadModule (0.8 Nr. 37)
+shell/Common/settings/Namen44.js	*	Umzug-Ende	Migration v44/Session v8 (alte Kennungen lesen)
+tools/design.py	STARTER_IDS = \{"dms_"|\{"dank": "alpe"\}|\{"dms": "alpe"\}|"dankLogo": "alpeLogo"	Umzug-Ende	alte Kennungen beim Einspielen eines 1.0-Designs (Version 44)
 tools/design.py	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|\{"dms": "standard"\}	Umzug-Ende	alte Schlüssel beim Einspielen eines 1.0-Designs
-tests/test_design.py	dankLauncherV2ShowFooter|"dms"	Umzug-Ende	Test dazu
+tests/test_design.py	dankLauncherV2ShowFooter|"dms"|"dank"|dankLogo|dms_power	Umzug-Ende	Test dazu
 tests/data/einstellungen-1.0/*	*	Umzug-Ende	Einstellungen aus 1.0 als Testdaten
+tests/data/einstellungen-v43/*	*	Umzug-Ende	Einstellungen auf Version 43 als Testdaten
 tests/test_einstellungen.mjs	*	Umzug-Ende	Test der Migration v43/v44
 tools/*	dms\.service|\.config/dms|state/dms|cache/dms|hypr/dms|/usr/bin/dms|dux-shell|dms-cli|DankMaterialShell|dev\.duxlabs\.shell	E4	1.0-Einrichtung in den Werkzeugen (0.7 Nr. 5), ersetzt in E4/F1
 entwicklung/ladepruefung/ladepruefung.py	dms	Umzug-Ende	Schutzprüfung gegen den laufenden 1.0-Dienst

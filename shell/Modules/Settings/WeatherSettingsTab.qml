@@ -186,13 +186,13 @@ Item {
             SettingsNavRow {
                 title: I18n.tr("Dashboard")
                 iconName: "space_dashboard"
-                onClicked: keyboard => root.parentModal?.navigateTo("dank_dash", keyboard)
+                onClicked: keyboard => root.parentModal?.navigateTo("dash", keyboard)
             }
 
             SettingsNavRow {
                 title: I18n.tr("Bar widgets")
                 iconName: "widgets"
-                onClicked: keyboard => root.parentModal?.navigateTo("dankbar_widgets", keyboard)
+                onClicked: keyboard => root.parentModal?.navigateTo("bar_widgets", keyboard)
             }
         }
     }

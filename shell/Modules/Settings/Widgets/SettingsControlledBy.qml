@@ -45,7 +45,7 @@ StyledRect {
         case "shadows":
             return "surface_shadows";
         default:
-            return section === "frameConnectedOptions" ? "dankbar_settings" : "dankbar_appearance";
+            return section === "frameConnectedOptions" ? "bar_settings" : "bar_appearance";
         }
     }
 

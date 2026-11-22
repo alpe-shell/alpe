@@ -86,7 +86,7 @@ Item {
                 hint: I18n.tr("Media")
                 iconName: "dashboard"
                 onClicked: keyboard => {
-                    root.parentModal?.navigateTo("dank_dash", keyboard);
+                    root.parentModal?.navigateTo("dash", keyboard);
                     SettingsSearchService.navigateToSection("dashOptions:media");
                 }
             }

@@ -40,7 +40,7 @@ Item {
         case "compositor":
             return CompositorService.isKnownCompositor ? "compositor" : fallback;
         case "os":
-        case "dank":
+        case "alpe":
             return mode;
         case "apps":
             return "apps";
@@ -78,22 +78,16 @@ Item {
         contrastOverride: root.contrast
     }
 
-    IconImage {
-        visible: root.resolvedMode === "dank"
+    // Alpe-Zeichen: gezeichnet aus Alpe/Widgets/LogoShape.js (dieselbe Quelle wie die Material-Vorlage «Alpe»).
+    Loader {
+        active: root.resolvedMode === "alpe"
         anchors.centerIn: parent
         width: root.size
         height: root.size
-        smooth: true
-        mipmap: true
-        asynchronous: true
-        source: "file://" + Theme.shellDir + "/assets/alpe-zeichen.svg"
-        layer.enabled: root.colorize
-        layer.smooth: true
-        layer.mipmap: true
-        layer.effect: MultiEffect {
-            saturation: 0
-            colorization: 1
-            colorizationColor: root.resolvedColor
+        sourceComponent: AlpeMaterialShape {
+            shape: "alpeLogo"
+            respectThemeShape: false
+            color: root.colorize ? root.resolvedColor : "#ffffff"
         }
     }
 

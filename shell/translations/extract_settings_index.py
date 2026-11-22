@@ -186,10 +186,10 @@ SIDEBAR_GATE_CONDITIONS = [
 FILE_PAGE_MAP = {
     "WallpaperColorsTab.qml": "personalization",
     "ThemeSurfacesTab.qml": "theme_surfaces",
-    "WidgetsTab.qml": "dankbar_widgets",
+    "WidgetsTab.qml": "bar_widgets",
     "NotificationsTab.qml": "notifications",
     "UserAccountsTab.qml": "user_accounts",
-    "BarHubHeader.qml": "dankbar",
+    "BarHubHeader.qml": "bar",
     "DockHubHeader.qml": "dock",
     "PluginsHubHeader.qml": "plugins",
 }

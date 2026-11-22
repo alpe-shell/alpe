@@ -70,7 +70,17 @@ RENAMED_KEYS = {
     "runDmsMatugenTemplates": "runMatugenTemplates",
     "dmsWindowsFloatingSeeded": "shellWindowsFloatingSeeded",
 }
-RENAMED_VALUES = {"alpeLockStyle": {"dms": "standard"}, "alpeHyprBlurMode": {"dms": "standard"}}
+RENAMED_VALUES = {"alpeLockStyle": {"dms": "standard"}, "alpeHyprBlurMode": {"dms": "standard"},
+                  "matugenSpec": {"dms": "alpe"}}
+# Gespeicherte Kennungen (Migration auf Version 44 bzw. Session 8, dieselben Tabellen wie
+# shell/Common/settings/Namen44.js; tests/test_design.py vergleicht sie): Starter-Einträge als
+# Schlüssel oder Wert an beliebiger Stelle, Werte unter bestimmten Schlüsseln.
+STARTER_IDS = {"dms_" + name: "alpe_" + name for name in (
+    "settings", "notepad", "sysmon", "colorpicker", "settings_search", "clipboard_search",
+    "power", "vpn", "qr_generator")}
+VALUES_BY_KEY = {"launcherLogoMode": {"dank": "alpe"}, "islandFreeIconMode": {"dank": "alpe"}}
+MATERIAL_KEYS = ("materialWallpapers", "materialWallpaperProfiles")
+MATERIAL_VALUES = {"preset": {"dank": "alpe"}, "shape": {"dankLogo": "alpeLogo"}}
 # Wer eine Leiste oder ein Dock für einen bestimmten Bildschirm hat, bekommt sie auf allen
 SCREEN_KEYS = {"screenPreferences": ["all"], "frameScreenPreferences": ["all"]}
 # settings.json: so beim neuen Nutzer, egal wie beim Exportierenden
@@ -330,6 +340,36 @@ def renamed(settings):
     for key, values in RENAMED_VALUES.items():
         if isinstance(out.get(key), str) and out[key] in values:
             out[key] = values[out[key]]
+    return deep_renamed(out, STARTER_IDS, VALUES_BY_KEY)
+
+
+def deep_renamed(value, ids, by_key):
+    """Kennungen im ganzen Baum umbenennen; ein schon vorhandener neuer Schlüssel gewinnt."""
+    if isinstance(value, str):
+        return ids.get(value, value)
+    if isinstance(value, list):
+        return [deep_renamed(item, ids, by_key) for item in value]
+    if not isinstance(value, dict):
+        return value
+    out = {}
+    for key, child in value.items():
+        if isinstance(child, str) and child in by_key.get(key, {}):
+            child = by_key[key][child]
+        else:
+            child = deep_renamed(child, ids, by_key)
+        if key not in ids:
+            out[key] = child
+        elif ids[key] not in value:
+            out[ids[key]] = child
+    return out
+
+
+def renamed_session(session):
+    """Dasselbe für session.json (Starter-Einträge in Pins, Material-Vorlage «Alpe»)."""
+    out = deep_renamed(session, STARTER_IDS, {})
+    for key in MATERIAL_KEYS:
+        if key in out:
+            out[key] = deep_renamed(out[key], {}, MATERIAL_VALUES)
     return out
 
 
@@ -368,7 +408,7 @@ def export(variant, mode, ask=input):
     dynamic = out.get("currentThemeName") == "dynamic"
     save_json(os.path.join(target, "settings.json"), out)
 
-    session = load_json(SESSION, {})
+    session = renamed_session(load_json(SESSION, {}) or {})
     kept = {k: session[k] for k in SESSION_KEEP if k in session}
     if not session.get("perModeWallpaper"):
         # Getrennte Bilder für Hell und Dunkel nutzt nur, wer perModeWallpaper eingeschaltet hat
@@ -682,8 +722,8 @@ def write_design(variant, source, base):
     save_json(SETTINGS, settings)
 
     ids = desktop_ids()
-    session = load_json(SESSION, {}) or {}
-    design_session = fill(load_json(os.path.join(source, "session.json"), {}), base)
+    session = renamed_session(load_json(SESSION, {}) or {})
+    design_session = renamed_session(fill(load_json(os.path.join(source, "session.json"), {}), base))
     for key in ("dockPins", "barPinnedApps"):
         if key in design_session:
             design_session[key] = installed_pins(design_session[key], ids)

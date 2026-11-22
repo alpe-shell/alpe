@@ -5,7 +5,7 @@ import qs.Common
 
 QtObject {
     readonly property var builtinLabels: ({
-            "dank": I18n.tr("Dank", "Material wallpaper preset"),
+            "alpe": "Alpe",
             "bloom": I18n.tr("Bloom", "Material wallpaper preset"),
             "orbit": I18n.tr("Orbit", "Material wallpaper preset"),
             "garden": I18n.tr("Garden", "Material wallpaper preset"),

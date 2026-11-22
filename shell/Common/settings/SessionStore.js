@@ -1,6 +1,7 @@
 .pragma library
 .import "./SessionSpec.js" as SpecModule
 .import "../../Alpe/Common/settings/SpecUtil.js" as Util
+.import "./Namen44.js" as Namen44
 
 function parse(root, jsonObj) {
     var SPEC = SpecModule.SPEC;
@@ -136,6 +137,12 @@ function migrateToVersion(obj, targetVersion, settingsData) {
         if (session.trayItemOrder !== undefined)
             session.trayItemOrder = stripTrayKeys(session.trayItemOrder);
         session.configVersion = 7;
+    }
+
+    // Alpe (v8, zusammen mit Einstellungen v44): Starter-Einträge alpe_*, Material-Vorlage "alpe", Form alpeLogo.
+    if (currentVersion < 8) {
+        Namen44.migrateSession(session);
+        session.configVersion = 8;
     }
     return session;
 }

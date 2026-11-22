@@ -24,7 +24,7 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("SettingsData")
 
-    readonly property int settingsConfigVersion: 43
+    readonly property int settingsConfigVersion: 44
 
     enum Position {
         Top,
@@ -3081,7 +3081,7 @@ Singleton {
     }
 
     function setMatugenSpec(spec) {
-        var normalized = spec === "2025" || spec === "dms" ? spec : "2021";
+        var normalized = spec === "2025" || spec === "alpe" ? spec : "2021";
         if (matugenSpec === normalized)
             return;
         if (normalized !== "2021") {

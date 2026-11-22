@@ -187,81 +187,81 @@ Singleton {
         });
     }
 
-    readonly property string dmsLogoPath: Qt.resolvedUrl("../assets/alpe-zeichen-akzent.svg")
+    readonly property string starterLogoPath: Qt.resolvedUrl("../assets/alpe-zeichen-akzent.svg")
 
     readonly property var builtInPlugins: ({
-            "dms_settings": {
-                id: "dms_settings",
+            "alpe_settings": {
+                id: "alpe_settings",
                 name: I18n.tr("Settings", "settings window title"),
-                icon: "svg+corner:" + dmsLogoPath + "|settings",
+                icon: "svg+corner:" + starterLogoPath + "|settings",
                 cornerIcon: "settings",
-                comment: "dms",
+                comment: "alpe",
                 action: "ipc:settings",
                 categories: ["Settings", "System"],
                 defaultTrigger: "",
                 isLauncher: false
             },
-            "dms_notepad": {
-                id: "dms_notepad",
+            "alpe_notepad": {
+                id: "alpe_notepad",
                 name: I18n.tr("Notepad", "Notepad"),
-                icon: "svg+corner:" + dmsLogoPath + "|description",
+                icon: "svg+corner:" + starterLogoPath + "|description",
                 cornerIcon: "description",
-                comment: "dms",
+                comment: "alpe",
                 action: "ipc:notepad",
                 categories: ["Office", "Utility"],
                 defaultTrigger: "",
                 isLauncher: false
             },
-            "dms_sysmon": {
-                id: "dms_sysmon",
+            "alpe_sysmon": {
+                id: "alpe_sysmon",
                 name: I18n.tr("System Monitor", "sysmon window title"),
-                icon: "svg+corner:" + dmsLogoPath + "|monitor_heart",
+                icon: "svg+corner:" + starterLogoPath + "|monitor_heart",
                 cornerIcon: "monitor_heart",
-                comment: "dms",
+                comment: "alpe",
                 action: "ipc:processlist",
                 categories: ["System", "Monitor"],
                 defaultTrigger: "",
                 isLauncher: false
             },
-            "dms_colorpicker": {
-                id: "dms_colorpicker",
+            "alpe_colorpicker": {
+                id: "alpe_colorpicker",
                 name: I18n.tr("Color Picker"),
-                icon: "svg+corner:" + dmsLogoPath + "|palette",
+                icon: "svg+corner:" + starterLogoPath + "|palette",
                 cornerIcon: "palette",
-                comment: "dms",
+                comment: "alpe",
                 action: "ipc:color-picker",
                 categories: ["Graphics", "Utility"],
                 defaultTrigger: "",
                 isLauncher: false
             },
-            "dms_power": {
-                id: "dms_power",
+            "alpe_power": {
+                id: "alpe_power",
                 name: I18n.tr("Power"),
                 cornerIcon: "power_settings_new",
-                comment: "dms",
+                comment: "alpe",
                 defaultTrigger: "pw",
                 isLauncher: true,
                 viewMode: "list",
                 viewModeEnforced: true,
                 defaultSectionPriority: 2.3
             },
-            "dms_vpn": {
-                id: "dms_vpn",
+            "alpe_vpn": {
+                id: "alpe_vpn",
                 name: I18n.tr("VPN", "virtual private network, widget and page title"),
                 cornerIcon: "vpn_key",
-                comment: "dms",
+                comment: "alpe",
                 defaultTrigger: "",
                 isLauncher: true,
                 viewMode: "list",
                 viewModeEnforced: true,
                 defaultSectionPriority: 2.4
             },
-            "dms_qr_generator": {
-                id: "dms_qr_generator",
+            "alpe_qr_generator": {
+                id: "alpe_qr_generator",
                 name: I18n.tr("QR Generator"),
-                icon: "svg+corner:" + dmsLogoPath + "|qr_code",
+                icon: "svg+corner:" + starterLogoPath + "|qr_code",
                 cornerIcon: "qr_code",
-                comment: "dms",
+                comment: "alpe",
                 action: "ipc:qr-generator",
                 categories: ["Utility"],
                 defaultTrigger: "qrg",
@@ -269,19 +269,19 @@ Singleton {
                 viewMode: "list",
                 viewModeEnforced: true
             },
-            "dms_settings_search": {
-                id: "dms_settings_search",
+            "alpe_settings_search": {
+                id: "alpe_settings_search",
                 name: I18n.tr("Search settings", "launcher plugin name that searches Alpe settings"),
                 cornerIcon: "search",
                 comment: I18n.tr("Alpe Settings"),
                 defaultTrigger: "?",
                 isLauncher: true
             },
-            "dms_clipboard_search": {
-                id: "dms_clipboard_search",
+            "alpe_clipboard_search": {
+                id: "alpe_clipboard_search",
                 name: I18n.tr("Clipboard"),
                 cornerIcon: "content_paste",
-                comment: "dms",
+                comment: "alpe",
                 defaultTrigger: "cb",
                 isLauncher: true,
                 viewMode: "list",
@@ -380,7 +380,7 @@ Singleton {
     }
 
     function getBuiltInLauncherItems(pluginId, query, allowEmptyQuery) {
-        if (pluginId === "dms_power") {
+        if (pluginId === "alpe_power") {
             const q = (query || "").toString().trim().toLowerCase();
             return getPowerLauncherActions().filter(a => {
                 if (!q)
@@ -399,7 +399,7 @@ Singleton {
                     }));
         }
 
-        if (pluginId === "dms_clipboard_search") {
+        if (pluginId === "alpe_clipboard_search") {
             const trimmed = (query || "").toString().trim();
             const entries = ClipboardService.getCachedLauncherSearchEntries(trimmed, 20).slice().sort((a, b) => {
                 if (a.pinned !== b.pinned)
@@ -412,7 +412,7 @@ Singleton {
                     }));
         }
 
-        if (pluginId === "dms_vpn") {
+        if (pluginId === "alpe_vpn") {
             if (!BackendNetworkService.vpnAvailable)
                 return [];
             const q = (query || "").toString().trim().toLowerCase();
@@ -442,7 +442,7 @@ Singleton {
             });
         }
 
-        if (pluginId === "dms_qr_generator") {
+        if (pluginId === "alpe_qr_generator") {
             const text = (query || "").toString().trim();
             return [
                 {
@@ -456,7 +456,7 @@ Singleton {
             ];
         }
 
-        if (pluginId !== "dms_settings_search")
+        if (pluginId !== "alpe_settings_search")
             return [];
 
         const results = SettingsSearchService.searchForLauncher(query);

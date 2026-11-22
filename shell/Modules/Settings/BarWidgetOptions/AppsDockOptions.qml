@@ -129,14 +129,14 @@ Column {
         SettingsButtonGroupRow {
             resetStore: root.apps
             resetKeys: ["launcherLogoMode"]
-            readonly property var modes: ["apps", "os", "dank", "compositor", "custom"]
+            readonly property var modes: ["apps", "os", "alpe", "compositor", "custom"]
 
             text: I18n.tr("Icon")
             enabled: root.apps.get("launcherEnabled")
             buttonPadding: Theme.spacingS
             minButtonWidth: 44
             textSize: Theme.fontSizeSmall
-            model: [I18n.tr("Apps Icon"), I18n.tr("OS Logo"), "Dank", root.compositorLabel, I18n.tr("Custom")]
+            model: [I18n.tr("Apps Icon"), I18n.tr("OS Logo"), "Alpe", root.compositorLabel, I18n.tr("Custom")]
             currentIndex: Math.max(0, modes.indexOf(root.apps.get("launcherLogoMode")))
             onSelectionChanged: (index, selected) => {
                 if (!selected)

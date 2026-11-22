@@ -30,7 +30,7 @@ SettingsCard {
             if (!root.parentModal)
                 return;
             SettingsSearchService.navigateToSection("islandHomeLayout");
-            root.parentModal.navigateTo("dankbar_widgets", keyboard);
+            root.parentModal.navigateTo("bar_widgets", keyboard);
         }
     }
 

@@ -21,7 +21,7 @@ Item {
 
     readonly property bool highContrast: dot.setting("islandHighContrast")
     readonly property bool paletteTinted: ["bright", "dim"].includes(dot.setting("islandPalette"))
-    readonly property var iconModes: ["icon", "os", "dank", "compositor", "custom"]
+    readonly property var iconModes: ["icon", "os", "alpe", "compositor", "custom"]
     readonly property string iconMode: dot.setting("islandFreeIconMode")
     readonly property string iconColor: dot.setting("islandFreeIconColor")
     readonly property bool iconColorCustom: iconColor !== "" && iconColor !== "primary" && iconColor !== "surface"
@@ -48,7 +48,7 @@ Item {
     SettingsPage {
         SettingsCard {
             settingKey: "dotSize"
-            tags: ["dot", "dankdot", "size", "diameter", "idle", "fade"]
+            tags: ["dot", "size", "diameter", "idle", "fade"]
             iconName: "blur_on"
             title: I18n.tr("General")
 

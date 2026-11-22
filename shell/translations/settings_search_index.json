@@ -276,10 +276,10 @@
     "page": "personalization"
   },
   {
-    "section": "_hub_dankbar",
+    "section": "_hub_bar",
     "label": "Bar",
     "tabIndex": -1,
-    "page": "dankbar",
+    "page": "bar",
     "category": "Bar",
     "keywords": [
       "appearance",
@@ -315,7 +315,7 @@
       "taskbar",
       "topbar"
     ],
-    "page": "dankbar"
+    "page": "bar"
   },
   {
     "section": "barConfigurations",
@@ -336,7 +336,7 @@
       "taskbar",
       "topbar"
     ],
-    "page": "dankbar",
+    "page": "bar",
     "icon": "dashboard"
   },
   {
@@ -999,7 +999,6 @@
     "keywords": [
       "bar",
       "companion",
-      "dankdot",
       "dot",
       "enable",
       "floating",
@@ -1009,7 +1008,7 @@
       "taskbar",
       "topbar"
     ],
-    "page": "dankbar",
+    "page": "bar",
     "icon": "blur_on"
   },
   {
@@ -1285,7 +1284,7 @@
       "topbar",
       "widgets"
     ],
-    "page": "dankbar_widgets",
+    "page": "bar_widgets",
     "icon": "view_in_ar"
   },
   {
@@ -1596,13 +1595,13 @@
     "tabIndex": -1,
     "category": "Wallpaper & colors",
     "keywords": [
+      "alpe",
       "background",
       "bg",
       "bloom",
       "colors",
       "colour",
       "colours",
-      "dank",
       "desktop",
       "dune",
       "garden",
@@ -10002,10 +10001,10 @@
     "optionFile": "IslandOptions.qml"
   },
   {
-    "section": "_hub_dankbar_widgets",
+    "section": "_hub_bar_widgets",
     "label": "Bar widgets",
     "tabIndex": 22,
-    "page": "dankbar_widgets",
+    "page": "bar_widgets",
     "category": "Bar widgets",
     "keywords": [
       "bar",
@@ -17577,7 +17576,6 @@
     "category": "Dot",
     "keywords": [
       "bar",
-      "dankdot",
       "diameter",
       "dot",
       "fade",

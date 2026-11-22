@@ -3,7 +3,7 @@
 .import "LogoShape.js" as Logo
 
 var catalog = Object.assign({
-    dankLogo: Logo.cubics
+    alpeLogo: Logo.cubics
 }, Data.cubics);
 
 function rotationScale(kind, aspectRatio = 1) {

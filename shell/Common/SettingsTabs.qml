@@ -94,24 +94,23 @@ Singleton {
             "separator": true
         },
         {
-            "id": "dankbar",
-            "aliases": ["bar"],
+            "id": "bar",
             "text": I18n.tr("Bar"),
             "icon": "toolbar",
             "hint": I18n.tr("Layout, position, appearance", "settings hub hint for the bar pages"),
             "hubHeader": "BarHubHeader",
             "children": [
                 {
-                    "id": "dankbar_settings",
+                    "id": "bar_settings",
                     "hidden": true,
-                    "aliases": ["dank_island", "island"],
+                    "aliases": ["island"],
                     "text": I18n.tr("General", "adjective, settings page and section title for general options"),
                     "icon": "tune",
                     "tabIndex": 3,
                     "hint": I18n.tr("Position, displays, auto-hide, behavior")
                 },
                 {
-                    "id": "dankbar_appearance",
+                    "id": "bar_appearance",
                     "hidden": true,
                     "aliases": ["frame"],
                     "text": I18n.tr("Appearance", "settings page and section title for visual options"),
@@ -120,9 +119,9 @@ Singleton {
                     "hint": I18n.tr("Background, corners, spacing, widget style")
                 },
                 {
-                    "id": "dankbar_dot",
+                    "id": "bar_dot",
                     "hidden": true,
-                    "aliases": ["dot", "dankdot"],
+                    "aliases": ["dot"],
                     "text": I18n.tr("Dot", "bar layout: free-floating dot that opens island activities"),
                     "icon": "blur_on",
                     "tabIndex": 65,
@@ -131,12 +130,12 @@ Singleton {
             ]
         },
         {
-            "id": "dankbar_widgets",
+            "id": "bar_widgets",
             "text": I18n.tr("Bar widgets"),
             "icon": "widgets",
             "tabIndex": 22,
             "hubHeader": "WidgetsTab",
-            "aliases": ["bar_widgets", "workspaces", "workspaces_widgets"],
+            "aliases": ["workspaces", "workspaces_widgets"],
             "hint": I18n.tr("Add, reorder, configure", "settings sidebar hint for the bar widgets page"),
             "children": [
                 {
@@ -200,7 +199,7 @@ Singleton {
             "hint": I18n.tr("Style, search, hidden apps", "settings sidebar hint for the launcher page")
         },
         {
-            "id": "dank_dash",
+            "id": "dash",
             "text": I18n.tr("Dashboard", "settings page name for the dank dash popout"),
             "icon": "space_dashboard",
             "tabIndex": 43,

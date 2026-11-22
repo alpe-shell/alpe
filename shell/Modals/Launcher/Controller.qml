@@ -231,7 +231,7 @@ Item {
             if (!active)
                 return;
 
-            const clipboardBuiltInActive = activePluginId === "dms_clipboard_search";
+            const clipboardBuiltInActive = activePluginId === "alpe_clipboard_search";
             if (!clipboardBuiltInActive && !clipboardSearchEnabledInAll())
                 return;
             if (!clipboardBuiltInActive && searchMode !== "all")
@@ -241,7 +241,7 @@ Item {
             if (trimmed.length < 2 && query.length > 0)
                 return;
             const triggerMatch = detectTrigger(trimmed);
-            const effectiveQuery = clipboardBuiltInActive && triggerMatch.pluginId === "dms_clipboard_search" ? triggerMatch.query : trimmed;
+            const effectiveQuery = clipboardBuiltInActive && triggerMatch.pluginId === "alpe_clipboard_search" ? triggerMatch.query : trimmed;
             if (query !== effectiveQuery)
                 return;
             if (!clipboardBuiltInActive && _refreshClipboardResults())
@@ -411,9 +411,9 @@ Item {
     function sectionViewPreference(sectionId) {
         switch (sectionId) {
         case "clipboard":
-            return getPluginViewPref("dms_clipboard_search");
+            return getPluginViewPref("alpe_clipboard_search");
         case "settings":
-            return getPluginViewPref("dms_settings_search");
+            return getPluginViewPref("alpe_settings_search");
         default:
             if (sectionId?.startsWith("plugin_"))
                 return getPluginViewPref(sectionId.substring(7));
@@ -1584,7 +1584,7 @@ Item {
                 if (currentVersion !== _searchVersion)
                     return;
                 var plugin = allPluginsOrdered[i];
-                if (plugin.isBuiltIn && (plugin.id === "dms_settings_search" || plugin.id === "dms_clipboard_search"))
+                if (plugin.isBuiltIn && (plugin.id === "alpe_settings_search" || plugin.id === "alpe_clipboard_search"))
                     continue;
                 var items = _pluginQueryItems(plugin);
                 pluginItems[plugin.id] = items;
@@ -1880,7 +1880,7 @@ Item {
     }
 
     function transformBuiltInSearchItem(item, pluginId) {
-        if (pluginId === "dms_clipboard_search" || item.type === "clipboard") {
+        if (pluginId === "alpe_clipboard_search" || item.type === "clipboard") {
             var transformed = transformClipboardEntry(item.data || item);
             if (item._preScored !== undefined)
                 transformed._preScored = item._preScored;
@@ -1906,7 +1906,7 @@ Item {
     }
 
     function clipboardSearchEnabledInAll() {
-        return builtInLauncherVisibleInAll("dms_clipboard_search") && ClipboardService.clipboardAvailable;
+        return builtInLauncherVisibleInAll("alpe_clipboard_search") && ClipboardService.clipboardAvailable;
     }
 
     function appendSharedAllResults(allItems, query) {
@@ -1924,13 +1924,13 @@ Item {
 
     function _settingsSharedItems(query) {
         var items = [];
-        if (!builtInLauncherVisibleInAll("dms_settings_search"))
+        if (!builtInLauncherVisibleInAll("alpe_settings_search"))
             return items;
-        var settingsItems = AppSearchService.getBuiltInLauncherItems("dms_settings_search", query);
+        var settingsItems = AppSearchService.getBuiltInLauncherItems("alpe_settings_search", query);
         var settingsLimit = Math.min(settingsItems.length, 8);
         for (var i = 0; i < settingsLimit; i++) {
             settingsItems[i]._preScored = 890 - i;
-            items.push(transformBuiltInSearchItem(settingsItems[i], "dms_settings_search"));
+            items.push(transformBuiltInSearchItem(settingsItems[i], "alpe_settings_search"));
         }
         return items;
     }
@@ -1939,11 +1939,11 @@ Item {
         var items = [];
         if (!clipboardSearchEnabledInAll())
             return items;
-        var clipboardItems = AppSearchService.getBuiltInLauncherItems("dms_clipboard_search", query);
+        var clipboardItems = AppSearchService.getBuiltInLauncherItems("alpe_clipboard_search", query);
         var clipboardLimit = Math.min(clipboardItems.length, 8);
         for (var j = 0; j < clipboardLimit; j++) {
             clipboardItems[j]._preScored = 840 - j;
-            items.push(transformBuiltInSearchItem(clipboardItems[j], "dms_clipboard_search"));
+            items.push(transformBuiltInSearchItem(clipboardItems[j], "alpe_clipboard_search"));
         }
         return items;
     }
@@ -2181,7 +2181,7 @@ Item {
         var unorderedPriority = 2.6 + order.length * 0.01;
 
         for (var d = 0; d < baseDefs.length; d++) {
-            var virtualId = baseDefs[d].id === "settings" ? "dms_settings_search" : baseDefs[d].id === "clipboard" ? "dms_clipboard_search" : "";
+            var virtualId = baseDefs[d].id === "settings" ? "alpe_settings_search" : baseDefs[d].id === "clipboard" ? "alpe_clipboard_search" : "";
             if (virtualId && orderMap[virtualId] !== undefined)
                 baseDefs[d].priority = 2.6 + orderMap[virtualId] * 0.01;
         }

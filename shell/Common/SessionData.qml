@@ -16,7 +16,7 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("SessionData")
 
-    readonly property int sessionConfigVersion: 7
+    readonly property int sessionConfigVersion: 8
 
     signal loaded
     signal brightnessDisplayHintChanged(string deviceName)
@@ -342,6 +342,7 @@ Singleton {
                 const settingsDataRef = (typeof SettingsData !== "undefined") ? SettingsData : null;
                 const migrated = Store.migrateToVersion(obj, sessionConfigVersion, settingsDataRef);
                 if (migrated) {
+                    _backupBeforeMigration(obj, oldVersion);
                     _pendingMigration = migrated;
                     obj = migrated;
                 }
@@ -371,6 +372,14 @@ Singleton {
 
     function _checkSessionWritable() {
         sessionWritableCheckProcess.running = true;
+    }
+
+    // Alpe: Die Datei vor der Migration bleibt als session.v<alt>.json liegen (wie settings.v<alt>.json).
+    function _backupBeforeMigration(obj, oldVersion) {
+        if (sessionBackup.path.toString() !== "" || !obj || Object.keys(obj).length === 0)
+            return;
+        sessionBackup.path = StandardPaths.writableLocation(StandardPaths.GenericStateLocation) + "/" + Paths.appDir + "/session.v" + oldVersion + ".json";
+        sessionBackup.setText(JSON.stringify(obj, null, 2));
     }
 
     function _onWritableCheckComplete(writable) {
@@ -425,6 +434,7 @@ Singleton {
                 const settingsDataRef = (typeof SettingsData !== "undefined") ? SettingsData : null;
                 const migrated = Store.migrateToVersion(obj, sessionConfigVersion, settingsDataRef);
                 if (migrated) {
+                    _backupBeforeMigration(obj, oldVersion);
                     _pendingMigration = migrated;
                     obj = migrated;
                 }
@@ -1774,6 +1784,15 @@ Singleton {
             root._isReadOnly = true;
             root._hasUnsavedChanges = root._checkForUnsavedChanges();
         }
+    }
+
+    FileView {
+        id: sessionBackup
+
+        preload: false
+        blockWrites: true
+        atomicWrites: true
+        printErrors: false
     }
 
     Process {

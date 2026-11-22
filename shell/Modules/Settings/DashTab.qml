@@ -24,7 +24,7 @@ FocusScope {
             title: I18n.tr("Weather")
 
             SettingsNavRow {
-                tab: "dank_dash"
+                tab: "dash"
                 settingKey: "dashWeatherSettings"
                 title: I18n.tr("Weather")
                 iconName: "partly_cloudy_day"
@@ -36,7 +36,7 @@ FocusScope {
             title: I18n.tr("Media player")
 
             SettingsNavRow {
-                tab: "dank_dash"
+                tab: "dash"
                 settingKey: "dashMediaSettings"
                 title: I18n.tr("Media player")
                 hint: I18n.tr("Lyrics providers", "Lyrics source priority settings")
@@ -49,7 +49,7 @@ FocusScope {
             title: I18n.tr("Digital wellbeing", "settings page and dashboard tab title, screen time tracking")
 
             SettingsNavRow {
-                tab: "dank_dash"
+                tab: "dash"
                 settingKey: "dashWellbeingSettings"
                 title: I18n.tr("Digital wellbeing", "settings page and dashboard tab title, screen time tracking")
                 hint: I18n.tr("Screen time and app limits", "settings sidebar hint and dashboard tab description for digital wellbeing")
@@ -61,7 +61,7 @@ FocusScope {
         SettingsCard {
             title: I18n.tr("Tabs", "noun, card title for dashboard tabs")
             settingKey: "dashTabs"
-            tab: "dank_dash"
+            tab: "dash"
 
             headerActions: AlpeActionButton {
                 iconName: "refresh"
@@ -98,7 +98,7 @@ FocusScope {
                     }
                 ]
                 settingKey: "dashTabPosition"
-                tab: "dank_dash"
+                tab: "dash"
                 tags: ["dashboard", "tabs", "position", "navigation"]
                 currentValue: (positions.find(option => option.value === SettingsData.dashTabPosition) ?? positions[0]).text
                 options: positions.map(option => option.text)
@@ -111,7 +111,7 @@ FocusScope {
 
             SettingsToggleRow {
                 settingKey: "dashTabsEvenlySpaced"
-                tab: "dank_dash"
+                tab: "dash"
                 tags: ["dashboard", "tabs", "spacing", "navigation"]
                 text: I18n.tr("Evenly space tabs", "dashboard tab bar toggle")
                 checked: SettingsData.dashTabsEvenlySpaced
@@ -186,7 +186,7 @@ FocusScope {
 
                 title: entry?.text ?? ""
                 settingKey: "dashOptions:" + modelData
-                tab: "dank_dash"
+                tab: "dash"
                 collapsible: true
                 expanded: false
 

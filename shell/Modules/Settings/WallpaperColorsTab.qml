@@ -341,7 +341,7 @@ Column {
         SettingsRow {
             tab: "wallpaper"
             settingKey: "materialPresets"
-            tags: ["material", "shape", "preset", "dank", "bloom", "orbit", "garden", "petal", "dune"]
+            tags: ["material", "shape", "preset", "alpe", "bloom", "orbit", "garden", "petal", "dune"]
             visible: root.materialWallpaper
             title: I18n.tr("Material", "wallpaper type")
             subtitle: I18n.tr("Shown while no image or color is set", "Material wallpaper presets description")

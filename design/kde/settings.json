@@ -356,23 +356,23 @@
     }
   ],
   "builtInPluginSettings": {
-    "dms_settings_search": {
+    "alpe_settings_search": {
       "trigger": "?"
     },
-    "dms_notepad": {
+    "alpe_notepad": {
       "enabled": false
     },
-    "dms_clipboard_search": {
+    "alpe_clipboard_search": {
       "trigger": "cb"
     },
-    "dms_power": {
+    "alpe_power": {
       "trigger": "pw"
     },
-    "dms_qr_generator": {
+    "alpe_qr_generator": {
       "trigger": "qrg"
     }
   },
-  "configVersion": 43,
+  "configVersion": 44,
   "lockScreenWidgetInstances": [
     {
       "id": "lock_clock",

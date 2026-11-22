@@ -85,7 +85,7 @@ func decodeSpecColorsMode(t *testing.T, seed, scheme, version string, mode Color
 }
 
 func TestGenerateSpecColorsDMSKeepsVibrantAccentsOnTonalSpotSurfaces(t *testing.T) {
-	dms := decodeSpecColors(t, "#1c7ecc", "scheme-vibrant", SpecDMS)
+	dms := decodeSpecColors(t, "#1c7ecc", "scheme-vibrant", SpecAlpe)
 	vibrant := decodeSpecColors(t, "#1c7ecc", "scheme-vibrant", Spec2025)
 	tonalSpot := decodeSpecColors(t, "#1c7ecc", "scheme-tonal-spot", Spec2025)
 	require.Equal(t, vibrant["primary"].Dark.Color, dms["primary"].Dark.Color)
@@ -93,9 +93,9 @@ func TestGenerateSpecColorsDMSKeepsVibrantAccentsOnTonalSpotSurfaces(t *testing.
 	require.Equal(t, vibrant["primary"].Light.Color, dms["primary"].Light.Color)
 	require.NotEqual(t, vibrant["surface"].Dark.Color, dms["surface"].Dark.Color)
 	require.LessOrEqual(t, maxChannelDelta(t, tonalSpot["surface"].Dark.Color, dms["surface"].Dark.Color), 4)
-	tonalSpotDMS := decodeSpecColors(t, "#1c7ecc", "scheme-tonal-spot", SpecDMS)
-	require.NotEqual(t, tonalSpot["primary"].Dark.Color, tonalSpotDMS["primary"].Dark.Color)
-	require.NotEqual(t, dms["primary"].Dark.Color, tonalSpotDMS["primary"].Dark.Color)
-	require.True(t, UsesSpecGenerator(SpecDMS, "scheme-vibrant"))
-	require.False(t, UsesSpecGenerator(SpecDMS, "scheme-content"))
+	tonalSpotAlpe := decodeSpecColors(t, "#1c7ecc", "scheme-tonal-spot", SpecAlpe)
+	require.NotEqual(t, tonalSpot["primary"].Dark.Color, tonalSpotAlpe["primary"].Dark.Color)
+	require.NotEqual(t, dms["primary"].Dark.Color, tonalSpotAlpe["primary"].Dark.Color)
+	require.True(t, UsesSpecGenerator(SpecAlpe, "scheme-vibrant"))
+	require.False(t, UsesSpecGenerator(SpecAlpe, "scheme-content"))
 }

@@ -572,7 +572,7 @@ AlpePopout {
                                 onClicked: {
                                     root.dashVisible = false;
                                     root.instantClose();
-                                    PopoutService.openSettingsWithTab("dank_dash");
+                                    PopoutService.openSettingsWithTab("dash");
                                 }
                             }
                         }

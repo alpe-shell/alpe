@@ -785,22 +785,6 @@ Item {
         target: "hypr"
     }
 
-    // ! TODO - remove for v1.6
-    IpcHandler {
-        function wallpaper(): string {
-            if (PopoutService.routeToIsland("wallpaper", null, true))
-                return "WARN; deprecated, use alpe-dienst ipc call dash toggle wallpaper instead";
-            const bar = root.getPreferredBar("clockButtonRef") || root.getPreferredBar();
-            if (bar) {
-                bar.triggerWallpaperBrowser();
-                return "WARN; deprecated, use alpe-dienst ipc call dash toggle wallpaper instead";
-            }
-            return "ERROR: Failed to toggle wallpaper browser";
-        }
-
-        target: "dankdash"
-    }
-
     function getBarConfig(selector: string, value: string): var {
         const barSelectors = ["id", "name", "index"];
         if (!barSelectors.includes(selector))
