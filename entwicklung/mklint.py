@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Baut einen Baum, in dem qmllint die qs.*-Module des Shell-Codes auflösen kann."""
 import os, shutil, sys, re
-src = sys.argv[1]; dst = "/tmp/lint"
+# Aufruf: mklint.py SHELL-ORDNER [ZIEL]; ohne ZIEL nach /tmp/lint (wie bisher).
+src = sys.argv[1]; dst = sys.argv[2] if len(sys.argv) > 2 else "/tmp/lint"
 shutil.rmtree(dst, ignore_errors=True)
 shutil.copytree(src, dst + "/qs", symlinks=False, ignore=shutil.ignore_patterns("translations", "tests", "assets", "*.wav", "*.png"))
 for root, dirs, files in os.walk(dst + "/qs"):

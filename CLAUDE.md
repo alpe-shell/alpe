@@ -64,8 +64,12 @@ KWin und Hyprland; im Temp-HOME sind dabei alle Plugins unter `plugins/` eingesc
 Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33).
 
 Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `shell/` – nicht in
-`tools/test.sh`. Grundlinie: 5600 Meldungen. Bei jedem Halt vergleichen und jede neue Meldung
-einzeln einordnen (Plan 0.8 Nr. 63).
+`tools/test.sh`: `python3 entwicklung/qmllint/qmllint-pruefung.py` vergleicht mit
+`entwicklung/qmllint/grundlinie.txt`. Bei jedem Halt vergleichen und jede neue Meldung einzeln
+einordnen (beheben oder mit Begründung in die Grundlinie; Plan 0.8 Nr. 63).
+
+Ebenfalls am Halt: `go vet ./...` in `core/` ohne Meldung. Attrappen unter `core/internal/mocks`
+nie von Hand ändern, sondern mit `mockery` in `core/` neu erzeugen (Plan 0.8 Nr. 62).
 
 ## Projektregeln
 

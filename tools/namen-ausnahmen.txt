@@ -90,3 +90,5 @@ tests/test_design.py	"dms_"|dank_dash|dankbar_dot	Umzug-Ende	Test: alte Kennunge
 tests/test_bridge.js	dms	Umzug-Ende	Test: keine alte Zeichenkette im Brückenskript
 tests/test_kwin.py	dms\.service|"dms"|\["dms-launcher"|by\["dms"\]	E4	Testdaten: Kürzel-Komponente und Dienst der Einrichtung von 1.0 (wie tools/*)
 
+tests/test_ladepruefung.py	"dank"	Umzug-Ende	Test: Session aus 1.0 mit der Vorlage des Ursprungs als Ausgangslage
+entwicklung/ladepruefung/ladepruefung.py	"dank"|dankLogo	Umzug-Ende	Probe: Session aus 1.0 zieht auf die Vorlage «Alpe» um (0.8 Nr. 41, 45)

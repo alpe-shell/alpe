@@ -7,6 +7,9 @@ einer Grundlinie vergleichen.
     python3 entwicklung/ladepruefung/ladepruefung.py hyprland           dasselbe unter Hyprland
     python3 entwicklung/ladepruefung/ladepruefung.py kwin --grundlinie  Grundlinie neu schreiben (3 Läufe vereint)
     Optionen: --laeufe N  --dienst PFAD (statt neu bauen)  --behalten (Temp-Ordner nicht löschen)
+              --plugins ORDNER[,ORDNER…]  weitere Plugins mitladen (Kopien fremder Plugins, Plan 0.8 Nr. 29)
+              --probe-zeichen             Logo-Modus "alpe" im Starter-Knopf, Material-Vorlage «Alpe» als
+                                          Hintergrund, Session aus 1.0 (Plan 0.8 Nr. 41, 45)
 
 Jeder Lauf läuft in einem eigenen systemd-Scope (alpe-ladepruefung-<zeit>-<n>.scope). Aufgeräumt wird
 nur über diesen Scope (systemctl --user stop …), nie über Prozessnamen: Die echte Shell läuft unter
@@ -17,8 +20,10 @@ Session-Bus (dbus-run-session), ein leerer Ersatz für den Systembus (kein login
 polkit, BlueZ), Attrappen für systemctl, loginctl, pkexec, sudo. Als Erstes prüft der Lauf, dass er
 den echten systemd-Benutzerdienst nicht erreicht (sonst Abbruch). Der Compositor läuft virtuell
 (kwin_wayland --virtual); Hyprland läuft verschachtelt darin, weil es keinen eigenständigen
-Headless-Betrieb mehr kennt. Vorher wird das ausgelieferte Design (design/kde) mit den Alpe-Plugins
-ins Temp-HOME gespielt.
+Headless-Betrieb mehr kennt. Vorher wird das ausgelieferte Design (design/kde) ins Temp-HOME gespielt,
+und alle Plugins unter plugins/ werden dort eingeschaltet – nicht nur die drei, die
+activate-plugins.py für Nutzer einschaltet. So lädt jedes Plugin im Repo bei jedem Halt mit
+(Plan 0.8 Nr. 33).
 
 Ergebnis: 0 = keine neuen Warnungen/Fehler gegenüber der Grundlinie, 1 = neue, 2 = Lauf gescheitert.
 Unix-Sockets dürfen höchstens ~107 Zeichen lang sein (Hyprlands Socket liegt unter
@@ -44,6 +49,66 @@ DAUER_ENDE = 8        # Sekunden Ruhe nach dem letzten Aufruf
 POPOUTS = [("spotlight", "toggle"), ("clipboard", "toggle"), ("processlist", "toggle"),
            ("notifications", "toggle"), ("control-center", "toggle"), ("dash", "toggle", ""),
            ("powermenu", "toggle"), ("notepad", "toggle")]
+
+# Vorbereitung im Temp-HOME (läuft im Scope, nach design.py): Plugins einschalten, Probe einrichten.
+VORBEREITUNG = r'''
+import json, os, shutil, sys
+config, state = os.environ["XDG_CONFIG_HOME"], os.environ["XDG_STATE_HOME"]
+folder = os.path.join(config, "alpe")
+plugin_dir = os.path.join(folder, "plugins")
+extra = [p for p in sys.argv[2].split(os.pathsep) if p]
+probe, session_1_0 = sys.argv[3] == "1", sys.argv[4]
+
+def load(path):
+    try:
+        with open(path, encoding="utf-8") as handle:
+            return json.load(handle)
+    except (OSError, ValueError):
+        return {}
+
+def save(path, data):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(data, handle, indent=2, ensure_ascii=False)
+
+for source in extra:
+    target = os.path.join(plugin_dir, os.path.basename(os.path.normpath(source)))
+    shutil.rmtree(target, ignore_errors=True)
+    shutil.copytree(source, target, symlinks=True, ignore=shutil.ignore_patterns(".git"))
+    print("Plugin kopiert: " + source)
+
+settings_path = os.path.join(folder, "plugin_settings.json")
+plugins = load(settings_path)
+for name in sorted(os.listdir(plugin_dir)):
+    manifest = load(os.path.join(plugin_dir, name, "plugin.json"))
+    if not manifest.get("id"):
+        continue
+    plugins.setdefault(manifest["id"], {})["enabled"] = True
+    print("Plugin eingeschaltet: %s (%s)" % (manifest["id"], name))
+save(settings_path, plugins)
+
+if probe:
+    # Starter-Knopf mit dem Alpe-Zeichen (Logo-Modus "alpe") in jeder Leiste, in der er steht.
+    path = os.path.join(folder, "settings.json")
+    settings = load(path)
+    hits = 0
+    for bar in settings.get("barConfigs", []):
+        for side in ("leftWidgets", "centerWidgets", "rightWidgets"):
+            for widget in bar.get(side, []):
+                if isinstance(widget, dict) and widget.get("id") == "launcherButton":
+                    widget["enabled"] = True
+                    widget["launcherLogoMode"] = "alpe"
+                    hits += 1
+    settings["launcherLogoMode"] = "alpe"
+    save(path, settings)
+    print("Probe: Starter-Knopf mit Logo-Modus alpe in %d Leiste(n)" % hits)
+    # Session aus 1.0 (Version 7, Material-Vorlage "dank" mit Form dankLogo): Die Shell zieht sie beim
+    # Laden auf Version 8 um. Einfarbiger Hintergrund, damit die Material-Vorlage gezeichnet wird.
+    session = load(session_1_0)
+    session["wallpaperPath"] = "#1d2a33"
+    save(os.path.join(state, "alpe", "session.json"), session)
+    print("Probe: Session aus 1.0 (Version %s), Vorlage %s" % (session.get("configVersion"), json.dumps(session.get("materialWallpapers"))))
+'''
 
 STUB = '#!/bin/sh\necho "{name} $*" >> "{log}"\nexit 1\n'
 SYSTEMBUS = """<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN"
@@ -137,7 +202,7 @@ echo "exit $?" > {base}/dienst.exit
 """.format(dienst=q(dienst), base=q(base), shell=q(SHELL), start=DAUER_START, ende=DAUER_ENDE, calls="\n".join(calls))
 
 
-def runner_script(base, compositor, sock, session):
+def runner_script(base, compositor, sock, session, extra_plugins=(), probe=False):
     """Alles im Scope: Selbstprüfung, Vorbereitung des Temp-HOME, Ersatz-Systembus, Compositor."""
     if compositor == "kwin":
         start = session
@@ -156,6 +221,7 @@ cp -r {repo}/plugins/. "$XDG_CONFIG_HOME/alpe/plugins/"
 {{
     python3 {repo}/tools/activate-plugins.py
     ALPE_DESIGN_NO_SERVICE=1 ALPE_SHELL_DIR={shell} python3 {repo}/tools/design.py apply --ja --variante kde --bilder nein </dev/null
+    python3 "$base/vorbereitung.py" - {extra} {probe} {session10}
 }} > "$base/vorbereitung.log" 2>&1
 # 3. Leerer Ersatz für den Systembus.
 dbus-daemon --config-file="$base/systembus.conf" --nofork >/dev/null 2>&1 &
@@ -164,7 +230,9 @@ i=0; while [ ! -S {sock} ] && [ $i -lt 50 ]; do i=$((i + 1)); sleep 0.1; done
 dbus-run-session -- kwin_wayland --virtual --width 1920 --height 1080 --socket lp --no-lockscreen \\
     --exit-with-session {start} > "$base/compositor.log" 2>&1
 echo "$?" > "$base/compositor.exit"
-""".format(base=q(base), repo=q(REPO), shell=q(SHELL), sock=q(sock), start=q(start))
+""".format(base=q(base), repo=q(REPO), shell=q(SHELL), sock=q(sock), start=q(start),
+           extra=q(os.pathsep.join(extra_plugins)), probe="1" if probe else "0",
+           session10=q(os.path.join(REPO, "tests", "data", "einstellungen-1.0", "session.json")))
 
 
 def hyprland_files(base, session):
@@ -229,7 +297,32 @@ def release_rundir(rundir):
     shutil.rmtree(rundir, ignore_errors=True)
 
 
-def one_run(compositor, dienst, keep, unit):
+def probe_report(home):
+    """Prüft nach dem Lauf, ob die Shell die Session aus 1.0 umgezogen und zurückgeschrieben hat."""
+    import json
+    folder = os.path.join(home, ".local", "state", "alpe")
+    lines = []
+    try:
+        session = json.load(open(os.path.join(folder, "session.json"), encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        return ["FEHLER: session.json nicht lesbar (%s)" % error]
+    text = json.dumps(session)
+    ok = session.get("configVersion", 0) >= 8 and '"dank"' not in text and "dankLogo" not in text and "alpeLogo" in text
+    lines.append("%s: session.json auf Version %s, Vorlage %s" % ("ok" if ok else "FEHLER", session.get("configVersion"),
+                                                                 json.dumps(session.get("materialWallpapers"))))
+    backup = os.path.join(folder, "session.v7.json")
+    lines.append(("ok" if os.path.exists(backup) else "FEHLER") + ": Sicherung session.v7.json " + ("vorhanden" if os.path.exists(backup) else "fehlt"))
+    try:
+        settings = json.load(open(os.path.join(home, ".config", "alpe", "settings.json"), encoding="utf-8"))
+        modes = [w.get("launcherLogoMode") for b in settings.get("barConfigs", []) for side in ("leftWidgets", "centerWidgets", "rightWidgets")
+                 for w in b.get(side, []) if isinstance(w, dict) and w.get("id") == "launcherButton" and w.get("enabled")]
+        lines.append("%s: Starter-Knopf eingeschaltet mit Logo-Modus %s" % ("ok" if modes and all(m == "alpe" for m in modes) else "FEHLER", modes))
+    except (OSError, ValueError) as error:
+        lines.append("FEHLER: settings.json nicht lesbar (%s)" % error)
+    return lines
+
+
+def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False):
     root = os.environ.get("ALPE_LP_TMP") or tempfile.gettempdir()
     base = tempfile.mkdtemp(prefix="alpe-lp-", dir=root)
     home, stubs = os.path.join(base, "h"), os.path.join(base, "s")
@@ -259,8 +352,10 @@ def one_run(compositor, dienst, keep, unit):
         hyprland_files(base, session)
     runner = os.path.join(base, "lauf.sh")
     with open(runner, "w") as handle:
-        handle.write(runner_script(base, compositor, sock, session))
+        handle.write(runner_script(base, compositor, sock, session, extra_plugins, probe))
     os.chmod(runner, 0o755)
+    with open(os.path.join(base, "vorbereitung.py"), "w", encoding="utf-8") as handle:
+        handle.write(VORBEREITUNG)
 
     env = test_env(base, home, rundir, stubs, sock, compositor)
     # Laden (bis 120 s), Popouts, alle Seiten; unter verschachteltem Hyprland deutlich langsamer.
@@ -284,7 +379,8 @@ def one_run(compositor, dienst, keep, unit):
                 say("   WARNUNG: systemd-run endet nicht – bitte prüfen: systemctl --user status %s" % unit)
     release_rundir(rundir)
     result = {"base": base, "seconds": round(time.time() - started), "hung": hung, "limit": limit}
-    for name in ("shell.log", "ipc.log", "stubs.log", "dienst.exit", "compositor.exit", "abbruch", "scope.log"):
+    result["probe"] = probe_report(home) if probe else []
+    for name in ("shell.log", "ipc.log", "stubs.log", "dienst.exit", "compositor.exit", "abbruch", "scope.log", "vorbereitung.log"):
         path = os.path.join(base, name)
         result[name] = open(path, errors="replace").read() if os.path.exists(path) else ""
     if not keep:
@@ -362,6 +458,15 @@ def main(argv):
     write = "--grundlinie" in args
     keep = "--behalten" in args
     runs = int(args[args.index("--laeufe") + 1]) if "--laeufe" in args else (3 if write else 1)
+    probe = "--probe-zeichen" in args
+    extra_plugins = [os.path.abspath(p) for p in args[args.index("--plugins") + 1].split(",") if p] if "--plugins" in args else []
+    for folder in extra_plugins:
+        if not os.path.isfile(os.path.join(folder, "plugin.json")):
+            say("FEHLER: %s ist kein Plugin-Ordner (plugin.json fehlt)" % folder)
+            return 2
+    if write and (probe or extra_plugins):
+        say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins und --probe-zeichen")
+        return 2
     for need in ("kwin_wayland", "systemd-run", "dbus-run-session") + (("Hyprland",) if compositor == "hyprland" else ()):
         if not shutil.which(need):
             say("übersprungen: %s nicht installiert" % need)
@@ -385,11 +490,18 @@ def main(argv):
         for n in range(runs):
             unit = "%s%s-%s-%d.scope" % (UNIT_PREFIX, stamp, compositor, n + 1)
             say("== Lauf %d/%d unter %s (%s)" % (n + 1, runs, compositor, unit))
-            result = one_run(compositor, dienst, keep, unit)
+            result = one_run(compositor, dienst, keep, unit, extra_plugins, probe)
             say("   %d s, Compositor-Exit %s, Dienst %s" % (result["seconds"], result["compositor.exit"].strip() or "?",
                                                          result["dienst.exit"].strip() or "?"))
             if keep:
                 say("   behalten: %s" % result["base"])
+            for line in result["vorbereitung.log"].splitlines():
+                if line.startswith(("Plugin eingeschaltet", "Plugin kopiert", "Probe:")):
+                    say("   " + line)
+            for line in result["probe"]:
+                say("   Probe nach dem Lauf – " + line)
+            if any(line.startswith("FEHLER") for line in result["probe"]):
+                return 2
             if result["stubs.log"]:
                 calls = sorted(set(" ".join(l.split(" ")[:3]) for l in result["stubs.log"].splitlines()))
                 say("   abgefangen: " + ", ".join(calls))
