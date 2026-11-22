@@ -68,5 +68,17 @@ layout["background"].update({"source": "image", "image": "/bilder/eigen.jpg"})
 run("write", conf, json.dumps(layout))
 check(json.loads(run("wallpaper", conf, "/bilder/x.jpg"))["changed"] is False and "path = /bilder/eigen.jpg" in open(conf).read(), "eigenes Bild: Desktop-Wechsel ändert nichts")
 
+# Die eingecheckte Vorlage der Sperre ist genau die Ausgabe des Umsetzers auf der neutralen
+# lockscreen/hyprlock.conf – ohne Pfad und Datum des Rechners, auf dem sie erzeugt wurde.
+REPO = os.path.dirname(HERE)
+neutral = os.path.join(REPO, "lockscreen", "hyprlock.conf")
+eingecheckt = os.path.join(SHELL, "Modules", "Lock", "Alpe", "layout.js")
+if os.path.isfile(neutral) and os.path.isfile(eingecheckt):
+    with open(eingecheckt, encoding="utf-8") as handle:
+        vorlage = handle.read()
+    check(run(neutral, "--quelle", "lockscreen/hyprlock.conf", "--quiet") == vorlage,
+          "layout.js der Sperre ist aus lockscreen/hyprlock.conf erzeugt (neu erzeugen: alpe-hyprlock.py … --quelle lockscreen/hyprlock.conf -o …)")
+    check("/home/" not in vorlage and " am 20" not in vorlage.splitlines()[1], "layout.js der Sperre: kein Pfad in ein Home-Verzeichnis, kein Datum")
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

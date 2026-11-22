@@ -1,5 +1,5 @@
 .pragma library
-// Erzeugt von tools/hyprlock2qml.py aus alpe/lockscreen/hyprlock.conf (Vorlage des MacBooks).
+// Erzeugt von tools/hyprlock2qml.py aus lockscreen/hyprlock.conf.
 // Nicht von Hand ändern: Die Quelle ist die hyprlock.conf.
 var layout = {
  "general": {
@@ -7,7 +7,9 @@ var layout = {
   "hideCursor": false
  },
  "background": {
-  "path": "/home/fabian/Pictures/Hyprlock/wallpaper.jpg",
+  "path": "",
+  "source": "desktop",
+  "image": "",
   "color": "#ff111111",
   "blurPasses": 3,
   "blurSize": 7.0,
@@ -20,153 +22,10 @@ var layout = {
  "widgets": [
   {
    "position": [
-    "110",
-    "250"
-   ],
-   "halign": "center",
-   "valign": "center",
-   "zindex": 0,
-   "rotate": 0,
-   "opacity": 1.0,
-   "type": "image",
-   "path": "/home/fabian/Pictures/Hyprlock/my_logo.png",
-   "size": 350.0,
-   "rounding": -1.0,
-   "borderSize": 0.0,
-   "borderColor": "#66ffffff",
-   "shadow": {
-    "size": 0,
-    "passes": 0,
-    "color": "#ff000000",
-    "boost": 1.2
-   },
-   "order": 0
-  },
-  {
-   "position": [
-    "990",
-    "-650"
-   ],
-   "halign": "center",
-   "valign": "center",
-   "zindex": 0,
-   "rotate": 0,
-   "opacity": 1.0,
-   "type": "image",
-   "path": "/home/fabian/Pictures/Hyprlock/goat.png",
-   "size": 350.0,
-   "rounding": -10.0,
-   "borderSize": 0.0,
-   "borderColor": "#ffdddddd",
-   "shadow": {
-    "size": 0,
-    "passes": 0,
-    "color": "#ff000000",
-    "boost": 1.2
-   },
-   "order": 1
-  },
-  {
-   "position": [
-    "-990",
-    "-650"
-   ],
-   "halign": "center",
-   "valign": "center",
-   "zindex": 0,
-   "rotate": 0,
-   "opacity": 1.0,
-   "type": "image",
-   "path": "/home/fabian/Pictures/Hyprlock/bobo.png",
-   "size": 350.0,
-   "rounding": -10.0,
-   "borderSize": 0.0,
-   "borderColor": "#ffdddddd",
-   "shadow": {
-    "size": 0,
-    "passes": 0,
-    "color": "#ff000000",
-    "boost": 1.2
-   },
-   "order": 2
-  },
-  {
-   "position": [
-    "600",
-    "450"
-   ],
-   "halign": "center",
-   "valign": "center",
-   "zindex": 0,
-   "rotate": 0,
-   "opacity": 1.0,
-   "type": "image",
-   "path": "/home/fabian/Pictures/Hyprlock/sun.png",
-   "size": 350.0,
-   "rounding": -10.0,
-   "borderSize": 0.0,
-   "borderColor": "#ffdddddd",
-   "shadow": {
-    "size": 0,
-    "passes": 0,
-    "color": "#ff000000",
-    "boost": 1.2
-   },
-   "order": 3
-  },
-  {
-   "position": [
-    "-120",
-    "200"
-   ],
-   "halign": "center",
-   "valign": "center",
-   "zindex": 0,
-   "rotate": 0,
-   "opacity": 1.0,
-   "type": "image",
-   "path": "/home/fabian/Pictures/Hyprlock/shaq.png",
-   "size": 450.0,
-   "rounding": -10.0,
-   "borderSize": 0.0,
-   "borderColor": "#ffdddddd",
-   "shadow": {
-    "size": 0,
-    "passes": 0,
-    "color": "#ff000000",
-    "boost": 1.2
-   },
-   "order": 4
-  },
-  {
-   "position": [
-    "-800",
-    "450"
-   ],
-   "halign": "center",
-   "valign": "center",
-   "zindex": 0,
-   "rotate": 0,
-   "opacity": 1.0,
-   "type": "image",
-   "path": "/home/fabian/Pictures/Hyprlock/bl.png",
-   "size": 550.0,
-   "rounding": -10.0,
-   "borderSize": 0.0,
-   "borderColor": "#ffdddddd",
-   "shadow": {
-    "size": 0,
-    "passes": 0,
-    "color": "#ff000000",
-    "boost": 1.2
-   },
-   "order": 5
-  },
-  {
-   "position": [
     "0",
     "-350"
    ],
+   "monitor": "",
    "halign": "center",
    "valign": "top",
    "zindex": 5,
@@ -189,13 +48,14 @@ var layout = {
     "color": "#ff000000",
     "boost": 1.2
    },
-   "order": 6
+   "order": 0
   },
   {
    "position": [
     "0",
     "-520"
    ],
+   "monitor": "eDP-1",
    "halign": "center",
    "valign": "top",
    "zindex": 5,
@@ -218,13 +78,14 @@ var layout = {
     "color": "#ff000000",
     "boost": 1.2
    },
-   "order": 7
+   "order": 1
   },
   {
    "position": [
     "0",
     "20"
    ],
+   "monitor": "eDP-1",
    "halign": "center",
    "valign": "center",
    "zindex": 5,
@@ -247,13 +108,14 @@ var layout = {
     "color": "#ff000000",
     "boost": 1.2
    },
-   "order": 8
+   "order": 2
   },
   {
    "position": [
     "0",
     "-40"
    ],
+   "monitor": "eDP-1",
    "halign": "center",
    "valign": "center",
    "zindex": 20,
@@ -282,12 +144,12 @@ var layout = {
    "placeholder": "Passwort...",
    "failText": "<i>{FAIL} <b>({ATTEMPTS})</b></i>",
    "failTimeout": 2000,
-   "order": 9
+   "order": 3
   }
  ],
  "reference": {
   "width": 2560,
   "height": 1664
  },
- "source": "/home/claude/src/alpe/lockscreen/hyprlock.conf"
+ "source": "lockscreen/hyprlock.conf"
 };

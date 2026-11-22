@@ -652,6 +652,8 @@ def main():
     parser.add_argument("--ref", default="2560x1664", help="Bildschirm, für den die Datei geschrieben ist")
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--json", action="store_true", help="Layout als JSON in einer Zeile ausgeben")
+    parser.add_argument("--quelle", default="", help="Name der Quelle statt des absoluten Pfads, ohne Datum im Kopf "
+                        "(für die eingecheckte Vorlage: gleiche Eingabe, gleiche Datei, nichts vom Rechner)")
     args = parser.parse_args()
     try:
         ref_w, ref_h = (int(v) for v in args.ref.lower().split("x"))
@@ -663,7 +665,7 @@ def main():
     # «exists» dient nur den Meldungen; im Layout hätte es den Stand dieses Rechners festgehalten.
     for item in layout["widgets"]:
         item.pop("exists", None)
-    layout["source"] = os.path.abspath(os.path.expanduser(args.conf))
+    layout["source"] = args.quelle or os.path.abspath(os.path.expanduser(args.conf))
     if args.json:
         layout.pop("source", None)
         for item in layout["widgets"]:
@@ -672,10 +674,10 @@ def main():
         for message in messages:
             print(f"   HINWEIS: {message}", file=sys.stderr)
         return 0
-    stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    stamp = "" if args.quelle else " am " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     body = (
         ".pragma library\n"
-        f"// Erzeugt von tools/hyprlock2qml.py aus {layout['source']} am {stamp}.\n"
+        f"// Erzeugt von tools/hyprlock2qml.py aus {layout['source']}{stamp}.\n"
         "// Nicht von Hand ändern: Die Quelle ist die hyprlock.conf.\n"
         "var layout = " + json.dumps(layout, ensure_ascii=False, indent=1) + ";\n"
     )
