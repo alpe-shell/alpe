@@ -13,8 +13,6 @@ Item {
     LayoutMirroring.enabled: I18n.isRtl
     LayoutMirroring.childrenInherit: true
 
-    readonly property string githubUrl: "https://github.com/duxlabs-dev/dux-shell"
-
     function host(url) {
         return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
     }
@@ -32,21 +30,14 @@ Item {
         return (count === 1 ? I18n.tr("%1 update", "singular, %1 is 1, available system update count").arg(count) : I18n.tr("%1 updates", "plural, %1 is a count of available system updates").arg(count)) + via;
     }
 
-    component LogoImage: Image {
-        width: Theme.iconSize
-        height: Theme.iconSize
-        sourceSize: Qt.size(Theme.iconSize, Theme.iconSize)
-        smooth: true
-        fillMode: Image.PreserveAspectFit
-    }
-
     SettingsPage {
         ReleaseHero {}
 
         SettingsCard {
             SettingsRow {
                 body: StyledText {
-                    text: I18n.tr('Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.', 'about page blurb, %1 is a Quickshell link, %2 is a Go link').arg(`<a href="https://quickshell.org" style="text-decoration:none; color:${Theme.primary};">Quickshell</a>`).arg(`<a href="https://go.dev" style="text-decoration:none; color:${Theme.primary};">Go</a>`)
+                    // Alpe: eigener Text statt der Beschreibung des Ursprungsprojekts
+                    text: `Alpe ist eine Desktop-Shell für Linux, massgeschneidert für die Schweiz: Leiste, Dock, Starter, Kontrollzentrum, Mitteilungen und Sperrbildschirm aus einem Guss, unter KDE Plasma (KWin) und Hyprland.<br/><br/>Gebaut mit <a href="https://quickshell.org" style="text-decoration:none; color:${Theme.primary};">Quickshell</a> und <a href="https://go.dev" style="text-decoration:none; color:${Theme.primary};">Go</a>.`
                     textFormat: Text.RichText
                     font.pixelSize: Theme.fontSizeMedium
                     linkColor: Theme.primary
@@ -61,10 +52,11 @@ Item {
                 }
             }
 
-            SettingsRow {
+            SettingsLinkRow {
                 iconName: "fork_right"
                 title: "Herkunft"
-                subtitle: `${Brand.name} ${Brand.version} «${Brand.codename}» baut auf ${Brand.upstreamName} ${Brand.upstreamVersion} auf (MIT-Lizenz).`
+                subtitle: `Basiert ursprünglich auf der ${Brand.upstreamName} ${Brand.upstreamVersion} (MIT-Lizenz) – ${root.host(Brand.upstreamUrl)}`
+                url: Brand.upstreamUrl
             }
 
             SettingsLinkRow {
@@ -155,7 +147,7 @@ Item {
 
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: `<a href="${root.githubUrl}/blob/master/LICENSE" style="text-decoration:none; color:${Theme.surfaceVariantText};">${I18n.tr('MIT License')}</a>`
+            text: `<a href="${Brand.url}/blob/main/LICENSE" style="text-decoration:none; color:${Theme.surfaceVariantText};">${I18n.tr('MIT License')}</a>`
             font.pixelSize: Theme.fontSizeMedium
             color: Theme.surfaceVariantText
             textFormat: Text.RichText
