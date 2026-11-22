@@ -606,7 +606,7 @@ func TestAppendFlatpakConfigRewritesOutputAndTemplateName(t *testing.T) {
 		t.Fatalf("failed to create config directory: %v", err)
 	}
 
-	config := "[templates.alpevesktop]\ninput_path = 'SHELL_DIR/matugen/templates/vesktop.css'\noutput_path = 'CONFIG_DIR/vesktop/themes/dank-discord.css'\n"
+	config := "[templates.alpevesktop]\ninput_path = 'SHELL_DIR/matugen/templates/vesktop.css'\noutput_path = 'CONFIG_DIR/vesktop/themes/alpe-discord.css'\n"
 	if err := os.WriteFile(filepath.Join(configDir, "vesktop.toml"), []byte(config), 0o644); err != nil {
 		t.Fatalf("failed to write config: %v", err)
 	}
@@ -633,7 +633,7 @@ func TestAppendFlatpakConfigRewritesOutputAndTemplateName(t *testing.T) {
 	}
 
 	assert.Contains(t, string(output), "[templates.alpevesktop-flatpak]")
-	assert.Contains(t, string(output), "'/home/test/.var/app/dev.vencord.Vesktop/config/vesktop/themes/dank-discord.css'")
+	assert.Contains(t, string(output), "'/home/test/.var/app/dev.vencord.Vesktop/config/vesktop/themes/alpe-discord.css'")
 }
 
 func TestQtengineActive(t *testing.T) {
@@ -801,7 +801,7 @@ func TestSyncQtengineConfig(t *testing.T) {
 			path := QtengineConfigPath()
 			assert.Equal(t, filepath.Join(configDir, "qtengine", "config.json"), path)
 
-			scheme := filepath.Join(dataHome, "color-schemes", "DankMatugen.colors")
+			scheme := filepath.Join(dataHome, "color-schemes", "AlpeMatugen.colors")
 			if !tc.noColorScheme {
 				if err := os.MkdirAll(filepath.Dir(scheme), 0o755); err != nil {
 					t.Fatalf("failed to create color-schemes dir: %v", err)
@@ -871,7 +871,7 @@ func TestSyncQtengineConfigAtUsesExplicitConfigDir(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", xdgConfigDir)
 	t.Setenv("XDG_DATA_HOME", dataHome)
 
-	scheme := filepath.Join(dataHome, "color-schemes", "DankMatugen.colors")
+	scheme := filepath.Join(dataHome, "color-schemes", "AlpeMatugen.colors")
 	if err := os.MkdirAll(filepath.Dir(scheme), 0o755); err != nil {
 		t.Fatalf("failed to create color-schemes dir: %v", err)
 	}

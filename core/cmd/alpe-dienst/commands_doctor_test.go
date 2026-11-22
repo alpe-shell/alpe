@@ -319,7 +319,7 @@ func TestCheckQtengineConfig(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", configHome)
 	t.Setenv("XDG_DATA_HOME", dataHome)
 	path := filepath.Join(configHome, "qtengine", "config.json")
-	scheme := filepath.Join(dataHome, "color-schemes", "DankMatugen.colors")
+	scheme := filepath.Join(dataHome, "color-schemes", "AlpeMatugen.colors")
 
 	write := func(t *testing.T, content string) {
 		t.Helper()

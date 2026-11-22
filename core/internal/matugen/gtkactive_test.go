@@ -10,7 +10,7 @@ import (
 )
 
 func TestIsDMSGTKActive(t *testing.T) {
-	const dankImport = "@import url(\"dank-colors.css\");\n"
+	const dankImport = "@import url(\"alpe-colors.css\");\n"
 
 	tests := []struct {
 		name  string

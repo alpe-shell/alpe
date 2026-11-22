@@ -216,7 +216,7 @@ func TestKittyConfigDeployment(t *testing.T) {
 
 		content, err := os.ReadFile(mainResult.Path)
 		require.NoError(t, err)
-		assert.Contains(t, string(content), "include dank-theme.conf")
+		assert.Contains(t, string(content), "include alpe-theme.conf")
 
 		themeResult := results[1]
 		assert.Equal(t, "Kitty Theme", themeResult.ConfigType)
@@ -254,7 +254,7 @@ func TestAlacrittyConfigDeployment(t *testing.T) {
 
 		content, err := os.ReadFile(mainResult.Path)
 		require.NoError(t, err)
-		assert.Contains(t, string(content), "~/.config/alacritty/dank-theme.toml")
+		assert.Contains(t, string(content), "~/.config/alacritty/alpe-theme.toml")
 		assert.Contains(t, string(content), "[window]")
 
 		themeResult := results[1]

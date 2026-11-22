@@ -62,10 +62,10 @@ def t_kopfleiste():
     config = tempfile.mkdtemp()
     os.makedirs(os.path.join(config, "gtk-4.0"))
     gtk = os.path.join(config, "gtk-4.0", "gtk.css")
-    open(gtk, "w").write('@import "dank-colors.css";\n')
+    open(gtk, "w").write('@import "alpe-colors.css";\n')
     assert run_tool("kopfleiste.py", ["schlank"], config).returncode == 0
     lines = open(gtk).read().splitlines()
-    assert lines[0].startswith('@import url("alpe-apps.css")') and lines[1] == '@import "dank-colors.css";'
+    assert lines[0].startswith('@import url("alpe-apps.css")') and lines[1] == '@import "alpe-colors.css";'
     for folder in ("gtk-4.0", "gtk-3.0"):
         assert "proton-app headerbar" in open(os.path.join(config, folder, "alpe-apps.css")).read()
     assert "schlank" in run_tool("kopfleiste.py", ["status"], config).stdout
@@ -74,7 +74,7 @@ def t_kopfleiste():
     assert "-gtk-icon-size" in open(os.path.join(config, "gtk-4.0", "alpe-apps.css")).read()
     assert "-gtk-icon-size" not in open(os.path.join(config, "gtk-3.0", "alpe-apps.css")).read()
     run_tool("kopfleiste.py", ["aus"], config)
-    assert open(gtk).read() == '@import "dank-colors.css";\n'
+    assert open(gtk).read() == '@import "alpe-colors.css";\n'
     assert not os.path.exists(os.path.join(config, "gtk-4.0", "alpe-apps.css"))
 
 

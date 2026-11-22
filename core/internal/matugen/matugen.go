@@ -513,6 +513,7 @@ func buildOnce(opts *Options) (bool, error) {
 	if err := renderTemplates(opts, args, tmpDir); err != nil {
 		return false, err
 	}
+	syncLegacyOutputs(opts)
 	signalTerminals(opts)
 	if !changed {
 		return false, nil
@@ -534,8 +535,8 @@ func buildOnce(opts *Options) (bool, error) {
 		refreshGTKColorScheme()
 	}
 
-	if isDMSKDEColorSchemeActive(opts.ConfigDir) {
-		applyKDEColorScheme(opts.Mode)
+	if prefix := activeKDESchemePrefix(opts.ConfigDir); prefix != "" {
+		applyKDEColorScheme(prefix, opts.Mode)
 	}
 
 	if !opts.ShouldSkipTemplate("qt6ct") && appExists(opts.AppChecker, []string{"qt6ct"}, nil) {
@@ -1351,19 +1352,26 @@ func isDMSGTKActive(configDir string) bool {
 
 // A user-managed symlink (home-manager) points elsewhere but can still import us.
 func cssUsesDankColors(path string) bool {
-	if target, err := os.Readlink(path); err == nil && strings.Contains(target, "dank-colors.css") {
+	if target, err := os.Readlink(path); err == nil && namesColorsCSS(target) {
 		return true
 	}
 	data, err := os.ReadFile(path)
-	return err == nil && strings.Contains(string(data), "dank-colors.css")
+	return err == nil && namesColorsCSS(string(data))
 }
 
-// isDMSKDEColorSchemeActive only flips the scheme when the user is already on a
-// DankMatugen one, leaving Breeze (or anything else) untouched.
-func isDMSKDEColorSchemeActive(configDir string) bool {
+// namesColorsCSS: Ein Import aus 1.0 nennt noch legacyColorsCSS; die Datei ist bis zum Umzug ein
+// Symlink auf alpe-colors.css (altnamen.go), der Import gilt darum weiter als aktiv.
+func namesColorsCSS(text string) bool {
+	return strings.Contains(text, "alpe-colors.css") || strings.Contains(text, legacyColorsCSS)
+}
+
+// activeKDESchemePrefix only flips the scheme when the user is already on one of
+// ours, leaving Breeze (or anything else) untouched. It returns the name the
+// user is on ("AlpeMatugen", or the one from 1.0 until the Umzug), else "".
+func activeKDESchemePrefix(configDir string) string {
 	data, err := os.ReadFile(filepath.Join(configDir, "kdeglobals"))
 	if err != nil {
-		return false
+		return ""
 	}
 
 	inGeneral := false
@@ -1377,20 +1385,31 @@ func isDMSKDEColorSchemeActive(configDir string) bool {
 			continue
 		}
 		if name, ok := strings.CutPrefix(line, "ColorScheme="); ok {
-			return strings.HasPrefix(strings.TrimSpace(name), "DankMatugen")
+			return kdeSchemePrefix(strings.TrimSpace(name))
 		}
 	}
-	return false
+	return ""
 }
 
-func applyKDEColorScheme(mode ColorMode) {
+// kdeSchemePrefix: "AlpeMatugen", oder der Name aus 1.0, solange kdeglobals ihn noch nennt
+// (das alte Schema wird bis zum Umzug mitgeschrieben, altnamen.go).
+func kdeSchemePrefix(name string) string {
+	for _, prefix := range []string{"AlpeMatugen", legacyKDEScheme} {
+		if strings.HasPrefix(name, prefix) {
+			return prefix
+		}
+	}
+	return ""
+}
+
+func applyKDEColorScheme(prefix string, mode ColorMode) {
 	if !utils.CommandExists("plasma-apply-colorscheme") {
 		return
 	}
 
-	scheme := "DankMatugenDark"
+	scheme := prefix + "Dark"
 	if mode == ColorModeLight {
-		scheme = "DankMatugenLight"
+		scheme = prefix + "Light"
 	}
 
 	log.Infof("Applying KDE color scheme: %s", scheme)

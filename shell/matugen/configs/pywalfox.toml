@@ -1,6 +1,6 @@
 [templates.alpepywalfox]
 input_path = 'SHELL_DIR/matugen/templates/pywalfox-colors.json'
-output_path = 'CACHE_DIR/wal/dank-pywalfox.json'
+output_path = 'CACHE_DIR/wal/alpe-pywalfox.json'
 
 [templates.alpepywal]
 input_path = 'SHELL_DIR/matugen/templates/pywalfox-colors.json'

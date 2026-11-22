@@ -80,7 +80,9 @@ Singleton {
     readonly property string _homeUrl: StandardPaths.writableLocation(StandardPaths.HomeLocation)
     readonly property string _configUrl: StandardPaths.writableLocation(StandardPaths.ConfigLocation)
     readonly property string _configDir: Paths.strip(_configUrl)
-    readonly property string _iconThemeBackup: _configDir + "/gtk-3.0/icon-theme.dms-backup"
+    readonly property string _iconThemeBackup: _configDir + "/gtk-3.0/icon-theme.alpe-backup"
+    // Alpe: Sicherung aus 1.0 (icon-theme.dms-backup) unter dem neuen Namen weiterführen (bis F1).
+    readonly property string _iconThemeBackupAdopt: `[ -e ${_shellQuote(_iconThemeBackup)} ] || mv ${_shellQuote(_configDir + "/gtk-3.0/icon-theme.dms-backup")} ${_shellQuote(_iconThemeBackup)} 2>/dev/null; `
     readonly property string pluginSettingsPath: _configDir + "/" + Paths.appDir + "/plugin_settings.json"
     readonly property bool qtengineActive: Quickshell.env("QT_QPA_PLATFORMTHEME") === "qtengine" || Quickshell.env("QT_QPA_PLATFORMTHEME_QT6") === "qtengine"
 
@@ -1480,7 +1482,7 @@ Singleton {
     // Hand back the theme Alpe replaced, unless something else changed it since.
     function restoreIconTheme() {
         const current = GSettings.getCmd("org.gnome.desktop.interface", "icon-theme");
-        const script = `b=${_shellQuote(_iconThemeBackup)}; cur=$(${current}); if saved=$(cat "$b" 2>/dev/null); then rm -f "$b"; [ "$cur" = ${_shellQuote(SessionData.lastAppliedIconTheme)} ] && { printf 'restore:%s' "$saved"; exit 0; }; fi; printf '%s' "$cur"`;
+        const script = `${_iconThemeBackupAdopt}b=${_shellQuote(_iconThemeBackup)}; cur=$(${current}); if saved=$(cat "$b" 2>/dev/null); then rm -f "$b"; [ "$cur" = ${_shellQuote(SessionData.lastAppliedIconTheme)} ] && { printf 'restore:%s' "$saved"; exit 0; }; fi; printf '%s' "$cur"`;
         Proc.runCommand("restoreIconTheme", ["sh", "-c", script], output => {
             const out = (output || "").trim();
             const restored = out.startsWith("restore:") ? out.substring(8) : "";
@@ -1592,7 +1594,7 @@ Singleton {
         }
         // The portal write in _writeGtkIconTheme lands before its script, so back up first.
         const current = GSettings.getCmd("org.gnome.desktop.interface", "icon-theme");
-        const backup = `b=${_shellQuote(_iconThemeBackup)}; [ -e "$b" ] && exit 0; cur=$(${current}); case "$cur" in ''|${_shellQuote(resolved)}) ;; *) mkdir -p "$(dirname "$b")" && printf '%s\\n' "$cur" > "$b" ;; esac`;
+        const backup = `${_iconThemeBackupAdopt}b=${_shellQuote(_iconThemeBackup)}; [ -e "$b" ] && exit 0; cur=$(${current}); case "$cur" in ''|${_shellQuote(resolved)}) ;; *) mkdir -p "$(dirname "$b")" && printf '%s\\n' "$cur" > "$b" ;; esac`;
         Proc.runCommand("backupIconTheme", ["sh", "-c", backup], () => root._writeGtkIconTheme(resolved));
     }
 

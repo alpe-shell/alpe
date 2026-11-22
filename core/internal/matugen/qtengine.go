@@ -28,7 +28,7 @@ func QtengineConfigPath() string {
 
 // QtengineColorSchemePath returns the KColorScheme file DMS points qtengine at.
 func QtengineColorSchemePath() string {
-	return filepath.Join(utils.XDGDataHome(), "color-schemes", "DankMatugen.colors")
+	return filepath.Join(utils.XDGDataHome(), "color-schemes", "AlpeMatugen.colors")
 }
 
 // SyncQtengineConfig merges the DMS colour scheme path and icon theme into

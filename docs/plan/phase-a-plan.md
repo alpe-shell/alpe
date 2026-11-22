@@ -80,6 +80,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | D7.7a2 | Übrige Bezeichner der Oberfläche: 60 Bezeichner `dms…`/`Dms…` → `shell…`/`backend…`, Kalender `dank…` → `dux…` (`CalendarDuxBackend.qml`), **Layer-Namensräume `dms:…` → `alpe:…`** (`dms:dankisland` → `alpe:island`; Dienst schneidet `alpe:` ab), `app-alpe-…`, IPC-Antworten `ISLAND_…`/`DOT_…`, `ALPE_BAR_LAYER`/`ALPE_ISLAND_LAYER`, `alpe-open`, Kommentare (Tabelle `d7-7a2-oberflaeche.tsv`, 402 Ersetzungen in 138 Dateien). Ausnahmeliste: PAM in `shell/` (E1), Lesen von 1.0-Kürzeln und -Anzeigeprofilen (Umzug-Ende), Scheintreffer `…dMs`. Folgen für F1/E3 in 2.3.5 | `tests/test_werte.py` erweitert; test.sh grün; go build/vet wie Ausgangsstand, Go-Tests `screenshot` grün; Namensprüfung 2231. QML-Laufzeit prüft die Ladeprüfung am Zwischenhalt | D7.7b |
 | D7.6/D7.7 (Auflagen) | Go-Tests lesen die Oberfläche unter `shell/` statt am Ursprungspfad `quickshell/`: die drei bekannten Fehlschläge sind grün, der Katalogtest der Hyprland-Kürzel läuft jetzt mit (0.8 Nr. 49). `i18nsync.py`/`i18nsync_plugins.py` entfernt (kein Aufrufer in test.sh, Skripten oder CI); **Übersetzungen werden ab jetzt nur im Repo gepflegt** (`shell/translations/poexports/de.json`, Quelltexte `en.json`) | test.sh grün; Go-Tests ohne bekannte Fehlschläge; qmllint (Qt 6.12) über `shell/`: 5600 Meldungen vor D7.7a wie danach, keine neue |
 | D7.7b1 | Cache `colors.json`/`typography.json`; matugen-Vorlagen `alpe.json`, `alpe-zed.json`, `alpe-emacs.el`, Abschnitte `[templates.alpe…]`; Vorlagen-Variablen `palette16`/`palette16term` (589 Stellen), **`dank16`/`dank16term` werden bis F1 zusätzlich mit denselben Werten eingespeist** (`withLegacyPaletteNames`, Ausnahmeliste Frist F1) (Tabelle `d7-7b1-vorlagen.tsv`, 654 Ersetzungen in 38 Dateien) | Go-Test `altnamen_test.go` (beide Namen identisch, eigene Palette gewinnt); test.sh grün; go build/vet wie Ausgangsstand; Go-Tests matugen, screenshot, cmd grün |
+| D7.7b2 | Ausgabedateien für Fremdprogramme heissen `alpe*` (kitty, GTK, Alacritty, WezTerm, Ghostty, foot, Discord-Clients, pywalfox, fcitx5, KDE-Farbschema `AlpeMatugen*`, Zed «Alpe …», Emacs `alpe-emacs`), `design/kde` mit; `Theme.palette16`. **Übergang bis F1** (`altnamen.go`): alte Namen bleiben als Symlink bzw. zweite Fassung aktuell, solange es sie gibt; GTK- und KDE-Erkennung gelten auch für Einbindungen aus 1.0; `gtk.sh` erkennt Marken und Sicherungen aus 1.0. Neovim unverändert (Frage). Tabelle je Programm in 0.8 Nr. 48 (`d7-7b2-ausgaben.tsv`, 245 Ersetzungen in 36 Dateien, dazu `gtk.sh` und Dienst von Hand) | Go-Tests `altnamen_test.go` (kein alter Name → nichts; Link; zweite Fassung mit alten Namen; Erkennung); test.sh grün; go build/vet wie Ausgangsstand; Go-Tests matugen, config, cmd grün; Namensprüfung 1297 |
 <!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
@@ -127,7 +128,7 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - **0.8: D7 kommt wieder**, 2.3 am 22.11.2026 freigegeben mit Änderungen (0.8 Nr. 6–19).
 - **D7 läuft** (Entscheide 0.8 Nr. 20–24): D7.G, D7.N, D7.0–D7.7 nach 2.3.5, Zwischenhalt
   nach D7.7; D7.8 erst nach Bestätigung, dass die Plugins an PC und Mac umgestellt sind.
-- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. Entscheide nach D7.3: 0.8 Nr. 31–35. Verbotene `D*`-Namen in der Namensprüfung (0.8 Nr. 34). D7.4, D7.5 erledigt. Entscheide nach D7.5: 0.8 Nr. 36–40. D7.6 erledigt, Nachträge dazu 0.8 Nr. 41–46. **Nächster Schritt: D7.7b2** (Aufteilung D7.7a–D7.7h in 2.3.5), danach Ladeprüfung mit allen Repo-Plugins (0.8 Nr. 33) und Zwischenhalt (0.8 Nr. 29, 45). Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
+- **Erledigt bis D7.2b** (dazu 0.8 Nr. 25–30). Ladeprüfung KWin auf D7.2b ohne Neues (0.8 Nr. 28). D7.3 erledigt. Entscheide nach D7.3: 0.8 Nr. 31–35. Verbotene `D*`-Namen in der Namensprüfung (0.8 Nr. 34). D7.4, D7.5 erledigt. Entscheide nach D7.5: 0.8 Nr. 36–40. D7.6 erledigt, Nachträge dazu 0.8 Nr. 41–46. **Nächster Schritt: D7.7b3** (Aufteilung D7.7a–D7.7h in 2.3.5), danach Ladeprüfung mit allen Repo-Plugins (0.8 Nr. 33) und Zwischenhalt (0.8 Nr. 29, 45). Installierte Kopien von alpeSport/alpeRadar unter `~/.config/dms/plugins` importieren noch `qs.Modules.DDash` und müssen mit 1.1 durch die Repo-Fassung ersetzt werden.
   Für jeden Bereich eine Tabelle `entwicklung/umbenennen/<bereich>.tsv` anlegen, Probelauf mit
   `--liste` prüfen, dann `--schreiben`; `bash tools/test.sh` muss grün sein, Namensprüfung zeigt
   die sinkende Zahl. D7.2a: nur `git mv` plus Symlinks unter den alten Pfaden (Werkzeug-Art
@@ -361,6 +362,41 @@ Entscheide und Befunde vor D7.7 (22.11.2026):
 | 45 | **Zwischenhalt nach D7.7 prüft zusätzlich** den Logo-Modus `"alpe"` mit einem Widget (Starter-Knopf in der Leiste) und die Materialform `alpeLogo` als Hintergrund (Material-Vorlage «Alpe» in der Session des Temp-HOME). |
 | 46 | **Aufteilung von D7.7** in D7.7a–D7.7h (2.3.5). Go-Bezeichner typbewusst: `gopls` ist auf dem PC nicht installiert, darum `umbenennen.py` mit ganzen Bezeichnern je Paketgruppe; nach jedem Schritt `go build ./...` und `go vet ./...` (bekannte Signaturwarnungen in `internal/mocks` ausgenommen), Go-Tests abgeschottet mit denselben drei Fehlschlägen. |
 
+Entscheide nach dem Halt vor D7.7b (22.11.2026):
+
+| # | Entscheid |
+|---|---|
+| 47 | **Vorlagen-Variablen:** neu `palette16`/`palette16term`; `dank16`/`dank16term` werden bis F1 zusätzlich mit denselben Werten eingespeist (Test `altnamen_test.go`: beide Namen identisch). **F1 schreibt die eigenen matugen-Vorlagen der Nutzer um** (`~/.config/matugen/config.toml` und die dort genannten Vorlagen: `{{dank16.` → `{{palette16.`, `{{dank16term.` → `{{palette16term.`), nicht nur die mitgelieferten; danach fällt die doppelte Einspeisung. |
+| 48 | **Ausgabedateien für Fremdprogramme** heissen `alpe*`. Übergang bis F1 (`core/internal/matugen/altnamen.go`): **Solange es eine Datei unter dem alten Namen gibt** (Datei aus 1.0 oder der eigene Link), hält Alpe sie aktuell – als Symlink auf die neue Datei, oder als zweite Fassung, wo ein Link nicht trägt. Auf frisch eingerichteten Rechnern entsteht nichts. Auslöser ist die alte Datei, nicht die Einbindung selbst: Sie ist die Voraussetzung jeder funktionierenden alten Einbindung, und die Einbindung lässt sich nicht bei jedem Programm zuverlässig finden (Emacs, WezTerm). Die Erkennung «ist aktiv» (GTK, KDE) gilt auch für alte Einbindungen. Weg je Programm: Tabelle unten. **F1 schreibt die Einbindungen um und räumt Links und alte Dateien weg.** |
+| 49 | **Null bekannte Go-Fehlschläge:** Alle drei bekannten Fehlschläge lasen die Oberfläche am Ursprungspfad `../../../quickshell/…` (`TestTerminalPaletteOnlyReachesTerminalTemplates`: Vorlagen; `TestLockScreenPasswordFieldBypassesTextInputIME`: prüft in `LockAuthWidget.qml`, dass das Passwortfeld die Eingabemethode umgeht; `TestLockScreenFprintProfileMatchesPamQml`: vergleicht `assets/pam/fprint` mit dem Profil in `Pam.qml`). Sie lesen jetzt `shell/…` und sind grün; der Katalogtest der Hyprland-Kürzel übersprang sich deshalb still und läuft jetzt mit. |
+| 50 | **`alpe-open.desktop`** kommt in D7.7b ins Repo (`packaging/`), installiert wird sie in E3, `mimeapps.list` schreibt F1 um. Befund am PC (nur gelesen): `/usr/share/applications/dms-open.desktop` gibt es, sie gehört zum Paket `dux-shell 2.1.2-1.1` (`Exec=dms open %u`); `mimeapps.list` nennt sie für Archive. «Jedes Mal fragen» funktioniert dort heute also nur, solange das Paket des Ursprungs installiert ist. |
+| 51 | **`i18nsync.py`, `i18nsync_plugins.py` entfernt.** Übersetzungen werden nur noch im Repo gepflegt. |
+| 52 | **Werkzeuge** `tools/backend.sh`, `entfernen.sh`, `alpe`, `maclock.sh` werden **vor D7.8** umgestellt (Schritt D7.7i): Namen, die Alpe selbst bezeichnen, werden umbenannt; Verweise auf 1.0-Artefakte bleiben mit Kommentar am Ort und je einem Eintrag auf der Ausnahmeliste (Frist «solange Update von 1.0 unterstützt wird»). Keine Ausnahme für ganze Dateien. |
+| 53 | **v44 lag nirgends:** `origin/phase-a` steht auf Version 43 (D7.6 ist nicht gepusht), Mac und VM beziehen den Stand nur von dort; am PC liegt Version 42 (1.0). Die Erweiterung von v44 um `settingsHiddenPages` bleibt darum v44. |
+| 54 | **`go vet` im Ausgangsstand:** Meldungen nur in `internal/mocks` (von mockery erzeugte `MarshalJSON`-Attrappen mit abweichender Signatur, Prüfung `stdmethods`). `go build` ohne Meldung. Behoben in **D7.7h** (dort wird `.mockery.yml` ohnehin angefasst): Die Attrappen werden von dieser einen Prüfung ausgenommen, alles andere muss ohne Meldung durchlaufen; Ziel zum Zwischenhalt: `go vet` ohne Meldung. |
+| 55 | **JSON-Schlüssel nach den Umbenennungen geprüft:** Alle in D7.4 umbenannten Felder, die über JSON laufen, tragen ein ausdrückliches Tag; die Schlüssel (`fragmentStatus`, `bindsAfterFragment` …) wurden in D7.4 bewusst auf beiden Seiten umgestellt. Ohne Tag sind nur `configfrag.Status` und die Parser-Ergebnisse (`HyprlandParseResult` …); sie werden nie serialisiert. Kein still geänderter Schlüssel. |
+| 56 | **qmllint** (Qt 6.12, erzeugte `qmldir` je Ordner) über `shell/`: 5600 Meldungen vor D7.7a, 5600 danach; die 17 abweichenden Zeilen unterscheiden sich nur im Temp-Pfad bzw. im umbenannten `CalendarDuxBackend.qml`. Keine neue Meldung. |
+
+Ausgabedateien für Fremdprogramme (0.8 Nr. 48). Basis: `~/.config`, sofern nichts anderes steht.
+
+| Programm | Alter Name | Neuer Name | Weg | Begründung, Einbindung (für F1) |
+|---|---|---|---|---|
+| GTK 3/4 | `gtk-3.0/dank-colors.css`, `gtk-4.0/dank-colors.css` | `alpe-colors.css` | Symlink | `@import` in `gtk.css` bzw. `gtk.css` als Link; GTK folgt Links. `gtk.sh` erkennt Import, Marken (`.dms-copy`) und Sicherungen (`*.dms-backup`) aus 1.0 weiter |
+| kitty | `kitty/dank-theme.conf`, `dank-tabs.conf` | `alpe-theme.conf`, `alpe-tabs.conf` | Symlink | `include` in `kitty.conf` liest über den Link |
+| Alacritty | `alacritty/dank-theme.toml` | `alpe-theme.toml` | Symlink | `import` in `alacritty.toml` |
+| WezTerm | `wezterm/colors/dank-theme.toml` | `alpe-theme.toml` | Symlink | Schema-Name = Dateiname (`color_scheme = "dank-theme"`) |
+| Ghostty | `ghostty/themes/dankcolors` | `alpecolors` | Symlink | `theme = dankcolors` |
+| foot | `foot/dank-colors.ini` | `alpe-colors.ini` | Symlink | `include=` in `foot.ini` |
+| Equibop, Vesktop, Vencord | `…/themes/dank-discord.css` | `alpe-discord.css` | Symlink | Auswahl über den Dateinamen; bis F1 stehen beide Namen in der Themenliste |
+| pywalfox | `~/.cache/wal/dank-pywalfox.json` | `alpe-pywalfox.json` | Symlink | Zweitkopie; pywalfox selbst liest `wal/colors.json` (unverändert) |
+| fcitx5 | `~/.local/share/fcitx5/themes/dms/` | `themes/alpe/` | doppelt schreiben | `Theme=dms` in `classicui.conf` meint den Ordner; ein echter Ordner aus 1.0 wird nicht durch einen Link ersetzt |
+| KDE-Farbschema | `~/.local/share/color-schemes/DankMatugen{,Light,Dark}.colors` | `AlpeMatugen…` | doppelt schreiben, alter Name im Inhalt | Name steht in der Datei (`ColorScheme=`, `Name=`); `kdeglobals`, `qt5ct.conf`/`qt6ct.conf` (`color_scheme_path`) und qtengine verweisen darauf. Wer auf dem alten Schema steht, bekommt weiter das alte angewendet |
+| Zed | `zed/themes/dank-zed-theme.json` (Themen «DankShell …») | `alpe-zed-theme.json` («Alpe …») | doppelt schreiben, alte Themennamen | Auswahl in `settings.json` über den Themennamen im Inhalt; ein Link ergäbe dieselben Namen doppelt |
+| Emacs | `themes/dank-emacs-theme.el` (Thema `dank-emacs`) | `alpe-emacs-theme.el` | doppelt schreiben, alter Themenname | Dateiname und `provide-theme` müssen übereinstimmen |
+| Neovim | `nvim/colors/dms.lua`, `nvim/lua/lualine/themes/dms.lua` | unverändert | – | Anbindung an ein fremdes base46 mit `_DMS_SUPPORT`; Name von aussen vorgegeben (Ausnahmeliste, **offene Frage zum Zwischenhalt**) |
+| Shell selbst | `~/.cache/alpe/dms-colors.json`, `dms-typography.json` | `colors.json`, `typography.json` | kein Übergang | liest nur die Shell selbst; alte Dateien räumt F1 weg |
+| Sicherungen | `gtk-3.0/gtk-theme.dms-backup`, `icon-theme.dms-backup` | `*.alpe-backup` | wird beim ersten Zugriff umbenannt | enthält das Thema, das beim Abschalten zurückkommt |
+
 Gespeicherte Kennungen aus D7 (0.8 Nr. 42): wo sie liegen können und was mit ihnen geschieht.
 
 | Kennung (alt → neu) | Kann gespeichert sein in | Ergebnis |
@@ -380,6 +416,11 @@ Gespeicherte Kennungen aus D7 (0.8 Nr. 42): wo sie liegen können und was mit ih
 | Fähigkeit `dankbar-widget`, `requires_dms` | `plugin.json` fremder Plugins | keine Migration: Die Fähigkeit wertet die Shell nicht aus, `requires_dms` wird nicht mehr gelesen (Hinweis entfällt); Anleitung `docs/plugins-anpassen.md` |
 | Module und Typen `qs.DCommon.*`, `D*`, `Dank*`, Funktionen `PopoutService.toggleDankLauncherV2` u. ä. | QML fremder Plugins | Hüllen bis D7.8, Anleitung; nicht in Datendateien |
 | Kürzel-Quelle `"dms"`, Aktionsart `"dms"`, JSON-Felder `dmsStatus` … | nur zur Laufzeit zwischen Dienst und Oberfläche | nichts gespeichert |
+| Layer-Namensräume `dms:…` → `alpe:…` (D7.7a2) | eigene `layerrule`/`layer_rule` in Hyprland-Dateien; KWin kennt keine Layer-Regeln (Fensterregeln in `kwinrulesrc` treffen Fensterklassen, nicht Namensräume) | **F1 deckt ab** (7.4 Schritt 6). PC (nur gelesen): kommt nicht vor |
+| `ALPE_DANKBAR_LAYER`, `ALPE_DANKISLAND_LAYER` → `ALPE_BAR_LAYER`, `ALPE_ISLAND_LAYER` (D7.7a2) | `env =` in Hyprland-Dateien, `~/.config/environment.d/*.conf`, Drop-ins von `alpe.service` | **F1 deckt ab** (7.4 Schritt 6, 7.2 Schritt 7). PC: kommt nicht vor |
+| systemd-Einheit `app-dms-…` → `app-alpe-…` (D7.7a2) | Overrides unter `~/.config/systemd/user/app-dms-*.d/` | **F1 deckt ab**: Ordner umbenennen (7.2 Schritt 7). PC: keine Overrides |
+| IPC-Antworten `DANK_ISLAND_…`/`DANK_DOT_…` → `ISLAND_…`/`DOT_…` (D7.7a2) | eigene Skripte, die die Antwort auswerten | **F1 deckt nicht ab** (Skripte der Nutzer werden nicht umgeschrieben): Hinweis im Protokoll des Umzugs und im CHANGELOG. PC: kommt nicht vor |
+| Auswahl-Eintrag `dms-open` → `alpe-open` (D7.7a2) | `mimeapps.list` | **F1 deckt ab** (0.8 Nr. 50). PC: fünf Einträge für Archive |
 ---
 
 ## 1. Zielstruktur des Repos
@@ -671,12 +712,15 @@ Bestätigung des Maintainers**, dass PC und Mac umgestellt sind.
 | D7.7a | Restliche `"dms"`-Werte (0.8 Nr. 38) und übrige Bezeichner der Oberfläche: Kürzel-Kategorie und -Erkennung (`alpe`, übergangsweise auch `dms`), `case "dms"` in `ProcessActions.qml`, `getDMSShellVersion` in doctor, verbliebene `dms…`/`dank…`-Bezeichner in `shell/` |
 | D7.7a2 | Übrige Bezeichner der Oberfläche (`shell…`/`backend…` statt `dms…`, Kalender `dux…`), sichtbare Kennungen: Layer-Namensräume `alpe:…` (auch `alpe:island`), systemd-Einheit `app-alpe-…`, IPC-Antworten `ISLAND_…`/`DOT_…`, `ALPE_BAR_LAYER`/`ALPE_ISLAND_LAYER`, Auswahl-Eintrag `alpe-open` |
 | D7.7b | Erzeugte Dateien und Vorlagen: Cache `colors.json`/`typography.json`, matugen-Vorlagen und -Ausgaben (`alpe*.json`, kitty, GTK, fcitx5, Lualine), Vorlagen-Variablen `dank16.*` → `palette16.*`, Regel-IDs `alpe-*`, Marke `-- ALPE-RULE:` (alte wird gelesen) – Oberfläche und Dienst gemeinsam, weil beide Seiten dieselben Dateinamen kennen |
+| D7.7b3 | Regel-IDs `alpe-floating-windows`, `alpe-window-opaque`, Marke `-- ALPE-RULE:` (alte Marke und IDs werden gelesen, beim nächsten Schreiben ersetzt) |
+| D7.7b4 | `packaging/alpe-open.desktop` (Installation E3, `mimeapps.list` F1) |
 | D7.7c | Hotspot («Alpe Hotspot», alte Verbindung wird erkannt und weiter benutzt) und CUPS (Benutzername zur Laufzeit, einmaliges Kündigen alter Abonnements des Besitzers `dms`, Marke unter `~/.local/state/alpe/`) mit IPP-Attrappe als Test |
 | D7.7d | Dienst intern: Paket `internal/dank16` → `internal/palette16`, Befehl `alpe-dienst palette16` |
 | D7.7e | Dienst intern: `internal/config`, `configfrag`, `luaconfig`, `keybinds`, `windowrules` (`dmsDir` → `appDir`, `dmsPath` → `shellConfigPath`, `LoadDMSRules` → `LoadShellRules` …) |
 | D7.7f | Dienst intern: `internal/matugen` (Rest nach D7.7b) |
 | D7.7g | Dienst intern: `cmd/alpe-dienst`, `internal/version`, `internal/log` und die Pakete unter `internal/server` |
 | D7.7h | Dienst intern: übrige Pakete, `core/README.md`, `Makefile`, `.mockery.yml`; Prüfung, dass weder Paketverzeichnisse noch `go.mod` alte Namen tragen (ausser Ausnahmeliste: `dux-go`, `dux-gop`) |
+| D7.7i | Werkzeuge `tools/backend.sh`, `entfernen.sh`, `alpe`, `maclock.sh` (0.8 Nr. 52) – vor dem Zwischenhalt |
 | D7.8 | **Nach Bestätigung:** `Dank*`-Hüllen, Übergangs-Hüllen `DCommon/Widgets`, `Modules/DankBar`, `Modules/DankDash` und `Deprecation.qml` weg; Namensprüfung schlägt ab jetzt fehl |
 
 Dazu im Lauf von D7 (Doku, kein Code): `docs/plan/sie-form.md` (0.8 Nr. 15).
@@ -1114,6 +1158,8 @@ Umzug:
    | Seiten-IDs als Argument (`ipc call settings …`): `dankbar`, `dankbar_settings`, `dankbar_appearance`, `dankbar_dot`, `dankbar_widgets`, `dank_dash`, Aliasse `dank_island`, `dankdot` | `bar`, `bar_settings`, `bar_appearance`, `bar_dot`, `bar_widgets`, `dash`, `island`, `dot` |
    | `dms dank16 …` | `alpe-dienst palette16 …` |
    | `dms://…` (Aufruf über `dms open`) | entfällt (0.8 Nr. 14): Zeile bleibt, Hinweis im Protokoll |
+   | Layer-Namensraum in `layerrule`/`layer_rule`: `dms:…`, `dms:dankisland` | `alpe:…`, `alpe:island` |
+   | `env = ALPE_DANKBAR_LAYER,…`, `ALPE_DANKISLAND_LAYER` (auch `~/.config/environment.d/`) | `ALPE_BAR_LAYER`, `ALPE_ISLAND_LAYER` |
 
    Ohne Übergang in der Shell: Bis zum Umzug greifen Kürzel mit alten Zielen nicht (`dms` spricht
    nur DMS-Sockets an; `dankdash` gibt es nicht mehr).

@@ -1,7 +1,7 @@
 [templates.alpekitty]
 input_path = 'SHELL_DIR/matugen/templates/kitty.conf'
-output_path = 'CONFIG_DIR/kitty/dank-theme.conf'
+output_path = 'CONFIG_DIR/kitty/alpe-theme.conf'
 
 [templates.alpekittytabs]
 input_path = 'SHELL_DIR/matugen/templates/kitty-tabs.conf'
-output_path = 'CONFIG_DIR/kitty/dank-tabs.conf'
+output_path = 'CONFIG_DIR/kitty/alpe-tabs.conf'

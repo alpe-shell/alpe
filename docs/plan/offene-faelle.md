@@ -183,6 +183,29 @@ alpe-dienst ipc call dash toggle wallpaper
 alpe-dienst ipc call settings tabs
 ```
 
+**Layer-Regeln am Mac im D7-Stand (Plan 0.8 Nr. 42, Tabelle):** Eigene Hyprland-Regeln mit
+`dms:…` (`layerrule = blur, dms:bar`, `hl.layer_rule({ match = { namespace = "^dms:.*$" } … })`)
+treffen die Testshell nicht mehr; ihre Flächen heissen `alpe:…` (`alpe:bar`, `alpe:island`,
+`alpe:popout` …). Für den Test eine Zeile mit `alpe:` daneben setzen oder den Befund «kein Blur,
+keine Animation-Ausnahme» als erwartet verbuchen; F1 schreibt die Regeln um. Nachsehen, was heute
+vorkommt:
+
+```
+grep -rn "dms:" ~/.config/hypr
+```
+
+**Rückweg zu 1.0 nach dem Test (Plan 0.8 Nr. 41):** Die Testshell schreibt `session.json` schon
+beim ersten Start auf Version 8. Wer die Session des Tests für 1.0 weiterverwenden will, nimmt
+dafür nur die Sicherung `session.v7.json` – nie die migrierte `session.json`:
+
+```
+cp ~/.local/state/alpe/session.v7.json ~/.local/state/dms/session.json
+```
+
+(Im normalen Test ist das nicht nötig: 1.0 liest weiter `~/.local/state/dms/session.json`, die der
+Test nicht anfasst.) Dasselbe gilt für `settings.v42.json` bzw. `settings.v43.json` unter
+`~/.config/alpe/`.
+
 ## Nach D1: Folgen der neuen Namen
 
 - **Kürzel in Hyprland-Dateien:** Die Kürzel-Aktionen heissen jetzt `alpe-dienst ipc call …` bzw.

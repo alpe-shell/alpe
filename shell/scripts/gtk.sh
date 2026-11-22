@@ -36,12 +36,22 @@ is_user_theme_dir() {
 	return 1
 }
 
-# Patch only DMS's own copy or a theme the user ran 'apply' on (which backs it
-# up), never a user's hand-made copy that merely sits next to a dank import.
+# Patch only Alpe's own copy or a theme the user ran 'apply' on (which backs it
+# up), never a user's hand-made copy that merely sits next to our import.
 is_patchable_theme_dir() {
 	local dir="$1"
 	is_user_theme_dir "$dir" || return 1
-	[ -f "$dir/../.dms-copy" ] || [ -f "$dir/gtk.css.dms-backup" ]
+	[ -f "$dir/../.alpe-copy" ] || [ -f "$dir/gtk.css.alpe-backup" ] ||
+		[ -f "$dir/../.dms-copy" ] || [ -f "$dir/gtk.css.dms-backup" ] # alte Marken aus 1.0 (bis F1)
+}
+
+# Marke der eigenen Kopie; eine Kopie aus 1.0 trägt noch die alte Marke (bis F1).
+copy_marker() {
+	if [ ! -f "$1/.alpe-copy" ] && [ -f "$1/.dms-copy" ]; then
+		echo "$1/.dms-copy"
+	else
+		echo "$1/.alpe-copy"
+	fi
 }
 
 get_adw_gtk3_dir() {
@@ -87,7 +97,7 @@ theme_src_checksum() {
 	sha256sum "$1/gtk-3.0/gtk.css" 2>/dev/null | cut -d' ' -f1
 }
 
-# DMS patches the theme css in place, which needs a user-writable copy;
+# Alpe patches the theme css in place, which needs a user-writable copy;
 # package managers install to read-only system dirs (nix store included).
 ensure_user_adw_gtk3() {
 	local variant name src dest marker src_sum
@@ -95,14 +105,14 @@ ensure_user_adw_gtk3() {
 		name=""
 		[ "$variant" == "dark" ] && name="-$variant"
 		dest="$USER_DATA_THEMES/adw-gtk3${name}"
-		marker="$dest/.dms-copy"
+		marker="$(copy_marker "$dest")"
 
 		if [ -d "$dest/gtk-3.0" ]; then
 			[ -f "$marker" ] || continue
 			src="$(get_system_adw_gtk3_root "$variant")" || continue
 			src_sum="$(theme_src_checksum "$src")" || continue
 			if [ "$src_sum" != "$(sed -n 's/^sha256=//p' "$marker")" ]; then
-				echo "System adw-gtk3${name} changed, refreshing DMS copy"
+				echo "System adw-gtk3${name} changed, refreshing our copy"
 				rm -rf "$dest"
 			else
 				continue
@@ -127,76 +137,77 @@ ensure_user_adw_gtk3() {
 	done
 }
 
-DANK_IMPORT='@import url("dank-colors.css");'
-DANK_IMPORT_RE='^@import url.*dank-colors\.css.*);$'
+COLORS_IMPORT='@import url("alpe-colors.css");'
+# alpe-colors.css: Import aus 1.0; die Datei ist bis zum Umzug (F1) ein Link auf alpe-colors.css.
+COLORS_IMPORT_RE='^@import url.*\(alpe\|dank\)-colors\.css.*);$'
 
-# gtk.css is DMS-managed if it is our symlink or carries our import line.
+# gtk.css is managed by Alpe if it is our symlink or carries our import line.
 # User-managed symlinks (e.g. home-manager) are never touched.
-dms_managed_css() {
+managed_css() {
 	local gtk_css="$1"
 	if [ -L "$gtk_css" ]; then
 		case "$(readlink "$gtk_css")" in
-			*dank-colors.css*) return 0 ;;
+			*alpe-colors.css* | *dank-colors.css*) return 0 ;;
 			*) return 1 ;;
 		esac
 	fi
-	[ -f "$gtk_css" ] && grep -q "$DANK_IMPORT_RE" "$gtk_css"
+	[ -f "$gtk_css" ] && grep -q "$COLORS_IMPORT_RE" "$gtk_css"
 }
 
 # Opted in when either gtk.css uses our colors, including through a user-managed
 # symlink. Must match isDMSGTKActive in core/internal/matugen.
-dank_colors_active() {
+colors_active() {
 	local config_dir="$1" gtk_css
 	for gtk_css in "$config_dir/gtk-4.0/gtk.css" "$config_dir/gtk-3.0/gtk.css"; do
-		dms_managed_css "$gtk_css" && return 0
-		grep -qs 'dank-colors\.css' "$gtk_css" && return 0
+		managed_css "$gtk_css" && return 0
+		grep -qs '\(alpe\|dank\)-colors\.css' "$gtk_css" && return 0
 	done
 	return 1
 }
 
-inject_dank_import() {
+inject_colors_import() {
 	local gtk_css="$1"
 
 	if [ -L "$gtk_css" ]; then
-		if grep -qs "$DANK_IMPORT_RE" "$gtk_css"; then
-			echo "User-managed '$gtk_css' already imports dank-colors.css"
+		if grep -qs "$COLORS_IMPORT_RE" "$gtk_css"; then
+			echo "User-managed '$gtk_css' already imports alpe-colors.css"
 			return 0
 		fi
-		if ! dms_managed_css "$gtk_css"; then
+		if ! managed_css "$gtk_css"; then
 			echo "Warning: '$gtk_css' is a user-managed symlink; leaving it untouched" >&2
-			echo "Import dank-colors.css from your own stylesheet to use DMS colors" >&2
+			echo "Import alpe-colors.css from your own stylesheet to use the Alpe colors" >&2
 			return 1
 		fi
 		rm "$gtk_css"
 	fi
 
-	if [ -f "$gtk_css" ] && grep -q "$DANK_IMPORT_RE" "$gtk_css"; then
-		echo "Dank import already present in '$gtk_css'"
+	if [ -f "$gtk_css" ] && grep -q "$COLORS_IMPORT_RE" "$gtk_css"; then
+		echo "Import already present in '$gtk_css'"
 		return 0
 	fi
 
 	if [ -f "$gtk_css" ] && [ -s "$gtk_css" ]; then
-		sed -i "1i\\$DANK_IMPORT" "$gtk_css"
+		sed -i "1i\\$COLORS_IMPORT" "$gtk_css"
 	else
-		echo "$DANK_IMPORT" >"$gtk_css"
+		echo "$COLORS_IMPORT" >"$gtk_css"
 	fi
-	echo "Added dank-colors import to '$gtk_css'"
+	echo "Added alpe-colors import to '$gtk_css'"
 }
 
-remove_dank_import() {
+remove_colors_import() {
 	local gtk_css="$1"
 
 	if [ -L "$gtk_css" ]; then
-		if dms_managed_css "$gtk_css"; then
+		if managed_css "$gtk_css"; then
 			rm "$gtk_css"
-			echo "Removed DMS-managed symlink '$gtk_css'"
+			echo "Removed managed symlink '$gtk_css'"
 		fi
 		return 0
 	fi
 
-	if [ -f "$gtk_css" ] && grep -q "$DANK_IMPORT_RE" "$gtk_css"; then
-		sed -i "/$DANK_IMPORT_RE/d" "$gtk_css"
-		echo "Removed dank-colors import from '$gtk_css'"
+	if [ -f "$gtk_css" ] && grep -q "$COLORS_IMPORT_RE" "$gtk_css"; then
+		sed -i "/$COLORS_IMPORT_RE/d" "$gtk_css"
+		echo "Removed alpe-colors import from '$gtk_css'"
 	fi
 }
 
@@ -204,7 +215,7 @@ remove_gtk3_patch() {
 	local theme_dir="$1"
 	local css_variant="$2"
 	[ "$css_variant" != "-dark" ] && css_variant=""
-	sed -i '/\/\* BEGIN DMS OVERRIDE \*\//,/\/\* END DMS OVERRIDE \*\//d' "${theme_dir}/gtk${css_variant}.css"
+	sed -i '/\/\* BEGIN \(ALPE\|DMS\) OVERRIDE \*\//,/\/\* END \(ALPE\|DMS\) OVERRIDE \*\//d' "${theme_dir}/gtk${css_variant}.css"
 	return $?
 }
 
@@ -213,11 +224,12 @@ remove_gtk3_colors() {
 
 	local gtk3_dir="$config_dir/gtk-3.0"
 
-	remove_dank_import "$gtk3_dir/gtk.css"
-	if [ ! -f "${gtk3_dir}/dank-colors.css" ]; then
+	remove_colors_import "$gtk3_dir/gtk.css"
+	if [ ! -f "${gtk3_dir}/alpe-colors.css" ]; then
 		echo "Nothing to remove at '${gtk3_dir}'"
 	else
-		if rm "${gtk3_dir}/dank-colors.css"; then
+		[ -L "${gtk3_dir}/dank-colors.css" ] && rm -f "${gtk3_dir}/dank-colors.css" # Link aus dem Übergang (bis F1)
+		if rm "${gtk3_dir}/alpe-colors.css"; then
 			echo "Removed GTK3 override from '${gtk3_dir}'"
 		else
 			echo "Failed to remove GTK3 override from '${gtk3_dir}'"
@@ -246,19 +258,19 @@ do_patch() {
 	local theme_dir="$1"
 	local variant="$2"
 	if ! is_patchable_theme_dir "$theme_dir"; then
-		echo "Skipping '$variant' patch: no DMS-managed copy of adw-gtk3 for this variant"
+		echo "Skipping '$variant' patch: no managed copy of adw-gtk3 for this variant"
 		return 0
 	fi
 	local css_variant=""
 	[ "$variant" = "dark" ] && css_variant="-${variant}"
 	local theme_css="${theme_dir}/gtk${css_variant}.css"
-	if [ "$(sed -n '/\/\* BEGIN DMS OVERRIDE \*\//,/\/\* END DMS OVERRIDE \*\//p' "$theme_css" 2>/dev/null)" = "$(cat "${gtk3_dir}/dank-colors.css")" ]; then
+	if [ "$(sed -n '/\/\* BEGIN ALPE OVERRIDE \*\//,/\/\* END ALPE OVERRIDE \*\//p' "$theme_css" 2>/dev/null)" = "$(cat "${gtk3_dir}/alpe-colors.css")" ]; then
 		return 0
 	fi
 	PATCHED=1
 	if {
 		remove_gtk3_patch "$theme_dir" "$css_variant"
-		cat "${gtk3_dir}/dank-colors.css" >>"${theme_dir}/gtk${css_variant}.css"
+		cat "${gtk3_dir}/alpe-colors.css" >>"${theme_dir}/gtk${css_variant}.css"
 	}; then
 		echo "Successfully patched '$theme_dir/gtk${css_variant}.css' with GTK '$variant' colors"
 	else
@@ -277,12 +289,12 @@ patch_gtk3_colors() {
 	local adw_gtk3_dir && adw_gtk3_dir=$(get_adw_gtk3_dir "$variant")
 
 	if ! is_patchable_theme_dir "$adw_gtk3_dir"; then
-		echo "No DMS-managed adw-gtk3 ${variant} was found, skipping patch"
+		echo "No managed adw-gtk3 ${variant} was found, skipping patch"
 		exit 2
 	fi
 
-	if [ ! -f "${gtk3_dir}/dank-colors.css" ]; then
-		echo "Error: GTK3 dank-colors.css not found at '${gtk3_dir}'" >&2
+	if [ ! -f "${gtk3_dir}/alpe-colors.css" ]; then
+		echo "Error: GTK3 alpe-colors.css not found at '${gtk3_dir}'" >&2
 		echo "Run matugen first to generate theme files" >&2
 		exit 1
 	fi
@@ -313,27 +325,27 @@ apply_gtk3_colors() {
 	if ! is_user_theme_dir "$adw_gtk3"; then
 		echo "Warning: No user version of adw-gtk3 found" >&2
 		echo "Falling back on global css override" >&2
-		local dank_colors="$gtk3_dir/dank-colors.css"
+		local colors_css="$gtk3_dir/alpe-colors.css"
 
-		if [ ! -f "$dank_colors" ]; then
-			echo "Error: dank-colors.css not found at $dank_colors" >&2
+		if [ ! -f "$colors_css" ]; then
+			echo "Error: alpe-colors.css not found at $colors_css" >&2
 			echo "Run matugen first to generate theme files" >&2
 			exit 1
 		fi
 
-		inject_dank_import "$gtk3_override" || exit 1
+		inject_colors_import "$gtk3_override" || exit 1
 
 		return
 	fi
 
-	# adw-gtk3 carries the colors; ensure there's no DMS global override
-	remove_dank_import "$gtk3_override"
+	# adw-gtk3 carries the colors; ensure there's no global override
+	remove_colors_import "$gtk3_override"
 
 	for variant in light dark; do
 		local adw_gtk3_dir && adw_gtk3_dir="$(get_adw_gtk3_dir "$variant")"
 		for css in gtk.css gtk-dark.css; do
-			if [ -f "$adw_gtk3_dir/$css" ] && [ ! -f "$adw_gtk3_dir/$css.dms-backup" ]; then
-				cp "$adw_gtk3_dir/$css" "$adw_gtk3_dir/$css.dms-backup"
+			if [ -f "$adw_gtk3_dir/$css" ] && [ ! -f "$adw_gtk3_dir/$css.alpe-backup" ] && [ ! -f "$adw_gtk3_dir/$css.dms-backup" ]; then
+				cp "$adw_gtk3_dir/$css" "$adw_gtk3_dir/$css.alpe-backup"
 			fi
 		done
 	done
@@ -343,40 +355,41 @@ remove_gtk4_colors() {
 	local config_dir="$1"
 
 	local gtk4_dir="$config_dir/gtk-4.0"
-	local dank_colors="$gtk4_dir/dank-colors.css"
+	local colors_css="$gtk4_dir/alpe-colors.css"
 	local gtk_css="$gtk4_dir/gtk.css"
 
-	remove_dank_import "$gtk_css"
+	remove_colors_import "$gtk_css"
 
-	if [ ! -f "$dank_colors" ]; then
+	if [ ! -f "$colors_css" ]; then
 		echo "Nothing to remove in '$gtk4_dir'"
 		return
 	fi
 
-	rm "$dank_colors"
-	echo "Removed 'dank-colors.css' from '$gtk4_dir'"
+	[ -L "$gtk4_dir/dank-colors.css" ] && rm -f "$gtk4_dir/dank-colors.css" # Link aus dem Übergang (bis F1)
+	rm "$colors_css"
+	echo "Removed 'alpe-colors.css' from '$gtk4_dir'"
 }
 
 apply_gtk4_colors() {
 	local config_dir="$1"
 
 	local gtk4_dir="$config_dir/gtk-4.0"
-	local dank_colors="$gtk4_dir/dank-colors.css"
+	local colors_css="$gtk4_dir/alpe-colors.css"
 	local gtk_css="$gtk4_dir/gtk.css"
 
-	if [ ! -f "$dank_colors" ]; then
-		echo "Error: GTK4 dank-colors.css not found at $dank_colors" >&2
+	if [ ! -f "$colors_css" ]; then
+		echo "Error: GTK4 alpe-colors.css not found at $colors_css" >&2
 		echo "Run matugen first to generate theme files" >&2
 		exit 1
 	fi
 
-	inject_dank_import "$gtk_css" || exit 1
+	inject_colors_import "$gtk_css" || exit 1
 }
 
 case "$MODE" in
 	patch)
-		if ! dank_colors_active "$CONFIG_DIR"; then
-			echo "DMS GTK theming is not applied, skipping patch"
+		if ! colors_active "$CONFIG_DIR"; then
+			echo "Alpe GTK theming is not applied, skipping patch"
 			exit 2
 		fi
 		patch_gtk3_colors "$CONFIG_DIR" "$IS_LIGHT"

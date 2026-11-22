@@ -1,11 +1,11 @@
 [templates.alpekcolorscheme]
 input_path = 'SHELL_DIR/matugen/templates/kcolorscheme.colors'
-output_path = 'DATA_DIR/color-schemes/DankMatugen.colors'
+output_path = 'DATA_DIR/color-schemes/AlpeMatugen.colors'
 
 [templates.alpelightkcolorscheme]
 input_path = 'SHELL_DIR/matugen/templates/light-kcolorscheme.colors'
-output_path = 'DATA_DIR/color-schemes/DankMatugenLight.colors'
+output_path = 'DATA_DIR/color-schemes/AlpeMatugenLight.colors'
 
 [templates.alpedarkkcolorscheme]
 input_path = 'SHELL_DIR/matugen/templates/dark-kcolorscheme.colors'
-output_path = 'DATA_DIR/color-schemes/DankMatugenDark.colors'
+output_path = 'DATA_DIR/color-schemes/AlpeMatugenDark.colors'

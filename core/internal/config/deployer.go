@@ -256,7 +256,7 @@ func (cd *ConfigDeployer) deployGhosttyConfig() ([]DeploymentResult, error) {
 
 	colorResult := DeploymentResult{
 		ConfigType: "Ghostty Colors",
-		Path:       filepath.Join(os.Getenv("HOME"), ".config", "ghostty", "themes", "dankcolors"),
+		Path:       filepath.Join(os.Getenv("HOME"), ".config", "ghostty", "themes", "alpecolors"),
 	}
 
 	themesDir := filepath.Dir(colorResult.Path)
@@ -320,7 +320,7 @@ func (cd *ConfigDeployer) deployKittyConfig() ([]DeploymentResult, error) {
 
 	themeResult := DeploymentResult{
 		ConfigType: "Kitty Theme",
-		Path:       filepath.Join(os.Getenv("HOME"), ".config", "kitty", "dank-theme.conf"),
+		Path:       filepath.Join(os.Getenv("HOME"), ".config", "kitty", "alpe-theme.conf"),
 	}
 
 	if err := os.WriteFile(themeResult.Path, []byte(KittyThemeConfig), 0o644); err != nil {
@@ -334,7 +334,7 @@ func (cd *ConfigDeployer) deployKittyConfig() ([]DeploymentResult, error) {
 
 	tabsResult := DeploymentResult{
 		ConfigType: "Kitty Tabs",
-		Path:       filepath.Join(os.Getenv("HOME"), ".config", "kitty", "dank-tabs.conf"),
+		Path:       filepath.Join(os.Getenv("HOME"), ".config", "kitty", "alpe-tabs.conf"),
 	}
 
 	if err := os.WriteFile(tabsResult.Path, []byte(KittyTabsConfig), 0o644); err != nil {
@@ -392,7 +392,7 @@ func (cd *ConfigDeployer) deployAlacrittyConfig() ([]DeploymentResult, error) {
 
 	themeResult := DeploymentResult{
 		ConfigType: "Alacritty Theme",
-		Path:       filepath.Join(os.Getenv("HOME"), ".config", "alacritty", "dank-theme.toml"),
+		Path:       filepath.Join(os.Getenv("HOME"), ".config", "alacritty", "alpe-theme.toml"),
 	}
 
 	if err := os.WriteFile(themeResult.Path, []byte(AlacrittyThemeConfig), 0o644); err != nil {

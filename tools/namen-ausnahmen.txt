@@ -23,7 +23,12 @@ shell/tests/keybinds-legacy-actions.test.mjs	*	Umzug-Ende	Test dazu
 shell/Common/ConfigIncludeResolve.js	DMS bzw\. Alpe 1\.0	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/Common/OutputModel.js	DMS used to write|DMS 1\.x|hypr/dms/profiles	Umzug-Ende	Anzeigeprofile aus 1.0 lesen
 core/internal/matugen/matugen.go	"dank16(term)?"|dank16 und dank16term	F1	alte Palettennamen für eigene matugen-Vorlagen der Nutzer zusätzlich einspeisen (0.8 Nr. 47); F1 schreibt die Vorlagen um
-core/internal/matugen/altnamen_test.go	dank16	F1	Test dazu: alte und neue Palettennamen liefern dieselben Werte
+core/internal/matugen/altnamen.go	*	F1	alte Ausgabenamen aus 1.0 als Link bzw. zweite Fassung weiterführen (0.8 Nr. 48); F1 schreibt die Einbindungen um und räumt sie weg
+core/internal/matugen/altnamen_test.go	*	F1	Test dazu
+shell/scripts/gtk.sh	\.dms-copy|\.dms-backup|dank-colors|DMS\\\) OVERRIDE|isDMSGTKActive	F1	GTK: Import, Marken und Sicherungen aus 1.0 erkennen (0.8 Nr. 48)
+shell/Common/Theme.qml	gtk-theme\.dms-backup	F1	Sicherung des GTK-Themas aus 1.0 übernehmen
+shell/Common/SettingsData.qml	icon-theme\.dms-backup	F1	Sicherung des Symbolthemas aus 1.0 übernehmen
+shell/matugen/*	neovim|_DMS_SUPPORT|"dms"|dms integration|dms settings file|nvim/.*dms\.lua	solange die Anbindung besteht	Neovim: Anbindung an base46 mit DMS-Unterstützung (fremdes Plugin, Namen von aussen vorgegeben); offene Frage zum Zwischenhalt
 shell/Common/ConfigIncludeResolve.js	DMS Include Configs	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/tests/config-include.test.mjs	DMS Include Configs|dms\.colors	Umzug-Ende	Test dazu
 shell/Common/settings/SettingsStore.js	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|=== "dms"	Umzug-Ende	Migration v43 (alte Schlüssel lesen)

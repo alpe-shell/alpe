@@ -13,8 +13,8 @@
   ],
   "programme": {
     "kitty": [
-      "dank-tabs.conf",
-      "dank-theme.conf",
+      "alpe-tabs.conf",
+      "alpe-theme.conf",
       "kitty.conf"
     ],
     "fastfetch": [

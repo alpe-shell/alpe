@@ -1,4 +1,4 @@
-;;; dank-emacs-theme.el --- Enhanced theme using Matugen SCSS variables with dank16 colors -*- lexical-binding: t; -*-
+;;; alpe-emacs-theme.el --- Enhanced theme using Matugen SCSS variables with palette16 colors -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2025
 
@@ -9,8 +9,8 @@
 
 ;;; Commentary:
 
-;; An enhanced theme using Matugen SCSS variables integrated with dank16 colors:
-;; - Rich color palette from dank16 for vibrant syntax highlighting
+;; An enhanced theme using Matugen SCSS variables integrated with palette16 colors:
+;; - Rich color palette from palette16 for vibrant syntax highlighting
 ;; - Improved contrast and readability
 ;; - Better source block distinction with refined backgrounds
 ;; - Enhanced org-mode styling with hidden asterisks
@@ -18,11 +18,11 @@
 
 ;;; Code:
 
-(deftheme dank-emacs "Enhanced theme using Matugen variables with dank16 color integration.")
+(deftheme alpe-emacs "Enhanced theme using Matugen variables with palette16 color integration.")
 
 ;; Define all the color variables (replaced by template processor)
 (let* ((bg "{{colors.background.default.hex}}")
-      (err "{{palette16.color1.default.hex}}")  ; Red from dank16
+      (err "{{palette16.color1.default.hex}}")  ; Red from palette16
       (err-container "{{colors.error_container.default.hex}}")
       (on-background "{{colors.on_background.default.hex}}")
       (on-err "{{colors.on_error.default.hex}}")
@@ -52,22 +52,22 @@
       (tertiary "{{colors.tertiary.default.hex}}")
       (tertiary-container "{{colors.tertiary_container.default.hex}}")
 
-      ;; Enhanced dank16 colors for better syntax highlighting
-      (dank-red "{{palette16.color1.default.hex}}")          ; Bright red
-      (dank-red-alt "{{palette16.color9.default.hex}}")      ; Alternative red
-      (dank-green "{{palette16.color2.default.hex}}")        ; Vibrant green
-      (dank-green-bright "{{palette16.color10.default.hex}}") ; Bright green
-      (dank-yellow "{{palette16.color3.default.hex}}")       ; Warm yellow
-      (dank-yellow-bright "{{palette16.color11.default.hex}}") ; Bright yellow
-      (dank-blue "{{palette16.color4.default.hex}}")         ; Blue-green
-      (dank-magenta "{{palette16.color5.default.hex}}")      ; Teal-magenta
-      (dank-cyan "{{palette16.color6.default.hex}}")         ; Bright cyan
-      (dank-cyan-bright "{{palette16.color12.default.hex}}") ; Brightest cyan
-      (dank-cyan-dark "{{palette16.color13.default.hex}}")   ; Dark cyan
-      (dank-teal "{{palette16.color14.default.hex}}")        ; Dark teal
-      (dank-fg "{{palette16.color7.default.hex}}")           ; Light foreground
-      (dank-gray "{{palette16.color8.default.hex}}")         ; Gray
-      (dank-white "{{palette16.color15.default.hex}}")       ; White
+      ;; Enhanced palette16 colors for better syntax highlighting
+      (alpe-red "{{palette16.color1.default.hex}}")          ; Bright red
+      (alpe-red-alt "{{palette16.color9.default.hex}}")      ; Alternative red
+      (alpe-green "{{palette16.color2.default.hex}}")        ; Vibrant green
+      (alpe-green-bright "{{palette16.color10.default.hex}}") ; Bright green
+      (alpe-yellow "{{palette16.color3.default.hex}}")       ; Warm yellow
+      (alpe-yellow-bright "{{palette16.color11.default.hex}}") ; Bright yellow
+      (alpe-blue "{{palette16.color4.default.hex}}")         ; Blue-green
+      (alpe-magenta "{{palette16.color5.default.hex}}")      ; Teal-magenta
+      (alpe-cyan "{{palette16.color6.default.hex}}")         ; Bright cyan
+      (alpe-cyan-bright "{{palette16.color12.default.hex}}") ; Brightest cyan
+      (alpe-cyan-dark "{{palette16.color13.default.hex}}")   ; Dark cyan
+      (alpe-teal "{{palette16.color14.default.hex}}")        ; Dark teal
+      (alpe-fg "{{palette16.color7.default.hex}}")           ; Light foreground
+      (alpe-gray "{{palette16.color8.default.hex}}")         ; Gray
+      (alpe-white "{{palette16.color15.default.hex}}")       ; White
 
       ;; Map success colors to green
       (success "{{palette16.color2.default.hex}}")
@@ -94,7 +94,7 @@
       (inverse-primary "{{colors.inverse_primary.default.hex}}")
       (inverse-surface "{{colors.inverse_surface.default.hex}}")
 
-      ;; Terminal colors from dank16
+      ;; Terminal colors from palette16
       (term0 "{{palette16.color0.default.hex}}")
       (term1 "{{palette16.color1.default.hex}}")
       (term2 "{{palette16.color2.default.hex}}")
@@ -113,163 +113,163 @@
       (term15 "{{palette16.color15.default.hex}}"))
 
   (custom-theme-set-faces
-   'dank-emacs
+   'alpe-emacs
    ;; Basic faces
    `(default ((t (:background ,bg :foreground ,on-background))))
-   `(cursor ((t (:background ,dank-cyan-bright))))
+   `(cursor ((t (:background ,alpe-cyan-bright))))
    `(highlight ((t (:background ,primary-container :foreground ,on-primary-container))))
-   `(region ((t (:background ,primary-container :foreground ,dank-cyan-bright :extend t))))
+   `(region ((t (:background ,primary-container :foreground ,alpe-cyan-bright :extend t))))
    `(secondary-selection ((t (:background ,secondary-container :foreground ,on-secondary-container :extend t))))
-   `(isearch ((t (:background ,dank-yellow :foreground ,bg :weight bold))))
-   `(lazy-highlight ((t (:background ,secondary-container :foreground ,dank-yellow-bright))))
+   `(isearch ((t (:background ,alpe-yellow :foreground ,bg :weight bold))))
+   `(lazy-highlight ((t (:background ,secondary-container :foreground ,alpe-yellow-bright))))
    `(vertical-border ((t (:foreground ,surface-variant))))
    `(border ((t (:background ,surface-variant :foreground ,surface-variant))))
-   `(fringe ((t (:background ,surface :foreground ,dank-gray))))
-   `(shadow ((t (:foreground ,dank-gray))))
-   `(link ((t (:foreground ,dank-cyan-bright :underline t))))
-   `(link-visited ((t (:foreground ,dank-magenta :underline t))))
+   `(fringe ((t (:background ,surface :foreground ,alpe-gray))))
+   `(shadow ((t (:foreground ,alpe-gray))))
+   `(link ((t (:foreground ,alpe-cyan-bright :underline t))))
+   `(link-visited ((t (:foreground ,alpe-magenta :underline t))))
    `(success ((t (:foreground ,success))))
-   `(warning ((t (:foreground ,dank-yellow))))
+   `(warning ((t (:foreground ,alpe-yellow))))
    `(error ((t (:foreground ,err))))
-   `(match ((t (:background ,dank-yellow :foreground ,bg :weight bold))))
+   `(match ((t (:background ,alpe-yellow :foreground ,bg :weight bold))))
 
-   ;; Font-lock - enhanced with dank16 colors for vibrant syntax highlighting
-   `(font-lock-builtin-face ((t (:foreground ,dank-cyan-bright))))
-   `(font-lock-comment-face ((t (:foreground ,dank-gray :slant italic))))
+   ;; Font-lock - enhanced with palette16 colors for vibrant syntax highlighting
+   `(font-lock-builtin-face ((t (:foreground ,alpe-cyan-bright))))
+   `(font-lock-comment-face ((t (:foreground ,alpe-gray :slant italic))))
    `(font-lock-comment-delimiter-face ((t (:foreground ,outline-variant))))
-   `(font-lock-constant-face ((t (:foreground ,dank-yellow-bright :weight bold))))
-   `(font-lock-doc-face ((t (:foreground ,dank-fg :slant italic))))
-   `(font-lock-function-name-face ((t (:foreground ,dank-cyan :weight bold))))
-   `(font-lock-keyword-face ((t (:foreground ,dank-red-alt :weight bold))))
-   `(font-lock-string-face ((t (:foreground ,dank-green))))
-   `(font-lock-type-face ((t (:foreground ,dank-yellow))))
-   `(font-lock-variable-name-face ((t (:foreground ,dank-fg))))
+   `(font-lock-constant-face ((t (:foreground ,alpe-yellow-bright :weight bold))))
+   `(font-lock-doc-face ((t (:foreground ,alpe-fg :slant italic))))
+   `(font-lock-function-name-face ((t (:foreground ,alpe-cyan :weight bold))))
+   `(font-lock-keyword-face ((t (:foreground ,alpe-red-alt :weight bold))))
+   `(font-lock-string-face ((t (:foreground ,alpe-green))))
+   `(font-lock-type-face ((t (:foreground ,alpe-yellow))))
+   `(font-lock-variable-name-face ((t (:foreground ,alpe-fg))))
    `(font-lock-warning-face ((t (:foreground ,err :weight bold))))
-   `(font-lock-preprocessor-face ((t (:foreground ,dank-teal))))
-   `(font-lock-negation-char-face ((t (:foreground ,dank-red))))
+   `(font-lock-preprocessor-face ((t (:foreground ,alpe-teal))))
+   `(font-lock-negation-char-face ((t (:foreground ,alpe-red))))
 
    ;; Show paren
-   `(show-paren-match ((t (:background ,primary-container :foreground ,dank-cyan-bright :weight bold))))
+   `(show-paren-match ((t (:background ,primary-container :foreground ,alpe-cyan-bright :weight bold))))
    `(show-paren-mismatch ((t (:background ,err-container :foreground ,on-err-container :weight bold))))
 
    ;; Mode line - improved status bar styling
    `(mode-line ((t (:background ,surface-container :foreground ,on-surface :box nil))))
-   `(mode-line-inactive ((t (:background ,surface :foreground ,dank-gray :box nil))))
-   `(mode-line-buffer-id ((t (:foreground ,dank-cyan :weight bold))))
-   `(mode-line-emphasis ((t (:foreground ,dank-cyan :weight bold))))
-   `(mode-line-highlight ((t (:foreground ,dank-cyan-bright :box nil))))
+   `(mode-line-inactive ((t (:background ,surface :foreground ,alpe-gray :box nil))))
+   `(mode-line-buffer-id ((t (:foreground ,alpe-cyan :weight bold))))
+   `(mode-line-emphasis ((t (:foreground ,alpe-cyan :weight bold))))
+   `(mode-line-highlight ((t (:foreground ,alpe-cyan-bright :box nil))))
 
    ;; Improved Source blocks - seamless integration
    `(org-block ((t (:background ,surface-container-low :extend t :inherit fixed-pitch))))
-   `(org-block-begin-line ((t (:background ,surface-container-low :foreground ,dank-teal :extend t :slant italic :inherit fixed-pitch))))
-   `(org-block-end-line ((t (:background ,surface-container-low :foreground ,dank-teal :extend t :slant italic :inherit fixed-pitch))))
-   `(org-code ((t (:background ,surface-container-low :foreground ,dank-yellow-bright :inherit fixed-pitch))))
-   `(org-verbatim ((t (:background ,surface-container-low :foreground ,dank-cyan :inherit fixed-pitch))))
-   `(org-meta-line ((t (:foreground ,dank-gray :slant italic))))
+   `(org-block-begin-line ((t (:background ,surface-container-low :foreground ,alpe-teal :extend t :slant italic :inherit fixed-pitch))))
+   `(org-block-end-line ((t (:background ,surface-container-low :foreground ,alpe-teal :extend t :slant italic :inherit fixed-pitch))))
+   `(org-code ((t (:background ,surface-container-low :foreground ,alpe-yellow-bright :inherit fixed-pitch))))
+   `(org-verbatim ((t (:background ,surface-container-low :foreground ,alpe-cyan :inherit fixed-pitch))))
+   `(org-meta-line ((t (:foreground ,alpe-gray :slant italic))))
 
    ;; Org mode with enhanced colors and hidden asterisks
-   `(org-level-1 ((t (:foreground ,dank-cyan :weight bold :height 1.2))))
-   `(org-level-2 ((t (:foreground ,dank-blue :weight bold :height 1.1))))
-   `(org-level-3 ((t (:foreground ,dank-magenta :weight bold))))
-   `(org-level-4 ((t (:foreground ,dank-green :weight bold))))
-   `(org-level-5 ((t (:foreground ,dank-yellow :weight bold))))
-   `(org-level-6 ((t (:foreground ,dank-cyan-bright :weight bold))))
-   `(org-level-7 ((t (:foreground ,dank-red-alt :weight bold))))
-   `(org-level-8 ((t (:foreground ,dank-teal :weight bold))))
-   `(org-document-title ((t (:foreground ,dank-cyan :weight bold :height 1.3))))
-   `(org-document-info ((t (:foreground ,dank-blue))))
-   `(org-todo ((t (:foreground ,dank-red :weight bold))))
+   `(org-level-1 ((t (:foreground ,alpe-cyan :weight bold :height 1.2))))
+   `(org-level-2 ((t (:foreground ,alpe-blue :weight bold :height 1.1))))
+   `(org-level-3 ((t (:foreground ,alpe-magenta :weight bold))))
+   `(org-level-4 ((t (:foreground ,alpe-green :weight bold))))
+   `(org-level-5 ((t (:foreground ,alpe-yellow :weight bold))))
+   `(org-level-6 ((t (:foreground ,alpe-cyan-bright :weight bold))))
+   `(org-level-7 ((t (:foreground ,alpe-red-alt :weight bold))))
+   `(org-level-8 ((t (:foreground ,alpe-teal :weight bold))))
+   `(org-document-title ((t (:foreground ,alpe-cyan :weight bold :height 1.3))))
+   `(org-document-info ((t (:foreground ,alpe-blue))))
+   `(org-todo ((t (:foreground ,alpe-red :weight bold))))
    `(org-done ((t (:foreground ,success :weight bold))))
-   `(org-headline-done ((t (:foreground ,dank-gray))))
+   `(org-headline-done ((t (:foreground ,alpe-gray))))
    `(org-hide ((t (:foreground ,bg))))
-   `(org-ellipsis ((t (:foreground ,dank-blue :underline nil))))
-   `(org-table ((t (:foreground ,dank-magenta :inherit fixed-pitch))))
-   `(org-formula ((t (:foreground ,dank-yellow-bright :inherit fixed-pitch))))
-   `(org-checkbox ((t (:foreground ,dank-cyan :weight bold :inherit fixed-pitch))))
-   `(org-date ((t (:foreground ,dank-teal :underline t))))
-   `(org-special-keyword ((t (:foreground ,dank-gray :slant italic))))
-   `(org-tag ((t (:foreground ,dank-gray :weight normal))))
+   `(org-ellipsis ((t (:foreground ,alpe-blue :underline nil))))
+   `(org-table ((t (:foreground ,alpe-magenta :inherit fixed-pitch))))
+   `(org-formula ((t (:foreground ,alpe-yellow-bright :inherit fixed-pitch))))
+   `(org-checkbox ((t (:foreground ,alpe-cyan :weight bold :inherit fixed-pitch))))
+   `(org-date ((t (:foreground ,alpe-teal :underline t))))
+   `(org-special-keyword ((t (:foreground ,alpe-gray :slant italic))))
+   `(org-tag ((t (:foreground ,alpe-gray :weight normal))))
 
    ;; Magit with enhanced diff colors
    `(magit-section-highlight ((t (:background ,surface-container-low))))
-   `(magit-diff-hunk-heading ((t (:background ,surface-container :foreground ,dank-gray))))
+   `(magit-diff-hunk-heading ((t (:background ,surface-container :foreground ,alpe-gray))))
    `(magit-diff-hunk-heading-highlight ((t (:background ,surface-container-high :foreground ,on-surface))))
-   `(magit-diff-context ((t (:foreground ,dank-gray))))
+   `(magit-diff-context ((t (:foreground ,alpe-gray))))
    `(magit-diff-context-highlight ((t (:background ,surface-container-low :foreground ,on-surface))))
-   `(magit-diff-added ((t (:background ,success-container :foreground ,dank-green-bright))))
-   `(magit-diff-added-highlight ((t (:background ,success-container :foreground ,dank-green-bright :weight bold))))
-   `(magit-diff-removed ((t (:background ,err-container :foreground ,dank-red-alt))))
-   `(magit-diff-removed-highlight ((t (:background ,err-container :foreground ,dank-red-alt :weight bold))))
-   `(magit-hash ((t (:foreground ,dank-gray))))
-   `(magit-branch-local ((t (:foreground ,dank-blue :weight bold))))
-   `(magit-branch-remote ((t (:foreground ,dank-cyan :weight bold))))
+   `(magit-diff-added ((t (:background ,success-container :foreground ,alpe-green-bright))))
+   `(magit-diff-added-highlight ((t (:background ,success-container :foreground ,alpe-green-bright :weight bold))))
+   `(magit-diff-removed ((t (:background ,err-container :foreground ,alpe-red-alt))))
+   `(magit-diff-removed-highlight ((t (:background ,err-container :foreground ,alpe-red-alt :weight bold))))
+   `(magit-hash ((t (:foreground ,alpe-gray))))
+   `(magit-branch-local ((t (:foreground ,alpe-blue :weight bold))))
+   `(magit-branch-remote ((t (:foreground ,alpe-cyan :weight bold))))
 
    ;; Company
    `(company-tooltip ((t (:background ,surface-container :foreground ,on-surface))))
-   `(company-tooltip-selection ((t (:background ,primary-container :foreground ,dank-cyan-bright))))
-   `(company-tooltip-common ((t (:foreground ,dank-cyan))))
-   `(company-tooltip-common-selection ((t (:foreground ,dank-cyan-bright :weight bold))))
-   `(company-tooltip-annotation ((t (:foreground ,dank-yellow))))
-   `(company-scrollbar-fg ((t (:background ,dank-cyan))))
+   `(company-tooltip-selection ((t (:background ,primary-container :foreground ,alpe-cyan-bright))))
+   `(company-tooltip-common ((t (:foreground ,alpe-cyan))))
+   `(company-tooltip-common-selection ((t (:foreground ,alpe-cyan-bright :weight bold))))
+   `(company-tooltip-annotation ((t (:foreground ,alpe-yellow))))
+   `(company-scrollbar-fg ((t (:background ,alpe-cyan))))
    `(company-scrollbar-bg ((t (:background ,surface-variant))))
-   `(company-preview ((t (:foreground ,dank-gray :slant italic))))
-   `(company-preview-common ((t (:foreground ,dank-cyan :slant italic))))
+   `(company-preview ((t (:foreground ,alpe-gray :slant italic))))
+   `(company-preview-common ((t (:foreground ,alpe-cyan :slant italic))))
 
    ;; Ido
-   `(ido-first-match ((t (:foreground ,dank-cyan :weight bold))))
-   `(ido-only-match ((t (:foreground ,dank-green :weight bold))))
-   `(ido-subdir ((t (:foreground ,dank-blue))))
-   `(ido-indicator ((t (:foreground ,dank-red))))
-   `(ido-virtual ((t (:foreground ,dank-gray))))
+   `(ido-first-match ((t (:foreground ,alpe-cyan :weight bold))))
+   `(ido-only-match ((t (:foreground ,alpe-green :weight bold))))
+   `(ido-subdir ((t (:foreground ,alpe-blue))))
+   `(ido-indicator ((t (:foreground ,alpe-red))))
+   `(ido-virtual ((t (:foreground ,alpe-gray))))
 
    ;; Helm
-   `(helm-selection ((t (:background ,primary-container :foreground ,dank-cyan-bright))))
-   `(helm-match ((t (:foreground ,dank-cyan :weight bold))))
-   `(helm-source-header ((t (:background ,surface-container-high :foreground ,dank-cyan :weight bold :height 1.1))))
-   `(helm-candidate-number ((t (:foreground ,dank-yellow :weight bold))))
-   `(helm-ff-directory ((t (:foreground ,dank-cyan :weight bold))))
+   `(helm-selection ((t (:background ,primary-container :foreground ,alpe-cyan-bright))))
+   `(helm-match ((t (:foreground ,alpe-cyan :weight bold))))
+   `(helm-source-header ((t (:background ,surface-container-high :foreground ,alpe-cyan :weight bold :height 1.1))))
+   `(helm-candidate-number ((t (:foreground ,alpe-yellow :weight bold))))
+   `(helm-ff-directory ((t (:foreground ,alpe-cyan :weight bold))))
    `(helm-ff-file ((t (:foreground ,on-surface))))
-   `(helm-ff-executable ((t (:foreground ,dank-green))))
+   `(helm-ff-executable ((t (:foreground ,alpe-green))))
 
    ;; corfu
    `(corfu-default ((t (:background ,surface-container :foreground ,on-surface))))
-   `(corfu-current ((t (:background ,primary-container :foreground ,dank-cyan-bright))))
+   `(corfu-current ((t (:background ,primary-container :foreground ,alpe-cyan-bright))))
 
    ;; Which-key
-   `(which-key-key-face ((t (:foreground ,dank-cyan :weight bold))))
+   `(which-key-key-face ((t (:foreground ,alpe-cyan :weight bold))))
    `(which-key-separator-face ((t (:foreground ,outline-variant))))
    `(which-key-command-description-face ((t (:foreground ,on-surface))))
-   `(which-key-group-description-face ((t (:foreground ,dank-blue))))
-   `(which-key-special-key-face ((t (:foreground ,dank-yellow :weight bold))))
+   `(which-key-group-description-face ((t (:foreground ,alpe-blue))))
+   `(which-key-special-key-face ((t (:foreground ,alpe-yellow :weight bold))))
 
    ;; Line numbers
-   `(line-number ((t (:foreground ,dank-gray :inherit default))))
-   `(line-number-current-line ((t (:foreground ,dank-cyan :weight bold :inherit default))))
+   `(line-number ((t (:foreground ,alpe-gray :inherit default))))
+   `(line-number-current-line ((t (:foreground ,alpe-cyan :weight bold :inherit default))))
 
    ;; Parenthesis matching
-   `(sp-show-pair-match-face ((t (:background ,primary-container :foreground ,dank-cyan-bright))))
+   `(sp-show-pair-match-face ((t (:background ,primary-container :foreground ,alpe-cyan-bright))))
    `(sp-show-pair-mismatch-face ((t (:background ,err-container :foreground ,on-err-container))))
 
    ;; Rainbow delimiters - vibrant colors
-   `(rainbow-delimiters-depth-1-face ((t (:foreground ,dank-cyan))))
-   `(rainbow-delimiters-depth-2-face ((t (:foreground ,dank-yellow))))
-   `(rainbow-delimiters-depth-3-face ((t (:foreground ,dank-green))))
-   `(rainbow-delimiters-depth-4-face ((t (:foreground ,dank-blue))))
-   `(rainbow-delimiters-depth-5-face ((t (:foreground ,dank-magenta))))
-   `(rainbow-delimiters-depth-6-face ((t (:foreground ,dank-cyan-bright))))
-   `(rainbow-delimiters-depth-7-face ((t (:foreground ,dank-yellow-bright))))
-   `(rainbow-delimiters-depth-8-face ((t (:foreground ,dank-green-bright))))
-   `(rainbow-delimiters-depth-9-face ((t (:foreground ,dank-red-alt))))
+   `(rainbow-delimiters-depth-1-face ((t (:foreground ,alpe-cyan))))
+   `(rainbow-delimiters-depth-2-face ((t (:foreground ,alpe-yellow))))
+   `(rainbow-delimiters-depth-3-face ((t (:foreground ,alpe-green))))
+   `(rainbow-delimiters-depth-4-face ((t (:foreground ,alpe-blue))))
+   `(rainbow-delimiters-depth-5-face ((t (:foreground ,alpe-magenta))))
+   `(rainbow-delimiters-depth-6-face ((t (:foreground ,alpe-cyan-bright))))
+   `(rainbow-delimiters-depth-7-face ((t (:foreground ,alpe-yellow-bright))))
+   `(rainbow-delimiters-depth-8-face ((t (:foreground ,alpe-green-bright))))
+   `(rainbow-delimiters-depth-9-face ((t (:foreground ,alpe-red-alt))))
    `(rainbow-delimiters-mismatched-face ((t (:foreground ,err :weight bold))))
    `(rainbow-delimiters-unmatched-face ((t (:foreground ,err :weight bold))))
 
    ;; Dired
-   `(dired-directory ((t (:foreground ,dank-cyan :weight bold))))
-   `(dired-ignored ((t (:foreground ,dank-gray))))
-   `(dired-flagged ((t (:foreground ,dank-red))))
-   `(dired-marked ((t (:foreground ,dank-yellow :weight bold))))
-   `(dired-symlink ((t (:foreground ,dank-magenta :slant italic))))
-   `(dired-header ((t (:foreground ,dank-cyan :weight bold :height 1.1))))
+   `(dired-directory ((t (:foreground ,alpe-cyan :weight bold))))
+   `(dired-ignored ((t (:foreground ,alpe-gray))))
+   `(dired-flagged ((t (:foreground ,alpe-red))))
+   `(dired-marked ((t (:foreground ,alpe-yellow :weight bold))))
+   `(dired-symlink ((t (:foreground ,alpe-magenta :slant italic))))
+   `(dired-header ((t (:foreground ,alpe-cyan :weight bold :height 1.1))))
 
    ;; Terminal colors
    `(term-color-black ((t (:foreground ,term0 :background ,term0))))
@@ -282,82 +282,82 @@
    `(term-color-white ((t (:foreground ,term7 :background ,term7))))
 
    ;; EShell
-   `(eshell-prompt ((t (:foreground ,dank-cyan :weight bold))))
-   `(eshell-ls-directory ((t (:foreground ,dank-cyan :weight bold))))
-   `(eshell-ls-symlink ((t (:foreground ,dank-magenta :slant italic))))
-   `(eshell-ls-executable ((t (:foreground ,dank-green))))
-   `(eshell-ls-archive ((t (:foreground ,dank-yellow))))
-   `(eshell-ls-backup ((t (:foreground ,dank-gray))))
-   `(eshell-ls-clutter ((t (:foreground ,dank-red))))
-   `(eshell-ls-missing ((t (:foreground ,dank-red))))
+   `(eshell-prompt ((t (:foreground ,alpe-cyan :weight bold))))
+   `(eshell-ls-directory ((t (:foreground ,alpe-cyan :weight bold))))
+   `(eshell-ls-symlink ((t (:foreground ,alpe-magenta :slant italic))))
+   `(eshell-ls-executable ((t (:foreground ,alpe-green))))
+   `(eshell-ls-archive ((t (:foreground ,alpe-yellow))))
+   `(eshell-ls-backup ((t (:foreground ,alpe-gray))))
+   `(eshell-ls-clutter ((t (:foreground ,alpe-red))))
+   `(eshell-ls-missing ((t (:foreground ,alpe-red))))
    `(eshell-ls-product ((t (:foreground ,on-surface-variant))))
-   `(eshell-ls-readonly ((t (:foreground ,dank-gray))))
-   `(eshell-ls-special ((t (:foreground ,dank-blue))))
-   `(eshell-ls-unreadable ((t (:foreground ,dank-gray))))
+   `(eshell-ls-readonly ((t (:foreground ,alpe-gray))))
+   `(eshell-ls-special ((t (:foreground ,alpe-blue))))
+   `(eshell-ls-unreadable ((t (:foreground ,alpe-gray))))
 
    ;; Improved markdown mode
-   `(markdown-header-face ((t (:foreground ,dank-cyan :weight bold))))
-   `(markdown-header-face-1 ((t (:foreground ,dank-cyan :weight bold :height 1.2))))
-   `(markdown-header-face-2 ((t (:foreground ,dank-blue :weight bold :height 1.1))))
-   `(markdown-header-face-3 ((t (:foreground ,dank-magenta :weight bold))))
-   `(markdown-header-face-4 ((t (:foreground ,dank-green :weight bold))))
-   `(markdown-inline-code-face ((t (:foreground ,dank-yellow-bright :background ,surface-container-low :inherit fixed-pitch))))
+   `(markdown-header-face ((t (:foreground ,alpe-cyan :weight bold))))
+   `(markdown-header-face-1 ((t (:foreground ,alpe-cyan :weight bold :height 1.2))))
+   `(markdown-header-face-2 ((t (:foreground ,alpe-blue :weight bold :height 1.1))))
+   `(markdown-header-face-3 ((t (:foreground ,alpe-magenta :weight bold))))
+   `(markdown-header-face-4 ((t (:foreground ,alpe-green :weight bold))))
+   `(markdown-inline-code-face ((t (:foreground ,alpe-yellow-bright :background ,surface-container-low :inherit fixed-pitch))))
    `(markdown-code-face ((t (:background ,surface-container-low :extend t :inherit fixed-pitch))))
    `(markdown-pre-face ((t (:background ,surface-container-low :inherit fixed-pitch))))
-   `(markdown-table-face ((t (:foreground ,dank-magenta :inherit fixed-pitch))))
+   `(markdown-table-face ((t (:foreground ,alpe-magenta :inherit fixed-pitch))))
 
    ;; Web mode
-   `(web-mode-html-tag-face ((t (:foreground ,dank-cyan))))
-   `(web-mode-html-tag-bracket-face ((t (:foreground ,dank-gray))))
-   `(web-mode-html-attr-name-face ((t (:foreground ,dank-yellow))))
-   `(web-mode-html-attr-value-face ((t (:foreground ,dank-green))))
-   `(web-mode-css-selector-face ((t (:foreground ,dank-cyan))))
-   `(web-mode-css-property-name-face ((t (:foreground ,dank-blue))))
-   `(web-mode-css-string-face ((t (:foreground ,dank-green))))
+   `(web-mode-html-tag-face ((t (:foreground ,alpe-cyan))))
+   `(web-mode-html-tag-bracket-face ((t (:foreground ,alpe-gray))))
+   `(web-mode-html-attr-name-face ((t (:foreground ,alpe-yellow))))
+   `(web-mode-html-attr-value-face ((t (:foreground ,alpe-green))))
+   `(web-mode-css-selector-face ((t (:foreground ,alpe-cyan))))
+   `(web-mode-css-property-name-face ((t (:foreground ,alpe-blue))))
+   `(web-mode-css-string-face ((t (:foreground ,alpe-green))))
 
    ;; Flycheck
    `(flycheck-error ((t (:underline (:style wave :color ,err)))))
-   `(flycheck-warning ((t (:underline (:style wave :color ,dank-yellow)))))
-   `(flycheck-info ((t (:underline (:style wave :color ,dank-blue)))))
+   `(flycheck-warning ((t (:underline (:style wave :color ,alpe-yellow)))))
+   `(flycheck-info ((t (:underline (:style wave :color ,alpe-blue)))))
    `(flycheck-fringe-error ((t (:foreground ,err))))
-   `(flycheck-fringe-warning ((t (:foreground ,dank-yellow))))
-   `(flycheck-fringe-info ((t (:foreground ,dank-blue))))
+   `(flycheck-fringe-warning ((t (:foreground ,alpe-yellow))))
+   `(flycheck-fringe-info ((t (:foreground ,alpe-blue))))
 
    ;; Mini-buffer customization
-   `(minibuffer-prompt ((t (:foreground ,dank-cyan :weight bold))))
+   `(minibuffer-prompt ((t (:foreground ,alpe-cyan :weight bold))))
 
    ;; Improved search highlighting
-   `(lsp-face-highlight-textual ((t (:background ,primary-container :foreground ,dank-cyan-bright :weight bold))))
-   `(lsp-face-highlight-read ((t (:background ,secondary-container :foreground ,dank-yellow-bright :weight bold))))
-   `(lsp-face-highlight-write ((t (:background ,tertiary-container :foreground ,dank-green-bright :weight bold))))
+   `(lsp-face-highlight-textual ((t (:background ,primary-container :foreground ,alpe-cyan-bright :weight bold))))
+   `(lsp-face-highlight-read ((t (:background ,secondary-container :foreground ,alpe-yellow-bright :weight bold))))
+   `(lsp-face-highlight-write ((t (:background ,tertiary-container :foreground ,alpe-green-bright :weight bold))))
 
    ;; Info and help modes
-   `(info-title-1 ((t (:foreground ,dank-cyan :weight bold :height 1.3))))
-   `(info-title-2 ((t (:foreground ,dank-blue :weight bold :height 1.2))))
-   `(info-title-3 ((t (:foreground ,dank-magenta :weight bold :height 1.1))))
-   `(info-title-4 ((t (:foreground ,dank-green :weight bold))))
-   `(Info-quoted ((t (:foreground ,dank-yellow))))
-   `(info-menu-header ((t (:foreground ,dank-cyan :weight bold))))
-   `(info-menu-star ((t (:foreground ,dank-cyan))))
-   `(info-node ((t (:foreground ,dank-blue :weight bold))))
+   `(info-title-1 ((t (:foreground ,alpe-cyan :weight bold :height 1.3))))
+   `(info-title-2 ((t (:foreground ,alpe-blue :weight bold :height 1.2))))
+   `(info-title-3 ((t (:foreground ,alpe-magenta :weight bold :height 1.1))))
+   `(info-title-4 ((t (:foreground ,alpe-green :weight bold))))
+   `(Info-quoted ((t (:foreground ,alpe-yellow))))
+   `(info-menu-header ((t (:foreground ,alpe-cyan :weight bold))))
+   `(info-menu-star ((t (:foreground ,alpe-cyan))))
+   `(info-node ((t (:foreground ,alpe-blue :weight bold))))
 
    ;; Tabs
    `(tab-bar ((t (:background ,surface-container :foreground ,on-surface :box nil))))
-   `(tab-bar-tab ((t (:background ,surface-container-high :foreground ,dank-cyan :weight bold :box nil))))
-   `(tab-bar-tab-inactive ((t (:background ,surface :foreground ,dank-gray :box nil))))
+   `(tab-bar-tab ((t (:background ,surface-container-high :foreground ,alpe-cyan :weight bold :box nil))))
+   `(tab-bar-tab-inactive ((t (:background ,surface :foreground ,alpe-gray :box nil))))
 
    `(tab-line ((t (:background ,surface-container :foreground ,on-surface :box nil))))
-   `(tab-line-tab ((t (:background ,surface :foreground ,dank-gray :box nil))))
-   `(tab-line-tab-current ((t (:background ,surface-container-high :foreground ,dank-cyan :weight bold :box nil))))
-   `(tab-line-tab-inactive ((t (:background ,surface :foreground ,dank-gray :box nil))))
-   `(tab-line-highlight ((t (:background ,surface-container-highest :foreground ,dank-cyan-bright))))
+   `(tab-line-tab ((t (:background ,surface :foreground ,alpe-gray :box nil))))
+   `(tab-line-tab-current ((t (:background ,surface-container-high :foreground ,alpe-cyan :weight bold :box nil))))
+   `(tab-line-tab-inactive ((t (:background ,surface :foreground ,alpe-gray :box nil))))
+   `(tab-line-highlight ((t (:background ,surface-container-highest :foreground ,alpe-cyan-bright))))
 
    `(centaur-tabs-default ((t (:background ,surface-container :foreground ,on-surface))))
-   `(centaur-tabs-selected ((t (:background ,surface-container-high :foreground ,dank-cyan :weight bold))))
-   `(centaur-tabs-unselected ((t (:background ,surface :foreground ,dank-gray))))
-   `(centaur-tabs-selected-modified ((t (:background ,surface-container-high :foreground ,dank-yellow :weight bold))))
-   `(centaur-tabs-unselected-modified ((t (:background ,surface :foreground ,dank-yellow))))
-   `(centaur-tabs-active-bar-face ((t (:background ,dank-cyan))))
+   `(centaur-tabs-selected ((t (:background ,surface-container-high :foreground ,alpe-cyan :weight bold))))
+   `(centaur-tabs-unselected ((t (:background ,surface :foreground ,alpe-gray))))
+   `(centaur-tabs-selected-modified ((t (:background ,surface-container-high :foreground ,alpe-yellow :weight bold))))
+   `(centaur-tabs-unselected-modified ((t (:background ,surface :foreground ,alpe-yellow))))
+   `(centaur-tabs-active-bar-face ((t (:background ,alpe-cyan))))
 
    ;; Fixed-pitch faces
    `(fixed-pitch ((t (:family "monospace"))))
@@ -377,5 +377,5 @@
   (add-to-list 'custom-theme-load-path
                (file-name-as-directory (file-name-directory load-file-name))))
 
-(provide-theme 'dank-emacs)
-;;; dank-emacs-theme.el ends here
+(provide-theme 'alpe-emacs)
+;;; alpe-emacs-theme.el ends here

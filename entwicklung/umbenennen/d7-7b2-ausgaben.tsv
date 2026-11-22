@@ -1,0 +1,28 @@
+# D7.7b2 (Plan 2.3.2/2.3.5, 0.8 Nr. 48): Ausgabedateien für Fremdprogramme heissen alpe*.
+# Übergang bis F1 in core/internal/matugen/altnamen.go (alte Dateinamen als Symlink bzw. doppelt
+# geschrieben, solange es sie gibt) und in shell/scripts/gtk.sh (alte Marken werden erkannt);
+# beide von Hand, darum hier ausgenommen. Neovim bleibt (base46-Anbindung, Ausnahmeliste).
+ohne	entwicklung/umbenennen/*,docs/plan/*,tests/test_umbenennen.py,tests/data/*,shell/scripts/gtk.sh,core/internal/matugen/altnamen.go,core/internal/matugen/altnamen_test.go,CHANGELOG.md,tools/*
+datei	design/kde/programme/kitty/dank-theme.conf	design/kde/programme/kitty/alpe-theme.conf
+datei	design/kde/programme/kitty/dank-tabs.conf	design/kde/programme/kitty/alpe-tabs.conf
+text	dank-colors.css	alpe-colors.css
+text	dank-theme.conf	alpe-theme.conf
+text	dank-tabs.conf	alpe-tabs.conf
+text	dank-theme.toml	alpe-theme.toml
+text	themes/dankcolors	themes/alpecolors
+text	"dankcolors"	"alpecolors"
+text	dank-colors.ini	alpe-colors.ini
+text	dank-discord.css	alpe-discord.css
+text	dank-pywalfox.json	alpe-pywalfox.json
+text	dank-zed-theme.json	alpe-zed-theme.json
+text	dank-emacs-theme.el	alpe-emacs-theme.el
+text	fcitx5/themes/dms/	fcitx5/themes/alpe/
+text	DankMatugen	AlpeMatugen
+text	Name=Dank Shell (matugen)	Name=Alpe (matugen)	shell/matugen/templates/*
+text	DankShell	Alpe	shell/matugen/templates/alpe-zed.json
+regex	\bdank-(?=[a-z])	alpe-	shell/matugen/templates/alpe-emacs.el
+text	dank16	palette16	shell/matugen/templates/alpe-emacs.el
+text	 * @name DMS	 * @name Alpe	shell/matugen/templates/vesktop.css
+text	Name=DMS	Name=Alpe	shell/matugen/templates/fcitx5/theme.conf
+text	/* DMS Matugen Zen Browser Theme */	/* Alpe Matugen Zen Browser Theme */	shell/matugen/templates/zen-userchrome.css
+text	DMS OVERRIDE */	ALPE OVERRIDE */	shell/matugen/templates/gtk-colors.css

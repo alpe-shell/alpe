@@ -83,8 +83,8 @@ Singleton {
     signal screenTransitionNeeded
     signal themeGenerationStarting
 
-    readonly property var dank16: {
-        const raw = matugenColors?.dank16;
+    readonly property var palette16: {
+        const raw = matugenColors?.palette16;
         if (!raw)
             return null;
 
@@ -2154,10 +2154,12 @@ Singleton {
         // HighContrast* latches GTK4 to prefers-contrast until restart.
         const reset = GSettings.setCmd(schema, key, isLight ? "Adwaita" : "adw-gtk3");
         const apply = GSettings.setCmd(schema, key, theme);
-        const backup = `${configDir}/gtk-3.0/gtk-theme.dms-backup`;
+        const backup = `${configDir}/gtk-3.0/gtk-theme.alpe-backup`;
+        // Alpe: Sicherung aus 1.0 (gtk-theme.dms-backup) unter dem neuen Namen weiterführen (bis F1).
+        const adopt = `[ -e '${backup}' ] || mv '${configDir}/gtk-3.0/gtk-theme.dms-backup' '${backup}' 2>/dev/null; `;
         const guard = claimTheme ? `case "$cur" in adw-gtk3|adw-gtk3-dark|'') ;; *) [ -e '${backup}' ] || printf '%s\\n' "$cur" > '${backup}' ;; esac; ` : `case "$cur" in adw-gtk3|adw-gtk3-dark) ;; *) exit 0 ;; esac; `;
         const reload = colorsChanged ? `${reset}; ${apply}` : ":";
-        const script = `cur=$(${GSettings.getCmd(schema, key)}); ${guard}if [ "$cur" != "${theme}" ]; then ${apply}; else ${reload}; fi`;
+        const script = `${adopt}cur=$(${GSettings.getCmd(schema, key)}); ${guard}if [ "$cur" != "${theme}" ]; then ${apply}; else ${reload}; fi`;
 
         Proc.runCommand("gtkRefresher", ["sh", "-c", script], (output, exitCode) => {
             if (exitCode !== 0) {
