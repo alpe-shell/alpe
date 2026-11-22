@@ -50,8 +50,8 @@
                 "tab_bar.background": "{{colors.surface.dark.hex}}",
                 "tab.inactive_background": "{{colors.surface.dark.hex}}",
                 "tab.active_background": "{{colors.background.dark.hex}}",
-                "search.match_background": "{{dank16.color3.dark.hex}}50",
-                "search.active_match_background": "{{dank16.color9.dark.hex}}66",
+                "search.match_background": "{{palette16.color3.dark.hex}}50",
+                "search.active_match_background": "{{palette16.color9.dark.hex}}66",
                 "panel.background": "{{colors.surface.dark.hex}}",
                 "panel.focused_border": null,
                 "pane.focused_border": null,
@@ -77,47 +77,47 @@
                 "editor.document_highlight.write_background": "{{colors.secondary_container.dark.hex}}80",
                 "terminal.background": "{{colors.background.dark.hex}}",
                 "terminal.foreground": "{{colors.on_surface.dark.hex}}",
-                "terminal.bright_foreground": "{{dank16.color15.dark.hex}}",
+                "terminal.bright_foreground": "{{palette16.color15.dark.hex}}",
                 "terminal.dim_foreground": "{{colors.on_surface_variant.dark.hex}}",
-                "terminal.ansi.black": "{{dank16.color0.dark.hex}}",
-                "terminal.ansi.bright_black": "{{dank16.color8.dark.hex}}",
-                "terminal.ansi.dim_black": "{{dank16.color0.dark.hex}}",
-                "terminal.ansi.red": "{{dank16.color1.dark.hex}}",
-                "terminal.ansi.bright_red": "{{dank16.color9.dark.hex}}",
-                "terminal.ansi.dim_red": "{{dank16.color1.dark.hex}}",
-                "terminal.ansi.green": "{{dank16.color2.dark.hex}}",
-                "terminal.ansi.bright_green": "{{dank16.color10.dark.hex}}",
-                "terminal.ansi.dim_green": "{{dank16.color2.dark.hex}}",
-                "terminal.ansi.yellow": "{{dank16.color3.dark.hex}}",
-                "terminal.ansi.bright_yellow": "{{dank16.color11.dark.hex}}",
-                "terminal.ansi.dim_yellow": "{{dank16.color3.dark.hex}}",
-                "terminal.ansi.blue": "{{dank16.color4.dark.hex}}",
-                "terminal.ansi.bright_blue": "{{dank16.color12.dark.hex}}",
-                "terminal.ansi.dim_blue": "{{dank16.color4.dark.hex}}",
-                "terminal.ansi.magenta": "{{dank16.color5.dark.hex}}",
-                "terminal.ansi.bright_magenta": "{{dank16.color13.dark.hex}}",
-                "terminal.ansi.dim_magenta": "{{dank16.color5.dark.hex}}",
-                "terminal.ansi.cyan": "{{dank16.color6.dark.hex}}",
-                "terminal.ansi.bright_cyan": "{{dank16.color14.dark.hex}}",
-                "terminal.ansi.dim_cyan": "{{dank16.color6.dark.hex}}",
-                "terminal.ansi.white": "{{dank16.color7.dark.hex}}",
-                "terminal.ansi.bright_white": "{{dank16.color15.dark.hex}}",
-                "terminal.ansi.dim_white": "{{dank16.color7.dark.hex}}",
+                "terminal.ansi.black": "{{palette16.color0.dark.hex}}",
+                "terminal.ansi.bright_black": "{{palette16.color8.dark.hex}}",
+                "terminal.ansi.dim_black": "{{palette16.color0.dark.hex}}",
+                "terminal.ansi.red": "{{palette16.color1.dark.hex}}",
+                "terminal.ansi.bright_red": "{{palette16.color9.dark.hex}}",
+                "terminal.ansi.dim_red": "{{palette16.color1.dark.hex}}",
+                "terminal.ansi.green": "{{palette16.color2.dark.hex}}",
+                "terminal.ansi.bright_green": "{{palette16.color10.dark.hex}}",
+                "terminal.ansi.dim_green": "{{palette16.color2.dark.hex}}",
+                "terminal.ansi.yellow": "{{palette16.color3.dark.hex}}",
+                "terminal.ansi.bright_yellow": "{{palette16.color11.dark.hex}}",
+                "terminal.ansi.dim_yellow": "{{palette16.color3.dark.hex}}",
+                "terminal.ansi.blue": "{{palette16.color4.dark.hex}}",
+                "terminal.ansi.bright_blue": "{{palette16.color12.dark.hex}}",
+                "terminal.ansi.dim_blue": "{{palette16.color4.dark.hex}}",
+                "terminal.ansi.magenta": "{{palette16.color5.dark.hex}}",
+                "terminal.ansi.bright_magenta": "{{palette16.color13.dark.hex}}",
+                "terminal.ansi.dim_magenta": "{{palette16.color5.dark.hex}}",
+                "terminal.ansi.cyan": "{{palette16.color6.dark.hex}}",
+                "terminal.ansi.bright_cyan": "{{palette16.color14.dark.hex}}",
+                "terminal.ansi.dim_cyan": "{{palette16.color6.dark.hex}}",
+                "terminal.ansi.white": "{{palette16.color7.dark.hex}}",
+                "terminal.ansi.bright_white": "{{palette16.color15.dark.hex}}",
+                "terminal.ansi.dim_white": "{{palette16.color7.dark.hex}}",
                 "link_text.hover": "{{colors.primary.dark.hex}}",
-                "version_control.added": "{{dank16.color2.dark.hex}}",
-                "version_control.modified": "{{dank16.color3.dark.hex}}",
-                "version_control.word_added": "{{dank16.color2.dark.hex}}33",
-                "version_control.word_deleted": "{{dank16.color1.dark.hex}}33",
-                "version_control.deleted": "{{dank16.color1.dark.hex}}",
+                "version_control.added": "{{palette16.color2.dark.hex}}",
+                "version_control.modified": "{{palette16.color3.dark.hex}}",
+                "version_control.word_added": "{{palette16.color2.dark.hex}}33",
+                "version_control.word_deleted": "{{palette16.color1.dark.hex}}33",
+                "version_control.deleted": "{{palette16.color1.dark.hex}}",
                 "conflict": "{{colors.error.dark.hex}}",
                 "conflict.background": "{{colors.error_container.dark.hex}}80",
                 "conflict.border": "{{colors.on_error_container.dark.hex}}",
-                "created": "{{dank16.color2.dark.hex}}",
-                "created.background": "{{dank16.color2.dark.hex}}1A",
-                "created.border": "{{dank16.color2.dark.hex}}",
-                "deleted": "{{dank16.color1.dark.hex}}",
-                "deleted.background": "{{dank16.color1.dark.hex}}1A",
-                "deleted.border": "{{dank16.color1.dark.hex}}",
+                "created": "{{palette16.color2.dark.hex}}",
+                "created.background": "{{palette16.color2.dark.hex}}1A",
+                "created.border": "{{palette16.color2.dark.hex}}",
+                "deleted": "{{palette16.color1.dark.hex}}",
+                "deleted.background": "{{palette16.color1.dark.hex}}1A",
+                "deleted.border": "{{palette16.color1.dark.hex}}",
                 "error": "{{colors.error.dark.hex}}",
                 "error.background": "{{colors.error_container.dark.hex}}",
                 "error.border": "{{colors.on_error_container.dark.hex}}",
@@ -133,18 +133,18 @@
                 "info": "{{colors.primary.dark.hex}}",
                 "info.background": "{{colors.primary_container.dark.hex}}80",
                 "info.border": "{{colors.on_primary_container.dark.hex}}",
-                "modified": "{{dank16.color3.dark.hex}}",
-                "modified.background": "{{dank16.color3.dark.hex}}1A",
-                "modified.border": "{{dank16.color3.dark.hex}}",
+                "modified": "{{palette16.color3.dark.hex}}",
+                "modified.background": "{{palette16.color3.dark.hex}}1A",
+                "modified.border": "{{palette16.color3.dark.hex}}",
                 "predictive": "{{colors.on_surface_variant.dark.hex}}80",
                 "predictive.border": "{{colors.outline.dark.hex}}",
                 "predictive.background": "{{colors.surface_container_highest.dark.hex}}80",
-                "renamed": "{{dank16.color4.dark.hex}}",
-                "renamed.border": "{{dank16.color4.dark.hex}}",
-                "renamed.background": "{{dank16.color4.dark.hex}}1A",
-                "success": "{{dank16.color2.dark.hex}}",
-                "success.background": "{{dank16.color2.dark.hex}}1A",
-                "success.border": "{{dank16.color2.dark.hex}}",
+                "renamed": "{{palette16.color4.dark.hex}}",
+                "renamed.border": "{{palette16.color4.dark.hex}}",
+                "renamed.background": "{{palette16.color4.dark.hex}}1A",
+                "success": "{{palette16.color2.dark.hex}}",
+                "success.background": "{{palette16.color2.dark.hex}}1A",
+                "success.border": "{{palette16.color2.dark.hex}}",
                 "unreachable": "{{colors.on_surface_variant.dark.hex}}60",
                 "unreachable.background": "{{colors.surface_variant.dark.hex}}40",
                 "unreachable.border": "{{colors.outline_variant.dark.hex}}60",
@@ -153,74 +153,74 @@
                 "warning.border": "{{colors.on_tertiary_container.dark.hex}}",
                 "players": [
                     {
-                        "cursor": "{{dank16.color4.dark.hex}}",
-                        "background": "{{dank16.color4.dark.hex}}80",
-                        "selection": "{{dank16.color4.dark.hex}}3D"
+                        "cursor": "{{palette16.color4.dark.hex}}",
+                        "background": "{{palette16.color4.dark.hex}}80",
+                        "selection": "{{palette16.color4.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color1.dark.hex}}",
-                        "background": "{{dank16.color1.dark.hex}}80",
-                        "selection": "{{dank16.color1.dark.hex}}3D"
+                        "cursor": "{{palette16.color1.dark.hex}}",
+                        "background": "{{palette16.color1.dark.hex}}80",
+                        "selection": "{{palette16.color1.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color3.dark.hex}}",
-                        "background": "{{dank16.color3.dark.hex}}80",
-                        "selection": "{{dank16.color3.dark.hex}}3D"
+                        "cursor": "{{palette16.color3.dark.hex}}",
+                        "background": "{{palette16.color3.dark.hex}}80",
+                        "selection": "{{palette16.color3.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color5.dark.hex}}",
-                        "background": "{{dank16.color5.dark.hex}}80",
-                        "selection": "{{dank16.color5.dark.hex}}3D"
+                        "cursor": "{{palette16.color5.dark.hex}}",
+                        "background": "{{palette16.color5.dark.hex}}80",
+                        "selection": "{{palette16.color5.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color6.dark.hex}}",
-                        "background": "{{dank16.color6.dark.hex}}80",
-                        "selection": "{{dank16.color6.dark.hex}}3D"
+                        "cursor": "{{palette16.color6.dark.hex}}",
+                        "background": "{{palette16.color6.dark.hex}}80",
+                        "selection": "{{palette16.color6.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color9.dark.hex}}",
-                        "background": "{{dank16.color9.dark.hex}}80",
-                        "selection": "{{dank16.color9.dark.hex}}3D"
+                        "cursor": "{{palette16.color9.dark.hex}}",
+                        "background": "{{palette16.color9.dark.hex}}80",
+                        "selection": "{{palette16.color9.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color10.dark.hex}}",
-                        "background": "{{dank16.color10.dark.hex}}80",
-                        "selection": "{{dank16.color10.dark.hex}}3D"
+                        "cursor": "{{palette16.color10.dark.hex}}",
+                        "background": "{{palette16.color10.dark.hex}}80",
+                        "selection": "{{palette16.color10.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color2.dark.hex}}",
-                        "background": "{{dank16.color2.dark.hex}}80",
-                        "selection": "{{dank16.color2.dark.hex}}3D"
+                        "cursor": "{{palette16.color2.dark.hex}}",
+                        "background": "{{palette16.color2.dark.hex}}80",
+                        "selection": "{{palette16.color2.dark.hex}}3D"
                     }
                 ],
                 "syntax": {
                     "attribute": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "boolean": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "comment": {
-                        "color": "{{dank16.color8.dark.hex}}",
+                        "color": "{{palette16.color8.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "comment.doc": {
-                        "color": "{{dank16.color8.dark.hex}}",
+                        "color": "{{palette16.color8.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "constant": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "constructor": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -230,57 +230,57 @@
                         "font_weight": null
                     },
                     "emphasis": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "emphasis.strong": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "enum": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "function": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "keyword": {
-                        "color": "{{dank16.color5.dark.hex}}",
+                        "color": "{{palette16.color5.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "label": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "link_text": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "link_uri": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": "normal",
                         "font_weight": null
                     },
                     "number": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "operator": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "property": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -300,67 +300,67 @@
                         "font_weight": null
                     },
                     "punctuation.list_marker": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "punctuation.special": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector": {
-                        "color": "{{dank16.color3.dark.hex}}",
+                        "color": "{{palette16.color3.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector.pseudo": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string": {
-                        "color": "{{dank16.color2.dark.hex}}",
+                        "color": "{{palette16.color2.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.escape": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.regex": {
-                        "color": "{{dank16.color10.dark.hex}}",
+                        "color": "{{palette16.color10.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special.symbol": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "tag": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "text.literal": {
-                        "color": "{{dank16.color2.dark.hex}}",
+                        "color": "{{palette16.color2.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "title": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "type": {
-                        "color": "{{dank16.color3.dark.hex}}",
+                        "color": "{{palette16.color3.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
@@ -370,12 +370,12 @@
                         "font_weight": null
                     },
                     "variable.special": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "variant": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     }
@@ -429,8 +429,8 @@
                 "tab_bar.background": "{{colors.surface.light.hex}}",
                 "tab.inactive_background": "{{colors.surface.light.hex}}",
                 "tab.active_background": "{{colors.background.light.hex}}",
-                "search.match_background": "{{dank16.color3.light.hex}}50",
-                "search.active_match_background": "{{dank16.color9.light.hex}}66",
+                "search.match_background": "{{palette16.color3.light.hex}}50",
+                "search.active_match_background": "{{palette16.color9.light.hex}}66",
                 "panel.background": "{{colors.surface.light.hex}}",
                 "panel.focused_border": null,
                 "pane.focused_border": null,
@@ -456,47 +456,47 @@
                 "editor.document_highlight.write_background": "{{colors.secondary_container.light.hex}}80",
                 "terminal.background": "{{colors.background.light.hex}}",
                 "terminal.foreground": "{{colors.on_surface.light.hex}}",
-                "terminal.bright_foreground": "{{dank16.color15.light.hex}}",
+                "terminal.bright_foreground": "{{palette16.color15.light.hex}}",
                 "terminal.dim_foreground": "{{colors.on_surface_variant.light.hex}}",
-                "terminal.ansi.black": "{{dank16.color0.light.hex}}",
-                "terminal.ansi.bright_black": "{{dank16.color8.light.hex}}",
-                "terminal.ansi.dim_black": "{{dank16.color0.light.hex}}",
-                "terminal.ansi.red": "{{dank16.color1.light.hex}}",
-                "terminal.ansi.bright_red": "{{dank16.color9.light.hex}}",
-                "terminal.ansi.dim_red": "{{dank16.color1.light.hex}}",
-                "terminal.ansi.green": "{{dank16.color2.light.hex}}",
-                "terminal.ansi.bright_green": "{{dank16.color10.light.hex}}",
-                "terminal.ansi.dim_green": "{{dank16.color2.light.hex}}",
-                "terminal.ansi.yellow": "{{dank16.color3.light.hex}}",
-                "terminal.ansi.bright_yellow": "{{dank16.color11.light.hex}}",
-                "terminal.ansi.dim_yellow": "{{dank16.color3.light.hex}}",
-                "terminal.ansi.blue": "{{dank16.color4.light.hex}}",
-                "terminal.ansi.bright_blue": "{{dank16.color12.light.hex}}",
-                "terminal.ansi.dim_blue": "{{dank16.color4.light.hex}}",
-                "terminal.ansi.magenta": "{{dank16.color5.light.hex}}",
-                "terminal.ansi.bright_magenta": "{{dank16.color13.light.hex}}",
-                "terminal.ansi.dim_magenta": "{{dank16.color5.light.hex}}",
-                "terminal.ansi.cyan": "{{dank16.color6.light.hex}}",
-                "terminal.ansi.bright_cyan": "{{dank16.color14.light.hex}}",
-                "terminal.ansi.dim_cyan": "{{dank16.color6.light.hex}}",
-                "terminal.ansi.white": "{{dank16.color7.light.hex}}",
-                "terminal.ansi.bright_white": "{{dank16.color15.light.hex}}",
-                "terminal.ansi.dim_white": "{{dank16.color7.light.hex}}",
+                "terminal.ansi.black": "{{palette16.color0.light.hex}}",
+                "terminal.ansi.bright_black": "{{palette16.color8.light.hex}}",
+                "terminal.ansi.dim_black": "{{palette16.color0.light.hex}}",
+                "terminal.ansi.red": "{{palette16.color1.light.hex}}",
+                "terminal.ansi.bright_red": "{{palette16.color9.light.hex}}",
+                "terminal.ansi.dim_red": "{{palette16.color1.light.hex}}",
+                "terminal.ansi.green": "{{palette16.color2.light.hex}}",
+                "terminal.ansi.bright_green": "{{palette16.color10.light.hex}}",
+                "terminal.ansi.dim_green": "{{palette16.color2.light.hex}}",
+                "terminal.ansi.yellow": "{{palette16.color3.light.hex}}",
+                "terminal.ansi.bright_yellow": "{{palette16.color11.light.hex}}",
+                "terminal.ansi.dim_yellow": "{{palette16.color3.light.hex}}",
+                "terminal.ansi.blue": "{{palette16.color4.light.hex}}",
+                "terminal.ansi.bright_blue": "{{palette16.color12.light.hex}}",
+                "terminal.ansi.dim_blue": "{{palette16.color4.light.hex}}",
+                "terminal.ansi.magenta": "{{palette16.color5.light.hex}}",
+                "terminal.ansi.bright_magenta": "{{palette16.color13.light.hex}}",
+                "terminal.ansi.dim_magenta": "{{palette16.color5.light.hex}}",
+                "terminal.ansi.cyan": "{{palette16.color6.light.hex}}",
+                "terminal.ansi.bright_cyan": "{{palette16.color14.light.hex}}",
+                "terminal.ansi.dim_cyan": "{{palette16.color6.light.hex}}",
+                "terminal.ansi.white": "{{palette16.color7.light.hex}}",
+                "terminal.ansi.bright_white": "{{palette16.color15.light.hex}}",
+                "terminal.ansi.dim_white": "{{palette16.color7.light.hex}}",
                 "link_text.hover": "{{colors.primary.light.hex}}",
-                "version_control.added": "{{dank16.color2.light.hex}}",
-                "version_control.modified": "{{dank16.color3.light.hex}}",
-                "version_control.word_added": "{{dank16.color2.light.hex}}33",
-                "version_control.word_deleted": "{{dank16.color1.light.hex}}33",
-                "version_control.deleted": "{{dank16.color1.light.hex}}",
+                "version_control.added": "{{palette16.color2.light.hex}}",
+                "version_control.modified": "{{palette16.color3.light.hex}}",
+                "version_control.word_added": "{{palette16.color2.light.hex}}33",
+                "version_control.word_deleted": "{{palette16.color1.light.hex}}33",
+                "version_control.deleted": "{{palette16.color1.light.hex}}",
                 "conflict": "{{colors.error.light.hex}}",
                 "conflict.background": "{{colors.error_container.light.hex}}80",
                 "conflict.border": "{{colors.on_error_container.light.hex}}",
-                "created": "{{dank16.color2.light.hex}}",
-                "created.background": "{{dank16.color2.light.hex}}1A",
-                "created.border": "{{dank16.color2.light.hex}}",
-                "deleted": "{{dank16.color1.light.hex}}",
-                "deleted.background": "{{dank16.color1.light.hex}}1A",
-                "deleted.border": "{{dank16.color1.light.hex}}",
+                "created": "{{palette16.color2.light.hex}}",
+                "created.background": "{{palette16.color2.light.hex}}1A",
+                "created.border": "{{palette16.color2.light.hex}}",
+                "deleted": "{{palette16.color1.light.hex}}",
+                "deleted.background": "{{palette16.color1.light.hex}}1A",
+                "deleted.border": "{{palette16.color1.light.hex}}",
                 "error": "{{colors.error.light.hex}}",
                 "error.background": "{{colors.error_container.light.hex}}",
                 "error.border": "{{colors.on_error_container.light.hex}}",
@@ -512,18 +512,18 @@
                 "info": "{{colors.primary.light.hex}}",
                 "info.background": "{{colors.primary_container.light.hex}}80",
                 "info.border": "{{colors.on_primary_container.light.hex}}",
-                "modified": "{{dank16.color3.light.hex}}",
-                "modified.background": "{{dank16.color3.light.hex}}1A",
-                "modified.border": "{{dank16.color3.light.hex}}",
+                "modified": "{{palette16.color3.light.hex}}",
+                "modified.background": "{{palette16.color3.light.hex}}1A",
+                "modified.border": "{{palette16.color3.light.hex}}",
                 "predictive": "{{colors.on_surface_variant.light.hex}}80",
                 "predictive.border": "{{colors.outline.light.hex}}",
                 "predictive.background": "{{colors.surface_container_highest.light.hex}}80",
-                "renamed": "{{dank16.color4.light.hex}}",
-                "renamed.border": "{{dank16.color4.light.hex}}",
-                "renamed.background": "{{dank16.color4.light.hex}}1A",
-                "success": "{{dank16.color2.light.hex}}",
-                "success.background": "{{dank16.color2.light.hex}}1A",
-                "success.border": "{{dank16.color2.light.hex}}",
+                "renamed": "{{palette16.color4.light.hex}}",
+                "renamed.border": "{{palette16.color4.light.hex}}",
+                "renamed.background": "{{palette16.color4.light.hex}}1A",
+                "success": "{{palette16.color2.light.hex}}",
+                "success.background": "{{palette16.color2.light.hex}}1A",
+                "success.border": "{{palette16.color2.light.hex}}",
                 "unreachable": "{{colors.on_surface_variant.light.hex}}60",
                 "unreachable.background": "{{colors.surface_variant.light.hex}}40",
                 "unreachable.border": "{{colors.outline_variant.light.hex}}60",
@@ -532,74 +532,74 @@
                 "warning.border": "{{colors.on_tertiary_container.light.hex}}",
                 "players": [
                     {
-                        "cursor": "{{dank16.color4.light.hex}}",
-                        "background": "{{dank16.color4.light.hex}}80",
-                        "selection": "{{dank16.color4.light.hex}}3D"
+                        "cursor": "{{palette16.color4.light.hex}}",
+                        "background": "{{palette16.color4.light.hex}}80",
+                        "selection": "{{palette16.color4.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color1.light.hex}}",
-                        "background": "{{dank16.color1.light.hex}}80",
-                        "selection": "{{dank16.color1.light.hex}}3D"
+                        "cursor": "{{palette16.color1.light.hex}}",
+                        "background": "{{palette16.color1.light.hex}}80",
+                        "selection": "{{palette16.color1.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color3.light.hex}}",
-                        "background": "{{dank16.color3.light.hex}}80",
-                        "selection": "{{dank16.color3.light.hex}}3D"
+                        "cursor": "{{palette16.color3.light.hex}}",
+                        "background": "{{palette16.color3.light.hex}}80",
+                        "selection": "{{palette16.color3.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color5.light.hex}}",
-                        "background": "{{dank16.color5.light.hex}}80",
-                        "selection": "{{dank16.color5.light.hex}}3D"
+                        "cursor": "{{palette16.color5.light.hex}}",
+                        "background": "{{palette16.color5.light.hex}}80",
+                        "selection": "{{palette16.color5.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color6.light.hex}}",
-                        "background": "{{dank16.color6.light.hex}}80",
-                        "selection": "{{dank16.color6.light.hex}}3D"
+                        "cursor": "{{palette16.color6.light.hex}}",
+                        "background": "{{palette16.color6.light.hex}}80",
+                        "selection": "{{palette16.color6.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color9.light.hex}}",
-                        "background": "{{dank16.color9.light.hex}}80",
-                        "selection": "{{dank16.color9.light.hex}}3D"
+                        "cursor": "{{palette16.color9.light.hex}}",
+                        "background": "{{palette16.color9.light.hex}}80",
+                        "selection": "{{palette16.color9.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color10.light.hex}}",
-                        "background": "{{dank16.color10.light.hex}}80",
-                        "selection": "{{dank16.color10.light.hex}}3D"
+                        "cursor": "{{palette16.color10.light.hex}}",
+                        "background": "{{palette16.color10.light.hex}}80",
+                        "selection": "{{palette16.color10.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color2.light.hex}}",
-                        "background": "{{dank16.color2.light.hex}}80",
-                        "selection": "{{dank16.color2.light.hex}}3D"
+                        "cursor": "{{palette16.color2.light.hex}}",
+                        "background": "{{palette16.color2.light.hex}}80",
+                        "selection": "{{palette16.color2.light.hex}}3D"
                     }
                 ],
                 "syntax": {
                     "attribute": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "boolean": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "comment": {
-                        "color": "{{dank16.color8.light.hex}}",
+                        "color": "{{palette16.color8.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "comment.doc": {
-                        "color": "{{dank16.color8.light.hex}}",
+                        "color": "{{palette16.color8.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "constant": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "constructor": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -609,57 +609,57 @@
                         "font_weight": null
                     },
                     "emphasis": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "emphasis.strong": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "enum": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "function": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "keyword": {
-                        "color": "{{dank16.color5.light.hex}}",
+                        "color": "{{palette16.color5.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "label": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "link_text": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "link_uri": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": "normal",
                         "font_weight": null
                     },
                     "number": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "operator": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "property": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -679,67 +679,67 @@
                         "font_weight": null
                     },
                     "punctuation.list_marker": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "punctuation.special": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector": {
-                        "color": "{{dank16.color3.light.hex}}",
+                        "color": "{{palette16.color3.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector.pseudo": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string": {
-                        "color": "{{dank16.color2.light.hex}}",
+                        "color": "{{palette16.color2.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.escape": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.regex": {
-                        "color": "{{dank16.color10.light.hex}}",
+                        "color": "{{palette16.color10.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special.symbol": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "tag": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "text.literal": {
-                        "color": "{{dank16.color2.light.hex}}",
+                        "color": "{{palette16.color2.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "title": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "type": {
-                        "color": "{{dank16.color3.light.hex}}",
+                        "color": "{{palette16.color3.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
@@ -749,12 +749,12 @@
                         "font_weight": null
                     },
                     "variable.special": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "variant": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     }
@@ -808,8 +808,8 @@
                 "tab_bar.background": "{{colors.surface.dark.hex}}B6",
                 "tab.inactive_background": "{{colors.surface.dark.hex}}B6",
                 "tab.active_background": "{{colors.background.dark.hex}}B6",
-                "search.match_background": "{{dank16.color3.dark.hex}}50",
-                "search.active_match_background": "{{dank16.color9.dark.hex}}66",
+                "search.match_background": "{{palette16.color3.dark.hex}}50",
+                "search.active_match_background": "{{palette16.color9.dark.hex}}66",
                 "panel.background": "{{colors.surface.dark.hex}}B6",
                 "panel.focused_border": null,
                 "pane.focused_border": null,
@@ -835,47 +835,47 @@
                 "editor.document_highlight.write_background": "{{colors.secondary_container.dark.hex}}80",
                 "terminal.background": "{{colors.background.dark.hex}}B6",
                 "terminal.foreground": "{{colors.on_surface.dark.hex}}",
-                "terminal.bright_foreground": "{{dank16.color15.dark.hex}}",
+                "terminal.bright_foreground": "{{palette16.color15.dark.hex}}",
                 "terminal.dim_foreground": "{{colors.on_surface_variant.dark.hex}}",
-                "terminal.ansi.black": "{{dank16.color0.dark.hex}}",
-                "terminal.ansi.bright_black": "{{dank16.color8.dark.hex}}",
-                "terminal.ansi.dim_black": "{{dank16.color0.dark.hex}}",
-                "terminal.ansi.red": "{{dank16.color1.dark.hex}}",
-                "terminal.ansi.bright_red": "{{dank16.color9.dark.hex}}",
-                "terminal.ansi.dim_red": "{{dank16.color1.dark.hex}}",
-                "terminal.ansi.green": "{{dank16.color2.dark.hex}}",
-                "terminal.ansi.bright_green": "{{dank16.color10.dark.hex}}",
-                "terminal.ansi.dim_green": "{{dank16.color2.dark.hex}}",
-                "terminal.ansi.yellow": "{{dank16.color3.dark.hex}}",
-                "terminal.ansi.bright_yellow": "{{dank16.color11.dark.hex}}",
-                "terminal.ansi.dim_yellow": "{{dank16.color3.dark.hex}}",
-                "terminal.ansi.blue": "{{dank16.color4.dark.hex}}",
-                "terminal.ansi.bright_blue": "{{dank16.color12.dark.hex}}",
-                "terminal.ansi.dim_blue": "{{dank16.color4.dark.hex}}",
-                "terminal.ansi.magenta": "{{dank16.color5.dark.hex}}",
-                "terminal.ansi.bright_magenta": "{{dank16.color13.dark.hex}}",
-                "terminal.ansi.dim_magenta": "{{dank16.color5.dark.hex}}",
-                "terminal.ansi.cyan": "{{dank16.color6.dark.hex}}",
-                "terminal.ansi.bright_cyan": "{{dank16.color14.dark.hex}}",
-                "terminal.ansi.dim_cyan": "{{dank16.color6.dark.hex}}",
-                "terminal.ansi.white": "{{dank16.color7.dark.hex}}",
-                "terminal.ansi.bright_white": "{{dank16.color15.dark.hex}}",
-                "terminal.ansi.dim_white": "{{dank16.color7.dark.hex}}",
+                "terminal.ansi.black": "{{palette16.color0.dark.hex}}",
+                "terminal.ansi.bright_black": "{{palette16.color8.dark.hex}}",
+                "terminal.ansi.dim_black": "{{palette16.color0.dark.hex}}",
+                "terminal.ansi.red": "{{palette16.color1.dark.hex}}",
+                "terminal.ansi.bright_red": "{{palette16.color9.dark.hex}}",
+                "terminal.ansi.dim_red": "{{palette16.color1.dark.hex}}",
+                "terminal.ansi.green": "{{palette16.color2.dark.hex}}",
+                "terminal.ansi.bright_green": "{{palette16.color10.dark.hex}}",
+                "terminal.ansi.dim_green": "{{palette16.color2.dark.hex}}",
+                "terminal.ansi.yellow": "{{palette16.color3.dark.hex}}",
+                "terminal.ansi.bright_yellow": "{{palette16.color11.dark.hex}}",
+                "terminal.ansi.dim_yellow": "{{palette16.color3.dark.hex}}",
+                "terminal.ansi.blue": "{{palette16.color4.dark.hex}}",
+                "terminal.ansi.bright_blue": "{{palette16.color12.dark.hex}}",
+                "terminal.ansi.dim_blue": "{{palette16.color4.dark.hex}}",
+                "terminal.ansi.magenta": "{{palette16.color5.dark.hex}}",
+                "terminal.ansi.bright_magenta": "{{palette16.color13.dark.hex}}",
+                "terminal.ansi.dim_magenta": "{{palette16.color5.dark.hex}}",
+                "terminal.ansi.cyan": "{{palette16.color6.dark.hex}}",
+                "terminal.ansi.bright_cyan": "{{palette16.color14.dark.hex}}",
+                "terminal.ansi.dim_cyan": "{{palette16.color6.dark.hex}}",
+                "terminal.ansi.white": "{{palette16.color7.dark.hex}}",
+                "terminal.ansi.bright_white": "{{palette16.color15.dark.hex}}",
+                "terminal.ansi.dim_white": "{{palette16.color7.dark.hex}}",
                 "link_text.hover": "{{colors.primary.dark.hex}}",
-                "version_control.added": "{{dank16.color2.dark.hex}}",
-                "version_control.modified": "{{dank16.color3.dark.hex}}",
-                "version_control.word_added": "{{dank16.color2.dark.hex}}33",
-                "version_control.word_deleted": "{{dank16.color1.dark.hex}}33",
-                "version_control.deleted": "{{dank16.color1.dark.hex}}",
+                "version_control.added": "{{palette16.color2.dark.hex}}",
+                "version_control.modified": "{{palette16.color3.dark.hex}}",
+                "version_control.word_added": "{{palette16.color2.dark.hex}}33",
+                "version_control.word_deleted": "{{palette16.color1.dark.hex}}33",
+                "version_control.deleted": "{{palette16.color1.dark.hex}}",
                 "conflict": "{{colors.error.dark.hex}}",
                 "conflict.background": "{{colors.error_container.dark.hex}}80",
                 "conflict.border": "{{colors.on_error_container.dark.hex}}",
-                "created": "{{dank16.color2.dark.hex}}",
-                "created.background": "{{dank16.color2.dark.hex}}1A",
-                "created.border": "{{dank16.color2.dark.hex}}",
-                "deleted": "{{dank16.color1.dark.hex}}",
-                "deleted.background": "{{dank16.color1.dark.hex}}1A",
-                "deleted.border": "{{dank16.color1.dark.hex}}",
+                "created": "{{palette16.color2.dark.hex}}",
+                "created.background": "{{palette16.color2.dark.hex}}1A",
+                "created.border": "{{palette16.color2.dark.hex}}",
+                "deleted": "{{palette16.color1.dark.hex}}",
+                "deleted.background": "{{palette16.color1.dark.hex}}1A",
+                "deleted.border": "{{palette16.color1.dark.hex}}",
                 "error": "{{colors.error.dark.hex}}",
                 "error.background": "{{colors.error_container.dark.hex}}",
                 "error.border": "{{colors.on_error_container.dark.hex}}",
@@ -891,18 +891,18 @@
                 "info": "{{colors.primary.dark.hex}}",
                 "info.background": "{{colors.primary_container.dark.hex}}80",
                 "info.border": "{{colors.on_primary_container.dark.hex}}",
-                "modified": "{{dank16.color3.dark.hex}}",
-                "modified.background": "{{dank16.color3.dark.hex}}1A",
-                "modified.border": "{{dank16.color3.dark.hex}}",
+                "modified": "{{palette16.color3.dark.hex}}",
+                "modified.background": "{{palette16.color3.dark.hex}}1A",
+                "modified.border": "{{palette16.color3.dark.hex}}",
                 "predictive": "{{colors.on_surface_variant.dark.hex}}80",
                 "predictive.border": "{{colors.outline.dark.hex}}",
                 "predictive.background": "{{colors.surface_container_highest.dark.hex}}80",
-                "renamed": "{{dank16.color4.dark.hex}}",
-                "renamed.border": "{{dank16.color4.dark.hex}}",
-                "renamed.background": "{{dank16.color4.dark.hex}}1A",
-                "success": "{{dank16.color2.dark.hex}}",
-                "success.background": "{{dank16.color2.dark.hex}}1A",
-                "success.border": "{{dank16.color2.dark.hex}}",
+                "renamed": "{{palette16.color4.dark.hex}}",
+                "renamed.border": "{{palette16.color4.dark.hex}}",
+                "renamed.background": "{{palette16.color4.dark.hex}}1A",
+                "success": "{{palette16.color2.dark.hex}}",
+                "success.background": "{{palette16.color2.dark.hex}}1A",
+                "success.border": "{{palette16.color2.dark.hex}}",
                 "unreachable": "{{colors.on_surface_variant.dark.hex}}60",
                 "unreachable.background": "{{colors.surface_variant.dark.hex}}40",
                 "unreachable.border": "{{colors.outline_variant.dark.hex}}60",
@@ -911,74 +911,74 @@
                 "warning.border": "{{colors.on_tertiary_container.dark.hex}}",
                 "players": [
                     {
-                        "cursor": "{{dank16.color4.dark.hex}}",
-                        "background": "{{dank16.color4.dark.hex}}80",
-                        "selection": "{{dank16.color4.dark.hex}}3D"
+                        "cursor": "{{palette16.color4.dark.hex}}",
+                        "background": "{{palette16.color4.dark.hex}}80",
+                        "selection": "{{palette16.color4.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color1.dark.hex}}",
-                        "background": "{{dank16.color1.dark.hex}}80",
-                        "selection": "{{dank16.color1.dark.hex}}3D"
+                        "cursor": "{{palette16.color1.dark.hex}}",
+                        "background": "{{palette16.color1.dark.hex}}80",
+                        "selection": "{{palette16.color1.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color3.dark.hex}}",
-                        "background": "{{dank16.color3.dark.hex}}80",
-                        "selection": "{{dank16.color3.dark.hex}}3D"
+                        "cursor": "{{palette16.color3.dark.hex}}",
+                        "background": "{{palette16.color3.dark.hex}}80",
+                        "selection": "{{palette16.color3.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color5.dark.hex}}",
-                        "background": "{{dank16.color5.dark.hex}}80",
-                        "selection": "{{dank16.color5.dark.hex}}3D"
+                        "cursor": "{{palette16.color5.dark.hex}}",
+                        "background": "{{palette16.color5.dark.hex}}80",
+                        "selection": "{{palette16.color5.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color6.dark.hex}}",
-                        "background": "{{dank16.color6.dark.hex}}80",
-                        "selection": "{{dank16.color6.dark.hex}}3D"
+                        "cursor": "{{palette16.color6.dark.hex}}",
+                        "background": "{{palette16.color6.dark.hex}}80",
+                        "selection": "{{palette16.color6.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color9.dark.hex}}",
-                        "background": "{{dank16.color9.dark.hex}}80",
-                        "selection": "{{dank16.color9.dark.hex}}3D"
+                        "cursor": "{{palette16.color9.dark.hex}}",
+                        "background": "{{palette16.color9.dark.hex}}80",
+                        "selection": "{{palette16.color9.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color10.dark.hex}}",
-                        "background": "{{dank16.color10.dark.hex}}80",
-                        "selection": "{{dank16.color10.dark.hex}}3D"
+                        "cursor": "{{palette16.color10.dark.hex}}",
+                        "background": "{{palette16.color10.dark.hex}}80",
+                        "selection": "{{palette16.color10.dark.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color2.dark.hex}}",
-                        "background": "{{dank16.color2.dark.hex}}80",
-                        "selection": "{{dank16.color2.dark.hex}}3D"
+                        "cursor": "{{palette16.color2.dark.hex}}",
+                        "background": "{{palette16.color2.dark.hex}}80",
+                        "selection": "{{palette16.color2.dark.hex}}3D"
                     }
                 ],
                 "syntax": {
                     "attribute": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "boolean": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "comment": {
-                        "color": "{{dank16.color8.dark.hex}}",
+                        "color": "{{palette16.color8.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "comment.doc": {
-                        "color": "{{dank16.color8.dark.hex}}",
+                        "color": "{{palette16.color8.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "constant": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "constructor": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -988,57 +988,57 @@
                         "font_weight": null
                     },
                     "emphasis": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "emphasis.strong": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "enum": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "function": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "keyword": {
-                        "color": "{{dank16.color5.dark.hex}}",
+                        "color": "{{palette16.color5.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "label": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "link_text": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "link_uri": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": "normal",
                         "font_weight": null
                     },
                     "number": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "operator": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "property": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -1058,67 +1058,67 @@
                         "font_weight": null
                     },
                     "punctuation.list_marker": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "punctuation.special": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector": {
-                        "color": "{{dank16.color3.dark.hex}}",
+                        "color": "{{palette16.color3.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector.pseudo": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string": {
-                        "color": "{{dank16.color2.dark.hex}}",
+                        "color": "{{palette16.color2.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.escape": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.regex": {
-                        "color": "{{dank16.color10.dark.hex}}",
+                        "color": "{{palette16.color10.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special.symbol": {
-                        "color": "{{dank16.color6.dark.hex}}",
+                        "color": "{{palette16.color6.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "tag": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "text.literal": {
-                        "color": "{{dank16.color2.dark.hex}}",
+                        "color": "{{palette16.color2.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "title": {
-                        "color": "{{dank16.color1.dark.hex}}",
+                        "color": "{{palette16.color1.dark.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "type": {
-                        "color": "{{dank16.color3.dark.hex}}",
+                        "color": "{{palette16.color3.dark.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
@@ -1128,12 +1128,12 @@
                         "font_weight": null
                     },
                     "variable.special": {
-                        "color": "{{dank16.color9.dark.hex}}",
+                        "color": "{{palette16.color9.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "variant": {
-                        "color": "{{dank16.color4.dark.hex}}",
+                        "color": "{{palette16.color4.dark.hex}}",
                         "font_style": null,
                         "font_weight": null
                     }
@@ -1187,8 +1187,8 @@
                 "tab_bar.background": "{{colors.surface.light.hex}}B6",
                 "tab.inactive_background": "{{colors.surface.light.hex}}B6",
                 "tab.active_background": "{{colors.background.light.hex}}B6",
-                "search.match_background": "{{dank16.color3.light.hex}}50",
-                "search.active_match_background": "{{dank16.color9.light.hex}}66",
+                "search.match_background": "{{palette16.color3.light.hex}}50",
+                "search.active_match_background": "{{palette16.color9.light.hex}}66",
                 "panel.background": "{{colors.surface.light.hex}}B6",
                 "panel.focused_border": null,
                 "pane.focused_border": null,
@@ -1214,47 +1214,47 @@
                 "editor.document_highlight.write_background": "{{colors.secondary_container.light.hex}}80",
                 "terminal.background": "{{colors.background.light.hex}}B6",
                 "terminal.foreground": "{{colors.on_surface.light.hex}}",
-                "terminal.bright_foreground": "{{dank16.color15.light.hex}}",
+                "terminal.bright_foreground": "{{palette16.color15.light.hex}}",
                 "terminal.dim_foreground": "{{colors.on_surface_variant.light.hex}}",
-                "terminal.ansi.black": "{{dank16.color0.light.hex}}",
-                "terminal.ansi.bright_black": "{{dank16.color8.light.hex}}",
-                "terminal.ansi.dim_black": "{{dank16.color0.light.hex}}",
-                "terminal.ansi.red": "{{dank16.color1.light.hex}}",
-                "terminal.ansi.bright_red": "{{dank16.color9.light.hex}}",
-                "terminal.ansi.dim_red": "{{dank16.color1.light.hex}}",
-                "terminal.ansi.green": "{{dank16.color2.light.hex}}",
-                "terminal.ansi.bright_green": "{{dank16.color10.light.hex}}",
-                "terminal.ansi.dim_green": "{{dank16.color2.light.hex}}",
-                "terminal.ansi.yellow": "{{dank16.color3.light.hex}}",
-                "terminal.ansi.bright_yellow": "{{dank16.color11.light.hex}}",
-                "terminal.ansi.dim_yellow": "{{dank16.color3.light.hex}}",
-                "terminal.ansi.blue": "{{dank16.color4.light.hex}}",
-                "terminal.ansi.bright_blue": "{{dank16.color12.light.hex}}",
-                "terminal.ansi.dim_blue": "{{dank16.color4.light.hex}}",
-                "terminal.ansi.magenta": "{{dank16.color5.light.hex}}",
-                "terminal.ansi.bright_magenta": "{{dank16.color13.light.hex}}",
-                "terminal.ansi.dim_magenta": "{{dank16.color5.light.hex}}",
-                "terminal.ansi.cyan": "{{dank16.color6.light.hex}}",
-                "terminal.ansi.bright_cyan": "{{dank16.color14.light.hex}}",
-                "terminal.ansi.dim_cyan": "{{dank16.color6.light.hex}}",
-                "terminal.ansi.white": "{{dank16.color7.light.hex}}",
-                "terminal.ansi.bright_white": "{{dank16.color15.light.hex}}",
-                "terminal.ansi.dim_white": "{{dank16.color7.light.hex}}",
+                "terminal.ansi.black": "{{palette16.color0.light.hex}}",
+                "terminal.ansi.bright_black": "{{palette16.color8.light.hex}}",
+                "terminal.ansi.dim_black": "{{palette16.color0.light.hex}}",
+                "terminal.ansi.red": "{{palette16.color1.light.hex}}",
+                "terminal.ansi.bright_red": "{{palette16.color9.light.hex}}",
+                "terminal.ansi.dim_red": "{{palette16.color1.light.hex}}",
+                "terminal.ansi.green": "{{palette16.color2.light.hex}}",
+                "terminal.ansi.bright_green": "{{palette16.color10.light.hex}}",
+                "terminal.ansi.dim_green": "{{palette16.color2.light.hex}}",
+                "terminal.ansi.yellow": "{{palette16.color3.light.hex}}",
+                "terminal.ansi.bright_yellow": "{{palette16.color11.light.hex}}",
+                "terminal.ansi.dim_yellow": "{{palette16.color3.light.hex}}",
+                "terminal.ansi.blue": "{{palette16.color4.light.hex}}",
+                "terminal.ansi.bright_blue": "{{palette16.color12.light.hex}}",
+                "terminal.ansi.dim_blue": "{{palette16.color4.light.hex}}",
+                "terminal.ansi.magenta": "{{palette16.color5.light.hex}}",
+                "terminal.ansi.bright_magenta": "{{palette16.color13.light.hex}}",
+                "terminal.ansi.dim_magenta": "{{palette16.color5.light.hex}}",
+                "terminal.ansi.cyan": "{{palette16.color6.light.hex}}",
+                "terminal.ansi.bright_cyan": "{{palette16.color14.light.hex}}",
+                "terminal.ansi.dim_cyan": "{{palette16.color6.light.hex}}",
+                "terminal.ansi.white": "{{palette16.color7.light.hex}}",
+                "terminal.ansi.bright_white": "{{palette16.color15.light.hex}}",
+                "terminal.ansi.dim_white": "{{palette16.color7.light.hex}}",
                 "link_text.hover": "{{colors.primary.light.hex}}",
-                "version_control.added": "{{dank16.color2.light.hex}}",
-                "version_control.modified": "{{dank16.color3.light.hex}}",
-                "version_control.word_added": "{{dank16.color2.light.hex}}33",
-                "version_control.word_deleted": "{{dank16.color1.light.hex}}33",
-                "version_control.deleted": "{{dank16.color1.light.hex}}",
+                "version_control.added": "{{palette16.color2.light.hex}}",
+                "version_control.modified": "{{palette16.color3.light.hex}}",
+                "version_control.word_added": "{{palette16.color2.light.hex}}33",
+                "version_control.word_deleted": "{{palette16.color1.light.hex}}33",
+                "version_control.deleted": "{{palette16.color1.light.hex}}",
                 "conflict": "{{colors.error.light.hex}}",
                 "conflict.background": "{{colors.error_container.light.hex}}80",
                 "conflict.border": "{{colors.on_error_container.light.hex}}",
-                "created": "{{dank16.color2.light.hex}}",
-                "created.background": "{{dank16.color2.light.hex}}1A",
-                "created.border": "{{dank16.color2.light.hex}}",
-                "deleted": "{{dank16.color1.light.hex}}",
-                "deleted.background": "{{dank16.color1.light.hex}}1A",
-                "deleted.border": "{{dank16.color1.light.hex}}",
+                "created": "{{palette16.color2.light.hex}}",
+                "created.background": "{{palette16.color2.light.hex}}1A",
+                "created.border": "{{palette16.color2.light.hex}}",
+                "deleted": "{{palette16.color1.light.hex}}",
+                "deleted.background": "{{palette16.color1.light.hex}}1A",
+                "deleted.border": "{{palette16.color1.light.hex}}",
                 "error": "{{colors.error.light.hex}}",
                 "error.background": "{{colors.error_container.light.hex}}",
                 "error.border": "{{colors.on_error_container.light.hex}}",
@@ -1270,18 +1270,18 @@
                 "info": "{{colors.primary.light.hex}}",
                 "info.background": "{{colors.primary_container.light.hex}}80",
                 "info.border": "{{colors.on_primary_container.light.hex}}",
-                "modified": "{{dank16.color3.light.hex}}",
-                "modified.background": "{{dank16.color3.light.hex}}1A",
-                "modified.border": "{{dank16.color3.light.hex}}",
+                "modified": "{{palette16.color3.light.hex}}",
+                "modified.background": "{{palette16.color3.light.hex}}1A",
+                "modified.border": "{{palette16.color3.light.hex}}",
                 "predictive": "{{colors.on_surface_variant.light.hex}}80",
                 "predictive.border": "{{colors.outline.light.hex}}",
                 "predictive.background": "{{colors.surface_container_highest.light.hex}}80",
-                "renamed": "{{dank16.color4.light.hex}}",
-                "renamed.border": "{{dank16.color4.light.hex}}",
-                "renamed.background": "{{dank16.color4.light.hex}}1A",
-                "success": "{{dank16.color2.light.hex}}",
-                "success.background": "{{dank16.color2.light.hex}}1A",
-                "success.border": "{{dank16.color2.light.hex}}",
+                "renamed": "{{palette16.color4.light.hex}}",
+                "renamed.border": "{{palette16.color4.light.hex}}",
+                "renamed.background": "{{palette16.color4.light.hex}}1A",
+                "success": "{{palette16.color2.light.hex}}",
+                "success.background": "{{palette16.color2.light.hex}}1A",
+                "success.border": "{{palette16.color2.light.hex}}",
                 "unreachable": "{{colors.on_surface_variant.light.hex}}60",
                 "unreachable.background": "{{colors.surface_variant.light.hex}}40",
                 "unreachable.border": "{{colors.outline_variant.light.hex}}60",
@@ -1290,74 +1290,74 @@
                 "warning.border": "{{colors.on_tertiary_container.light.hex}}",
                 "players": [
                     {
-                        "cursor": "{{dank16.color4.light.hex}}",
-                        "background": "{{dank16.color4.light.hex}}80",
-                        "selection": "{{dank16.color4.light.hex}}3D"
+                        "cursor": "{{palette16.color4.light.hex}}",
+                        "background": "{{palette16.color4.light.hex}}80",
+                        "selection": "{{palette16.color4.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color1.light.hex}}",
-                        "background": "{{dank16.color1.light.hex}}80",
-                        "selection": "{{dank16.color1.light.hex}}3D"
+                        "cursor": "{{palette16.color1.light.hex}}",
+                        "background": "{{palette16.color1.light.hex}}80",
+                        "selection": "{{palette16.color1.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color3.light.hex}}",
-                        "background": "{{dank16.color3.light.hex}}80",
-                        "selection": "{{dank16.color3.light.hex}}3D"
+                        "cursor": "{{palette16.color3.light.hex}}",
+                        "background": "{{palette16.color3.light.hex}}80",
+                        "selection": "{{palette16.color3.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color5.light.hex}}",
-                        "background": "{{dank16.color5.light.hex}}80",
-                        "selection": "{{dank16.color5.light.hex}}3D"
+                        "cursor": "{{palette16.color5.light.hex}}",
+                        "background": "{{palette16.color5.light.hex}}80",
+                        "selection": "{{palette16.color5.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color6.light.hex}}",
-                        "background": "{{dank16.color6.light.hex}}80",
-                        "selection": "{{dank16.color6.light.hex}}3D"
+                        "cursor": "{{palette16.color6.light.hex}}",
+                        "background": "{{palette16.color6.light.hex}}80",
+                        "selection": "{{palette16.color6.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color9.light.hex}}",
-                        "background": "{{dank16.color9.light.hex}}80",
-                        "selection": "{{dank16.color9.light.hex}}3D"
+                        "cursor": "{{palette16.color9.light.hex}}",
+                        "background": "{{palette16.color9.light.hex}}80",
+                        "selection": "{{palette16.color9.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color10.light.hex}}",
-                        "background": "{{dank16.color10.light.hex}}80",
-                        "selection": "{{dank16.color10.light.hex}}3D"
+                        "cursor": "{{palette16.color10.light.hex}}",
+                        "background": "{{palette16.color10.light.hex}}80",
+                        "selection": "{{palette16.color10.light.hex}}3D"
                     },
                     {
-                        "cursor": "{{dank16.color2.light.hex}}",
-                        "background": "{{dank16.color2.light.hex}}80",
-                        "selection": "{{dank16.color2.light.hex}}3D"
+                        "cursor": "{{palette16.color2.light.hex}}",
+                        "background": "{{palette16.color2.light.hex}}80",
+                        "selection": "{{palette16.color2.light.hex}}3D"
                     }
                 ],
                 "syntax": {
                     "attribute": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "boolean": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "comment": {
-                        "color": "{{dank16.color8.light.hex}}",
+                        "color": "{{palette16.color8.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "comment.doc": {
-                        "color": "{{dank16.color8.light.hex}}",
+                        "color": "{{palette16.color8.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "constant": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "constructor": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -1367,57 +1367,57 @@
                         "font_weight": null
                     },
                     "emphasis": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "emphasis.strong": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "enum": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "function": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "keyword": {
-                        "color": "{{dank16.color5.light.hex}}",
+                        "color": "{{palette16.color5.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "label": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "link_text": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
                     "link_uri": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": "normal",
                         "font_weight": null
                     },
                     "number": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "operator": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "property": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -1437,67 +1437,67 @@
                         "font_weight": null
                     },
                     "punctuation.list_marker": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "punctuation.special": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector": {
-                        "color": "{{dank16.color3.light.hex}}",
+                        "color": "{{palette16.color3.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "selector.pseudo": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string": {
-                        "color": "{{dank16.color2.light.hex}}",
+                        "color": "{{palette16.color2.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.escape": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.regex": {
-                        "color": "{{dank16.color10.light.hex}}",
+                        "color": "{{palette16.color10.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "string.special.symbol": {
-                        "color": "{{dank16.color6.light.hex}}",
+                        "color": "{{palette16.color6.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "tag": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "text.literal": {
-                        "color": "{{dank16.color2.light.hex}}",
+                        "color": "{{palette16.color2.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "title": {
-                        "color": "{{dank16.color1.light.hex}}",
+                        "color": "{{palette16.color1.light.hex}}",
                         "font_style": null,
                         "font_weight": 700
                     },
                     "type": {
-                        "color": "{{dank16.color3.light.hex}}",
+                        "color": "{{palette16.color3.light.hex}}",
                         "font_style": "italic",
                         "font_weight": null
                     },
@@ -1507,12 +1507,12 @@
                         "font_weight": null
                     },
                     "variable.special": {
-                        "color": "{{dank16.color9.light.hex}}",
+                        "color": "{{palette16.color9.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     },
                     "variant": {
-                        "color": "{{dank16.color4.light.hex}}",
+                        "color": "{{palette16.color4.light.hex}}",
                         "font_style": null,
                         "font_weight": null
                     }

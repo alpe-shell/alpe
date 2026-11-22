@@ -235,7 +235,7 @@ func smartSchemePreview(fallback SchemePreview, sourceColor string, contrast flo
 }
 
 func (o *Options) ColorsOutput() string {
-	return filepath.Join(o.StateDir, "dms-colors.json")
+	return filepath.Join(o.StateDir, "colors.json")
 }
 
 func (o *Options) colorsStaging() string {
@@ -417,8 +417,8 @@ func buildOnce(opts *Options) (bool, error) {
 
 		dank16JSON = generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, "")
 		dank16TermJSON := generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, opts.TerminalPalette)
-		importData := fmt.Sprintf(`{"colors": %s, "dank16": %s, "dank16term": %s}`, opts.StockColors, dank16JSON, dank16TermJSON)
-		importArgs = []string{"--import-json-string", importData}
+		importData := fmt.Sprintf(`{"colors": %s, "palette16": %s, "palette16term": %s}`, opts.StockColors, dank16JSON, dank16TermJSON)
+		importArgs = []string{"--import-json-string", withLegacyPaletteNames(importData)}
 
 		log.Info("Running matugen color hex with stock color overrides")
 		args = []string{"color", "hex", primaryDark, "-m", string(opts.Mode), "-t", opts.MatugenType}
@@ -487,11 +487,11 @@ func buildOnce(opts *Options) (bool, error) {
 
 		dank16JSON = generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, "")
 		// The terminal palette only reaches the terminal templates; editor themes and user templates keep dank16.
-		dank16Term := paletteInjection{Namespace: "dank16term", JSON: generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, opts.TerminalPalette)}
+		dank16Term := paletteInjection{Namespace: "palette16term", JSON: generateDank16Variants(primaryDark, primaryLight, surfaceDark, surfaceLight, containerDark, containerLight, opts.Mode, opts.TerminalPalette)}
 		injections := append([]paletteInjection{dank16Term}, InjectedPalettes(opts.ConfigDir, sourceImage, opts.Mode)...)
-		importArgs = []string{"--import-json-string", buildImportData(dank16JSON, sourceImage, specColors, injections)}
+		importArgs = []string{"--import-json-string", withLegacyPaletteNames(buildImportData(dank16JSON, sourceImage, specColors, injections))}
 
-		log.Infof("Running matugen %s with dank16 injection", opts.Kind)
+		log.Infof("Running matugen %s with palette16 injection", opts.Kind)
 		switch opts.Kind {
 		case "hex":
 			args = []string{"color", "hex", opts.Value}
@@ -558,7 +558,7 @@ func buildOnce(opts *Options) (bool, error) {
 	return true, nil
 }
 
-// The shell only needs dms-colors.json, so it is rendered and committed on its own before the template pass.
+// The shell only needs colors.json, so it is rendered and committed on its own before the template pass.
 func renderColors(opts *Options, args []string, tmpDir string, oldColors []byte) (bool, error) {
 	colorsOpts := *opts
 	colorsOpts.ColorsOnly = true
@@ -616,7 +616,7 @@ func appendContrastArg(args []string, contrast float64) []string {
 // Each injection is exposed under its own namespace (e.g. {{mypalette.color0}}),
 // skipping any name already emitted so the object stays valid.
 func buildImportData(dank16JSON, image, colors string, injections []paletteInjection) string {
-	fields := []string{fmt.Sprintf(`"dank16": %s`, dank16JSON)}
+	fields := []string{fmt.Sprintf(`"palette16": %s`, dank16JSON)}
 	if image != "" {
 		path, _ := json.Marshal(image)
 		fields = append(fields, fmt.Sprintf(`"image": %s`, path))
@@ -624,7 +624,7 @@ func buildImportData(dank16JSON, image, colors string, injections []paletteInjec
 	if colors != "" {
 		fields = append(fields, fmt.Sprintf(`"colors": %s`, colors))
 	}
-	seen := map[string]bool{"dank16": true, "image": true, "colors": true}
+	seen := map[string]bool{"palette16": true, "image": true, "colors": true}
 	for _, inj := range injections {
 		if inj.Namespace == "" || inj.JSON == "" || seen[inj.Namespace] {
 			continue
@@ -634,6 +634,40 @@ func buildImportData(dank16JSON, image, colors string, injections []paletteInjec
 		fields = append(fields, fmt.Sprintf(`%s: %s`, nsKey, inj.JSON))
 	}
 	return "{" + strings.Join(fields, ", ") + "}"
+}
+
+// legacyPaletteNames: Bis Alpe 1.0 hiessen die Paletten in den Vorlagen dank16 und dank16term.
+// Eigene matugen-Vorlagen der Nutzer lesen sie noch, darum stehen dieselben Werte bis zum Umzug
+// (F1 schreibt die Vorlagen um) zusätzlich unter den alten Namen.
+var legacyPaletteNames = map[string]string{
+	"palette16":     "dank16",
+	"palette16term": "dank16term",
+}
+
+// withLegacyPaletteNames ergänzt die Importdaten um die alten Namen. Ein Name, den schon eine
+// eingespeiste Palette des Nutzers trägt, bleibt unberührt.
+func withLegacyPaletteNames(importData string) string {
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal([]byte(importData), &fields); err != nil {
+		return importData
+	}
+	added := false
+	for name, legacy := range legacyPaletteNames {
+		value, ok := fields[name]
+		if _, taken := fields[legacy]; !ok || taken {
+			continue
+		}
+		fields[legacy] = value
+		added = true
+	}
+	if !added {
+		return importData
+	}
+	out, err := json.Marshal(fields)
+	if err != nil {
+		return importData
+	}
+	return string(out)
 }
 
 func userConfigSection(opts *Options) string {
@@ -669,8 +703,8 @@ func buildMergedConfig(opts *Options, cfgFile *os.File, tmpDir string) error {
 		cfgFile.WriteString("\n")
 	}
 
-	fmt.Fprintf(cfgFile, `[templates.dank]
-input_path = '%s/matugen/templates/dank.json'
+	fmt.Fprintf(cfgFile, `[templates.alpe]
+input_path = '%s/matugen/templates/alpe.json'
 output_path = '%s'
 
 `, opts.ShellDir, opts.colorsStaging())

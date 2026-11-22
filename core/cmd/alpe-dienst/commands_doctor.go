@@ -1349,7 +1349,7 @@ func checkConfigurationFiles() []checkResult {
 		{"clsettings.json", filepath.Join(configDir, dmsDir, "clsettings.json")},
 		{"plugin_settings.json", filepath.Join(configDir, dmsDir, "plugin_settings.json")},
 		{"session.json", filepath.Join(utils.XDGStateHome(), dmsDir, "session.json")},
-		{"dms-colors.json", filepath.Join(cacheDir, dmsDir, "dms-colors.json")},
+		{"colors.json", filepath.Join(cacheDir, dmsDir, "colors.json")},
 	}
 
 	var results []checkResult

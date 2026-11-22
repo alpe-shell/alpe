@@ -1,0 +1,19 @@
+# D7.7b1 (Plan 2.3.2/2.3.5): Cache-Namen, matugen-Vorlagen (Dateien, Abschnitte), Vorlagen-Variable palette16.
+# Die alten Variablen dank16/dank16term speist der Dienst bis F1 zusätzlich ein (eigene Vorlagen der
+# Nutzer, 0.8 Nr. 47); Ausgabedateien der Fremdprogramme folgen in D7.7b2, das Go-Paket in D7.7d.
+ohne	entwicklung/umbenennen/*,docs/plan/*,tests/test_umbenennen.py,tests/data/*,shell/scripts/gtk.sh,design/*,CHANGELOG.md,tools/*
+text	dms-colors.json	colors.json
+text	dms-typography.json	typography.json
+datei	shell/matugen/templates/dank.json	shell/matugen/templates/alpe.json
+datei	shell/matugen/templates/dank-zed.json	shell/matugen/templates/alpe-zed.json
+datei	shell/matugen/templates/dank-emacs.el	shell/matugen/templates/alpe-emacs.el
+text	templates/dank.json	templates/alpe.json
+text	templates/dank-zed.json	templates/alpe-zed.json
+text	templates/dank-emacs.el	templates/alpe-emacs.el
+text	[templates.dank]	[templates.alpe]
+text	[templates.dms	[templates.alpe
+regex	\bdank16(term)?\.color	palette16\1.color	shell/matugen/*,core/internal/matugen/*,shell/Common/*,shell/Modules/*,shell/Services/*
+text	{{dank16.	{{palette16.	core/internal/matugen/*
+text	"dank16term"	"palette16term"	core/internal/matugen/*
+text	"dank16"	"palette16"	core/internal/matugen/*
+text	with dank16 injection	with palette16 injection

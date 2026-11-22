@@ -22,7 +22,7 @@
 
 ;; Define all the color variables (replaced by template processor)
 (let* ((bg "{{colors.background.default.hex}}")
-      (err "{{dank16.color1.default.hex}}")  ; Red from dank16
+      (err "{{palette16.color1.default.hex}}")  ; Red from dank16
       (err-container "{{colors.error_container.default.hex}}")
       (on-background "{{colors.on_background.default.hex}}")
       (on-err "{{colors.on_error.default.hex}}")
@@ -53,24 +53,24 @@
       (tertiary-container "{{colors.tertiary_container.default.hex}}")
 
       ;; Enhanced dank16 colors for better syntax highlighting
-      (dank-red "{{dank16.color1.default.hex}}")          ; Bright red
-      (dank-red-alt "{{dank16.color9.default.hex}}")      ; Alternative red
-      (dank-green "{{dank16.color2.default.hex}}")        ; Vibrant green
-      (dank-green-bright "{{dank16.color10.default.hex}}") ; Bright green
-      (dank-yellow "{{dank16.color3.default.hex}}")       ; Warm yellow
-      (dank-yellow-bright "{{dank16.color11.default.hex}}") ; Bright yellow
-      (dank-blue "{{dank16.color4.default.hex}}")         ; Blue-green
-      (dank-magenta "{{dank16.color5.default.hex}}")      ; Teal-magenta
-      (dank-cyan "{{dank16.color6.default.hex}}")         ; Bright cyan
-      (dank-cyan-bright "{{dank16.color12.default.hex}}") ; Brightest cyan
-      (dank-cyan-dark "{{dank16.color13.default.hex}}")   ; Dark cyan
-      (dank-teal "{{dank16.color14.default.hex}}")        ; Dark teal
-      (dank-fg "{{dank16.color7.default.hex}}")           ; Light foreground
-      (dank-gray "{{dank16.color8.default.hex}}")         ; Gray
-      (dank-white "{{dank16.color15.default.hex}}")       ; White
+      (dank-red "{{palette16.color1.default.hex}}")          ; Bright red
+      (dank-red-alt "{{palette16.color9.default.hex}}")      ; Alternative red
+      (dank-green "{{palette16.color2.default.hex}}")        ; Vibrant green
+      (dank-green-bright "{{palette16.color10.default.hex}}") ; Bright green
+      (dank-yellow "{{palette16.color3.default.hex}}")       ; Warm yellow
+      (dank-yellow-bright "{{palette16.color11.default.hex}}") ; Bright yellow
+      (dank-blue "{{palette16.color4.default.hex}}")         ; Blue-green
+      (dank-magenta "{{palette16.color5.default.hex}}")      ; Teal-magenta
+      (dank-cyan "{{palette16.color6.default.hex}}")         ; Bright cyan
+      (dank-cyan-bright "{{palette16.color12.default.hex}}") ; Brightest cyan
+      (dank-cyan-dark "{{palette16.color13.default.hex}}")   ; Dark cyan
+      (dank-teal "{{palette16.color14.default.hex}}")        ; Dark teal
+      (dank-fg "{{palette16.color7.default.hex}}")           ; Light foreground
+      (dank-gray "{{palette16.color8.default.hex}}")         ; Gray
+      (dank-white "{{palette16.color15.default.hex}}")       ; White
 
       ;; Map success colors to green
-      (success "{{dank16.color2.default.hex}}")
+      (success "{{palette16.color2.default.hex}}")
       (on-success "{{colors.on_tertiary.default.hex}}")
       (success-container "{{colors.tertiary_container.default.hex}}")
       (on-success-container "{{colors.on_tertiary_container.default.hex}}")
@@ -95,22 +95,22 @@
       (inverse-surface "{{colors.inverse_surface.default.hex}}")
 
       ;; Terminal colors from dank16
-      (term0 "{{dank16.color0.default.hex}}")
-      (term1 "{{dank16.color1.default.hex}}")
-      (term2 "{{dank16.color2.default.hex}}")
-      (term3 "{{dank16.color3.default.hex}}")
-      (term4 "{{dank16.color4.default.hex}}")
-      (term5 "{{dank16.color5.default.hex}}")
-      (term6 "{{dank16.color6.default.hex}}")
-      (term7 "{{dank16.color7.default.hex}}")
-      (term8 "{{dank16.color8.default.hex}}")
-      (term9 "{{dank16.color9.default.hex}}")
-      (term10 "{{dank16.color10.default.hex}}")
-      (term11 "{{dank16.color11.default.hex}}")
-      (term12 "{{dank16.color12.default.hex}}")
-      (term13 "{{dank16.color13.default.hex}}")
-      (term14 "{{dank16.color14.default.hex}}")
-      (term15 "{{dank16.color15.default.hex}}"))
+      (term0 "{{palette16.color0.default.hex}}")
+      (term1 "{{palette16.color1.default.hex}}")
+      (term2 "{{palette16.color2.default.hex}}")
+      (term3 "{{palette16.color3.default.hex}}")
+      (term4 "{{palette16.color4.default.hex}}")
+      (term5 "{{palette16.color5.default.hex}}")
+      (term6 "{{palette16.color6.default.hex}}")
+      (term7 "{{palette16.color7.default.hex}}")
+      (term8 "{{palette16.color8.default.hex}}")
+      (term9 "{{palette16.color9.default.hex}}")
+      (term10 "{{palette16.color10.default.hex}}")
+      (term11 "{{palette16.color11.default.hex}}")
+      (term12 "{{palette16.color12.default.hex}}")
+      (term13 "{{palette16.color13.default.hex}}")
+      (term14 "{{palette16.color14.default.hex}}")
+      (term15 "{{palette16.color15.default.hex}}"))
 
   (custom-theme-set-faces
    'dank-emacs

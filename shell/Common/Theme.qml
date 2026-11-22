@@ -2442,7 +2442,7 @@ Singleton {
 
     FileView {
         id: dynamicColorsFileView
-        path: stateDir + "/dms-colors.json"
+        path: stateDir + "/colors.json"
         blockLoading: false
         watchChanges: true
 
@@ -2535,7 +2535,7 @@ Singleton {
 
     FileView {
         id: typographyFileView
-        path: root.publishTypography ? root.stateDir + "/dms-typography.json" : ""
+        path: root.publishTypography ? root.stateDir + "/typography.json" : ""
         blockLoading: false
         printErrors: false
     }

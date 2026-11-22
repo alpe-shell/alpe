@@ -267,11 +267,11 @@ func TestBuildMatugenArgsSourceModes(t *testing.T) {
 func TestBuildImportData(t *testing.T) {
 	const dank16 = `{"color0":"#000000"}`
 
-	assert.Equal(t, `{"dank16": {"color0":"#000000"}}`, buildImportData(dank16, "", "", nil),
+	assert.Equal(t, `{"palette16": {"color0":"#000000"}}`, buildImportData(dank16, "", "", nil),
 		"no image must produce byte-identical import data to pre-feature behavior")
-	assert.Equal(t, `{"dank16": {"color0":"#000000"}, "image": "/home/u/My Wallpaper.png"}`,
+	assert.Equal(t, `{"palette16": {"color0":"#000000"}, "image": "/home/u/My Wallpaper.png"}`,
 		buildImportData(dank16, "/home/u/My Wallpaper.png", "", nil))
-	assert.Equal(t, `{"dank16": {"color0":"#000000"}, "image": "/home/u/a\"b\\c.png"}`,
+	assert.Equal(t, `{"palette16": {"color0":"#000000"}, "image": "/home/u/a\"b\\c.png"}`,
 		buildImportData(dank16, `/home/u/a"b\c.png`, "", nil), "paths must be escaped, not interpolated raw")
 }
 
@@ -505,7 +505,7 @@ func TestBuildMergedConfigColorsOnly(t *testing.T) {
 	}
 
 	content := string(output)
-	assert.Contains(t, content, "[templates.dank]")
+	assert.Contains(t, content, "[templates.alpe]")
 	assert.Contains(t, content, "output_path = '"+opts.colorsStaging()+"'")
 	assert.NotContains(t, content, "[templates.gtk]")
 	assert.False(t, strings.Contains(content, "output_path = 'CONFIG_DIR/"), "colors-only config should not emit app template outputs")
@@ -606,7 +606,7 @@ func TestAppendFlatpakConfigRewritesOutputAndTemplateName(t *testing.T) {
 		t.Fatalf("failed to create config directory: %v", err)
 	}
 
-	config := "[templates.dmsvesktop]\ninput_path = 'SHELL_DIR/matugen/templates/vesktop.css'\noutput_path = 'CONFIG_DIR/vesktop/themes/dank-discord.css'\n"
+	config := "[templates.alpevesktop]\ninput_path = 'SHELL_DIR/matugen/templates/vesktop.css'\noutput_path = 'CONFIG_DIR/vesktop/themes/dank-discord.css'\n"
 	if err := os.WriteFile(filepath.Join(configDir, "vesktop.toml"), []byte(config), 0o644); err != nil {
 		t.Fatalf("failed to write config: %v", err)
 	}
@@ -632,7 +632,7 @@ func TestAppendFlatpakConfigRewritesOutputAndTemplateName(t *testing.T) {
 		t.Fatalf("failed to read output: %v", err)
 	}
 
-	assert.Contains(t, string(output), "[templates.dmsvesktop-flatpak]")
+	assert.Contains(t, string(output), "[templates.alpevesktop-flatpak]")
 	assert.Contains(t, string(output), "'/home/test/.var/app/dev.vencord.Vesktop/config/vesktop/themes/dank-discord.css'")
 }
 
@@ -1151,8 +1151,8 @@ func TestAppendTerminalConfigOpacity(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	toml := "[templates.dmskitty]\ninput_path = 'SHELL_DIR/matugen/templates/kitty.conf'\noutput_path = 'out/kitty'\n\n" +
-		"[templates.dmskittytabs]\ninput_path = 'SHELL_DIR/matugen/templates/kitty-tabs.conf'\noutput_path = 'out/tabs'\n"
+	toml := "[templates.alpekitty]\ninput_path = 'SHELL_DIR/matugen/templates/kitty.conf'\noutput_path = 'out/kitty'\n\n" +
+		"[templates.alpekittytabs]\ninput_path = 'SHELL_DIR/matugen/templates/kitty-tabs.conf'\noutput_path = 'out/tabs'\n"
 	for name, c := range map[string]string{
 		filepath.Join(cfgDir, "kitty.toml"):       toml,
 		filepath.Join(tmplDir, "kitty.conf"):      "color0 {{x}}\n",
@@ -1230,9 +1230,9 @@ func TestTerminalPaletteOnlyReachesTerminalTemplates(t *testing.T) {
 			}
 			content := string(data)
 			if def.Kind == TemplateKindTerminal {
-				assert.NotContains(t, content, "{{dank16.", "%s: terminal templates read dank16term", m[1])
+				assert.NotContains(t, content, "{{palette16.", "%s: terminal templates read dank16term", m[1])
 			} else {
-				assert.NotContains(t, content, "dank16term", "%s: only terminal templates follow the terminal palette", m[1])
+				assert.NotContains(t, content, "palette16term", "%s: only terminal templates follow the terminal palette", m[1])
 			}
 			checked++
 		}

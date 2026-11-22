@@ -22,6 +22,8 @@ shell/Common/KeybindActions.js	DMS- und Alpe-1\.0|«dms |spawn dms 	Umzug-Ende	K
 shell/tests/keybinds-legacy-actions.test.mjs	*	Umzug-Ende	Test dazu
 shell/Common/ConfigIncludeResolve.js	DMS bzw\. Alpe 1\.0	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/Common/OutputModel.js	DMS used to write|DMS 1\.x|hypr/dms/profiles	Umzug-Ende	Anzeigeprofile aus 1.0 lesen
+core/internal/matugen/matugen.go	"dank16(term)?"|dank16 und dank16term	F1	alte Palettennamen für eigene matugen-Vorlagen der Nutzer zusätzlich einspeisen (0.8 Nr. 47); F1 schreibt die Vorlagen um
+core/internal/matugen/altnamen_test.go	dank16	F1	Test dazu: alte und neue Palettennamen liefern dieselben Werte
 shell/Common/ConfigIncludeResolve.js	DMS Include Configs	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/tests/config-include.test.mjs	DMS Include Configs|dms\.colors	Umzug-Ende	Test dazu
 shell/Common/settings/SettingsStore.js	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|=== "dms"	Umzug-Ende	Migration v43 (alte Schlüssel lesen)

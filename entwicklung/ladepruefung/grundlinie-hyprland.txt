@@ -9,7 +9,7 @@ WARN qml: [Proc:<Z>] runCommand callback error for command: ["sh","-c","for b in
 WARN qml: [ProcessListModal:<Z>] dgop is not available
 WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Building theme: image <TMP>/h/.cache/alpe/video-wallpaper/<HASH>.jpg (dark)
 WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Done
-WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Running matugen hex with dank16 injection
+WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Running matugen hex with palette16 injection
 WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Seed color: <TMP>/h/.cache/alpe/video-wallpaper/<HASH>.jpg -> #c3b9c0
 WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Server unavailable, running synchronously
 WARN qml: [Theme:<Z>] Theme worker:   INFO  go: Using dynamic theme from image: <TMP>/h/.cache/alpe/video-wallpaper/<HASH>.jpg
@@ -30,7 +30,7 @@ WARN scene: @Modules/Settings/BarTab.qml[<Z>]: Unable to assign [undefined] to Q
 WARN scene: QML FileView at @Common/AppUsageHistoryData.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/appusage.json failed: File does not exist.
 WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/cache.json failed: File does not exist.
 WARN scene: QML FileView at @Common/CacheData.qml[<Z>]: Read of <TMP>/h/.cache/alpe/launcher_cache.json failed: File does not exist.
-WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/alpe/dms-colors.json failed: File does not exist.
+WARN scene: QML FileView at @Common/Theme.qml[<Z>]: Read of <TMP>/h/.cache/alpe/colors.json failed: File does not exist.
 WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <TMP>/h/.local/state/alpe/notepad-session.json failed: File does not exist.
 WARN scene: QML FileView at @Services/PaletteInjectService.qml[<Z>]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
 WARN scene: QML QQuickImage* at @Alpe/Widgets/CachingImage.qml[<Z>]: Cannot open: file://<TMP>/h/.cache/alpe/imagecache/<HASH>@1024x1024.png

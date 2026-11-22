@@ -88,7 +88,7 @@ func getColorsFilePath() string {
 		log.Error("Failed to get user cache dir", "err", err)
 		return ""
 	}
-	return filepath.Join(cacheDir, brand.DirName, "dms-colors.json")
+	return filepath.Join(cacheDir, brand.DirName, "colors.json")
 }
 
 func isLightMode() bool {
