@@ -8,7 +8,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 
 ---
 
-## Stand (22.11.2026, Halt nach D7 abgenommen, vorbehaltlich Mac-Test)
+## Stand (22.11.2026, Halt nach D7 abgenommen, vorbehaltlich Mac-Test; Vorlage 6.7 liegt zur Entscheidung vor)
 
 ### Erledigt
 
@@ -269,8 +269,18 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   4. `docs/plan/sie-form.md` und `docs/plan/uebersetzung-luecken.md`: **nicht freigegeben**; die
      drei Stilfragen beantwortet der Maintainer nach der Durchsicht. Bis dahin nichts in `de.json`.
   5. Der Worktree `/tmp/claude-1000/h7/wt-alt` (`ba4ddbc`) bleibt bis nach dem Mac-Test stehen.
-- Danach: Vorlage 6.7 → E1 (0.8 Nr. 6); E1 erst nach dem Entscheid zu 6.7 **und** dem Ergebnis
-  des Mac-Tests.
+- **Vorlage 6.7 vorgelegt, nicht entschieden:** `docs/plan/sperrbildschirm-dateien.md` (Empfehlung:
+  Systempaket unverändert, Eigenes nur in `kscreenlockerrc`; vier Fragen). **Nebenbefund daraus,
+  nicht behoben (Entscheid nötig, Frage 3 der Vorlage):** `shell/Modules/Lock/Alpe/layout.js` enthält
+  absolute Pfade in zwei Home-Verzeichnisse (seit `bfc7243`, laut lokalem Stand der Remote-Zweige
+  auch auf `origin/phase-a`); `tests/test_werte.py` prüft darauf nur `design/`.
+- **E1 beginnt erst** nach dem Entscheid zu 6.7 **und** dem Ergebnis des Mac-Tests (0.8 Nr. 6).
+  Bis dahin offen beim Maintainer: Mac-Test, Entscheid 6.7 (vier Fragen), Durchsicht der beiden
+  Übersetzungslisten. Kein Schritt wurde wegen fehlender Freigabe übersprungen; begonnen ist
+  nach 6.7 nichts.
+- Abschluss der Sitzung (22.11.2026, nachts): `1d91c2b` und `554fd44` je auf dem Commit im
+  Temp-Worktree mit `tools/test.sh` grün (32 Schritte); keine Läufe und keine Scopes der
+  Ladeprüfung mehr offen; Worktrees: nur der Arbeitsbaum und `wt-alt`.
 
 ---
 
@@ -1173,6 +1183,11 @@ schreibt dort das erzeugte `layout.js` und die Bilder hinein. Ein Paket unter
 `/usr/share/plasma/shells/` ist schreibgeschützt. Entscheidungsvorlage (Varianten: Greeter liest
 aus `~/.config/alpe`, oder bewusst erzeugte Nutzerkopie) mit Folgen für Umzug,
 `design apply/export` und `alpe entfernen` folgt vor E1.
+
+**Vorgelegt am 22.11.2026, nicht entschieden: `docs/plan/sperrbildschirm-dateien.md`.** Berichtigung
+zum Absatz oben: Bilder schreibt `lockscreen.sh` nicht ins Paket (das Layout nennt sie mit
+absolutem Pfad); nutzerspezifisch ist dort allein `layout.js`, und nur mit einer eigenen
+`~/.config/alpe/hyprlock.conf`.
 
 ### 6.8 `alpe-dienst` startet nie eine systemd-Unit (D1)
 
