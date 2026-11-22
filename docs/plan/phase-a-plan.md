@@ -549,7 +549,7 @@ liegen; Session-Daten wie `builtInPluginState` im selben Zug).
 | Herkunft: NOTICE, LICENSE-Vermerk, `LICENSE_CHANGE_12_11_2025.md`, README «Herkunft», `CHANGELOG.md`, `Brand.upstream*`, Herkunftszeile der Über-Seite | Rechtspflicht bzw. historische Angabe | dauerhaft |
 | Lesen alter Namen bei der Migration: `SettingsStore` v43/v44, Kopfzeile «DMS Include Configs», Marke `-- DMS-RULE:`, Hotspot-Name, Umzugscode `tools/umzug.py` und seine Tests/Testdaten | Daten aus 1.0 auf den Rechnern der Nutzer | sobald der Umzug von 1.0 nicht mehr unterstützt wird, frühestens mit dem ersten Release nach Abschluss von Phase B (0.8 Nr. 23) |
 | Fremde App «Dux Calendar»: `dev.duxlabs.calendar`, Socket `dankcal`, `CalendarDuxBackend.qml` | Namen der fremden App | solange die Anbindung besteht |
-| Fremdes Programm `dsearch` («dux-search», `github.com/duxlabs-dev/dux-search`): Programmname, Bezugsquelle im Starter-Hinweis, doctor-Eintrag | Name und Quelle des fremden Programms (0.8 Nr. 26) | solange die Anbindung besteht; Abhängigkeit in E3/E4 vermerken |
+| Fremdes Programm `dsearch` («dux-search», `github.com/duxlabs-dev/dux-search`): Programmname, Bezugsquelle im Starter-Hinweis, doctor-Eintrag | Name und Quelle des fremden Programms (0.8 Nr. 26) | solange die Anbindung besteht; in E3 optionale Abhängigkeit (`optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec), keine harte |
 | PAM-Dienste `dankshell`, `dankshell-u2f`, Blockmarken «DMS LOCKSCREEN AUTH»; Richtlinien `/usr/share/dms`, `/etc/dms`; alle anderen paketierten Pfade | heute vom Paket `dux-shell`/`dms` belegt | **E1** (zwingend, 0.8 Nr. 16; alte Blöcke erkennen) |
 | CUPS `requesting-user-name` `dms` | Besitzerkennung von Abonnements in cupsd (Befund in `offene-faelle.md`) | D7.7: Benutzername zur Laufzeit (`os/user`, Rückfall `alpe`); `dms` nur noch beim einmaligen Kündigen alter Abonnements (siehe unten), Frist wie Migration |
 | Dateien fremder Plugins im Original, Herkunftsvermerke im README von `~/alpe-plugins` | Lizenz/Herkunft | dauerhaft |
@@ -1096,11 +1096,11 @@ Meldungen die Commits dazwischen einzeln (0.7 Nr. 6).
 | D7.N, D7.0–D7.8 | Node-Tests in test.sh; interne Namen, Widget-Bibliothek `Alpe*`, Plugin-Beschreibung, Plugins, Migration v44; Weiterleitungen weg (D7.8 erst nach Bestätigung) | **direkt nach D6, vor E1** (0.8 Nr. 6), Bereiche in 2.3.5; Halt nach D7, Mac-Test, dann 6.7 |
 | E1 | Makefile, systemd-Unit, Desktop-Dateien; **PAM-Dienste, Richtlinien und alle paketierten Pfade mit `alpe`-Namen** (0.8 Nr. 16) | `make install DESTDIR` getestet in Temp-Wurzel; Dateiliste ohne Überschneidung mit dem Paket `dms`/`dux-shell` |
 | E2 | PKGBUILD | CI-Bau |
-| E3 | RPM-Spec; optionale Abhängigkeit `dsearch` (dux-search) vermerken (0.8 Nr. 26) | CI-Bau x86_64 |
+| E3 | RPM-Spec; `dsearch` (dux-search) wird **optionale** Abhängigkeit, keine harte, weil die Dateisuche ohne das Programm läuft: `optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec (0.8 Nr. 26) | CI-Bau x86_64 |
 | E4 | Werkzeuge: `alpe` CLI, einrichten.sh, entwicklung, doctor/update/entfernen/backup, kde-sitzung, lockscreen, kuerzel, titelleisten, design.py | bestehende Tests nachgeführt |
 | F1 | Umzug: `tools/umzug.py`, `install.sh`-Übergang, Testdaten, Test | |
 | F2 | get.sh neu | Probelauf `--check` in Temp-`HOME` mit Attrappen |
-| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `requires_alpe` der Alpe-Plugins auf `>=1.1` heben (D7.1 setzt `>=1.0`, solange `Brand.version` noch 1.0 meldet) | |
+| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `Brand.version` auf 1.1 und `requires_alpe` der drei Alpe-Plugins auf `>=1.1` **im selben Commit** heben (D7.1 setzt `>=1.0`, solange `Brand.version` noch 1.0 meldet) | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
 (Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D3 (0.6, abgenommen), nach D6, nach D7 (0.8), nach E4, nach F2, zuletzt G1. Vor B2 zusätzlich,
