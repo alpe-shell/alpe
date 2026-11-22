@@ -610,6 +610,25 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   `windowGripExcluded` für einzelne Programme (`kwin.json`, `settings.json`), Exportdatum im
   `manifest.json`. Ein fremdes Plugin im Bar-Layout fängt beim Export nur der Test ab,
   `design.py` filtert es nicht.
+  **Entschieden und umgesetzt (22.11.2026):** `dockPins` ist aus `design/kde/session.json`
+  entfernt – das ausgelieferte Design heftet keine Programme an (der Schlüssel fehlt, statt leer
+  zu sein: Ein leeres Dock im Design würde beim Einspielen die Anheftungen des Nutzers
+  überschreiben). Aus `kwin.json` sind die Fensterregeln «WingDrive» und «dev.zed.Zed» und die
+  Programmliste `WindowClasses` des Unschärfe-Effekts (Zen, Nautilus, WingDrive, Zed) entfernt,
+  die Hinweise im `manifest.json` dazu ebenfalls. `alpeSport.order` bleibt (National League
+  zuerst ist die Vorgabe für Alpe). `tools/design.py` nimmt beim Export Widgets fremder Plugins
+  aus dem Bar-Layout (bekannt sind die Widgets aus `WidgetModel.js` und die mitgelieferten
+  Plugins), Test in `tests/test_design.py`; der Test in `tests/test_werte.py` bleibt als zweite
+  Sicherung. **`windowGripExcluded: ["app.zen_browser.zen"]` entfernt:** Der Eintrag nimmt Zen
+  von den Griffleisten aus (`docs/technik.md`, «Griffleisten»: der Streifen am oberen
+  Fensterrand fängt Klicks ab; Zen hat dort seine Reiter). Im Repository steht dazu nichts –
+  kein Kommentar, kein Eintrag in Doku oder CHANGELOG, keine Sonderbehandlung in
+  `alpe-bridge.js`; es ist eine Ausnahme aus den Einstellungen des exportierenden Rechners. Als
+  Umgehung eines allgemeinen Problems wäre sie in der Liste ohnehin am falschen Ort, weil
+  dasselbe jedes Programm mit Reitern am oberen Rand träfe (Firefox, Chromium …), die nicht in
+  der Liste stehen. **Offen:** prüfen, ob die Erkennung selbst gezeichneter Titelleisten
+  (`bufferGeometry` grösser als `frameGeometry`) solche Programme unter der Regel «ohne
+  Titelleiste» verfehlt; wenn ja, gehört die Lösung in die Brücke, nicht ins Design.
 - ~~Sporadisch: `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null`~~
   Behoben (Commit «Einstellungssuche: abgebaute Karten»): Bindung und `sync()` prüfen `target`
   auf null; `unregisterCard` ohne Karte entfernt nur einen Eintrag, dessen Karte schon weg ist,

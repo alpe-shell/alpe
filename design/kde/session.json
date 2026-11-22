@@ -1,29 +1,6 @@
 {
   "wallpaperPath": "@DESIGN@/bilder/jagged-peaks-wolkenzug.mp4",
   "wallpaperTransition": "none",
-  "dockPins": {
-    "dock": [
-      "ONLYOFFICE",
-      "app.zen_browser.zen",
-      "me.proton.Mail",
-      "com.stremio.Stremio",
-      "ai.storyteller.photocraft",
-      "ai.storyteller.pdfcraft",
-      "ai.storyteller.wordcraft",
-      "ai.storyteller.lightcraft",
-      "ai.storyteller.deckcraft",
-      "ai.storyteller.gridcraft",
-      "app.legcord.Legcord",
-      "steam",
-      "proton.vpn.app.gtk",
-      "systemsettings",
-      "dev.zed.Zed",
-      "org.prismlauncher.PrismLauncher",
-      "com.spotify.Client",
-      "wingdrive",
-      "org.gnome.Nautilus"
-    ]
-  },
   "recentColors": [
     "#720a0a"
   ]

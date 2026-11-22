@@ -98,12 +98,6 @@
     ],
     [
       "kwinrc",
-      "Effect-better-blur-dx",
-      "WindowClasses",
-      "app.zen_browser.zen\norg.gnome.Nautilus\nWingDrive\ndev.zed.Zed"
-    ],
-    [
-      "kwinrc",
       "Plugins",
       "better_blur_dxEnabled",
       "true"
@@ -129,26 +123,6 @@
       "decorationpolicyrule": "2",
       "noborder": "true",
       "noborderrule": "2"
-    },
-    {
-      "Description": "WingDrive",
-      "wmclass": "WingDrive",
-      "wmclassmatch": "1",
-      "wmclasscomplete": "false",
-      "opacityactive": "90",
-      "opacityactiverule": "2",
-      "opacityinactive": "85",
-      "opacityinactiverule": "2"
-    },
-    {
-      "Description": "dev.zed.Zed",
-      "wmclass": "dev.zed.Zed",
-      "wmclassmatch": "1",
-      "wmclasscomplete": "false",
-      "opacityactive": "90",
-      "opacityactiverule": "2",
-      "opacityinactive": "85",
-      "opacityinactiverule": "2"
     }
   ],
   "sperrbildschirm": {

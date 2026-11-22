@@ -738,9 +738,7 @@
     }
   ],
   "powerMenuDefaultAction": "poweroff",
-  "windowGripExcluded": [
-    "app.zen_browser.zen"
-  ],
+  "windowGripExcluded": [],
   "windowGripSkipDecorated": true,
   "lockFollowWallpaper": false,
   "useAutoLocation": true

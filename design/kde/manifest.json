@@ -21,8 +21,5 @@
       "config.jsonc"
     ]
   },
-  "hinweise": [
-    "Fensterregel «WingDrive»: Bedingung Fenstertitel entfernt, gilt für alle Fenster des Programms.",
-    "Fensterregel «dev.zed.Zed»: Bedingung Fenstertitel entfernt, gilt für alle Fenster des Programms."
-  ]
+  "hinweise": []
 }

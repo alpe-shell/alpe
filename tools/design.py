@@ -385,6 +385,46 @@ def renamed_session(session):
     return out
 
 
+def known_bar_widgets():
+    """Widget-Kennungen, die jede Alpe-Installation kennt: die eingebauten Widgets der Leiste
+    (Modules/Bar/WidgetModel.js) und die mitgelieferten Plugins. None, wenn die Liste nicht lesbar ist."""
+    try:
+        with open(os.path.join(SHELL_DIR, "Modules", "Bar", "WidgetModel.js"), encoding="utf-8") as handle:
+            block = re.search(r"componentNames\s*=\s*\{(.*?)\n\}", handle.read(), re.S)
+    except OSError:
+        return None
+    if not block:
+        return None
+    known = set(re.findall(r'^\s*"([^"]+)"\s*:', block.group(1), re.M)) | set(PLUGIN_KEEP)
+    folder = os.path.join(ALPE_DIR, "plugins")
+    for name in (os.listdir(folder) if os.path.isdir(folder) else []):
+        plugin_id = (load_json(os.path.join(folder, name, "plugin.json"), {}) or {}).get("id")
+        if plugin_id:
+            known.add(plugin_id)
+    return known
+
+
+def drop_foreign_widgets(settings, dropped):
+    """Widgets fremder Plugins aus dem Bar-Layout nehmen: Der neue Nutzer hat das Plugin nicht,
+    die Stelle bliebe leer, und die Kennung verrät, was beim Exportierenden installiert ist."""
+    known = known_bar_widgets()
+    if known is None:
+        return
+    for bar in settings.get("barConfigs") or []:
+        if not isinstance(bar, dict):
+            continue
+        for side in ("leftWidgets", "centerWidgets", "rightWidgets"):
+            kept = []
+            for widget in bar.get(side) or []:
+                widget_id = widget.get("id") if isinstance(widget, dict) else widget
+                if widget_id in known:
+                    kept.append(widget)
+                else:
+                    dropped.append("barConfigs.%s: Widget «%s» (fremdes Plugin)" % (side, widget_id))
+            if side in bar:
+                bar[side] = kept
+
+
 # ---------------------------------------------------------------- Export
 
 def export(variant, mode, ask=input):
@@ -398,6 +438,7 @@ def export(variant, mode, ask=input):
     settings = renamed(load_json(SETTINGS, {}) or {})
     if not settings:
         say("   Keine Einstellungen gefunden (%s) – hier läuft Alpe noch nicht?" % SETTINGS.replace(HOME, "~"))
+    drop_foreign_widgets(settings, dropped)
     out = {}
     for key, value in settings.items():
         if key in SETTINGS_DROP:

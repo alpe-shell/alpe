@@ -59,7 +59,9 @@ write(os.path.join(a, ".config", "alpe", "settings.json"), {
     "fontFamily": "Inter Variable",
     "cornerRadius": 18,
     "barConfigs": [{"id": "default", "position": 0, "screenPreferences": ["DP-2"],
-                    "leftWidgets": ["launcherButton", {"id": "gpuTemp", "enabled": True, "selectedGpuIndex": 0, "pciId": "1234:abcd"}]}],
+                    "leftWidgets": [{"id": "fremdesPlugin", "enabled": True}, "launcherButton",
+                                    {"id": "gpuTemp", "enabled": True, "selectedGpuIndex": 0, "pciId": "1234:abcd"}],
+                    "rightWidgets": ["nochEinFremdes", {"id": "alpeSport", "enabled": True}, "clock"]}],
     "dockConfigs": [{"id": "dock", "screenPreferences": [{"name": "DP-2"}]}],
     "dashTabs": ["overview", "weather", "plugin_alpeRadar", "plugin_alpeSport"],
     "screenPreferences": {"notifications": ["DP-2"]},
@@ -115,7 +117,9 @@ check("screenPreferences" not in s and "updaterCustomCommand" not in s and "upda
 check(s["useAutoLocation"] is True, "Wetter folgt beim neuen Nutzer dem Standort")
 check("lockScreenVideoPath" not in s and "launcherLogoCustomPath" not in s, "Pfade in den eigenen Ordner weggelassen")
 check(s["barConfigs"][0]["leftWidgets"] == ["launcherButton", {"id": "gpuTemp", "enabled": True, "selectedGpuIndex": 0}],
-      "Kennung der Grafikkarte (pciId) im Widget gpuTemp weggelassen, das Widget bleibt")
+      "Kennung der Grafikkarte (pciId) im Widget gpuTemp weggelassen, das Widget bleibt; Widget eines fremden Plugins weg")
+check(s["barConfigs"][0]["rightWidgets"] == [{"id": "alpeSport", "enabled": True}, "clock"],
+      "Bar-Layout: fremdes Plugin weg, mitgeliefertes Plugin und eingebautes Widget bleiben")
 check(s["customThemeFile"] == "@DESIGN@/farben.json" and os.path.isfile(os.path.join(d, "farben.json")), "eigenes Farbschema kommt mit")
 se = json.load(open(os.path.join(d, "session.json")))
 check(se["wallpaperPath"] == "@DESIGN@/bilder/berg.jpg" and os.path.isfile(os.path.join(d, "bilder", "berg.jpg")), "bestätigtes eigenes Hintergrundbild kommt mit")
