@@ -1,0 +1,22 @@
+# D7.7e: Texte, Kommentare und Testdaten in internal/config, configfrag, luaconfig, keybinds, windowrules
+# (angewendet mit texte-ersetzen.py auf die von der Namensprüfung gemeldeten Zeilen).
+duxinstall-	alpe-
+dms ipc call	alpe-dienst ipc call
+"dms:geometry"	"alpe:geometry"
+"\^dms:	"^alpe:
+hl\.exec_cmd\("dms run"\)	hl.exec_cmd("alpe-dienst run")
+DMS_STARTUP_	ALPE_STARTUP_
+\.dms-backups	.alpe-backups
+run-dms-setup error	missing-config error
+-- Your keybinds\. dms setup never overwrites this file\.	-- Your keybinds. Alpe never overwrites this file.
+-- dms setup replaces this file	-- Alpe replaces this file
+After=dms\.service	After=alpe.service
+DMS-owned	Alpe-owned
+"quickshell", "dms"	"quickshell", brand.ID
+filepath\.Join\("dms", 	filepath.Join("alpe", 
+filepath\.Join\(tmpDir, "dms"\)	filepath.Join(tmpDir, "alpe")
+non-dms module	foreign module
+the dms module	the alpe module
+\bdms([./])(?=[a-z])	alpe\1
+\bDMS\b	Alpe
+\bdms (binds|window rules|directory|configs)	alpe \1

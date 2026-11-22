@@ -33,29 +33,29 @@ type HyprlandSection struct {
 type HyprlandParser struct {
 	configDir          string
 	currentSource      string
-	dmsBindsExists     bool
+	shellBindsExists   bool
 	walker             *configfrag.Walker
-	bindsAfterDMS      int
-	dmsBindKeys        map[string]bool
+	bindsAfterShell    int
+	shellBindKeys      map[string]bool
 	configBindKeys     map[string]bool
 	conflictingConfigs map[string]*HyprlandKeyBinding
 	bindMap            map[string]*HyprlandKeyBinding
 	bindOrder          []string
 	processedFiles     map[string]bool
-	dmsProcessed       bool
+	shellProcessed     bool
 	removedKeys        map[string]bool // hl.unbind targets
 	// Files that unbind then rebind a removed key; only their own bind survives the removal.
-	rebindSources  map[string]map[string]bool
-	fileUnbinds    map[string]bool // hl.unbind targets seen so far in the file being parsed
-	defaultDMSKeys map[string]bool // keys present in dms/binds.lua
-	mainMod        string
+	rebindSources    map[string]map[string]bool
+	fileUnbinds      map[string]bool // hl.unbind targets seen so far in the file being parsed
+	defaultShellKeys map[string]bool // keys present in alpe/binds.lua
+	mainMod          string
 }
 
 func NewHyprlandParser(configDir string) *HyprlandParser {
 	return &HyprlandParser{
 		configDir:          configDir,
-		walker:             configfrag.NewWalker(isDMSBindsPrimarySourcePath),
-		dmsBindKeys:        make(map[string]bool),
+		walker:             configfrag.NewWalker(isShellBindsPrimarySourcePath),
+		shellBindKeys:      make(map[string]bool),
 		configBindKeys:     make(map[string]bool),
 		conflictingConfigs: make(map[string]*HyprlandKeyBinding),
 		bindMap:            make(map[string]*HyprlandKeyBinding),
@@ -63,7 +63,7 @@ func NewHyprlandParser(configDir string) *HyprlandParser {
 		processedFiles:     make(map[string]bool),
 		removedKeys:        make(map[string]bool),
 		rebindSources:      make(map[string]map[string]bool),
-		defaultDMSKeys:     make(map[string]bool),
+		defaultShellKeys:   make(map[string]bool),
 	}
 }
 
@@ -350,19 +350,19 @@ type HyprlandParseResult struct {
 	BindsFragmentIncluded bool
 	FragmentStatus        *configfrag.Status
 	ConflictingConfigs    map[string]*HyprlandKeyBinding
-	DefaultDMSKeys        map[string]bool // keys with a DMS default in binds.lua
+	DefaultShellKeys      map[string]bool // keys with a Alpe default in binds.lua
 	MainMod               string          // value of the mainMod Lua variable when the config defines one
 }
 
 var hyprlandBindsMessages = configfrag.Messages{
 	Missing:     "alpe/binds.lua does not exist",
-	NotIncluded: "dms binds are not loaded from Hyprland config (require)",
+	NotIncluded: "alpe binds are not loaded from Hyprland config (require)",
 	Overridden:  "Some Alpe binds may be overridden by config binds",
 	Active:      "Alpe binds are active",
 }
 
 func (p *HyprlandParser) buildFragmentStatus() *configfrag.Status {
-	status := configfrag.BuildStatus(p.walker.Scan(), p.dmsBindsExists, p.bindsAfterDMS, hyprlandBindsMessages)
+	status := configfrag.BuildStatus(p.walker.Scan(), p.shellBindsExists, p.bindsAfterShell, hyprlandBindsMessages)
 	return &status
 }
 
@@ -384,18 +384,18 @@ func (p *HyprlandParser) normalizeKey(key string) string {
 func (p *HyprlandParser) addBind(kb *HyprlandKeyBinding) bool {
 	key := p.formatBindKey(kb)
 	normalizedKey := p.normalizeKey(key)
-	isDMSBind := isDMSBindsSourcePath(kb.Source)
+	isShellBind := isShellBindsSourcePath(kb.Source)
 
-	if isDMSBindsPrimarySourcePath(kb.Source) {
-		p.defaultDMSKeys[normalizedKey] = true
+	if isShellBindsPrimarySourcePath(kb.Source) {
+		p.defaultShellKeys[normalizedKey] = true
 	}
-	if isDMSBind {
-		p.dmsBindKeys[normalizedKey] = true
-	} else if p.dmsBindKeys[normalizedKey] && !p.fileUnbinds[normalizedKey] {
+	if isShellBind {
+		p.shellBindKeys[normalizedKey] = true
+	} else if p.shellBindKeys[normalizedKey] && !p.fileUnbinds[normalizedKey] {
 		// Without a preceding hl.unbind both binds stay live in Hyprland, which
-		// is the conflict this counts. With one, the DMS bind is gone and this
+		// is the conflict this counts. With one, the Alpe bind is gone and this
 		// is the effective bind, so it belongs in the list (#3145).
-		p.bindsAfterDMS++
+		p.bindsAfterShell++
 		p.conflictingConfigs[normalizedKey] = kb
 		p.configBindKeys[normalizedKey] = true
 		return false
@@ -410,7 +410,7 @@ func (p *HyprlandParser) addBind(kb *HyprlandKeyBinding) bool {
 	return true
 }
 
-func (p *HyprlandParser) ParseWithDMS() (*HyprlandSection, error) {
+func (p *HyprlandParser) ParseWithShell() (*HyprlandSection, error) {
 	expandedDir, err := utils.ExpandPath(p.configDir)
 	if err != nil {
 		return nil, err
@@ -418,7 +418,7 @@ func (p *HyprlandParser) ParseWithDMS() (*HyprlandSection, error) {
 
 	shellBindsPath := filepath.Join(expandedDir, brand.DirName, "binds.lua")
 	if _, err := os.Stat(shellBindsPath); err == nil {
-		p.dmsBindsExists = true
+		p.shellBindsExists = true
 	}
 
 	mainConfig, err := hyprlandMainConfigPath(p.configDir)
@@ -430,16 +430,16 @@ func (p *HyprlandParser) ParseWithDMS() (*HyprlandSection, error) {
 		return nil, err
 	}
 
-	if p.dmsBindsExists && !p.dmsProcessed {
-		p.parseDMSBindsDirectly(shellBindsPath, section)
+	if p.shellBindsExists && !p.shellProcessed {
+		p.parseShellBindsDirectly(shellBindsPath, section)
 	}
-	p.removeShadowedDMSBinds(section)
-	p.removeUnboundDMSBinds(section)
+	p.removeShadowedShellBinds(section)
+	p.removeUnboundShellBinds(section)
 
 	return section, nil
 }
 
-func (p *HyprlandParser) removeUnboundDMSBinds(section *HyprlandSection) {
+func (p *HyprlandParser) removeUnboundShellBinds(section *HyprlandSection) {
 	if len(p.removedKeys) == 0 {
 		return
 	}
@@ -447,41 +447,41 @@ func (p *HyprlandParser) removeUnboundDMSBinds(section *HyprlandSection) {
 	for i := range section.Keybinds {
 		kb := section.Keybinds[i]
 		key := p.normalizeKey(p.formatBindKey(&kb))
-		if isDMSBindsSourcePath(kb.Source) && p.removedKeys[key] && !p.rebindSources[key][kb.Source] {
+		if isShellBindsSourcePath(kb.Source) && p.removedKeys[key] && !p.rebindSources[key][kb.Source] {
 			continue
 		}
 		filtered = append(filtered, kb)
 	}
 	section.Keybinds = filtered
 	for i := range section.Children {
-		p.removeUnboundDMSBinds(&section.Children[i])
+		p.removeUnboundShellBinds(&section.Children[i])
 	}
 }
 
-func (p *HyprlandParser) removeShadowedDMSBinds(section *HyprlandSection) {
+func (p *HyprlandParser) removeShadowedShellBinds(section *HyprlandSection) {
 	counts := make(map[string]int)
-	p.countDMSBinds(section, counts)
-	p.filterShadowedDMSBinds(section, counts)
+	p.countShellBinds(section, counts)
+	p.filterShadowedShellBinds(section, counts)
 }
 
-func (p *HyprlandParser) countDMSBinds(section *HyprlandSection, counts map[string]int) {
+func (p *HyprlandParser) countShellBinds(section *HyprlandSection, counts map[string]int) {
 	for i := range section.Keybinds {
 		kb := &section.Keybinds[i]
-		if isDMSBindsSourcePath(kb.Source) {
+		if isShellBindsSourcePath(kb.Source) {
 			counts[p.normalizeKey(p.formatBindKey(kb))]++
 		}
 	}
 	for i := range section.Children {
-		p.countDMSBinds(&section.Children[i], counts)
+		p.countShellBinds(&section.Children[i], counts)
 	}
 }
 
-func (p *HyprlandParser) filterShadowedDMSBinds(section *HyprlandSection, counts map[string]int) {
+func (p *HyprlandParser) filterShadowedShellBinds(section *HyprlandSection, counts map[string]int) {
 	filtered := section.Keybinds[:0]
 	for i := range section.Keybinds {
 		kb := section.Keybinds[i]
 		key := p.normalizeKey(p.formatBindKey(&kb))
-		if isDMSBindsSourcePath(kb.Source) && counts[key] > 1 {
+		if isShellBindsSourcePath(kb.Source) && counts[key] > 1 {
 			counts[key]--
 			continue
 		}
@@ -489,7 +489,7 @@ func (p *HyprlandParser) filterShadowedDMSBinds(section *HyprlandSection, counts
 	}
 	section.Keybinds = filtered
 	for i := range section.Children {
-		p.filterShadowedDMSBinds(&section.Children[i], counts)
+		p.filterShadowedShellBinds(&section.Children[i], counts)
 	}
 }
 
@@ -512,14 +512,14 @@ func (p *HyprlandParser) parseFileWithSource(filePath, sectionName string) (*Hyp
 	return p.parseLuaLines(string(data), filepath.Dir(absPath), absPath, sectionName)
 }
 
-func (p *HyprlandParser) parseDMSBindsDirectly(shellBindsPath string, section *HyprlandSection) {
+func (p *HyprlandParser) parseShellBindsDirectly(shellBindsPath string, section *HyprlandSection) {
 	sub, err := p.parseLuaLinesFromPath(shellBindsPath)
 	if err != nil {
 		return
 	}
 	section.Keybinds = append(section.Keybinds, sub.Keybinds...)
 	section.Children = append(section.Children, sub.Children...)
-	p.dmsProcessed = true
+	p.shellProcessed = true
 }
 
 func (p *HyprlandParser) parseLuaLinesFromPath(absPath string) (*HyprlandSection, error) {
@@ -569,7 +569,7 @@ func (p *HyprlandParser) parseLuaLines(content string, baseDir, absPath, section
 					continue
 				}
 				if p.walker.Record(rel) {
-					p.dmsProcessed = true
+					p.shellProcessed = true
 				}
 				fullPath := luaconfig.ModuleToPath(rootDir, mod)
 				expanded, err := utils.ExpandPath(fullPath)
@@ -712,9 +712,9 @@ func luaBindOptDescription(optSuffix string) string {
 	return luaTableStringField(optSuffix, "description")
 }
 
-func ParseHyprlandKeysWithDMS(path string) (*HyprlandParseResult, error) {
+func ParseHyprlandKeysWithShell(path string) (*HyprlandParseResult, error) {
 	parser := NewHyprlandParser(path)
-	section, err := parser.ParseWithDMS()
+	section, err := parser.ParseWithShell()
 	if err != nil {
 		return nil, err
 	}
@@ -724,7 +724,7 @@ func ParseHyprlandKeysWithDMS(path string) (*HyprlandParseResult, error) {
 		BindsFragmentIncluded: parser.walker.Included(),
 		FragmentStatus:        parser.buildFragmentStatus(),
 		ConflictingConfigs:    parser.conflictingConfigs,
-		DefaultDMSKeys:        parser.defaultDMSKeys,
+		DefaultShellKeys:      parser.defaultShellKeys,
 		MainMod:               parser.mainMod,
 	}, nil
 }
@@ -1439,21 +1439,21 @@ func luaLineTrailingComment(line string) string {
 	return ""
 }
 
-func isDMSBindsSourcePath(p string) bool {
+func isShellBindsSourcePath(p string) bool {
 	p = filepath.ToSlash(strings.TrimSpace(p))
-	if isDMSBindsPrimarySourcePath(p) {
+	if isShellBindsPrimarySourcePath(p) {
 		return true
 	}
-	return isDMSBindsUserOverridePath(p)
+	return isShellBindsUserOverridePath(p)
 }
 
-func isDMSBindsUserOverridePath(p string) bool {
+func isShellBindsUserOverridePath(p string) bool {
 	p = filepath.ToSlash(strings.TrimSpace(p))
 	return p == "alpe/binds-user.lua" || p == "./alpe/binds-user.lua" ||
 		strings.HasSuffix(p, "/alpe/binds-user.lua")
 }
 
-func isDMSBindsPrimarySourcePath(p string) bool {
+func isShellBindsPrimarySourcePath(p string) bool {
 	p = filepath.ToSlash(strings.TrimSpace(p))
 	return strings.Contains(p, "/alpe/binds.lua") || strings.HasSuffix(p, "alpe/binds.lua")
 }

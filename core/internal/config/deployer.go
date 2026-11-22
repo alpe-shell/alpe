@@ -13,7 +13,9 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/version"
 )
 
-const hyprlandBackupDirName = ".dms-backups"
+// Sicherungen der Hyprland-Dateien. Den Ordner .dms-backups aus 1.0 rührt Alpe nicht an
+// (Plan 0.8 Nr. 57): Er wird weder umbenannt noch weiter beschrieben.
+const hyprlandBackupDirName = ".alpe-backups"
 
 type ConfigDeployer struct {
 	logChan         chan<- string
@@ -50,7 +52,7 @@ func hyprlandLuaUnsupported(ver string) error {
 	if ver == "" || version.CompareVersions(ver, "0.55.0") >= 0 {
 		return nil
 	}
-	return fmt.Errorf("hyprland.lua is not loaded by Hyprland %s; DMS needs 0.55 or newer", ver)
+	return fmt.Errorf("hyprland.lua is not loaded by Hyprland %s; Alpe needs 0.55 or newer", ver)
 }
 
 func (cd *ConfigDeployer) DeployConfigurationsSelectiveWithReinstalls(ctx context.Context, wm deps.WindowManager, terminal deps.Terminal, installedDeps []deps.Dependency, replaceConfigs map[string]bool, reinstallItems map[string]bool) ([]DeploymentResult, error) {
@@ -122,7 +124,7 @@ func (cd *ConfigDeployer) deployConfigurationsInternal(_ context.Context, wm dep
 			if err != nil {
 				return results, fmt.Errorf("failed to deploy Hyprland config: %w", err)
 			}
-		} else if result, ok := cd.RefreshHyprlandDMSBinds(terminalCommand); ok {
+		} else if result, ok := cd.RefreshHyprlandShellBinds(terminalCommand); ok {
 			results = append(results, result)
 			if result.Error != nil {
 				return results, fmt.Errorf("failed to deploy Hyprland keybinds: %w", result.Error)
@@ -209,7 +211,7 @@ func (cd *ConfigDeployer) deployBindsFile(path, stock string) error {
 	if err := os.WriteFile(path, []byte(stock), 0o644); err != nil {
 		return fmt.Errorf("failed to write %s: %w", name, err)
 	}
-	cd.log("Deployed DMS stock " + name)
+	cd.log("Deployed Alpe stock " + name)
 	return nil
 }
 
@@ -423,9 +425,9 @@ func (cd *ConfigDeployer) deployHyprlandConfig(terminalCommand string, useSystem
 		return result, result.Error
 	}
 
-	dmsDir := filepath.Join(configDir, brand.DirName)
-	if err := os.MkdirAll(dmsDir, 0o755); err != nil {
-		result.Error = fmt.Errorf("failed to create dms directory: %w", err)
+	appDir := filepath.Join(configDir, brand.DirName)
+	if err := os.MkdirAll(appDir, 0o755); err != nil {
+		result.Error = fmt.Errorf("failed to create alpe directory: %w", err)
 		return result, result.Error
 	}
 
@@ -451,8 +453,8 @@ func (cd *ConfigDeployer) deployHyprlandConfig(terminalCommand string, useSystem
 	}
 
 	// Hyprland reloads hyprland.lua as soon as it changes, so its required fragments must already exist.
-	if err := cd.deployHyprlandDmsConfigs(dmsDir, terminalCommand); err != nil {
-		result.Error = fmt.Errorf("failed to deploy dms configs: %w", err)
+	if err := cd.deployHyprlandShellConfigs(appDir, terminalCommand); err != nil {
+		result.Error = fmt.Errorf("failed to deploy alpe configs: %w", err)
 		return result, result.Error
 	}
 
@@ -490,9 +492,9 @@ func backupHyprlandConfigFile(dst string, data []byte) (string, error) {
 	return dst, nil
 }
 
-// Keeping hyprland.lua must not leave the DMS-owned binds.lua stale; the user's
+// Keeping hyprland.lua must not leave the Alpe-owned binds.lua stale; the user's
 // binds live in binds-user.lua, which is never overwritten.
-func (cd *ConfigDeployer) RefreshHyprlandDMSBinds(terminalCommand string) (DeploymentResult, bool) {
+func (cd *ConfigDeployer) RefreshHyprlandShellBinds(terminalCommand string) (DeploymentResult, bool) {
 	bindsPath := filepath.Join(HyprlandConfigDir(), brand.DirName, "binds.lua")
 	result := DeploymentResult{ConfigType: BindsConfigType, Path: bindsPath}
 	if _, err := os.Stat(bindsPath); err != nil {
@@ -511,11 +513,11 @@ func (cd *ConfigDeployer) RefreshHyprlandDMSBinds(terminalCommand string) (Deplo
 	return result, true
 }
 
-// WriteHyprlandStockBinds replaces dms/binds.lua with the stock set. Hand edits are
-// never lost: a copy that differs from stock goes to .dms-backups first.
+// WriteHyprlandStockBinds replaces alpe/binds.lua with the stock set. Hand edits are
+// never lost: a copy that differs from stock goes to .alpe-backups first.
 func WriteHyprlandStockBinds(configDir, terminalCommand string) (backupPath string, written bool, err error) {
 	path := filepath.Join(configDir, brand.DirName, "binds.lua")
-	stock := strings.ReplaceAll(DMSBindsLuaConfig, "{{TERMINAL_COMMAND}}", terminalCommand)
+	stock := strings.ReplaceAll(BindsLuaConfig, "{{TERMINAL_COMMAND}}", terminalCommand)
 	existing, err := os.ReadFile(path)
 	if err != nil && !os.IsNotExist(err) {
 		return "", false, err
@@ -546,8 +548,8 @@ func (cd *ConfigDeployer) logStockBinds(backupPath string, written bool) {
 	cd.log("Updated binds.lua")
 }
 
-func (cd *ConfigDeployer) deployHyprlandDmsConfigs(dmsDir string, terminalCommand string) error {
-	backupPath, written, err := WriteHyprlandStockBinds(filepath.Dir(dmsDir), terminalCommand)
+func (cd *ConfigDeployer) deployHyprlandShellConfigs(appDir string, terminalCommand string) error {
+	backupPath, written, err := WriteHyprlandStockBinds(filepath.Dir(appDir), terminalCommand)
 	if err != nil {
 		return err
 	}
@@ -557,17 +559,17 @@ func (cd *ConfigDeployer) deployHyprlandDmsConfigs(dmsDir string, terminalComman
 		name    string
 		content string
 	}{
-		{name: "colors.lua", content: DMSColorsLuaConfig},
-		{name: "layout.lua", content: DMSLayoutLuaConfig},
-		{name: "binds-user.lua", content: DMSBindsUserLuaConfig},
-		{name: "outputs.lua", content: DMSOutputsLuaConfig},
-		{name: "cursor.lua", content: DMSCursorLuaConfig},
-		{name: "input.lua", content: DMSInputLuaConfig},
-		{name: "windowrules.lua", content: DMSWindowRulesLuaConfig},
+		{name: "colors.lua", content: ColorsLuaConfig},
+		{name: "layout.lua", content: LayoutLuaConfig},
+		{name: "binds-user.lua", content: BindsUserLuaConfig},
+		{name: "outputs.lua", content: OutputsLuaConfig},
+		{name: "cursor.lua", content: CursorLuaConfig},
+		{name: "input.lua", content: InputLuaConfig},
+		{name: "windowrules.lua", content: WindowRulesLuaConfig},
 	}
 
 	for _, cfg := range configs {
-		path := filepath.Join(dmsDir, cfg.name)
+		path := filepath.Join(appDir, cfg.name)
 		if info, err := os.Stat(path); err == nil && info.Size() > 0 {
 			cd.log(fmt.Sprintf("Skipping %s (already exists)", cfg.name))
 			continue

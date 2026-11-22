@@ -20,7 +20,7 @@ func marshalKeys(t *testing.T, v any) map[string]json.RawMessage {
 	return out
 }
 
-func TestDMSBindsStatusKeySpellings(t *testing.T) {
+func TestBindsStatusKeySpellings(t *testing.T) {
 	keys := marshalKeys(t, BindsFragmentStatus{
 		Exists:             true,
 		Included:           true,
@@ -29,7 +29,7 @@ func TestDMSBindsStatusKeySpellings(t *testing.T) {
 		BindsAfterFragment: 4,
 		Effective:          true,
 		OverriddenBy:       4,
-		StatusMessage:      "DMS binds are active",
+		StatusMessage:      "Alpe binds are active",
 	})
 
 	want := []string{"exists", "included", "includePosition", "totalIncludes", "bindsAfterFragment", "effective", "overriddenBy", "statusMessage"}
@@ -43,7 +43,7 @@ func TestDMSBindsStatusKeySpellings(t *testing.T) {
 	}
 }
 
-func TestDMSBindsStatusFromCarriesEveryField(t *testing.T) {
+func TestBindsStatusFromCarriesEveryField(t *testing.T) {
 	got := BindsFragmentStatusFrom(configfrag.Status{
 		Exists:               true,
 		Included:             true,
@@ -52,7 +52,7 @@ func TestDMSBindsStatusFromCarriesEveryField(t *testing.T) {
 		EntriesAfterFragment: 7,
 		Effective:            true,
 		OverriddenBy:         7,
-		StatusMessage:        "DMS binds are active",
+		StatusMessage:        "Alpe binds are active",
 	})
 
 	want := BindsFragmentStatus{
@@ -63,7 +63,7 @@ func TestDMSBindsStatusFromCarriesEveryField(t *testing.T) {
 		BindsAfterFragment: 7,
 		Effective:          true,
 		OverriddenBy:       7,
-		StatusMessage:      "DMS binds are active",
+		StatusMessage:      "Alpe binds are active",
 	}
 	if *got != want {
 		t.Errorf("BindsFragmentStatusFrom = %+v, want %+v", *got, want)

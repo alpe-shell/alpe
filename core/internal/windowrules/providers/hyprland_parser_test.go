@@ -46,7 +46,7 @@ func TestHyprlandSetRuleLeavesConfOnlyInstallReadOnly(t *testing.T) {
 		t.Fatal("expected SetRule to reject conf-only Hyprland config")
 	}
 	if !strings.Contains(err.Error(), "create it before editing window rules") {
-		t.Fatalf("expected a run-dms-setup error, got %v", err)
+		t.Fatalf("expected a missing-config error, got %v", err)
 	}
 	if _, err := os.Stat(filepath.Join(tmpDir, "alpe", "windowrules.lua")); !os.IsNotExist(err) {
 		t.Fatalf("expected no Lua windowrules file to be created for conf-only config, stat err=%v", err)
@@ -69,7 +69,7 @@ func TestHyprlandRemoveRule(t *testing.T) {
 		t.Fatalf("RemoveRule failed: %v", err)
 	}
 
-	rules, _ := provider.LoadDMSRules()
+	rules, _ := provider.LoadShellRules()
 	if len(rules) != 1 {
 		t.Fatalf("expected 1 rule after removal, got %d", len(rules))
 	}
@@ -97,7 +97,7 @@ func TestHyprlandReorderRules(t *testing.T) {
 		t.Fatalf("ReorderRules failed: %v", err)
 	}
 
-	rules, _ := provider.LoadDMSRules()
+	rules, _ := provider.LoadShellRules()
 	if len(rules) != 3 {
 		t.Fatalf("expected 3 rules, got %d", len(rules))
 	}
@@ -111,13 +111,13 @@ func TestHyprlandReorderRules(t *testing.T) {
 
 func TestParseHyprlandLuaRequiresFragment(t *testing.T) {
 	tmpDir := t.TempDir()
-	dmsDir := filepath.Join(tmpDir, "alpe")
-	if err := os.MkdirAll(dmsDir, 0755); err != nil {
+	appDir := filepath.Join(tmpDir, "alpe")
+	if err := os.MkdirAll(appDir, 0755); err != nil {
 		t.Fatal(err)
 	}
 
 	mainLua := filepath.Join(tmpDir, "hyprland.lua")
-	fragLua := filepath.Join(dmsDir, "windowrules.lua")
+	fragLua := filepath.Join(appDir, "windowrules.lua")
 
 	if err := os.WriteFile(fragLua, []byte(`
 hl.window_rule({ match = { class = "^test$" }, float = true })
@@ -139,7 +139,7 @@ require("alpe.windowrules")
 		t.Fatalf("expected 1 rule, got %d", len(res.Rules))
 	}
 	if !res.RulesFragmentIncluded {
-		t.Fatal("expected dms.windowrules fragment to be marked included")
+		t.Fatal("expected alpe.windowrules fragment to be marked included")
 	}
 	wr := ConvertHyprlandRulesToWindowRules(res.Rules)[0]
 	if wr.MatchCriteria.AppID != "^test$" || wr.Actions.OpenFloating == nil || !*wr.Actions.OpenFloating {
@@ -451,9 +451,9 @@ func TestHyprlandLuaRoundTripMatchAndActions(t *testing.T) {
 	if err := provider.SetRule(rule); err != nil {
 		t.Fatalf("SetRule: %v", err)
 	}
-	rules, err := provider.LoadDMSRules()
+	rules, err := provider.LoadShellRules()
 	if err != nil {
-		t.Fatalf("LoadDMSRules: %v", err)
+		t.Fatalf("LoadShellRules: %v", err)
 	}
 	if len(rules) != 1 {
 		t.Fatalf("expected 1 rule, got %d", len(rules))
@@ -531,9 +531,9 @@ func TestHyprlandEndToEndWriterOrderAndKeys(t *testing.T) {
 	}
 	ruleOrder(t, read(), "user2", "user1", windowrules.OpaqueRuleID)
 
-	rules, err := provider.LoadDMSRules()
+	rules, err := provider.LoadShellRules()
 	if err != nil {
-		t.Fatalf("LoadDMSRules: %v", err)
+		t.Fatalf("LoadShellRules: %v", err)
 	}
 	got := map[string]windowrules.WindowRule{}
 	for _, r := range rules {
@@ -606,9 +606,9 @@ func TestHyprlandLuaRoundTripCatalogKeys(t *testing.T) {
 			if !strings.Contains(string(written), tt.lua) {
 				t.Fatalf("missing %q in:\n%s", tt.lua, written)
 			}
-			rules, err := provider.LoadDMSRules()
+			rules, err := provider.LoadShellRules()
 			if err != nil || len(rules) != 1 {
-				t.Fatalf("LoadDMSRules: %v, %d rules", err, len(rules))
+				t.Fatalf("LoadShellRules: %v, %d rules", err, len(rules))
 			}
 			if !reflect.DeepEqual(rules[0].MatchCriteria, rule.MatchCriteria) {
 				t.Errorf("match = %+v, want %+v", rules[0].MatchCriteria, rule.MatchCriteria)

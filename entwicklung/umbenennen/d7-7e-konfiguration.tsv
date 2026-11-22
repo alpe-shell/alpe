@@ -1,0 +1,56 @@
+# D7.7e (Plan 2.3.5): Dienst intern – internal/config, configfrag, luaconfig, keybinds, windowrules.
+# Regel 2.3.0 Nr. 1: Bezeichner ohne Marke («Shell» = das, was Alpe selbst verwaltet).
+ohne	entwicklung/umbenennen/*,docs/plan/*
+datei	core/internal/config/dms.go	core/internal/config/shellconfig.go
+# exportierte Namen: alle Aufrufer im Dienst
+wort	LocateDMSConfig	LocateShellConfig	core/*
+wort	LoadDMSRules	LoadShellRules	core/*
+wort	WriteDMSRules	WriteShellRules	core/*
+wort	ParseHyprlandKeysWithDMS	ParseHyprlandKeysWithShell	core/*
+wort	ParseWithDMS	ParseWithShell	core/*
+wort	RefreshHyprlandDMSBinds	RefreshHyprlandShellBinds	core/*
+wort	DefaultDMSKeys	DefaultShellKeys	core/*
+wort	DMSSeen	ShellSeen	core/*
+wort	DMSPosition	ShellPosition	core/*
+wort	DMSBindsUserLuaConfig	BindsUserLuaConfig	core/*
+wort	DMSBindsLuaConfig	BindsLuaConfig	core/*
+wort	DMSWindowRulesLuaConfig	WindowRulesLuaConfig	core/*
+wort	DMSOutputsLuaConfig	OutputsLuaConfig	core/*
+wort	DMSLayoutLuaConfig	LayoutLuaConfig	core/*
+wort	DMSInputLuaConfig	InputLuaConfig	core/*
+wort	DMSCursorLuaConfig	CursorLuaConfig	core/*
+wort	DMSColorsLuaConfig	ColorsLuaConfig	core/*
+# paketlokale Namen
+wort	dmsDir	appDir	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	dmsProcessed	shellProcessed	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	pinDMSRules	pinShellRules	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	isDMSFragment	isShellFragment	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	isDMSBindsSourcePath	isShellBindsSourcePath	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	isDMSBindsPrimarySourcePath	isShellBindsPrimarySourcePath	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	isDMSBindsUserOverridePath	isShellBindsUserOverridePath	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	isDMSWindowRulesSourcePath	isShellWindowRulesSourcePath	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	isDMSWindowRulesRequireModule	isShellWindowRulesRequireModule	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	dmsRulesPath	shellRulesPath	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	dmsRulesExists	shellRulesExists	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	dmsPrimaryPath	shellPrimaryPath	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	dmsBindsExists	shellBindsExists	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	dmsBindKeys	shellBindKeys	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	defaultDMSKeys	defaultShellKeys	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	rulesAfterDMS	rulesAfterShell	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	bindsAfterDMS	bindsAfterShell	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	removeUnboundDMSBinds	removeUnboundShellBinds	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	filterShadowedDMSBinds	filterShadowedShellBinds	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	removeShadowedDMSBinds	removeShadowedShellBinds	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	countDMSBinds	countShellBinds	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	isDMSBind	isShellBind	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	parseDMSRulesDirectly	parseShellRulesDirectly	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	parseDMSBindsDirectly	parseShellBindsDirectly	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	loadDMSRulesFromLua	loadShellRulesFromLua	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	deployHyprlandDmsConfigs	deployHyprlandShellConfigs	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	TestParserDropsDMSDefaultsSuppressedByBindsUserUnbind	TestParserDropsShellDefaultsSuppressedByBindsUserUnbind	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	TestHyprlandKeptConfigStillRefreshesDMSBinds	TestHyprlandKeptConfigStillRefreshesShellBinds	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	TestDMSRulesStatusKeySpellings	TestRulesStatusKeySpellings	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	TestDMSRulesStatusFromCarriesEveryField	TestRulesStatusFromCarriesEveryField	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	TestDMSOpaqueRuleIsPinnedLast	TestOpaqueRuleIsPinnedLast	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	TestDMSBindsStatusKeySpellings	TestBindsStatusKeySpellings	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*
+wort	TestDMSBindsStatusFromCarriesEveryField	TestBindsStatusFromCarriesEveryField	core/internal/config/*,core/internal/configfrag/*,core/internal/luaconfig/*,core/internal/keybinds/*,core/internal/windowrules/*

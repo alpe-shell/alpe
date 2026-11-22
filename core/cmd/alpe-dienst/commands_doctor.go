@@ -700,7 +700,7 @@ func getShellVersion() (version, path string) {
 		return "installed", shellApp.ConfigPath()
 	}
 
-	if shellConfigPath, err := config.LocateDMSConfig(); err == nil {
+	if shellConfigPath, err := config.LocateShellConfig(); err == nil {
 		if version := brandVersion(shellConfigPath); version != "" {
 			return version, shellConfigPath
 		}
@@ -1644,7 +1644,7 @@ func resolveDoctorShellPath() string {
 	if err := shellApp.ResolveConfig(nil, nil); err == nil && shellApp.ConfigPath() != "" {
 		return shellApp.ConfigPath()
 	}
-	if path, err := config.LocateDMSConfig(); err == nil {
+	if path, err := config.LocateShellConfig(); err == nil {
 		return path
 	}
 	return ""

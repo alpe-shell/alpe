@@ -3,24 +3,24 @@ package configfrag
 import "testing"
 
 var hyprlandBinds = Messages{
-	Missing:     "dms/binds.lua (or legacy binds.conf) does not exist",
-	NotIncluded: "dms binds are not loaded from Hyprland config (require / source)",
-	Overridden:  "Some DMS binds may be overridden by config binds",
-	Active:      "DMS binds are active",
+	Missing:     "alpe/binds.lua (or legacy binds.conf) does not exist",
+	NotIncluded: "alpe binds are not loaded from Hyprland config (require / source)",
+	Overridden:  "Some Alpe binds may be overridden by config binds",
+	Active:      "Alpe binds are active",
 }
 
 var mangoBinds = Messages{
-	Missing:     "dms/binds.conf does not exist",
-	NotIncluded: "dms/binds.conf is not sourced in config",
-	Overridden:  "Some DMS binds may be overridden by config binds",
-	Active:      "DMS binds are active",
+	Missing:     "alpe/binds.conf does not exist",
+	NotIncluded: "alpe/binds.conf is not sourced in config",
+	Overridden:  "Some Alpe binds may be overridden by config binds",
+	Active:      "Alpe binds are active",
 }
 
 var hyprlandRules = Messages{
-	Missing:     "dms window rules fragment (windowrules.lua / windowrules.conf) does not exist",
-	NotIncluded: "dms window rules are not loaded (missing require/source for dms/windowrules)",
-	Overridden:  "Some DMS rules may be overridden by config rules",
-	Active:      "DMS window rules are active",
+	Missing:     "alpe window rules fragment (windowrules.lua / windowrules.conf) does not exist",
+	NotIncluded: "alpe window rules are not loaded (missing require/source for alpe/windowrules)",
+	Overridden:  "Some Alpe rules may be overridden by config rules",
+	Active:      "Alpe window rules are active",
 }
 
 var allDomains = map[string]Messages{
@@ -60,7 +60,7 @@ func TestExistingButNotIncludedIsNotEffective(t *testing.T) {
 
 func TestIncludedWithEntriesAfterReportsOverride(t *testing.T) {
 	for domain, msgs := range allDomains {
-		scan := IncludeScan{Count: 3, DMSPosition: 2, DMSSeen: true}
+		scan := IncludeScan{Count: 3, ShellPosition: 2, ShellSeen: true}
 		status := BuildStatus(scan, true, 5, msgs)
 		if !status.Effective {
 			t.Errorf("%s: an overridden fragment is still effective", domain)
@@ -76,7 +76,7 @@ func TestIncludedWithEntriesAfterReportsOverride(t *testing.T) {
 
 func TestIncludedWithNothingAfterIsActive(t *testing.T) {
 	for domain, msgs := range allDomains {
-		scan := IncludeScan{Count: 1, DMSPosition: 1, DMSSeen: true}
+		scan := IncludeScan{Count: 1, ShellPosition: 1, ShellSeen: true}
 		status := BuildStatus(scan, true, 0, msgs)
 		if !status.Effective {
 			t.Errorf("%s: an included fragment with nothing after it is effective", domain)
@@ -91,13 +91,13 @@ func TestIncludedWithNothingAfterIsActive(t *testing.T) {
 }
 
 func TestScanCarriesThrough(t *testing.T) {
-	scan := IncludeScan{Count: 4, DMSPosition: 3, DMSSeen: true}
+	scan := IncludeScan{Count: 4, ShellPosition: 3, ShellSeen: true}
 	status := BuildStatus(scan, true, 0, hyprlandRules)
 
 	if status.TotalIncludes != 4 || status.IncludePosition != 3 {
 		t.Errorf("includes = %d/%d, want 3/4", status.IncludePosition, status.TotalIncludes)
 	}
 	if !status.Included {
-		t.Error("DMSSeen must land on Included")
+		t.Error("ShellSeen must land on Included")
 	}
 }

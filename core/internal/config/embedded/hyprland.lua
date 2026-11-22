@@ -1,13 +1,13 @@
 -- Hyprland configuration (Lua) — https://wiki.hypr.land/configuring/
 
--- DMS_STARTUP_BEGIN
+-- ALPE_STARTUP_BEGIN
 hl.on("hyprland.start", function()
 	hl.exec_cmd("dbus-update-activation-environment --systemd --all")
 	if not os.getenv("HYPRLAND_NO_SD_TARGET") then
 		hl.exec_cmd("systemctl --user start hyprland-session.target")
 	end
 end)
--- DMS_STARTUP_END
+-- ALPE_STARTUP_END
 
 hl.config({
 	input = {
@@ -79,7 +79,7 @@ hl.window_rule({
 })
 hl.window_rule({ match = { class = "^(zoom)$" }, float = true })
 hl.layer_rule({ match = { namespace = "^(quickshell)$" }, no_anim = true })
-hl.layer_rule({ match = { namespace = "^dms:.*" }, no_anim = true })
+hl.layer_rule({ match = { namespace = "^alpe:.*" }, no_anim = true })
 
 require("alpe.colors")
 require("alpe.outputs")

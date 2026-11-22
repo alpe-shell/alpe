@@ -1,1 +1,1 @@
--- Mouse, touchpad and keyboard settings. DMS rewrites this file from Settings.
+-- Mouse, touchpad and keyboard settings. Alpe rewrites this file from Settings.

@@ -6,7 +6,7 @@ import (
 	"slices"
 )
 
-// Mirrors Hyprland's shipped target. Before=graphical-session.target would cycle with the add-wants implicit After=dms.service.
+// Mirrors Hyprland's shipped target. Before=graphical-session.target would cycle with the add-wants implicit After=alpe.service.
 const hyprlandSessionTargetUnit = `[Unit]
 Description=Hyprland Session Target
 BindsTo=graphical-session.target

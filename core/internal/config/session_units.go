@@ -106,7 +106,7 @@ func RunningCompositor() (deps.WindowManager, bool) {
 }
 
 // systemdAutostart makes the compositor session start alpe.service and returns false when
-// that is not possible, so the deployed config keeps starting DMS itself.
+// that is not possible, so the deployed config keeps starting Alpe itself.
 func (cd *ConfigDeployer) systemdAutostart(wm deps.WindowManager, useSystemd bool) bool {
 	name := SessionUnitName(wm)
 	if !useSystemd {
@@ -117,7 +117,7 @@ func (cd *ConfigDeployer) systemdAutostart(wm deps.WindowManager, useSystemd boo
 	}
 	unit, err := EnableSession(wm)
 	if err != nil {
-		cd.log(fmt.Sprintf("Warning: %v; starting DMS from the compositor config instead", err))
+		cd.log(fmt.Sprintf("Warning: %v; starting Alpe from the compositor config instead", err))
 		if unit == "" {
 			if err := os.Remove(WantsLink(name)); err == nil {
 				cd.log("Removed alpe.service from " + name)
@@ -125,6 +125,6 @@ func (cd *ConfigDeployer) systemdAutostart(wm deps.WindowManager, useSystemd boo
 		}
 		return false
 	}
-	cd.log("DMS starts as alpe.service with " + unit)
+	cd.log("Alpe starts as alpe.service with " + unit)
 	return true
 }

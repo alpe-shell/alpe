@@ -1,22 +1,22 @@
 package configfrag
 
 type IncludeScan struct {
-	Count       int
-	DMSPosition int
-	DMSSeen     bool
+	Count         int
+	ShellPosition int
+	ShellSeen     bool
 }
 
 func NewScan() IncludeScan {
-	return IncludeScan{DMSPosition: -1}
+	return IncludeScan{ShellPosition: -1}
 }
 
 type Walker struct {
-	isDMSFragment func(string) bool
-	scan          IncludeScan
+	isShellFragment func(string) bool
+	scan            IncludeScan
 }
 
-func NewWalker(isDMSFragment func(string) bool) *Walker {
-	return &Walker{isDMSFragment: isDMSFragment, scan: NewScan()}
+func NewWalker(isShellFragment func(string) bool) *Walker {
+	return &Walker{isShellFragment: isShellFragment, scan: NewScan()}
 }
 
 func (w *Walker) Scan() IncludeScan {
@@ -24,7 +24,7 @@ func (w *Walker) Scan() IncludeScan {
 }
 
 func (w *Walker) Included() bool {
-	return w.scan.DMSSeen
+	return w.scan.ShellSeen
 }
 
 func (w *Walker) RecordMatch(matched bool) bool {
@@ -32,11 +32,11 @@ func (w *Walker) RecordMatch(matched bool) bool {
 	if !matched {
 		return false
 	}
-	w.scan.DMSSeen = true
-	w.scan.DMSPosition = w.scan.Count
+	w.scan.ShellSeen = true
+	w.scan.ShellPosition = w.scan.Count
 	return true
 }
 
 func (w *Walker) Record(sourcePath string) bool {
-	return w.RecordMatch(w.isDMSFragment != nil && w.isDMSFragment(sourcePath))
+	return w.RecordMatch(w.isShellFragment != nil && w.isShellFragment(sourcePath))
 }

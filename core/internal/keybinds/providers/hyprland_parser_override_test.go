@@ -37,9 +37,9 @@ func writeHyprlandConfig(t *testing.T, dir string, files map[string]string) {
 	}
 }
 
-// A user module that unbinds a DMS key and binds it again is an override: in
-// Hyprland the DMS bind is gone and only the new one fires, so the modal has to
-// show the new one. It used to show the DMS bind instead, because the unbind was
+// A user module that unbinds a Alpe key and binds it again is an override: in
+// Hyprland the Alpe bind is gone and only the new one fires, so the modal has to
+// show the new one. It used to show the Alpe bind instead, because the unbind was
 // discarded whenever the same file rebound the key and the rebind was then
 // dropped as a conflicting config bind (#3145).
 func TestParserShowsUnbindRebindOverrideFromUserModule(t *testing.T) {
@@ -49,13 +49,13 @@ func TestParserShowsUnbindRebindOverrideFromUserModule(t *testing.T) {
 require("alpe.binds")
 require("mybinds")
 `,
-		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("alpe-dienst ipc call clipboard toggle"), { description = "Clipboard history" })
 hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"), { description = "Terminal" })`,
 		"mybinds.lua": `hl.unbind("SUPER + V")
 hl.bind("SUPER + V", hl.dsp.togglefloating(), { description = "float toggle" })`,
 	})
 
-	result, err := ParseHyprlandKeysWithDMS(tmpDir)
+	result, err := ParseHyprlandKeysWithShell(tmpDir)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -91,11 +91,11 @@ func TestParserStillReportsConflictWithoutUnbind(t *testing.T) {
 require("alpe.binds")
 require("mybinds")
 `,
-		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })`,
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("alpe-dienst ipc call clipboard toggle"), { description = "Clipboard history" })`,
 		"mybinds.lua":    `hl.bind("SUPER + V", hl.dsp.togglefloating(), { description = "float toggle" })`,
 	})
 
-	result, err := ParseHyprlandKeysWithDMS(tmpDir)
+	result, err := ParseHyprlandKeysWithShell(tmpDir)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -106,7 +106,7 @@ require("mybinds")
 		t.Fatalf("SUPER+V missing entirely, got keys: %v", bindKeys(binds))
 	}
 	if got.Comment != "Clipboard history" {
-		t.Errorf("SUPER+V shows %q, want the DMS bind to be kept as before", got.Comment)
+		t.Errorf("SUPER+V shows %q, want the Alpe bind to be kept as before", got.Comment)
 	}
 	if result.FragmentStatus.EntriesAfterFragment != 1 {
 		t.Errorf("EntriesAfterFragment = %d, want 1 for a config bind without unbind",
@@ -123,12 +123,12 @@ func TestParserUnbindWithoutRebindStillRemoves(t *testing.T) {
 require("alpe.binds")
 require("mybinds")
 `,
-		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"))
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("alpe-dienst ipc call clipboard toggle"))
 hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"))`,
 		"mybinds.lua": `hl.unbind("SUPER + V")`,
 	})
 
-	result, err := ParseHyprlandKeysWithDMS(tmpDir)
+	result, err := ParseHyprlandKeysWithShell(tmpDir)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -152,13 +152,13 @@ func TestParserKeepsBindsUserRebindAfterItsOwnUnbind(t *testing.T) {
 require("alpe.binds")
 require("alpe.binds-user")
 `,
-		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("dms ipc call clipboard toggle"), { description = "Clipboard history" })
+		"alpe/binds.lua": `hl.bind("SUPER + V", hl.dsp.exec_cmd("alpe-dienst ipc call clipboard toggle"), { description = "Clipboard history" })
 hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"), { description = "Terminal" })`,
 		"alpe/binds-user.lua": `hl.unbind("SUPER + V")
 hl.bind("SUPER + V", hl.dsp.togglefloating(), { description = "float toggle" })`,
 	})
 
-	result, err := ParseHyprlandKeysWithDMS(tmpDir)
+	result, err := ParseHyprlandKeysWithShell(tmpDir)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -45,7 +45,7 @@ func (h *HyprlandProvider) Name() string {
 }
 
 func (h *HyprlandProvider) GetCheatSheet() (*keybinds.CheatSheet, error) {
-	result, err := ParseHyprlandKeysWithDMS(h.configPath)
+	result, err := ParseHyprlandKeysWithShell(h.configPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse hyprland config: %w", err)
 	}
@@ -54,7 +54,7 @@ func (h *HyprlandProvider) GetCheatSheet() (*keybinds.CheatSheet, error) {
 	h.parsed = true
 
 	categorizedBinds := make(map[string][]keybinds.Keybind)
-	h.convertSection(result.Section, "", categorizedBinds, result.ConflictingConfigs, result.DefaultDMSKeys)
+	h.convertSection(result.Section, "", categorizedBinds, result.ConflictingConfigs, result.DefaultShellKeys)
 
 	sheet := &keybinds.CheatSheet{
 		Title:                 "Hyprland Keybinds",
@@ -76,7 +76,7 @@ func (h *HyprlandProvider) HasBindsFragmentIncluded() bool {
 		return h.bindsFragmentIncluded
 	}
 
-	result, err := ParseHyprlandKeysWithDMS(h.configPath)
+	result, err := ParseHyprlandKeysWithShell(h.configPath)
 	if err != nil {
 		return false
 	}
@@ -213,9 +213,9 @@ func (h *HyprlandProvider) convertKeybind(kb *HyprlandKeyBinding, subcategory st
 	}
 
 	source := "config"
-	if isDMSBindsUserOverridePath(kb.Source) {
+	if isShellBindsUserOverridePath(kb.Source) {
 		source = "shell"
-	} else if isDMSBindsPrimarySourcePath(kb.Source) {
+	} else if isShellBindsPrimarySourcePath(kb.Source) {
 		source = "shell-default"
 	}
 
@@ -271,7 +271,7 @@ func (h *HyprlandProvider) formatKey(kb *HyprlandKeyBinding) string {
 }
 
 func (h *HyprlandProvider) ModKey() keybinds.ModKey {
-	result, err := ParseHyprlandKeysWithDMS(h.configPath)
+	result, err := ParseHyprlandKeysWithShell(h.configPath)
 	if err != nil {
 		return keybinds.DefaultModKey()
 	}
@@ -355,7 +355,7 @@ func (h *HyprlandProvider) SetBind(key, action, description string, options map[
 	overridePath := h.GetOverridePath()
 
 	if err := os.MkdirAll(filepath.Dir(overridePath), 0o755); err != nil {
-		return fmt.Errorf("failed to create dms directory: %w", err)
+		return fmt.Errorf("failed to create alpe directory: %w", err)
 	}
 
 	existingBinds, err := h.loadOverrideBinds()
@@ -393,7 +393,7 @@ func (h *HyprlandProvider) SetBind(key, action, description string, options map[
 
 func (h *HyprlandProvider) mainConfigBindDevice(normalizedKey string) string {
 	parser := NewHyprlandParser(h.configPath)
-	if _, err := parser.ParseWithDMS(); err != nil {
+	if _, err := parser.ParseWithShell(); err != nil {
 		return ""
 	}
 	if kb := parser.bindMap[normalizedKey]; kb != nil && kb.Device != "" {
@@ -478,6 +478,7 @@ func hyprlandOverrideMapKey(key string) string {
 
 func (h *HyprlandProvider) getBindSortPriority(action string) int {
 	switch {
+	// "dms": Kürzel aus Alpe 1.0 rufen noch «dms ipc …» auf und gehören bis zum Umzug dazu.
 	case strings.HasPrefix(action, "exec") && (strings.Contains(action, brand.Binary) || strings.Contains(action, "dms")):
 		return 0
 	case strings.Contains(action, "workspace"):
@@ -522,7 +523,7 @@ func (h *HyprlandProvider) generateBindsContent(binds map[string]*hyprlandOverri
 	})
 
 	var sb strings.Builder
-	sb.WriteString(config.DMSBindsUserLuaConfig)
+	sb.WriteString(config.BindsUserLuaConfig)
 	sb.WriteString("\n")
 	for _, bind := range bindList {
 		writeLuaBindLine(&sb, bind)

@@ -21,8 +21,8 @@ type Status struct {
 func BuildStatus(scan IncludeScan, exists bool, entriesAfter int, msgs Messages) Status {
 	status := Status{
 		Exists:               exists,
-		Included:             scan.DMSSeen,
-		IncludePosition:      scan.DMSPosition,
+		Included:             scan.ShellSeen,
+		IncludePosition:      scan.ShellPosition,
 		TotalIncludes:        scan.Count,
 		EntriesAfterFragment: entriesAfter,
 	}
@@ -31,7 +31,7 @@ func BuildStatus(scan IncludeScan, exists bool, entriesAfter int, msgs Messages)
 		status.StatusMessage = msgs.Missing
 		return status
 	}
-	if !scan.DMSSeen {
+	if !scan.ShellSeen {
 		status.StatusMessage = msgs.NotIncluded
 		return status
 	}

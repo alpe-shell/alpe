@@ -20,7 +20,7 @@ func marshalKeys(t *testing.T, v any) map[string]json.RawMessage {
 	return out
 }
 
-func TestDMSRulesStatusKeySpellings(t *testing.T) {
+func TestRulesStatusKeySpellings(t *testing.T) {
 	keys := marshalKeys(t, RulesFragmentStatus{
 		Exists:             true,
 		Included:           true,
@@ -29,7 +29,7 @@ func TestDMSRulesStatusKeySpellings(t *testing.T) {
 		RulesAfterFragment: 4,
 		Effective:          true,
 		OverriddenBy:       4,
-		StatusMessage:      "DMS window rules are active",
+		StatusMessage:      "Alpe window rules are active",
 	})
 
 	want := []string{"exists", "included", "includePosition", "totalIncludes", "rulesAfterFragment", "effective", "overriddenBy", "statusMessage"}
@@ -43,7 +43,7 @@ func TestDMSRulesStatusKeySpellings(t *testing.T) {
 	}
 }
 
-func TestDMSRulesStatusFromCarriesEveryField(t *testing.T) {
+func TestRulesStatusFromCarriesEveryField(t *testing.T) {
 	got := RulesFragmentStatusFrom(configfrag.Status{
 		Exists:               true,
 		Included:             true,
@@ -52,7 +52,7 @@ func TestDMSRulesStatusFromCarriesEveryField(t *testing.T) {
 		EntriesAfterFragment: 7,
 		Effective:            true,
 		OverriddenBy:         7,
-		StatusMessage:        "DMS window rules are active",
+		StatusMessage:        "Alpe window rules are active",
 	})
 
 	want := RulesFragmentStatus{
@@ -63,7 +63,7 @@ func TestDMSRulesStatusFromCarriesEveryField(t *testing.T) {
 		RulesAfterFragment: 7,
 		Effective:          true,
 		OverriddenBy:       7,
-		StatusMessage:      "DMS window rules are active",
+		StatusMessage:      "Alpe window rules are active",
 	}
 	if *got != want {
 		t.Errorf("RulesFragmentStatusFrom = %+v, want %+v", *got, want)

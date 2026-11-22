@@ -58,3 +58,8 @@ core/internal/server/network/backend_networkmanager_hotspot_altnamen_test.go	*	U
 core/internal/server/cups/legacy_subscriptions.go	"dms"|«dms»	Umzug-Ende	CUPS: Abonnements des Besitzers dms aus 1.0 einmal kündigen (0.8 Nr. 22)
 core/internal/server/cups/owner.go	«dms»	Umzug-Ende	Kommentar: früherer fester Besitzername
 core/internal/server/cups/legacy_subscriptions_test.go	*	Umzug-Ende	Test dazu
+core/internal/config/hyprland_lua.go	DMS_STARTUP_(BEGIN|END)	Umzug-Ende	Startmarken aus 1.0 lesen (D7.7e)
+core/internal/config/deployer.go	\.dms-backups	Umzug-Ende	Kommentar: Sicherungsordner aus 1.0 bleibt unberührt (0.8 Nr. 57)
+core/internal/config/altnamen_test.go	*	Umzug-Ende	Test dazu
+core/internal/keybinds/providers/hyprland.go	"dms"|«dms ipc	Umzug-Ende	Kürzel aus 1.0 zu den eigenen zählen (wie KeybindsContent.qml, 0.8 Nr. 38)
+core/internal/keybinds/providers/altnamen_test.go	*	Umzug-Ende	Test dazu

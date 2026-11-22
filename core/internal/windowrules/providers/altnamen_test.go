@@ -60,7 +60,7 @@ func TestRulesFromOldVersionAreReadAndRewritten(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	rules, err := provider.LoadDMSRules()
+	rules, err := provider.LoadShellRules()
 	if err != nil {
 		t.Fatalf("Laden: %v", err)
 	}

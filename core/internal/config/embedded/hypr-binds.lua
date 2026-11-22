@@ -1,5 +1,5 @@
--- DMS default keybinds (Hyprland 0.55+ Lua)
--- dms setup replaces this file with the stock set; a changed copy is kept in ../.dms-backups/.
+-- Alpe default keybinds (Hyprland 0.55+ Lua)
+-- Alpe replaces this file with the stock set; a changed copy is kept in ../.alpe-backups/.
 -- Put your own binds and overrides in binds-user.lua, which setup never touches.
 
 -- Hyprland emits no socket2 event when a window moves or resizes, so these
@@ -15,7 +15,7 @@ if hl.dsp.event then
 			local dispatcher = raw(...)
 			return function()
 				hl.dispatch(dispatcher)
-				hl.dispatch(hl.dsp.event("dms:geometry"))
+				hl.dispatch(hl.dsp.event("alpe:geometry"))
 			end
 		end
 	end
@@ -37,7 +37,7 @@ hl.bind("SUPER + TAB", hl.dsp.exec_cmd("alpe-dienst ipc call hypr toggleOverview
 hl.bind("SUPER + O", hl.dsp.exec_cmd("alpe-dienst ipc call hypr toggleOverview"))
 hl.bind("SUPER + X", hl.dsp.exec_cmd("alpe-dienst ipc call powermenu toggle"))
 hl.bind("SUPER + A", hl.dsp.exec_cmd("alpe-dienst ipc call control-center toggle"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd([[dms ipc call dash toggle ""]]))
+hl.bind("SUPER + D", hl.dsp.exec_cmd([[alpe-dienst ipc call dash toggle ""]]))
 hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("alpe-dienst ipc call color-picker toggle"))
 hl.bind("SUPER + ALT + N", hl.dsp.exec_cmd("alpe-dienst ipc call night toggle"))
 hl.bind("SUPER + ALT + I", hl.dsp.exec_cmd("alpe-dienst ipc call inhibit toggle"))
@@ -65,8 +65,8 @@ hl.bind("CTRL + XF86AudioRaiseVolume", hl.dsp.exec_cmd("alpe-dienst ipc call mpr
 hl.bind("CTRL + XF86AudioLowerVolume", hl.dsp.exec_cmd("alpe-dienst ipc call mpris decrement 3"), { locked = true, repeating = true })
 
 -- === Brightness Controls ===
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd([[dms ipc call brightness increment 5 ""]]), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd([[dms ipc call brightness decrement 5 ""]]), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd([[alpe-dienst ipc call brightness increment 5 ""]]), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd([[alpe-dienst ipc call brightness decrement 5 ""]]), { locked = true, repeating = true })
 
 -- === Window Management ===
 hl.bind("SUPER + Q", hl.dsp.window.close())

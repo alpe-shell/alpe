@@ -4,8 +4,8 @@ import "strings"
 
 type RuleStore interface {
 	EnsureWritable() error
-	LoadDMSRules() ([]WindowRule, error)
-	WriteDMSRules([]WindowRule) error
+	LoadShellRules() ([]WindowRule, error)
+	WriteShellRules([]WindowRule) error
 }
 
 const OpaqueRuleID = "alpe-window-opaque"
@@ -25,9 +25,9 @@ func CurrentRuleID(id string) string {
 	return id
 }
 
-// pinDMSRules puts the opaque rule last, since compositors apply rules in
+// pinShellRules puts the opaque rule last, since compositors apply rules in
 // order and the last match wins.
-func pinDMSRules(rules []WindowRule) []WindowRule {
+func pinShellRules(rules []WindowRule) []WindowRule {
 	var rest, last []WindowRule
 	for _, rule := range rules {
 		if rule.ID == OpaqueRuleID {
@@ -43,7 +43,7 @@ func Set(store RuleStore, rule WindowRule) error {
 	if err := store.EnsureWritable(); err != nil {
 		return err
 	}
-	rules, err := store.LoadDMSRules()
+	rules, err := store.LoadShellRules()
 	if err != nil {
 		rules = []WindowRule{}
 	}
@@ -53,17 +53,17 @@ func Set(store RuleStore, rule WindowRule) error {
 			continue
 		}
 		rules[i] = rule
-		return store.WriteDMSRules(pinDMSRules(rules))
+		return store.WriteShellRules(pinShellRules(rules))
 	}
 
-	return store.WriteDMSRules(pinDMSRules(append(rules, rule)))
+	return store.WriteShellRules(pinShellRules(append(rules, rule)))
 }
 
 func Remove(store RuleStore, id string) error {
 	if err := store.EnsureWritable(); err != nil {
 		return err
 	}
-	rules, err := store.LoadDMSRules()
+	rules, err := store.LoadShellRules()
 	if err != nil {
 		return err
 	}
@@ -76,14 +76,14 @@ func Remove(store RuleStore, id string) error {
 		kept = append(kept, rule)
 	}
 
-	return store.WriteDMSRules(pinDMSRules(kept))
+	return store.WriteShellRules(pinShellRules(kept))
 }
 
 func Reorder(store RuleStore, ids []string) error {
 	if err := store.EnsureWritable(); err != nil {
 		return err
 	}
-	rules, err := store.LoadDMSRules()
+	rules, err := store.LoadShellRules()
 	if err != nil {
 		return err
 	}
@@ -117,5 +117,5 @@ func Reorder(store RuleStore, ids []string) error {
 		result = append(result, rule)
 	}
 
-	return store.WriteDMSRules(pinDMSRules(append(result, leftover...)))
+	return store.WriteShellRules(pinShellRules(append(result, leftover...)))
 }

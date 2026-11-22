@@ -24,17 +24,17 @@ type HyprlandWindowRule struct {
 }
 
 type HyprlandRulesParser struct {
-	configDir      string
-	processedFiles map[string]bool
-	rules          []HyprlandWindowRule
-	currentSource  string
-	dmsRulesExists bool
-	dmsPrimaryPath string
-	walker         *configfrag.Walker
-	rulesAfterDMS  int
-	dmsProcessed   bool
+	configDir        string
+	processedFiles   map[string]bool
+	rules            []HyprlandWindowRule
+	currentSource    string
+	shellRulesExists bool
+	shellPrimaryPath string
+	walker           *configfrag.Walker
+	rulesAfterShell  int
+	shellProcessed   bool
 
-	requireLineInMain int    // hyprland.lua line (1-based) where require("dms.windowrules") occurs; else -1
+	requireLineInMain int    // hyprland.lua line (1-based) where require("alpe.windowrules") occurs; else -1
 	primaryHyprLua    string // absolute path to ~/.config/hypr/hyprland.lua when that is the main config
 }
 
@@ -43,7 +43,7 @@ func NewHyprlandRulesParser(configDir string) *HyprlandRulesParser {
 		configDir:         configDir,
 		processedFiles:    make(map[string]bool),
 		rules:             []HyprlandWindowRule{},
-		walker:            configfrag.NewWalker(isDMSWindowRulesSourcePath),
+		walker:            configfrag.NewWalker(isShellWindowRulesSourcePath),
 		requireLineInMain: -1,
 	}
 }
@@ -54,9 +54,9 @@ func (p *HyprlandRulesParser) Parse() ([]HyprlandWindowRule, error) {
 		return nil, err
 	}
 
-	p.dmsPrimaryPath = filepath.Join(expandedDir, brand.DirName, "windowrules.lua")
-	if _, err := os.Stat(p.dmsPrimaryPath); err == nil {
-		p.dmsRulesExists = true
+	p.shellPrimaryPath = filepath.Join(expandedDir, brand.DirName, "windowrules.lua")
+	if _, err := os.Stat(p.shellPrimaryPath); err == nil {
+		p.shellRulesExists = true
 	}
 
 	mainConfig, err := hyprlandMainConfigPath(expandedDir)
@@ -73,26 +73,26 @@ func (p *HyprlandRulesParser) Parse() ([]HyprlandWindowRule, error) {
 		return nil, err
 	}
 
-	if p.dmsRulesExists && !p.dmsProcessed {
-		p.parseDMSRulesDirectly(p.dmsPrimaryPath)
+	if p.shellRulesExists && !p.shellProcessed {
+		p.parseShellRulesDirectly(p.shellPrimaryPath)
 	}
 
 	return p.rules, nil
 }
 
-func (p *HyprlandRulesParser) parseDMSRulesDirectly(dmsRulesPath string) {
-	data, err := os.ReadFile(dmsRulesPath)
+func (p *HyprlandRulesParser) parseShellRulesDirectly(shellRulesPath string) {
+	data, err := os.ReadFile(shellRulesPath)
 	if err != nil {
 		return
 	}
 
-	abs, err := filepath.Abs(dmsRulesPath)
+	abs, err := filepath.Abs(shellRulesPath)
 	if err != nil {
-		abs = dmsRulesPath
+		abs = shellRulesPath
 	}
 
 	p.parseLuaWindowRules(string(data), filepath.Dir(abs), abs, false)
-	p.dmsProcessed = true
+	p.shellProcessed = true
 }
 
 func (p *HyprlandRulesParser) parseFile(filePath string) error {
@@ -127,7 +127,7 @@ var hyprlandRulesMessages = configfrag.Messages{
 }
 
 func (p *HyprlandRulesParser) buildFragmentStatus() *windowrules.RulesFragmentStatus {
-	return windowrules.RulesFragmentStatusFrom(configfrag.BuildStatus(p.walker.Scan(), p.dmsRulesExists, p.rulesAfterDMS, hyprlandRulesMessages))
+	return windowrules.RulesFragmentStatusFrom(configfrag.BuildStatus(p.walker.Scan(), p.shellRulesExists, p.rulesAfterShell, hyprlandRulesMessages))
 }
 
 type HyprlandRulesParseResult struct {
@@ -421,7 +421,7 @@ func formatLuaManagedHyprRule(rule windowrules.WindowRule) []string {
 	return out
 }
 
-func (p *HyprlandWritableProvider) LoadDMSRules() ([]windowrules.WindowRule, error) {
+func (p *HyprlandWritableProvider) LoadShellRules() ([]windowrules.WindowRule, error) {
 	luaPath := p.GetOverridePath()
 	data, err := os.ReadFile(luaPath)
 	if os.IsNotExist(err) {
@@ -430,10 +430,10 @@ func (p *HyprlandWritableProvider) LoadDMSRules() ([]windowrules.WindowRule, err
 	if err != nil {
 		return nil, err
 	}
-	return p.loadDMSRulesFromLua(data, luaPath)
+	return p.loadShellRulesFromLua(data, luaPath)
 }
 
-func (p *HyprlandWritableProvider) loadDMSRulesFromLua(data []byte, rulesPath string) ([]windowrules.WindowRule, error) {
+func (p *HyprlandWritableProvider) loadShellRulesFromLua(data []byte, rulesPath string) ([]windowrules.WindowRule, error) {
 	var rules []windowrules.WindowRule
 	lines := strings.Split(string(data), "\n")
 
@@ -501,7 +501,7 @@ func (p *HyprlandWritableProvider) loadDMSRulesFromLua(data []byte, rulesPath st
 	return rules, nil
 }
 
-func (p *HyprlandWritableProvider) WriteDMSRules(rules []windowrules.WindowRule) error {
+func (p *HyprlandWritableProvider) WriteShellRules(rules []windowrules.WindowRule) error {
 	rulesPath := p.GetOverridePath()
 
 	if err := os.MkdirAll(filepath.Dir(rulesPath), 0755); err != nil {
@@ -538,13 +538,13 @@ func hyprlandMainConfigPath(dir string) (string, error) {
 	return luaPath, nil
 }
 
-func isDMSWindowRulesSourcePath(sourcePath string) bool {
+func isShellWindowRulesSourcePath(sourcePath string) bool {
 	p := filepath.ToSlash(strings.TrimSpace(sourcePath))
 	return p == "alpe/windowrules.lua" || p == "./alpe/windowrules.lua" || strings.HasSuffix(p, "/alpe/windowrules.lua")
 }
 
-func isDMSWindowRulesRequireModule(mod string) bool {
-	return isDMSWindowRulesSourcePath(luaconfig.ModuleToRelPath(mod))
+func isShellWindowRulesRequireModule(mod string) bool {
+	return isShellWindowRulesSourcePath(luaconfig.ModuleToRelPath(mod))
 }
 
 func (p *HyprlandRulesParser) probeRequireWindowrulesLine(mainLua string) {
@@ -554,7 +554,7 @@ func (p *HyprlandRulesParser) probeRequireWindowrulesLine(mainLua string) {
 	}
 	lines := strings.Split(string(data), "\n")
 	for i, line := range lines {
-		if mod, ok := luaconfig.Require(line); ok && isDMSWindowRulesRequireModule(mod) {
+		if mod, ok := luaconfig.Require(line); ok && isShellWindowRulesRequireModule(mod) {
 			p.requireLineInMain = i + 1
 			return
 		}
@@ -600,8 +600,8 @@ func (p *HyprlandRulesParser) parseLuaWindowRules(content, baseDir, absPath stri
 				if err != nil {
 					continue
 				}
-				if p.walker.RecordMatch(isDMSWindowRulesRequireModule(mod)) {
-					p.dmsProcessed = true
+				if p.walker.RecordMatch(isShellWindowRulesRequireModule(mod)) {
+					p.shellProcessed = true
 				}
 				_ = p.parseFile(expanded)
 			}
@@ -638,7 +638,7 @@ func (p *HyprlandRulesParser) parseLuaWindowRules(content, baseDir, absPath stri
 				})
 
 				if p.requireLineInMain > 0 && mainAbs != "" && curAbs == mainAbs && startLine > p.requireLineInMain {
-					p.rulesAfterDMS++
+					p.rulesAfterShell++
 				}
 			}
 			advance := strings.Count(tail[:idx+consumedFrag], "\n")
@@ -1094,7 +1094,7 @@ func applyLuaActionKey(a *windowrules.Actions, key, raw string) bool {
 		a.Idleinhibit = strings.TrimSpace(luaStringValue(raw))
 		return true
 	default:
-		// Unsupported keys are left to Hyprland; DMS only round-trips managed fields.
+		// Unsupported keys are left to Hyprland; Alpe only round-trips managed fields.
 	}
 	return false
 }

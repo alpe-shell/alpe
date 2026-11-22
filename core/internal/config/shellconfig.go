@@ -5,14 +5,18 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/alpe-shell/alpe/core/internal/brand"
 )
 
-func LocateDMSConfig() (string, error) {
+// LocateShellConfig sucht die Oberfläche (shell.qml) in den Quickshell-Ordnern unter dem Namen
+// von Alpe. Die Ordner des Ursprungs gehören nicht dazu: Dort läge nicht Alpe.
+func LocateShellConfig() (string, error) {
 	var primaryPaths []string
 
 	configHome, err := os.UserConfigDir()
 	if err == nil && configHome != "" {
-		primaryPaths = append(primaryPaths, filepath.Join(configHome, "quickshell", "dms"))
+		primaryPaths = append(primaryPaths, filepath.Join(configHome, "quickshell", brand.ID))
 	}
 
 	// System data directories
@@ -23,7 +27,7 @@ func LocateDMSConfig() (string, error) {
 
 	for dir := range strings.SplitSeq(dataDirs, ":") {
 		if dir != "" {
-			primaryPaths = append(primaryPaths, filepath.Join(dir, "quickshell", "dms"))
+			primaryPaths = append(primaryPaths, filepath.Join(dir, "quickshell", brand.ID))
 		}
 	}
 
@@ -35,7 +39,7 @@ func LocateDMSConfig() (string, error) {
 
 	for dir := range strings.SplitSeq(configDirs, ":") {
 		if dir != "" {
-			primaryPaths = append(primaryPaths, filepath.Join(dir, "quickshell", "dms"))
+			primaryPaths = append(primaryPaths, filepath.Join(dir, "quickshell", brand.ID))
 		}
 	}
 
@@ -53,5 +57,5 @@ func LocateDMSConfig() (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("could not find DMS config (shell.qml) in any valid config path")
+	return "", fmt.Errorf("could not find the Alpe shell (shell.qml) in any valid config path")
 }

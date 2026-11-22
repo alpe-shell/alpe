@@ -16,7 +16,7 @@ type fakeStore struct {
 
 func (f *fakeStore) EnsureWritable() error { return f.writableEr }
 
-func (f *fakeStore) LoadDMSRules() ([]WindowRule, error) {
+func (f *fakeStore) LoadShellRules() ([]WindowRule, error) {
 	f.loads++
 	if f.loadErr != nil {
 		return nil, f.loadErr
@@ -24,7 +24,7 @@ func (f *fakeStore) LoadDMSRules() ([]WindowRule, error) {
 	return append([]WindowRule(nil), f.rules...), nil
 }
 
-func (f *fakeStore) WriteDMSRules(rules []WindowRule) error {
+func (f *fakeStore) WriteShellRules(rules []WindowRule) error {
 	f.written = rules
 	f.wrote = true
 	return nil
@@ -165,7 +165,7 @@ func TestAReadOnlyConfigIsRefusedBeforeTheFragmentIsRead(t *testing.T) {
 	}
 }
 
-func TestDMSOpaqueRuleIsPinnedLast(t *testing.T) {
+func TestOpaqueRuleIsPinnedLast(t *testing.T) {
 	tests := []struct {
 		name string
 		run  func(*fakeStore) error

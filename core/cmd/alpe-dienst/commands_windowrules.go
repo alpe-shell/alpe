@@ -155,7 +155,7 @@ func runWindowrulesList(cmd *cobra.Command, args []string) {
 
 		provider := providers.NewHyprlandWritableProvider(configDir)
 		dmsRulesPath := provider.GetOverridePath()
-		dmsRules, _ := provider.LoadDMSRules()
+		dmsRules, _ := provider.LoadShellRules()
 
 		dmsRuleMap := make(map[int]windowrules.WindowRule)
 		for i, dr := range dmsRules {
