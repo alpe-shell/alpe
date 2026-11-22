@@ -1212,7 +1212,7 @@ func TestGenerateDank16VariantsProfile(t *testing.T) {
 }
 
 func TestTerminalPaletteOnlyReachesTerminalTemplates(t *testing.T) {
-	shellDir := filepath.Join("..", "..", "..", "quickshell")
+	shellDir := filepath.Join("..", "..", "..", "shell")
 	inputPath := regexp.MustCompile(`input_path = 'SHELL_DIR/([^']+)'`)
 	checked := 0
 	for _, def := range templateRegistry {

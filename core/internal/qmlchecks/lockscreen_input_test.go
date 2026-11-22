@@ -9,7 +9,7 @@ import (
 )
 
 func TestLockScreenPasswordFieldBypassesTextInputIME(t *testing.T) {
-	data, err := os.ReadFile("../../../quickshell/Modules/Lock/Widgets/LockAuthWidget.qml")
+	data, err := os.ReadFile("../../../shell/Modules/Lock/Widgets/LockAuthWidget.qml")
 	if err != nil {
 		t.Fatalf("read lock screen QML: %v", err)
 	}
@@ -43,12 +43,12 @@ func TestLockScreenPasswordFieldBypassesTextInputIME(t *testing.T) {
 }
 
 func TestLockScreenFprintProfileMatchesPamQml(t *testing.T) {
-	profile, err := os.ReadFile("../../../quickshell/assets/pam/fprint")
+	profile, err := os.ReadFile("../../../shell/assets/pam/fprint")
 	if err != nil {
 		t.Fatalf("read fprint PAM profile: %v", err)
 	}
 
-	qml, err := os.ReadFile("../../../quickshell/Modules/Lock/Pam.qml")
+	qml, err := os.ReadFile("../../../shell/Modules/Lock/Pam.qml")
 	if err != nil {
 		t.Fatalf("read lock screen PAM QML: %v", err)
 	}

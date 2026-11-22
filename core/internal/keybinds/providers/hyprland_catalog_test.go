@@ -54,7 +54,7 @@ func jsObjectBlock(t *testing.T, src, name string) string {
 }
 
 func TestHyprlandKeybindCatalogMapsToLua(t *testing.T) {
-	data, err := os.ReadFile("../../../../quickshell/Common/KeybindActions.js")
+	data, err := os.ReadFile("../../../../shell/Common/KeybindActions.js")
 	if os.IsNotExist(err) {
 		t.Skip("quickshell tree not available")
 	}

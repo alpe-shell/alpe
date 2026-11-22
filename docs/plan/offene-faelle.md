@@ -375,9 +375,11 @@ mindestens drei.
 
 ## Bekannte Fehlschläge (schon vor C1, unverändert)
 
-- Go: `internal/matugen` `TestTerminalPaletteOnlyReachesTerminalTemplates`;
-  `internal/qmlchecks` `TestLockScreenPasswordFieldBypassesTextInputIME`,
-  `TestLockScreenFprintProfileMatchesPamQml`.
+- Go: ~~`internal/matugen` `TestTerminalPaletteOnlyReachesTerminalTemplates`; `internal/qmlchecks`
+  `TestLockScreenPasswordFieldBypassesTextInputIME`, `TestLockScreenFprintProfileMatchesPamQml`~~
+  **behoben vor D7.7b** (Plan 0.8 Nr. 49): Alle drei lasen die Oberfläche am Ursprungspfad
+  `../../../quickshell/…`; sie lesen jetzt `shell/…` und sind grün. Der Katalogtest
+  `TestHyprlandKeybindCatalogMapsToLua` übersprang sich aus demselben Grund still und läuft jetzt mit.
 - Node (`shell/tests`, nicht in `tools/test.sh`): 10 Fälle, u. a. Hyprland-Layout-Tests,
   Singleton-Zyklen mit `KwinService`, `shell-embed` (sucht `scripts/shell-test-excludes.txt`
   am Ursprungspfad), Systemaktualisierung (flatpak, portage).
