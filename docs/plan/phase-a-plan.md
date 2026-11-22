@@ -2,12 +2,12 @@
 
 Stand: 21. November 2026, Branch `phase-a`. **Freigegeben am 21.11.2026** mit den Entscheiden in 0.4. Grundlage: `docs/plan/phase-a.md`, `CLAUDE.md`,
 `KONTEXT.md`, Erkundung von `~/alpe` (Commit c988364) und `~/dux-shell` (Branch `alpe` =
-v2.1.2 + 2 Schichten). Umgesetzt bis D3 (abgenommen), siehe «Stand»; Entscheide nach D3 in 0.7; offene Einzelfälle in
+v2.1.2 + 2 Schichten). Umgesetzt bis D6 (Halt), siehe «Stand»; Entscheide nach D3 in 0.7; offene Einzelfälle in
 `docs/plan/offene-faelle.md`.
 
 ---
 
-## Stand (21.11.2026, nach D3)
+## Stand (22.11.2026, nach D6)
 
 ### Erledigt
 
@@ -46,9 +46,23 @@ v2.1.2 + 2 Schichten). Umgesetzt bis D3 (abgenommen), siehe «Stand»; Entscheid
 | `95ce578` | **D2** `hypr/alpe/`, `require("alpe.…")`; versteckte ICC-Migration entfernt | dito |
 | `bca3795` | **D3** App-ID `io.github.alpe_shell.Alpe`, D-Bus `….NMAgent`, `….KwinBridge` | dito |
 | `d3343e9` | **D3** unbenutzte DMS-Logos im Dienst entfernt | dito |
+| `0da9b8a` | **D4** KWin-Brücke `alpe-bridge.js`, Pfad `/AlpeBridge`, Kürzel `alpe-*`, `alpe-cmd-*` | ab hier je Commit test.sh grün (0.7 Nr. 6) |
+| `dd31ebf` | **D5** Einstellungen: `dankLauncherV2*` → `launcher*`, `runMatugenTemplates`, `shellWindowsFloatingSeeded`, Werte `"dms"` → `"standard"`; Migration v43, `settings.v<alt>.json`; `design.py` benennt mit um | Test `tests/test_einstellungen.mjs` (1.0-Datei) |
+| `f2a34f7` | **D6** Übersetzungen: 393 Begriffe entfernter Seiten weg (DCommon jetzt ausdrücklich ausgelassen) | dito |
+| `204aaa7` | **D6** Übersetzungen: ss statt ß (79 Einträge) | dito |
+| `bbb57be` | **D6** `Brand.apply` weg, «Alpe» direkt in Quelltexten und `de.json` | dito |
+| `0515150` | **Fehler aus D2:** eigene Hyprland-Fensterregeln galten als fremd (`dms/windowrules`) | Test `tests/test_pfade.py` |
+| `eab4f12` | **D6** Suchindex: Skript nachgerüstet, Index neu erzeugt | dito |
+| `15b2072` | Reste aus D1: `ALPE_LOG_*` im Dienst, `alpe-dienst auth sync`, Rückfall `brand.Binary` | Go wie bekannt |
+| `8301a6a` | **D6** Dienst: Hilfe, Meldungen, Mitteilungs-Absender, Terminaltitel | Go wie bekannt (Tests angepasst) |
+| `1bbf8da` | **D6** Alpe-Zeichen unter eigenem Dateinamen, `dank.svg` weg | dito |
+| `b3db7fd` | **D6** Über-Seite: Beschreibung, Herkunft, Lizenz | dito |
+| `d4c90f5`, `7e3c5a3` | **D6** übrige Oberflächentexte (Kürzelkategorie, `dms setup`-Hinweise, Plugin-Basisversion, Kopfzeilen, Testmitteilungen) | dito; Node-Tests config-include, plugin-reload, settings-search-cards neu in test.sh |
+| `82ecea2` | Ladeprüfung auf dem Endstand: KWin 29/29, Hyprland 38/38, nur die 2 geänderten Meldungen; Grundlinien nachgeführt | – |
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
-Fälle). Node-Tests des Ursprungs: 10 Fehlschläge, alle schon vor C1 rot.
+Fälle). Node-Tests des Ursprungs: 10 Fehlschläge, alle schon vor C1 rot. Jeder Commit nach D3
+einzeln mit test.sh geprüft (Zwischenstände in einem Temp-Worktree).
 
 Offene Fragen aus C4 (Deployer in `internal/config`, Hinweistexte auf `dms setup`) stehen in
 `docs/plan/offene-faelle.md` unter «Nach C4: Liste für D», Folgen von D1–D3 unter «Nach D1» und
@@ -79,10 +93,10 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
 - ~~SettingsSearchRegistration, **C6**, **D1–D3**~~ erledigt; Halt nach D3 am 22.11.2026
   abgenommen, Entscheide in 0.7. Ladeprüfung bis D3: jeder Commit einzeln, Endstand `170c7d1`
   KWin 29/29, Hyprland 38/38.
-- **Als Nächstes: D4 (KWin-Brücke), D5 (Einstellungen), D6 (sichtbare Texte), Halt nach D6.**
-  Prüfregel ab D4 siehe 0.7 Nr. 6.
-- Mac-Test nach D6 (Anleitung in `offene-faelle.md`, vor dem Test auf den Stand nach D6
-  nachführen).
+- ~~D4, D5, D6~~ erledigt; **Halt nach D6** (22.11.2026). Fragen zum Halt in
+  `offene-faelle.md`, Abschnitt «Nach D4–D6: Fragen».
+- Mac-Test des Stands nach D6 (Anleitung in `offene-faelle.md`, Abschnitt «Mac-Test»).
+- Danach: Vorlage 6.7 (Sperrbildschirm) vor E1, dann E1–E4, Halt nach E4.
 
 ---
 

@@ -1,6 +1,6 @@
 # Phase A – offene Fälle
 
-Stand: 22. November 2026, Halt nach D3 abgenommen (Plan 0.7). Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
+Stand: 22. November 2026, Halt nach D6 (Plan «Stand»); Halt nach D3 abgenommen (Plan 0.7). Ergänzt mit den Entscheiden 0.5/0.6 und den Befunden aus C4/C5. Ergänzt `docs/plan/phase-a-plan.md`
 (Abschnitt «Stand»). Erledigte Fälle werden gestrichen, nicht gelöscht.
 
 ## Entscheide des Maintainers
@@ -21,12 +21,10 @@ seit C2 immer aus. Bleibt in Phase A unverändert (Plan 0.5 Nr. 3). Vorschlag f�
 45, Quickshell 0.3.2 (COPR `avengemedia/quickshell`); Shell startet, Plugins geladen, keine
 QML-Fehler; `doctor` erkennt Hyprland. Befunde 1–4 siehe Plan 0.6 und die Fälle unten.
 
-Anleitung für den nächsten Stand (Stand D3; der Test folgt nach D6, Plan 0.7 Nr. 7 – Pfade
-/tmp/alpe-d3 dann sinngemäss). Die Ladeprüfung braucht `kwin_wayland --virtual`
-und wird am Mac übersprungen; getestet wird in der echten Hyprland-Sitzung, `~/alpe` bleibt
-unberührt. **Ab D2 schreibt die Testshell nach `~/.config/alpe`, `~/.local/state/alpe`,
-`~/.cache/alpe` und `~/.config/hypr/alpe/`** (Plan 7.4); vorher entstehende Dateien in
-`~/.config/hypr/dms/` (z. B. `layout.lua`) schreibt die Shell beim Start selbst.
+**Anleitung für den Stand nach D6** (Plan 0.7 Nr. 7). Die Ladeprüfung braucht
+`kwin_wayland --virtual` und wird am Mac übersprungen; getestet wird in der echten
+Hyprland-Sitzung, `~/alpe` bleibt unberührt. Die Testshell schreibt nach `~/.config/alpe`,
+`~/.local/state/alpe`, `~/.cache/alpe` und `~/.config/hypr/alpe/` (Plan 7.4).
 
 Am PC (Maintainer):
 
@@ -45,12 +43,13 @@ git -C ~/alpe fetch origin phase-a
 git -C ~/alpe-phase-a checkout --detach origin/phase-a
 bash ~/alpe-phase-a/tools/test.sh
 cd ~/alpe-phase-a/core
-make dev BUILD_DIR=/tmp/alpe-d3
-/tmp/alpe-d3/alpe-dienst doctor
+make dev BUILD_DIR=/tmp/alpe-d6
+/tmp/alpe-d6/alpe-dienst doctor
 ```
 
-(Beim ersten Mal statt `checkout` noch `git -C ~/alpe worktree add ~/alpe-phase-a origin/phase-a`.)
-Ab D1 heisst das Programm `alpe-dienst`. Bei `doctor` muss unter «Compositor» Hyprland stehen.
+(Gibt es den Worktree noch nicht: `git -C ~/alpe worktree add ~/alpe-phase-a origin/phase-a`.)
+Bei `doctor` muss unter «Compositor» Hyprland stehen; Überschriften und Meldungen nennen
+«Alpe» bzw. `alpe-dienst`, nicht mehr «DMS».
 
 Laufende Shell stoppen:
 
@@ -58,9 +57,9 @@ Laufende Shell stoppen:
 systemctl --user stop dms.service
 ```
 
-Ab D2 sucht die Shell ihre Einstellungen in `~/.config/alpe` (Umzug erst in F1). Damit der Test
-nicht mit Werkseinstellungen läuft, die DMS-Dateien wie Umzug-Schritt 4 dazukopieren (`-n`:
-nichts überschreiben; Sicherungen von oben):
+Die Shell sucht ihre Einstellungen in `~/.config/alpe` (Umzug erst in F1). Damit der Test nicht
+mit Werkseinstellungen läuft, die DMS-Dateien wie Umzug-Schritt 4 dazukopieren (`-n`: nichts
+überschreiben; Sicherungen von oben):
 
 ```
 cp -rn ~/.config/dms/. ~/.config/alpe/
@@ -76,29 +75,46 @@ Einträge; Hyprland selbst liest weiter `hypr/dms/`.)
 Testshell starten:
 
 ```
-/tmp/alpe-d3/alpe-dienst -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-d3.log
+/tmp/alpe-d6/alpe-dienst -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-d6.log
 ```
 
-**Ab D2 liest die Testshell `~/.config/hypr/alpe/`.** Die Seiten Tastenkürzel,
-Fensterregeln und Anzeige melden darum, dass ihre Dateien nicht eingebunden sind: **die Knöpfe
-«Einrichten»/«Einbinden» nicht drücken** – sie würden `require("alpe.…")` in die echte
-`hyprland.lua` schreiben. Die Hyprland-Kürzel der 1.0-Einrichtung (`dms ipc call …`) erreichen
-die Testshell nicht (anderer Socket); Aufrufe stattdessen im zweiten Terminal, z. B.
-`/tmp/alpe-d3/alpe-dienst ipc call spotlight toggle`. «Neu starten» im Energiemenü nicht
-auslösen: Das ruft jetzt `alpe restart`, und das 1.0-`alpe` startet `dms.service`.
+Die Seiten Tastenkürzel, Fensterregeln und Anzeige melden, dass ihre Dateien nicht eingebunden
+sind: **die Knöpfe «Einrichten»/«Einbinden» nicht drücken** – sie würden `require("alpe.…")` in
+die echte `hyprland.lua` schreiben. Die Hyprland-Kürzel der 1.0-Einrichtung (`dms ipc call …`)
+erreichen die Testshell nicht (anderer Socket); Aufrufe stattdessen im zweiten Terminal, z. B.
+`/tmp/alpe-d6/alpe-dienst ipc call spotlight toggle`. «Neu starten» im Energiemenü nicht
+auslösen: Das ruft `alpe restart`, und das 1.0-`alpe` startet `dms.service`.
 
 Durchklicken wie beim letzten Mal (Arbeitsflächen, Launcher-Rechtsklick, Dock, Launcher,
 Kontrollzentrum, Tastaturlayout, Einstellungen → Tastenkürzel, Fensterregeln, Anzeige, Maus &
-Touchpad, Compositor-Layout, Über-Seite; Energiemenü nur öffnen; im zweiten Terminal
-`/tmp/alpe-d3/alpe-dienst screenshot window`). Zusätzlich: Mitteilung senden (`notify-send test`),
-`/tmp/alpe-d3/alpe-dienst restart` im zweiten Terminal (muss ohne systemd die Testshell neu
-laden und darf nichts an `dms.service` ändern), `hyprctl clients | grep class` (Shell-Fenster
-mit `io.github.alpe_shell.Alpe`).
+Touchpad, Compositor-Layout; Energiemenü nur öffnen; im zweiten Terminal
+`/tmp/alpe-d6/alpe-dienst screenshot window`; Mitteilung `notify-send test`;
+`/tmp/alpe-d6/alpe-dienst restart` lädt nur die Testshell neu und ändert nichts an
+`dms.service`; `hyprctl clients | grep class` zeigt `io.github.alpe_shell.Alpe`).
+
+Neu seit D3 – bitte gezielt ansehen:
+
+- **Einstellungen (D5):** In einem zweiten Terminal
+  `ls ~/.config/alpe/settings.v42.json` (Sicherung vor der Migration muss da sein),
+  `grep -c dankLauncherV2 ~/.config/alpe/settings.json` (muss 0 sein),
+  `grep configVersion ~/.config/alpe/settings.json` (43). Starter: Grösse, Rahmen und Fusszeile
+  wie vorher (die Werte sind umgezogen).
+- **Fensterregeln (Fehler aus D2, `0515150`):** Eigene Regeln aus `hypr/alpe/windowrules.lua`
+  stehen oben als bearbeitbare Regeln, nicht unter den fremden (nur lesbar).
+- **Tastenkürzel:** Kategorie heisst «Alpe» statt «DMS» (Einstellungen und Kürzelübersicht).
+- **Über-Seite:** eigene Beschreibung, «Herkunft: Basiert ursprünglich auf der Dux Modular
+  Shell 2.1.2 (MIT-Lizenz)» mit Verweis; Lizenz-Verweis führt zu Alpe.
+- **Sperrbildschirm / Effekte:** Sperr-Auswahl zeigt den bisherigen Stil; Unschärfe-Modus
+  «Standard (Interface-Stil)».
+- **Mitteilungen:** Bildschirmfoto-Mitteilung mit Absender «Alpe»; Einstellungen →
+  Mitteilungen → Position testen zeigt drei deutsche Testmitteilungen.
+- **Hilfe:** `/tmp/alpe-d6/alpe-dienst --help` und `/tmp/alpe-d6/alpe-dienst ipc` nennen
+  `alpe-dienst`.
 
 Beenden mit Strg+C, dann `systemctl --user start dms.service`. Auswerten:
 
 ```
-grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Unable to assign|not installed" /tmp/alpe-d3.log
+grep -E "ReferenceError|TypeError|is not a type|is not defined|Cannot assign|Unable to assign|not installed" /tmp/alpe-d6.log
 ls ~/.config/hypr/alpe
 ```
 
@@ -117,13 +133,9 @@ nur «nicht gefunden».)
 
 ## Nach C4: Liste für D
 
-- **Hinweise auf entfernte Befehle** (sichtbare Texte, D6): Die Oberfläche empfiehlt weiterhin
-  `dms setup`, wenn `hyprland.lua` fehlt (`KeybindsTab.qml`, `Widgets/ConfigInclude.qml`,
-  `Widgets/IncludeSetupBanner.qml`, `KeybindsService.qml`), ebenso der Dienst
-  (`keybinds/providers/hyprland.go`, `windowrules/providers/hyprland_parser.go`,
-  `server/evdev/manager.go`). Aufgerufen wird `setup` nirgends, darum ist es nach Plan 0.5
-  Nr. 1 weg. Die Texte sollen auf den Reparatur-Knopf der Oberfläche bzw. den künftigen
-  `alpe`-Befehl zeigen.
+- ~~**Hinweise auf entfernte Befehle** (`dms setup`)~~ erledigt in D6: Oberfläche und Dienst
+  sagen jetzt, dass zuerst `~/.config/hypr/hyprland.lua` anzulegen ist (evdev: nur die Gruppe
+  `input`). Zeigt E4/F2 einen `alpe`-Befehl für die Einrichtung, die Texte dorthin ändern.
 - **Deployer in `core/internal/config`** (`deployer.go`, `session_units.go`, eingebettete
   `hypr-*.lua`, Terminal-Vorlagen): hat seit dem Wegfall von `dms setup` keinen Aufrufer mehr,
   ist aber die einzige Stelle, die auf einem frischen Hyprland-System `hypr/dms/*.lua` anlegt
@@ -148,9 +160,7 @@ nur «nicht gefunden».)
   Mit E4 auf `alpe-dienst` umstellen, der Umzug schreibt bestehende Zeilen um.
 - `tools/alpe`, `tools/backend.sh`, `bootstrap.sh`, `get.sh` kennen noch `/usr/bin/dms` und
   `dms.service` (1.0-Weg, wird in E4/F2 ersetzt). `backend.sh` baut schon `bin/alpe-dienst`.
-- Hilfetexte des Dienstes (`--help`, Beispiele `dms screenshot …`, `dms ipc …`) und
-  Oberflächentexte («sperrt über «dms ipc call lock lock»», veraltet-Meldungen in der IPC)
-  nennen noch `dms`: D6.
+- ~~Hilfetexte des Dienstes und Oberflächentexte mit `dms`~~ erledigt in D6.
 - `ALPE_SHELL_DIR` ist jetzt zugleich die Variable des Dienstes (vorher `DMS_SHELL_DIR`) und die
   der Werkzeuge/Tests – gleiche Bedeutung (Ordner mit `shell.qml`). Die Hyprland-Zeile
   `env = DMS_SHELL_DIR,…` aus `hypr/alpe.conf` wirkt auf `alpe-dienst` nicht mehr (Umzug 7.4
@@ -184,9 +194,51 @@ nur «nicht gefunden».)
   Lualine-Theme `dms`, Kennung `source: "dms"` zwischen Kürzel-Parser und Oberfläche,
   Regelname `dms-floating-windows`, CUPS-Benutzername `dms`, Hotspot-Name
   «DankMaterialShell Hotspot», Kalender-Anbindung an `dev.duxlabs.calendar` (fremde App).
-- Logos der Oberfläche (`danklogo*.svg`, Starter, Mitteilungen, Prozessliste) ersetzt D6;
+  Nach D6 weiter so; Hotspot siehe «Nach D4–D6: Fragen» Nr. 6.
+- ~~Logos der Oberfläche~~ erledigt in D6 (`alpe-zeichen.svg`, `alpe-zeichen-akzent.svg`);
   App-Symbol und Desktop-Dateien liefert E1.
-- Kürzel-Hinweistexte, Abschnittsüberschrift «DMS Include Configs» in `hyprland.lua`: D6.
+- ~~Abschnittsüberschrift «DMS Include Configs»~~ erledigt in D6: neue Kopfzeile
+  «-- Alpe: eingebundene Dateien», die alte gilt beim Einbinden weiter als vorhanden. Der
+  Umzug (F1) kann die alte Kopfzeile umschreiben, muss aber nicht.
+
+## Nach D4–D6: Fragen zum Halt
+
+1. **Kennungen der eingebauten Starter-Plugins** `dms_settings`, `dms_notepad`, `dms_sysmon`,
+   `dms_colorpicker`, `dms_settings_search`, `dms_clipboard_search`, `dms_power`,
+   `dms_qr_generator`, `dms_vpn` (≈50 Stellen; gespeichert in `builtInPluginSettings`,
+   `launcherPluginVisibility`, `launcherPluginOrder`, Session `builtInPluginState`, Starter-
+   Zwischenspeicher). Nicht sichtbar. In D5 bewusst nicht umbenannt. **Vorschlag:** auf die
+   Ausnahmeliste (interne Kennung, wie 0.7 Nr. 3), Phase C. Alternative: Migration v44.
+2. **Material-Hintergrund «Dank»** (Vorgabe-Vorlage, `DCommon/Common/MaterialWallpaper.js`):
+   heisst sichtbar «Dank» und zeichnet als Ebene `dankLogo` die **Logoform des Ursprungs**
+   (`DCommon/Widgets/DLogoShape.js`). **Vorschlag:** Form durch das Alpe-Zeichen ersetzen
+   (Kurven aus `alpe-zeichen.svg`), Bezeichnung «Alpe»; der gespeicherte Wert `"dank"` bleibt
+   intern. Alternative: Vorlage entfernen (Vorgabe wird «bloom», Migration nötig).
+3. **Logo-Modus `"dank"`** (Starter-Knopf, Apps-Dock, Dot: `launcherLogoMode`,
+   `islandFreeIconMode`): zeigt seit 1.0 das Alpe-Zeichen, der Wert ist nicht sichtbar, liegt
+   aber verschachtelt in Leisten-/Dock-Konfigurationen. **Vorschlag:** Ausnahmeliste, Phase C.
+4. **Webdienste des Ursprungs** (`Common/Site.qml`, `duxlabs.dev`): Doku-Link auf der
+   Autostart-Seite, Doku-Links in `alpe-dienst doctor`, Knopf «Wallpaper creator»
+   (Webdienst des Ursprungs; installiert über das Schema `dms://wallpaper/install/`, das
+   `alpe-dienst open` und `DMSShell.qml` annehmen). **Vorschlag:** Doku-Links entfernen
+   (Alpe hat keine eigene Doku-Seite), Wallpaper-Knopf ausblenden, `dms://` bleibt intern bis
+   Phase C. Entscheid nötig, weil es eine Funktion wegnimmt.
+5. **Sie-Form im deutschen Katalog des Ursprungs:** 103 von 3090 Übersetzungen siezen
+   («Aktualisieren Sie …», «Ihr System …»); die Oberfläche soll duzen. Mechanisch nicht sicher
+   umzustellen (Verbformen). **Vorschlag:** eigener Commit vor G1, Liste von Hand durchgehen.
+6. **Systemnahe Namen:** PAM-Dienste `/etc/pam.d/dankshell`, `dankshell-u2f` und deren
+   Blockmarken «DMS LOCKSCREEN AUTH»; NetworkManager-Verbindung «DankMaterialShell Hotspot»
+   (nur der Verbindungsname, die SSID wählt man selbst); Richtlinien
+   `/usr/share/dms/cli-policy.json`, `/etc/dms/cli-policy.json`; CUPS-Benutzername `dms`.
+   Umbenennen hiesse Systemdateien migrieren (sudo) bzw. alte Verbindungen doppelt führen.
+   **Vorschlag:** Ausnahmeliste; die Richtlinien-Pfade mit E1 (Paket) neu entscheiden.
+7. **Gesperrte Pakete** `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) und die
+   Hold-Anzeige auf der Wartungsseite: gehören zur 1.0-Einrichtung; Plan 2.2 sagt «entfällt».
+   **Vorschlag:** mit E4 entfernen (nach dem Umzug ist `dux-shell` weg).
+
+Dazu, ohne Frage: Die deutschen Kataloge hatten «ß» (ersetzt), Importreihenfolge in 6 Go-Dateien
+seit D3 (`bca3795`, Import von `internal/brand`) nicht gofmt-sauber (kosmetisch, vor G1), `Theme.qml` kennt die Kategorie «registry»
+weiter (unverändert seit C4).
 
 ## Hyprland: `hyprctl descriptions` (nach Phase A)
 
@@ -261,13 +313,16 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   (Ladegrenze/Deckel-Abfrage; im Test fehlt logind, die Auswertung fängt das nicht ab).
 - beide: `SportDaemon … Created graphical object was not placed in the graphics scene`.
 - KWin: `Error: Cannot assign to non-existent property "requestedSearchQuery"` (ohne Datei).
+- Hyprland: Die Meldung zur Fensterregel der Shell nennt seit D6 «the shell window rule» und
+  verweist auf das Anlegen von `hyprland.lua` statt auf `dms setup` (Grundlinie nachgeführt).
 - **KWin: leere Bildschirmliste** – `[WlrOutputService] Received empty outputs list`. Unter
   KWin kommen die Bildschirme über kscreen, nicht wlr-output-management; zu klären, ob die
   Anzeige-Seite unter KWin trotzdem Bildschirme zeigt oder ob nur die Meldung stört.
 - Hyprland: `[KeybindsService] Failed to parse binds: SyntaxError: JSON.parse` und
   `Load process failed with code: 1` (Kürzel-Auslesen scheitert im Testprofil).
-- Hyprland: `[CompositorService] failed to update DMS window rule dms-floating-windows …
-  hyprland.lua not found …; run dms setup …`; verweist auf `dms setup` (Befehl fällt mit C4 weg).
+- Hyprland: `[CompositorService] failed to update the shell window rule dms-floating-windows …
+  hyprland.lua not found …` (im Testprofil gibt es keine `hyprland.lua`; Text seit D6 ohne
+  `dms setup`).
 
 - ~~Sporadisch: `SettingsSearchRegistration.qml: TypeError: Cannot read property 'parent' of null`~~
   Behoben (Commit «Einstellungssuche: abgebaute Karten»): Bindung und `sync()` prüfen `target`
@@ -318,16 +373,14 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
 
 ## Werkzeuge
 
-- `shell/translations/extract_settings_index.py` bricht ab, weil die Alpe-Seiten in
-  `TAB_INDEX_MAP` fehlen; der Suchindex wurde in C2/C3 von Hand bereinigt (Einträge zu
-  entfernten Einstellungen). Vor D6 nachrüsten.
+- ~~`extract_settings_index.py` bricht ab~~ erledigt in D6 (`eab4f12`): Alpe-Seiten werden
+  ausdrücklich übersprungen (sie kommen zur Laufzeit dazu), Index neu erzeugt.
 - ~~`entwicklung/lint.sh`~~ und die Hand-Harnesse `pageharness/th.qml`, `td2.qml`, `tl2.qml`
   (tote Pfade `/home/claude/...`) entfernt in C6. Übrig: `shell/Modules/Lock/Alpe/layout.js`
   nennt als Herkunft `/home/claude/src/alpe/lockscreen/hyprlock.conf` (erzeugte Datei; mit E4
   bzw. dem Export neu erzeugen).
 - `entwicklung/pageharness/qs/` enthält veraltete Kopien (`SettingsTabs.qml`,
   `CompositorService.qml`-Attrappe mit `isNiri`).
-- Übersetzungen (`shell/translations/*.json`, `poexports`) enthalten noch Texte entfernter
-  Seiten; bereinigen mit D6.
+- ~~Übersetzungen mit Texten entfernter Seiten~~ bereinigt in D6 (`f2a34f7`).
 - Assets `discord.svg`, `reddit.svg`, `matrix-logo-white.svg` sind unbenutzt bzw. nur noch
   für den Discord-Link des Ursprungs da (Entfernen laut 4.3 in C4).
