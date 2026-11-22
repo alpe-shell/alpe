@@ -13,6 +13,9 @@ fails=0
 step() { printf '\n\033[1m== %s\033[0m\n' "$1"; }
 run() { "$@" || { fails=$((fails + 1)); printf '\033[31m✗ fehlgeschlagen:\033[0m %s\n' "$*"; }; }
 
+step "Neue Dateien: nichts über 1 MB, keine Programme (gegenüber origin/phase-a)"
+run bash tools/neue-dateien-pruefen.sh
+
 step "KWin-Brücke (node)"
 if command -v node >/dev/null; then run node tests/test_bridge.js; else echo "node fehlt – übersprungen"; fi
 

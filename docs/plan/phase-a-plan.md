@@ -60,6 +60,9 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | `b53ecd3` | **D6** Über-Seite: Beschreibung, Herkunft, Lizenz | dito |
 | `713749c`, `17a5f36` | **D6** übrige Oberflächentexte (Kürzelkategorie, `dms setup`-Hinweise, Plugin-Basisversion, Kopfzeilen, Testmitteilungen) | dito; Node-Tests config-include, plugin-reload, settings-search-cards neu in test.sh |
 | `459a476` | Ladeprüfung auf dem Endstand: KWin 29/29, Hyprland 38/38, nur die 2 geänderten Meldungen; Grundlinien nachgeführt | – |
+| | **D7** (Entscheide 0.8 Nr. 20–24, Commits nach 2.3.5; Hash siehe `git log`) | |
+| D7.G | `tools/neue-dateien-pruefen.sh` in test.sh: rot bei neuen Dateien > 1 MB oder ELF gegenüber `origin/phase-a` (auch vorgemerkt und unversioniert-nicht-ignoriert) | Test `tests/test_neue_dateien.py` |
+<!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
 Fälle). Node-Tests des Ursprungs: 10 Fehlschläge, alle schon vor C1 rot. Jeder Commit nach D3
