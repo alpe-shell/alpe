@@ -157,6 +157,17 @@ TAB_INDEX_MAP = {
     "KeyboardTab.qml": 45,
 }
 
+# Alpe: Eigene Seiten kommen nicht in den statischen Index; SettingsSearchService
+# (_alpeSearchEntries) trägt sie zur Laufzeit ein. Die KWin-Fassungen von Kürzeln,
+# Fensterregeln und Sperrbildschirm ersetzen Seiten, die schon im Index stehen.
+ALPE_RUNTIME_FILES = {
+    "AlpeKwinTab.qml", "AlpeMaintenanceTab.qml", "AlpePeripheralsTab.qml", "AlpePagesTab.qml",
+    "AlpeDeviceTab.qml", "AlpeLockDesignTab.qml", "AlpeEffectsTab.qml", "AlpeServicesTab.qml",
+    "AlpePerformanceTab.qml", "AlpeSportTab.qml", "AlpeShortcutsTab.qml", "AlpeWindowRulesTab.qml",
+    "AlpeLockTab.qml",
+}
+ALPE_RUNTIME_TABS = set(range(100, 110))
+
 SIDEBAR_GATE_CONDITIONS = [
     ("shortcutsOnly", "keybindsAvailable"),
     ("soundsOnly", "soundsAvailable"),
@@ -762,7 +773,7 @@ def generate_tab_entries(leaves, settings_entries):
     entries = []
     for leaf in leaves:
         base_label = leaf["label"] or ""
-        if leaf["children"] or not (base_label or leaf["runtimeLabel"]):
+        if leaf["children"] or not (base_label or leaf["runtimeLabel"]) or leaf["tabIndex"] in ALPE_RUNTIME_TABS:
             continue
         label = (
             f"{leaf['parentLabel']}: {base_label}"
@@ -914,7 +925,7 @@ def validate(all_entries, leaves, hubs, sidebar_file, root_dir):
         if count > 1:
             errors.append(f"page id '{page_id}' is declared {count} times")
     for tab_file in sorted(settings_dir.glob("*Tab.qml")):
-        if tab_file.name not in TAB_INDEX_MAP and tab_file.name not in FILE_PAGE_MAP:
+        if tab_file.name not in TAB_INDEX_MAP and tab_file.name not in FILE_PAGE_MAP and tab_file.name not in ALPE_RUNTIME_FILES:
             errors.append(f"{tab_file.name} missing from TAB_INDEX_MAP")
 
     with open(sidebar_file, "r", encoding="utf-8") as f:
@@ -922,7 +933,7 @@ def validate(all_entries, leaves, hubs, sidebar_file, root_dir):
     sidebar_tabs = {leaf["tabIndex"] for leaf in leaves}
     file_backed_tabs = {leaf["tabIndex"] for leaf in leaves if not leaf["children"]}
     mapped_tabs = set(TAB_INDEX_MAP.values())
-    for tab_index in sorted(file_backed_tabs - mapped_tabs):
+    for tab_index in sorted(file_backed_tabs - mapped_tabs - ALPE_RUNTIME_TABS):
         errors.append(f"tabIndex {tab_index} in sidebar has no file in TAB_INDEX_MAP")
     with open(Path(__file__).parent / "en.json", "r", encoding="utf-8") as f:
         catalog_terms = {entry["term"] for entry in json.load(f)}

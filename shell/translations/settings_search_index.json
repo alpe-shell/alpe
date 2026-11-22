@@ -1219,7 +1219,7 @@
       "wallpaper"
     ],
     "page": "personalization",
-    "conditionKey": "isHyprlandOrNiri"
+    "conditionKey": "isHyprland"
   },
   {
     "section": "notificationHistory",
@@ -1728,7 +1728,7 @@
       "wifi",
       "wireless"
     ],
-    "icon": "wifi",
+    "icon": null,
     "description": "Wi-Fi, Ethernet, VPN",
     "conditionKey": "networkAvailable"
   },
@@ -1833,6 +1833,7 @@
     "category": "Interface style",
     "keywords": [
       "adds",
+      "alpe",
       "compositor",
       "floating",
       "hyprland",
@@ -1847,7 +1848,7 @@
       "windows"
     ],
     "page": "theme_surfaces",
-    "description": "Adds a compositor window rule so DMS windows such as Settings open floating"
+    "description": "Adds a compositor window rule so Alpe windows such as Settings open floating"
   },
   {
     "section": "notificationOverlayEnabled",
@@ -2177,7 +2178,6 @@
     "page": "security_accounts",
     "category": "Security",
     "keywords": [
-      "authentication",
       "lock",
       "lockscreen",
       "login",
@@ -2502,12 +2502,10 @@
       "history",
       "integrations",
       "multiplexers",
-      "notes",
       "paste",
       "print",
       "printers",
       "printing",
-      "release",
       "software",
       "system",
       "updates"
@@ -2665,6 +2663,7 @@
     "tabIndex": -1,
     "category": "Interface style",
     "keywords": [
+      "alpe",
       "bar",
       "bars",
       "compositor",
@@ -2690,7 +2689,7 @@
       "windows"
     ],
     "page": "theme_surfaces",
-    "description": "Off lets the compositor decorate DMS windows. Open windows update when reopened."
+    "description": "Off lets the compositor decorate Alpe windows. Open windows update when reopened."
   },
   {
     "section": "tooltipSurfaceColor",
@@ -2750,6 +2749,7 @@
     "tabIndex": -1,
     "category": "Wallpaper & colors",
     "keywords": [
+      "alpe",
       "background",
       "bg",
       "colors",
@@ -2779,7 +2779,7 @@
       "wallpapers"
     ],
     "page": "personalization",
-    "description": "DMS stops drawing wallpapers on every display"
+    "description": "Alpe stops drawing wallpapers on every display"
   },
   {
     "section": "wallpaperOptions",
@@ -2854,7 +2854,7 @@
       "xray"
     ],
     "page": "theme_surfaces",
-    "conditionKey": "isHyprlandOrNiri"
+    "conditionKey": "isHyprland"
   },
   {
     "section": "_hub_personalization",
@@ -7148,6 +7148,7 @@
     "tabIndex": 10,
     "category": "Theme & colors",
     "keywords": [
+      "alpe",
       "appearance",
       "background",
       "bg",
@@ -7178,7 +7179,7 @@
       "wallpaper colors"
     ],
     "parentLabel": "Wallpaper & colors",
-    "description": "Regenerate matugen colors when DMS starts, even if nothing changed.",
+    "description": "Regenerate matugen colors when Alpe starts, even if nothing changed.",
     "conditionKey": "matugenAvailable"
   },
   {
@@ -7796,6 +7797,27 @@
     "parentLabel": "Security"
   },
   {
+    "section": "alpeLockShell",
+    "label": "Sperrbildschirm (Alpe)",
+    "tabIndex": 11,
+    "category": "Lock screen",
+    "keywords": [
+      "(alpe)",
+      "alpe",
+      "design",
+      "hyprlock",
+      "lock",
+      "lockscreen",
+      "login",
+      "password",
+      "screen",
+      "security",
+      "sperrbildschirm"
+    ],
+    "parentLabel": "Security",
+    "icon": "brush"
+  },
+  {
     "section": "lockPamExternallyManaged",
     "label": "Use system PAM authentication",
     "tabIndex": 11,
@@ -7912,12 +7934,10 @@
       "addons",
       "extend",
       "extensions",
-      "manage",
       "plugins",
       "widgets"
     ],
-    "icon": "extension",
-    "description": "Browse, install, registries"
+    "icon": "extension"
   },
   {
     "section": "_tab_13",
@@ -7927,14 +7947,11 @@
     "keywords": [
       "about",
       "credits",
-      "diagnostics",
       "help",
       "info",
-      "links",
       "version"
     ],
-    "icon": "info",
-    "description": "Version, links, diagnostics"
+    "icon": "info"
   },
   {
     "section": "typographyAdvanced",
@@ -9099,27 +9116,6 @@
     "parentLabel": "System & integrations"
   },
   {
-    "section": "softwareUpdatesShell",
-    "label": "Dux Modular Shell",
-    "tabIndex": 20,
-    "category": "Software updates",
-    "keywords": [
-      "channel",
-      "dms",
-      "dux",
-      "integrations",
-      "modular",
-      "restart",
-      "shell",
-      "software",
-      "system",
-      "updates",
-      "version"
-    ],
-    "parentLabel": "System & integrations",
-    "icon": "deployed_code"
-  },
-  {
     "section": "systemUpdaterIgnoredPackages",
     "label": "Ignored packages",
     "tabIndex": 20,
@@ -9302,6 +9298,7 @@
     "tabIndex": 20,
     "category": "Software updates",
     "keywords": [
+      "alpe",
       "integrations",
       "software",
       "system",
@@ -9309,7 +9306,7 @@
     ],
     "icon": "system_update_alt",
     "parentLabel": "System & integrations",
-    "description": "DMS and system updates"
+    "description": "Alpe and system updates"
   },
   {
     "section": "softwareUpdatesSystem",
@@ -9327,6 +9324,26 @@
     ],
     "parentLabel": "System & integrations",
     "icon": "inventory_2"
+  },
+  {
+    "section": "softwareUpdatesShell",
+    "label": "Systemaktualisierung",
+    "tabIndex": 20,
+    "category": "Software updates",
+    "keywords": [
+      "channel",
+      "dms",
+      "integrations",
+      "restart",
+      "shell",
+      "software",
+      "system",
+      "systemaktualisierung",
+      "updates",
+      "version"
+    ],
+    "parentLabel": "System & integrations",
+    "icon": "system_update_alt"
   },
   {
     "section": "systemUpdaterCustomCommand",
@@ -10304,14 +10321,6 @@
     "optionFile": "WorkspaceSwitcherOptions.qml"
   },
   {
-    "section": "barWidgetOption:WorkspaceSwitcherOptions.qml:21",
-    "label": "Drag to reorder",
-    "tabIndex": 22,
-    "keywords": [],
-    "runtimeType": "barWidgetOption",
-    "optionFile": "WorkspaceSwitcherOptions.qml"
-  },
-  {
     "section": "barWidgetOption:IslandOptions.qml:30",
     "label": "Expand by default",
     "tabIndex": 22,
@@ -10782,14 +10791,6 @@
     "keywords": [],
     "runtimeType": "barWidgetOption",
     "optionFile": "AppsDockOptions.qml"
-  },
-  {
-    "section": "barWidgetOption:WorkspaceSwitcherOptions.qml:22",
-    "label": "Show all tags",
-    "tabIndex": 22,
-    "keywords": [],
-    "runtimeType": "barWidgetOption",
-    "optionFile": "WorkspaceSwitcherOptions.qml"
   },
   {
     "section": "barWidgetOption:WorkspaceSwitcherOptions.qml:7",
@@ -11849,10 +11850,30 @@
     "description": "Auto turns it off on compositors that use clicks on the empty desktop themselves"
   },
   {
+    "section": "_tab_28",
+    "label": "",
+    "tabIndex": 28,
+    "category": "Plugins",
+    "keywords": [
+      "addon",
+      "addons",
+      "extend",
+      "extensions",
+      "nach",
+      "ordner",
+      "plugins",
+      "suche",
+      "widgets"
+    ],
+    "icon": "folder_open",
+    "description": "Ordner und Suche nach Plugins",
+    "runtimeType": "pageLabel"
+  },
+  {
     "section": "pluginDirectory",
     "label": "Directory",
     "tabIndex": 28,
-    "category": "Plugin-Ordner",
+    "category": "Plugins",
     "keywords": [
       "addon",
       "addons",
@@ -11860,33 +11881,11 @@
       "extend",
       "extensions",
       "folder",
-      "manage",
       "path",
       "plugins",
       "widgets"
     ],
-    "parentLabel": "Plugins",
     "icon": "folder"
-  },
-  {
-    "section": "_tab_28",
-    "label": "Plugin-Ordner",
-    "tabIndex": 28,
-    "category": "Plugin-Ordner",
-    "keywords": [
-      "addon",
-      "addons",
-      "directory",
-      "extend",
-      "extensions",
-      "manage",
-      "plugin",
-      "plugins",
-      "widgets"
-    ],
-    "icon": "folder_open",
-    "parentLabel": "Plugins",
-    "description": "Plugin directory and registries"
   },
   {
     "section": "_tab_29",
@@ -13029,23 +13028,6 @@
       "mouse",
       "resize",
       "system"
-    ],
-    "conditionKey": "layoutCapable"
-  },
-  {
-    "section": "showConfigReloadToast",
-    "label": "Show \"config reloaded\" toast",
-    "tabIndex": 37,
-    "category": "System & integrations",
-    "keywords": [
-      "compositor",
-      "config",
-      "integrations",
-      "reload",
-      "reloaded",
-      "show",
-      "system",
-      "toast"
     ],
     "conditionKey": "layoutCapable"
   },
@@ -15010,10 +14992,11 @@
   },
   {
     "section": "matugenTemplateNeovimSetBackground",
-    "label": "Follow DMS background color",
+    "label": "Follow Alpe background color",
     "tabIndex": 50,
     "category": "App theming",
     "keywords": [
+      "alpe",
       "app",
       "background",
       "bg",
@@ -15022,7 +15005,6 @@
       "colour",
       "colours",
       "desktop",
-      "dms",
       "follow",
       "hue",
       "image",
@@ -15272,10 +15254,11 @@
   },
   {
     "section": "runMatugenTemplates",
-    "label": "Run DMS templates",
+    "label": "Run Alpe templates",
     "tabIndex": 50,
     "category": "App theming",
     "keywords": [
+      "alpe",
       "app",
       "background",
       "bg",
