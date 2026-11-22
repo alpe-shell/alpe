@@ -61,7 +61,7 @@ Singleton {
             root.forceRefresh();
     }
 
-    readonly property string userAgent: "Dux Modular Shell Weather Widget (+https://github.com/duxlabs-dev/dux-shell)"
+    readonly property string userAgent: "Alpe Weather (+https://github.com/alpe-shell/alpe)"
     readonly property var builtinProviders: [
         {
             id: "openmeteo",

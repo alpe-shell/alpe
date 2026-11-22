@@ -660,7 +660,7 @@
   {
     "term": "%1 update",
     "context": "%1 update",
-    "reference": "Services/SystemUpdateService.qml:309, Modules/Settings/SoftwareUpdatesTab.qml:133, Modules/Settings/AboutTab.qml:32, Modules/SystemUpdate/SystemUpdatePanel.qml:117",
+    "reference": "Services/SystemUpdateService.qml:309, Modules/Settings/SoftwareUpdatesTab.qml:133, Modules/Settings/AboutTab.qml:30, Modules/SystemUpdate/SystemUpdatePanel.qml:117",
     "comment": "singular, %1 is 1, available system update count",
     "tags": [
       "settings",
@@ -670,7 +670,7 @@
   {
     "term": "%1 updates",
     "context": "%1 updates",
-    "reference": "Services/SystemUpdateService.qml:309, Modules/Settings/SoftwareUpdatesTab.qml:133, Modules/Settings/AboutTab.qml:32, Modules/SystemUpdate/SystemUpdatePanel.qml:119",
+    "reference": "Services/SystemUpdateService.qml:309, Modules/Settings/SoftwareUpdatesTab.qml:133, Modules/Settings/AboutTab.qml:30, Modules/SystemUpdate/SystemUpdatePanel.qml:119",
     "comment": "plural, %1 is a count of available system updates",
     "tags": [
       "settings",
@@ -996,7 +996,7 @@
   {
     "term": "API",
     "context": "API",
-    "reference": "Modules/ProcessList/SystemView.qml:159, Modules/Settings/AboutTab.qml:88",
+    "reference": "Modules/ProcessList/SystemView.qml:159, Modules/Settings/AboutTab.qml:80",
     "comment": "about page card title, application programming interface version",
     "tags": [
       "settings",
@@ -1123,7 +1123,7 @@
   {
     "term": "Action",
     "context": "Action",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:896, Modules/Settings/NotificationRuleEditorDialog.qml:228",
+    "reference": "Modules/Settings/NotificationRuleEditorDialog.qml:228, Modules/Settings/KeybindEditorDialog.qml:896",
     "comment": "noun, dropdown label for what a notification rule or keybind does",
     "tags": [
       "settings"
@@ -1260,7 +1260,7 @@
   {
     "term": "Add",
     "context": "Add",
-    "reference": "Modules/Plugins/ListSettingWithInput.qml:53, Modules/Settings/BarHubHeader.qml:100, Modules/Settings/DesktopWidgetsTab.qml:136, Modules/Settings/DockHubHeader.qml:53, Modules/Settings/GammaControlTab.qml:301, Modules/Settings/KeybindEditorDialog.qml:695, Modules/Settings/MediaPlayerTab.qml:195, Modules/Settings/NotificationRuleEditorDialog.qml:108, Modules/Settings/WindowRuleEditorDialog.qml:550, Modules/Settings/BarWidgetOptions/KeyboardLayoutOptions.qml:94",
+    "reference": "Modules/Plugins/ListSettingWithInput.qml:53, Modules/Settings/BarHubHeader.qml:100, Modules/Settings/DesktopWidgetsTab.qml:136, Modules/Settings/DockHubHeader.qml:53, Modules/Settings/GammaControlTab.qml:301, Modules/Settings/MediaPlayerTab.qml:195, Modules/Settings/NotificationRuleEditorDialog.qml:108, Modules/Settings/WindowRuleEditorDialog.qml:550, Modules/Settings/KeybindEditorDialog.qml:695, Modules/Settings/BarWidgetOptions/KeyboardLayoutOptions.qml:94",
     "comment": "verb, button that adds a new item to a list",
     "tags": [
       "settings",
@@ -1378,7 +1378,7 @@
   {
     "term": "Add shortcut",
     "context": "Add shortcut",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:88, Modules/Settings/KeybindsTab.qml:540, Modules/Notifications/Center/NotificationShortcutSheet.qml:175, Modules/Notifications/Center/NotificationShortcutSlot.qml:63",
+    "reference": "Modules/Settings/KeybindsTab.qml:540, Modules/Settings/KeybindEditorDialog.qml:88, Modules/Notifications/Center/NotificationShortcutSheet.qml:175, Modules/Notifications/Center/NotificationShortcutSlot.qml:63",
     "comment": "keybind editor dialog title and button",
     "tags": [
       "settings",
@@ -1599,7 +1599,7 @@
   {
     "term": "All",
     "context": "All",
-    "reference": "Modals/KeybindsContent.qml:628, Modals/KeybindsContent.qml:644, Services/AppSearchService.qml:807, Services/AppSearchService.qml:824, Modules/ProcessList/ProcessFilterChips.qml:9, Modules/Settings/KeybindsTab.qml:65, Modules/Settings/PluginsHubHeader.qml:31, Modules/Settings/LauncherTab.qml:67, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:94, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:105, Modules/Notifications/Center/HistoryNotificationList.qml:92, Modals/Clipboard/ClipboardContent.qml:19, Modals/DLauncherV2/Controller.qml:1354, Modals/DLauncherV2/LauncherContent.qml:292, Modals/DLauncherV2/LauncherContent.qml:581, Modals/DLauncherV2/LauncherContent.qml:584, Modals/DLauncherV2/Components/LauncherSearchField.qml:16",
+    "reference": "Modals/KeybindsContent.qml:628, Modals/KeybindsContent.qml:644, Services/AppSearchService.qml:807, Services/AppSearchService.qml:824, Modules/ProcessList/ProcessFilterChips.qml:9, Modules/Settings/PluginsHubHeader.qml:31, Modules/Settings/LauncherTab.qml:67, Modules/Settings/KeybindsTab.qml:65, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:94, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:105, Modules/Notifications/Center/HistoryNotificationList.qml:92, Modals/Clipboard/ClipboardContent.qml:19, Modals/DLauncherV2/Controller.qml:1354, Modals/DLauncherV2/LauncherContent.qml:292, Modals/DLauncherV2/LauncherContent.qml:581, Modals/DLauncherV2/LauncherContent.qml:584, Modals/DLauncherV2/Components/LauncherSearchField.qml:16",
     "comment": "notification history filter",
     "tags": [
       "settings",
@@ -1726,15 +1726,6 @@
     ]
   },
   {
-    "term": "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
-    "context": "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
-    "reference": "Modules/Settings/AboutTab.qml:49",
-    "comment": "about page blurb, %1 is a Quickshell link, %2 is a Go link",
-    "tags": [
-      "settings"
-    ]
-  },
-  {
     "term": "Alpe out of date",
     "context": "Alpe out of date",
     "reference": "Services/DMSService.qml:246, Modules/DDash/WellbeingTab.qml:67",
@@ -1777,6 +1768,16 @@
     "comment": "use external wallpaper manager toggle description",
     "tags": [
       "settings"
+    ]
+  },
+  {
+    "term": "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.",
+    "context": "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.",
+    "reference": "Services/KeybindsService.qml:581, Modules/Settings/KeybindsTab.qml:468, Modules/Settings/Widgets/IncludeSetupBanner.qml:50, Modules/Settings/Widgets/ConfigInclude.qml:67",
+    "comment": "hyprland.lua missing warning, %1 is the path of hyprland.lua",
+    "tags": [
+      "settings",
+      "shell"
     ]
   },
   {
@@ -3013,7 +3014,7 @@
   {
     "term": "Backend",
     "context": "Backend",
-    "reference": "Modules/ProcessList/SystemView.qml:159, Modules/Settings/NetworkStatusTab.qml:48, Modules/Settings/AboutTab.qml:80",
+    "reference": "Modules/ProcessList/SystemView.qml:159, Modules/Settings/NetworkStatusTab.qml:48, Modules/Settings/AboutTab.qml:72",
     "comment": "noun, settings label for the backend service in use",
     "tags": [
       "settings",
@@ -3981,7 +3982,7 @@
   {
     "term": "Cancel",
     "context": "Cancel",
-    "reference": "DMSShell.qml:377, DMSShell.qml:404, Modals/BluetoothPairingModal.qml:269, Modals/BluetoothPairingModal.qml:358, Modals/PolkitAuthContent.qml:173, Modals/WifiPasswordModal.qml:579, Modals/WorkspaceRenameModal.qml:86, Modules/ProcessList/ProcessActionDialog.qml:77, Modules/Settings/BarHubHeader.qml:162, Modules/Settings/DockHubHeader.qml:106, Modules/Settings/KeybindEditorDialog.qml:689, Modules/Settings/NetworkWifiTab.qml:921, Modules/Settings/NotificationRuleEditorDialog.qml:103, Modules/Settings/PrinterTab.qml:173, Modules/Settings/PrinterTab.qml:696, Modules/Settings/SoftwareUpdatesTab.qml:195, Modules/Settings/DisplayConfigTab.qml:225, Modules/Settings/DisplayConfigTab.qml:247, Modules/Settings/DisplayConfigTab.qml:295, Modules/Settings/WallpaperColorsTab.qml:155, Modules/Settings/WallpaperColorsTab.qml:185, Modules/Settings/WindowRuleEditorDialog.qml:536, Modules/SystemUpdate/SystemUpdatePanel.qml:414, Modules/Settings/Widgets/SettingsRenameDialog.qml:79, Modules/DDash/Overview/CalendarEventEditor.qml:251, Modules/DDash/Overview/CalendarOverviewCard.qml:808, Modules/ControlCenter/BuiltinPlugins/CupsWidget.qml:142, Modals/Clipboard/ClipboardEditor.qml:340, Modals/Common/ConfirmModal.qml:14, Modals/Common/ConfirmModal.qml:32, Modals/Common/InputModal.qml:17, Modals/Common/InputModal.qml:28, Modals/Common/InputModal.qml:41, Modals/Common/ConfirmDialogOverlay.qml:14, Modals/Common/ConfirmDialogOverlay.qml:50, Modals/DLauncherV2/AppEditView.qml:264",
+    "reference": "DMSShell.qml:377, DMSShell.qml:404, Modals/BluetoothPairingModal.qml:269, Modals/BluetoothPairingModal.qml:358, Modals/PolkitAuthContent.qml:173, Modals/WifiPasswordModal.qml:579, Modals/WorkspaceRenameModal.qml:86, Modules/ProcessList/ProcessActionDialog.qml:77, Modules/Settings/BarHubHeader.qml:162, Modules/Settings/DockHubHeader.qml:106, Modules/Settings/NetworkWifiTab.qml:921, Modules/Settings/NotificationRuleEditorDialog.qml:103, Modules/Settings/PrinterTab.qml:173, Modules/Settings/PrinterTab.qml:696, Modules/Settings/SoftwareUpdatesTab.qml:195, Modules/Settings/DisplayConfigTab.qml:225, Modules/Settings/DisplayConfigTab.qml:247, Modules/Settings/DisplayConfigTab.qml:295, Modules/Settings/WallpaperColorsTab.qml:155, Modules/Settings/WallpaperColorsTab.qml:185, Modules/Settings/WindowRuleEditorDialog.qml:536, Modules/Settings/KeybindEditorDialog.qml:689, Modules/SystemUpdate/SystemUpdatePanel.qml:414, Modules/Settings/Widgets/SettingsRenameDialog.qml:79, Modules/DDash/Overview/CalendarEventEditor.qml:251, Modules/DDash/Overview/CalendarOverviewCard.qml:808, Modules/ControlCenter/BuiltinPlugins/CupsWidget.qml:142, Modals/Clipboard/ClipboardEditor.qml:340, Modals/Common/ConfirmModal.qml:14, Modals/Common/ConfirmModal.qml:32, Modals/Common/InputModal.qml:17, Modals/Common/InputModal.qml:28, Modals/Common/InputModal.qml:41, Modals/Common/ConfirmDialogOverlay.qml:14, Modals/Common/ConfirmDialogOverlay.qml:50, Modals/DLauncherV2/AppEditView.qml:264",
     "comment": "cancel hotspot editing action",
     "tags": [
       "settings",
@@ -4065,7 +4066,7 @@
   {
     "term": "Capabilities",
     "context": "Capabilities",
-    "reference": "Modules/ProcessList/SystemView.qml:159, Modules/ProcessList/ProcessDetailStrip.qml:550, Modules/Settings/AboutTab.qml:103",
+    "reference": "Modules/ProcessList/SystemView.qml:159, Modules/ProcessList/ProcessDetailStrip.qml:550, Modules/Settings/AboutTab.qml:95",
     "comment": "Linux capabilities that give a process extra rights",
     "tags": [
       "settings",
@@ -4663,7 +4664,7 @@
     "term": "Click 'Setup' to create %1 and add include to your compositor config.",
     "context": "Click 'Setup' to create %1 and add include to your compositor config.",
     "reference": "Modules/Settings/KeybindsTab.qml:470, Modules/Settings/Widgets/IncludeSetupBanner.qml:50",
-    "comment": "include setup banner, %1 is the dms config file name",
+    "comment": "include setup banner, %1 is the config file name",
     "tags": [
       "settings"
     ]
@@ -5176,7 +5177,7 @@
   {
     "term": "Command",
     "context": "Command",
-    "reference": "Modules/ProcessList/ProcessDetailStrip.qml:579, Modules/Settings/KeybindEditorDialog.qml:224, Modules/Settings/KeybindEditorDialog.qml:1001, Modules/Settings/PaletteInjectTab.qml:117, Modules/Settings/DesktopWidgetTab.qml:124, Modules/Settings/AutoStartTab.qml:437, Modules/Settings/AutoStartTab.qml:465",
+    "reference": "Modules/ProcessList/ProcessDetailStrip.qml:579, Modules/Settings/PaletteInjectTab.qml:117, Modules/Settings/DesktopWidgetTab.qml:124, Modules/Settings/AutoStartTab.qml:437, Modules/Settings/AutoStartTab.qml:465, Modules/Settings/KeybindEditorDialog.qml:224, Modules/Settings/KeybindEditorDialog.qml:1001",
     "comment": "noun, text field label for a shell command",
     "tags": [
       "settings",
@@ -5468,7 +5469,7 @@
   {
     "term": "Connected",
     "context": "Connected",
-    "reference": "Services/AppSearchService.qml:432, Modules/Settings/NetworkCellularTab.qml:250, Modules/Settings/NetworkEthernetTab.qml:138, Modules/Settings/NetworkWifiTab.qml:355, Modules/Settings/NetworkWifiTab.qml:537, Modules/Settings/DBarTab.qml:364, Modules/Settings/DisplayConfigTab.qml:270, Modules/Settings/AboutTab.qml:94, Modules/ControlCenter/BuiltinPlugins/VpnWidget.qml:23, Modules/ControlCenter/Details/BluetoothDetail.qml:273, Modules/ControlCenter/Details/NetworkDetail.qml:444, Modules/ControlCenter/Details/NetworkDetail.qml:508, Modules/ControlCenter/Details/NetworkDetail.qml:536, Modules/ControlCenter/Details/NetworkDetail.qml:594, Modules/ControlCenter/Widgets/NetworkTile.qml:64, Modules/ControlCenter/Widgets/NetworkTile.qml:67, Modules/ControlCenter/Widgets/NetworkTile.qml:69, Modules/ControlCenter/Widgets/NetworkTile.qml:72, Modules/ControlCenter/Widgets/NetworkTile.qml:74",
+    "reference": "Services/AppSearchService.qml:432, Modules/Settings/NetworkCellularTab.qml:250, Modules/Settings/NetworkEthernetTab.qml:138, Modules/Settings/NetworkWifiTab.qml:355, Modules/Settings/NetworkWifiTab.qml:537, Modules/Settings/DBarTab.qml:364, Modules/Settings/DisplayConfigTab.qml:270, Modules/Settings/AboutTab.qml:86, Modules/ControlCenter/BuiltinPlugins/VpnWidget.qml:23, Modules/ControlCenter/Details/BluetoothDetail.qml:273, Modules/ControlCenter/Details/NetworkDetail.qml:444, Modules/ControlCenter/Details/NetworkDetail.qml:508, Modules/ControlCenter/Details/NetworkDetail.qml:536, Modules/ControlCenter/Details/NetworkDetail.qml:594, Modules/ControlCenter/Widgets/NetworkTile.qml:64, Modules/ControlCenter/Widgets/NetworkTile.qml:67, Modules/ControlCenter/Widgets/NetworkTile.qml:69, Modules/ControlCenter/Widgets/NetworkTile.qml:72, Modules/ControlCenter/Widgets/NetworkTile.qml:74",
     "comment": "network status",
     "tags": [
       "settings",
@@ -6181,7 +6182,7 @@
   {
     "term": "Custom",
     "context": "Custom",
-    "reference": "Modules/Settings/DBarAppearanceTab.qml:443, Modules/Settings/DDotTab.qml:78, Modules/Settings/DDotTab.qml:105, Modules/Settings/DDotTab.qml:135, Modules/Settings/KeybindEditorDialog.qml:68, Modules/Settings/ShadowsTab.qml:63, Modules/Settings/ShadowsTab.qml:69, Modules/Settings/ShadowsTab.qml:80, Modules/Settings/ShadowsTab.qml:96, Modules/Settings/ShadowsTab.qml:376, Modules/Settings/ThemeColorsTab.qml:105, Modules/Settings/ThemeColorsTab.qml:371, Modules/Settings/TimeWeatherTab.qml:150, Modules/Settings/TimeWeatherTab.qml:189, Modules/Settings/TimeWeatherTab.qml:202, Modules/Settings/TimeWeatherTab.qml:229, Modules/Settings/TimeWeatherTab.qml:268, Modules/Settings/TimeWeatherTab.qml:281, Modules/Settings/SoftwareUpdatesTab.qml:53, Modules/Settings/CompositorLayoutTab.qml:203, Modules/Settings/OSDTab.qml:86, Modules/Settings/ThemeSurfacesTab.qml:188, Modules/Settings/ThemeSurfacesTab.qml:194, Modules/Settings/ThemeSurfacesTab.qml:205, Modules/Settings/ThemeSurfacesTab.qml:221, Modules/Settings/WallpaperColorsTab.qml:465, Modules/Settings/WorkspaceAppearanceCard.qml:33, Modules/Settings/LockScreenTab.qml:39, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:139, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:151, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:180, Modules/Settings/BarWidgetOptions/LauncherButtonOptions.qml:45, Modules/Settings/BarWidgetOptions/LauncherButtonOptions.qml:57, Modules/Settings/BarWidgetOptions/LauncherButtonOptions.qml:86, Modules/Settings/DisplayConfig/OutputCard.qml:102, Modules/Settings/Widgets/DeviceAliasRow.qml:25, Modules/Settings/Widgets/SettingsColorPicker.qml:47, Modules/Settings/Widgets/SettingsWallpaperThumb.qml:166, Modules/Settings/Widgets/SurfaceColorRow.qml:37, Modules/Settings/Widgets/WidgetBackgroundRow.qml:35",
+    "reference": "Modules/Settings/DBarAppearanceTab.qml:443, Modules/Settings/DDotTab.qml:78, Modules/Settings/DDotTab.qml:105, Modules/Settings/DDotTab.qml:135, Modules/Settings/ShadowsTab.qml:63, Modules/Settings/ShadowsTab.qml:69, Modules/Settings/ShadowsTab.qml:80, Modules/Settings/ShadowsTab.qml:96, Modules/Settings/ShadowsTab.qml:376, Modules/Settings/ThemeColorsTab.qml:105, Modules/Settings/ThemeColorsTab.qml:371, Modules/Settings/TimeWeatherTab.qml:150, Modules/Settings/TimeWeatherTab.qml:189, Modules/Settings/TimeWeatherTab.qml:202, Modules/Settings/TimeWeatherTab.qml:229, Modules/Settings/TimeWeatherTab.qml:268, Modules/Settings/TimeWeatherTab.qml:281, Modules/Settings/SoftwareUpdatesTab.qml:53, Modules/Settings/CompositorLayoutTab.qml:203, Modules/Settings/OSDTab.qml:86, Modules/Settings/ThemeSurfacesTab.qml:188, Modules/Settings/ThemeSurfacesTab.qml:194, Modules/Settings/ThemeSurfacesTab.qml:205, Modules/Settings/ThemeSurfacesTab.qml:221, Modules/Settings/WallpaperColorsTab.qml:465, Modules/Settings/WorkspaceAppearanceCard.qml:33, Modules/Settings/KeybindEditorDialog.qml:68, Modules/Settings/LockScreenTab.qml:39, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:139, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:151, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:180, Modules/Settings/BarWidgetOptions/LauncherButtonOptions.qml:45, Modules/Settings/BarWidgetOptions/LauncherButtonOptions.qml:57, Modules/Settings/BarWidgetOptions/LauncherButtonOptions.qml:86, Modules/Settings/DisplayConfig/OutputCard.qml:102, Modules/Settings/Widgets/DeviceAliasRow.qml:25, Modules/Settings/Widgets/SettingsColorPicker.qml:47, Modules/Settings/Widgets/SettingsWallpaperThumb.qml:166, Modules/Settings/Widgets/SurfaceColorRow.qml:37, Modules/Settings/Widgets/WidgetBackgroundRow.qml:35",
     "comment": "bar length option, the bar spans a percentage of the edge | custom PAM authentication source option | date format option | dropdown option that opens a custom value input | shadow color option | surface border color | surface color option | theme category option | widget background color option | workspace color option",
     "tags": [
       "settings"
@@ -6951,7 +6952,7 @@
   {
     "term": "Device",
     "context": "Device",
-    "reference": "Modules/ProcessList/DriveCard.qml:438, Modules/Settings/KeybindEditorDialog.qml:1073, Modules/Settings/NetworkWifiTab.qml:206, Modules/Settings/NetworkWifiTab.qml:901, Modules/Settings/PrinterTab.qml:207",
+    "reference": "Modules/ProcessList/DriveCard.qml:438, Modules/Settings/NetworkWifiTab.qml:206, Modules/Settings/NetworkWifiTab.qml:901, Modules/Settings/PrinterTab.qml:207, Modules/Settings/KeybindEditorDialog.qml:1073",
     "comment": "hotspot WiFi device field label",
     "tags": [
       "settings",
@@ -7585,7 +7586,7 @@
   {
     "term": "Dock window",
     "context": "Dock window",
-    "reference": "Modals/KeybindsContent.qml:593, Modals/KeybindsModalWindow.qml:64",
+    "reference": "Modals/KeybindsModalWindow.qml:64, Modals/KeybindsContent.qml:593",
     "comment": "",
     "tags": [
       "shell"
@@ -10070,7 +10071,7 @@
   {
     "term": "Focus",
     "context": "Focus",
-    "reference": "Modules/Settings/WindowRuleEditorDialog.qml:893, Modules/Settings/WindowRulesTab.qml:122, Modules/Settings/LauncherTab.qml:280",
+    "reference": "Modules/Settings/WindowRuleEditorDialog.qml:893, Modules/Settings/LauncherTab.qml:280, Modules/Settings/WindowRulesTab.qml:122",
     "comment": "noun, window rule editor group of keyboard focus options",
     "tags": [
       "settings"
@@ -10252,7 +10253,7 @@
   {
     "term": "Follow focus",
     "context": "Follow focus",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:483, Modules/Settings/CompositorLayoutTab.qml:173",
+    "reference": "Modules/Settings/CompositorLayoutTab.qml:173, Modules/Settings/KeybindEditorDialog.qml:483",
     "comment": "",
     "tags": [
       "settings"
@@ -11131,7 +11132,7 @@
   {
     "term": "Group",
     "context": "Group",
-    "reference": "Modules/ProcessList/ProcessDetailStrip.qml:541, Modules/Settings/WindowRuleEditorDialog.qml:685, Modules/Settings/WindowRulesTab.qml:65, Modules/Settings/DesktopWidgetTab.qml:76",
+    "reference": "Modules/ProcessList/ProcessDetailStrip.qml:541, Modules/Settings/WindowRuleEditorDialog.qml:685, Modules/Settings/DesktopWidgetTab.qml:76, Modules/Settings/WindowRulesTab.qml:65",
     "comment": "noun, dropdown label for a desktop widget group | noun, window rule match condition for windows in a Hyprland group",
     "tags": [
       "settings",
@@ -14178,7 +14179,7 @@
   {
     "term": "MIT License",
     "context": "MIT License",
-    "reference": "Modules/Settings/AboutTab.qml:158",
+    "reference": "Modules/Settings/AboutTab.qml:150",
     "comment": "",
     "tags": [
       "settings"
@@ -14719,7 +14720,7 @@
   {
     "term": "Media",
     "context": "Media",
-    "reference": "Common/BarWidgetCatalog.qml:71, Services/AppSearchService.qml:740, Services/AppSearchService.qml:741, Services/AppSearchService.qml:742, Modules/DDash/DashRegistry.qml:107, Modules/Settings/KeybindEditorDialog.qml:376, Modules/Settings/KeybindEditorDialog.qml:388, Modules/Settings/KeybindEditorDialog.qml:1093, Modules/Settings/MediaPlayerTab.qml:86, Modules/Settings/Widgets/IslandBehaviorCard.qml:103, Modules/ControlCenter/Details/BluetoothCodecSelector.qml:124",
+    "reference": "Common/BarWidgetCatalog.qml:71, Services/AppSearchService.qml:740, Services/AppSearchService.qml:741, Services/AppSearchService.qml:742, Modules/DDash/DashRegistry.qml:107, Modules/Settings/MediaPlayerTab.qml:86, Modules/Settings/KeybindEditorDialog.qml:376, Modules/Settings/KeybindEditorDialog.qml:388, Modules/Settings/KeybindEditorDialog.qml:1093, Modules/Settings/Widgets/IslandBehaviorCard.qml:103, Modules/ControlCenter/Details/BluetoothCodecSelector.qml:124",
     "comment": "dashboard media player tab name | launcher app category for audio and video apps",
     "tags": [
       "settings",
@@ -15359,7 +15360,7 @@
   {
     "term": "Mouse",
     "context": "Mouse",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:581, Modules/Settings/MouseTouchpadTab.qml:31",
+    "reference": "Modules/Settings/MouseTouchpadTab.qml:31, Modules/Settings/KeybindEditorDialog.qml:581",
     "comment": "hyprland bind flag toggle, bind for a mouse button | mouse input settings card title",
     "tags": [
       "settings"
@@ -16918,7 +16919,7 @@
   {
     "term": "None",
     "context": "None",
-    "reference": "Services/CupsService.qml:670, Modules/ProcessList/DriveCard.qml:117, Modules/Settings/UserAccountsTab.qml:54, Modules/Settings/DBarTab.qml:481, Modules/Settings/DBarTab.qml:481, Modules/Settings/DBarTab.qml:546, Modules/Settings/DBarTab.qml:577, Modules/Settings/WallpaperColorsTab.qml:553, Modules/Settings/WindowRuleEditorDialog.qml:44, Modules/Settings/WindowRulesTab.qml:684, Modules/Settings/WorkspaceAppearanceCard.qml:32, Modules/Settings/DesktopWidgetTab.qml:29, Modules/Settings/DesktopWidgetTab.qml:78, Modules/Settings/BarWidgetOptions/ClockOptions.qml:48, Modules/Settings/BarWidgetOptions/SystemTrayOptions.qml:71, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:46, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:52, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:56",
+    "reference": "Services/CupsService.qml:670, Modules/ProcessList/DriveCard.qml:117, Modules/Settings/UserAccountsTab.qml:54, Modules/Settings/DBarTab.qml:481, Modules/Settings/DBarTab.qml:481, Modules/Settings/DBarTab.qml:546, Modules/Settings/DBarTab.qml:577, Modules/Settings/WallpaperColorsTab.qml:553, Modules/Settings/WindowRuleEditorDialog.qml:44, Modules/Settings/WorkspaceAppearanceCard.qml:32, Modules/Settings/DesktopWidgetTab.qml:29, Modules/Settings/DesktopWidgetTab.qml:78, Modules/Settings/WindowRulesTab.qml:684, Modules/Settings/BarWidgetOptions/ClockOptions.qml:48, Modules/Settings/BarWidgetOptions/SystemTrayOptions.qml:71, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:46, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:52, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:56",
     "comment": "bar click action | wallpaper transition option | workspace color option",
     "tags": [
       "settings",
@@ -17512,7 +17513,7 @@
   {
     "term": "Opacity",
     "context": "Opacity",
-    "reference": "Modules/ColorPicker/ColorPickerContent.qml:278, Modules/ColorPicker/ColorPickerContent.qml:299, Modules/Settings/DBarAppearanceTab.qml:144, Modules/Settings/DBarAppearanceTab.qml:217, Modules/Settings/DBarAppearanceTab.qml:319, Modules/Settings/DBarAppearanceTab.qml:601, Modules/Settings/DBarAppearanceTab.qml:681, Modules/Settings/DBarAppearanceTab.qml:762, Modules/Settings/DDotTab.qml:246, Modules/Settings/DockAppearanceTab.qml:230, Modules/Settings/DockAppearanceTab.qml:254, Modules/Settings/ShadowsTab.qml:50, Modules/Settings/ShadowsTab.qml:267, Modules/Settings/ThemeSurfacesTab.qml:129, Modules/Settings/ThemeSurfacesTab.qml:474, Modules/Settings/ThemeSurfacesTab.qml:525, Modules/Settings/WindowRuleEditorDialog.qml:798, Modules/Settings/WindowRulesTab.qml:117, Modules/Settings/ThemeAppsTab.qml:144, Modules/Settings/DesktopWidgetSettings/DesktopWidgetInstanceSettings.qml:35",
+    "reference": "Modules/ColorPicker/ColorPickerContent.qml:278, Modules/ColorPicker/ColorPickerContent.qml:299, Modules/Settings/DBarAppearanceTab.qml:144, Modules/Settings/DBarAppearanceTab.qml:217, Modules/Settings/DBarAppearanceTab.qml:319, Modules/Settings/DBarAppearanceTab.qml:601, Modules/Settings/DBarAppearanceTab.qml:681, Modules/Settings/DBarAppearanceTab.qml:762, Modules/Settings/DDotTab.qml:246, Modules/Settings/DockAppearanceTab.qml:230, Modules/Settings/DockAppearanceTab.qml:254, Modules/Settings/ShadowsTab.qml:50, Modules/Settings/ShadowsTab.qml:267, Modules/Settings/ThemeSurfacesTab.qml:129, Modules/Settings/ThemeSurfacesTab.qml:474, Modules/Settings/ThemeSurfacesTab.qml:525, Modules/Settings/WindowRuleEditorDialog.qml:798, Modules/Settings/ThemeAppsTab.qml:144, Modules/Settings/WindowRulesTab.qml:117, Modules/Settings/DesktopWidgetSettings/DesktopWidgetInstanceSettings.qml:35",
     "comment": "island settings: satellite background opacity slider",
     "tags": [
       "settings",
@@ -17787,7 +17788,7 @@
   {
     "term": "Options",
     "context": "Options",
-    "reference": "Widgets/DGridEditChrome.qml:145, Modules/DDash/DashWidgetGrid.qml:241, Modules/Settings/KeybindEditorDialog.qml:1192, Modules/Settings/SoftwareUpdatesTab.qml:505, Modules/DDash/Overview/DashEditControls.qml:175, Modules/DDash/Overview/DashOptionsSheet.qml:31, Modules/ControlCenter/Details/BluetoothDetail.qml:304, Modules/ControlCenter/Details/NetworkDetail.qml:458, Modules/ControlCenter/Details/NetworkDetail.qml:648",
+    "reference": "Widgets/DGridEditChrome.qml:145, Modules/DDash/DashWidgetGrid.qml:241, Modules/Settings/SoftwareUpdatesTab.qml:505, Modules/Settings/KeybindEditorDialog.qml:1192, Modules/DDash/Overview/DashEditControls.qml:175, Modules/DDash/Overview/DashOptionsSheet.qml:31, Modules/ControlCenter/Details/BluetoothDetail.qml:304, Modules/ControlCenter/Details/NetworkDetail.qml:458, Modules/ControlCenter/Details/NetworkDetail.qml:648",
     "comment": "",
     "tags": [
       "settings",
@@ -19033,7 +19034,7 @@
   {
     "term": "Pointer",
     "context": "Pointer",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:406, Modules/Settings/KeybindEditorDialog.qml:501, Modules/Settings/WindowRuleEditorDialog.qml:919",
+    "reference": "Modules/Settings/WindowRuleEditorDialog.qml:919, Modules/Settings/KeybindEditorDialog.qml:406, Modules/Settings/KeybindEditorDialog.qml:501",
     "comment": "noun, mouse cursor, keybind screenshot option to include it",
     "tags": [
       "settings"
@@ -19470,7 +19471,7 @@
   {
     "term": "Press key...",
     "context": "Press key...",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:827, Modules/Settings/LauncherTab.qml:350, Modules/Settings/LockScreenTab.qml:619",
+    "reference": "Modules/Settings/LauncherTab.qml:350, Modules/Settings/KeybindEditorDialog.qml:827, Modules/Settings/LockScreenTab.qml:619",
     "comment": "lock screen security key shortcut key combination capture prompt",
     "tags": [
       "settings"
@@ -20398,7 +20399,7 @@
   {
     "term": "Release",
     "context": "Release",
-    "reference": "Modals/KeybindsContent.qml:46, Modals/KeybindsContent.qml:95, Modules/Settings/KeybindEditorDialog.qml:566, Modules/Settings/KeybindEditorDialog.qml:1172, Modules/Settings/KeybindRow.qml:27, Modules/Settings/KeybindRow.qml:61",
+    "reference": "Modals/KeybindsContent.qml:46, Modals/KeybindsContent.qml:95, Modules/Settings/KeybindRow.qml:27, Modules/Settings/KeybindRow.qml:61, Modules/Settings/KeybindEditorDialog.qml:566, Modules/Settings/KeybindEditorDialog.qml:1172",
     "comment": "noun, hyprland bind flag toggle, trigger on key release",
     "tags": [
       "settings",
@@ -20516,7 +20517,7 @@
   {
     "term": "Remove",
     "context": "Remove",
-    "reference": "Widgets/DGridEditChrome.qml:107, Modules/Plugins/ListSettingRemoveButton.qml:20, Modules/Settings/DigitalWellbeingTab.qml:165, Modules/Settings/GammaControlTab.qml:327, Modules/Settings/MediaPlayerTab.qml:221, Modules/Settings/NotificationsTab.qml:292, Modules/Settings/RunningAppsTab.qml:51, Modules/Settings/UsersTab.qml:108, Modules/Settings/WidgetsTabSection.qml:226, Modules/Settings/PowerSleepTab.qml:374, Modules/Settings/KeybindsTab.qml:179, Modules/Settings/WorkspaceAppearanceCard.qml:247, Modules/Settings/PaletteInjectTab.qml:97, Modules/Settings/AutoStartTab.qml:568, Modules/Settings/LauncherTab.qml:887, Modules/SurfaceWidgets/SurfaceStrip.qml:512, Modules/Settings/BarWidgetOptions/KeyboardLayoutOptions.qml:138, Modules/Settings/DisplayConfig/OutputCard.qml:269, Modules/Notifications/Center/NotificationShortcutSheet.qml:90, Modules/ControlCenter/Components/CcEditActions.qml:179",
+    "reference": "Widgets/DGridEditChrome.qml:107, Modules/Plugins/ListSettingRemoveButton.qml:20, Modules/Settings/DigitalWellbeingTab.qml:165, Modules/Settings/GammaControlTab.qml:327, Modules/Settings/MediaPlayerTab.qml:221, Modules/Settings/NotificationsTab.qml:292, Modules/Settings/RunningAppsTab.qml:51, Modules/Settings/UsersTab.qml:108, Modules/Settings/WidgetsTabSection.qml:226, Modules/Settings/PowerSleepTab.qml:374, Modules/Settings/WorkspaceAppearanceCard.qml:247, Modules/Settings/PaletteInjectTab.qml:97, Modules/Settings/AutoStartTab.qml:568, Modules/Settings/LauncherTab.qml:887, Modules/Settings/KeybindsTab.qml:179, Modules/SurfaceWidgets/SurfaceStrip.qml:512, Modules/Settings/BarWidgetOptions/KeyboardLayoutOptions.qml:138, Modules/Settings/DisplayConfig/OutputCard.qml:269, Modules/Notifications/Center/NotificationShortcutSheet.qml:90, Modules/ControlCenter/Components/CcEditActions.qml:179",
     "comment": "verb, button that removes an item from a list",
     "tags": [
       "settings",
@@ -20778,10 +20779,10 @@
     ]
   },
   {
-    "term": "Requires Alpe %1",
-    "context": "Requires Alpe %1",
+    "term": "Requires %1 %2 as base",
+    "context": "Requires %1 %2 as base",
     "reference": "Modules/Settings/PluginSettingsPage.qml:140",
-    "comment": "plugin incompatibility notice, %1 is the required Alpe version",
+    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 the version the plugin needs (requires_dms)",
     "tags": [
       "settings"
     ]
@@ -20834,7 +20835,7 @@
   {
     "term": "Reset",
     "context": "Reset",
-    "reference": "Modules/Settings/KeybindsTab.qml:188, Modules/Settings/WallpaperColorsTab.qml:497, Modules/Settings/WidgetsTab.qml:616, Modals/DLauncherV2/AppEditView.qml:256",
+    "reference": "Modules/Settings/WallpaperColorsTab.qml:497, Modules/Settings/WidgetsTab.qml:616, Modules/Settings/KeybindsTab.qml:188, Modals/DLauncherV2/AppEditView.qml:256",
     "comment": "verb, button that restores defaults",
     "tags": [
       "settings",
@@ -20862,7 +20863,7 @@
   {
     "term": "Reset to default",
     "context": "Reset to default",
-    "reference": "Modules/Settings/DDashTab.qml:69, Modules/Settings/KeybindEditorDialog.qml:682, Modules/Settings/MediaPlayerTab.qml:142, Modules/Settings/NotificationRulesTab.qml:197, Modules/Settings/RunningAppsTab.qml:21, Modules/Settings/WeatherSettingsTab.qml:133, Modules/Settings/KeybindsTab.qml:186, Modules/Settings/LauncherTab.qml:526, Modules/Settings/LockScreenTab.qml:356, Modules/Settings/Widgets/SettingsRow.qml:349, Modules/Settings/Widgets/SettingsRow.qml:350, Modules/Settings/Widgets/SettingsSliderControl.qml:70, Modules/Settings/Widgets/SettingsTextFieldRow.qml:61, Modules/Settings/Widgets/SettingsTextFieldRow.qml:62, Modules/DDash/Overview/DashEditControls.qml:192, Modules/DDash/Overview/DashOptionsSheet.qml:65, Modules/ControlCenter/Components/CcEditActions.qml:195",
+    "reference": "Modules/Settings/DDashTab.qml:69, Modules/Settings/MediaPlayerTab.qml:142, Modules/Settings/NotificationRulesTab.qml:197, Modules/Settings/RunningAppsTab.qml:21, Modules/Settings/WeatherSettingsTab.qml:133, Modules/Settings/LauncherTab.qml:526, Modules/Settings/KeybindsTab.qml:186, Modules/Settings/KeybindEditorDialog.qml:682, Modules/Settings/LockScreenTab.qml:356, Modules/Settings/Widgets/SettingsRow.qml:349, Modules/Settings/Widgets/SettingsRow.qml:350, Modules/Settings/Widgets/SettingsSliderControl.qml:70, Modules/Settings/Widgets/SettingsTextFieldRow.qml:61, Modules/Settings/Widgets/SettingsTextFieldRow.qml:62, Modules/DDash/Overview/DashEditControls.qml:192, Modules/DDash/Overview/DashOptionsSheet.qml:65, Modules/ControlCenter/Components/CcEditActions.qml:195",
     "comment": "",
     "tags": [
       "settings",
@@ -21230,16 +21231,6 @@
     ]
   },
   {
-    "term": "Run %1 to create it before changing these settings.",
-    "context": "Run %1 to create it before changing these settings.",
-    "reference": "Services/KeybindsService.qml:581, Modules/Settings/KeybindsTab.qml:468, Modules/Settings/Widgets/IncludeSetupBanner.qml:50, Modules/Settings/Widgets/ConfigInclude.qml:67",
-    "comment": "hyprland.lua missing warning, %1 is a command",
-    "tags": [
-      "settings",
-      "shell"
-    ]
-  },
-  {
     "term": "Run Alpe templates",
     "context": "Run Alpe templates",
     "reference": "Modules/Settings/ThemeAppsTab.qml:200",
@@ -21424,7 +21415,7 @@
   {
     "term": "Save",
     "context": "Save",
-    "reference": "Modals/QRGeneratorModal.qml:238, Modules/ColorPicker/ColorPickerContent.qml:439, Modules/Notepad/Notepad.qml:807, Modules/Notepad/NotepadSettings.qml:549, Modules/Notepad/NotepadTextEditor.qml:833, Modules/Notepad/NotepadTextEditor.qml:841, Modules/Settings/BarHubHeader.qml:149, Modules/Settings/DockHubHeader.qml:93, Modules/Settings/KeybindEditorDialog.qml:402, Modules/Settings/KeybindEditorDialog.qml:507, Modules/Settings/KeybindEditorDialog.qml:695, Modules/Settings/NetworkWifiTab.qml:941, Modules/Settings/NotificationRuleEditorDialog.qml:108, Modules/Settings/DisplayConfigTab.qml:285, Modules/Settings/WindowRuleEditorDialog.qml:550, Modules/Settings/Widgets/SettingsRenameDialog.qml:84, Modules/DDash/Overview/CalendarEventEditor.qml:244, Modules/DDash/Overview/CalendarOverviewCard.qml:828, Modals/Clipboard/ClipboardEditor.qml:352, Modals/Clipboard/ClipboardEditor.qml:359, Modals/Clipboard/ClipboardEditor.qml:405, Modals/DLauncherV2/AppEditView.qml:271",
+    "reference": "Modals/QRGeneratorModal.qml:238, Modules/ColorPicker/ColorPickerContent.qml:439, Modules/Notepad/Notepad.qml:807, Modules/Notepad/NotepadSettings.qml:549, Modules/Notepad/NotepadTextEditor.qml:833, Modules/Notepad/NotepadTextEditor.qml:841, Modules/Settings/BarHubHeader.qml:149, Modules/Settings/DockHubHeader.qml:93, Modules/Settings/NetworkWifiTab.qml:941, Modules/Settings/NotificationRuleEditorDialog.qml:108, Modules/Settings/DisplayConfigTab.qml:285, Modules/Settings/WindowRuleEditorDialog.qml:550, Modules/Settings/KeybindEditorDialog.qml:402, Modules/Settings/KeybindEditorDialog.qml:507, Modules/Settings/KeybindEditorDialog.qml:695, Modules/Settings/Widgets/SettingsRenameDialog.qml:84, Modules/DDash/Overview/CalendarEventEditor.qml:244, Modules/DDash/Overview/CalendarOverviewCard.qml:828, Modals/Clipboard/ClipboardEditor.qml:352, Modals/Clipboard/ClipboardEditor.qml:359, Modals/Clipboard/ClipboardEditor.qml:405, Modals/DLauncherV2/AppEditView.qml:271",
     "comment": "save hotspot configuration action",
     "tags": [
       "settings",
@@ -22051,7 +22042,7 @@
   {
     "term": "Select",
     "context": "Select",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:46, Modules/Settings/PowerSleepTab.qml:341, Modals/DLauncherV2/Controller.qml:2255",
+    "reference": "Modules/Settings/PowerSleepTab.qml:341, Modules/Settings/KeybindEditorDialog.qml:46, Modals/DLauncherV2/Controller.qml:2255",
     "comment": "verb, dropdown placeholder or option that opens a picker | verb, primary action label for a launcher plugin item",
     "tags": [
       "settings",
@@ -23582,7 +23573,7 @@
   {
     "term": "Software updates",
     "context": "Software updates",
-    "reference": "Common/SettingsTabs.qml:580, Modals/SystemUpdateModal.qml:21, Modules/Settings/AboutTab.qml:128, Modules/Settings/AlpeMaintenanceTab.qml:167, Modules/Settings/BarWidgetOptions/SystemUpdateOptions.qml:24",
+    "reference": "Common/SettingsTabs.qml:580, Modals/SystemUpdateModal.qml:21, Modules/Settings/AboutTab.qml:120, Modules/Settings/AlpeMaintenanceTab.qml:167, Modules/Settings/BarWidgetOptions/SystemUpdateOptions.qml:24",
     "comment": "settings page, modal and bar widget title, Alpe and system package updates",
     "tags": [
       "settings",
@@ -23609,10 +23600,10 @@
     ]
   },
   {
-    "term": "Some plugins require a newer version of Alpe:",
-    "context": "Some plugins require a newer version of Alpe:",
+    "term": "Some plugins require a newer base than %1 %2:",
+    "context": "Some plugins require a newer base than %1 %2:",
     "reference": "Modules/Settings/PluginsHubHeader.qml:218",
-    "comment": "",
+    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 its version",
     "tags": [
       "settings"
     ]
@@ -24030,7 +24021,7 @@
   {
     "term": "Status",
     "context": "Status",
-    "reference": "Common/SettingsTabs.qml:432, Services/DesktopWidgetRegistry.qml:109, Modules/ProcessList/ProcessListMetrics.qml:231, Modules/ProcessList/ProcessDetailStrip.qml:541, Modules/Settings/NetworkStatusTab.qml:60, Modules/Settings/PrinterTab.qml:142, Modules/Settings/BatteryTab.qml:81, Modules/Settings/AboutTab.qml:93, Modules/Settings/Widgets/IslandHomeCard.qml:94",
+    "reference": "Common/SettingsTabs.qml:432, Services/DesktopWidgetRegistry.qml:109, Modules/ProcessList/ProcessListMetrics.qml:231, Modules/ProcessList/ProcessDetailStrip.qml:541, Modules/Settings/NetworkStatusTab.qml:60, Modules/Settings/PrinterTab.qml:142, Modules/Settings/BatteryTab.qml:81, Modules/Settings/AboutTab.qml:85, Modules/Settings/Widgets/IslandHomeCard.qml:94",
     "comment": "noun, settings row or section title showing current state",
     "tags": [
       "settings",
@@ -24067,7 +24058,7 @@
   {
     "term": "Stop",
     "context": "Stop",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:843, Modules/Settings/NetworkWifiTab.qml:953",
+    "reference": "Modules/Settings/NetworkWifiTab.qml:953, Modules/Settings/KeybindEditorDialog.qml:843",
     "comment": "stop hotspot action",
     "tags": [
       "settings"
@@ -25559,7 +25550,7 @@
   {
     "term": "Title",
     "context": "Title",
-    "reference": "Modules/Settings/KeybindEditorDialog.qml:1181, Modules/Settings/WindowRulesTab.qml:47, Modules/DDash/Overview/CalendarEventEditor.qml:146, Modules/DBar/Widgets/FocusedWindowContextMenu.qml:196",
+    "reference": "Modules/Settings/WindowRulesTab.qml:47, Modules/Settings/KeybindEditorDialog.qml:1181, Modules/DDash/Overview/CalendarEventEditor.qml:146, Modules/DBar/Widgets/FocusedWindowContextMenu.qml:196",
     "comment": "noun, window title match field, also name field label",
     "tags": [
       "settings",
@@ -25794,7 +25785,7 @@
   {
     "term": "Tools",
     "context": "Tools",
-    "reference": "Modules/Settings/AboutTab.qml:124",
+    "reference": "Modules/Settings/AboutTab.qml:116",
     "comment": "about page card title for welcome and system check",
     "tags": [
       "settings"
@@ -26067,7 +26058,7 @@
   {
     "term": "Try a different search",
     "context": "Try a different search",
-    "reference": "Modals/KeybindsContent.qml:853, Modals/MuxModal.qml:547",
+    "reference": "Modals/MuxModal.qml:547, Modals/KeybindsContent.qml:853",
     "comment": "",
     "tags": [
       "shell"
@@ -26262,7 +26253,7 @@
   {
     "term": "Unknown",
     "context": "Unknown",
-    "reference": "Common/Theme.qml:1773, Services/BluetoothService.qml:741, Services/BluetoothService.qml:825, Services/BluetoothService.qml:868, Services/WeatherService.qml:226, Services/WeatherService.qml:804, Services/WeatherService.qml:805, Services/WeatherService.qml:887, Services/WeatherService.qml:888, Services/WeatherService.qml:929, Services/WeatherService.qml:930, Services/WeatherService.qml:965, Services/WeatherService.qml:966, Services/BatteryService.qml:739, Modules/ProcessList/ProcessRow.qml:197, Modules/Settings/NetworkCellularTab.qml:124, Modules/Settings/NetworkCellularTab.qml:135, Modules/Settings/NetworkCellularTab.qml:240, Modules/Settings/NetworkEthernetTab.qml:121, Modules/Settings/NetworkEthernetTab.qml:144, Modules/Settings/NetworkEthernetTab.qml:251, Modules/Settings/NetworkEthernetTab.qml:330, Modules/Settings/NetworkStatusTab.qml:53, Modules/Settings/NetworkStatusTab.qml:98, Modules/Settings/NetworkWifiTab.qml:352, Modules/Settings/NetworkWifiTab.qml:532, Modules/Settings/NotificationRulesTab.qml:282, Modules/Settings/NotificationsTab.qml:286, Modules/Settings/PrinterTab.qml:736, Modules/Settings/WidgetsTab.qml:512, Modules/Settings/PluginsHubHeader.qml:501, Modules/Lock/Widgets/LockNotificationsWidget.qml:38, Modules/DBar/Popouts/BatteryPopoutContent.qml:111, Modules/DBar/Popouts/BatteryPopoutContent.qml:125, Modules/DBar/Popouts/BatteryPopoutContent.qml:144, Modules/DBar/Widgets/TrayMenuContent.qml:106, Modules/DBar/Widgets/FocusedWindowContextMenu.qml:19, Modules/ControlCenter/Details/NetworkDetail.qml:507, Modules/ControlCenter/Details/NetworkDetail.qml:535",
+    "reference": "Common/Theme.qml:1773, Services/BluetoothService.qml:741, Services/BluetoothService.qml:825, Services/BluetoothService.qml:868, Services/BatteryService.qml:739, Services/WeatherService.qml:226, Services/WeatherService.qml:804, Services/WeatherService.qml:805, Services/WeatherService.qml:887, Services/WeatherService.qml:888, Services/WeatherService.qml:929, Services/WeatherService.qml:930, Services/WeatherService.qml:965, Services/WeatherService.qml:966, Modules/ProcessList/ProcessRow.qml:197, Modules/Settings/NetworkCellularTab.qml:124, Modules/Settings/NetworkCellularTab.qml:135, Modules/Settings/NetworkCellularTab.qml:240, Modules/Settings/NetworkEthernetTab.qml:121, Modules/Settings/NetworkEthernetTab.qml:144, Modules/Settings/NetworkEthernetTab.qml:251, Modules/Settings/NetworkEthernetTab.qml:330, Modules/Settings/NetworkStatusTab.qml:53, Modules/Settings/NetworkStatusTab.qml:98, Modules/Settings/NetworkWifiTab.qml:352, Modules/Settings/NetworkWifiTab.qml:532, Modules/Settings/NotificationRulesTab.qml:282, Modules/Settings/NotificationsTab.qml:286, Modules/Settings/PrinterTab.qml:736, Modules/Settings/WidgetsTab.qml:512, Modules/Settings/PluginsHubHeader.qml:501, Modules/Lock/Widgets/LockNotificationsWidget.qml:38, Modules/DBar/Popouts/BatteryPopoutContent.qml:111, Modules/DBar/Popouts/BatteryPopoutContent.qml:125, Modules/DBar/Popouts/BatteryPopoutContent.qml:144, Modules/DBar/Widgets/TrayMenuContent.qml:106, Modules/DBar/Widgets/FocusedWindowContextMenu.qml:19, Modules/ControlCenter/Details/NetworkDetail.qml:507, Modules/ControlCenter/Details/NetworkDetail.qml:535",
     "comment": "battery status | power profile option | process network rate that could not be measured | unknown author",
     "tags": [
       "settings",
@@ -26536,7 +26527,7 @@
   {
     "term": "Up to date",
     "context": "Up to date",
-    "reference": "Modules/Settings/SoftwareUpdatesTab.qml:156, Modules/Settings/SoftwareUpdatesTab.qml:377, Modules/Settings/AboutTab.qml:31, Modules/SystemUpdate/SystemUpdatePanel.qml:115",
+    "reference": "Modules/Settings/SoftwareUpdatesTab.qml:156, Modules/Settings/SoftwareUpdatesTab.qml:377, Modules/Settings/AboutTab.qml:29, Modules/SystemUpdate/SystemUpdatePanel.qml:115",
     "comment": "",
     "tags": [
       "settings",
@@ -26553,10 +26544,10 @@
     ]
   },
   {
-    "term": "Update the dms package with your package manager, then restart the shell.",
-    "context": "Update the dms package with your package manager, then restart the shell.",
+    "term": "Update Alpe with your package manager, then restart the shell.",
+    "context": "Update Alpe with your package manager, then restart the shell.",
     "reference": "Services/DMSService.qml:246, Modules/DDash/WellbeingTab.qml:68",
-    "comment": "shown when the running shell is older than the installed dms binary",
+    "comment": "shown when the running shell is older than the installed alpe-dienst binary",
     "tags": [
       "shell"
     ]
@@ -27047,7 +27038,7 @@
   {
     "term": "Version",
     "context": "Version",
-    "reference": "Modules/Settings/AboutTab.qml:83, Modules/Settings/DisplayConfig/ICCProfileInfoModal.qml:74",
+    "reference": "Modules/Settings/AboutTab.qml:75, Modules/Settings/DisplayConfig/ICCProfileInfoModal.qml:74",
     "comment": "Version",
     "tags": [
       "settings"
@@ -27349,7 +27340,7 @@
   {
     "term": "Wallpaper",
     "context": "Wallpaper",
-    "reference": "Modules/DIsland/DIslandSurface.qml:743, Modules/Settings/DisplayWidgetsTab.qml:34, Modules/Settings/KeybindEditorDialog.qml:378, Modules/Settings/KeybindEditorDialog.qml:390, Modules/Settings/KeybindEditorDialog.qml:1093, Modules/Settings/ThemeScheduleTab.qml:16, Modules/Settings/WallpaperColorsTab.qml:56, Modules/Settings/WallpaperColorsTab.qml:361",
+    "reference": "Modules/DIsland/DIslandSurface.qml:743, Modules/Settings/DisplayWidgetsTab.qml:34, Modules/Settings/ThemeScheduleTab.qml:16, Modules/Settings/WallpaperColorsTab.qml:56, Modules/Settings/WallpaperColorsTab.qml:361, Modules/Settings/KeybindEditorDialog.qml:378, Modules/Settings/KeybindEditorDialog.qml:390, Modules/Settings/KeybindEditorDialog.qml:1093",
     "comment": "island compact face: wallpaper picker label",
     "tags": [
       "settings",
@@ -27459,7 +27450,7 @@
   {
     "term": "Weather",
     "context": "Weather",
-    "reference": "Common/BarWidgetCatalog.qml:64, Common/SettingsTabs.qml:549, Modules/DDash/DashRegistry.qml:180, Modules/DIsland/DIslandSurface.qml:765, Modules/Settings/BarWidgetTab.qml:141, Modules/Settings/BarWidgetTab.qml:144, Modules/Settings/DDashTab.qml:24, Modules/Settings/DDashTab.qml:29, Modules/Settings/KeybindEditorDialog.qml:380, Modules/Settings/KeybindEditorDialog.qml:392, Modules/Settings/KeybindEditorDialog.qml:1093, Modules/Settings/TimeWeatherTab.qml:434, Modules/Settings/WeatherSettingsTab.qml:31, Modules/Settings/LockWidgetSettings/LockStatusSettings.qml:26, Modules/Settings/Widgets/IslandBehaviorCard.qml:111, Modules/Settings/Widgets/IslandHomeLayoutEditor.qml:40",
+    "reference": "Common/BarWidgetCatalog.qml:64, Common/SettingsTabs.qml:549, Modules/DDash/DashRegistry.qml:180, Modules/DIsland/DIslandSurface.qml:765, Modules/Settings/BarWidgetTab.qml:141, Modules/Settings/BarWidgetTab.qml:144, Modules/Settings/DDashTab.qml:24, Modules/Settings/DDashTab.qml:29, Modules/Settings/TimeWeatherTab.qml:434, Modules/Settings/WeatherSettingsTab.qml:31, Modules/Settings/KeybindEditorDialog.qml:380, Modules/Settings/KeybindEditorDialog.qml:392, Modules/Settings/KeybindEditorDialog.qml:1093, Modules/Settings/LockWidgetSettings/LockStatusSettings.qml:26, Modules/Settings/Widgets/IslandBehaviorCard.qml:111, Modules/Settings/Widgets/IslandHomeLayoutEditor.qml:40",
     "comment": "island compact face: weather label | island settings: weather slot row",
     "tags": [
       "settings",

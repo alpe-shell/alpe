@@ -53,3 +53,26 @@ test("repair preserves config and fragments, backs up, and adds live includes on
     }
 });
 
+
+// Alpe: Ein Abschnitt mit der Kopfzeile aus DMS bzw. Alpe 1.0 bekommt keine zweite Kopfzeile.
+test("repair appends below a legacy DMS section header instead of adding a new one", t => {
+    const directory = mkdtempSync(join(tmpdir(), "alpe-includes-"));
+    t.after(() => rmSync(directory, { recursive: true, force: true }));
+    const paths = resolve.includePaths("layout", "hyprland", directory);
+    mkdirSync(dirname(paths.configFile), { recursive: true });
+    writeFileSync(paths.configFile, "-- user config\n\n-- DMS Include Configs\nrequire(\"dms.colors\")\n");
+    execFileSync("sh", ["-c", resolve.repairScriptFor("layout", "hyprland", directory, "")]);
+    const repaired = readFileSync(paths.configFile, "utf8");
+    assert.equal(repaired.includes("Alpe: eingebundene Dateien"), false);
+    assert.ok(repaired.includes("-- DMS Include Configs\nrequire(\"dms.colors\")\n" + paths.includes[0].includeLine));
+});
+
+test("a fresh config gets the Alpe section header", t => {
+    const directory = mkdtempSync(join(tmpdir(), "alpe-includes-"));
+    t.after(() => rmSync(directory, { recursive: true, force: true }));
+    const paths = resolve.includePaths("layout", "hyprland", directory);
+    mkdirSync(dirname(paths.configFile), { recursive: true });
+    writeFileSync(paths.configFile, "-- user config\n");
+    execFileSync("sh", ["-c", resolve.repairScriptFor("layout", "hyprland", directory, "")]);
+    assert.ok(readFileSync(paths.configFile, "utf8").includes("\n-- Alpe: eingebundene Dateien\n" + paths.includes[0].includeLine));
+});

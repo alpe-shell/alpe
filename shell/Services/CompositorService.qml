@@ -368,7 +368,7 @@ Singleton {
                 Hyprland.refreshWorkspaces();
                 return;
             }
-            // Sent by the move/resize wrappers in dms/binds.lua; Hyprland has no geometry event of its own
+            // Sent by the move/resize wrappers in alpe/binds.lua; Hyprland has no geometry event of its own
             if (event.name === "custom") {
                 if (event.data !== "dms:geometry")
                     return;
@@ -1257,7 +1257,7 @@ Singleton {
 
     function setDmsWindowFloatingRule(enabled, onDone) {
         setDmsRule(dmsFloatingRuleId, enabled ? {
-            "name": "DMS Floating Windows",
+            "name": "Alpe: Fenster der Shell schwebend",
             "matchCriteria": {
                 "appId": "^io\\.github\\.alpe_shell\\.Alpe$"
             },
@@ -1282,7 +1282,7 @@ Singleton {
         else
             return;
         setDmsRule(dmsOpaqueRuleId, {
-            "name": "DMS Window Opaque",
+            "name": "Alpe: Fenster der Shell deckend",
             "matchCriteria": {
                 "appId": "^io\\.github\\.alpe_shell\\.Alpe$"
             },

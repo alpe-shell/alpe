@@ -19,6 +19,9 @@ if command -v node >/dev/null; then run node tests/test_bridge.js; else echo "no
 step "Einstellungen: Migration (node)"
 if command -v node >/dev/null; then run node --test tests/test_einstellungen.mjs; else echo "node fehlt – übersprungen"; fi
 
+step "Oberfläche: Einbindung, Plugin-Neuladen, Suchkarten (node)"
+if command -v node >/dev/null; then run node --test "$ALPE_SHELL_DIR/tests/config-include.test.mjs" "$ALPE_SHELL_DIR/tests/plugin-reload.test.mjs" "$ALPE_SHELL_DIR/tests/settings-search-cards.test.mjs"; else echo "node fehlt – übersprungen"; fi
+
 for t in tests/test_*.py; do
     step "$t"
     run python3 "$t"

@@ -2012,9 +2012,6 @@
   "Alpe chooser": {
     "Alpe chooser": "Alpe-Auswahl"
   },
-  "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": {
-    "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.": "Alpe ist eine moderne, hochgradig anpassbare Desktop-Shell, die direkt nach der Installation grossartig aussieht, ohne dabei die Freiheit einzuschränken, sie ganz nach Ihren Wünschen zu gestalten.<br/><br/>Entwickelt mit %1 und %2, vereint sie Panels, Widgets, Systemsteuerungen und mehr zu einem stimmigen Desktop-Erlebnis."
-  },
   "Alpe out of date": {
     "Alpe out of date": "Alpe ist veraltet"
   },
@@ -6665,9 +6662,6 @@
   "Requires %1": {
     "Requires %1": "Erfordert %1"
   },
-  "Requires Alpe %1": {
-    "Requires Alpe %1": "Erfordert Alpe %1"
-  },
   "Requires Alpe server with sysupdate capability": {
     "Requires Alpe server with sysupdate capability": "Erfordert Alpe-Server mit sysupdate-Fähigkeit"
   },
@@ -6808,9 +6802,6 @@
   },
   "Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.": {
     "Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.": "In Ihrer Compositor-Konfiguration gefundene Regeln. Diese sind hier schreibgeschützt. Verwenden Sie „In Alpe konvertieren“, um eine editierbare Kopie anzulegen."
-  },
-  "Run %1 to create it before changing these settings.": {
-    "Run %1 to create it before changing these settings.": "Führen Sie %1 aus, um es zu erstellen, bevor Sie diese Einstellungen ändern."
   },
   "Run Alpe templates": {
     "Run Alpe templates": "Alpe-Vorlagen ausführen"
@@ -7567,9 +7558,6 @@
   },
   "Solid": {
     "Solid": "Solid"
-  },
-  "Some plugins require a newer version of Alpe:": {
-    "Some plugins require a newer version of Alpe:": "Einige Plugins erfordern eine neuere Version von Alpe:"
   },
   "Sort alphabetically": {
     "Sort alphabetically": "Alphabetisch sortieren"
@@ -8513,9 +8501,6 @@
   "Update All": {
     "Update All": "Alle aktualisieren"
   },
-  "Update the dms package with your package manager, then restart the shell.": {
-    "Update the dms package with your package manager, then restart the shell.": "Aktualisieren Sie das dms-Paket mit Ihrem Paketmanager, daann starten Sie die Shell neu."
-  },
   "Updates, clipboard, %1": {
     "Updates, clipboard, %1": "Aktualisierungen, Zwischenablage, %1"
   },
@@ -9265,5 +9250,17 @@
   },
   "• yyyy - Year (2024)": {
     "• yyyy - Year (2024)": "• yyyy - Jahr (2024)"
+  },
+  "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.": {
+    "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.": "Alpe schreibt diese Einstellungen in die Lua-Konfiguration von Hyprland. Lege zuerst %1 an und öffne die Seite dann erneut."
+  },
+  "Requires %1 %2 as base": {
+    "Requires %1 %2 as base": "Braucht %1 %2 als Basis"
+  },
+  "Some plugins require a newer base than %1 %2:": {
+    "Some plugins require a newer base than %1 %2:": "Einige Plugins brauchen eine neuere Basis als %1 %2:"
+  },
+  "Update Alpe with your package manager, then restart the shell.": {
+    "Update Alpe with your package manager, then restart the shell.": "Aktualisiere Alpe mit der Paketverwaltung und starte die Shell danach neu."
   }
 }

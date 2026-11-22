@@ -209,7 +209,7 @@ test("enabling again after a failed load compiles the fixed files", () => {
 
 test("a stale directory listing explains that the shell needs a restart", () => {
     const cases = [
-        ["Script file:///plugins/fixture/Helper.js unavailable\nfile:///plugins/fixture/Helper.js: File name case mismatch", /Restart DMS/],
+        ["Script file:///plugins/fixture/Helper.js unavailable\nfile:///plugins/fixture/Helper.js: File name case mismatch", /Restart Alpe/],
         ["Widget.qml:3:1: Type Helper unavailable", /^$/]
     ];
     for (const [message, details] of cases) {

@@ -64,7 +64,7 @@ QtObject {
     }
 
     function showReadOnlyWarning() {
-        ToastService.showWarning(I18n.tr("%1 not found").arg("hyprland.lua"), I18n.tr("Run %1 to create it before changing these settings.", "hyprland.lua missing warning, %1 is a command").arg("dms setup"), "dms setup", warningCategory);
+        ToastService.showWarning(I18n.tr("%1 not found").arg("hyprland.lua"), I18n.tr("Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.", "hyprland.lua missing warning, %1 is the path of hyprland.lua").arg("~/.config/hypr/hyprland.lua"), "", warningCategory);
     }
 
     function fix() {

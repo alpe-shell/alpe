@@ -179,7 +179,7 @@ Singleton {
                     userMessage = I18n.tr("Failed to set profile image: %1", "error message, %1 is the error detail").arg(errorMsg.split(":").pop().trim());
                 }
 
-                Quickshell.execDetached(["notify-send", "-u", "normal", "-a", "DMS", "-i", "error", I18n.tr("Profile Image Error"), userMessage]);
+                Quickshell.execDetached(["notify-send", "-u", "normal", "-a", "Alpe", "-i", "error", I18n.tr("Profile Image Error"), userMessage]);
 
                 pendingProfileImage = "";
             } else {

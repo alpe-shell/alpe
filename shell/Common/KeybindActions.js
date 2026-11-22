@@ -3,7 +3,7 @@
 const ACTION_TYPES = [
     {
         id: "dms",
-        label: "DMS Action",
+        label: "Alpe Action",
         icon: "widgets"
     },
     {
@@ -1238,7 +1238,7 @@ const COMPOSITOR_ACTIONS = {
     hyprland: HYPRLAND_ACTIONS
 };
 
-const CATEGORY_ORDER = ["DMS", "Execute", "Workspace", "Tags", "Window", "Move/Resize", "Focus", "Move", "Layout", "Groups", "Monitor", "Scratchpad", "Screenshot", "System", "Pass-through", "Overview", "Alt-Tab", "Other"];
+const CATEGORY_ORDER = ["Alpe", "Execute", "Workspace", "Tags", "Window", "Move/Resize", "Focus", "Move", "Layout", "Groups", "Monitor", "Scratchpad", "Screenshot", "System", "Pass-through", "Overview", "Alt-Tab", "Other"];
 
 const HYPRLAND_ACTION_ARGS = {
     "workspace": {

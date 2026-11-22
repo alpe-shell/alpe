@@ -465,7 +465,7 @@ Item {
                             StyledText {
                                 text: {
                                     if (warningBox.showLegacy)
-                                        return I18n.tr("Run %1 to create it before changing these settings.", "hyprland.lua missing warning, %1 is a command").arg("dms setup");
+                                        return I18n.tr("Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.", "hyprland.lua missing warning, %1 is the path of hyprland.lua").arg("~/.config/hypr/hyprland.lua");
                                     if (warningBox.showSetup)
                                         return I18n.tr("Click 'Setup' to create %1 and add include to your compositor config.", "include setup banner, %1 is the config file name").arg("alpe/binds");
                                     if (warningBox.showWarning) {

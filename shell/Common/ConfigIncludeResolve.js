@@ -7,13 +7,22 @@ function dirname(path) {
     return idx > 0 ? path.substring(0, idx) : ".";
 }
 
-function sectionHeaderFor(includeLine) {
+function commentPrefixFor(includeLine) {
     const line = String(includeLine ?? "").trim();
     if (line.startsWith("require"))
-        return "-- DMS Include Configs";
+        return "--";
     if (line.startsWith("source") || line.startsWith("[global]"))
-        return "# DMS Include Configs";
-    return "// DMS Include Configs";
+        return "#";
+    return "//";
+}
+
+function sectionHeaderFor(includeLine) {
+    return commentPrefixFor(includeLine) + " Alpe: eingebundene Dateien";
+}
+
+// Alpe: Kopfzeile, die DMS bzw. Alpe 1.0 geschrieben hat; gilt weiter als vorhandener Abschnitt.
+function legacySectionHeaderFor(includeLine) {
+    return commentPrefixFor(includeLine) + " DMS Include Configs";
 }
 
 function managedIncludePatternFor(includeLine) {
@@ -56,12 +65,13 @@ function buildRepairScript(options) {
         if (!include.grepPattern || !include.includeLine)
             continue;
         const sectionHeader = options.sectionHeader || sectionHeaderFor(include.includeLine);
+        const legacyHeader = legacySectionHeaderFor(include.includeLine);
         const file = shQuote(configFile);
         const active = activeLinesCommand(file);
         const included = `${active} | grep -q ${shQuote(include.grepPattern)}`;
         const managed = `${active} | grep -q ${shQuote(managedIncludePatternFor(include.includeLine))}`;
         // The append must start on its own line.
-        commands.push(`if ! { ${included}; }; then if grep -Fqx ${shQuote(sectionHeader)} ${file} 2>/dev/null || ${managed}; then { [ -z "$(tail -c 1 ${file})" ] || printf '\\n'; printf '%s\\n' ${shQuote(include.includeLine)}; } >> ${file}; elif [ -s ${file} ]; then printf '\\n%s\\n%s\\n' ${shQuote(sectionHeader)} ${shQuote(include.includeLine)} >> ${file}; else printf '%s\\n%s\\n' ${shQuote(sectionHeader)} ${shQuote(include.includeLine)} >> ${file}; fi; fi`);
+        commands.push(`if ! { ${included}; }; then if grep -Fqx -e ${shQuote(sectionHeader)} -e ${shQuote(legacyHeader)} ${file} 2>/dev/null || ${managed}; then { [ -z "$(tail -c 1 ${file})" ] || printf '\\n'; printf '%s\\n' ${shQuote(include.includeLine)}; } >> ${file}; elif [ -s ${file} ]; then printf '\\n%s\\n%s\\n' ${shQuote(sectionHeader)} ${shQuote(include.includeLine)} >> ${file}; else printf '%s\\n%s\\n' ${shQuote(sectionHeader)} ${shQuote(include.includeLine)} >> ${file}; fi; fi`);
     }
 
     return commands.join("; ");

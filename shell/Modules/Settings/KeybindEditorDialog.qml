@@ -217,7 +217,7 @@ DDialog {
     function typeLabel(type) {
         switch (type) {
         case "dms":
-            return "DMS";
+            return "Alpe";
         case "compositor":
             return I18n.tr("Compositor");
         case "spawn":

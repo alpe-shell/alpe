@@ -137,7 +137,7 @@ FocusScope {
 
             SettingsRow {
                 iconName: "error"
-                title: I18n.tr("Requires Alpe %1", "plugin incompatibility notice, %1 is the required Alpe version").arg(root.requiresDms)
+                title: I18n.tr("Requires %1 %2 as base", "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 the version the plugin needs (requires_dms)").arg(Brand.upstreamName).arg(root.requiresDms)
                 subtitleColor: Theme.error
                 visible: !root.meetsRequirements
             }

@@ -309,7 +309,7 @@ Item {
 
             SettingsDropdownRow {
                 readonly property var values: ["standard", "tuned", "off"]
-                readonly property var labels: ["Wie in DMS eingestellt", "Mit Feineinstellungen", "Aus – bei Darstellungsfehlern"]
+                readonly property var labels: ["Standard (Interface-Stil)", "Mit Feineinstellungen", "Aus – bei Darstellungsfehlern"]
                 text: "Modus"
                 description: SettingsData.alpeHyprBlurMode === "off" ? "Hyprland zeichnet nichts weich; Shell-Flächen und Fenster bleiben durchsichtig." : "Stärke und Stil der Unschärfe stehen unter «Interface-Stil». Hier kommen die Feinheiten dazu."
                 options: labels

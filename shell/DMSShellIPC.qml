@@ -789,11 +789,11 @@ Item {
     IpcHandler {
         function wallpaper(): string {
             if (PopoutService.routeToIsland("wallpaper", null, true))
-                return "WARN; deprecated, use dms ipc call dash toggle wallpaper instead";
+                return "WARN; deprecated, use alpe-dienst ipc call dash toggle wallpaper instead";
             const bar = root.getPreferredBar("clockButtonRef") || root.getPreferredBar();
             if (bar) {
                 bar.triggerWallpaperBrowser();
-                return "WARN; deprecated, use dms ipc call dash toggle wallpaper instead";
+                return "WARN; deprecated, use alpe-dienst ipc call dash toggle wallpaper instead";
             }
             return "ERROR: Failed to toggle wallpaper browser";
         }

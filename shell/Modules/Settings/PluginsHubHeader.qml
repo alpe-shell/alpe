@@ -215,7 +215,7 @@ Column {
         SettingsRow {
             iconName: "error"
             title: I18n.tr("Incompatible plugins loaded")
-            subtitle: I18n.tr("Some plugins require a newer version of Alpe:") + " " + root.incompatiblePlugins.map(plugin => plugin.name + " (" + plugin.requires_dms + ")").join(", ")
+            subtitle: I18n.tr("Some plugins require a newer base than %1 %2:", "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 its version").arg(Brand.upstreamName).arg(Brand.upstreamVersion) + " " + root.incompatiblePlugins.map(plugin => plugin.name + " (" + plugin.requires_dms + ")").join(", ")
             subtitleColor: Theme.error
         }
     }

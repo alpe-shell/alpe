@@ -1330,13 +1330,6 @@
     "comment": ""
   },
   {
-    "term": "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
-    "translation": "",
-    "context": "Alpe is a modern, highly customizable desktop shell that looks great out of the box, without sacrificing the freedom to make it your own.<br/><br/>Built with %1 and %2, it brings together panels, widgets, system controls, and more into a cohesive desktop experience.",
-    "reference": "",
-    "comment": "about page blurb, %1 is a Quickshell link, %2 is a Go link"
-  },
-  {
     "term": "Alpe out of date",
     "translation": "",
     "context": "Alpe out of date",
@@ -1370,6 +1363,13 @@
     "context": "Alpe stops drawing wallpapers on every display",
     "reference": "",
     "comment": "use external wallpaper manager toggle description"
+  },
+  {
+    "term": "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.",
+    "translation": "",
+    "context": "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.",
+    "reference": "",
+    "comment": "hyprland.lua missing warning, %1 is the path of hyprland.lua"
   },
   {
     "term": "Already on that session",
@@ -3581,7 +3581,7 @@
     "translation": "",
     "context": "Click 'Setup' to create %1 and add include to your compositor config.",
     "reference": "",
-    "comment": "include setup banner, %1 is the dms config file name"
+    "comment": "include setup banner, %1 is the config file name"
   },
   {
     "term": "Click Import to add a %1 or %2 file",
@@ -15960,11 +15960,11 @@
     "comment": ""
   },
   {
-    "term": "Requires Alpe %1",
+    "term": "Requires %1 %2 as base",
     "translation": "",
-    "context": "Requires Alpe %1",
+    "context": "Requires %1 %2 as base",
     "reference": "",
-    "comment": "plugin incompatibility notice, %1 is the required Alpe version"
+    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 the version the plugin needs (requires_dms)"
   },
   {
     "term": "Requires Alpe server with sysupdate capability",
@@ -16301,13 +16301,6 @@
     "context": "Rules found in your compositor config. These are read-only here, use Convert to Alpe to make an editable copy.",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Run %1 to create it before changing these settings.",
-    "translation": "",
-    "context": "Run %1 to create it before changing these settings.",
-    "reference": "",
-    "comment": "hyprland.lua missing warning, %1 is a command"
   },
   {
     "term": "Run Alpe templates",
@@ -18123,11 +18116,11 @@
     "comment": "island settings: filled battery meter style"
   },
   {
-    "term": "Some plugins require a newer version of Alpe:",
+    "term": "Some plugins require a newer base than %1 %2:",
     "translation": "",
-    "context": "Some plugins require a newer version of Alpe:",
+    "context": "Some plugins require a newer base than %1 %2:",
     "reference": "",
-    "comment": ""
+    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 its version"
   },
   {
     "term": "Sort alphabetically",
@@ -20384,11 +20377,11 @@
     "comment": ""
   },
   {
-    "term": "Update the dms package with your package manager, then restart the shell.",
+    "term": "Update Alpe with your package manager, then restart the shell.",
     "translation": "",
-    "context": "Update the dms package with your package manager, then restart the shell.",
+    "context": "Update Alpe with your package manager, then restart the shell.",
     "reference": "",
-    "comment": "shown when the running shell is older than the installed dms binary"
+    "comment": "shown when the running shell is older than the installed alpe-dienst binary"
   },
   {
     "term": "Updates, clipboard, %1",

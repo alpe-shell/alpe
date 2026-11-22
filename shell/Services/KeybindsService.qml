@@ -410,7 +410,7 @@ Singleton {
                 if (currentProvider === "hyprland" && bind.action && bind.action.startsWith("exec "))
                     bind.action = "spawn " + bind.action.slice(5);
                 bind.action = Actions.normalizeLegacyAction(bind.action);
-                const targetCat = Actions.isDmsAction(bind.action) ? "DMS" : cat;
+                const targetCat = Actions.isDmsAction(bind.action) ? "Alpe" : cat;
                 if (!processed[targetCat])
                     processed[targetCat] = [];
                 processed[targetCat].push(bind);
@@ -574,11 +574,11 @@ Singleton {
         if (!dmsStatus.exists || dmsStatus.included)
             return;
         _hyprlandLegacyWarnShown = true;
-        ToastService.showWarning(I18n.tr("Hyprland config include missing"), I18n.tr("Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply."), "dms setup", "hyprland-migration");
+        ToastService.showWarning(I18n.tr("Hyprland config include missing"), I18n.tr("Alpe Settings writes Lua keybinds. Add the Alpe include so edits apply."), "", "hyprland-migration");
     }
 
     function showHyprlandReadOnlyWarning() {
-        ToastService.showWarning(I18n.tr("%1 not found").arg("hyprland.lua"), I18n.tr("Run %1 to create it before changing these settings.", "hyprland.lua missing warning, %1 is a command").arg("dms setup"), "dms setup", "hyprland-migration");
+        ToastService.showWarning(I18n.tr("%1 not found").arg("hyprland.lua"), I18n.tr("Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.", "hyprland.lua missing warning, %1 is the path of hyprland.lua").arg("~/.config/hypr/hyprland.lua"), "", "hyprland-migration");
     }
 
     function removeBind(key) {

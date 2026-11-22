@@ -300,7 +300,7 @@ FocusScope {
             return "volume_up";
         if (lower.includes("bright"))
             return "brightness_6";
-        if (lower.includes("dms"))
+        if (lower === "alpe" || lower.includes("dms"))
             return "widgets";
         if (lower.includes("system") || lower.includes("power"))
             return "power_settings_new";
