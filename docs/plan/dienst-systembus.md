@@ -1,6 +1,6 @@
 # Dienst: Zeitgrenze für alle Verbindungen zum Systembus (Plan 0.8 Nr. 82)
 
-Stand: **Vorschlag, zur Freigabe vorgelegt am 22.11.2026. Noch nichts umgesetzt.**
+Stand: **Freigegeben am 22.11.2026 wie vorgeschlagen** (Plan 0.8 Nr. 84; Antworten in Abschnitt 6).
 
 ## 1. Befund
 
@@ -193,6 +193,12 @@ da. Unterschiede:
   WLAN-Liste, Bluetooth, Helligkeitstasten, Sperren beim Zuklappen.
 
 ## 6. Fragen an den Maintainer
+
+**Beantwortet am 22.11.2026:** (1) NetworkManager-Backend erst einrichten, wenn die Verbindung steht;
+kein Patch der Bibliothek. (2) 3 s für den Aufbau, erneute Versuche ab 2 s verdoppelnd bis 60 s, ohne
+Ende. (3) Gegenprobe mit Schalter für einen stummen Bus in der Ladeprüfung: einmal nach der Behebung
+unter beiden Compositors, danach nur bei Bedarf, nicht bei jedem Halt. (4) Abriss der Verbindung im
+Betrieb bleibt draussen und ist offener Fall.
 
 1. **gonetworkmanager:** Reicht «NetworkManager-Backend erst nach bereit» mit dem beschriebenen Rest
    (Vorschlag), oder soll die Bibliothek in diesem Schritt gepatcht/ersetzt werden, damit wörtlich kein
