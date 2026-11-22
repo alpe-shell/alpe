@@ -414,7 +414,7 @@ Singleton {
         info.loaded = isPluginLoaded(manifest.id);
         info.type = manifest.type || (manifest.components ? "composite" : "widget");
         info.source = sourceTag;
-        info.requires_dms = manifest.requires_dms || null;
+        info.requires_alpe = manifest.requires_alpe || null;
 
         const existing = availablePlugins[manifest.id];
         const shouldReplace = (!existing) || (existing && existing.source === "system" && sourceTag === "user");
@@ -1273,11 +1273,12 @@ Singleton {
     }
 
     // The directory ignores the query; it keys the on-disk thumbnail cache so an updated plugin gets a fresh render.
-    // Alpe: «requires_dms» bezieht sich auf den Stand des Ursprungsprojekts (Brand.upstreamVersion).
-    function checkPluginCompatibility(requiresDms) {
-        if (!requiresDms)
+    // Alpe: «requires_alpe» in plugin.json bezieht sich auf die Version von Alpe (Brand.version).
+    // Das Ergebnis ist nur ein Hinweis in den Einstellungen, keine Ladesperre (Plan 2.3.4).
+    function checkPluginCompatibility(requiresAlpe) {
+        if (!requiresAlpe)
             return true;
-        return _checkVersionRequirement(requiresDms, _parseVersion(Brand.upstreamVersion));
+        return _checkVersionRequirement(requiresAlpe, _parseVersion(Brand.version));
     }
 
     function _parseVersion(versionStr) {
@@ -1330,7 +1331,7 @@ Singleton {
         const result = [];
         for (const pluginId in availablePlugins) {
             const plugin = availablePlugins[pluginId];
-            if (plugin.loaded && plugin.requires_dms && !checkPluginCompatibility(plugin.requires_dms)) {
+            if (plugin.loaded && plugin.requires_alpe && !checkPluginCompatibility(plugin.requires_alpe)) {
                 result.push(plugin);
             }
         }

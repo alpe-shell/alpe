@@ -14,7 +14,7 @@ Singleton {
     // Öffentliches Repository (Installation, Fehler melden)
     readonly property string url: "https://github.com/alpe-shell/alpe"
     readonly property string upstreamName: "Dux Modular Shell"
-    // Stand des Ursprungsprojekts, auf dem Alpe aufbaut; «requires_dms» der Plugins bezieht sich darauf.
+    // Stand des Ursprungsprojekts, auf dem Alpe aufbaut (Herkunft; Plugins beziehen sich mit «requires_alpe» auf «version»).
     readonly property string upstreamVersion: "2.1.2"
     readonly property string upstreamUrl: "https://github.com/duxlabs-dev/dux-shell"
 

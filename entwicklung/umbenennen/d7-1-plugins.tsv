@@ -1,0 +1,5 @@
+# D7.1 Plugin-Beschreibung (Plan 2.3.2, 2.3.4): requires_dms → requires_alpe, Fähigkeit bar-widget
+ohne	shell/translations/*
+wort	requires_dms	requires_alpe	shell/Services/PluginService.qml,shell/Modules/Settings/PluginSettingsPage.qml,shell/Modules/Settings/PluginsHubHeader.qml
+wort	requiresDms	requiresAlpe	shell/Services/PluginService.qml,shell/Modules/Settings/PluginSettingsPage.qml
+text	"dankbar-widget"	"bar-widget"	plugins/*/plugin.json

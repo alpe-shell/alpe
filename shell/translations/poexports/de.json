@@ -9254,13 +9254,13 @@
   "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.": {
     "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.": "Alpe schreibt diese Einstellungen in die Lua-Konfiguration von Hyprland. Lege zuerst %1 an und öffne die Seite dann erneut."
   },
-  "Requires %1 %2 as base": {
-    "Requires %1 %2 as base": "Braucht %1 %2 als Basis"
-  },
-  "Some plugins require a newer base than %1 %2:": {
-    "Some plugins require a newer base than %1 %2:": "Einige Plugins brauchen eine neuere Basis als %1 %2:"
-  },
   "Update Alpe with your package manager, then restart the shell.": {
     "Update Alpe with your package manager, then restart the shell.": "Aktualisiere Alpe mit der Paketverwaltung und starte die Shell danach neu."
+  },
+  "Requires Alpe %1": {
+    "Requires Alpe %1": "Braucht Alpe %1"
+  },
+  "Some plugins require a newer Alpe than %1:": {
+    "Some plugins require a newer Alpe than %1:": "Einige Plugins brauchen ein neueres Alpe als %1:"
   }
 }

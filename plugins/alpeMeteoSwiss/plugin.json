@@ -3,6 +3,7 @@
     "name": "MeteoSchweiz",
     "description": "Wetterprognose von MeteoSchweiz: offizielle Tagesprognose (Open Data) und ICON-CH-Modell fuer Stundenwerte. Quelle: MeteoSchweiz.",
     "version": "1.0.0",
+    "requires_alpe": ">=1.0",
     "author": "alpemessi",
     "weather": {
         "command": "fetch",

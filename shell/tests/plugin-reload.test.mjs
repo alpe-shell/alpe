@@ -25,7 +25,7 @@ function service({ enabled = true, type = "widget" } = {}) {
         Paths: { toFileUrl: path => path.startsWith("file://") ? path : "file://" + path },
         SettingsData: { getPluginSetting: () => enabled, setPluginSetting() {} },
         DMSService: { installedPlugins: [] },
-        Brand: { upstreamVersion: "2.1.2" },
+        Brand: { version: "1.1", upstreamVersion: "2.1.2" },
         Component: { Error: 3, PreferSynchronous: 0 },
         I18n: { tr: text => Object.assign(new String(text), { arg: value => text.replace("%1", value) }) },
         ToastService: { showError() {} },
@@ -223,14 +223,14 @@ test("a stale directory listing explains that the shell needs a restart", () => 
     }
 });
 
-test("requires_dms is checked against the upstream base version in Brand", () => {
+test("requires_alpe is checked against the Alpe version in Brand, not the upstream base", () => {
     const { context } = service();
     assert.equal(context.checkPluginCompatibility(""), true);
-    assert.equal(context.checkPluginCompatibility(">=2.1"), true);
-    assert.equal(context.checkPluginCompatibility(">=2.1.2"), true);
-    assert.equal(context.checkPluginCompatibility(">2.1.2"), false);
-    assert.equal(context.checkPluginCompatibility(">=2.2"), false);
-    assert.equal(context.checkPluginCompatibility("<3"), true);
-    assert.equal(context.checkPluginCompatibility("=2.1.2"), true);
-    assert.equal(context.checkPluginCompatibility("2.0"), true);
+    assert.equal(context.checkPluginCompatibility(">=1.0"), true);
+    assert.equal(context.checkPluginCompatibility(">=1.1"), true);
+    assert.equal(context.checkPluginCompatibility(">1.1"), false);
+    assert.equal(context.checkPluginCompatibility(">=1.2"), false);
+    assert.equal(context.checkPluginCompatibility("<2"), true);
+    assert.equal(context.checkPluginCompatibility("=1.1"), true);
+    assert.equal(context.checkPluginCompatibility(">=2.1"), false, "upstream base 2.1.2 must not count");
 });

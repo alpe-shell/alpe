@@ -64,6 +64,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | D7.G | `tools/neue-dateien-pruefen.sh` in test.sh: rot bei neuen Dateien > 1 MB oder ELF gegenüber `origin/phase-a` (auch vorgemerkt und unversioniert-nicht-ignoriert) | Test `tests/test_neue_dateien.py` |
 | D7.N | Alle Node-Tests der Oberfläche in test.sh (`tools/node-tests.py`), feste Liste der 10 bekannten Fehlschläge `tests/data/node-bekannte-fehlschlaege.txt`; neuer Fehlschlag = rot | Test `tests/test_node_tests.py` |
 | D7.0 | Werkzeug `entwicklung/umbenennen/umbenennen.py` (Tabellen je Bereich, Probelauf, `--liste`, Kollisionsprüfung gegen Repo, Qt, Quickshell); `tools/namen-pruefen.sh` mit Ausnahmeliste `tools/namen-ausnahmen.txt` (Fristen), in test.sh nur meldend. Ausgangswert: 4048 Fundstellen in 596 Dateien | Test `tests/test_umbenennen.py` |
+| D7.1 | Plugin-Beschreibung: `requires_alpe` (gegen `Brand.version`, Hinweis statt Ladesperre), `requires_dms` nicht mehr gelesen; alpeSport `bar-widget`; Alpe-Plugins `requires_alpe: >=1.0` (G1 hebt auf 1.1); Tabelle `d7-1-plugins.tsv` | plugin-reload-Test angepasst |
 <!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene
@@ -1098,7 +1099,7 @@ Meldungen die Commits dazwischen einzeln (0.7 Nr. 6).
 | E4 | Werkzeuge: `alpe` CLI, einrichten.sh, entwicklung, doctor/update/entfernen/backup, kde-sitzung, lockscreen, kuerzel, titelleisten, design.py | bestehende Tests nachgeführt |
 | F1 | Umzug: `tools/umzug.py`, `install.sh`-Übergang, Testdaten, Test | |
 | F2 | get.sh neu | Probelauf `--check` in Temp-`HOME` mit Attrappen |
-| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste | |
+| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `requires_alpe` der Alpe-Plugins auf `>=1.1` heben (D7.1 setzt `>=1.0`, solange `Brand.version` noch 1.0 meldet) | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
 (Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D3 (0.6, abgenommen), nach D6, nach D7 (0.8), nach E4, nach F2, zuletzt G1. Vor B2 zusätzlich,

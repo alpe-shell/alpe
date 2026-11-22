@@ -3,6 +3,7 @@
     "name": "Niederschlagsradar",
     "description": "Niederschlagsradar der Schweiz als Film, mit eigener Hochrechnung der nächsten Stunde. Quelle: MeteoSchweiz.",
     "version": "1.0.0",
+    "requires_alpe": ">=1.0",
     "author": "alpemessi",
     "type": "dash",
     "capabilities": ["dash-tab"],

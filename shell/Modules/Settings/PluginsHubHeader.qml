@@ -215,7 +215,7 @@ Column {
         SettingsRow {
             iconName: "error"
             title: I18n.tr("Incompatible plugins loaded")
-            subtitle: I18n.tr("Some plugins require a newer base than %1 %2:", "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 its version").arg(Brand.upstreamName).arg(Brand.upstreamVersion) + " " + root.incompatiblePlugins.map(plugin => plugin.name + " (" + plugin.requires_dms + ")").join(", ")
+            subtitle: I18n.tr("Some plugins require a newer Alpe than %1:", "plugin incompatibility notice, %1 is the running Alpe version").arg(Brand.version) + " " + root.incompatiblePlugins.map(plugin => plugin.name + " (" + plugin.requires_alpe + ")").join(", ")
             subtitleColor: Theme.error
         }
     }
@@ -409,8 +409,8 @@ Column {
                 readonly property bool loaded: PluginService.loadedPlugins[modelData.pluginId] !== undefined
                 readonly property var plugin: PluginService.availablePlugins[modelData.pluginId] || ({})
                 readonly property var loadError: PluginService.pluginLoadErrors[modelData.pluginId]
-                readonly property bool compatible: PluginService.checkPluginCompatibility(plugin.requires_dms)
-                readonly property string problem: root.uninstallErrors[modelData.pluginId] || (loadError ? [loadError.title, loadError.details].filter(Boolean).join("\n") : !compatible ? I18n.tr("Requires %1", "version requirement").arg(plugin.requires_dms) : "")
+                readonly property bool compatible: PluginService.checkPluginCompatibility(plugin.requires_alpe)
+                readonly property string problem: root.uninstallErrors[modelData.pluginId] || (loadError ? [loadError.title, loadError.details].filter(Boolean).join("\n") : !compatible ? I18n.tr("Requires %1", "version requirement").arg(plugin.requires_alpe) : "")
                 Layout.fillWidth: true
                 Layout.minimumWidth: 0
                 Layout.preferredWidth: (installedGrid.width - installedGrid.columnSpacing * (installedGrid.columns - 1)) / installedGrid.columns

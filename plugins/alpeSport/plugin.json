@@ -3,13 +3,14 @@
     "name": "Sport",
     "description": "Spiele, Live-Resultate, Tabellen, Bestenlisten und Spieldetails im Aufbau von FotMob: National League, NBA, die Top-5-Ligen im Fussball und ihre Cups, Länderspiele der Schweiz. Mitteilungen bei Toren der Favoriten, Live-Spiel in der Leiste. Quellen: ESPN, Swiss Ice Hockey Federation.",
     "version": "1.0.0",
+    "requires_alpe": ">=1.0",
     "author": "alpemessi",
     "type": "composite",
     "capabilities": [
         "dash-tab",
         "dash-card",
         "daemon",
-        "dankbar-widget"
+        "bar-widget"
     ],
     "icon": "sports_soccer",
     "components": {

@@ -15960,11 +15960,11 @@
     "comment": ""
   },
   {
-    "term": "Requires %1 %2 as base",
+    "term": "Requires Alpe %1",
     "translation": "",
-    "context": "Requires %1 %2 as base",
+    "context": "Requires Alpe %1",
     "reference": "",
-    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 the version the plugin needs (requires_dms)"
+    "comment": "plugin incompatibility notice, %1 is the Alpe version the plugin needs (requires_alpe in plugin.json)"
   },
   {
     "term": "Requires Alpe server with sysupdate capability",
@@ -18116,11 +18116,11 @@
     "comment": "island settings: filled battery meter style"
   },
   {
-    "term": "Some plugins require a newer base than %1 %2:",
+    "term": "Some plugins require a newer Alpe than %1:",
     "translation": "",
-    "context": "Some plugins require a newer base than %1 %2:",
+    "context": "Some plugins require a newer Alpe than %1:",
     "reference": "",
-    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 its version"
+    "comment": "plugin incompatibility notice, %1 is the running Alpe version"
   },
   {
     "term": "Sort alphabetically",

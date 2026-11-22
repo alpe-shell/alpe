@@ -22,8 +22,8 @@ FocusScope {
     readonly property bool hasSettings: !!pluginData?.settings && !isDesktopPlugin
     readonly property bool isSystemPlugin: pluginData?.source === "system"
     readonly property string pluginName: pluginData?.name || pluginId
-    readonly property string requiresDms: pluginData?.requires_dms || ""
-    readonly property bool meetsRequirements: requiresDms ? PluginService.checkPluginCompatibility(requiresDms) : true
+    readonly property string requiresAlpe: pluginData?.requires_alpe || ""
+    readonly property bool meetsRequirements: requiresAlpe ? PluginService.checkPluginCompatibility(requiresAlpe) : true
     readonly property var permissions: Array.isArray(pluginData?.permissions) ? pluginData.permissions : []
     readonly property string settingsStatus: {
         if (!root.isLoaded)
@@ -137,7 +137,7 @@ FocusScope {
 
             SettingsRow {
                 iconName: "error"
-                title: I18n.tr("Requires %1 %2 as base", "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 the version the plugin needs (requires_dms)").arg(Brand.upstreamName).arg(root.requiresDms)
+                title: I18n.tr("Requires Alpe %1", "plugin incompatibility notice, %1 is the Alpe version the plugin needs (requires_alpe in plugin.json)").arg(root.requiresAlpe)
                 subtitleColor: Theme.error
                 visible: !root.meetsRequirements
             }

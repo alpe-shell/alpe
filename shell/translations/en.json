@@ -515,7 +515,7 @@
   {
     "term": "%1 not found",
     "context": "%1 not found",
-    "reference": "Services/KeybindsService.qml:581, Modules/Settings/ThemeColorsTab.qml:125, Modules/Settings/KeybindsTab.qml:451, Modules/Settings/Widgets/IncludeSetupBanner.qml:41, Modules/Settings/Widgets/ConfigInclude.qml:67",
+    "reference": "Services/KeybindsService.qml:581, Modules/Settings/ThemeColorsTab.qml:125, Modules/Settings/KeybindsTab.qml:451, Modules/Settings/Widgets/ConfigInclude.qml:67, Modules/Settings/Widgets/IncludeSetupBanner.qml:41",
     "comment": "missing program, %1 is a program name",
     "tags": [
       "settings",
@@ -1378,7 +1378,7 @@
   {
     "term": "Add shortcut",
     "context": "Add shortcut",
-    "reference": "Modules/Settings/KeybindsTab.qml:540, Modules/Settings/KeybindEditorDialog.qml:88, Modules/Notifications/Center/NotificationShortcutSheet.qml:175, Modules/Notifications/Center/NotificationShortcutSlot.qml:63",
+    "reference": "Modules/Settings/KeybindEditorDialog.qml:88, Modules/Settings/KeybindsTab.qml:540, Modules/Notifications/Center/NotificationShortcutSheet.qml:175, Modules/Notifications/Center/NotificationShortcutSlot.qml:63",
     "comment": "keybind editor dialog title and button",
     "tags": [
       "settings",
@@ -1599,7 +1599,7 @@
   {
     "term": "All",
     "context": "All",
-    "reference": "Modals/KeybindsContent.qml:628, Modals/KeybindsContent.qml:644, Services/AppSearchService.qml:807, Services/AppSearchService.qml:824, Modules/ProcessList/ProcessFilterChips.qml:9, Modules/Settings/PluginsHubHeader.qml:31, Modules/Settings/LauncherTab.qml:67, Modules/Settings/KeybindsTab.qml:65, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:94, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:105, Modules/Notifications/Center/HistoryNotificationList.qml:92, Modals/Clipboard/ClipboardContent.qml:19, Modals/DLauncherV2/Controller.qml:1354, Modals/DLauncherV2/LauncherContent.qml:292, Modals/DLauncherV2/LauncherContent.qml:581, Modals/DLauncherV2/LauncherContent.qml:584, Modals/DLauncherV2/Components/LauncherSearchField.qml:16",
+    "reference": "Modals/KeybindsContent.qml:628, Modals/KeybindsContent.qml:644, Services/AppSearchService.qml:807, Services/AppSearchService.qml:824, Modules/ProcessList/ProcessFilterChips.qml:9, Modules/Settings/LauncherTab.qml:67, Modules/Settings/KeybindsTab.qml:65, Modules/Settings/PluginsHubHeader.qml:31, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:94, Modules/Settings/BarWidgetOptions/AppsDockOptions.qml:105, Modules/Notifications/Center/HistoryNotificationList.qml:92, Modals/Clipboard/ClipboardContent.qml:19, Modals/DLauncherV2/Controller.qml:1354, Modals/DLauncherV2/LauncherContent.qml:292, Modals/DLauncherV2/LauncherContent.qml:581, Modals/DLauncherV2/LauncherContent.qml:584, Modals/DLauncherV2/Components/LauncherSearchField.qml:16",
     "comment": "notification history filter",
     "tags": [
       "settings",
@@ -1773,7 +1773,7 @@
   {
     "term": "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.",
     "context": "Alpe writes these settings into the Lua configuration of Hyprland. Create %1 first, then open this page again.",
-    "reference": "Services/KeybindsService.qml:581, Modules/Settings/KeybindsTab.qml:468, Modules/Settings/Widgets/IncludeSetupBanner.qml:50, Modules/Settings/Widgets/ConfigInclude.qml:67",
+    "reference": "Services/KeybindsService.qml:581, Modules/Settings/KeybindsTab.qml:468, Modules/Settings/Widgets/ConfigInclude.qml:67, Modules/Settings/Widgets/IncludeSetupBanner.qml:50",
     "comment": "hyprland.lua missing warning, %1 is the path of hyprland.lua",
     "tags": [
       "settings",
@@ -4232,7 +4232,7 @@
   {
     "term": "Changes save to %1",
     "context": "Changes save to %1",
-    "reference": "Modules/Settings/KeybindsTab.qml:77, Modules/Settings/WindowRulesTab.qml:725",
+    "reference": "Modules/Settings/WindowRulesTab.qml:725, Modules/Settings/KeybindsTab.qml:77",
     "comment": "hint under the keybind and window rule editors, %1 is the config file the changes are written to",
     "tags": [
       "settings"
@@ -7144,7 +7144,7 @@
   {
     "term": "Disabled",
     "context": "Disabled",
-    "reference": "Modules/Settings/DDashTab.qml:143, Modules/Settings/NetworkCellularTab.qml:44, Modules/Settings/NetworkWifiTab.qml:190, Modules/Settings/NotificationsTab.qml:333, Modules/Settings/SettingsHubPage.qml:47, Modules/Settings/PluginsHubHeader.qml:31, Modules/Settings/AutoStartTab.qml:548, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1276, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1282, Modules/Settings/DisplayConfig/OutputCard.qml:55, Modules/ControlCenter/Details/NetworkDetail.qml:478, Modules/ControlCenter/Widgets/BluetoothTile.qml:39",
+    "reference": "Modules/Settings/DDashTab.qml:143, Modules/Settings/NetworkCellularTab.qml:44, Modules/Settings/NetworkWifiTab.qml:190, Modules/Settings/NotificationsTab.qml:333, Modules/Settings/SettingsHubPage.qml:47, Modules/Settings/AutoStartTab.qml:548, Modules/Settings/PluginsHubHeader.qml:31, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1276, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1282, Modules/Settings/DisplayConfig/OutputCard.qml:55, Modules/ControlCenter/Details/NetworkDetail.qml:478, Modules/ControlCenter/Widgets/BluetoothTile.qml:39",
     "comment": "bluetooth status | lock screen notification mode option",
     "tags": [
       "settings",
@@ -15586,7 +15586,7 @@
   {
     "term": "Name",
     "context": "Name",
-    "reference": "Modules/DDash/WallpaperTab.qml:60, Modules/ProcessList/ProcessesView.qml:493, Modules/Settings/BarHubHeader.qml:144, Modules/Settings/BarHubHeader.qml:174, Modules/Settings/DesktopWidgetsTab.qml:120, Modules/Settings/DisplayWidgetsTab.qml:136, Modules/Settings/DockHubHeader.qml:88, Modules/Settings/DockHubHeader.qml:118, Modules/Settings/MediaPlayerTab.qml:186, Modules/Settings/PrinterTab.qml:373, Modules/Settings/SoftwareUpdatesTab.qml:667, Modules/Settings/DisplayConfigTab.qml:323, Modules/Settings/PaletteInjectTab.qml:106, Modules/Settings/PluginsHubHeader.qml:30, Modules/Settings/DesktopWidgetTab.qml:67, Modules/Settings/AutoStartTab.qml:455, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1261, Modules/Settings/Widgets/SettingsRenameDialog.qml:11, Modals/DLauncherV2/AppEditView.qml:147, Modals/DLauncherV2/LauncherContent.qml:618, Modals/DLauncherV2/LauncherContent.qml:627, Modals/DLauncherV2/LauncherContent.qml:632",
+    "reference": "Modules/DDash/WallpaperTab.qml:60, Modules/ProcessList/ProcessesView.qml:493, Modules/Settings/BarHubHeader.qml:144, Modules/Settings/BarHubHeader.qml:174, Modules/Settings/DesktopWidgetsTab.qml:120, Modules/Settings/DisplayWidgetsTab.qml:136, Modules/Settings/DockHubHeader.qml:88, Modules/Settings/DockHubHeader.qml:118, Modules/Settings/MediaPlayerTab.qml:186, Modules/Settings/PrinterTab.qml:373, Modules/Settings/SoftwareUpdatesTab.qml:667, Modules/Settings/DisplayConfigTab.qml:323, Modules/Settings/PaletteInjectTab.qml:106, Modules/Settings/DesktopWidgetTab.qml:67, Modules/Settings/AutoStartTab.qml:455, Modules/Settings/PluginsHubHeader.qml:30, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1261, Modules/Settings/Widgets/SettingsRenameDialog.qml:11, Modals/DLauncherV2/AppEditView.qml:147, Modals/DLauncherV2/LauncherContent.qml:618, Modals/DLauncherV2/LauncherContent.qml:627, Modals/DLauncherV2/LauncherContent.qml:632",
     "comment": "",
     "tags": [
       "settings",
@@ -20779,10 +20779,10 @@
     ]
   },
   {
-    "term": "Requires %1 %2 as base",
-    "context": "Requires %1 %2 as base",
+    "term": "Requires Alpe %1",
+    "context": "Requires Alpe %1",
     "reference": "Modules/Settings/PluginSettingsPage.qml:140",
-    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 the version the plugin needs (requires_dms)",
+    "comment": "plugin incompatibility notice, %1 is the Alpe version the plugin needs (requires_alpe in plugin.json)",
     "tags": [
       "settings"
     ]
@@ -20863,7 +20863,7 @@
   {
     "term": "Reset to default",
     "context": "Reset to default",
-    "reference": "Modules/Settings/DDashTab.qml:69, Modules/Settings/MediaPlayerTab.qml:142, Modules/Settings/NotificationRulesTab.qml:197, Modules/Settings/RunningAppsTab.qml:21, Modules/Settings/WeatherSettingsTab.qml:133, Modules/Settings/LauncherTab.qml:526, Modules/Settings/KeybindsTab.qml:186, Modules/Settings/KeybindEditorDialog.qml:682, Modules/Settings/LockScreenTab.qml:356, Modules/Settings/Widgets/SettingsRow.qml:349, Modules/Settings/Widgets/SettingsRow.qml:350, Modules/Settings/Widgets/SettingsSliderControl.qml:70, Modules/Settings/Widgets/SettingsTextFieldRow.qml:61, Modules/Settings/Widgets/SettingsTextFieldRow.qml:62, Modules/DDash/Overview/DashEditControls.qml:192, Modules/DDash/Overview/DashOptionsSheet.qml:65, Modules/ControlCenter/Components/CcEditActions.qml:195",
+    "reference": "Modules/Settings/DDashTab.qml:69, Modules/Settings/MediaPlayerTab.qml:142, Modules/Settings/NotificationRulesTab.qml:197, Modules/Settings/RunningAppsTab.qml:21, Modules/Settings/WeatherSettingsTab.qml:133, Modules/Settings/LauncherTab.qml:526, Modules/Settings/KeybindEditorDialog.qml:682, Modules/Settings/KeybindsTab.qml:186, Modules/Settings/LockScreenTab.qml:356, Modules/Settings/Widgets/SettingsRow.qml:349, Modules/Settings/Widgets/SettingsRow.qml:350, Modules/Settings/Widgets/SettingsSliderControl.qml:70, Modules/Settings/Widgets/SettingsTextFieldRow.qml:61, Modules/Settings/Widgets/SettingsTextFieldRow.qml:62, Modules/DDash/Overview/DashEditControls.qml:192, Modules/DDash/Overview/DashOptionsSheet.qml:65, Modules/ControlCenter/Components/CcEditActions.qml:195",
     "comment": "",
     "tags": [
       "settings",
@@ -22496,7 +22496,7 @@
   {
     "term": "Settings",
     "context": "Settings",
-    "reference": "Modules/DesktopContextMenu.qml:89, Services/PopoutService.qml:532, Services/PopoutService.qml:658, Services/PopoutService.qml:675, Services/AppSearchService.qml:195, Services/AppSearchService.qml:475, Services/AppSearchService.qml:758, Services/SystemUpdateService.qml:311, Modules/DDash/DDashPopout.qml:570, Modules/DDash/WeatherTab.qml:30, Modules/DDash/WeatherTab.qml:325, Modules/DDash/WellbeingTab.qml:26, Modules/DDash/DashRegistry.qml:235, Modules/DDash/DashRegistry.qml:237, Modules/Dock/DockEditChrome.qml:65, Modules/Dock/DockTrashContextMenu.qml:49, Modules/Notepad/NotepadTextEditor.qml:927, Modules/OSD/OsdDetailSheet.qml:61, Modules/Settings/DockWidgetsTab.qml:195, Modules/Settings/PluginSettingsPage.qml:175, Modules/Settings/PluginsHubHeader.qml:563, Modules/Notifications/Center/NotificationShortcutSheet.qml:88, Modules/Notifications/Center/NotificationShortcutSlot.qml:61, Modules/DBar/Popouts/BatteryPopoutContent.qml:249, Modules/ControlCenter/Models/WidgetModel.qml:206, Modules/ControlCenter/Widgets/CcSettingsButton.qml:14, Modals/Clipboard/ClipboardActions.qml:50, Modals/DLauncherV2/Controller.qml:337, Modals/Settings/SettingsModal.qml:178, Modals/Settings/SettingsModal.qml:307",
+    "reference": "Modules/DesktopContextMenu.qml:89, Services/PopoutService.qml:532, Services/PopoutService.qml:658, Services/PopoutService.qml:675, Services/SystemUpdateService.qml:311, Services/AppSearchService.qml:195, Services/AppSearchService.qml:475, Services/AppSearchService.qml:758, Modules/DDash/DDashPopout.qml:570, Modules/DDash/WeatherTab.qml:30, Modules/DDash/WeatherTab.qml:325, Modules/DDash/DashRegistry.qml:235, Modules/DDash/DashRegistry.qml:237, Modules/DDash/WellbeingTab.qml:26, Modules/Dock/DockEditChrome.qml:65, Modules/Dock/DockTrashContextMenu.qml:49, Modules/Notepad/NotepadTextEditor.qml:927, Modules/OSD/OsdDetailSheet.qml:61, Modules/Settings/DockWidgetsTab.qml:195, Modules/Settings/PluginSettingsPage.qml:175, Modules/Settings/PluginsHubHeader.qml:563, Modules/Notifications/Center/NotificationShortcutSheet.qml:88, Modules/Notifications/Center/NotificationShortcutSlot.qml:61, Modules/DBar/Popouts/BatteryPopoutContent.qml:249, Modules/ControlCenter/Models/WidgetModel.qml:206, Modules/ControlCenter/Widgets/CcSettingsButton.qml:14, Modals/Clipboard/ClipboardActions.qml:50, Modals/DLauncherV2/Controller.qml:337, Modals/Settings/SettingsModal.qml:178, Modals/Settings/SettingsModal.qml:307",
     "comment": "settings window title",
     "tags": [
       "settings",
@@ -23573,7 +23573,7 @@
   {
     "term": "Software updates",
     "context": "Software updates",
-    "reference": "Common/SettingsTabs.qml:580, Modals/SystemUpdateModal.qml:21, Modules/Settings/AboutTab.qml:120, Modules/Settings/AlpeMaintenanceTab.qml:167, Modules/Settings/BarWidgetOptions/SystemUpdateOptions.qml:24",
+    "reference": "Common/SettingsTabs.qml:580, Modals/SystemUpdateModal.qml:21, Modules/Settings/AlpeMaintenanceTab.qml:167, Modules/Settings/AboutTab.qml:120, Modules/Settings/BarWidgetOptions/SystemUpdateOptions.qml:24",
     "comment": "settings page, modal and bar widget title, Alpe and system package updates",
     "tags": [
       "settings",
@@ -23600,10 +23600,10 @@
     ]
   },
   {
-    "term": "Some plugins require a newer base than %1 %2:",
-    "context": "Some plugins require a newer base than %1 %2:",
+    "term": "Some plugins require a newer Alpe than %1:",
+    "context": "Some plugins require a newer Alpe than %1:",
     "reference": "Modules/Settings/PluginsHubHeader.qml:218",
-    "comment": "plugin incompatibility notice, %1 is the name of the upstream shell Alpe is based on, %2 its version",
+    "comment": "plugin incompatibility notice, %1 is the running Alpe version",
     "tags": [
       "settings"
     ]
