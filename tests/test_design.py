@@ -161,9 +161,11 @@ check("AlfaSlabOne" in m["schriften"] and "Inter Variable" in m["schriften"] and
 
 # ---------------------------------------------------------------- neuer Nutzer
 b = home("neu")
-# Ein Design aus einem älteren Export kann noch Anheftungen tragen; der heutige Export schreibt keine mehr.
+# Ein Design aus einem älteren Export kann noch Zustand tragen (Anheftungen, Farbverlauf, Sprache); der heutige
+# Export schreibt keinen mehr, und das Einspielen übernimmt ihn nicht (Plan 0.8 Nr. 83).
 aelter = json.load(open(os.path.join(d, "session.json")))
-aelter["dockPins"] = {"dock": ["kitty", "org.kde.dolphin", "gibtsnicht"]}
+aelter.update({"dockPins": {"dock": ["kitty", "org.kde.dolphin", "gibtsnicht"]}, "barPinnedApps": ["kitty"], "recentColors": ["#123456"],
+               "locale": "fr_CH", "trayItemOrder": ["fremd"], "unbekannterSchluessel": 1})
 write(os.path.join(d, "session.json"), aelter)
 for app in ("kitty.desktop", "org.kde.dolphin.desktop"):
     write(os.path.join(b, "sys", "applications", app), "[Desktop Entry]\nName=x\nExec=x\n")
@@ -171,7 +173,8 @@ write(os.path.join(b, ".config", "alpe", "settings.json"), {"fontFamily": "Noto 
                                                          "dankLauncherV2ShowFooter": False, "alpeLockStyle": "dms",
                                                          "matugenSpec": "dms", "eigeneListe": ["dms_power", "dms_powerx"],
                                                          "eigeneWidgets": [{"id": "launcherButton", "launcherLogoMode": "dank"}]})
-write(os.path.join(b, ".local", "state", "alpe", "session.json"), {"weatherLocation": "Bern", "materialWallpapers": {"": {"shared": {"preset": "dank", "seed": "#d0bcff"}}},
+write(os.path.join(b, ".local", "state", "alpe", "session.json"), {"weatherLocation": "Bern", "dockPins": {"dock": ["firefox"]}, "recentColors": ["#abcdef"], "locale": "de_CH",
+                                                                 "materialWallpapers": {"": {"shared": {"preset": "dank", "seed": "#d0bcff"}}},
                                                                  "materialWallpaperProfiles": {"eigen": {"name": "dank", "layers": [{"shape": "dankLogo"}]}}})
 write(os.path.join(b, ".config", "kwinrulesrc"), "[General]\nOrder=eigen\n\n[eigen]\nDescription=Firefox\nwmclass=firefox\n")
 out = run(b, "apply", "--ja")
@@ -194,7 +197,13 @@ check(se2["weatherLocation"] == "Bern" and s2["useAutoLocation"] is False, "eige
 c = home("leer")
 run(c, "apply", "--ja")
 check(json.load(open(os.path.join(c, ".config", "alpe", "settings.json")))["useAutoLocation"] is True, "frischer Nutzer: Wetter nach Standort")
-check(se2["dockPins"] == {"dock": ["kitty", "org.kde.dolphin"]}, "Dock: nur installierte Programme angeheftet")
+check(se2["dockPins"] == {"dock": ["firefox"]} and se2["recentColors"] == ["#abcdef"] and se2["locale"] == "de_CH",
+      "Einspielen: Anheftungen, Farbverlauf und Sprache des Nutzers bleiben, auch wenn ein älteres Design eigene mitbringt")
+check(not {"barPinnedApps", "trayItemOrder", "unbekannterSchluessel"} & set(se2), "Einspielen: Zustand und Unbekanntes aus dem Design kommen nicht in die Session")
+check("nicht übernommen, weil Zustand" in out.stdout and "dockPins" in out.stdout, "Einspielen nennt, was es aus der Session des Designs weglässt")
+werkzeug_text = open(TOOL, encoding="utf-8").read()
+check("installed_pins" not in werkzeug_text and "for key in SESSION_GESTALTUNG" not in werkzeug_text.split("def write_design")[1].split("\ndef ")[0] and "if key in SESSION_GESTALTUNG" in werkzeug_text.split("def write_design")[1].split("\ndef ")[0],
+      "Einspielen filtert die Session über SESSION_GESTALTUNG; der alte Pin-Filter ist weg")
 rules = open(os.path.join(b, ".config", "kwinrulesrc")).read()
 check("Description=Firefox" in rules and "Description=Zed" in rules and "Description=Alpe: ohne Titelleiste" in rules and "rules=" not in rules, "Fensterregeln dazu, eigene bleiben, Format KWin 6.8")
 lock = open(os.path.join(b, ".config", "kscreenlockerrc")).read()

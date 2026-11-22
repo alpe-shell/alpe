@@ -714,30 +714,6 @@ def alpe_version():
 
 # ---------------------------------------------------------------- Einspielen
 
-def desktop_ids():
-    data = os.environ.get("XDG_DATA_DIRS") or "/usr/local/share:/usr/share"
-    ids = set()
-    for base in [os.path.join(DATA, "applications")] + [os.path.join(d, "applications") for d in data.split(":") if d]:
-        for path in glob.glob(os.path.join(base, "**", "*.desktop"), recursive=True):
-            did = os.path.relpath(path, base).replace(os.sep, "-")
-            ids.add(did.lower())
-            ids.add(did[:-8].lower())
-    return ids
-
-
-def installed_pins(value, ids):
-    """Nur Programme anheften, die es auf diesem Rechner gibt."""
-    def ok(app):
-        if not isinstance(app, str):
-            return True
-        return app.lower() in ids or (app.lower() + ".desktop") in ids
-    if isinstance(value, list):
-        return [a for a in value if ok(a)]
-    if isinstance(value, dict):
-        return {k: installed_pins(v, ids) for k, v in value.items()}
-    return value
-
-
 def backup_folder():
     return os.path.join(CONFIG, "alpe", "design-sicherung", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
 
@@ -821,12 +797,14 @@ def write_design(variant, source, base):
     settings.update(incoming)
     save_json(SETTINGS, settings)
 
-    ids = desktop_ids()
     session = renamed_session(load_json(SESSION, {}) or {})
     design_session = renamed_session(fill(load_json(os.path.join(source, "session.json"), {}), base))
-    for key in ("dockPins", "barPinnedApps"):
-        if key in design_session:
-            design_session[key] = installed_pins(design_session[key], ids)
+    # Wie beim Export gilt nur die Gestaltung (Plan 0.8 Nr. 83): Zustand in einem Design – etwa Anheftungen
+    # aus einem älteren Export – überschriebe sonst den des Nutzers.
+    state = sorted(key for key in design_session if key not in SESSION_GESTALTUNG)
+    if state:
+        say("   Session: nicht übernommen, weil Zustand und nicht Gestaltung: " + ", ".join(state))
+    design_session = {key: value for key, value in design_session.items() if key in SESSION_GESTALTUNG}
     # Eigene Formen des Nutzers bleiben neben denen des Designs bestehen (bei gleicher Kennung gewinnt das Design)
     own_profiles = session.get("materialWallpaperProfiles")
     if isinstance(own_profiles, dict) and isinstance(design_session.get("materialWallpaperProfiles"), dict):

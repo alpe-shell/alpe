@@ -204,9 +204,9 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
      Pakete grün (vorher 56 mit `systembus`, nachher dieselben; neu Tests in `systembus`, `wayland`,
      `server`, `server/dbus`, mit `-race`). **Gegenprobe mit stummem Systembus bestanden:** Hyprland
      (319 s) und KWin (263 s), `Connected` und genau eine Meldung zum Ausfall.
-     **Nach der Behebung, vor der Neumessung (0.8 Nr. 83):** eigener Commit, `tools/design.py` wendet
-     `SESSION_GESTALTUNG` auch beim Einspielen an (Zustand aus einem Design wird nicht übernommen), mit Test;
-     7.8 und der Test zu Anheftungen aus älteren Designs werden dabei umgestellt.
+     **Erledigt (0.8 Nr. 83):** `tools/design.py` wendet `SESSION_GESTALTUNG` auch beim Einspielen an
+     (Zustand aus einem Design wird nicht übernommen und beim Einspielen genannt), mit Test; 7.8 nachgeführt,
+     der Pin-Filter `installed_pins` ist entfallen.
   2. Behebung im Dienst als eigener Commit mit Test und Eintrag in `offene-faelle.md` (Fehler aus der Zeit vor
      Phase A); Mac-Anleitung: Nachtlicht prüfen.
   3. Prüfen: `Connected` im Protokoll unter dem verschachtelten Hyprland, `cpuUsage` links in der Leiste.
@@ -1454,8 +1454,10 @@ Geräte (Helligkeit, Grafikkarten, WLAN, Bluetooth, Lautstärken, ausgeblendete 
 `islandFreePositions` (Schlüssel sind Bildschirmnamen), `locale`, `timeLocale` (Sprache des Nutzers);
 gestrichen `wallpaperFillMode` (kein Schlüssel der Session, steht in `settings.json`).
 **Einspielen:** Eigene Formen des Nutzers (`materialWallpaperProfiles`) bleiben neben denen des Designs
-bestehen. Das Einspielen filtert die Session eines Designs nicht; Anheftungen in einem Design aus einem
-älteren Export werden wie bisher auf installierte Programme beschränkt und übernommen.
+bestehen. **Das Einspielen wendet dieselbe Liste an (0.8 Nr. 83):** Aus der Session eines Designs kommen
+nur Schlüssel aus `SESSION_GESTALTUNG` in die Session des Nutzers; Zustand (etwa Anheftungen, Farbverlauf
+oder Sprache aus einem älteren Export) und unbekannte Schlüssel werden weggelassen und beim Einspielen
+genannt. Der frühere Filter «nur installierte Programme anheften» ist damit entfallen.
 
 ---
 
