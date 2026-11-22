@@ -219,7 +219,9 @@ func (p *HyprlandWritableProvider) ReorderRules(ids []string) error {
 	return windowrules.Reorder(p, ids)
 }
 
-var dmsRuleLuaHDRRegex = regexp.MustCompile(`^\s*--\s*DMS-RULE:\s*id=([^,]+),\s*name=(.*)$`)
+// Geschrieben wird "-- ALPE-RULE:". Dateien aus 1.0 tragen "-- DMS-RULE:" und die alten IDs der
+// eigenen Regeln; beides wird gelesen und beim nächsten Schreiben durch die neuen Namen ersetzt.
+var ruleLuaHDRRegex = regexp.MustCompile(`^\s*--\s*(?:ALPE|DMS)-RULE:\s*id=([^,]+),\s*name=(.*)$`)
 
 // 0.57 raised the per-rule cap from 20 to 100.
 func hyprlandMaxRounding() int {
@@ -409,7 +411,7 @@ func formatLuaManagedHyprRule(rule windowrules.WindowRule) []string {
 	}
 	luaAppendActions(rule.Actions, &body)
 
-	out := []string{fmt.Sprintf("-- DMS-RULE: id=%s, name=%s", rule.ID, rule.Name)}
+	out := []string{fmt.Sprintf("-- ALPE-RULE: id=%s, name=%s", rule.ID, rule.Name)}
 	if len(body) == 0 {
 		out = append(out, fmt.Sprintf("-- (no matchers/actions for rule %s)", rule.ID))
 	} else {
@@ -440,8 +442,8 @@ func (p *HyprlandWritableProvider) loadDMSRulesFromLua(data []byte, rulesPath st
 	for li := 0; li < len(lines); {
 		trimmed := strings.TrimSpace(lines[li])
 		if strings.HasPrefix(trimmed, "--") {
-			if m := dmsRuleLuaHDRRegex.FindStringSubmatch(trimmed); m != nil {
-				curID, curName = m[1], m[2]
+			if m := ruleLuaHDRRegex.FindStringSubmatch(trimmed); m != nil {
+				curID, curName = windowrules.CurrentRuleID(m[1]), m[2]
 				li++
 				continue
 			}
@@ -474,7 +476,7 @@ func (p *HyprlandWritableProvider) loadDMSRulesFromLua(data []byte, rulesPath st
 					Actions:       *acts,
 				}
 				if wr.ID == "" {
-					wr.ID = fmt.Sprintf("dms_rule_%d", len(rules))
+					wr.ID = fmt.Sprintf("alpe_rule_%d", len(rules))
 				}
 				rules = append(rules, wr)
 			}

@@ -29,6 +29,9 @@ shell/scripts/gtk.sh	\.dms-copy|\.dms-backup|dank-colors|DMS\\\) OVERRIDE|isDMSG
 shell/Common/Theme.qml	gtk-theme\.dms-backup	F1	Sicherung des GTK-Themas aus 1.0 übernehmen
 shell/Common/SettingsData.qml	icon-theme\.dms-backup	F1	Sicherung des Symbolthemas aus 1.0 übernehmen
 shell/matugen/*	neovim|_DMS_SUPPORT|"dms"|dms integration|dms settings file|nvim/.*dms\.lua	solange die Anbindung besteht	Neovim: Anbindung an base46 mit DMS-Unterstützung (fremdes Plugin, Namen von aussen vorgegeben); offene Frage zum Zwischenhalt
+core/internal/windowrules/providers/hyprland_parser.go	DMS-RULE|\(\?:ALPE\|DMS\)-RULE	Umzug-Ende	Marke der Fensterregeln aus 1.0 lesen (Plan 2.3.2)
+core/internal/windowrules/store.go	legacyRuleIDs|"dms-window-opaque"|"dms-floating-windows"	Umzug-Ende	IDs der eigenen Fensterregeln aus 1.0 lesen
+core/internal/windowrules/providers/altnamen_test.go	*	Umzug-Ende	Test dazu
 shell/Common/ConfigIncludeResolve.js	DMS Include Configs	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/tests/config-include.test.mjs	DMS Include Configs|dms\.colors	Umzug-Ende	Test dazu
 shell/Common/settings/SettingsStore.js	"(dankLauncherV2[A-Za-z]*|runDmsMatugenTemplates|dmsWindowsFloatingSeeded)"|=== "dms"	Umzug-Ende	Migration v43 (alte Schlüssel lesen)

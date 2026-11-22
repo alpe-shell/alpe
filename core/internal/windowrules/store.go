@@ -1,12 +1,29 @@
 package windowrules
 
+import "strings"
+
 type RuleStore interface {
 	EnsureWritable() error
 	LoadDMSRules() ([]WindowRule, error)
 	WriteDMSRules([]WindowRule) error
 }
 
-const OpaqueRuleID = "dms-window-opaque"
+const OpaqueRuleID = "alpe-window-opaque"
+
+// legacyRuleIDs: IDs der eigenen Regeln bis Alpe 1.0. Sie stehen in windowrules.lua der Nutzer und
+// werden beim Lesen auf die heutigen abgebildet (bis zum Umzug von 1.0, Plan 2.3.3).
+var legacyRuleIDs = map[string]string{
+	"dms-window-opaque":    OpaqueRuleID,
+	"dms-floating-windows": "alpe-floating-windows",
+}
+
+// CurrentRuleID gibt zu einer ID aus einer Datei von 1.0 die heutige zurück, sonst die ID selbst.
+func CurrentRuleID(id string) string {
+	if current, ok := legacyRuleIDs[strings.TrimSpace(id)]; ok {
+		return current
+	}
+	return id
+}
 
 // pinDMSRules puts the opaque rule last, since compositors apply rules in
 // order and the last match wins.

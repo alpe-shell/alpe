@@ -109,9 +109,9 @@ Singleton {
 
     readonly property bool isKnownCompositor: configKey !== ""
     readonly property bool supportsWindowRules: isHyprland
-    readonly property string shellFloatingRuleId: "dms-floating-windows"
+    readonly property string shellFloatingRuleId: "alpe-floating-windows"
     property bool shellWindowFloatingActive: false
-    readonly property string shellOpaqueRuleId: "dms-window-opaque"
+    readonly property string shellOpaqueRuleId: "alpe-window-opaque"
     readonly property bool supportsLayoutConfig: isHyprland
     readonly property bool supportsCursorConfig: isHyprland
     readonly property bool supportsDisplayConfig: isHyprland
