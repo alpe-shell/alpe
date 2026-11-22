@@ -96,14 +96,14 @@ def scan_line(line, occ, translations, real_patterns, context_patterns, simple_p
 def extract_qstr_strings(root_dir):
     translations = defaultdict(new_translation_bucket)
 
-    # DCommon terms are owned by the dux-qml-common repo (synced through
-    # the DMS POEditor project); rglob not following the symlink is load-bearing.
+    # DCommon terms have their own catalog (DCommon/translations). Alpe: DCommon
+    # is a plain folder now, not a symlink, so it is skipped explicitly.
     for qml_file in Path(root_dir).rglob('*.qml'):
         relative_path = qml_file.relative_to(root_dir)
 
         # PLUGINS/ holds developer examples demonstrating plugin-local
         # translations; their strings never enter the central catalog.
-        if relative_path.parts[0] in ('PLUGINS', EXTERNAL_PLUGINS_DIR):
+        if relative_path.parts[0] in ('PLUGINS', 'DCommon', EXTERNAL_PLUGINS_DIR):
             continue
 
         with open(qml_file, 'r', encoding='utf-8') as f:

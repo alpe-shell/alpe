@@ -105,13 +105,6 @@
     "comment": "calendar reminder option, %1 is a duration such as 15 minutes"
   },
   {
-    "term": "%1 behind",
-    "translation": "",
-    "context": "%1 behind",
-    "reference": "",
-    "comment": "git channel badge, %1 is the number of commits master is ahead"
-  },
-  {
     "term": "%1 breaking",
     "translation": "",
     "context": "%1 breaking",
@@ -301,13 +294,6 @@
     "comment": "notepad large file prompt, file name then size"
   },
   {
-    "term": "%1 is not installed. Install the package to manage the greeter.",
-    "translation": "",
-    "context": "%1 is not installed. Install the package to manage the greeter.",
-    "reference": "",
-    "comment": "greeter status placeholder, %1 is the dms-greeter binary"
-  },
-  {
     "term": "%1 is now included in config",
     "translation": "",
     "context": "%1 is now included in config",
@@ -320,20 +306,6 @@
     "context": "%1 is running and will create duplicate Bluetooth players. Disable it with: %2",
     "reference": "",
     "comment": "Warning shown when the legacy BlueZ MPRIS proxy conflicts with DMS Bluetooth media controls, %1 is the service name, %2 a shell command"
-  },
-  {
-    "term": "%1 issue found",
-    "translation": "",
-    "context": "%1 issue found",
-    "reference": "",
-    "comment": "greeter doctor page error count"
-  },
-  {
-    "term": "%1 issues found",
-    "translation": "",
-    "context": "%1 issues found",
-    "reference": "",
-    "comment": "greeter doctor page error count"
   },
   {
     "term": "%1 job",
@@ -431,7 +403,7 @@
     "translation": "",
     "context": "%1 not found",
     "reference": "",
-    "comment": "missing program, %1 is a program name | plugin dependency missing, %1 is a program name"
+    "comment": "missing program, %1 is a program name"
   },
   {
     "term": "%1 notifications",
@@ -446,20 +418,6 @@
     "context": "%1 of %2 used",
     "reference": "",
     "comment": "partition space, e.g. 1.2 TB of 2 TB used"
-  },
-  {
-    "term": "%1 online",
-    "translation": "",
-    "context": "%1 online",
-    "reference": "",
-    "comment": "Number of online Tailscale peers"
-  },
-  {
-    "term": "%1 only",
-    "translation": "",
-    "context": "%1 only",
-    "reference": "",
-    "comment": "lowercase plugin badge, compositors the plugin is limited to"
   },
   {
     "term": "%1 other",
@@ -553,13 +511,6 @@
     "comment": "task count next to a date, %1 is the number of tasks"
   },
   {
-    "term": "%1 uninstalled",
-    "translation": "",
-    "context": "%1 uninstalled",
-    "reference": "",
-    "comment": "plugin removed notice, %1 is the plugin name"
-  },
-  {
     "term": "%1 update",
     "translation": "",
     "context": "%1 update",
@@ -579,13 +530,6 @@
     "context": "%1 used",
     "reference": "",
     "comment": "share of a filesystem in use, e.g. 61% used"
-  },
-  {
-    "term": "%1 variants",
-    "translation": "",
-    "context": "%1 variants",
-    "reference": "",
-    "comment": "theme browser badge, plural, %1 is a count of theme variants"
   },
   {
     "term": "%1 wallpaper  •  %2 / %3",
@@ -644,13 +588,6 @@
     "comment": "vpn error toast, %1 is the vpn name, %2 is the error"
   },
   {
-    "term": "%1d ago",
-    "translation": "",
-    "context": "%1d ago",
-    "reference": "",
-    "comment": "Tailscale peer last seen time, %1 is a number of days"
-  },
-  {
     "term": "%1h",
     "translation": "",
     "context": "%1h",
@@ -665,13 +602,6 @@
     "comment": "battery time remaining"
   },
   {
-    "term": "%1h ago",
-    "translation": "",
-    "context": "%1h ago",
-    "reference": "",
-    "comment": "Tailscale peer last seen time, %1 is a number of hours"
-  },
-  {
     "term": "%1m",
     "translation": "",
     "context": "%1m",
@@ -683,7 +613,7 @@
     "translation": "",
     "context": "%1m ago",
     "reference": "",
-    "comment": "Tailscale peer last seen time, %1 is a number of minutes | notification relative time, %1 is a number of minutes"
+    "comment": "notification relative time, %1 is a number of minutes"
   },
   {
     "term": "'Alternative' lets the key unlock on its own. 'Second factor' requires password or fingerprint first, then the key.",
@@ -763,13 +693,6 @@
     "comment": "hotspot WiFi band option"
   },
   {
-    "term": "3rd party",
-    "translation": "",
-    "context": "3rd party",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "5 GHz",
     "translation": "",
     "context": "5 GHz",
@@ -796,20 +719,6 @@
     "context": "A floating companion that works alongside any bar layout",
     "reference": "",
     "comment": "bar settings: what the dot is"
-  },
-  {
-    "term": "A modern desktop shell for Wayland",
-    "translation": "",
-    "context": "A modern desktop shell for Wayland",
-    "reference": "",
-    "comment": "greeter welcome page tagline"
-  },
-  {
-    "term": "A newer dms binary is installed.",
-    "translation": "",
-    "context": "A newer dms binary is installed.",
-    "reference": "",
-    "comment": "software updates row subtitle, the running shell is older than the installed binary"
   },
   {
     "term": "A notification must match every condition",
@@ -966,13 +875,6 @@
     "comment": "noun, dropdown label for what a notification rule or keybind does"
   },
   {
-    "term": "Action failed or terminal was closed.",
-    "translation": "",
-    "context": "Action failed or terminal was closed.",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Actions",
     "translation": "",
     "context": "Actions",
@@ -983,27 +885,6 @@
     "term": "Activate",
     "translation": "",
     "context": "Activate",
-    "reference": "",
-    "comment": "verb, enable the greeter, also activate a wired network profile"
-  },
-  {
-    "term": "Activate Greeter",
-    "translation": "",
-    "context": "Activate Greeter",
-    "reference": "",
-    "comment": "greeter action confirmation"
-  },
-  {
-    "term": "Activate input method",
-    "translation": "",
-    "context": "Activate input method",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
-    "term": "Activate the DMS greeter? A terminal will open for sudo authentication. Run Sync after activation to apply your settings.",
-    "translation": "",
-    "context": "Activate the DMS greeter? A terminal will open for sudo authentication. Run Sync after activation to apply your settings.",
     "reference": "",
     "comment": ""
   },
@@ -1027,13 +908,6 @@
     "context": "Active VPN",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Active by default",
-    "translation": "",
-    "context": "Active by default",
-    "reference": "",
-    "comment": "Option on the fcitx5 config page."
   },
   {
     "term": "Active color",
@@ -1113,13 +987,6 @@
     "comment": "confirm dialog message, %1 is the username, %2 is the group name"
   },
   {
-    "term": "Add \"%1\" to the %2 group? They must log out and back in, then run %3 to publish their login-screen theme.",
-    "translation": "",
-    "context": "Add \"%1\" to the %2 group? They must log out and back in, then run %3 to publish their login-screen theme.",
-    "reference": "",
-    "comment": "confirm dialog message, %1 is the username, %2 is the group name, %3 a command"
-  },
-  {
     "term": "Add Desktop Widget",
     "translation": "",
     "context": "Add Desktop Widget",
@@ -1162,23 +1029,9 @@
     "comment": "settings row that adds an EFI boot entry to the power menu"
   },
   {
-    "term": "Add input method",
-    "translation": "",
-    "context": "Add input method",
-    "reference": "",
-    "comment": "Title for fcitx5 IM picker window"
-  },
-  {
     "term": "Add location",
     "translation": "",
     "context": "Add location",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Add match",
-    "translation": "",
-    "context": "Add match",
     "reference": "",
     "comment": ""
   },
@@ -1295,13 +1148,6 @@
     "comment": "bar goth corners toggle description"
   },
   {
-    "term": "Adds them to the %1 group so they can run %2",
-    "translation": "",
-    "context": "Adds them to the %1 group so they can run %2",
-    "reference": "",
-    "comment": "create user greeter toggle description, %1 is a group name, %2 a command"
-  },
-  {
     "term": "Adds them to the %1 group so they can use sudo",
     "translation": "",
     "context": "Adds them to the %1 group so they can use sudo",
@@ -1314,13 +1160,6 @@
     "context": "Adjustment",
     "reference": "",
     "comment": "oom_score_adj"
-  },
-  {
-    "term": "Administrator access is required. Press Apply changes in Settings → Greeter.",
-    "translation": "",
-    "context": "Administrator access is required. Press Apply changes in Settings → Greeter.",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Advance when a video ends",
@@ -1397,14 +1236,7 @@
     "translation": "",
     "context": "All",
     "reference": "",
-    "comment": "Tailscale filter: all devices | notification history filter | plugin browser category filter"
-  },
-  {
-    "term": "All checks passed",
-    "translation": "",
-    "context": "All checks passed",
-    "reference": "",
-    "comment": "greeter doctor page success"
+    "comment": "notification history filter"
   },
   {
     "term": "All day",
@@ -1421,13 +1253,6 @@
     "comment": ""
   },
   {
-    "term": "All plugins",
-    "translation": "",
-    "context": "All plugins",
-    "reference": "",
-    "comment": "plugin browser section title above the full list"
-  },
-  {
     "term": "All settings",
     "translation": "",
     "context": "All settings",
@@ -1442,13 +1267,6 @@
     "comment": "hyprland bind flag toggle, submap universal"
   },
   {
-    "term": "Allow",
-    "translation": "",
-    "context": "Allow",
-    "reference": "",
-    "comment": "verb, confirm button granting a user greeter access"
-  },
-  {
     "term": "Allow %1 in Do Not Disturb",
     "translation": "",
     "context": "Allow %1 in Do Not Disturb",
@@ -1456,30 +1274,9 @@
     "comment": "notification menu action, %1 is the app name"
   },
   {
-    "term": "Allow LAN access",
-    "translation": "",
-    "context": "Allow LAN access",
-    "reference": "",
-    "comment": "Tailscale allow LAN access toggle"
-  },
-  {
     "term": "Allow critical",
     "translation": "",
     "context": "Allow critical",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Allow greeter access?",
-    "translation": "",
-    "context": "Allow greeter access?",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Allow greeter login access",
-    "translation": "",
-    "context": "Allow greeter login access",
     "reference": "",
     "comment": ""
   },
@@ -1503,13 +1300,6 @@
     "context": "Already on that session",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Already upvoted, click again to remove",
-    "translation": "",
-    "context": "Already upvoted, click again to remove",
-    "reference": "",
-    "comment": "plugin upvote toast"
   },
   {
     "term": "Also runs the templates in your %1",
@@ -1624,13 +1414,6 @@
     "comment": "toast warning message"
   },
   {
-    "term": "An xray rule at %1 may conflict with the Xray settings below",
-    "translation": "",
-    "context": "An xray rule at %1 may conflict with the Xray settings below",
-    "reference": "",
-    "comment": "compositor layout warning, %1 is a config location"
-  },
-  {
     "term": "Analog",
     "translation": "",
     "context": "Analog",
@@ -1643,20 +1426,6 @@
     "context": "Analog, digital, stacked, expressive, or overlapping clock",
     "reference": "",
     "comment": "Desktop clock widget description"
-  },
-  {
-    "term": "Analyzing configuration...",
-    "translation": "",
-    "context": "Analyzing configuration...",
-    "reference": "",
-    "comment": "greeter doctor page loading text"
-  },
-  {
-    "term": "Anchor",
-    "translation": "",
-    "context": "Anchor",
-    "reference": "",
-    "comment": "noun, screen corner or edge a floating window position is relative to"
   },
   {
     "term": "Animation duration",
@@ -1718,13 +1487,6 @@
     "term": "App ID",
     "translation": "",
     "context": "App ID",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "App ID (e.g. firefox)",
-    "translation": "",
-    "context": "App ID (e.g. firefox)",
     "reference": "",
     "comment": ""
   },
@@ -1890,13 +1652,6 @@
     "comment": ""
   },
   {
-    "term": "Applying auto-login on startup...",
-    "translation": "",
-    "context": "Applying auto-login on startup...",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Apps",
     "translation": "",
     "context": "Apps",
@@ -1937,13 +1692,6 @@
     "context": "Apps dock",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Apps that capture the keyboard can block it",
-    "translation": "",
-    "context": "Apps that capture the keyboard can block it",
-    "reference": "",
-    "comment": "keybind option tooltip, niri allow inhibiting"
   },
   {
     "term": "Apps with notification popups muted. Unmute or delete to remove.",
@@ -2275,13 +2023,6 @@
     "comment": ""
   },
   {
-    "term": "Auto follows bar spacing, Off keeps your %1 config",
-    "translation": "",
-    "context": "Auto follows bar spacing, Off keeps your %1 config",
-    "reference": "",
-    "comment": "gaps mode description, %1 is the compositor name"
-  },
-  {
     "term": "Auto location",
     "translation": "",
     "context": "Auto location",
@@ -2364,34 +2105,6 @@
     "context": "Auto-hide",
     "reference": "",
     "comment": "toggle to automatically hide the bar or dock"
-  },
-  {
-    "term": "Auto-login change needs a sync",
-    "translation": "",
-    "context": "Auto-login change needs a sync",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Auto-login disabled",
-    "translation": "",
-    "context": "Auto-login disabled",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Auto-login enabled",
-    "translation": "",
-    "context": "Auto-login enabled",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Auto-login on startup",
-    "translation": "",
-    "context": "Auto-login on startup",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Auto-save to disk",
@@ -2492,20 +2205,6 @@
     "comment": "audio port availability status"
   },
   {
-    "term": "Available Layouts",
-    "translation": "",
-    "context": "Available Layouts",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Available Updates (%1)",
-    "translation": "",
-    "context": "Available Updates (%1)",
-    "reference": "",
-    "comment": "plugin updates dialog title, %1 is a count"
-  },
-  {
     "term": "Available displays (%1)",
     "translation": "",
     "context": "Available displays (%1)",
@@ -2538,7 +2237,7 @@
     "translation": "",
     "context": "Back",
     "reference": "",
-    "comment": "greeter back button"
+    "comment": ""
   },
   {
     "term": "Backend",
@@ -2562,13 +2261,6 @@
     "comment": "island settings: satellite background toggle"
   },
   {
-    "term": "Background Effect",
-    "translation": "",
-    "context": "Background Effect",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Background authentication sync failed. Trying terminal mode.",
     "translation": "",
     "context": "Background authentication sync failed. Trying terminal mode.",
@@ -2588,13 +2280,6 @@
     "context": "Background color",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Background image",
-    "translation": "",
-    "context": "Background image",
-    "reference": "",
-    "comment": "greeter wallpaper description"
   },
   {
     "term": "Background, corners, spacing, widget style",
@@ -2643,7 +2328,7 @@
     "translation": "",
     "context": "Bar",
     "reference": "",
-    "comment": "fallback name for an unnamed bar | plugin browser type filter chip, bar widget plugins"
+    "comment": "fallback name for an unnamed bar"
   },
   {
     "term": "Bar %1",
@@ -2828,13 +2513,6 @@
     "comment": "notification menu action, %1 is the app name"
   },
   {
-    "term": "Block Out From",
-    "translation": "",
-    "context": "Block Out From",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Block notifications",
     "translation": "",
     "context": "Block notifications",
@@ -2902,7 +2580,7 @@
     "translation": "",
     "context": "Blur",
     "reference": "",
-    "comment": "noun, background blur effect option"
+    "comment": ""
   },
   {
     "term": "Blur against the wallpaper even with xray off",
@@ -2917,20 +2595,6 @@
     "context": "Blur follows opacity",
     "reference": "",
     "comment": "Hyprland toggle, blur strength scales with how opaque each pixel is"
-  },
-  {
-    "term": "Blur layer",
-    "translation": "",
-    "context": "Blur layer",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Blur on overview",
-    "translation": "",
-    "context": "Blur on overview",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Blur, shadows, corners",
@@ -2975,20 +2639,6 @@
     "comment": ""
   },
   {
-    "term": "Bold",
-    "translation": "",
-    "context": "Bold",
-    "reference": "",
-    "comment": "font style"
-  },
-  {
-    "term": "Bold Italic",
-    "translation": "",
-    "context": "Bold Italic",
-    "reference": "",
-    "comment": "font style"
-  },
-  {
     "term": "Boot",
     "translation": "",
     "context": "Boot",
@@ -3027,13 +2677,6 @@
     "term": "Border w/ bg",
     "translation": "",
     "context": "Border w/ bg",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Border with Background",
-    "translation": "",
-    "context": "Border with Background",
     "reference": "",
     "comment": ""
   },
@@ -3133,7 +2776,7 @@
     "translation": "",
     "context": "Browse",
     "reference": "",
-    "comment": "Browse | theme category option"
+    "comment": "Browse"
   },
   {
     "term": "Browse Files",
@@ -3141,13 +2784,6 @@
     "context": "Browse Files",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Browse Themes",
-    "translation": "",
-    "context": "Browse Themes",
-    "reference": "",
-    "comment": "browse themes button | theme browser window title"
   },
   {
     "term": "Browse and set wallpapers",
@@ -3160,20 +2796,6 @@
     "term": "Browse or search plugins",
     "translation": "",
     "context": "Browse or search plugins",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Browse plugins",
-    "translation": "",
-    "context": "Browse plugins",
-    "reference": "",
-    "comment": "plugin browser window title"
-  },
-  {
-    "term": "Browse, install, registries",
-    "translation": "",
-    "context": "Browse, install, registries",
     "reference": "",
     "comment": ""
   },
@@ -3381,20 +3003,6 @@
     "comment": "printer job state"
   },
   {
-    "term": "Candidate list",
-    "translation": "",
-    "context": "Candidate list",
-    "reference": "",
-    "comment": "Description for a configurable keybind in the fcitx5 settings."
-  },
-  {
-    "term": "Candidates per page",
-    "translation": "",
-    "context": "Candidates per page",
-    "reference": "",
-    "comment": "Option on the fcitx5 config page."
-  },
-  {
     "term": "Cannot delete the only administrator",
     "translation": "",
     "context": "Cannot delete the only administrator",
@@ -3441,7 +3049,7 @@
     "translation": "",
     "context": "Capabilities",
     "reference": "",
-    "comment": "Linux capabilities that give a process extra rights | plugin detail section"
+    "comment": "Linux capabilities that give a process extra rights"
   },
   {
     "term": "Capacity",
@@ -3500,13 +3108,6 @@
     "comment": ""
   },
   {
-    "term": "Category",
-    "translation": "",
-    "context": "Category",
-    "reference": "",
-    "comment": "plugin browser sort option"
-  },
-  {
     "term": "Cellular",
     "translation": "",
     "context": "Cellular",
@@ -3535,13 +3136,6 @@
     "comment": "noun, taskbar dock alignment option between start and end"
   },
   {
-    "term": "Center Tiling",
-    "translation": "",
-    "context": "Center Tiling",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Center dragged windows",
     "translation": "",
     "context": "Center dragged windows",
@@ -3554,13 +3148,6 @@
     "context": "Center section",
     "reference": "",
     "comment": "widgets settings: bar section replaced by the island"
-  },
-  {
-    "term": "Center single column",
-    "translation": "",
-    "context": "Center single column",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Certificate Password",
@@ -3589,13 +3176,6 @@
     "context": "Changes save to %1",
     "reference": "",
     "comment": "hint under the keybind and window rule editors, %1 is the config file the changes are written to"
-  },
-  {
-    "term": "Changes volume and audio devices",
-    "translation": "",
-    "context": "Changes volume and audio devices",
-    "reference": "",
-    "comment": "plugin permission"
   },
   {
     "term": "Channel",
@@ -3703,13 +3283,6 @@
     "comment": ""
   },
   {
-    "term": "Check status",
-    "translation": "",
-    "context": "Check status",
-    "reference": "",
-    "comment": "greeter settings button, runs dms-greeter status"
-  },
-  {
     "term": "Check your custom command in Settings → Dock → Trash.",
     "translation": "",
     "context": "Check your custom command in Settings → Dock → Trash.",
@@ -3724,18 +3297,11 @@
     "comment": ""
   },
   {
-    "term": "Checking whether sudo authentication is needed...",
-    "translation": "",
-    "context": "Checking whether sudo authentication is needed...",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Checking...",
     "translation": "",
     "context": "Checking...",
     "reference": "",
-    "comment": "greeter status loading"
+    "comment": ""
   },
   {
     "term": "Checks in the background at the check interval. Notifies only when the count grows.",
@@ -4053,13 +3619,6 @@
     "comment": "verb, short window rule property label for clip to geometry"
   },
   {
-    "term": "Clip to Geometry",
-    "translation": "",
-    "context": "Clip to Geometry",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Clipboard",
     "translation": "",
     "context": "Clipboard",
@@ -4156,13 +3715,6 @@
     "context": "Close Window",
     "reference": "",
     "comment": "dock middle-click action option"
-  },
-  {
-    "term": "Close on window focus",
-    "translation": "",
-    "context": "Close on window focus",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Codec switched successfully",
@@ -4270,13 +3822,6 @@
     "comment": "ICC profile color space"
   },
   {
-    "term": "Color theme from DMS registry",
-    "translation": "",
-    "context": "Color theme from DMS registry",
-    "reference": "",
-    "comment": "registry theme description"
-  },
-  {
     "term": "Colorful",
     "translation": "",
     "context": "Colorful",
@@ -4308,13 +3853,6 @@
     "term": "Colors from wallpaper",
     "translation": "",
     "context": "Colors from wallpaper",
-    "reference": "",
-    "comment": "greeter feature card description"
-  },
-  {
-    "term": "Column Display",
-    "translation": "",
-    "context": "Column Display",
     "reference": "",
     "comment": ""
   },
@@ -4382,20 +3920,6 @@
     "comment": "memory committed by processes, of the commit limit"
   },
   {
-    "term": "Community",
-    "translation": "",
-    "context": "Community",
-    "reference": "",
-    "comment": "about page card title, chat and community links"
-  },
-  {
-    "term": "Community favorites to get you started",
-    "translation": "",
-    "context": "Community favorites to get you started",
-    "reference": "",
-    "comment": "greeter plugins page subtitle"
-  },
-  {
     "term": "Compact",
     "translation": "",
     "context": "Compact",
@@ -4421,7 +3945,7 @@
     "translation": "",
     "context": "Compositor",
     "reference": "",
-    "comment": "noun, wayland compositor, section title and launcher logo option fallback"
+    "comment": ""
   },
   {
     "term": "Compositor actions (focus, move, etc.)",
@@ -4491,14 +4015,7 @@
     "translation": "",
     "context": "Configure",
     "reference": "",
-    "comment": "greeter settings section header"
-  },
-  {
-    "term": "Configure Keybinds",
-    "translation": "",
-    "context": "Configure Keybinds",
-    "reference": "",
-    "comment": "greeter configure keybinds link"
+    "comment": ""
   },
   {
     "term": "Configure a new printer",
@@ -4603,7 +4120,7 @@
     "translation": "",
     "context": "Connected",
     "reference": "",
-    "comment": "Tailscale connection status: connected | network status"
+    "comment": "network status"
   },
   {
     "term": "Connected Device",
@@ -4669,13 +4186,6 @@
     "comment": ""
   },
   {
-    "term": "Connects to the internet",
-    "translation": "",
-    "context": "Connects to the internet",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
     "term": "Consumes the key only when a dispatcher runs",
     "translation": "",
     "context": "Consumes the key only when a dispatcher runs",
@@ -4725,18 +4235,11 @@
     "comment": "noun, slider label for color or display contrast"
   },
   {
-    "term": "Contributor",
-    "translation": "",
-    "context": "Contributor",
-    "reference": "",
-    "comment": "plugin browser sort option"
-  },
-  {
     "term": "Control Center",
     "translation": "",
     "context": "Control Center",
     "reference": "",
-    "comment": "Control Center | greeter feature card title | island compact face: control center label | island settings: battery or control center slot row | plugin browser type filter chip"
+    "comment": "Control Center | island compact face: control center label | island settings: battery or control center slot row"
   },
   {
     "term": "Control group",
@@ -4753,13 +4256,6 @@
     "comment": "media widget style with play, previous and next buttons"
   },
   {
-    "term": "Controls media players",
-    "translation": "",
-    "context": "Controls media players",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
     "term": "Convert to DMS",
     "translation": "",
     "context": "Convert to DMS",
@@ -4772,13 +4268,6 @@
     "context": "Convertible",
     "reference": "",
     "comment": "computer chassis type: laptop that turns into a tablet"
-  },
-  {
-    "term": "Cooldown",
-    "translation": "",
-    "context": "Cooldown",
-    "reference": "",
-    "comment": "noun, niri keybind cooldown time field label"
   },
   {
     "term": "Copied to clipboard",
@@ -4806,7 +4295,7 @@
     "translation": "",
     "context": "Copy",
     "reference": "",
-    "comment": "Copy to clipboard"
+    "comment": ""
   },
   {
     "term": "Copy %1",
@@ -4926,13 +4415,6 @@
     "context": "Couldn't load hotspot password",
     "reference": "",
     "comment": "hotspot password error title"
-  },
-  {
-    "term": "Couldn't load plugins",
-    "translation": "",
-    "context": "Couldn't load plugins",
-    "reference": "",
-    "comment": "plugin registry fetch error"
   },
   {
     "term": "Count only",
@@ -5327,13 +4809,6 @@
     "comment": ""
   },
   {
-    "term": "DMS Shortcuts",
-    "translation": "",
-    "context": "DMS Shortcuts",
-    "reference": "",
-    "comment": "greeter keybinds section header"
-  },
-  {
     "term": "DMS and system updates",
     "translation": "",
     "context": "DMS and system updates",
@@ -5362,13 +4837,6 @@
     "comment": ""
   },
   {
-    "term": "DMS removes its managed block from %1 and stops write services",
-    "translation": "",
-    "context": "DMS removes its managed block from %1 and stops write services",
-    "reference": "",
-    "comment": "greeter system PAM toggle description, %1 is a PAM config path"
-  },
-  {
     "term": "DMS server is outdated (API v%1, expected v%2)",
     "translation": "",
     "context": "DMS server is outdated (API v%1, expected v%2)",
@@ -5395,13 +4863,6 @@
     "context": "DMS stops drawing wallpapers on every display",
     "reference": "",
     "comment": "use external wallpaper manager toggle description"
-  },
-  {
-    "term": "Daemon",
-    "translation": "",
-    "context": "Daemon",
-    "reference": "",
-    "comment": "plugin browser type filter chip, background plugins"
   },
   {
     "term": "Daily",
@@ -5437,13 +4898,6 @@
     "context": "Dank",
     "reference": "",
     "comment": "Material wallpaper preset"
-  },
-  {
-    "term": "DankBar",
-    "translation": "",
-    "context": "DankBar",
-    "reference": "",
-    "comment": "greeter settings link"
   },
   {
     "term": "Dark",
@@ -5500,20 +4954,6 @@
     "context": "Darkest",
     "reference": "",
     "comment": "matugen source color option"
-  },
-  {
-    "term": "Dash card",
-    "translation": "",
-    "context": "Dash card",
-    "reference": "",
-    "comment": "plugin browser type filter chip"
-  },
-  {
-    "term": "Dash tab",
-    "translation": "",
-    "context": "Dash tab",
-    "reference": "",
-    "comment": "plugin browser type filter chip"
   },
   {
     "term": "Dashboard",
@@ -5614,27 +5054,6 @@
     "comment": "night mode status label, current period is day"
   },
   {
-    "term": "Deactivate input method",
-    "translation": "",
-    "context": "Deactivate input method",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
-    "term": "Deck",
-    "translation": "",
-    "context": "Deck",
-    "reference": "",
-    "comment": "window tiling layout name in layout picker"
-  },
-  {
-    "term": "Declared by the author, not enforced",
-    "translation": "",
-    "context": "Declared by the author, not enforced",
-    "reference": "",
-    "comment": "plugin detail section, introduces the permission list the plugin declares about itself"
-  },
-  {
     "term": "Decrease",
     "translation": "",
     "context": "Decrease",
@@ -5684,13 +5103,6 @@
     "comment": ""
   },
   {
-    "term": "Default leaves it to niri, which floats dialogs and fixed-size windows and tiles the rest",
-    "translation": "",
-    "context": "Default leaves it to niri, which floats dialogs and fixed-size windows and tiles the rest",
-    "reference": "",
-    "comment": "window rule float option, explains the Default choice"
-  },
-  {
     "term": "Default selected action",
     "translation": "",
     "context": "Default selected action",
@@ -5703,13 +5115,6 @@
     "context": "Default task list",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Default width (%)",
-    "translation": "",
-    "context": "Default width (%)",
-    "reference": "",
-    "comment": "niri output field label, default column width percent"
   },
   {
     "term": "Defaults, autostart, rules",
@@ -5831,13 +5236,6 @@
     "comment": "interface density option denser than compact for small text and tight rows"
   },
   {
-    "term": "Dependencies & documentation",
-    "translation": "",
-    "context": "Dependencies & documentation",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Depth",
     "translation": "",
     "context": "Depth",
@@ -5877,7 +5275,7 @@
     "translation": "",
     "context": "Desktop",
     "reference": "",
-    "comment": "computer chassis type | plugin browser type filter chip, desktop widget plugins | system info section: compositor, themes, fonts"
+    "comment": "computer chassis type | system info section: compositor, themes, fonts"
   },
   {
     "term": "Desktop Entry",
@@ -5978,13 +5376,6 @@
     "comment": "Weather dew point temperature"
   },
   {
-    "term": "Did you mean",
-    "translation": "",
-    "context": "Did you mean",
-    "reference": "",
-    "comment": "plugin search, introduces plugins with a close name"
-  },
-  {
     "term": "Digital",
     "translation": "",
     "context": "Digital",
@@ -6083,13 +5474,6 @@
     "comment": ""
   },
   {
-    "term": "Disable with external mouse",
-    "translation": "",
-    "context": "Disable with external mouse",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Disabled",
     "translation": "",
     "context": "Disabled",
@@ -6132,13 +5516,6 @@
     "comment": "network status"
   },
   {
-    "term": "Disabling auto-login on startup...",
-    "translation": "",
-    "context": "Disabling auto-login on startup...",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Disabling cellular...",
     "translation": "",
     "context": "Disabling cellular...",
@@ -6178,7 +5555,7 @@
     "translation": "",
     "context": "Disconnected",
     "reference": "",
-    "comment": "Tailscale connection status: disconnected | Tailscale disconnected status"
+    "comment": ""
   },
   {
     "term": "Disconnected from WiFi",
@@ -6186,13 +5563,6 @@
     "context": "Disconnected from WiFi",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Discover community plugins. Review their code before installing, and audit changes before updating.",
-    "translation": "",
-    "context": "Discover community plugins. Review their code before installing, and audit changes before updating.",
-    "reference": "",
-    "comment": "community plugin safety guidance"
   },
   {
     "term": "Discover devices",
@@ -6258,13 +5628,6 @@
     "comment": "Display font role option"
   },
   {
-    "term": "Display Control",
-    "translation": "",
-    "context": "Display Control",
-    "reference": "",
-    "comment": "greeter feature card title"
-  },
-  {
     "term": "Display Profiles",
     "translation": "",
     "context": "Display Profiles",
@@ -6275,13 +5638,6 @@
     "term": "Display Settings",
     "translation": "",
     "context": "Display Settings",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Display and switch MangoWC layouts",
-    "translation": "",
-    "context": "Display and switch MangoWC layouts",
     "reference": "",
     "comment": ""
   },
@@ -6374,7 +5730,7 @@
     "translation": "",
     "context": "Displays",
     "reference": "",
-    "comment": "greeter settings link"
+    "comment": ""
   },
   {
     "term": "Displays in \"%1\"",
@@ -6430,7 +5786,7 @@
     "translation": "",
     "context": "Dock",
     "reference": "",
-    "comment": "greeter settings link"
+    "comment": ""
   },
   {
     "term": "Dock %1",
@@ -6479,7 +5835,7 @@
     "translation": "",
     "context": "Docs",
     "reference": "",
-    "comment": "greeter documentation link"
+    "comment": ""
   },
   {
     "term": "Documents",
@@ -6734,13 +6090,6 @@
     "comment": ""
   },
   {
-    "term": "Dux Greeter docs",
-    "translation": "",
-    "context": "Dux Greeter docs",
-    "reference": "",
-    "comment": "link text"
-  },
-  {
     "term": "Dwindle",
     "translation": "",
     "context": "Dwindle",
@@ -6762,13 +6111,6 @@
     "comment": ""
   },
   {
-    "term": "Dynamic Theming",
-    "translation": "",
-    "context": "Dynamic Theming",
-    "reference": "",
-    "comment": "greeter feature card title"
-  },
-  {
     "term": "Dynamic colors from wallpaper",
     "translation": "",
     "context": "Dynamic colors from wallpaper",
@@ -6781,13 +6123,6 @@
     "context": "Dynamic colors parse error: %1",
     "reference": "",
     "comment": "error toast, %1 is the error message"
-  },
-  {
-    "term": "Dynamic colors, presets",
-    "translation": "",
-    "context": "Dynamic colors, presets",
-    "reference": "",
-    "comment": "greeter theme description"
   },
   {
     "term": "Dynamic theme is off",
@@ -6928,34 +6263,6 @@
     "context": "Edit widgets",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Editing the lock screen",
-    "translation": "",
-    "context": "Editing the lock screen",
-    "reference": "",
-    "comment": "widget editor banner"
-  },
-  {
-    "term": "Editing the lock screen, the login screen follows it",
-    "translation": "",
-    "context": "Editing the lock screen, the login screen follows it",
-    "reference": "",
-    "comment": "widget editor banner"
-  },
-  {
-    "term": "Editing the login screen",
-    "translation": "",
-    "context": "Editing the login screen",
-    "reference": "",
-    "comment": "widget editor banner"
-  },
-  {
-    "term": "Editing the login screen, shared with the lock screen",
-    "translation": "",
-    "context": "Editing the login screen, shared with the lock screen",
-    "reference": "",
-    "comment": "widget editor banner"
   },
   {
     "term": "Education",
@@ -7228,7 +6535,7 @@
     "translation": "",
     "context": "Errors",
     "reference": "",
-    "comment": "greeter doctor page status card"
+    "comment": ""
   },
   {
     "term": "Estimated time",
@@ -7329,13 +6636,6 @@
     "comment": "path of the program file a process runs"
   },
   {
-    "term": "Exit node",
-    "translation": "",
-    "context": "Exit node",
-    "reference": "",
-    "comment": "Tailscale exit node selector label"
-  },
-  {
     "term": "Expand",
     "translation": "",
     "context": "Expand",
@@ -7364,20 +6664,6 @@
     "comment": ""
   },
   {
-    "term": "Explore",
-    "translation": "",
-    "context": "Explore",
-    "reference": "",
-    "comment": "greeter explore section header"
-  },
-  {
-    "term": "Explore Plugins",
-    "translation": "",
-    "context": "Explore Plugins",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Exponential",
     "translation": "",
     "context": "Exponential",
@@ -7399,25 +6685,11 @@
     "comment": "matugen color scheme option"
   },
   {
-    "term": "Extend %1 with powerful plugins for widgets, launchers, and more",
-    "translation": "",
-    "context": "Extend %1 with powerful plugins for widgets, launchers, and more",
-    "reference": "",
-    "comment": "plugins hub description, %1 is the product name"
-  },
-  {
     "term": "Extend battery life",
     "translation": "",
     "context": "Extend battery life",
     "reference": "",
     "comment": "power profile description"
-  },
-  {
-    "term": "Extensible architecture",
-    "translation": "",
-    "context": "Extensible architecture",
-    "reference": "",
-    "comment": "greeter feature card description"
   },
   {
     "term": "External palette commands, namespaces",
@@ -7676,7 +6948,7 @@
     "translation": "",
     "context": "Failed to enable plugin: %1",
     "reference": "",
-    "comment": "plugin error message, %1 is the plugin name or id"
+    "comment": ""
   },
   {
     "term": "Failed to extract theme",
@@ -7868,13 +7140,6 @@
     "comment": ""
   },
   {
-    "term": "Failed to run '%1'. Ensure the %2 package is installed.",
-    "translation": "",
-    "context": "Failed to run '%1'. Ensure the %2 package is installed.",
-    "reference": "",
-    "comment": "greeter status error, %1 is a command, %2 a package name"
-  },
-  {
     "term": "Failed to save VPN credentials",
     "translation": "",
     "context": "Failed to save VPN credentials",
@@ -8043,13 +7308,6 @@
     "comment": ""
   },
   {
-    "term": "Failed to update %1: %2",
-    "translation": "",
-    "context": "Failed to update %1: %2",
-    "reference": "",
-    "comment": "plugin update error, %1 is the plugin name, %2 is the error message"
-  },
-  {
     "term": "Failed to update VPN",
     "translation": "",
     "context": "Failed to update VPN",
@@ -8085,13 +7343,6 @@
     "comment": ""
   },
   {
-    "term": "Failed to write temp file for validation",
-    "translation": "",
-    "context": "Failed to write temp file for validation",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Failed: %1",
     "translation": "",
     "context": "Failed: %1",
@@ -8118,13 +7369,6 @@
     "context": "Fan",
     "reference": "",
     "comment": "GPU fan speed"
-  },
-  {
-    "term": "Featured plugin",
-    "translation": "",
-    "context": "Featured plugin",
-    "reference": "",
-    "comment": "plugin recommendation reason"
   },
   {
     "term": "Feels Like %1°",
@@ -8229,7 +7473,7 @@
     "translation": "",
     "context": "Filter",
     "reference": "",
-    "comment": "plugin browser category filter label"
+    "comment": ""
   },
   {
     "term": "Filter by type",
@@ -8267,13 +7511,6 @@
     "comment": "lock screen fingerprint authentication toggle"
   },
   {
-    "term": "Fingerprint at login",
-    "translation": "",
-    "context": "Fingerprint at login",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Fingerprint availability could not be confirmed",
     "translation": "",
     "context": "Fingerprint availability could not be confirmed",
@@ -8302,18 +7539,11 @@
     "comment": "lock screen fingerprint setting"
   },
   {
-    "term": "Fingerprint reader detected, but no prints are enrolled yet. You can enable this now and run Sync later.",
-    "translation": "",
-    "context": "Fingerprint reader detected, but no prints are enrolled yet. You can enable this now and run Sync later.",
-    "reference": "",
-    "comment": "greeter fingerprint login setting"
-  },
-  {
     "term": "Finish",
     "translation": "",
     "context": "Finish",
     "reference": "",
-    "comment": "greeter finish button"
+    "comment": ""
   },
   {
     "term": "Fires even when an app inhibits shortcuts",
@@ -8377,13 +7607,6 @@
     "context": "Fits the song title instead of keeping a fixed width",
     "reference": "",
     "comment": "media widget adaptive width toggle description"
-  },
-  {
-    "term": "Fits your setup",
-    "translation": "",
-    "context": "Fits your setup",
-    "reference": "",
-    "comment": "plugin recommendation reason, same category as installed plugins"
   },
   {
     "term": "Fixed",
@@ -8470,13 +7693,6 @@
     "comment": "adjective, window rule match condition for floating windows | bar summary: island can be dragged anywhere on the display | island settings: island can be dragged anywhere on the display"
   },
   {
-    "term": "Floating Position",
-    "translation": "",
-    "context": "Floating Position",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Floating windows",
     "translation": "",
     "context": "Floating windows",
@@ -8516,14 +7732,7 @@
     "translation": "",
     "context": "Focus",
     "reference": "",
-    "comment": "noun, window rule editor group of keyboard focus options | verb, window rule action to focus the window when it opens"
-  },
-  {
-    "term": "Focus at startup",
-    "translation": "",
-    "context": "Focus at startup",
-    "reference": "",
-    "comment": ""
+    "comment": "noun, window rule editor group of keyboard focus options"
   },
   {
     "term": "Focus follows mouse",
@@ -8666,13 +7875,6 @@
     "comment": ""
   },
   {
-    "term": "Follow lock screen",
-    "translation": "",
-    "context": "Follow lock screen",
-    "reference": "",
-    "comment": "greeter widgets toggle"
-  },
-  {
     "term": "Follow mouse",
     "translation": "",
     "context": "Follow mouse",
@@ -8741,13 +7943,6 @@
     "context": "For 1 hour",
     "reference": "",
     "comment": "timed preset menu option"
-  },
-  {
-    "term": "For you",
-    "translation": "",
-    "context": "For you",
-    "reference": "",
-    "comment": "plugin browser shelf, plugins ranked for this user | plugin browser sort option, plugins ranked for this user"
   },
   {
     "term": "Force",
@@ -9160,7 +8355,7 @@
     "translation": "",
     "context": "Gaps",
     "reference": "",
-    "comment": "noun, window gaps mode in compositor layout settings"
+    "comment": ""
   },
   {
     "term": "Gaps, window borders, corner radius",
@@ -9226,32 +8421,11 @@
     "comment": ""
   },
   {
-    "term": "Get Started",
-    "translation": "",
-    "context": "Get Started",
-    "reference": "",
-    "comment": "greeter first page button"
-  },
-  {
-    "term": "Git",
-    "translation": "",
-    "context": "Git",
-    "reference": "",
-    "comment": "release channel that follows the master branch"
-  },
-  {
     "term": "Global fonts can be configured in Settings → Personalization",
     "translation": "",
     "context": "Global fonts can be configured in Settings → Personalization",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Globally",
-    "translation": "",
-    "context": "Globally",
-    "reference": "",
-    "comment": "adverb, remember keyboard layout option, opposite of per window"
   },
   {
     "term": "Glow",
@@ -9310,13 +8484,6 @@
     "comment": ""
   },
   {
-    "term": "Granted greeter login access",
-    "translation": "",
-    "context": "Granted greeter login access",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Graph time range",
     "translation": "",
     "context": "Graph time range",
@@ -9343,27 +8510,6 @@
     "context": "Green",
     "reference": "",
     "comment": "seed color hue"
-  },
-  {
-    "term": "Greeter",
-    "translation": "",
-    "context": "Greeter",
-    "reference": "",
-    "comment": "noun, login screen settings page and greeter account badge"
-  },
-  {
-    "term": "Greeter activated. greetd is now enabled.",
-    "translation": "",
-    "context": "Greeter activated. greetd is now enabled.",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Greeter sync complete",
-    "translation": "",
-    "context": "Greeter sync complete",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Grid",
@@ -9653,13 +8799,6 @@
     "comment": ""
   },
   {
-    "term": "Hide bar on fullscreen",
-    "translation": "",
-    "context": "Hide bar on fullscreen",
-    "reference": "",
-    "comment": "bar visibility toggle"
-  },
-  {
     "term": "Hide cursor on touch",
     "translation": "",
     "context": "Hide cursor on touch",
@@ -9686,13 +8825,6 @@
     "context": "Hide device",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Hide installed",
-    "translation": "",
-    "context": "Hide installed",
-    "reference": "",
-    "comment": "plugin browser filter chip"
   },
   {
     "term": "Hide on last display",
@@ -9919,13 +9051,6 @@
     "comment": ""
   },
   {
-    "term": "Hot corners",
-    "translation": "",
-    "context": "Hot corners",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Hotkey overlay title (optional)",
     "translation": "",
     "context": "Hotkey overlay title (optional)",
@@ -10031,13 +9156,6 @@
     "comment": "island settings: hybrid mode hint"
   },
   {
-    "term": "Hyprland Discord server",
-    "translation": "",
-    "context": "Hyprland Discord server",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Hyprland Options",
     "translation": "",
     "context": "Hyprland Options",
@@ -10055,20 +9173,6 @@
     "term": "Hyprland config include missing",
     "translation": "",
     "context": "Hyprland config include missing",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Hyprland website",
-    "translation": "",
-    "context": "Hyprland website",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "I Understand",
-    "translation": "",
-    "context": "I Understand",
     "reference": "",
     "comment": ""
   },
@@ -10253,13 +9357,6 @@
     "context": "If autostart app icons don't appear in the system tray, generate a systemd override to ensure DMS starts before autostart apps",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Ignore",
-    "translation": "",
-    "context": "Ignore",
-    "reference": "",
-    "comment": "verb, window rule on-activation choice, niri ignores the activation request"
   },
   {
     "term": "Ignore Completely",
@@ -10490,14 +9587,14 @@
     "translation": "",
     "context": "Info",
     "reference": "",
-    "comment": "greeter doctor page status card"
+    "comment": ""
   },
   {
     "term": "Inherit",
     "translation": "",
     "context": "Inherit",
     "reference": "",
-    "comment": "inherit from global setting"
+    "comment": ""
   },
   {
     "term": "Inherit Global (Default)",
@@ -10505,13 +9602,6 @@
     "context": "Inherit Global (Default)",
     "reference": "",
     "comment": "bar shadow direction source option"
-  },
-  {
-    "term": "Inhibitable",
-    "translation": "",
-    "context": "Inhibitable",
-    "reference": "",
-    "comment": "adjective, niri keybind option, apps may inhibit this shortcut"
   },
   {
     "term": "Init",
@@ -10524,13 +9614,6 @@
     "term": "Initial class",
     "translation": "",
     "context": "Initial class",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Initial position for floating windows. Set both X and Y; anchor controls which corner/edge they're relative to.",
-    "translation": "",
-    "context": "Initial position for floating windows. Set both X and Y; anchor controls which corner/edge they're relative to.",
     "reference": "",
     "comment": ""
   },
@@ -10582,13 +9665,6 @@
     "context": "Input",
     "reference": "",
     "comment": "noun, settings page name for input devices"
-  },
-  {
-    "term": "Input Method Framework",
-    "translation": "",
-    "context": "Input Method Framework",
-    "reference": "",
-    "comment": "Name of settings tab for fcitx5 configuration"
   },
   {
     "term": "Input Volume",
@@ -10654,41 +9730,6 @@
     "comment": "install action button"
   },
   {
-    "term": "Install Plugin",
-    "translation": "",
-    "context": "Install Plugin",
-    "reference": "",
-    "comment": "plugin installation dialog title"
-  },
-  {
-    "term": "Install Theme",
-    "translation": "",
-    "context": "Install Theme",
-    "reference": "",
-    "comment": "theme installation dialog title"
-  },
-  {
-    "term": "Install color themes from the DMS theme registry",
-    "translation": "",
-    "context": "Install color themes from the DMS theme registry",
-    "reference": "",
-    "comment": "theme browser description"
-  },
-  {
-    "term": "Install failed: %1",
-    "translation": "",
-    "context": "Install failed: %1",
-    "reference": "",
-    "comment": "installation error"
-  },
-  {
-    "term": "Install plugin '%1' from the DMS registry?",
-    "translation": "",
-    "context": "Install plugin '%1' from the DMS registry?",
-    "reference": "",
-    "comment": "plugin installation confirmation"
-  },
-  {
     "term": "Install smartmontools",
     "translation": "",
     "context": "Install smartmontools",
@@ -10710,13 +9751,6 @@
     "comment": "matugen installation hint, %1 is the package name"
   },
   {
-    "term": "Install theme '%1' from the DMS registry?",
-    "translation": "",
-    "context": "Install theme '%1' from the DMS registry?",
-    "reference": "",
-    "comment": "theme installation confirmation"
-  },
-  {
     "term": "Install wallpaper",
     "translation": "",
     "context": "Install wallpaper",
@@ -10731,53 +9765,11 @@
     "comment": "material wallpaper install confirmation"
   },
   {
-    "term": "Installation and PAM setup are documented in the %1.",
-    "translation": "",
-    "context": "Installation and PAM setup are documented in the %1.",
-    "reference": "",
-    "comment": "%1 is a link to the greeter docs"
-  },
-  {
     "term": "Installed",
     "translation": "",
     "context": "Installed",
     "reference": "",
-    "comment": "adjective, plugin or theme is already installed, button state and filter chip"
-  },
-  {
-    "term": "Installed %1, still running %2",
-    "translation": "",
-    "context": "Installed %1, still running %2",
-    "reference": "",
-    "comment": "%1 is the installed version, %2 the running one"
-  },
-  {
-    "term": "Installed first",
-    "translation": "",
-    "context": "Installed first",
-    "reference": "",
-    "comment": "plugin browser filter chip"
-  },
-  {
-    "term": "Installed plugin could not be loaded: %1",
-    "translation": "",
-    "context": "Installed plugin could not be loaded: %1",
-    "reference": "",
-    "comment": "plugin manifest unavailable after installation"
-  },
-  {
-    "term": "Installed: %1",
-    "translation": "",
-    "context": "Installed: %1",
-    "reference": "",
-    "comment": "installation success"
-  },
-  {
-    "term": "Installing: %1",
-    "translation": "",
-    "context": "Installing: %1",
-    "reference": "",
-    "comment": "installation progress"
+    "comment": ""
   },
   {
     "term": "Instrumental",
@@ -10850,13 +9842,6 @@
     "comment": "custom theme file error toast, %1 is the error message"
   },
   {
-    "term": "Invalid configuration",
-    "translation": "",
-    "context": "Invalid configuration",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Invalid package name — letters, digits and @._+:/- only.",
     "translation": "",
     "context": "Invalid package name — letters, digits and @._+:/- only.",
@@ -10924,7 +9909,7 @@
     "translation": "",
     "context": "Italic",
     "reference": "",
-    "comment": "clock font style toggle | font style"
+    "comment": "clock font style toggle"
   },
   {
     "term": "JSON output path",
@@ -11064,7 +10049,7 @@
     "translation": "",
     "context": "Keybinds",
     "reference": "",
-    "comment": "greeter settings link"
+    "comment": ""
   },
   {
     "term": "Keyboard",
@@ -11144,20 +10129,6 @@
     "comment": ""
   },
   {
-    "term": "LabWC IRC channel",
-    "translation": "",
-    "context": "LabWC IRC channel",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "LabWC website",
-    "translation": "",
-    "context": "LabWC website",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Label overrides",
     "translation": "",
     "context": "Label overrides",
@@ -11205,13 +10176,6 @@
     "context": "Largest",
     "reference": "",
     "comment": "bar widget size option"
-  },
-  {
-    "term": "Last commit %1",
-    "translation": "",
-    "context": "Last commit %1",
-    "reference": "",
-    "comment": "git channel row, %1 is a localized date"
   },
   {
     "term": "Last core",
@@ -11344,7 +10308,7 @@
     "translation": "",
     "context": "Launcher",
     "reference": "",
-    "comment": "island compact face: launcher label | island settings: button to launcher tab | plugin browser type filter chip"
+    "comment": "island compact face: launcher label | island settings: button to launcher tab"
   },
   {
     "term": "Launcher button",
@@ -11366,13 +10330,6 @@
     "context": "Launching",
     "reference": "",
     "comment": "launcher settings card about how apps are launched"
-  },
-  {
-    "term": "Layer namespace %1, needs a niri blur rule",
-    "translation": "",
-    "context": "Layer namespace %1, needs a niri blur rule",
-    "reference": "",
-    "comment": "blur layer toggle description, %1 is the layer namespace"
   },
   {
     "term": "Layer outline",
@@ -11459,13 +10416,6 @@
     "comment": "matugen source color option"
   },
   {
-    "term": "Leaves the overview when DMS launches an app or focuses a window",
-    "translation": "",
-    "context": "Leaves the overview when DMS launches an app or focuses a window",
-    "reference": "",
-    "comment": "niri overview close on window focus toggle description"
-  },
-  {
     "term": "Left",
     "translation": "",
     "context": "Left",
@@ -11512,7 +10462,7 @@
     "translation": "",
     "context": "Light",
     "reference": "",
-    "comment": "adjective, wallpaper thumbnail label for light mode | font style"
+    "comment": "adjective, wallpaper thumbnail label for light mode"
   },
   {
     "term": "Light Rain",
@@ -11585,13 +10535,6 @@
     "comment": "matugen source color option"
   },
   {
-    "term": "Like your plugins",
-    "translation": "",
-    "context": "Like your plugins",
-    "reference": "",
-    "comment": "plugin recommendation reason, similar to installed plugins"
-  },
-  {
     "term": "Limit",
     "translation": "",
     "context": "Limit",
@@ -11632,41 +10575,6 @@
     "context": "Lines: %1",
     "reference": "",
     "comment": "plural, notepad status bar line count, %1 is a count"
-  },
-  {
-    "term": "Link copied",
-    "translation": "",
-    "context": "Link copied",
-    "reference": "",
-    "comment": "plugin browser, link copied to clipboard"
-  },
-  {
-    "term": "Link your DMS settings so the login screen follows them.",
-    "translation": "",
-    "context": "Link your DMS settings so the login screen follows them.",
-    "reference": "",
-    "comment": "greeter status"
-  },
-  {
-    "term": "Link your DMS settings so the login screen follows them. Administrator access is required.",
-    "translation": "",
-    "context": "Link your DMS settings so the login screen follows them. Administrator access is required.",
-    "reference": "",
-    "comment": "greeter status"
-  },
-  {
-    "term": "Linked",
-    "translation": "",
-    "context": "Linked",
-    "reference": "",
-    "comment": "greeter status, login screen follows DMS settings live"
-  },
-  {
-    "term": "Linked as a snapshot",
-    "translation": "",
-    "context": "Linked as a snapshot",
-    "reference": "",
-    "comment": "greeter status, login screen reads a copy of DMS settings"
   },
   {
     "term": "List",
@@ -11872,20 +10780,6 @@
     "comment": "noun, system sounds toggle, sound played on login"
   },
   {
-    "term": "Login screen appearance and authentication",
-    "translation": "",
-    "context": "Login screen appearance and authentication",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Login screen unlinked.",
-    "translation": "",
-    "context": "Login screen unlinked.",
-    "reference": "",
-    "comment": "greeter unlink status"
-  },
-  {
     "term": "Long",
     "translation": "",
     "context": "Long",
@@ -11956,13 +10850,6 @@
     "comment": ""
   },
   {
-    "term": "Lower only if a mode fails for lack of bandwidth",
-    "translation": "",
-    "context": "Lower only if a mode fails for lack of bandwidth",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Lower priorities move into overflow first",
     "translation": "",
     "context": "Lower priorities move into overflow first",
@@ -11981,7 +10868,7 @@
     "translation": "",
     "context": "Lyrics",
     "reference": "",
-    "comment": "Media player lyrics button | plugin browser type filter chip, lyrics provider plugins"
+    "comment": "Media player lyrics button"
   },
   {
     "term": "Lyrics providers",
@@ -12040,25 +10927,11 @@
     "comment": ""
   },
   {
-    "term": "Manage Registries",
-    "translation": "",
-    "context": "Manage Registries",
-    "reference": "",
-    "comment": "plugin registry management"
-  },
-  {
     "term": "Managed by Frame in Connected Mode",
     "translation": "",
     "context": "Managed by Frame in Connected Mode",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Managed by Nix",
-    "translation": "",
-    "context": "Managed by Nix",
-    "reference": "",
-    "comment": "badge on the DMS update row when the shell is installed through Nix"
   },
   {
     "term": "Managed by administrator policy",
@@ -12073,20 +10946,6 @@
     "context": "Managed by the primary PAM source",
     "reference": "",
     "comment": "factor managed by PAM source status"
-  },
-  {
-    "term": "Mango Options",
-    "translation": "",
-    "context": "Mango Options",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Mango service not available",
-    "translation": "",
-    "context": "Mango service not available",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Manual",
@@ -12159,13 +11018,6 @@
     "comment": ""
   },
   {
-    "term": "Mark urgent",
-    "translation": "",
-    "context": "Mark urgent",
-    "reference": "",
-    "comment": "window rule on-activation choice, mark the window urgent instead of focusing it"
-  },
-  {
     "term": "Marker Supply Empty",
     "translation": "",
     "context": "Marker Supply Empty",
@@ -12199,13 +11051,6 @@
     "context": "Master",
     "reference": "",
     "comment": "Hyprland tiling layout name"
-  },
-  {
-    "term": "Master branch",
-    "translation": "",
-    "context": "Master branch",
-    "reference": "",
-    "comment": "git channel row, the branch the build tracks"
   },
   {
     "term": "Master position",
@@ -12339,13 +11184,6 @@
     "context": "Max apps to show",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Max bits per channel",
-    "translation": "",
-    "context": "Max bits per channel",
-    "reference": "",
-    "comment": "niri output dropdown, max-bpc sent to the display"
   },
   {
     "term": "Max clock",
@@ -12541,7 +11379,7 @@
     "translation": "",
     "context": "Medium",
     "reference": "",
-    "comment": "bar widget size option | font style"
+    "comment": "bar widget size option"
   },
   {
     "term": "Memory",
@@ -12796,13 +11634,6 @@
     "comment": "Modified"
   },
   {
-    "term": "Modular widget bar",
-    "translation": "",
-    "context": "Modular widget bar",
-    "reference": "",
-    "comment": "greeter feature card description"
-  },
-  {
     "term": "Monitor",
     "translation": "",
     "context": "Monitor",
@@ -12829,13 +11660,6 @@
     "context": "Monochrome",
     "reference": "",
     "comment": "matugen color scheme option"
-  },
-  {
-    "term": "Monocle",
-    "translation": "",
-    "context": "Monocle",
-    "reference": "",
-    "comment": "window tiling layout name in layout picker"
   },
   {
     "term": "Monospace family",
@@ -12892,13 +11716,6 @@
     "context": "More",
     "reference": "",
     "comment": "hub group of rarely used pages"
-  },
-  {
-    "term": "More in %1",
-    "translation": "",
-    "context": "More in %1",
-    "reference": "",
-    "comment": "changelog card title, %1 is a version"
   },
   {
     "term": "More samples look smoother and cost more GPU",
@@ -13041,13 +11858,6 @@
     "comment": ""
   },
   {
-    "term": "Multi-Monitor",
-    "translation": "",
-    "context": "Multi-Monitor",
-    "reference": "",
-    "comment": "greeter feature card title"
-  },
-  {
     "term": "Multimedia",
     "translation": "",
     "context": "Multimedia",
@@ -13139,13 +11949,6 @@
     "comment": ""
   },
   {
-    "term": "My Online",
-    "translation": "",
-    "context": "My Online",
-    "reference": "",
-    "comment": "Tailscale filter: my online devices"
-  },
-  {
     "term": "N",
     "translation": "",
     "context": "N",
@@ -13171,7 +11974,7 @@
     "translation": "",
     "context": "Name",
     "reference": "",
-    "comment": "plugin browser sort option"
+    "comment": ""
   },
   {
     "term": "Name format",
@@ -13221,13 +12024,6 @@
     "context": "Near island",
     "reference": "",
     "comment": "island settings: satellites hug the island"
-  },
-  {
-    "term": "Needs",
-    "translation": "",
-    "context": "Needs",
-    "reference": "",
-    "comment": "plugin detail section, introduces the programs a plugin depends on"
   },
   {
     "term": "Nested chip",
@@ -13325,14 +12121,7 @@
     "translation": "",
     "context": "New",
     "reference": "",
-    "comment": "adjective, shortcut or button that creates a new session or note | plugin browser shelf, recently published | plugin recommendation reason, recently published"
-  },
-  {
-    "term": "New & updated",
-    "translation": "",
-    "context": "New & updated",
-    "reference": "",
-    "comment": "plugin browser filter chip"
+    "comment": "adjective, shortcut or button that creates a new session or note"
   },
   {
     "term": "New Session",
@@ -13416,7 +12205,7 @@
     "translation": "",
     "context": "Next",
     "reference": "",
-    "comment": "greeter next button"
+    "comment": ""
   },
   {
     "term": "Next Transition",
@@ -13426,13 +12215,6 @@
     "comment": ""
   },
   {
-    "term": "Next candidate",
-    "translation": "",
-    "context": "Next candidate",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
     "term": "Next category",
     "translation": "",
     "context": "Next category",
@@ -13440,25 +12222,11 @@
     "comment": "launcher shortcut that switches to the next mode tab"
   },
   {
-    "term": "Next group",
-    "translation": "",
-    "context": "Next group",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
-    "term": "Next input method",
-    "translation": "",
-    "context": "Next input method",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
     "term": "Next page",
     "translation": "",
     "context": "Next page",
     "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
+    "comment": ""
   },
   {
     "term": "Nice",
@@ -13480,13 +12248,6 @@
     "context": "Night mode",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Night mode & gamma",
-    "translation": "",
-    "context": "Night mode & gamma",
-    "reference": "",
-    "comment": "greeter feature card description"
   },
   {
     "term": "Night mode exceptions",
@@ -13536,13 +12297,6 @@
     "context": "No Bluetooth adapter found",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "No DMS shortcuts configured",
-    "translation": "",
-    "context": "No DMS shortcuts configured",
-    "reference": "",
-    "comment": "greeter no keybinds message"
   },
   {
     "term": "No GPU detected",
@@ -13720,13 +12474,6 @@
     "comment": ""
   },
   {
-    "term": "No checks passed",
-    "translation": "",
-    "context": "No checks passed",
-    "reference": "",
-    "comment": "greeter doctor page empty state"
-  },
-  {
     "term": "No codecs found",
     "translation": "",
     "context": "No codecs found",
@@ -13804,13 +12551,6 @@
     "comment": ""
   },
   {
-    "term": "No errors",
-    "translation": "",
-    "context": "No errors",
-    "reference": "",
-    "comment": "greeter doctor page empty state"
-  },
-  {
     "term": "No excluded apps configured",
     "translation": "",
     "context": "No excluded apps configured",
@@ -13872,13 +12612,6 @@
     "context": "No human user accounts found.",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "No info items",
-    "translation": "",
-    "context": "No info items",
-    "reference": "",
-    "comment": "greeter doctor page empty state"
   },
   {
     "term": "No information available",
@@ -13951,13 +12684,6 @@
     "comment": ""
   },
   {
-    "term": "No matching devices",
-    "translation": "",
-    "context": "No matching devices",
-    "reference": "",
-    "comment": "No Tailscale devices match search"
-  },
-  {
     "term": "No matching processes",
     "translation": "",
     "context": "No matching processes",
@@ -14019,13 +12745,6 @@
     "context": "No palettes configured. Use + to add one.",
     "reference": "",
     "comment": "injected palettes empty state"
-  },
-  {
-    "term": "No peers found",
-    "translation": "",
-    "context": "No peers found",
-    "reference": "",
-    "comment": "No Tailscale peers found"
   },
   {
     "term": "No plugin results",
@@ -14119,13 +12838,6 @@
     "comment": ""
   },
   {
-    "term": "No screenshot provided",
-    "translation": "",
-    "context": "No screenshot provided",
-    "reference": "",
-    "comment": "plugin browser no screenshot"
-  },
-  {
     "term": "No scroll",
     "translation": "",
     "context": "No scroll",
@@ -14154,13 +12866,6 @@
     "comment": ""
   },
   {
-    "term": "No status output.",
-    "translation": "",
-    "context": "No status output.",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "No supported package manager found.",
     "translation": "",
     "context": "No supported package manager found.",
@@ -14175,30 +12880,9 @@
     "comment": "Dashboard empty state when all navigation tabs are hidden"
   },
   {
-    "term": "No themes found",
-    "translation": "",
-    "context": "No themes found",
-    "reference": "",
-    "comment": "empty theme list"
-  },
-  {
-    "term": "No themes installed. Browse themes to install from the registry.",
-    "translation": "",
-    "context": "No themes installed. Browse themes to install from the registry.",
-    "reference": "",
-    "comment": "no registry themes installed hint"
-  },
-  {
     "term": "No trigger",
     "translation": "",
     "context": "No trigger",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "No updates available.",
-    "translation": "",
-    "context": "No updates available.",
     "reference": "",
     "comment": ""
   },
@@ -14229,13 +12913,6 @@
     "context": "No wallpapers",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "No warnings",
-    "translation": "",
-    "context": "No warnings",
-    "reference": "",
-    "comment": "greeter doctor page empty state"
   },
   {
     "term": "No weather data available",
@@ -14305,7 +12982,7 @@
     "translation": "",
     "context": "Noise",
     "reference": "",
-    "comment": "window rule background noise effect checkbox"
+    "comment": ""
   },
   {
     "term": "Non-consuming",
@@ -14319,7 +12996,7 @@
     "translation": "",
     "context": "None",
     "reference": "",
-    "comment": "Tailscale exit node: none selected | bar click action | wallpaper transition option | workspace color option"
+    "comment": "bar click action | wallpaper transition option | workspace color option"
   },
   {
     "term": "None active",
@@ -14357,18 +13034,11 @@
     "comment": "shared shortcuts option, shortcuts open where they normally would"
   },
   {
-    "term": "Not active",
-    "translation": "",
-    "context": "Not active",
-    "reference": "",
-    "comment": "greeter status, greetd does not run the DMS greeter"
-  },
-  {
     "term": "Not available",
     "translation": "",
     "context": "Not available",
     "reference": "",
-    "comment": "Tailscale service not available"
+    "comment": ""
   },
   {
     "term": "Not available - install %1 and %2",
@@ -14378,25 +13048,11 @@
     "comment": "lock screen fingerprint setting, %1 and %2 are package names"
   },
   {
-    "term": "Not available - install %1 and %2, or configure %3 PAM",
-    "translation": "",
-    "context": "Not available - install %1 and %2, or configure %3 PAM",
-    "reference": "",
-    "comment": "greeter fingerprint login setting, %1 and %2 are package names, %3 is greetd"
-  },
-  {
     "term": "Not available - install or configure %1",
     "translation": "",
     "context": "Not available - install or configure %1",
     "reference": "",
     "comment": "lock screen security key setting, %1 is a PAM module"
-  },
-  {
-    "term": "Not available - install or configure %1, or configure %2 PAM",
-    "translation": "",
-    "context": "Not available - install or configure %1, or configure %2 PAM",
-    "reference": "",
-    "comment": "greeter security key login setting, %1 is a PAM module, %2 is greetd"
   },
   {
     "term": "Not bound",
@@ -14425,20 +13081,6 @@
     "context": "Not inhibitable",
     "reference": "",
     "comment": "adjective, hyprland bind flag toggle, dont_inhibit"
-  },
-  {
-    "term": "Not installed",
-    "translation": "",
-    "context": "Not installed",
-    "reference": "",
-    "comment": "greeter status"
-  },
-  {
-    "term": "Not linked",
-    "translation": "",
-    "context": "Not linked",
-    "reference": "",
-    "comment": "greeter status, no greeter slot for this user"
   },
   {
     "term": "Not on click",
@@ -14550,7 +13192,7 @@
     "translation": "",
     "context": "Notifications",
     "reference": "",
-    "comment": "greeter settings link | island compact face: notification center label | island settings: notification badge slot row | island settings: notifications card title"
+    "comment": "island compact face: notification center label | island settings: notification badge slot row | island settings: notifications card title"
   },
   {
     "term": "Notifies when today's screen time passes the limit",
@@ -14634,7 +13276,7 @@
     "translation": "",
     "context": "OK",
     "reference": "",
-    "comment": "greeter doctor page status card"
+    "comment": ""
   },
   {
     "term": "OS Logo",
@@ -14686,13 +13328,6 @@
     "comment": "launcher app category"
   },
   {
-    "term": "Official only",
-    "translation": "",
-    "context": "Official only",
-    "reference": "",
-    "comment": "plugin browser filter chip, first party plugins"
-  },
-  {
     "term": "Offline Report",
     "translation": "",
     "context": "Offline Report",
@@ -14742,13 +13377,6 @@
     "comment": ""
   },
   {
-    "term": "On-demand",
-    "translation": "",
-    "context": "On-demand",
-    "reference": "",
-    "comment": "variable refresh rate option on niri"
-  },
-  {
     "term": "On-screen displays",
     "translation": "",
     "context": "On-screen displays",
@@ -14781,7 +13409,7 @@
     "translation": "",
     "context": "Online",
     "reference": "",
-    "comment": "Tailscale filter: all online devices | process filter: only processes with internet connections"
+    "comment": "process filter: only processes with internet connections"
   },
   {
     "term": "Only continue if you recognize this server certificate fingerprint.",
@@ -14966,27 +13594,6 @@
     "comment": "app picker title, followed by a list of apps | trash setting label, which file manager opens the trash"
   },
   {
-    "term": "Opening GitHub to remove the upvote",
-    "translation": "",
-    "context": "Opening GitHub to remove the upvote",
-    "reference": "",
-    "comment": "plugin upvote toast, shown when the GitHub CLI is missing or signed out"
-  },
-  {
-    "term": "Opening GitHub to upvote",
-    "translation": "",
-    "context": "Opening GitHub to upvote",
-    "reference": "",
-    "comment": "plugin upvote toast, shown when the GitHub CLI is missing or signed out"
-  },
-  {
-    "term": "Opening terminal: %1",
-    "translation": "",
-    "context": "Opening terminal: %1",
-    "reference": "",
-    "comment": "%1 is the action name"
-  },
-  {
     "term": "Opens",
     "translation": "",
     "context": "Opens",
@@ -14998,7 +13605,7 @@
     "translation": "",
     "context": "Opens %1",
     "reference": "",
-    "comment": "dashboard tab description, %1 is the settings window name | plugin settings page, plugin details, %1 is the link to the plugin source code"
+    "comment": "dashboard tab description, %1 is the settings window name"
   },
   {
     "term": "Opens a floating window with the live output",
@@ -15055,13 +13662,6 @@
     "context": "Options",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Options of a fcitx5 plugin",
-    "translation": "",
-    "context": "Options of a fcitx5 plugin",
-    "reference": "",
-    "comment": "Tab name for fcitx5 addon config page"
   },
   {
     "term": "Options of one widget instance",
@@ -15159,7 +13759,7 @@
     "translation": "",
     "context": "Output",
     "reference": "",
-    "comment": "noun, display output a window opens on, window rule field"
+    "comment": ""
   },
   {
     "term": "Output Area Almost Full",
@@ -15320,7 +13920,7 @@
     "translation": "",
     "context": "Overview",
     "reference": "",
-    "comment": "dashboard tab name | noun, niri compositor overview mode label"
+    "comment": "dashboard tab name"
   },
   {
     "term": "Own share",
@@ -15328,27 +13928,6 @@
     "context": "Own share",
     "reference": "",
     "comment": "proportional memory: the process's share of pages it shares with others"
-  },
-  {
-    "term": "Owner: %1",
-    "translation": "",
-    "context": "Owner: %1",
-    "reference": "",
-    "comment": "Tailscale device owner"
-  },
-  {
-    "term": "PAM already provides fingerprint auth. Enable this to show it at login.",
-    "translation": "",
-    "context": "PAM already provides fingerprint auth. Enable this to show it at login.",
-    "reference": "",
-    "comment": "greeter fingerprint login setting"
-  },
-  {
-    "term": "PAM already provides security-key auth. Enable this to show it at login.",
-    "translation": "",
-    "context": "PAM already provides security-key auth. Enable this to show it at login.",
-    "reference": "",
-    "comment": "greeter security key login setting"
   },
   {
     "term": "PDF reader",
@@ -15391,13 +13970,6 @@
     "context": "Package name (e.g., docker)",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Package repositories moved",
-    "translation": "",
-    "context": "Package repositories moved",
-    "reference": "",
-    "comment": "notification title, the DMS package repositories moved to a new owner"
   },
   {
     "term": "Packages",
@@ -15729,20 +14301,6 @@
     "comment": "CPU chart mode: one graph per thread"
   },
   {
-    "term": "Per window",
-    "translation": "",
-    "context": "Per window",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Per-screen config",
-    "translation": "",
-    "context": "Per-screen config",
-    "reference": "",
-    "comment": "greeter feature card description"
-  },
-  {
     "term": "Percentage",
     "translation": "",
     "context": "Percentage",
@@ -15813,20 +14371,6 @@
     "comment": "idle inhibitor detail subtitle shown while keep awake is off"
   },
   {
-    "term": "Pick of the day",
-    "translation": "",
-    "context": "Pick of the day",
-    "reference": "",
-    "comment": "plugin browser highlighted plugin"
-  },
-  {
-    "term": "Pick of the week",
-    "translation": "",
-    "context": "Pick of the week",
-    "reference": "",
-    "comment": "plugin browser highlighted plugin"
-  },
-  {
     "term": "Pill",
     "translation": "",
     "context": "Pill",
@@ -15860,13 +14404,6 @@
     "context": "Pinch",
     "reference": "",
     "comment": "short window rule property label for touchpad pinch sensitivity"
-  },
-  {
-    "term": "Pinch sensitivity",
-    "translation": "",
-    "context": "Pinch sensitivity",
-    "reference": "",
-    "comment": "touchpad slider, how strongly pinch gestures zoom in apps"
   },
   {
     "term": "Pink",
@@ -16016,13 +14553,6 @@
     "comment": "noun, item type label and fallback plugin name"
   },
   {
-    "term": "Plugin Source Code",
-    "translation": "",
-    "context": "Plugin Source Code",
-    "reference": "",
-    "comment": "plugin settings page, plugin details"
-  },
-  {
     "term": "Plugin dependency missing",
     "translation": "",
     "context": "Plugin dependency missing",
@@ -16035,13 +14565,6 @@
     "context": "Plugin details",
     "reference": "",
     "comment": "plugin metadata and maintenance"
-  },
-  {
-    "term": "Plugin directory and registries",
-    "translation": "",
-    "context": "Plugin directory and registries",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Plugin is disabled - enable in Plugins settings to use",
@@ -16072,13 +14595,6 @@
     "comment": ""
   },
   {
-    "term": "Plugin updates can change the code running in your session. Review the changes before updating.",
-    "translation": "",
-    "context": "Plugin updates can change the code running in your session. Review the changes before updating.",
-    "reference": "",
-    "comment": "plugin update audit reminder"
-  },
-  {
     "term": "Plugin visibility",
     "translation": "",
     "context": "Plugin visibility",
@@ -16090,14 +14606,7 @@
     "translation": "",
     "context": "Plugins",
     "reference": "",
-    "comment": "greeter feature card title"
-  },
-  {
-    "term": "Plugins by %1",
-    "translation": "",
-    "context": "Plugins by %1",
-    "reference": "",
-    "comment": "plugin browser author filter, %1 is the author"
+    "comment": ""
   },
   {
     "term": "Plugins shown in All mode without a trigger. Drag to reorder",
@@ -16156,32 +14665,11 @@
     "comment": "sync popout and modal animation toggle description"
   },
   {
-    "term": "Popular",
-    "translation": "",
-    "context": "Popular",
-    "reference": "",
-    "comment": "plugin browser shelf | plugin recommendation reason, many votes"
-  },
-  {
-    "term": "Popular Plugins",
-    "translation": "",
-    "context": "Popular Plugins",
-    "reference": "",
-    "comment": "greeter plugins page title"
-  },
-  {
     "term": "Popup Only",
     "translation": "",
     "context": "Popup Only",
     "reference": "",
     "comment": "notification rule action option"
-  },
-  {
-    "term": "Popup behavior, position",
-    "translation": "",
-    "context": "Popup behavior, position",
-    "reference": "",
-    "comment": "greeter notifications description"
   },
   {
     "term": "Popups",
@@ -16259,13 +14747,6 @@
     "context": "Position, displays, auto-hide, behavior",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Position, pinned apps",
-    "translation": "",
-    "context": "Position, pinned apps",
-    "reference": "",
-    "comment": "greeter dock description"
   },
   {
     "term": "Position, pinned apps, trash",
@@ -16450,20 +14931,6 @@
     "comment": "Hyprland dwindle layout toggle"
   },
   {
-    "term": "Preset widths (%)",
-    "translation": "",
-    "context": "Preset widths (%)",
-    "reference": "",
-    "comment": "niri output field label, preset column width percents"
-  },
-  {
-    "term": "Press Apply changes to update the login screen",
-    "translation": "",
-    "context": "Press Apply changes to update the login screen",
-    "reference": "",
-    "comment": "greeter auth setting description"
-  },
-  {
     "term": "Press Ctrl+N or click 'New Session' to create one",
     "translation": "",
     "context": "Press Ctrl+N or click 'New Session' to create one",
@@ -16534,13 +15001,6 @@
     "comment": "button going to the previous track, page, day, month or match"
   },
   {
-    "term": "Previous candidate",
-    "translation": "",
-    "context": "Previous candidate",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
     "term": "Previous category",
     "translation": "",
     "context": "Previous category",
@@ -16548,25 +15008,11 @@
     "comment": "launcher shortcut that switches to the previous mode tab"
   },
   {
-    "term": "Previous group",
-    "translation": "",
-    "context": "Previous group",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
-    "term": "Previous input method",
-    "translation": "",
-    "context": "Previous input method",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
     "term": "Previous page",
     "translation": "",
     "context": "Previous page",
     "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
+    "comment": ""
   },
   {
     "term": "Primary",
@@ -16828,13 +15274,6 @@
     "comment": "toast after saving a display profile, %1 is the profile name"
   },
   {
-    "term": "Profile sync failed.",
-    "translation": "",
-    "context": "Profile sync failed.",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Profiles",
     "translation": "",
     "context": "Profiles",
@@ -16947,13 +15386,6 @@
     "comment": ""
   },
   {
-    "term": "Quick system toggles",
-    "translation": "",
-    "context": "Quick system toggles",
-    "reference": "",
-    "comment": "greeter feature card description"
-  },
-  {
     "term": "Quick tiles",
     "translation": "",
     "context": "Quick tiles",
@@ -17031,25 +15463,11 @@
     "comment": "noun, wifi network detail label, link speed in Mbps"
   },
   {
-    "term": "Re-applies the greetd command, permissions and PAM authentication. Needs administrator access.",
-    "translation": "",
-    "context": "Re-applies the greetd command, permissions and PAM authentication. Needs administrator access.",
-    "reference": "",
-    "comment": "greeter advanced action"
-  },
-  {
     "term": "Re-enter the password before saving.",
     "translation": "",
     "context": "Re-enter the password before saving.",
     "reference": "",
     "comment": "hotspot password recovery message"
-  },
-  {
-    "term": "Reach local network devices while using an exit node",
-    "translation": "",
-    "context": "Reach local network devices while using an exit node",
-    "reference": "",
-    "comment": "Tailscale allow LAN access description"
   },
   {
     "term": "Read the blog post",
@@ -17071,48 +15489,6 @@
     "context": "Readings",
     "reference": "",
     "comment": "weather widget title, grid of current measurements"
-  },
-  {
-    "term": "Reads audio devices and volume",
-    "translation": "",
-    "context": "Reads audio devices and volume",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
-    "term": "Reads its own settings",
-    "translation": "",
-    "context": "Reads its own settings",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
-    "term": "Reads its saved state",
-    "translation": "",
-    "context": "Reads its saved state",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
-    "term": "Reads the clipboard",
-    "translation": "",
-    "context": "Reads the clipboard",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
-    "term": "Reads the list of running programs",
-    "translation": "",
-    "context": "Reads the list of running programs",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
-    "term": "Reads your files",
-    "translation": "",
-    "context": "Reads your files",
-    "reference": "",
-    "comment": "plugin permission"
   },
   {
     "term": "Ready",
@@ -17252,7 +15628,7 @@
     "translation": "",
     "context": "Refresh",
     "reference": "",
-    "comment": "Refresh Tailscale device status"
+    "comment": ""
   },
   {
     "term": "Refresh Weather",
@@ -17283,20 +15659,6 @@
     "comment": "notification rule match type option"
   },
   {
-    "term": "Registries",
-    "translation": "",
-    "context": "Registries",
-    "reference": "",
-    "comment": "plugin settings card title, plugin registry sources"
-  },
-  {
-    "term": "Regular",
-    "translation": "",
-    "context": "Regular",
-    "reference": "",
-    "comment": "font style"
-  },
-  {
     "term": "Reject jobs",
     "translation": "",
     "context": "Reject jobs",
@@ -17304,32 +15666,11 @@
     "comment": ""
   },
   {
-    "term": "Related: %1",
-    "translation": "",
-    "context": "Related: %1",
-    "reference": "",
-    "comment": "related plugins"
-  },
-  {
     "term": "Release",
     "translation": "",
     "context": "Release",
     "reference": "",
     "comment": "noun, hyprland bind flag toggle, trigger on key release"
-  },
-  {
-    "term": "Release notes",
-    "translation": "",
-    "context": "Release notes",
-    "reference": "",
-    "comment": "settings page and card title, notes for a DMS release"
-  },
-  {
-    "term": "Release notes are unavailable",
-    "translation": "",
-    "context": "Release notes are unavailable",
-    "reference": "",
-    "comment": "empty state title when no release notes are loaded"
   },
   {
     "term": "Release to confirm",
@@ -17391,27 +15732,6 @@
     "term": "Remember last query",
     "translation": "",
     "context": "Remember last query",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Remember last session",
-    "translation": "",
-    "context": "Remember last session",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Remember last user",
-    "translation": "",
-    "context": "Remember last user",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Remember layout",
-    "translation": "",
-    "context": "Remember layout",
     "reference": "",
     "comment": ""
   },
@@ -17479,20 +15799,6 @@
     "comment": "button on a recently picked color swatch"
   },
   {
-    "term": "Remove greeter access?",
-    "translation": "",
-    "context": "Remove greeter access?",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Remove greeter login access",
-    "translation": "",
-    "context": "Remove greeter login access",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Remove match",
     "translation": "",
     "context": "Remove match",
@@ -17521,23 +15827,9 @@
     "comment": "hyprland remove shortcut confirmation, %1 is the key combination, %2 the override file"
   },
   {
-    "term": "Remove upvote",
-    "translation": "",
-    "context": "Remove upvote",
-    "reference": "",
-    "comment": "plugin upvote button tooltip"
-  },
-  {
     "term": "Removed administrator privileges",
     "translation": "",
     "context": "Removed administrator privileges",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Removed greeter login access",
-    "translation": "",
-    "context": "Removed greeter login access",
     "reference": "",
     "comment": ""
   },
@@ -17668,13 +15960,6 @@
     "comment": ""
   },
   {
-    "term": "Requires %1, %2, and your user in the %3 group (plus %4 for fingerprint, %5 for security keys).",
-    "translation": "",
-    "context": "Requires %1, %2, and your user in the %3 group (plus %4 for fingerprint, %5 for security keys).",
-    "reference": "",
-    "comment": "greeter requirements note, %1 and %2 are package names, %3 a group name, %4 and %5 PAM modules"
-  },
-  {
     "term": "Requires DMS %1",
     "translation": "",
     "context": "Requires DMS %1",
@@ -17689,23 +15974,9 @@
     "comment": ""
   },
   {
-    "term": "Requires MangoWC compositor",
-    "translation": "",
-    "context": "Requires MangoWC compositor",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Requires night mode support",
     "translation": "",
     "context": "Requires night mode support",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Requires remembering the last user and session. Enable those options first.",
-    "translation": "",
-    "context": "Requires remembering the last user and session. Enable those options first.",
     "reference": "",
     "comment": ""
   },
@@ -17715,13 +15986,6 @@
     "context": "Requires restart",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Requires the DMS Theme extension from the editor marketplace",
-    "translation": "",
-    "context": "Requires the DMS Theme extension from the editor marketplace",
-    "reference": "",
-    "comment": "vscode matugen template description"
   },
   {
     "term": "Reserved height",
@@ -17785,13 +16049,6 @@
     "context": "Resolution & refresh",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Resolution, position, scale",
-    "translation": "",
-    "context": "Resolution, position, scale",
-    "reference": "",
-    "comment": "greeter displays description"
   },
   {
     "term": "Resources",
@@ -17861,7 +16118,7 @@
     "translation": "",
     "context": "Retry",
     "reference": "",
-    "comment": "retry failed action button"
+    "comment": ""
   },
   {
     "term": "Reverse scroll direction",
@@ -17890,13 +16147,6 @@
     "context": "Right Center",
     "reference": "",
     "comment": "screen position option"
-  },
-  {
-    "term": "Right Tiling",
-    "translation": "",
-    "context": "Right Tiling",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Right click",
@@ -17930,13 +16180,6 @@
     "term": "Right-click an app in the launcher and choose 'Hide App'",
     "translation": "",
     "context": "Right-click an app in the launcher and choose 'Hide App'",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Right-click bar widget to cycle",
-    "translation": "",
-    "context": "Right-click bar widget to cycle",
     "reference": "",
     "comment": ""
   },
@@ -18060,25 +16303,11 @@
     "comment": ""
   },
   {
-    "term": "Run %1 in a terminal.",
-    "translation": "",
-    "context": "Run %1 in a terminal.",
-    "reference": "",
-    "comment": "%1 is a shell command"
-  },
-  {
     "term": "Run %1 to create it before changing these settings.",
     "translation": "",
     "context": "Run %1 to create it before changing these settings.",
     "reference": "",
     "comment": "hyprland.lua missing warning, %1 is a command"
-  },
-  {
-    "term": "Run Again",
-    "translation": "",
-    "context": "Run Again",
-    "reference": "",
-    "comment": "greeter doctor page button"
   },
   {
     "term": "Run DMS templates",
@@ -18109,13 +16338,6 @@
     "comment": "injected palettes settings description, %1 is matugen, %2 a template placeholder, %3 and %4 placeholder and variable pairs"
   },
   {
-    "term": "Run full sync",
-    "translation": "",
-    "context": "Run full sync",
-    "reference": "",
-    "comment": "greeter advanced action"
-  },
-  {
     "term": "Run user templates",
     "translation": "",
     "context": "Run user templates",
@@ -18144,13 +16366,6 @@
     "comment": "how long a process has been running"
   },
   {
-    "term": "Running greeter sync...",
-    "translation": "",
-    "context": "Running greeter sync...",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Running in terminal",
     "translation": "",
     "context": "Running in terminal",
@@ -18163,20 +16378,6 @@
     "context": "Runs in a terminal.",
     "reference": "",
     "comment": "system update confirmation, the upgrade opens a terminal window"
-  },
-  {
-    "term": "Runs programs on your computer",
-    "translation": "",
-    "context": "Runs programs on your computer",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
-    "term": "Runs shell commands",
-    "translation": "",
-    "context": "Runs shell commands",
-    "reference": "",
-    "comment": "plugin permission"
   },
   {
     "term": "S",
@@ -18246,7 +16447,7 @@
     "translation": "",
     "context": "Saturation",
     "reference": "",
-    "comment": "window rule background color saturation checkbox"
+    "comment": ""
   },
   {
     "term": "Save",
@@ -18368,20 +16569,6 @@
     "comment": ""
   },
   {
-    "term": "Saves its own settings",
-    "translation": "",
-    "context": "Saves its own settings",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
-    "term": "Saves its state",
-    "translation": "",
-    "context": "Saves its state",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
     "term": "Saving...",
     "translation": "",
     "context": "Saving...",
@@ -18494,32 +16681,11 @@
     "comment": "settings row title, stored screen time data"
   },
   {
-    "term": "Screenshot unavailable",
-    "translation": "",
-    "context": "Screenshot unavailable",
-    "reference": "",
-    "comment": "plugin browser screenshot error"
-  },
-  {
     "term": "Scroll",
     "translation": "",
     "context": "Scroll",
     "reference": "",
     "comment": "wallpaper fill mode"
-  },
-  {
-    "term": "Scroll Factor",
-    "translation": "",
-    "context": "Scroll Factor",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Scroll GitHub",
-    "translation": "",
-    "context": "Scroll GitHub",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Scroll method",
@@ -18561,7 +16727,7 @@
     "translation": "",
     "context": "Scrolling",
     "reference": "",
-    "comment": "Hyprland tiling layout name | window tiling layout name in layout picker"
+    "comment": "Hyprland tiling layout name"
   },
   {
     "term": "Search",
@@ -18583,13 +16749,6 @@
     "context": "Search applications...",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Search devices...",
-    "translation": "",
-    "context": "Search devices...",
-    "reference": "",
-    "comment": "Tailscale device search placeholder"
   },
   {
     "term": "Search or press a shortcut...",
@@ -18632,13 +16791,6 @@
     "context": "Search shortcuts...",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Search themes...",
-    "translation": "",
-    "context": "Search themes...",
-    "reference": "",
-    "comment": "theme search placeholder"
   },
   {
     "term": "Search widgets...",
@@ -18730,13 +16882,6 @@
     "context": "Security key PAM source",
     "reference": "",
     "comment": "lock screen dedicated U2F PAM source setting"
-  },
-  {
-    "term": "Security key at login",
-    "translation": "",
-    "context": "Security key at login",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Security key mode",
@@ -19037,7 +17182,7 @@
     "translation": "",
     "context": "Session",
     "reference": "",
-    "comment": "greeter session picker widget | login session id of a process"
+    "comment": "login session id of a process"
   },
   {
     "term": "Session filter",
@@ -19108,13 +17253,6 @@
     "context": "Set under Theme & colors, Derived color",
     "reference": "",
     "comment": "Material seed card status"
-  },
-  {
-    "term": "Set up",
-    "translation": "",
-    "context": "Set up",
-    "reference": "",
-    "comment": "greeter setup button, links DMS settings to the login screen"
   },
   {
     "term": "Set up a Wi-Fi hotspot for sharing this connection.",
@@ -19206,13 +17344,6 @@
     "context": "Share gamma control settings",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Share input state",
-    "translation": "",
-    "context": "Share input state",
-    "reference": "",
-    "comment": "Option on the fcitx5 config page."
   },
   {
     "term": "Shared",
@@ -19313,13 +17444,6 @@
     "comment": "island settings: satellite widgets toggle | island settings: show home group"
   },
   {
-    "term": "Show \"config reloaded\" toast",
-    "translation": "",
-    "context": "Show \"config reloaded\" toast",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Show AM/PM",
     "translation": "",
     "context": "Show AM/PM",
@@ -19351,13 +17475,6 @@
     "term": "Show Saved Items",
     "translation": "",
     "context": "Show Saved Items",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Show all tags",
-    "translation": "",
-    "context": "Show all tags",
     "reference": "",
     "comment": ""
   },
@@ -19416,13 +17533,6 @@
     "context": "Show discharge rate",
     "reference": "",
     "comment": "Battery bar widget setting: show how many watts the system is drawing from the battery"
-  },
-  {
-    "term": "Show every author",
-    "translation": "",
-    "context": "Show every author",
-    "reference": "",
-    "comment": "plugin browser, clears the author filter"
   },
   {
     "term": "Show filename",
@@ -19516,13 +17626,6 @@
     "comment": ""
   },
   {
-    "term": "Show input method info on switch",
-    "translation": "",
-    "context": "Show input method info on switch",
-    "reference": "",
-    "comment": "Option on the fcitx5 config page."
-  },
-  {
     "term": "Show lock",
     "translation": "",
     "context": "Show lock",
@@ -19586,13 +17689,6 @@
     "comment": ""
   },
   {
-    "term": "Show on overview only",
-    "translation": "",
-    "context": "Show on overview only",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Show package source badges",
     "translation": "",
     "context": "Show package source badges",
@@ -19619,13 +17715,6 @@
     "context": "Show power off",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Show preedit in application",
-    "translation": "",
-    "context": "Show preedit in application",
-    "reference": "",
-    "comment": "Option on the fcitx5 config page."
   },
   {
     "term": "Show readings",
@@ -19719,13 +17808,6 @@
     "comment": "island settings: charging pulse toggle description"
   },
   {
-    "term": "Show the text being composed inside the app instead of the candidate window",
-    "translation": "",
-    "context": "Show the text being composed inside the app instead of the candidate window",
-    "reference": "",
-    "comment": "Description for an option on the fcitx5 config page."
-  },
-  {
     "term": "Show trend",
     "translation": "",
     "context": "Show trend",
@@ -19757,13 +17839,6 @@
     "term": "Show week number",
     "translation": "",
     "context": "Show week number",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Show welcome",
-    "translation": "",
-    "context": "Show welcome",
     "reference": "",
     "comment": ""
   },
@@ -19877,19 +17952,12 @@
     "translation": "",
     "context": "Size",
     "reference": "",
-    "comment": "Size | font size"
+    "comment": "Size"
   },
   {
     "term": "Size & spacing",
     "translation": "",
     "context": "Size & spacing",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Size Constraints",
-    "translation": "",
-    "context": "Size Constraints",
     "reference": "",
     "comment": ""
   },
@@ -19908,30 +17976,9 @@
     "comment": ""
   },
   {
-    "term": "Skip",
-    "translation": "",
-    "context": "Skip",
-    "reference": "",
-    "comment": "greeter skip button"
-  },
-  {
     "term": "Skip confirmation",
     "translation": "",
     "context": "Skip confirmation",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Skip setup",
-    "translation": "",
-    "context": "Skip setup",
-    "reference": "",
-    "comment": "greeter skip button tooltip"
-  },
-  {
-    "term": "Skip the greeter password after boot until you sign out. Lock screen unlock is unchanged. Takes effect on the next reboot after sync.",
-    "translation": "",
-    "context": "Skip the greeter password after boot until you sign out. Lock screen unlock is unchanged. Takes effect on the next reboot after sync.",
     "reference": "",
     "comment": ""
   },
@@ -19948,13 +17995,6 @@
     "context": "Sleeping",
     "reference": "",
     "comment": "process state"
-  },
-  {
-    "term": "Slide the bar away over fullscreen applications. Move the pointer to the screen edge to reveal it.",
-    "translation": "",
-    "context": "Slide the bar away over fullscreen applications. Move the pointer to the screen edge to reveal it.",
-    "reference": "",
-    "comment": "bar fullscreen auto-hide description"
   },
   {
     "term": "Slideout",
@@ -20083,13 +18123,6 @@
     "comment": "island settings: filled battery meter style"
   },
   {
-    "term": "Some options are only available in fcitx5-configtool: %1",
-    "translation": "",
-    "context": "Some options are only available in fcitx5-configtool: %1",
-    "reference": "",
-    "comment": "Displayed when not all config options are displayed in a fcitx5 addon config page, followed by the option names"
-  },
-  {
     "term": "Some plugins require a newer version of DMS:",
     "translation": "",
     "context": "Some plugins require a newer version of DMS:",
@@ -20151,13 +18184,6 @@
     "context": "Source: %1",
     "reference": "",
     "comment": "window rule detail, %1 is the config file path"
-  },
-  {
-    "term": "Sources for plugins and themes. Registries are git repositories with a plugins/ or themes/ directory.",
-    "translation": "",
-    "context": "Sources for plugins and themes. Registries are git repositories with a plugins/ or themes/ directory.",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Space-separated; {image} and {mode} are substituted",
@@ -20321,13 +18347,6 @@
     "comment": "bar corner style option"
   },
   {
-    "term": "Stable",
-    "translation": "",
-    "context": "Stable",
-    "reference": "",
-    "comment": "release channel"
-  },
-  {
     "term": "Stack",
     "translation": "",
     "context": "Stack",
@@ -20375,13 +18394,6 @@
     "context": "Start typing your notes here...",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Start with the input method on instead of the plain keyboard",
-    "translation": "",
-    "context": "Start with the input method on instead of the plain keyboard",
-    "reference": "",
-    "comment": "Option on the fcitx5 config page."
   },
   {
     "term": "Start/stop count",
@@ -20496,13 +18508,6 @@
     "comment": "printer state reason"
   },
   {
-    "term": "Stops syncing your DMS settings to the greeter. Set up links them again.",
-    "translation": "",
-    "context": "Stops syncing your DMS settings to the greeter. Set up links them again.",
-    "reference": "",
-    "comment": "greeter advanced action"
-  },
-  {
     "term": "Storage",
     "translation": "",
     "context": "Storage",
@@ -20535,7 +18540,7 @@
     "translation": "",
     "context": "Style",
     "reference": "",
-    "comment": "font style | noun, visual style option label for a widget or the dock"
+    "comment": "noun, visual style option label for a widget or the dock"
   },
   {
     "term": "Style, search, hidden apps",
@@ -20573,13 +18578,6 @@
     "comment": ""
   },
   {
-    "term": "Summary, highlights, links",
-    "translation": "",
-    "context": "Summary, highlights, links",
-    "reference": "",
-    "comment": "settings sidebar hint for the release notes page"
-  },
-  {
     "term": "Sun",
     "translation": "",
     "context": "Sun",
@@ -20599,13 +18597,6 @@
     "context": "Sunset",
     "reference": "",
     "comment": "sunset time label, also time of day period name"
-  },
-  {
-    "term": "Support DMS",
-    "translation": "",
-    "context": "Support DMS",
-    "reference": "",
-    "comment": "about page hero button, opens the Ko-fi donation page"
   },
   {
     "term": "Suppress duplicates",
@@ -20734,13 +18725,6 @@
     "comment": "Material seed card status"
   },
   {
-    "term": "Sway website",
-    "translation": "",
-    "context": "Sway website",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Swaying Square",
     "translation": "",
     "context": "Swaying Square",
@@ -20760,13 +18744,6 @@
     "context": "Switch between display configurations",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Switch between the first input method and the active one",
-    "translation": "",
-    "context": "Switch between the first input method and the active one",
-    "reference": "",
-    "comment": "Description for a configurable keybind in the fcitx5 settings."
   },
   {
     "term": "Switch layout shortcut",
@@ -20804,37 +18781,9 @@
     "comment": ""
   },
   {
-    "term": "Sync",
-    "translation": "",
-    "context": "Sync",
-    "reference": "",
-    "comment": "verb, button that copies settings to the login greeter"
-  },
-  {
-    "term": "Sync completed successfully.",
-    "translation": "",
-    "context": "Sync completed successfully.",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Sync failed in background mode. Trying terminal mode so you can authenticate interactively.",
-    "translation": "",
-    "context": "Sync failed in background mode. Trying terminal mode so you can authenticate interactively.",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Sync inset padding",
     "translation": "",
     "context": "Sync inset padding",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Sync needs sudo authentication. Opening terminal so you can use password or fingerprint.",
-    "translation": "",
-    "context": "Sync needs sudo authentication. Opening terminal so you can use password or fingerprint.",
     "reference": "",
     "comment": ""
   },
@@ -20858,13 +18807,6 @@
     "context": "Sync with portal",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Syncing...",
-    "translation": "",
-    "context": "Syncing...",
-    "reference": "",
-    "comment": "greeter settings status while sync is running"
   },
   {
     "term": "System",
@@ -20906,7 +18848,7 @@
     "translation": "",
     "context": "System check",
     "reference": "",
-    "comment": "greeter doctor page title"
+    "comment": ""
   },
   {
     "term": "System default",
@@ -21061,48 +19003,6 @@
     "context": "Tag",
     "reference": "",
     "comment": "noun, Hyprland window tag in window rule match"
-  },
-  {
-    "term": "Tags",
-    "translation": "",
-    "context": "Tags",
-    "reference": "",
-    "comment": "noun, mango compositor workspace tags field in window rule editor"
-  },
-  {
-    "term": "Tags: %1",
-    "translation": "",
-    "context": "Tags: %1",
-    "reference": "",
-    "comment": "Tailscale device tags"
-  },
-  {
-    "term": "Tailscale",
-    "translation": "",
-    "context": "Tailscale",
-    "reference": "",
-    "comment": "Tailscale mesh VPN widget title"
-  },
-  {
-    "term": "Tailscale Network",
-    "translation": "",
-    "context": "Tailscale Network",
-    "reference": "",
-    "comment": "Tailscale control center widget description"
-  },
-  {
-    "term": "Tailscale action failed",
-    "translation": "",
-    "context": "Tailscale action failed",
-    "reference": "",
-    "comment": "Toast shown when a Tailscale write action is rejected"
-  },
-  {
-    "term": "Tailscale not available",
-    "translation": "",
-    "context": "Tailscale not available",
-    "reference": "",
-    "comment": "Warning when Tailscale service is not running"
   },
   {
     "term": "Tap and drag",
@@ -21336,13 +19236,6 @@
     "comment": ""
   },
   {
-    "term": "The fcitx5 popup. The shell's OSD toggle is in the OSD settings.",
-    "translation": "",
-    "context": "The fcitx5 popup. The shell's OSD toggle is in the OSD settings.",
-    "reference": "",
-    "comment": "Description for an option on the fcitx5 config page."
-  },
-  {
     "term": "The fill shows relative humidity. The badge shows the dew point temperature.",
     "translation": "",
     "context": "The fill shows relative humidity. The badge shows the dew point temperature.",
@@ -21378,27 +19271,6 @@
     "comment": "keybind option tooltip, hyprland non-consuming flag"
   },
   {
-    "term": "The login screen follows your theme, wallpaper, widgets and behavior live. Only authentication changes need applying.",
-    "translation": "",
-    "context": "The login screen follows your theme, wallpaper, widgets and behavior live. Only authentication changes need applying.",
-    "reference": "",
-    "comment": "greeter status"
-  },
-  {
-    "term": "The login screen shows the lock screen widgets it supports and its own session picker. Turn off to arrange it separately.",
-    "translation": "",
-    "context": "The login screen shows the lock screen widgets it supports and its own session picker. Turn off to arrange it separately.",
-    "reference": "",
-    "comment": "greeter widgets toggle"
-  },
-  {
-    "term": "The login screen stops following your DMS theme, wallpaper, widgets and settings. greetd, authentication and other users are not affected.",
-    "translation": "",
-    "context": "The login screen stops following your DMS theme, wallpaper, widgets and settings. greetd, authentication and other users are not affected.",
-    "reference": "",
-    "comment": "greeter unlink confirmation"
-  },
-  {
     "term": "The next enabled provider is used when one fails.",
     "translation": "",
     "context": "The next enabled provider is used when one fails.",
@@ -21425,13 +19297,6 @@
     "context": "The rest open the bar's own popouts",
     "reference": "",
     "comment": "island widget settings: unselected activities use the bar"
-  },
-  {
-    "term": "The rule applies to any window matching one of these.",
-    "translation": "",
-    "context": "The rule applies to any window matching one of these.",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "The server certificate has changed since it was last trusted. Only continue if you recognize the new fingerprint.",
@@ -21466,7 +19331,7 @@
     "translation": "",
     "context": "Theme & colors",
     "reference": "",
-    "comment": "greeter settings link"
+    "comment": ""
   },
   {
     "term": "Theme color",
@@ -21518,13 +19383,6 @@
     "comment": "settings sidebar hint for the wallpaper and colors page"
   },
   {
-    "term": "Themes",
-    "translation": "",
-    "context": "Themes",
-    "reference": "",
-    "comment": "greeter themes link"
-  },
-  {
     "term": "These add entries to the XDG autostart directory (%1)",
     "translation": "",
     "context": "These add entries to the XDG autostart directory (%1)",
@@ -21532,39 +19390,11 @@
     "comment": "autostart note, %1 is a path"
   },
   {
-    "term": "They load with the next update check. Release notes are also published on GitHub.",
-    "translation": "",
-    "context": "They load with the next update check. Release notes are also published on GitHub.",
-    "reference": "",
-    "comment": "release notes empty state description"
-  },
-  {
     "term": "Thickness",
     "translation": "",
     "context": "Thickness",
     "reference": "",
     "comment": "slider label, border or outline width in pixels"
-  },
-  {
-    "term": "Third-Party Plugin Warning",
-    "translation": "",
-    "context": "Third-Party Plugin Warning",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Third-party plugins",
-    "translation": "",
-    "context": "Third-party plugins",
-    "reference": "",
-    "comment": "community plugin discovery control"
-  },
-  {
-    "term": "Third-party plugins are created by the community and are not officially supported by %1.\n\nThese plugins may pose security and privacy risks - install at your own risk.",
-    "translation": "",
-    "context": "Third-party plugins are created by the community and are not officially supported by %1.\n\nThese plugins may pose security and privacy risks - install at your own risk.",
-    "reference": "",
-    "comment": "third-party plugin warning, %1 is the product name"
   },
   {
     "term": "This bar is the Island",
@@ -21579,13 +19409,6 @@
     "context": "This bind is overridden by %1",
     "reference": "",
     "comment": "keybind conflict notice, %1 is the compositor config file"
-  },
-  {
-    "term": "This device",
-    "translation": "",
-    "context": "This device",
-    "reference": "",
-    "comment": "Label for the user's own device in Tailscale"
   },
   {
     "term": "This display does not report HDR support, so Hyprland falls back to sRGB.",
@@ -21621,13 +19444,6 @@
     "context": "This plugin does not have '%1' permission.\n\nAdd %2 to %3",
     "reference": "",
     "comment": "plugin settings write warning, %1 is a permission name, %2 a manifest snippet, %3 the manifest file"
-  },
-  {
-    "term": "This system cannot link settings live. Sync again after changing them.",
-    "translation": "",
-    "context": "This system cannot link settings live. Sync again after changing them.",
-    "reference": "",
-    "comment": "greeter status"
   },
   {
     "term": "This system was not started in UEFI mode",
@@ -21728,20 +19544,6 @@
     "comment": "adjective, short window rule property label for tiled state"
   },
   {
-    "term": "Tiled State",
-    "translation": "",
-    "context": "Tiled State",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Tiling",
-    "translation": "",
-    "context": "Tiling",
-    "reference": "",
-    "comment": "window tiling layout name in layout picker"
-  },
-  {
     "term": "Tiling layout",
     "translation": "",
     "context": "Tiling layout",
@@ -21824,13 +19626,6 @@
     "context": "Title",
     "reference": "",
     "comment": "noun, window title match field, also name field label"
-  },
-  {
-    "term": "Title (optional)",
-    "translation": "",
-    "context": "Title (optional)",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Title bars",
@@ -21950,20 +19745,6 @@
     "context": "Toggle fonts",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Toggle input method",
-    "translation": "",
-    "context": "Toggle input method",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
-  },
-  {
-    "term": "Toggle preedit in application",
-    "translation": "",
-    "context": "Toggle preedit in application",
-    "reference": "",
-    "comment": "Configurable keybind in the fcitx5 settings."
   },
   {
     "term": "Toggling...",
@@ -22183,13 +19964,6 @@
     "comment": ""
   },
   {
-    "term": "Trending",
-    "translation": "",
-    "context": "Trending",
-    "reference": "",
-    "comment": "plugin browser shelf, gaining votes quickly | plugin recommendation reason, gaining votes quickly"
-  },
-  {
     "term": "Trigger",
     "translation": "",
     "context": "Trigger",
@@ -22295,25 +20069,11 @@
     "comment": ""
   },
   {
-    "term": "Typing in the overview opens the launcher",
-    "translation": "",
-    "context": "Typing in the overview opens the launcher",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Typing reveals the field. Escape hides it again. The editor always shows it.",
     "translation": "",
     "context": "Typing reveals the field. Escape hides it again. The editor always shows it.",
     "reference": "",
     "comment": "lock screen hide until typing behavior"
-  },
-  {
-    "term": "URL",
-    "translation": "",
-    "context": "URL",
-    "reference": "",
-    "comment": "Plugin registry repository address"
   },
   {
     "term": "UV Index",
@@ -22330,18 +20090,11 @@
     "comment": "audio port availability status"
   },
   {
-    "term": "Uncategorized",
-    "translation": "",
-    "context": "Uncategorized",
-    "reference": "",
-    "comment": "plugin browser category filter"
-  },
-  {
     "term": "Undo",
     "translation": "",
     "context": "Undo",
     "reference": "",
-    "comment": "reinstall the plugin that was just uninstalled"
+    "comment": ""
   },
   {
     "term": "Unfocused color",
@@ -22468,34 +20221,6 @@
     "context": "Unknown Track",
     "reference": "",
     "comment": "island media face: fallback title"
-  },
-  {
-    "term": "Unlink",
-    "translation": "",
-    "context": "Unlink",
-    "reference": "",
-    "comment": "verb, greeter unlink button"
-  },
-  {
-    "term": "Unlink login screen",
-    "translation": "",
-    "context": "Unlink login screen",
-    "reference": "",
-    "comment": "greeter advanced action"
-  },
-  {
-    "term": "Unlink needs sudo authentication. Opening terminal so you can use password or fingerprint.",
-    "translation": "",
-    "context": "Unlink needs sudo authentication. Opening terminal so you can use password or fingerprint.",
-    "reference": "",
-    "comment": "greeter unlink status"
-  },
-  {
-    "term": "Unlink now?",
-    "translation": "",
-    "context": "Unlink now?",
-    "reference": "",
-    "comment": "greeter unlink second confirmation"
   },
   {
     "term": "Unload on close",
@@ -22652,51 +20377,9 @@
     "comment": ""
   },
   {
-    "term": "Update",
-    "translation": "",
-    "context": "Update",
-    "reference": "",
-    "comment": "verb, button installing a newer plugin version"
-  },
-  {
-    "term": "Update %1?",
-    "translation": "",
-    "context": "Update %1?",
-    "reference": "",
-    "comment": "plugin update confirmation"
-  },
-  {
     "term": "Update All",
     "translation": "",
     "context": "Update All",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Update DMS to configure fcitx5 from here",
-    "translation": "",
-    "context": "Update DMS to configure fcitx5 from here",
-    "reference": "",
-    "comment": "Tip displayed when dms core is too old for fcitx5"
-  },
-  {
-    "term": "Update available",
-    "translation": "",
-    "context": "Update available",
-    "reference": "",
-    "comment": "plugin row badge"
-  },
-  {
-    "term": "Update failed: %1",
-    "translation": "",
-    "context": "Update failed: %1",
-    "reference": "",
-    "comment": "plugin update error, %1 is the error message"
-  },
-  {
-    "term": "Update plugin",
-    "translation": "",
-    "context": "Update plugin",
     "reference": "",
     "comment": ""
   },
@@ -22713,27 +20396,6 @@
     "context": "Updates, clipboard, %1",
     "reference": "",
     "comment": "settings sidebar hint for the system and integrations page, %1 is the compositor name"
-  },
-  {
-    "term": "Updating %1...",
-    "translation": "",
-    "context": "Updating %1...",
-    "reference": "",
-    "comment": "plugin updates dialog progress, %1 is the plugin name"
-  },
-  {
-    "term": "Updating plugins...",
-    "translation": "",
-    "context": "Updating plugins...",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Updating...",
-    "translation": "",
-    "context": "Updating...",
-    "reference": "",
-    "comment": "plugin update button tooltip while the update runs"
   },
   {
     "term": "Upgrading...",
@@ -22757,32 +20419,11 @@
     "comment": ""
   },
   {
-    "term": "Upvote on GitHub",
-    "translation": "",
-    "context": "Upvote on GitHub",
-    "reference": "",
-    "comment": "plugin upvote button tooltip"
-  },
-  {
-    "term": "Upvote removed",
-    "translation": "",
-    "context": "Upvote removed",
-    "reference": "",
-    "comment": "plugin upvote toast"
-  },
-  {
-    "term": "Upvoted on GitHub",
-    "translation": "",
-    "context": "Upvoted on GitHub",
-    "reference": "",
-    "comment": "plugin upvote toast"
-  },
-  {
     "term": "Urgent",
     "translation": "",
     "context": "Urgent",
     "reference": "",
-    "comment": "adjective, window rule match condition for windows requesting attention"
+    "comment": ""
   },
   {
     "term": "Urgent color",
@@ -22946,23 +20587,9 @@
     "comment": ""
   },
   {
-    "term": "User created with administrator and greeter login access",
-    "translation": "",
-    "context": "User created with administrator and greeter login access",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "User created with administrator privileges",
     "translation": "",
     "context": "User created with administrator privileges",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "User created with greeter login access",
-    "translation": "",
-    "context": "User created with greeter login access",
     "reference": "",
     "comment": ""
   },
@@ -23028,13 +20655,6 @@
     "context": "Uses sunrise/sunset times based on your location.",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Uses your wallpaper, fonts and lock screen settings.",
-    "translation": "",
-    "context": "Uses your wallpaper, fonts and lock screen settings.",
-    "reference": "",
-    "comment": "login screen appearance"
   },
   {
     "term": "Using global monospace font from Settings → Personalization",
@@ -23128,13 +20748,6 @@
     "comment": ""
   },
   {
-    "term": "VRR On-Demand",
-    "translation": "",
-    "context": "VRR On-Demand",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Variable refresh rate",
     "translation": "",
     "context": "Variable refresh rate",
@@ -23163,46 +20776,11 @@
     "comment": "accessible name of plugin version badge, %1 is the version number"
   },
   {
-    "term": "Version, links, diagnostics",
-    "translation": "",
-    "context": "Version, links, diagnostics",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Vertical",
     "translation": "",
     "context": "Vertical",
     "reference": "",
     "comment": "island settings: free island orientation"
-  },
-  {
-    "term": "Vertical Deck",
-    "translation": "",
-    "context": "Vertical Deck",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Vertical Grid",
-    "translation": "",
-    "context": "Vertical Grid",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Vertical Scrolling",
-    "translation": "",
-    "context": "Vertical Scrolling",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Vertical Tiling",
-    "translation": "",
-    "context": "Vertical Tiling",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Vertical offset",
@@ -23280,13 +20858,6 @@
     "context": "Video wallpapers play once, then the next wallpaper is shown",
     "reference": "",
     "comment": "wallpaper cycling toggle description"
-  },
-  {
-    "term": "View Changes",
-    "translation": "",
-    "context": "View Changes",
-    "reference": "",
-    "comment": "open plugin changes before updating"
   },
   {
     "term": "View on GitHub",
@@ -23394,13 +20965,6 @@
     "comment": "settings sidebar hint for the on-screen displays page"
   },
   {
-    "term": "Votes",
-    "translation": "",
-    "context": "Votes",
-    "reference": "",
-    "comment": "plugin browser sort option"
-  },
-  {
     "term": "W",
     "translation": "",
     "context": "W",
@@ -23433,7 +20997,7 @@
     "translation": "",
     "context": "Wallpaper",
     "reference": "",
-    "comment": "greeter settings link | island compact face: wallpaper picker label"
+    "comment": "island compact face: wallpaper picker label"
   },
   {
     "term": "Wallpaper & colors",
@@ -23483,13 +21047,6 @@
     "context": "Warning",
     "reference": "",
     "comment": "noun, printer state reason severity"
-  },
-  {
-    "term": "Warnings",
-    "translation": "",
-    "context": "Warnings",
-    "reference": "",
-    "comment": "greeter doctor page status card"
   },
   {
     "term": "Warp on display change",
@@ -23560,41 +21117,6 @@
     "context": "Weight",
     "reference": "",
     "comment": "font weight slider label"
-  },
-  {
-    "term": "Welcome",
-    "translation": "",
-    "context": "Welcome",
-    "reference": "",
-    "comment": "greeter modal window title"
-  },
-  {
-    "term": "Welcome to %1",
-    "translation": "",
-    "context": "Welcome to %1",
-    "reference": "",
-    "comment": "greeter welcome page title, %1 is the product name"
-  },
-  {
-    "term": "What changed",
-    "translation": "",
-    "context": "What changed",
-    "reference": "",
-    "comment": "changelog section heading listing the changes in a release"
-  },
-  {
-    "term": "What's New",
-    "translation": "",
-    "context": "What's New",
-    "reference": "",
-    "comment": "changelog window title"
-  },
-  {
-    "term": "When locked",
-    "translation": "",
-    "context": "When locked",
-    "reference": "",
-    "comment": ""
   },
   {
     "term": "Which PAM service the lock screen uses to authenticate",
@@ -23807,13 +21329,6 @@
     "comment": "bar section overflow description"
   },
   {
-    "term": "Widgets, layout, style",
-    "translation": "",
-    "context": "Widgets, layout, style",
-    "reference": "",
-    "comment": "greeter dankbar description"
-  },
-  {
     "term": "Width",
     "translation": "",
     "context": "Width",
@@ -23842,30 +21357,9 @@
     "comment": ""
   },
   {
-    "term": "Window Height",
-    "translation": "",
-    "context": "Window Height",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Window Opening",
     "translation": "",
     "context": "Window Opening",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Window gaps",
-    "translation": "",
-    "context": "Window gaps",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Window gaps (px)",
-    "translation": "",
-    "context": "Window gaps (px)",
     "reference": "",
     "comment": ""
   },
@@ -23982,13 +21476,6 @@
     "comment": "create user button text while the operation runs"
   },
   {
-    "term": "Works here",
-    "translation": "",
-    "context": "Works here",
-    "reference": "",
-    "comment": "plugin browser filter chip, plugins that run on the current compositor"
-  },
-  {
     "term": "Works in every submap",
     "translation": "",
     "context": "Works in every submap",
@@ -24066,13 +21553,6 @@
     "comment": "disk write cache mode"
   },
   {
-    "term": "Writes to your files",
-    "translation": "",
-    "context": "Writes to your files",
-    "reference": "",
-    "comment": "plugin permission"
-  },
-  {
     "term": "Written total",
     "translation": "",
     "context": "Written total",
@@ -24091,7 +21571,7 @@
     "translation": "",
     "context": "X-Ray",
     "reference": "",
-    "comment": "window rule background xray effect option"
+    "comment": ""
   },
   {
     "term": "XDG tag",
@@ -24111,13 +21591,6 @@
     "term": "Xray blur",
     "translation": "",
     "context": "Xray blur",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Xray blurs only the wallpaper (efficient) and is the default when Blur is on. Set Xray to Off for regular full blur of everything beneath the window (more expensive).",
-    "translation": "",
-    "context": "Xray blurs only the wallpaper (efficient) and is the default when Blur is on. Set Xray to Off for regular full blur of everything beneath the window (more expensive).",
     "reference": "",
     "comment": ""
   },
@@ -24164,27 +21637,6 @@
     "comment": ""
   },
   {
-    "term": "You'll enter your password at the greeter after the next reboot.",
-    "translation": "",
-    "context": "You'll enter your password at the greeter after the next reboot.",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "You'll skip the greeter password after the next reboot. The lock screen and signing out still require your password.",
-    "translation": "",
-    "context": "You'll skip the greeter password after the next reboot. The lock screen and signing out still require your password.",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "You're All Set!",
-    "translation": "",
-    "context": "You're All Set!",
-    "reference": "",
-    "comment": "greeter completion page title"
-  },
-  {
     "term": "You're all caught up",
     "translation": "",
     "context": "You're all caught up",
@@ -24197,13 +21649,6 @@
     "context": "Your compositor does not support ext-background blur",
     "reference": "",
     "comment": ""
-  },
-  {
-    "term": "Your greeter slot and any cache links to your home are removed. Administrator access may be required. Set up links them again.",
-    "translation": "",
-    "context": "Your greeter slot and any cache links to your home are removed. Administrator access may be required. Set up links them again.",
-    "reference": "",
-    "comment": "greeter unlink second confirmation"
   },
   {
     "term": "Your hotspot is running.",
@@ -24262,13 +21707,6 @@
     "comment": "multiplexer session state, a client is attached"
   },
   {
-    "term": "broken",
-    "translation": "",
-    "context": "broken",
-    "reference": "",
-    "comment": "plugin status"
-  },
-  {
     "term": "by %1",
     "translation": "",
     "context": "by %1",
@@ -24304,39 +21742,11 @@
     "comment": ""
   },
   {
-    "term": "copy link",
-    "translation": "",
-    "context": "copy link",
-    "reference": "",
-    "comment": "plugin detail link, copies the plugin page address"
-  },
-  {
-    "term": "deprecated",
-    "translation": "",
-    "context": "deprecated",
-    "reference": "",
-    "comment": "plugin status"
-  },
-  {
     "term": "detached",
     "translation": "",
     "context": "detached",
     "reference": "",
     "comment": "multiplexer session state, no client attached"
-  },
-  {
-    "term": "direct",
-    "translation": "",
-    "context": "direct",
-    "reference": "",
-    "comment": "Tailscale direct connection"
-  },
-  {
-    "term": "discuss",
-    "translation": "",
-    "context": "discuss",
-    "reference": "",
-    "comment": "plugin discussion link"
   },
   {
     "term": "e.g. /usr/bin/my-script --flag",
@@ -24416,25 +21826,11 @@
     "comment": "launcher file search placeholder, short for file extension"
   },
   {
-    "term": "fcitx5 input methods, keybinds, behavior",
-    "translation": "",
-    "context": "fcitx5 input methods, keybinds, behavior",
-    "reference": "",
-    "comment": "Description for fcitx5 settings config page"
-  },
-  {
     "term": "featured",
     "translation": "",
     "context": "featured",
     "reference": "",
-    "comment": "adjective, lowercase plugin badge"
-  },
-  {
-    "term": "greetd is not using the DMS greeter yet.",
-    "translation": "",
-    "context": "greetd is not using the DMS greeter yet.",
-    "reference": "",
-    "comment": "greeter status"
+    "comment": ""
   },
   {
     "term": "khal",
@@ -24442,13 +21838,6 @@
     "context": "khal",
     "reference": "",
     "comment": "calendar backend option"
-  },
-  {
-    "term": "last seen %1",
-    "translation": "",
-    "context": "last seen %1",
-    "reference": "",
-    "comment": "Tailscale peer last seen time"
   },
   {
     "term": "leave empty for default",
@@ -24472,41 +21861,6 @@
     "comment": ""
   },
   {
-    "term": "mango: config reloaded",
-    "translation": "",
-    "context": "mango: config reloaded",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "mango: failed to reload config",
-    "translation": "",
-    "context": "mango: failed to reload config",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "mangowc Discord server",
-    "translation": "",
-    "context": "mangowc Discord server",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "mangowc GitHub",
-    "translation": "",
-    "context": "mangowc GitHub",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "ms",
-    "translation": "",
-    "context": "ms",
-    "reference": "",
-    "comment": "milliseconds unit suffix after a number field"
-  },
-  {
     "term": "nav",
     "translation": "",
     "context": "nav",
@@ -24514,60 +21868,11 @@
     "comment": "launcher footer hint after arrow keys, short for navigate"
   },
   {
-    "term": "new",
-    "translation": "",
-    "context": "new",
-    "reference": "",
-    "comment": "adjective, lowercase plugin badge, recently added"
-  },
-  {
-    "term": "niri GitHub",
-    "translation": "",
-    "context": "niri GitHub",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "niri Matrix chat",
-    "translation": "",
-    "context": "niri Matrix chat",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "niri shortcuts config",
-    "translation": "",
-    "context": "niri shortcuts config",
-    "reference": "",
-    "comment": "greeter keybinds niri description"
-  },
-  {
-    "term": "niri: config reloaded",
-    "translation": "",
-    "context": "niri: config reloaded",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "niri: failed to load config",
-    "translation": "",
-    "context": "niri: failed to load config",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "now",
     "translation": "",
     "context": "now",
     "reference": "",
     "comment": "relative timestamp for the current moment"
-  },
-  {
-    "term": "official",
-    "translation": "",
-    "context": "official",
-    "reference": "",
-    "comment": "adjective, lowercase first party plugin or registry badge"
   },
   {
     "term": "on %1",
@@ -24584,27 +21889,6 @@
     "comment": ""
   },
   {
-    "term": "px",
-    "translation": "",
-    "context": "px",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "r/niri subreddit",
-    "translation": "",
-    "context": "r/niri subreddit",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "relay: %1",
-    "translation": "",
-    "context": "relay: %1",
-    "reference": "",
-    "comment": "Tailscale relay server name"
-  },
-  {
     "term": "remote",
     "translation": "",
     "context": "remote",
@@ -24612,32 +21896,11 @@
     "comment": "adjective, shown when a login session has no tty or seat"
   },
   {
-    "term": "report a problem",
-    "translation": "",
-    "context": "report a problem",
-    "reference": "",
-    "comment": "plugin detail link, opens a prefilled issue"
-  },
-  {
-    "term": "reviewed",
-    "translation": "",
-    "context": "reviewed",
-    "reference": "",
-    "comment": "plugin status"
-  },
-  {
     "term": "session %1",
     "translation": "",
     "context": "session %1",
     "reference": "",
     "comment": "switch user list, %1 is the login session id"
-  },
-  {
-    "term": "source",
-    "translation": "",
-    "context": "source",
-    "reference": "",
-    "comment": "source code link"
   },
   {
     "term": "the Qt 6 Multimedia QML module",
@@ -24661,13 +21924,6 @@
     "comment": "settings page description for terminal multiplexer sessions; tmux, zellij, and herdr are product names"
   },
   {
-    "term": "unmaintained",
-    "translation": "",
-    "context": "unmaintained",
-    "reference": "",
-    "comment": "plugin status"
-  },
-  {
     "term": "until %1",
     "translation": "",
     "context": "until %1",
@@ -24680,13 +21936,6 @@
     "context": "up",
     "reference": "",
     "comment": "uptime prefix, e.g. 'up 4h 2m'"
-  },
-  {
-    "term": "updated",
-    "translation": "",
-    "context": "updated",
-    "reference": "",
-    "comment": "adjective, lowercase plugin badge, recently updated"
   },
   {
     "term": "useradd failed (exit %1)",
@@ -24707,7 +21956,7 @@
     "translation": "",
     "context": "usermod failed (exit %1)",
     "reference": "",
-    "comment": "user group change error, usermod is a command, %1 is exit code"
+    "comment": ""
   },
   {
     "term": "• M - Month (1-12)",
