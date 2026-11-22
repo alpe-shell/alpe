@@ -97,8 +97,8 @@ var (
 
 var doctorCmd = &cobra.Command{
 	Use:   "doctor",
-	Short: "Diagnose DMS installation and dependencies",
-	Long:  "Check system health, verify dependencies, and diagnose configuration issues for DMS",
+	Short: "Diagnose Alpe installation and dependencies",
+	Long:  "Check system health, verify dependencies, and diagnose configuration issues for Alpe",
 	Run:   runDoctor,
 }
 
@@ -285,7 +285,7 @@ func checkSystemInfo() []checkResult {
 			doctorDocsURL + "#display-server",
 		})
 	case xdgSessionType == "x11":
-		results = append(results, checkResult{catSystem, "Display Server", statusError, "X11 (DMS requires Wayland)", "", doctorDocsURL + "#display-server"})
+		results = append(results, checkResult{catSystem, "Display Server", statusError, "X11 (Alpe requires Wayland)", "", doctorDocsURL + "#display-server"})
 	default:
 		results = append(results, checkResult{
 			catSystem, "Display Server", statusWarn, "Unknown (ensure you're running Wayland)",
@@ -346,14 +346,14 @@ func xdgMenuPrefixResult(menuPrefix string, shellUnderSystemd bool, sessionEnv f
 			return []checkResult{{catEnvironment, "XDG_MENU_PREFIX", statusWarn, fmt.Sprintf("%s (menu file not found)", menuPrefix), fmt.Sprintf("Dolphin 'Open with…' dialog may be empty. Ensure %sapplications.menu exists in ~/.config/menus or /etc/xdg/menus.", menuPrefix), url}}
 		}
 		if shellUnderSystemd && sessionEnv("XDG_MENU_PREFIX") == "" {
-			return []checkResult{{catEnvironment, "XDG_MENU_PREFIX", statusWarn, fmt.Sprintf("%s (not in the systemd user environment)", menuPrefix), fmt.Sprintf("dms.service and apps launched from DMS only see the systemd user environment. Set XDG_MENU_PREFIX=%s in ~/.config/environment.d/ as well; a compositor environment block does not reach them.", menuPrefix), url}}
+			return []checkResult{{catEnvironment, "XDG_MENU_PREFIX", statusWarn, fmt.Sprintf("%s (not in the systemd user environment)", menuPrefix), fmt.Sprintf("alpe.service and apps launched from Alpe only see the systemd user environment. Set XDG_MENU_PREFIX=%s in ~/.config/environment.d/ as well; a compositor environment block does not reach them.", menuPrefix), url}}
 		}
 		return []checkResult{{catEnvironment, "XDG_MENU_PREFIX", statusInfo, menuPrefix, "", url}}
 	}
 	if _, err := exec.LookPath("keditfiletype"); err == nil {
 		hint := "Dolphin file associations and 'Open with…' dialog may be empty. Set XDG_MENU_PREFIX=plasma- in your compositor's environment block."
 		if shellUnderSystemd {
-			hint = "Dolphin file associations and 'Open with…' dialog may be empty. dms.service and apps launched from DMS only see the systemd user environment, so set XDG_MENU_PREFIX=plasma- in ~/.config/environment.d/; a compositor environment block does not reach them."
+			hint = "Dolphin file associations and 'Open with…' dialog may be empty. alpe.service and apps launched from Alpe only see the systemd user environment, so set XDG_MENU_PREFIX=plasma- in ~/.config/environment.d/; a compositor environment block does not reach them."
 		}
 		return []checkResult{{catEnvironment, "XDG_MENU_PREFIX", statusWarn, "Not set", hint, url}}
 	}
@@ -399,7 +399,7 @@ func checkQtengineConfig() []checkResult {
 
 	data, err := os.ReadFile(path)
 	if os.IsNotExist(err) || (err == nil && len(bytes.TrimSpace(data)) == 0) {
-		return []checkResult{{catEnvironment, "qtengine config", statusInfo, "Not found", "Qt apps use qtengine's default palette until DMS generates a theme.", url}}
+		return []checkResult{{catEnvironment, "qtengine config", statusInfo, "Not found", "Qt apps use qtengine's default palette until Alpe generates a theme.", url}}
 	}
 	var cfg struct {
 		Theme struct {
@@ -410,20 +410,20 @@ func checkQtengineConfig() []checkResult {
 		err = json.Unmarshal(data, &cfg)
 	}
 	if err != nil {
-		return []checkResult{{catEnvironment, "qtengine config", statusWarn, "Unreadable", fmt.Sprintf("DMS won't overwrite %s while it can't parse it, so Qt apps stop following DMS colors. Fix or remove the file.", path), url}}
+		return []checkResult{{catEnvironment, "qtengine config", statusWarn, "Unreadable", fmt.Sprintf("Alpe won't overwrite %s while it can't parse it, so Qt apps stop following Alpe colors. Fix or remove the file.", path), url}}
 	}
 
 	scheme := matugen.QtengineColorSchemePath()
 	if cfg.Theme.ColorScheme == scheme {
-		return []checkResult{{catEnvironment, "qtengine config", statusOK, "Uses DMS colors", path, url}}
+		return []checkResult{{catEnvironment, "qtengine config", statusOK, "Uses Alpe colors", path, url}}
 	}
 	current := "No color scheme is set"
 	if cfg.Theme.ColorScheme != "" {
 		current = "The color scheme is " + cfg.Theme.ColorScheme
 	}
 	return []checkResult{{
-		catEnvironment, "qtengine config", statusInfo, "Not using DMS colors",
-		fmt.Sprintf("%s. DMS sets %s when it generates a theme with the qtengine and KColorScheme templates enabled.", current, scheme),
+		catEnvironment, "qtengine config", statusInfo, "Not using Alpe colors",
+		fmt.Sprintf("%s. Alpe sets %s when it generates a theme with the qtengine and KColorScheme templates enabled.", current, scheme),
 		url,
 	}}
 }
@@ -484,7 +484,7 @@ func checkQtPlatformThemePluginFor(varName, value, major string, qt qtInstall) c
 	if qt.plugins == "" {
 		return checkResult{
 			catEnvironment, name, statusInfo, "Cannot verify (no qmake/qtpaths)",
-			"Install a Qt development package to let dms doctor check the plugin against the path Qt actually searches.",
+			"Install a Qt development package to let alpe-dienst doctor check the plugin against the path Qt actually searches.",
 			url,
 		}
 	}
@@ -675,7 +675,7 @@ func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver stri
 	}
 
 	results = []checkResult{
-		{catVersions, "DMS CLI", statusOK, formatVersion(Version), dmsCliDetails, doctorDocsURL + "#dms-cli"},
+		{catVersions, brand.Binary, statusOK, formatVersion(Version), dmsCliDetails, doctorDocsURL + "#dms-cli"},
 	}
 
 	qsVersion, qsStatus, qsPath, qsDetails, qsSemver := getQuickshellVersionInfo(qsMissingFeatures)
@@ -686,9 +686,9 @@ func checkVersions(qsMissingFeatures bool) (results []checkResult, qsSemver stri
 
 	dmsVersion, dmsPath := getDMSShellVersion()
 	if dmsVersion != "" {
-		results = append(results, checkResult{catVersions, "DMS Shell", statusOK, dmsVersion, dmsPath, doctorDocsURL + "#dms-shell"})
+		results = append(results, checkResult{catVersions, "Alpe Shell", statusOK, dmsVersion, dmsPath, doctorDocsURL + "#dms-shell"})
 	} else {
-		results = append(results, checkResult{catVersions, "DMS Shell", statusError, "Not installed or not detected", "", doctorDocsURL + "#dms-shell"})
+		results = append(results, checkResult{catVersions, "Alpe Shell", statusError, "Not installed or not detected", "", doctorDocsURL + "#dms-shell"})
 	}
 
 	return results, qsSemver
@@ -757,10 +757,10 @@ func checkDMSInstallation() []checkResult {
 	dmsPath := resolveDoctorShellPath()
 
 	if dmsPath == "" {
-		return []checkResult{{catInstallation, "DMS Configuration", statusError, "Not found", "shell.qml not found in any config path", doctorDocsURL + "#dms-configuration"}}
+		return []checkResult{{catInstallation, "Alpe Configuration", statusError, "Not found", "shell.qml not found in any config path", doctorDocsURL + "#dms-configuration"}}
 	}
 
-	results = append(results, checkResult{catInstallation, "DMS Configuration", statusOK, "Found", dmsPath, doctorDocsURL + "#dms-configuration"})
+	results = append(results, checkResult{catInstallation, "Alpe Configuration", statusOK, "Found", dmsPath, doctorDocsURL + "#dms-configuration"})
 
 	shellQml := filepath.Join(dmsPath, "shell.qml")
 	if _, err := os.Stat(shellQml); err != nil {
@@ -823,7 +823,7 @@ func checkWindowManagers(qsVersion string) []checkResult {
 			results = append(results, checkResult{
 				catCompositor, "Hyprland Lua config", statusWarn,
 				fmt.Sprintf("Hyprland %s is older than 0.55", ver),
-				"DMS writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer",
+				"Alpe writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer",
 				doctorDocsURL + "#compositor-checks",
 			})
 		}
@@ -1582,7 +1582,7 @@ func printSummary(results []checkResult, qsMissingFeatures bool) {
 
 func formatResultsPlain(results []checkResult) string {
 	var sb strings.Builder
-	sb.WriteString("## DMS Doctor Report\n\n")
+	sb.WriteString("## Alpe Doctor Report\n\n")
 
 	currentCategory := category(-1)
 	for _, r := range results {
@@ -1735,7 +1735,7 @@ func checkConfiguredFont(label, family, shellPath string, fcFamilies map[string]
 		return checkResult{
 			catFonts, label, statusWarn,
 			fmt.Sprintf("'%s' bundled file missing", family),
-			"Expected font file missing from shell install. Reinstall DMS or check DCommon assets.",
+			"Expected font file missing from shell install. Reinstall Alpe or check DCommon assets.",
 			url,
 		}
 	}

@@ -877,8 +877,8 @@ func TestHyprlandSetBindLeavesConfOnlyInstallReadOnly(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected SetBind to reject conf-only Hyprland config")
 	}
-	if !strings.Contains(err.Error(), "dms setup") {
-		t.Fatalf("expected a run-dms-setup error, got %v", err)
+	if !strings.Contains(err.Error(), "create it before editing keybinds") {
+		t.Fatalf("expected a create-hyprland.lua error, got %v", err)
 	}
 	if _, err := os.Stat(filepath.Join(tmpDir, "alpe", "binds-user.lua")); !os.IsNotExist(err) {
 		t.Fatalf("expected no Lua override to be created for conf-only config, stat err=%v", err)

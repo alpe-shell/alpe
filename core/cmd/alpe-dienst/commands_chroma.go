@@ -44,14 +44,14 @@ Reads from file or stdin, outputs HTML with syntax highlighting.
 Language is auto-detected from filename or can be specified with --language.
 
 Examples:
-  dms chroma main.go
-  dms chroma --language python script.py
-  echo "def foo(): pass" | dms chroma -l python
-  cat code.rs | dms chroma -l rust --style dracula
-  dms chroma --markdown README.md
-  dms chroma --markdown --style github-dark notes.md
-  dms chroma list-languages
-  dms chroma list-styles`,
+  alpe-dienst chroma main.go
+  alpe-dienst chroma --language python script.py
+  echo "def foo(): pass" | alpe-dienst chroma -l python
+  cat code.rs | alpe-dienst chroma -l rust --style dracula
+  alpe-dienst chroma --markdown README.md
+  alpe-dienst chroma --markdown --style github-dark notes.md
+  alpe-dienst chroma list-languages
+  alpe-dienst chroma list-styles`,
 	Args: cobra.MaximumNArgs(1),
 	Run:  runChroma,
 }

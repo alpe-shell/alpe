@@ -12,7 +12,7 @@ var backupOutputPath string
 
 var backupCmd = &cobra.Command{
 	Use:   "backup",
-	Short: "Backup and restore DMS configuration",
+	Short: "Backup and restore Alpe configuration",
 }
 
 var backupCreateCmd = &cobra.Command{
@@ -24,7 +24,7 @@ var backupCreateCmd = &cobra.Command{
 
 var backupRestoreCmd = &cobra.Command{
 	Use:   "restore <archive>",
-	Short: "Restore a DMS configuration backup; the current configuration is moved aside first",
+	Short: "Restore an Alpe configuration backup; the current configuration is moved aside first",
 	Args:  cobra.ExactArgs(1),
 	Run:   runBackupRestore,
 }

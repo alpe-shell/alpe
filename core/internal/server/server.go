@@ -957,7 +957,7 @@ func (s *Server) Serve(printDocs bool) error {
 	tuneRuntime()
 	startPprof()
 
-	log.Infof("DMS API Server listening on: %s", s.ipc.SocketPath())
+	log.Infof("Alpe API Server listening on: %s", s.ipc.SocketPath())
 	log.Infof("API Version: %d", APIVersion)
 	log.Info("Protocol: JSON over Unix socket")
 	log.Info("Request format: {\"id\": <any>, \"method\": \"...\", \"params\": {...}}")

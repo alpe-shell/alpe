@@ -25,7 +25,7 @@ var colorCmd = &cobra.Command{
 	Long: `Color utilities including picking colors from the screen.
 
 This is the screen eyedropper CLI. To open the in-shell color modal, use:
-  dms ipc call color-picker toggle
+  alpe-dienst ipc call color-picker toggle
 
 See: ` + site.Docs + "/dms/keybinds-ipc",
 }
@@ -38,7 +38,7 @@ var colorPickCmd = &cobra.Command{
 Click on any pixel to capture its color, or press Escape to cancel.
 
 This is the screen eyedropper CLI. To open the in-shell color modal, use:
-  dms ipc call color-picker toggle
+  alpe-dienst ipc call color-picker toggle
 
 Output format flags (mutually exclusive, default: --hex):
   --hex  - Hexadecimal (#RRGGBB)
@@ -52,12 +52,12 @@ Optional:
   --raw - Removes ANSI escape codes and background colors. Use this when piping to other commands
 
 Examples:
-  dms color pick                # Pick color, output as hex
-  dms color pick --rgb          # Output as RGB
-  dms color pick --json         # Output all formats as JSON
-  dms color pick --hex -l       # Output hex in lowercase
-  dms color pick -a             # Auto-copy result to clipboard
-  dms color pick --allow-multiple  # Skip the one-picker-at-a-time guard`,
+  alpe-dienst color pick                # Pick color, output as hex
+  alpe-dienst color pick --rgb          # Output as RGB
+  alpe-dienst color pick --json         # Output all formats as JSON
+  alpe-dienst color pick --hex -l       # Output hex in lowercase
+  alpe-dienst color pick -a             # Auto-copy result to clipboard
+  alpe-dienst color pick --allow-multiple  # Skip the one-picker-at-a-time guard`,
 	Run: runColorPick,
 }
 

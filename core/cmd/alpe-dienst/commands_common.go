@@ -19,11 +19,11 @@ var versionCmd = &cobra.Command{
 
 var ipcCmd = &cobra.Command{
 	Use:   "ipc",
-	Short: "Send IPC commands to running DMS shell",
-	Long: `Send IPC commands to the running DMS shell.
+	Short: "Send IPC commands to running Alpe shell",
+	Long: `Send IPC commands to the running Alpe shell.
 
-  dms ipc call <target> <function> [args...]   invoke a command
-  dms ipc list                                 list all targets and functions
+  alpe-dienst ipc call <target> <function> [args...]   invoke a command
+  alpe-dienst ipc list                                 list all targets and functions
 
 Full reference: ` + site.Docs + "/dms/keybinds-ipc",
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
@@ -52,7 +52,7 @@ func init() {
 var debugSrvCmd = &cobra.Command{
 	Use:   "debug-srv",
 	Short: "Start the debug server",
-	Long:  "Start the Unix socket debug server for DMS",
+	Long:  "Start the Unix socket debug server for Alpe",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := startDebugServer(); err != nil {
 			log.Fatalf("Error starting debug server: %v", err)
@@ -62,14 +62,14 @@ var debugSrvCmd = &cobra.Command{
 
 var pluginsCmd = &cobra.Command{
 	Use:   "plugins",
-	Short: "Manage DMS plugins",
-	Long:  "List and remove locally installed DMS plugins",
+	Short: "Manage Alpe plugins",
+	Long:  "List and remove locally installed Alpe plugins",
 }
 
 var pluginsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List installed plugins",
-	Long:  "List all installed DMS plugins",
+	Long:  "List all installed Alpe plugins",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := listInstalledPlugins(); err != nil {
 			log.Fatalf("Error listing plugins: %v", err)
@@ -80,7 +80,7 @@ var pluginsListCmd = &cobra.Command{
 var pluginsUninstallCmd = &cobra.Command{
 	Use:   "uninstall <plugin-id>",
 	Short: "Uninstall a plugin by ID",
-	Long:  "Uninstall a DMS plugin using its ID (e.g., 'myPlugin'). Plugin names with spaces are also supported for backward compatibility.",
+	Long:  "Uninstall an Alpe plugin using its ID (e.g., 'myPlugin'). Plugin names with spaces are also supported for backward compatibility.",
 	Args:  cobra.ExactArgs(1),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if len(args) != 0 {

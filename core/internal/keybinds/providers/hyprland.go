@@ -453,7 +453,7 @@ func (h *HyprlandProvider) ensureWritableConfig() error {
 	case err == nil:
 		return nil
 	case errors.Is(err, os.ErrNotExist):
-		return fmt.Errorf("hyprland.lua not found in %s; run `dms setup` to migrate before editing keybinds: %w", h.configPath, err)
+		return fmt.Errorf("hyprland.lua not found in %s; create it before editing keybinds: %w", h.configPath, err)
 	default:
 		return fmt.Errorf("cannot read hyprland.lua in %s: %w", h.configPath, err)
 	}

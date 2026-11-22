@@ -32,7 +32,7 @@ func Create(outputPath string) error {
 		return err
 	}
 	if _, err := os.Stat(srcDir); err != nil {
-		return fmt.Errorf("no DMS configuration found at %s: %w", srcDir, err)
+		return fmt.Errorf("no Alpe configuration found at %s: %w", srcDir, err)
 	}
 
 	return writeArchive(outputPath, func(tw *tar.Writer) error {
@@ -138,7 +138,7 @@ func validateArchive(archivePath string) error {
 			return fmt.Errorf("unsafe path in archive: %s", header.Name)
 		}
 		if !strings.HasPrefix(name, dirName+"/") && name != dirName {
-			return fmt.Errorf("not a DMS backup: unexpected entry %s", header.Name)
+			return fmt.Errorf("not an Alpe backup: unexpected entry %s", header.Name)
 		}
 		if name == dirName+"/settings.json" {
 			hasSettings = true
@@ -149,7 +149,7 @@ func validateArchive(archivePath string) error {
 		return err
 	}
 	if !hasSettings {
-		return fmt.Errorf("not a DMS backup: settings.json missing from archive")
+		return fmt.Errorf("not an Alpe backup: settings.json missing from archive")
 	}
 	return nil
 }

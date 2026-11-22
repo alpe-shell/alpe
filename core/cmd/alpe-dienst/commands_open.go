@@ -22,15 +22,15 @@ var (
 var openCmd = &cobra.Command{
 	Use:   "open [target]",
 	Short: "Open a file, URL, or resource with an application picker",
-	Long: `Open a target (URL, file, or other resource) using the DMS application picker.
+	Long: `Open a target (URL, file, or other resource) using the Alpe application picker.
 By default, this opens URLs with the browser picker. You can customize the behavior
 with flags to handle different MIME types or application categories.
 
 Examples:
-  dms open https://example.com                    # Open URL with browser picker
-  dms open file.pdf                               # Open file (MIME auto-detected)
-  dms open file.pdf --mime application/pdf        # Override MIME detection
-  dms open document.odt --category Office         # Open with office applications`,
+  alpe-dienst open https://example.com                    # Open URL with browser picker
+  alpe-dienst open file.pdf                               # Open file (MIME auto-detected)
+  alpe-dienst open file.pdf --mime application/pdf        # Override MIME detection
+  alpe-dienst open document.odt --category Office         # Open with office applications`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		runOpen(args[0])
@@ -132,7 +132,7 @@ func runOpen(target string) {
 	log.Infof("Sending request - Method: %s, Params: %+v", method, params)
 
 	if err := sendServerRequestFireAndForget(req); err != nil {
-		fmt.Println("DMS is not running. Please start DMS first.")
+		fmt.Println("Alpe is not running. Please start Alpe first.")
 		os.Exit(1)
 	}
 

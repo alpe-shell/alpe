@@ -80,7 +80,7 @@ var qrWifiCmd = &cobra.Command{
 	Long: `Generate a QR code that joins a WiFi network when scanned.
 
 With --password the code is built entirely offline. Without it, the saved
-credentials are fetched from the running DMS shell (like the network panel).`,
+credentials are fetched from the running Alpe shell (like the network panel).`,
 	Args: cobra.ExactArgs(1),
 	Run:  runQRWifi,
 }

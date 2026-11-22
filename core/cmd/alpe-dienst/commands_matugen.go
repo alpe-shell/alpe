@@ -46,7 +46,7 @@ var matugenPreviewCmd = &cobra.Command{
 
 var matugenQtengineCmd = &cobra.Command{
 	Use:   "qtengine",
-	Short: "Sync qtengine's config with the current DMS theme",
+	Short: "Sync qtengine's config with the current Alpe theme",
 	Run:   runMatugenQtengine,
 }
 
@@ -59,7 +59,7 @@ func init() {
 
 	for _, cmd := range []*cobra.Command{matugenGenerateCmd, matugenQueueCmd} {
 		cmd.Flags().String("state-dir", "", "State directory for cache files")
-		cmd.Flags().String("shell-dir", "", "DMS shell installation directory")
+		cmd.Flags().String("shell-dir", "", "Alpe shell installation directory")
 		cmd.Flags().String("config-dir", "", "User config directory")
 		cmd.Flags().String("kind", "image", "Source type: image or hex")
 		cmd.Flags().String("value", "", "Wallpaper path or hex color")

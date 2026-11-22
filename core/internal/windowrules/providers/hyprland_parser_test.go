@@ -45,7 +45,7 @@ func TestHyprlandSetRuleLeavesConfOnlyInstallReadOnly(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected SetRule to reject conf-only Hyprland config")
 	}
-	if !strings.Contains(err.Error(), "dms setup") {
+	if !strings.Contains(err.Error(), "create it before editing window rules") {
 		t.Fatalf("expected a run-dms-setup error, got %v", err)
 	}
 	if _, err := os.Stat(filepath.Join(tmpDir, "alpe", "windowrules.lua")); !os.IsNotExist(err) {

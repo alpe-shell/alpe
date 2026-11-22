@@ -41,12 +41,12 @@ If --file is provided, the notification gets "Open" and "Open Folder" actions
 that open the file or its directory when clicked.
 
 Examples:
-  dms notify "Hello" "World"
-  dms notify -u critical -t 0 "Disk almost full"
-  dms notify -a "Backup" -i drive-harddisk -c transfer.complete "Backup finished"
-  dms notify "File received" "photo.jpg" --file ~/Downloads/photo.jpg
-  dms notify -A retry=Retry -A "Dismiss" "Build failed"
-  dms notify -h string:x-dms-tag:build -h int:value:42 "Hinted"`,
+  alpe-dienst notify "Hello" "World"
+  alpe-dienst notify -u critical -t 0 "Disk almost full"
+  alpe-dienst notify -a "Backup" -i drive-harddisk -c transfer.complete "Backup finished"
+  alpe-dienst notify "File received" "photo.jpg" --file ~/Downloads/photo.jpg
+  alpe-dienst notify -A retry=Retry -A "Dismiss" "Build failed"
+  alpe-dienst notify -h string:x-dms-tag:build -h int:value:42 "Hinted"`,
 	Args: cobra.MinimumNArgs(1),
 	Run:  runNotify,
 }
@@ -76,7 +76,7 @@ func init() {
 	f.Bool("help", false, "Show help")
 	f.StringVarP(&notifyUrgency, "urgency", "u", "", "Urgency level: low, normal, critical")
 	f.IntVarP(&notifyTimeout, "expire-time", "t", -1, "Timeout in milliseconds (0 never expires, -1 server default)")
-	f.StringVarP(&notifyAppName, "app-name", "a", "DMS", "Application name")
+	f.StringVarP(&notifyAppName, "app-name", "a", "Alpe", "Application name")
 	f.StringVarP(&notifyIcon, "icon", "i", "", "Icon name or path")
 	f.StringVarP(&notifyAppIcon, "app-icon", "n", "", "Application icon name or path; --icon then becomes the image")
 	f.StringVar(&notifyCategory, "category", "", "Notification category, comma separated (-c is taken by the global --config)")

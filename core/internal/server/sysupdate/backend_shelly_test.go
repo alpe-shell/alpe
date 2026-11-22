@@ -215,7 +215,7 @@ func TestShellyUpgradeHolds(t *testing.T) {
 				t.Fatalf("duplicate AUR check: %q", calls)
 			}
 			if tt.wantError {
-				if err == nil || err.Error() != `shelly cannot exclude held AUR package "example-git"; disable AUR updates or remove its DMS hold before updating` || strings.Contains(calls, "upgrade ") {
+				if err == nil || err.Error() != `shelly cannot exclude held AUR package "example-git"; disable AUR updates or remove its Alpe hold before updating` || strings.Contains(calls, "upgrade ") {
 					t.Fatalf("held AUR package must block upgrade, got %v, calls %q", err, readUpdateCalls(t, log))
 				}
 				return

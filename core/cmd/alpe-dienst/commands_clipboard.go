@@ -87,9 +87,9 @@ If a command is provided, it will be executed each time the clipboard changes,
 with the clipboard content piped to its stdin.
 
 Examples:
-  dms cl watch              # Print clipboard changes to stdout
-  dms cl watch cat          # Same as above
-  dms cl watch notify-send  # Send notification on clipboard change`,
+  alpe-dienst cl watch              # Print clipboard changes to stdout
+  alpe-dienst cl watch cat          # Same as above
+  alpe-dienst cl watch notify-send  # Send notification on clipboard change`,
 	Run: runClipWatch,
 }
 
@@ -161,9 +161,9 @@ var clipConfigSetCmd = &cobra.Command{
 	Long: `Set clipboard configuration options.
 
 Examples:
-  dms cl config set --max-history 200
-  dms cl config set --auto-clear-days 7
-  dms cl config set --clear-at-startup`,
+  alpe-dienst cl config set --max-history 200
+  alpe-dienst cl config set --auto-clear-days 7
+  alpe-dienst cl config set --clear-at-startup`,
 	Run: runClipConfigSet,
 }
 
@@ -186,7 +186,7 @@ var clipExportCmd = &cobra.Command{
 var clipImportCmd = &cobra.Command{
 	Use:   "import <file>",
 	Short: "Import clipboard history from JSON",
-	Long:  "Import clipboard history from JSON file exported by 'dms cl export'.",
+	Long:  "Import clipboard history from JSON file exported by 'alpe-dienst cl export'.",
 	Args:  cobra.ExactArgs(1),
 	Run:   runClipImport,
 }

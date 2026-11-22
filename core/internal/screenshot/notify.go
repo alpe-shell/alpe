@@ -76,7 +76,7 @@ func SendNotification(result NotifyResult) uint32 {
 	call := obj.Call(
 		notifyInterface+".Notify",
 		0,
-		"DMS",
+		"Alpe",
 		uint32(0),
 		notify.AppID,
 		summary,

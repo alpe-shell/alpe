@@ -122,8 +122,8 @@ func (p *HyprlandRulesParser) HasDMSRulesIncluded() bool {
 var hyprlandRulesMessages = configfrag.Messages{
 	Missing:     "alpe/windowrules.lua does not exist",
 	NotIncluded: "alpe window rules are not loaded (missing require for alpe/windowrules)",
-	Overridden:  "Some DMS rules may be overridden by config rules",
-	Active:      "DMS window rules are active",
+	Overridden:  "Some Alpe rules may be overridden by config rules",
+	Active:      "Alpe window rules are active",
 }
 
 func (p *HyprlandRulesParser) buildDMSStatus() *windowrules.DMSRulesStatus {
@@ -201,7 +201,7 @@ func (p *HyprlandWritableProvider) EnsureWritable() error {
 	case err == nil:
 		return nil
 	case errors.Is(err, os.ErrNotExist):
-		return fmt.Errorf("hyprland.lua not found in %s; run `dms setup` to migrate before editing window rules: %w", p.configDir, err)
+		return fmt.Errorf("hyprland.lua not found in %s; create it before editing window rules: %w", p.configDir, err)
 	default:
 		return fmt.Errorf("cannot read hyprland.lua in %s: %w", p.configDir, err)
 	}
@@ -507,7 +507,7 @@ func (p *HyprlandWritableProvider) WriteDMSRules(rules []windowrules.WindowRule)
 	}
 
 	var lines []string
-	lines = append(lines, "-- DMS Window Rules — managed by Dux Modular Shell")
+	lines = append(lines, "-- Alpe: Fensterregeln – von Alpe verwaltet")
 	lines = append(lines, "-- Do not edit manually; changes may be overwritten")
 	lines = append(lines, "")
 

@@ -357,8 +357,8 @@ type HyprlandParseResult struct {
 var hyprlandBindsMessages = configfrag.Messages{
 	Missing:     "alpe/binds.lua does not exist",
 	NotIncluded: "dms binds are not loaded from Hyprland config (require)",
-	Overridden:  "Some DMS binds may be overridden by config binds",
-	Active:      "DMS binds are active",
+	Overridden:  "Some Alpe binds may be overridden by config binds",
+	Active:      "Alpe binds are active",
 }
 
 func (p *HyprlandParser) buildDMSStatus() *configfrag.Status {

@@ -152,7 +152,7 @@ else
 fi
 read -r dms_update_reply
 exit "$dms_update_status"`
-	export := `export SUDO_PROMPT="[DMS] sudo password for %u: "; `
+	export := `export SUDO_PROMPT="[Alpe] sudo password for %u: "; `
 	full := export + banner + "; " + shellCmd + "; " + closer
 
 	var argv []string

@@ -202,7 +202,7 @@ func tryDirectIPCCall(args []string) bool {
 }
 
 func printIPCHelp() {
-	fmt.Println("Usage: dms ipc call <target> <function> [args...]")
+	fmt.Println("Usage: alpe-dienst ipc call <target> <function> [args...]")
 	fmt.Println()
 
 	baseArgs, err := buildQsIPCBaseArgs()
@@ -251,7 +251,7 @@ func printIPCHelpFailure(err error) {
 	}
 	fmt.Println()
 	fmt.Println("  Full docs:  " + site.Docs + "/dms/keybinds-ipc")
-	fmt.Println("  Try:        dms ipc call <target> <function>")
+	fmt.Println("  Try:        alpe-dienst ipc call <target> <function>")
 }
 
 func ensureFontCache() {
@@ -334,9 +334,9 @@ func logStartupFailure(exitCode int, uptime time.Duration, stderrTail string) {
 		return
 	}
 	if containsFontCrashSignature(stderrTail) {
-		log.Errorf("DMS startup failed due to a potential font/rendering crash. Try running 'fc-cache -fv' and restarting DMS.")
+		log.Errorf("Alpe startup failed due to a potential font/rendering crash. Try running 'fc-cache -fv' and restarting Alpe.")
 	} else {
-		log.Errorf("DMS startup failed (exit code %d). Run 'dms doctor' for more diagnostics.", exitCode)
+		log.Errorf("Alpe startup failed (exit code %d). Run 'alpe-dienst doctor' for more diagnostics.", exitCode)
 	}
 }
 

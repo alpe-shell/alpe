@@ -21,7 +21,7 @@ import (
 var systemCmd = &cobra.Command{
 	Use:   "system",
 	Short: "System operations",
-	Long:  "System-level operations (updates, etc.). Runs against installed package managers directly; does not require the DMS server.",
+	Long:  "System-level operations (updates, etc.). Runs against installed package managers directly; does not require the Alpe server.",
 }
 
 var systemUpdateCmd = &cobra.Command{
@@ -33,13 +33,13 @@ Default behavior is to apply available updates after prompting for confirmation.
 Use --check to list updates without applying.
 
 Examples:
-  dms system update --check                  # list available updates
-  dms system update                          # apply updates (interactive prompt)
-  dms system update --noconfirm              # apply updates without prompting
-  dms system update --interactive            # let the package manager ask its own questions
-  dms system update --dry                    # simulate without changing anything
-  dms system update --no-flatpak --noconfirm # apply system updates only
-  dms system update --interval 3600          # set the server poll interval to 1h`,
+  alpe-dienst system update --check                  # list available updates
+  alpe-dienst system update                          # apply updates (interactive prompt)
+  alpe-dienst system update --noconfirm              # apply updates without prompting
+  alpe-dienst system update --interactive            # let the package manager ask its own questions
+  alpe-dienst system update --dry                    # simulate without changing anything
+  alpe-dienst system update --no-flatpak --noconfirm # apply system updates only
+  alpe-dienst system update --interval 3600          # set the server poll interval to 1h`,
 	Run: runSystemUpdate,
 }
 
@@ -65,7 +65,7 @@ func init() {
 	systemUpdateCmd.Flags().BoolVar(&sysUpdateNoFlatpak, "no-flatpak", false, "Skip the Flatpak overlay")
 	systemUpdateCmd.Flags().BoolVar(&sysUpdateNoAUR, "no-aur", false, "Skip AUR updates")
 	systemUpdateCmd.Flags().StringSliceVar(&sysUpdateIgnore, "ignore", nil, "Skip specific packages (repeatable or comma-separated)")
-	systemUpdateCmd.Flags().IntVar(&sysUpdateIntervalS, "interval", -1, "Set the DMS server poll interval in seconds and exit (requires running server)")
+	systemUpdateCmd.Flags().IntVar(&sysUpdateIntervalS, "interval", -1, "Set the Alpe server poll interval in seconds and exit (requires running server)")
 
 	systemCmd.AddCommand(systemUpdateCmd)
 }

@@ -50,13 +50,13 @@ var (
 
 var dmenuCmd = &cobra.Command{
 	Use:   "dmenu",
-	Short: "dmenu-compatible picker backed by the DMS app launcher",
-	Long: `Read newline-separated items from stdin, show them in the DMS launcher,
+	Short: "dmenu-compatible picker backed by the Alpe app launcher",
+	Long: `Read newline-separated items from stdin, show them in the Alpe launcher,
 and print the selected item to stdout
 
 Examples:
-  printf '%s\n' opt1 opt2 opt3 | dms dmenu -p "Pick one:"
-  dms dmenu --prompt-only -p "Rename to:"
+  printf '%s\n' opt1 opt2 opt3 | alpe-dienst dmenu -p "Pick one:"
+  alpe-dienst dmenu --prompt-only -p "Rename to:"
 
 Matching is always case-insensitive; -i/--case-insensitive is accepted for
 dmenu script compatibility but has no effect.
@@ -412,7 +412,7 @@ func runDmenuDump(rows []dmenuRow, format string) {
 
 func runDmenu(cmd *cobra.Command, args []string) {
 	if cmd.Flags().Changed("case-insensitive") {
-		fmt.Fprintln(os.Stderr, "dms dmenu: warning: -i/--case-insensitive has no effect (matching is always case-insensitive)")
+		fmt.Fprintln(os.Stderr, "alpe-dienst dmenu: warning: -i/--case-insensitive has no effect (matching is always case-insensitive)")
 	}
 	os.Exit(dmenuSession())
 }
@@ -498,7 +498,7 @@ func dmenuSession() int {
 	}
 
 	release, err := dmenuipc.AcquireQueueSlot(func() {
-		fmt.Fprintln(os.Stderr, "dms dmenu: waiting for another dmenu session to finish...")
+		fmt.Fprintln(os.Stderr, "alpe-dienst dmenu: waiting for another dmenu session to finish...")
 	})
 	if err != nil {
 		log.Fatalf("Error acquiring dmenu queue slot: %v", err)
@@ -513,7 +513,7 @@ func dmenuSession() int {
 
 	pid, ok := shellApp.SessionPID()
 	if !ok {
-		log.Errorf("DMS shell is not running")
+		log.Errorf("Alpe shell is not running")
 		return 1
 	}
 

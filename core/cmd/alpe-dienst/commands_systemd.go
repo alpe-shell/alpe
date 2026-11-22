@@ -18,7 +18,7 @@ var systemdCmd = &cobra.Command{
 	Short: "Start Alpe as a systemd user service with the compositor session",
 	Long: `Manage alpe.service for the compositor session.
 
-enable makes the compositor's own session unit want alpe.service, so DMS starts
+enable makes the compositor's own session unit want alpe.service, so Alpe starts
 with that compositor only: hyprland-session.target. The compositor is the running one, or --compositor.`,
 }
 

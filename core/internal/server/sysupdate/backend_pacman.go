@@ -141,10 +141,10 @@ func (b archHelperBackend) Upgrade(ctx context.Context, opts UpgradeOptions, onL
 	}
 	term := findTerminal(opts.Terminal)
 	if term == "" {
-		return fmt.Errorf("no terminal found (pick one in DMS settings, set $TERMINAL, or install kitty/ghostty/foot/alacritty)")
+		return fmt.Errorf("no terminal found (pick one in Alpe settings, set $TERMINAL, or install kitty/ghostty/foot/alacritty)")
 	}
 	cmd := strings.Join(archHelperUpgradeArgv(b.id, opts), " ")
-	title := fmt.Sprintf("DMS — System Update (%s)", b.id)
+	title := fmt.Sprintf("Alpe — System Update (%s)", b.id)
 	return Run(ctx, wrapInTerminal(term, title, cmd, opts.TerminalArgs), RunOptions{OnLine: onLine})
 }
 

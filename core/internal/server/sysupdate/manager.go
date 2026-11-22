@@ -419,7 +419,7 @@ func (m *Manager) runUpgrade(ctx context.Context, opts UpgradeOptions) {
 	}()
 
 	if opts.CustomCommand != "" {
-		m.runCustomUpgrade(ctx, opts.CustomCommand, "DMS — System Update (custom)", opts)
+		m.runCustomUpgrade(ctx, opts.CustomCommand, "Alpe — System Update (custom)", opts)
 		return
 	}
 
@@ -439,7 +439,7 @@ func (m *Manager) runUpgrade(ctx context.Context, opts UpgradeOptions) {
 			m.setError(ErrCodeBackendFailed, err.Error())
 			return
 		}
-		m.runCustomUpgrade(ctx, interactiveUpgradeCommand(exe, opts), "DMS — System Update", opts)
+		m.runCustomUpgrade(ctx, interactiveUpgradeCommand(exe, opts), "Alpe — System Update", opts)
 		return
 	}
 
@@ -496,7 +496,7 @@ func (m *Manager) runUpgrade(ctx context.Context, opts UpgradeOptions) {
 func (m *Manager) runCustomUpgrade(ctx context.Context, command, title string, opts UpgradeOptions) {
 	term := findTerminal(opts.Terminal)
 	if term == "" {
-		m.setError(ErrCodeBackendFailed, "no terminal found (pick one in DMS settings, set $TERMINAL, or install kitty/ghostty/foot/alacritty)")
+		m.setError(ErrCodeBackendFailed, "no terminal found (pick one in Alpe settings, set $TERMINAL, or install kitty/ghostty/foot/alacritty)")
 		return
 	}
 

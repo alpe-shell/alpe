@@ -143,7 +143,7 @@ func RestoreSnapshot(archivePath string) error {
 		prefix, rest, _ := strings.Cut(filepath.ToSlash(name), "/")
 		parent, ok := targets[prefix]
 		if !ok || (rest != dirName && !strings.HasPrefix(rest, dirName+"/")) {
-			return "", fmt.Errorf("not a DMS snapshot: unexpected entry %s", name)
+			return "", fmt.Errorf("not an Alpe snapshot: unexpected entry %s", name)
 		}
 		return filepath.Join(parent, rest), nil
 	}

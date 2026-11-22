@@ -69,23 +69,23 @@ Output format (--format):
   ppm         - PPM format
 
 Examples:
-  dms screenshot                     # Region select, save file + clipboard
-  dms screenshot full                # Full screen of focused output
-  dms screenshot all                 # All screens combined
-  dms screenshot output -o DP-1      # Specific output
-  dms screenshot window              # Focused window
-  dms screenshot last                # Last region (pre-selected)
-  dms screenshot --reset             # Reset last region pre-selection
-  dms screenshot --no-clipboard      # Save file only
-  dms screenshot --no-file           # Clipboard only
-  dms screenshot --no-confirm        # Region capture on mouse release
-  dms screenshot --cursor=on         # Include cursor
-  dms screenshot -f jpg -q 85        # JPEG with quality 85
-  dms screenshot --json              # Print capture metadata as JSON
-  dms screenshot --allow-multiple    # Skip the one-selector-at-a-time guard
-  dms screenshot -g                  # Print selected region geometry (X,Y WxH) to stdout
-  dms screenshot scroll              # Scroll capture, Enter finishes / Esc cancels
-  dms screenshot scroll --interval 250`,
+  alpe-dienst screenshot                     # Region select, save file + clipboard
+  alpe-dienst screenshot full                # Full screen of focused output
+  alpe-dienst screenshot all                 # All screens combined
+  alpe-dienst screenshot output -o DP-1      # Specific output
+  alpe-dienst screenshot window              # Focused window
+  alpe-dienst screenshot last                # Last region (pre-selected)
+  alpe-dienst screenshot --reset             # Reset last region pre-selection
+  alpe-dienst screenshot --no-clipboard      # Save file only
+  alpe-dienst screenshot --no-file           # Clipboard only
+  alpe-dienst screenshot --no-confirm        # Region capture on mouse release
+  alpe-dienst screenshot --cursor=on         # Include cursor
+  alpe-dienst screenshot -f jpg -q 85        # JPEG with quality 85
+  alpe-dienst screenshot --json              # Print capture metadata as JSON
+  alpe-dienst screenshot --allow-multiple    # Skip the one-selector-at-a-time guard
+  alpe-dienst screenshot -g                  # Print selected region geometry (X,Y WxH) to stdout
+  alpe-dienst screenshot scroll              # Scroll capture, Enter finishes / Esc cancels
+  alpe-dienst screenshot scroll --interval 250`,
 }
 
 var ssRegionCmd = &cobra.Command{

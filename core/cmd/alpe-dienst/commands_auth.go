@@ -16,14 +16,14 @@ import (
 
 var authCmd = &cobra.Command{
 	Use:   "auth",
-	Short: "Manage DMS authentication sync",
-	Long:  "Manage PAM/authentication setup for the DMS lock screen",
+	Short: "Manage Alpe authentication sync",
+	Long:  "Manage PAM/authentication setup for the Alpe lock screen",
 }
 
 var authSyncCmd = &cobra.Command{
 	Use:     "sync",
-	Short:   "Sync DMS authentication configuration",
-	Long:    "Apply PAM/authentication changes for the lock screen based on current DMS settings",
+	Short:   "Sync Alpe authentication configuration",
+	Long:    "Apply PAM/authentication changes for the lock screen based on current Alpe settings",
 	PreRunE: preRunPrivileged,
 	Run: func(cmd *cobra.Command, args []string) {
 		yes, _ := cmd.Flags().GetBool("yes")
@@ -93,8 +93,8 @@ var authListServicesCmd = &cobra.Command{
 
 var authValidateCmd = &cobra.Command{
 	Use:   "validate",
-	Short: "Validate a PAM service file for use by the DMS lock screen",
-	Long:  "Validate one PAM service (by --service NAME or --path /abs/file) for use as the DMS lock-screen password or dedicated U2F stack. Exits 1 when the file is not usable.",
+	Short: "Validate a PAM service file for use by the Alpe lock screen",
+	Long:  "Validate one PAM service (by --service NAME or --path /abs/file) for use as the Alpe lock-screen password or dedicated U2F stack. Exits 1 when the file is not usable.",
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := cmd.Flags().GetString("path")
 		service, _ := cmd.Flags().GetString("service")
@@ -180,7 +180,7 @@ func init() {
 
 func syncAuth(nonInteractive bool) error {
 	if !nonInteractive {
-		fmt.Println("=== DMS Authentication Sync ===")
+		fmt.Println("=== Alpe Authentication Sync ===")
 		fmt.Println()
 	}
 

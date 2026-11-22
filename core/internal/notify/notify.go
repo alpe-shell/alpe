@@ -17,7 +17,7 @@ import (
 const (
 	AppID = brand.AppID
 
-	appName = "DMS"
+	appName = "Alpe"
 
 	notifyDest      = "org.freedesktop.Notifications"
 	notifyPath      = "/org/freedesktop/Notifications"

@@ -55,15 +55,15 @@ var keybindsSetCmd = &cobra.Command{
 var keybindsRemoveCmd = &cobra.Command{
 	Use:   "remove <provider> <key>",
 	Short: "Remove a keybind",
-	Long:  "Remove a keybind. For Hyprland this writes a negative override to dms/binds-user.lua so the key stays unbound across DMS updates. For other providers it deletes the entry from the managed file.",
+	Long:  "Remove a keybind. For Hyprland this writes a negative override to alpe/binds-user.lua so the key stays unbound across Alpe updates. For other providers it deletes the entry from the managed file.",
 	Args:  cobra.ExactArgs(2),
 	Run:   runKeybindsEdit,
 }
 
 var keybindsResetCmd = &cobra.Command{
 	Use:   "reset <provider> <key>",
-	Short: "Reset a keybind override to its DMS default",
-	Long:  "Drop the user override for the given key so the DMS default re-applies. For providers without a separate default file this is equivalent to remove.",
+	Short: "Reset a keybind override to its Alpe default",
+	Long:  "Drop the user override for the given key so the Alpe default re-applies. For providers without a separate default file this is equivalent to remove.",
 	Args:  cobra.ExactArgs(2),
 	Run:   runKeybindsEdit,
 }

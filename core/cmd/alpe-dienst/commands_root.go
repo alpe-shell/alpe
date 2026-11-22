@@ -7,8 +7,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   brand.Binary,
-	Short: "dms CLI",
-	Long:  "dms is the Dux Modular Shell management CLI and backend server.",
+	Short: "Alpe service and CLI",
+	Long:  brand.Binary + " is the background service of Alpe and its command line interface.",
 }
 
 func init() {
