@@ -100,6 +100,38 @@ os.remove(os.path.join(repo, "shell/" + alt_name + ".qml"))
 os.remove(os.path.join(repo, "shell/Rest.qml"))
 subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
 check(run(np, "--streng").returncode == 0, "--streng: grün ohne Fund")
+
+# Marken im Code (Plan 0.8 Nr. 64): Bereich zwischen zwei Marken ist ausgenommen, alles davor und danach nicht.
+marke = "// alpe-namen-" + "ausnahme: umzug-ende"  # geteilt geschrieben, wie die alten Namen oben
+alt = "da" + "nkAlt"
+
+
+def marken_lauf(inhalt):
+    write("shell/Marke.js", inhalt)
+    subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
+    return run(np, "--liste").stdout, run(np, "--streng").returncode
+
+
+ausgabe, code = marken_lauf("var a = s.%s0;\n%s\nvar b = s.%s1;\nvar c = s.%s2;\n%s\nvar d = s.%s3;\n" % (alt, marke, alt, alt, marke, alt))
+check("shell/Marke.js:1:" in ausgabe and "shell/Marke.js:6:" in ausgabe, "Marke: Zeilen vor und nach dem Bereich bleiben Fundstellen")
+check("shell/Marke.js:3:" not in ausgabe and "shell/Marke.js:4:" not in ausgabe, "Marke: Zeilen im Bereich sind ausgenommen")
+check("2 Fundstellen in 1 Dateien" in ausgabe and "1 Bereiche in 1 Dateien, 2 Fundstellen ausgenommen" in ausgabe, "Marke: Zusammenfassung zählt Bereiche und Ausgenommenes")
+check(code == 1, "Marke: --streng bleibt rot wegen der Zeilen ausserhalb")
+check("shell/Marke.js:2-5\tumzug-ende\t2 Fundstellen" in run(np, "--bereiche").stdout, "Marke: --bereiche nennt Datei, Zeilen und Frist")
+ausgabe, code = marken_lauf("%s\nvar b = s.%s1;\n%s\n%s\nvar c = s.%s2;\n%s\n" % (marke, alt, marke, marke, alt, marke))
+check(code == 0 and "2 Bereiche" in ausgabe, "Marke: zwei Bereiche in einer Datei, grün")
+ausgabe, code = marken_lauf("%s\nvar b = s.%s1;\nvar c = s.%s2;\n" % (marke, alt, alt))
+check(code == 1 and "shell/Marke.js:1: Marke ohne Ende" in ausgabe and "shell/Marke.js:2:" in ausgabe and "shell/Marke.js:3:" in ausgabe,
+      "Marke ohne Ende: gemeldet, nimmt nichts aus")
+ausgabe, code = marken_lauf("%s\nvar b = s.%s1;\n%s\n" % (marke.replace("umzug-ende", "irgendwann"), alt, marke.replace("umzug-ende", "irgendwann")))
+check(code == 1 and "unbekannter Frist «irgendwann»" in ausgabe and "shell/Marke.js:2:" in ausgabe, "Marke mit unbekannter Frist: gemeldet, nimmt nichts aus")
+ausgabe, code = marken_lauf("%s\nvar b = s.%s1;\n%s\n" % (marke.replace(" umzug-ende", ""), alt, marke.replace(" umzug-ende", "")))
+check(code == 1 and "unbekannter Frist «»" in ausgabe, "Marke ohne Frist: gemeldet")
+ausgabe, code = marken_lauf("%s\nvar b = 1;\n%s\n" % (marke, marke))
+check(code == 1 and "shell/Marke.js:1: Marke nimmt keine Fundstelle aus" in ausgabe, "Marke um einen Bereich ohne alten Namen: gemeldet (überholt)")
+os.remove(os.path.join(repo, "shell/Marke.js"))
+subprocess.run(["git", "-C", repo, "add", "-A"], env=env, check=True)
+check(run(np, "--streng").returncode == 0, "--streng: grün nach dem Entfernen")
 write("tools/namen-ausnahmen.txt", "tools/*\t*\t\tohne Frist\n")
 check(run(np).returncode != 0, "Eintrag ohne Frist wird abgelehnt")
 
