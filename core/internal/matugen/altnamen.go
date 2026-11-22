@@ -9,13 +9,14 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/utils"
 )
 
-// Übergang von Alpe 1.0 (Plan 0.8 Nr. 48, Frist F1). Bis 1.0 trugen die Ausgabedateien für
+// Übergang von Alpe 1.0 (Plan 0.8 Nr. 48 und 59, Frist Umzug-Ende). Bis 1.0 trugen die Ausgabedateien für
 // Fremdprogramme Namen des Ursprungs, und die Programme binden sie unter diesen Namen ein
 // (kitty-include, gtk.css-Import, KDE-Farbschema …). Solange es eine Datei unter dem alten Namen
 // gibt, hält Alpe sie aktuell: als Symlink auf die neue Datei, oder – wo der Name auch im Inhalt
 // steht oder ein Ordner gemeint ist – als zweite Fassung. Auf einem frisch eingerichteten Rechner
 // gibt es die alten Namen nicht, dort geschieht hier nichts. Der Umzug (F1) schreibt die
-// Einbindungen um und räumt die alten Namen weg; dann fällt diese Datei.
+// Einbindungen um; die alten Namen bleiben bis zum Ende des Umzugs von 1.0 aktuell (Rückweg),
+// dann fällt diese Datei.
 
 const (
 	legacyColorsCSS = "dank-colors.css"

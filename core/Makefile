@@ -46,7 +46,7 @@ sync-shell:
 	@rm -rf $(EMBED_DIR)/tests
 	@find $(EMBED_DIR) -type d \( -name .claude -o -name .vscode \) -prune -exec rm -rf {} +
 	@rm -f $(EMBED_DIR)/scripts/qmllint-entrypoints.sh
-	@rm -f $(EMBED_DIR)/translations/*.py $(EMBED_DIR)/translations/WORKFLOW.md
+	@rm -f $(EMBED_DIR)/translations/*.py
 	@cd $(EMBED_DIR) && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16 > .dankrev
 
 # Build the main binary (alpe-dienst)

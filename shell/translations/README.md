@@ -1,5 +1,7 @@
-> **Alpe:** Übersetzungen werden nur noch in diesem Repository gepflegt (`poexports/de.json`, Quelltexte `en.json`).
-> Den Abgleich mit dem Übersetzungsprojekt des Ursprungs (POEditor, `i18nsync.py`) gibt es nicht mehr.
+> **Alpe:** Gepflegt werden nur Deutsch (`poexports/de.json`) und die englischen Quelltexte
+> (`en.json`), beide ausschliesslich in diesem Repository. Einen Abgleich mit einem externen
+> Übersetzungsdienst gibt es nicht mehr; der Rest dieser Datei beschreibt das Dateiformat und die
+> Skripte.
 
 # Dux Shell Translations
 

@@ -85,6 +85,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 | D7.7b4 | `packaging/alpe-open.desktop` (`Exec=alpe-dienst open %u`, ohne das Schema `dms://`) für die Auswahl «jedes Mal fragen» der Standardprogramme; Installation in E3, `mimeapps.list` in F1 (0.8 Nr. 50) | `tests/test_werte.py` (Name = Auswahl-Eintrag, `desktop-file-validate`); test.sh grün |
 | – | Plan: Entscheide nach D7.7b (0.8 Nr. 57–63), F1-Tabellen 7.6/7.7, `offene-faelle.md` (Vencord), `CLAUDE.md` (qmllint in der Haltprüfung) | – |
 | D7.7b5 | **Sicherungen aus 1.0 bleiben unverändert** (0.8 Nr. 57): `gtk-theme.dms-backup`, `icon-theme.dms-backup` werden nicht mehr umbenannt; gelesen wird der neue Name, sonst der alte, das Symbolthema einmal kopiert (Marke im Zustandsordner). Skripte in `shell/Common/settings/Sicherungen.js`; Ausnahmeliste: Sicherungen und Marken in `gtk.sh` mit Frist Umzug-Ende | Test `tests/test_sicherungen.mjs` (alte Sicherung nach jedem Zugriff unverändert: Inhalt, Zeit, Inode); test.sh grün |
+| – | `shell/translations/WORKFLOW.md` entfernt, README des Übersetzungsordners: nur `de` und `en`, nur im Repo, kein externer Abgleich (0.8 Nr. 61); Ausnahmeliste: alte Ausgabenamen und GTK-Import mit Frist Umzug-Ende (0.8 Nr. 59), Neovim ohne offene Frage (0.8 Nr. 60) | test.sh grün |
 <!-- D7-Stand -->
 
 Go-Tests (`go test ./...`, abgeschottet): dieselben 3 Fehlschläge wie vor C1 (siehe offene

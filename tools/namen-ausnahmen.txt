@@ -23,13 +23,13 @@ shell/tests/keybinds-legacy-actions.test.mjs	*	Umzug-Ende	Test dazu
 shell/Common/ConfigIncludeResolve.js	DMS bzw\. Alpe 1\.0	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
 shell/Common/OutputModel.js	DMS used to write|DMS 1\.x|hypr/dms/profiles	Umzug-Ende	Anzeigeprofile aus 1.0 lesen
 core/internal/matugen/matugen.go	"dank16(term)?"|dank16 und dank16term	F1	alte Palettennamen für eigene matugen-Vorlagen der Nutzer zusätzlich einspeisen (0.8 Nr. 47); F1 schreibt die Vorlagen um
-core/internal/matugen/altnamen.go	*	F1	alte Ausgabenamen aus 1.0 als Link bzw. zweite Fassung weiterführen (0.8 Nr. 48); F1 schreibt die Einbindungen um und räumt sie weg
-core/internal/matugen/altnamen_test.go	*	F1	Test dazu
-shell/scripts/gtk.sh	dank-colors|DMS\\\) OVERRIDE|isDMSGTKActive	F1	GTK: Import aus 1.0 erkennen (0.8 Nr. 48)
+core/internal/matugen/altnamen.go	*	Umzug-Ende	alte Ausgabenamen aus 1.0 als Link bzw. zweite Fassung weiterführen (0.8 Nr. 48); F1 schreibt die Einbindungen um, Links und doppeltes Schreiben fallen mit Umzug-Ende (0.8 Nr. 59)
+core/internal/matugen/altnamen_test.go	*	Umzug-Ende	Test dazu
+shell/scripts/gtk.sh	dank-colors|DMS\\\) OVERRIDE|isDMSGTKActive	Umzug-Ende	GTK: Import aus 1.0 erkennen (0.8 Nr. 48, 59)
 shell/scripts/gtk.sh	\.dms-copy|\.dms-backup	Umzug-Ende	GTK: Marken und Sicherungen aus 1.0 erkennen, nie umbenennen (0.8 Nr. 57)
 shell/Common/settings/Sicherungen.js	(gtk|icon)-theme\.dms-backup	Umzug-Ende	Sicherungen aus 1.0 lesen, nie umbenennen (0.8 Nr. 57)
 tests/test_sicherungen.mjs	*	Umzug-Ende	Test dazu
-shell/matugen/*	neovim|_DMS_SUPPORT|"dms"|dms integration|dms settings file|nvim/.*dms\.lua	solange die Anbindung besteht	Neovim: Anbindung an base46 mit DMS-Unterstützung (fremdes Plugin, Namen von aussen vorgegeben); offene Frage zum Zwischenhalt
+shell/matugen/*	neovim|_DMS_SUPPORT|"dms"|dms integration|dms settings file|nvim/.*dms\.lua	solange die Anbindung besteht	Neovim: Anbindung an base46 mit DMS-Unterstützung (fremdes Plugin, Namen von aussen vorgegeben; 0.8 Nr. 60)
 core/internal/windowrules/providers/hyprland_parser.go	DMS-RULE|\(\?:ALPE\|DMS\)-RULE	Umzug-Ende	Marke der Fensterregeln aus 1.0 lesen (Plan 2.3.2)
 core/internal/windowrules/store.go	legacyRuleIDs|"dms-window-opaque"|"dms-floating-windows"	Umzug-Ende	IDs der eigenen Fensterregeln aus 1.0 lesen
 core/internal/windowrules/providers/altnamen_test.go	*	Umzug-Ende	Test dazu
