@@ -1247,7 +1247,7 @@ Singleton {
             }, rule))] : ["remove", compositor, id];
         Proc.runCommand("dms-windowrule-" + id, [Proc.dmsBin, "config", "windowrules", ...args], (output, exitCode) => {
             if (exitCode !== 0) {
-                log.warn("failed to update DMS window rule", id, exitCode, output);
+                log.warn("failed to update the shell window rule", id, exitCode, output);
                 return;
             }
             reloadAfterWindowRuleWrite();

@@ -364,7 +364,7 @@ Singleton {
             log.warn("DMSService.sendRequest: Not connected, method:", method);
             if (callback) {
                 callback({
-                    "error": "not connected to DMS socket"
+                    "error": "not connected to the service socket"
                 });
             }
             return;
@@ -427,7 +427,7 @@ Singleton {
         for (const id in pending) {
             cancelRequest(id);
             pending[id]({
-                "error": "not connected to DMS socket"
+                "error": "not connected to the service socket"
             });
         }
     }

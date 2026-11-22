@@ -925,7 +925,7 @@ printf 'uwsm=%s\nelogind=%s\nloginctl=%s\nsystemctl=%s\nusermgr=%s\nhibernate=%s
             }
         } else {
             loginctlAvailable = false;
-            log.debug("loginctl capability not available in DMS");
+            log.debug("loginctl capability not available in the service");
         }
 
         if (DMSService.capabilities.includes("dbus")) {

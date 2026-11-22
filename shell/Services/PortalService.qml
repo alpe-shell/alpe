@@ -272,7 +272,7 @@ Singleton {
             checkAccountsService();
             checkSettingsPortal();
         } else {
-            log.info("freedesktop capability not available in DMS");
+            log.info("freedesktop capability not available in the service");
         }
     }
 
