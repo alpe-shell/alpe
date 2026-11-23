@@ -36,7 +36,8 @@ MUSTER = [
     ("MAC-Adresse", re.compile(r"(?<![0-9A-Fa-f:.-])[0-9A-Fa-f]{2}(?:[:-][0-9A-Fa-f]{2}){5}(?![0-9A-Fa-f:-])")),
     ("Gerätekennung", re.compile(r"(?<![0-9A-Fa-f:\w])[0-9a-f]{4}:[0-9a-f]{4}(?![0-9A-Fa-f:\w])")),
 ]
-ARTEN = [HOME, "Benutzername", "Rechnername"] + [art for art, _muster in MUSTER]
+RECHNERABHAENGIG = ("Benutzername", "Rechnername")   # der gesuchte Wert kommt vom Rechner, auf dem die Prüfung läuft
+ARTEN = [HOME, *RECHNERABHAENGIG] + [art for art, _muster in MUSTER]
 ENDUNGEN = (".json", ".jsonc", ".conf", ".txt", ".md", ".lua", ".toml", ".ini", ".css", ".qml", ".py", ".sh", ".js", ".mjs",
             ".go", ".tsv", ".yml", ".yaml", ".xml", ".desktop", ".service", ".spec", ".fish", ".templ", ".mod", ".kvconfig",
             ".theme", ".html", ".patch", ".diff")
@@ -94,7 +95,12 @@ def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None):
     gelesen, ergebnis = 0, []
     for pfad in dateien(wurzel):
         voll = os.path.join(wurzel, pfad)
-        if os.path.abspath(voll) == AUSNAHMEN_DATEI:   # die Liste nennt die ausgenommenen Werte selbst
+        # Bewusste Regel: Die Ausnahmeliste wird als ganze Datei nicht durchsucht. Sie muss die ausgenommenen Werte
+        # nennen (Spalte WERT-MUSTER) und wäre sonst selbst ein Fund. Ausgenommen ist nur die Liste, die dieser Lauf
+        # anwendet (tools/werte-ausnahmen.txt neben diesem Skript, verglichen über den absoluten Pfad) – keine
+        # gleichnamige Datei in einem anderen durchsuchten Ordner. Folge: Kommentare und Begründungen in der Liste
+        # prüft niemand; persönliche Werte gehören dort so wenig hin wie anderswo (docs/technik.md, «Tests»).
+        if os.path.abspath(voll) == AUSNAHMEN_DATEI:
             continue
         if not (pfad.endswith(ENDUNGEN) or "." not in os.path.basename(pfad)) or not os.path.isfile(voll) or os.path.islink(voll):
             continue
@@ -106,6 +112,28 @@ def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None):
         gelesen += 1
         ergebnis += funde(pfad, text, benutzer, rechner, ausnahmen)
     return gelesen, ergebnis
+
+
+def ueberholte(ausnahmen, ergebnis, benutzer, rechner):
+    """Ausnahmen ohne Treffer – aber nur solche, über die dieser Lauf etwas aussagen kann.
+
+    Eine Ausnahme gilt nur als überholt, wenn ihre Art in diesem Lauf gesucht wurde. Benutzer- und Rechnername
+    kommen vom Rechner: In der CI (Allerweltsname) wird die Art gar nicht gesucht; auf einem Rechner mit einem
+    anderen Namen wird zwar gesucht, aber nach einem Wert, der im Repository nirgends steht – auch dieser Lauf
+    weiss nichts über die Ausnahme. Für diese beiden Arten zählt darum zusätzlich, dass der gesuchte Name im
+    Repository überhaupt vorkommt (als Fund oder als ausgenommener Treffer).
+    """
+    gesucht = dict(zip(RECHNERABHAENGIG, (benutzer, rechner)))
+    liste = []
+    for a in ausnahmen:
+        if a["treffer"]:
+            continue
+        if a["art"] in gesucht:
+            vorkommen = sum(b["treffer"] for b in ausnahmen if b["art"] == a["art"]) + sum(1 for f in ergebnis if f[2] == a["art"])
+            if not gesucht[a["art"]] or not vorkommen:
+                continue
+        liste.append(a)
+    return liste
 
 
 def zeile(fund):

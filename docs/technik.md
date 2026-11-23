@@ -331,6 +331,27 @@ Das sind:
                                      sonst übersprungen)
     go test ./internal/server -run TestReadAlpeOff   (in ~/dux-shell/core, braucht go)
 
+### Prüfung auf persönliche Werte
+
+`tests/test_werte.py` durchsucht über `tools/werte-pruefen.py` alle versionierten Textdateien nach
+Pfaden in ein Home-Verzeichnis, Benutzer- und Rechnernamen, IP- und MAC-Adressen und
+Gerätekennungen. Von Hand, auch gegen einen anderen Ordner:
+
+    python3 tools/werte-pruefen.py [ORDNER] [--ausnahmen] [--ohne-ausnahmen]
+
+- **Ausnahmen** stehen in `tools/werte-ausnahmen.txt`: je Datei, Art und erwartetem Wert, mit Frist
+  und Grund. Ein anderer Fund in derselben Datei schlägt an.
+- **Die Ausnahmeliste selbst wird als ganze Datei nicht durchsucht** – bewusste Regel: Sie muss die
+  ausgenommenen Werte nennen. Das gilt nur für die Liste, die der Lauf anwendet (die Datei neben dem
+  Skript), nicht für eine gleichnamige Datei in einem anderen durchsuchten Ordner. Kommentare und
+  Begründungen in der Liste prüft darum niemand; persönliche Werte gehören auch dort nicht hin.
+- **Überholte Ausnahmen:** Eine Ausnahme ohne Treffer gilt als überholt und macht den Test rot – aber
+  nur, wenn ihre Art in diesem Lauf gesucht wurde. Benutzer- und Rechnername kommen vom Rechner, auf
+  dem der Test läuft (Namen unter vier Zeichen und Allerweltsnamen wie `runner` werden nicht
+  gesucht). Ausnahmen dieser beiden Arten werden nur beurteilt, wenn der Name des Rechners gesucht
+  wurde und im Repository überhaupt vorkommt; in der CI und auf einem Rechner mit anderem Namen sagt
+  der Lauf über sie nichts aus.
+
 Quelle der Prognose- und Radardaten: MeteoSchweiz. Wetterdaten über Open-Meteo.com.
 Kartengrundlage: Natural Earth. Musterdatei in `tests/data`: MeteoSchweiz Open Data.
 

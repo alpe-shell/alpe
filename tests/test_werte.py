@@ -235,9 +235,33 @@ benutzer, rechner = wp.eigener_name(__import__("pwd").getpwuid(os.getuid()).pw_n
 check(repo_gelesen > 1500 and repo_treffer == [],
       "ganzes Repo ohne persönliche Werte (%d Dateien; Benutzername %s, Rechnername %s): %s"
       % (repo_gelesen, "gesucht" if benutzer else "nicht gesucht", "gesucht" if rechner else "nicht gesucht", [wp.zeile(f) for f in repo_treffer[:12]]))
-ueberholt = ["%s %s %s" % (a["glob"], a["art"], a["text"]) for a in ausnahmen if a["treffer"] == 0
-             and not (a["art"] in ("Benutzername", "Rechnername") and not (benutzer if a["art"] == "Benutzername" else rechner))]
+ueberholt = ["%s %s %s" % (a["glob"], a["art"], a["text"]) for a in wp.ueberholte(ausnahmen, repo_treffer, benutzer, rechner)]
 check(ueberholt == [], "jede Ausnahme trifft mindestens einen Fund (sonst ist sie überholt): %s" % ueberholt)
+# Überholt darf eine Ausnahme nur heissen, wenn ihre Art in diesem Lauf gesucht wurde. Benutzer- und Rechnername
+# kommen vom Rechner; nachgestellt werden die Lagen, in denen der Lauf über solche Ausnahmen nichts weiss.
+# Die erfundenen Namen sind zusammengesetzt, damit sie in dieser Datei nicht als Wort stehen.
+namens_ausnahmen = [a for a in ausnahmen if a["art"] in wp.RECHNERABHAENGIG]
+for lage, b, r in (("CI: Allerweltsname, kurzer Rechnername – beide Arten nicht gesucht", wp.eigener_name("runner"), wp.eigener_name("ci")),
+                   ("CI: Rechnername gesucht, kommt nirgends vor", wp.eigener_name("runner"), wp.eigener_name("fv-" + "az1234-567")),
+                   ("anderer Rechner: Benutzername gesucht, kommt nirgends vor", wp.eigener_name("wen" + "delin"), "")):
+    lage_ausnahmen = wp.lade_ausnahmen()
+    _gelesen, lage_treffer = wp.durchsuche(REPO, lage_ausnahmen, benutzer=b, rechner=r)
+    check(lage_treffer == [] and wp.ueberholte(lage_ausnahmen, lage_treffer, b, r) == []
+          and (not namens_ausnahmen or any(a["treffer"] == 0 for a in lage_ausnahmen if a["art"] in wp.RECHNERABHAENGIG)),
+          "überholte Ausnahmen – %s: keine Ausnahme gilt als überholt, obwohl die Namens-Ausnahmen keinen Treffer haben" % lage)
+
+
+def probe_ueberholt(art, treffer=0):
+    return {"glob": "x", "art": art, "muster": re.compile("x"), "text": "x", "treffer": treffer}
+
+
+fest, name_a, name_b = probe_ueberholt("IP-Adresse"), probe_ueberholt("Benutzername"), probe_ueberholt("Benutzername", 2)
+check(wp.ueberholte([fest, name_a], [], "", "") == [fest] and wp.ueberholte([fest, name_a], [], "erika", "") == [fest],
+      "überholte Ausnahmen: eine immer gesuchte Art ohne Treffer ist überholt; ein Name, der nicht gesucht wird oder nirgends vorkommt, sagt nichts")
+check(wp.ueberholte([name_a, name_b], [], "erika", "") == [name_a] and wp.ueberholte([name_a, name_b], [], "", "") == []
+      and wp.ueberholte([name_a], [("y", 1, "Benutzername", "erika")], "erika", "") == [name_a]
+      and wp.ueberholte([name_a], [("y", 1, "Rechnername", "werkbank")], "erika", "werkbank") == [],
+      "überholte Ausnahmen: kommt der gesuchte Name im Repo vor (Treffer oder Fund derselben Art), ist eine Namens-Ausnahme ohne Treffer überholt")
 check(len(ausnahmen) <= 30 and all(a["frist"] and len(a["grund"]) >= 15 for a in ausnahmen),
       "Ausnahmeliste kurz (%d Einträge), jede mit Frist und Begründung" % len(ausnahmen))
 for art, probe in (("Pfad in ein Home-Verzeichnis", "source = /home/erika/bild.png"), ("IP-Adresse", "host 192.168.1.20"), ("MAC-Adresse", "aa:bb:cc:dd:ee:ff"),
