@@ -214,7 +214,12 @@ Neu seit D6 – bitte gezielt ansehen:
   mit und ohne Anheftungen. Ursache ist das Symbol aus dem Ersatzthema Adwaita, das Qt mit
   schwarzem Grund rendert – siehe «Ladeprüfung» unten; am Mac ist Adwaita die Vorgabe von
   Fedora. Am Mac festhalten: Quadrat hinter dem Papierkorb ja/nein, eingestelltes Symbolthema,
-  und wie das kleine Dock nur mit dem Papierkorb wirkt.
+  und wie das kleine Dock nur mit dem Papierkorb wirkt. **Nachtrag 23.11.2026 (Plan 0.8
+  Nr. 91–93):** kora kommt künftig als Abhängigkeit mit (E3/F2); solange es am Mac nicht
+  installiert ist, ist ein Quadrat hinter dem Papierkorb mit Adwaita der bekannte Befund und
+  kein neuer. Das Dock ohne Anheftungen bleibt für 1.1 so; am Mac bitte die **Sichtbarkeit der
+  Dock-Fläche auf dem dortigen Hintergrund** beurteilen (am PC war sie auf der dunklen
+  Material-Vorlage fast unsichtbar).
 - **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
 
 Die Ladeprüfung in den Varianten «gesperrt» und «offen» (Plan 0.8 Nr. 70) läuft nur am PC.
@@ -649,8 +654,13 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   die Zeitsteuerung laufen lassen; Deckel zu und wieder auf – die Farbtemperatur muss nach dem
   Aufwachen stimmen (die Überwachung des Ruhezustands hängt jetzt erst Augenblicke nach dem Start
   am Bus); WLAN-Liste, Bluetooth, Helligkeitstasten, Sperren beim Zuklappen.
-- **Offen (22.11.2026, Frist: vor E1 – Entscheid des Maintainers, weil es das Erste ist, was ein
-  neuer Nutzer sieht): Dock ohne angeheftete Programme.** Im Bild der Variante «offen» unter dem
+- ~~**Offen (22.11.2026, Frist: vor E1 – Entscheid des Maintainers, weil es das Erste ist, was ein
+  neuer Nutzer sieht): Dock ohne angeheftete Programme.**~~ **Geschlossen am 23.11.2026 (Plan 0.8
+  Nr. 91–93):** kora wird als Abhängigkeit mitgeliefert, der Papierkorb kommt damit aus kora (kein
+  eigenes Symbol); das Dock ohne Anheftungen bleibt für 1.1, wie es ist – die Sichtbarkeit der
+  Fläche wird beim Mac-Test auf anderem Hintergrund neu beurteilt. Beleg mit der Systemfassung von
+  kora (leerer und voller Papierkorb) im Plan, «Stand»; der Befund zu Adwaita steht als eigener
+  Fall weiter unten. Der Text darunter ist der Stand der Untersuchung. Im Bild der Variante «offen» unter dem
   verschachtelten Hyprland (`1d91c2b`) steht unten in der Mitte nur der Papierkorb auf einem
   schwarzen, scharfkantigen Quadrat von etwa 68 px. **Gegenprobe (22.11.2026, Stand `016d986`,
   im Temp-HOME vier Programme angeheftet, sonst gleich; Lauf gültig, 39 gleich, nichts neu):** Mit
@@ -702,6 +712,80 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   erkennbar ist – ändert das Aussehen auch mit Anheftungen.
   Unter KWin: Bild in der Haltprüfung vom 23.11.2026 (Plan, «Stand»). Gegenprobe am Mac steht in
   der Anleitung für den Stand nach D7.
+- **Offen (23.11.2026, Herkunft offen): `AlpeTextField.qml: TypeError: Property 'snapTo' of object
+  SpringMotion… is not a function`** – KWin, Variante «offen», in 1 von 4 Läufen auf `016b2d4`, in
+  0 von 3 auf dem Stand davor (`53c5121`). Vermutlich dieselbe Art Wettlauf wie bei
+  `DeferredAction` (Aufruf, während das Objekt auf- oder abgebaut wird; `AlpeTextField` ruft
+  `snapTo` auf drei eigenen `SpringMotion`-Objekten), nicht untersucht. Die sieben Läufe belegen
+  weder, dass die Meldung neu ist, noch dass sie alt ist (Plan 0.8 Nr. 76). Nicht in der
+  Grundlinie; bis zu einem Entscheid kann der Lauf KWin «offen» damit gelegentlich rot sein.
+  Zusammen mit den beiden sporadischen Meldungen unter Hyprland klären (Frist dort: vor G1).
+- **Bilder des Designs ohne Lizenzangabe (23.11.2026):** `design/kde/bilder/` enthält
+  `jagged-peaks-wolkenzug.mp4`, `wallpaper.jpg` und `wall.png`; `NOTICE` nennt sie nicht, die
+  Dateien tragen keine Urheberangabe. Das Bergbild der Sperre ist ein Standbild aus dem Video.
+  Herkunft und Lizenz bestätigt der Maintainer; danach Eintrag in `NOTICE`.
+- **Verweise im ausgelieferten Design, die nur auf dem exportierenden Rechner aufgehen (geprüft am
+  23.11.2026; Massstab: vom Paket `alpe-shell` oder seinen Abhängigkeiten geliefert oder in der
+  Grundinstallation von CachyOS mit KDE und Fedora Asahi mit Hyprland vorhanden).** Es gibt ein
+  Design, `design/kde`. **In Ordnung:** Symbolthema kora (Abhängigkeit, Plan 0.8 Nr. 91; ein
+  eigenes Thema für die helle Darstellung setzt das Design nicht – `iconThemeLight` und
+  `iconThemePerMode` fehlen, hell und dunkel benutzen kora); Schriften der Sperre «AlfaSlabOne»
+  und «JetBrains Mono Nerd Font Mono» (liegen unter `shell/Modules/Lock/Alpe/fonts`, die Sperre
+  ordnet den Namen ohne «Nerd Font» zu); Schrift der Shell und Festbreitenschrift (nicht im
+  Design, Vorgaben «Google Sans Flex» und «Fira Code» liegen unter `shell/Alpe/assets/fonts`);
+  Bilder (`bilder/`, kommen mit dem Design); Cursorthema und Klangthema (nicht im Design, es gilt
+  das System); fastfetch-Logo (`alpe-logo.txt` legt `tools/fastfetch.py` an); Symbole in der
+  fastfetch-Vorlage (kitty bringt «Symbols Nerd Font Mono» selbst mit). **Behoben (eindeutig):**
+  Das abgeschaltete Uhr-Widget auf dem Schreibtisch nannte «CaskaydiaCove Nerd Font Propo» (am PC
+  aus `ttf-cascadia-code-nerd`, ausdrücklich installiert; unter Fedora nicht paketiert) – aus dem
+  Design entfernt, es gilt die Schrift der Shell. **Unklar, nur aufgelistet:** (1) KWin-Effekte
+  `better_blur_dx` und `Round-Corners` in `kwin.json` – Pakete aus AUR bzw. fremden COPR, heute
+  `optdepends` (Plan 6.2) und von `get.sh` nachinstalliert; fehlen sie, hat das Design weder
+  Unschärfe noch runde Ecken und der eingebaute Unschärfe-Effekt ist abgeschaltet
+  (`blurEnabled=false`). Gehört das zum «ausgelieferten Design», müssten sie Abhängigkeiten sein.
+  (2) Video-Hintergrund `jagged-peaks-wolkenzug.mp4`: braucht `qt6-multimedia` (in `depends`) und
+  für das Standbild der Sperre und die Farben `ffmpeg` (heute `optdepends`/`Recommends`); ohne
+  `ffmpeg` zeigt die Sperre eine Farbe statt des Bildes. (3) `manifest.json` führt Schriften nur aus
+  Schlüsseln der obersten Ebene, der Sperre und der Programme; die Schrift im Uhr-Widget stand
+  darum nicht darin – `tools/design.py` sammelt verschachtelte `fontFamily` nicht ein und meldet
+  sie beim Einspielen nicht als fehlend. (4) Eingeschaltete matugen-Vorlagen für Firefox, Neovim,
+  Zen und Zed spiegeln die Programme des exportierenden Rechners; ob sie ins Design gehören, ist
+  offen. (5) `lockscreen/hyprlock.conf` und daraus `layout.js` nennen an mehreren Stellen den
+  Bildschirm `eDP-1` (eingebauter Bildschirm eines Notebooks; die Shell-Sperre beachtet die Angabe
+  laut Kopf der Vorlage nicht); kein persönlicher Name, aber eine Bildschirmangabe im Repository. **Vorschlag für einen Test (nicht umgesetzt):** in
+  `tests/test_werte.py` für jedes Design alle Verweise einsammeln – `iconThemeDark`/`iconThemeLight`,
+  `cursorSettings.theme`, jede `fontFamily`/`font.family` in beliebiger Tiefe von `settings.json`
+  und im Layout der Sperre, `font_family` in den Programmdateien, Bild- und Videopfade, die
+  eingeschalteten KWin-Effekte – und gegen eine erlaubte Liste prüfen, die neben dem Test steht
+  und je Eintrag sagt, woher er kommt: Abhängigkeit (`kora`), mitgelieferte Schrift (der Test
+  prüft die Datei unter `shell/…/fonts`), Datei im Design (`@DESIGN@/bilder/…` muss existieren),
+  generischer Name (`Sans`, `monospace`, «System Default»). Alles andere ist ein Fund. Sobald es
+  PKGBUILD und Spec gibt (E2/E3), vergleicht derselbe Test die Liste mit deren `depends`/`Requires`,
+  damit Liste und Pakete nicht auseinanderlaufen. Dazu `design.py`: verschachtelte Schriften ins
+  `manifest.json`.
+- **Offen (23.11.2026, ohne Frist; vor G1 neu beurteilen): Adwaita 51 unter Qt 6.12 – Symbole mit
+  deckend schwarzem Grund.** Betrifft nur Nutzer, die das Symbolthema selbst auf Adwaita umstellen
+  (oder bei denen kora und breeze fehlen, sodass Qt bei Adwaita landet); das ausgelieferte Design
+  nennt kora, das als Abhängigkeit mitkommt (Plan 0.8 Nr. 91, 92). Im Dock sichtbar am Papierkorb
+  (`user-trash`, `user-trash-full`). **Ursache eingegrenzt (QtSvg 6.12.0, Bildleser von Qt,
+  offscreen, 72 px):** nicht `<mask>` und nicht `<filter>` – die Datei rendert auch ohne beide
+  schwarz –, sondern **`<clipPath>`-Elemente, die direkt unter `<svg>` stehen statt in `<defs>`**:
+  QtSvg zeichnet ihren Inhalt wie gewöhnliche Formen. `user-trash.svg` enthält acht solche
+  Elemente, zwei davon `<clipPath><rect width="192" height="152"/></clipPath>`; dieses Rechteck
+  ohne Füllangabe wird als deckend schwarze Fläche über das ganze Bild gemalt. Gegenproben: ohne
+  die beiden Rechteck-Clip-Pfade sind die Ecken durchsichtig; mit denselben Elementen in `<defs>`
+  ebenfalls; eine Datei aus vier Zeilen (ein `<clipPath>` mit `<rect>` direkt unter `<svg>`, ein
+  Kreis) zeigt denselben Fehler, mit `<defs>` nicht. **Umfang (alle 767 Dateien von
+  `adwaita-icon-theme` 51.0 gerendert):** 16 Symbole mit vier schwarzen Ecken – neben den beiden
+  Papierkörben `audio-headphones`, `audio-headset`, `ebook-reader`, `input-tablet`, `microphone`,
+  `printer`, `printer-network`, `scanner`, `video-display` (Geräte) und `package-x-generic`,
+  `x-office-addressbook`, `x-office-spreadsheet`, `x-office-spreadsheet-template`,
+  `x-package-repository` (Dateitypen). kora 2.0.6 (9819 Dateien), breeze 6.32 (7859) und hicolor
+  (239) im selben Lauf: keines. Die Angabe vom 23.11.2026, 16 andere Adwaita-Symbole seien
+  unauffällig, war eine Stichprobe und bleibt richtig, aber der Papierkorb ist nicht das einzige
+  betroffene Symbol. Mögliche Wege, nichts davon umgesetzt: auf Qt oder Adwaita warten; in
+  `IconThemeService` für Adwaita die Symbole aus `AdwaitaLegacy` bzw. die symbolischen vorziehen;
+  betroffene SVG vor dem Laden umschreiben (nicht empfohlen).
 - **Offen (23.11.2026): kein Bild unter KWin.** `alpe-dienst screenshot full` meldet im virtuellen
   `kwin_wayland` der Ladeprüfung `compositor does not support wlr-screencopy-unstable-v1`; das
   Bild zum Halt (Plan 0.8 Nr. 71) gibt es darum nur unter Hyprland. Der Lauf selbst bleibt
@@ -710,6 +794,40 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Weg braucht (KWin-Schnittstelle `org.kde.KWin.ScreenShot2`, verlangt eine Freigabe über die
   Desktop-Datei). Ebenso: `--bild` gibt es nur in der Variante «offen»; ein Bild des
   Sperrbildschirms brauchte am 23.11.2026 einen Temp-Worktree mit aufgehobener Sperre.
+  **Eingeschätzt am 23.11.2026 (nicht umgesetzt; Entscheid offen, Vorschlag unten).**
+  *Berechtigungsprüfung am installierten KWin 6.8.3:* Die Annahme «verlangt eine Freigabe über die
+  Desktop-Datei» trifft auf dieser Version nicht zu. Belege: (1) Im Plugin
+  `/usr/lib/qt6/plugins/kwin/plugins/screenshot.so` (Paket `kwin` 6.8.3) gibt es die Fehlernamen
+  `org.kde.KWin.ScreenShot2.Error.Cancelled`, `.FileDescriptor`, `.InvalidArea`, `.InvalidScreen`,
+  `.InvalidWindow`, `.NoActiveWindow` – **keinen** für eine verweigerte Berechtigung; weder das
+  Plugin noch `libkwin.so.6` noch `kwin_wayland` enthalten den Schlüssel
+  `X-KDE-DBUS-Restricted-Interfaces` oder eine Umgebungsvariable mit `NO_PERMISSION_CHECKS` (als
+  ASCII und UTF-16 gesucht). (2) Probe in einer eigenen Test-Instanz (`kwin_wayland --virtual`,
+  eigener Scope, eigenes HOME, eigener Session-Bus, keine `KWIN_*`-Variable gesetzt): `busctl
+  --user call org.kde.KWin /org/kde/KWin/ScreenShot2 org.kde.KWin.ScreenShot2 CaptureWorkspace
+  'a{sv}h' 0 3` – ein Aufrufer ohne Desktop-Datei – liefert ohne Fehler `format 16` (RGBX8888),
+  1280 × 720, `stride 5120`, `type raw` und 3 686 400 Bytes Bilddaten; die Schnittstelle meldet
+  `Version 5`. **Eine Umgebungsvariable zum Abschalten gibt es in dieser Version also nicht, und es
+  braucht keine.** Der Quelltext von 6.8.3 liegt auf dem Rechner nicht vor (kein Quell- oder
+  Debug-Paket, keine Header zum Plugin); belegt ist das Verhalten der installierten Binärdateien,
+  nicht der Quelltext. Dass ältere KWin-Fassungen die Desktop-Datei prüfen und einen Schalter
+  kennen, ist hier nicht nachprüfbar; die drei Desktop-Dateien mit dem Schlüssel (plasmashell,
+  Portal, Spectacle) liegen weiterhin vor. Die echte Sitzung wurde nicht angesprochen.
+  *Was es braucht:* Die Schnittstelle nimmt einen Dateideskriptor (Pipe), schreibt Rohdaten und
+  antwortet mit Breite, Höhe, Zeilenlänge und `QImage`-Format. **Weg A – nur in der Ladeprüfung**
+  (`ladepruefung.py`, `--bild` unter KWin über `busctl` und ein paar Zeilen Umwandlung nach PNG,
+  dazu ein Test): rund 40 Zeilen, ein bis zwei Stunden; trifft von der Bauart her nur die
+  Test-Instanz (eigener Session-Bus), der Dienst bleibt unverändert. Weicht von «fester Weg
+  `alpe-dienst screenshot full`» (0.8 Nr. 71) ab, darum Entscheid nötig. **Weg B – im Dienst**
+  (`core/internal/screenshot`: zweites Backend über den Session-Bus mit godbus, Pipe lesen,
+  Formate RGBX8888/ARGB32 nach PNG, `full` über `CaptureWorkspace`, später `CaptureScreen`,
+  `CaptureArea`, `CaptureActiveWindow`; Go-Test gegen eine Attrappe der Schnittstelle auf einem
+  privaten Bus): für `screenshot full` ein halber bis ein Tag, mit Bereichs- und Fensterauswahl
+  mehr. Das wäre eine neue Funktion für alle KWin-Nutzer (heute meldet der Dienst unter KWin nur
+  den Fehler oben) und liesse sich nur künstlich auf die Test-Instanz beschränken (eigener
+  Schalter im Dienst) – davon rate ich ab. **Vorschlag:** Weg A **vor E1** (klein, und ab E1
+  ändern sich Pfade und Paketdateien, bei denen ein Bild unter KWin am Halt nützt); Weg B nicht
+  in Phase A, als eigene Funktion nach G1 entscheiden.
 - **Hinweisbalken von Hyprland in der Ladeprüfung: erledigt (`1d91c2b`).** Die Testkonfiguration
   setzt `misc.disable_watchdog_warning`; das Bild danach zeigt keinen Balken mehr, der Lauf
   gegen die Grundlinie «offen» 39 gleich, nichts neu.
@@ -836,3 +954,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
 - ~~Übersetzungen mit Texten entfernter Seiten~~ bereinigt in D6 (`f2a34f7`).
 - Assets `discord.svg`, `reddit.svg`, `matrix-logo-white.svg` sind unbenutzt bzw. nur noch
   für den Discord-Link des Ursprungs da (Entfernen laut 4.3 in C4).
+- **Offen (23.11.2026, Frist: G1): `docs/technik.md` beschreibt noch `tools/upstream.sh` und
+  `schichten/*.patch`** (Abschnitte «Aufbau in drei Schichten» und «Neue Version des
+  Ursprungsprojekts»). Beides gibt es seit B3 nicht mehr (`4a9a1c2` «Schichten aufgelöst»). Im
+  selben Zug prüfen: Der Abschnitt «Tests» nennt noch `~/dux-shell` als Ort der KWin-Brücke und
+  des Dienstes, «Unterbau» den Dienst `dms` und `tools/backend.sh` mit dem Quellbaum des
+  Ursprungs. Mit der Doku in G1 (Plan 8.) neu schreiben.

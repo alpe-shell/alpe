@@ -8,7 +8,7 @@ aufgenommen, Abschnitt 2.3); offene Einzelfälle in
 
 ---
 
-## Stand (23.11.2026, Halt nach D7 abgenommen, vorbehaltlich Mac-Test; 6.7 vollständig entschieden)
+## Stand (23.11.2026, Halt nach D7 abgenommen, vorbehaltlich Mac-Test; 6.7 vollständig entschieden; kora, Papierkorb und Dock entschieden)
 
 ### Erledigt
 
@@ -360,6 +360,79 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
   `d96b0ae` je auf dem Commit im Temp-Worktree mit `tools/test.sh` grün (32 Schritte), `16ff71d`
   und `f5a5256` rot (siehe oben); keine Läufe und keine Scopes der Ladeprüfung mehr offen; Worktrees: nur der
   Arbeitsbaum und `wt-alt`.
+- **Nach dem Halt zur Werteprüfung (23.11.2026, abends; Entscheide 0.8 Nr. 90–94).**
+  - **Rote Commits zusammengelegt (0.8 Nr. 90).** Vorprüfung: `origin/phase-a` (`d17558a`) ist
+    Vorfahr von `16ff71d`. Sicherung: lokaler **Zweig** `sicherung/vor-zusammenlegen` auf `53c5121`
+    (ein Zweig statt eines Tags, weil `CLAUDE.md` das Setzen von Tags ausschliesst). Alt → neu:
+    `16ff71d` + `d96b0ae` → **`a7018dc`**; `f5a5256` + `53c5121` → **`3adf214`**. Bäume gleich
+    (`a7018dc` = Baum von `d96b0ae`, `3adf214` = Baum von `53c5121`), `git diff` gegen die Sicherung
+    leer, `origin/phase-a` unverändert. `tools/test.sh` im Temp-Worktree: beide grün, 32 Schritte.
+    Die Hashes `16ff71d`, `d96b0ae`, `f5a5256`, `53c5121` in den Absätzen oben gibt es nur noch auf
+    dem Sicherungszweig.
+  - **Commits danach**, je im Temp-Worktree grün (32 Schritte, nichts übersprungen): `d1e972f`
+    (`CLAUDE.md`: Pipes), `fb85d70` (Werteprüfung: überholte Ausnahmen, Regel zur Ausnahmeliste),
+    `ae4e394` (MAC-Adressen aus dem Dokumentationsbereich), `5e062cc` (Design ohne fremde Schrift),
+    `016b2d4` (Ladeprüfung: Probe mit vollem Papierkorb).
+  - **Werteprüfung.** (a) Die Ausnahmeliste wird als ganze Datei nicht durchsucht (Vergleich des
+    absoluten Pfads mit der Liste neben dem Skript) – als bewusste Regel im Skript und in
+    `docs/technik.md`, «Tests». (b) Befund: In der CI setzte die Prüfung auf überholte Ausnahmen
+    schon richtig aus (Art nicht gesucht); mit einem **anderen Benutzernamen** (Mac) wurde die Art
+    aber gesucht, die Ausnahme der LICENSE traf nichts und galt als überholt – der Test wäre dort
+    rot gewesen. Behoben (`werte-pruefen.ueberholte`), der Test stellt CI und anderen Rechner nach.
+    (c) Beide MAC-Adressen ersetzt, im Bluetooth-Test auch die des namenlosen Geräts, damit die
+    geprüfte Reihenfolge dieselbe bleibt; 22 Ausnahmen statt 24.
+  - **kora (0.8 Nr. 91).** Installiert: `kora-icon-theme` **2.0.6-1** (AUR, GPL3; liefert `kora` und
+    `kora-pgrey`, kein `kora-light`). Gegen die Kopie im Home: `index.theme` gleich
+    (`Inherits=breeze,hicolor`, keine Versionszeile); 9821 Dateien und 13707 Symlinks gegen 9823
+    und 13706, keiner kaputt; nur im System `apps/scalable/proton-mail.svg` (Symlink), nur im Home
+    ein Hilfsskript und eine doppelte Datei mit Leerzeichen im Namen; Inhalt verschieden nur bei
+    `application-x-drawy.svg` und dem Cache. Die Kopie im Home ist also praktisch derselbe Stand;
+    der Symlink-Verlust von 2.0.0 betrifft 2.0.6 nicht. **Auflösung** (Index der Shell mit
+    `IconThemeIndex.js` nachgebildet, nur Systemordner): feste Namen `user-trash`,
+    `user-trash-full`, `application-x-executable`, `image-missing` aus kora; von 52 Symbolnamen
+    (diese vier und die sichtbaren Desktop-Einträge unter `/usr/share/applications`) 44 aus kora,
+    7 aus hicolor (eigene Symbole von Programmen, die kein Thema führt), 1 gar nicht (`hwloc`),
+    **keiner aus breeze**. Kette: kora → breeze → hicolor, danach das Ersatzthema von Qt. Die sieben
+    Ersatzsymbole und die Papierkörbe aus kora und breeze ausserhalb der Shell gerendert: Ecken
+    durchsichtig; alle Dateien von kora, breeze und hicolor: kein Symbol mit schwarzen Ecken,
+    Adwaita: 16 (`offene-faelle.md`). Nebenbefund für E2/E3: Das AUR-Paket führt breeze nur als
+    `optdepends` (6.2).
+  - **Designs:** Befunde und Vorschlag für einen Test in `offene-faelle.md`, «Ladeprüfung»
+    («Verweise im ausgelieferten Design»). Kein eigenes Symbolthema für hell.
+  - **Bergbild der Sperre:** Standbild, das die Shell mit `ffmpeg` aus
+    `design/kde/bilder/jagged-peaks-wolkenzug.mp4` zieht (im Temp-HOME des Laufs
+    `~/.cache/alpe/video-wallpaper/<MD5 des Pfads>.jpg`; die eingespielte Videodatei ist byte-gleich
+    mit der im Repo). **Die Lizenz ist im Repo nicht belegt:** `NOTICE` nennt die drei Dateien unter
+    `design/kde/bilder` nicht, die Dateien tragen keine Urheberangabe; es gibt nur die allgemeine
+    Aussage, Bilder kämen beim Export nur als bestätigte eigene mit. Offen beim Maintainer.
+  - **`wt-alt`:** lag unter `/tmp/claude-1000/h7` und **hat den Neustart vom 23.11.2026 (18:22) nicht
+    überlebt** – `/tmp` ist flüchtig; Git führt den Worktree noch als «prunable». Gebraucht wird er,
+    bis die sporadischen Meldungen (Notizblock «Tab file does not exist», `DeferredAction` «flush is
+    not a function») geklärt sind. Wiederherstellen: `git worktree prune`, dann `git worktree add
+    --detach <Ordner> ba4ddbc` und die heutige Ladeprüfung als unversionierte Kopie nach
+    `entwicklung/lp-offen/` darin. Nicht neu angelegt.
+  - **Haltprüfung auf dem Endstand `016b2d4`** (kora aus dem System; je 1 Lauf, alle gültig,
+    143–148 s): Hyprland «gesperrt» 39 gleich, Hyprland «offen» 39 gleich, KWin «gesperrt» 39 von
+    39 – nichts neu, nichts weg. **KWin «offen»: 38 gleich und eine neue Meldung**,
+    `@Alpe/Widgets/AlpeTextField.qml: TypeError: Property 'snapTo' of object SpringMotion… is not a
+    function`. Gegengemessen (0.8 Nr. 76), je drei weitere Läufe: Endstand 0 von 3, Stand vor den
+    heutigen Änderungen (`53c5121`) 0 von 3 – zusammen **1 von 4 auf dem Endstand, 0 von 3 davor**;
+    das belegt weder Herkunft noch Alter. Die Oberfläche unterscheidet sich zwischen beiden Ständen
+    nur um die entfernte Schrift des abgeschalteten Uhr-Widgets. Nicht in die Grundlinie
+    aufgenommen, offener Fall. Gegenprobe mit stummem Systembus unter KWin bestanden (263 s).
+    qmllint 4900 gegen 4902, nichts neu (dieselben zwei weg). `go vet ./...` ohne Meldung.
+    **Bilder «offen» unter Hyprland:** Leiste mit Arbeitsflächen-Pille, Starter mit Alpe-Zeichen,
+    46°, 48°, 2 %, Uhr, Wetter (3 °C), Ton und Mikrofon; Material-Vorlage mit Alpe-Zeichen; unten in
+    der kleinen gerundeten Dock-Fläche **der Papierkorb aus kora, ohne schwarzes Quadrat** – leer
+    ein grauer Eimer, mit `ALPE_LP_PAPIERKORB=voll` derselbe Eimer mit Papier darin.
+  - **Zwischenfall (23.11.2026):** Ein einzelner Go-Testlauf von Hand
+    (`HOME=<Temp> GOMODCACHE=$(go env GOMODCACHE) … go test ./internal/server/network`) legte einen
+    schreibgeschützten Modul-Cache (80 MB) unter `/tmp/claude-1000/k/gh` an: Die Shell wertete
+    `go env` schon mit dem Temp-HOME aus. Kein Schaden am Repo oder am echten HOME; der Ordner liegt
+    noch dort (nicht entsperrt), verschwindet mit dem nächsten Neustart. Die Werte künftig vorher in
+    eigene Variablen lesen.
+  - **Angehalten.** Keine Läufe und keine Scopes offen; Worktrees: nur der Arbeitsbaum (und der
+    verwaiste Eintrag `wt-alt`). Nichts gepusht.
 
 ---
 
@@ -637,6 +710,16 @@ Entscheide nach D7.7b (22.11.2026):
 | 87 | **Geschichte wird nicht umgeschrieben** (23.11.2026): weder `phase-a` noch `main` noch `v1.0`. Die persönlichen Pfade, die dort stehen (`layout.js` ab `bfc7243` auf `phase-a`; `shell/0001-Alpe-1.0-Zugerberg.patch` und fünf weitere Dateien in `v1.0`/`main`), bleiben in der Geschichte; **Behebung nur nach vorne.** |
 | 88 | **Prüfung auf persönliche Werte im ganzen Repo** (22./23.11.2026): `tests/test_werte.py` durchsucht über `tools/werte-pruefen.py` alle versionierten Textdateien nach Pfaden in ein Home-Verzeichnis, Benutzer- und Rechnernamen, IP- und MAC-Adressen und Gerätekennungen. Ausnahmen in `tools/werte-ausnahmen.txt`, aufgebaut wie `tools/namen-ausnahmen.txt`: je Datei, Art und **erwartetem Wert**, dauerhafte mit Begründung, vorübergehende mit Frist; ein neuer Fund in derselben Datei schlägt an, eine Ausnahme ohne Fund gilt als überholt. |
 | 89 | **Dock ohne angeheftete Programme: Frist vor E1** statt vor G1 (22.11.2026), weil es das Erste ist, was ein neuer Nutzer sieht. Ursachen untersucht am 23.11.2026 (`offene-faelle.md`, «Ladeprüfung»); über die Behebung entscheidet der Maintainer. |
+
+Entscheide nach dem Halt zur Werteprüfung (23.11.2026):
+
+| # | Entscheid |
+|---|---|
+| 90 | **«Geschichte nicht umschreiben» (Nr. 87) betrifft nur Veröffentlichtes.** Lokale Commits, die nach `origin/phase-a` liegen, dürfen zusammengelegt werden. So geschehen mit den beiden roten Commits: Sicherung als lokaler Zweig `sicherung/vor-zusammenlegen`, Zusammenlegen nicht-interaktiv (fixup über `GIT_SEQUENCE_EDITOR`), Endstand byte-gleich, `tools/test.sh` auf jedem neuen Commit im Temp-Worktree (Hashes im «Stand»). |
+| 91 | **Symbolthema kora bleibt** das Symbolthema der mitgelieferten Designs und wird **als Abhängigkeit mitgeliefert, nicht ins Paket `alpe-shell` gelegt**. Arch: `depends` auf `kora-icon-theme` (AUR). Fedora: `kora-icon-theme` wird im eigenen COPR mitgebaut, `alpe-shell` verlangt es mit `Requires`. `get.sh` (F2) installiert kora auf beiden Systemen mit. Lizenz von kora: GPL-3.0, als getrenntes Paket verträglich mit MIT. Umsetzung in E3/E4 (6.2, 6.3, 6.4, Tabelle in 10). Befunde zur Systemfassung 2.0.6 im «Stand». |
+| 92 | **Papierkorb im Dock: kein eigenes Symbol.** Mit kora als Abhängigkeit kommt der Papierkorb aus kora (belegt mit der Ladeprüfung «offen» unter Hyprland, leer und voll, «Stand»). Der Befund zu Adwaita 51 unter Qt 6.12 betrifft nur Nutzer, die selbst auf Adwaita umstellen (`offene-faelle.md`, ohne Frist, vor G1 neu beurteilen). |
+| 93 | **Dock ohne Anheftungen: so lassen für 1.1.** Das ausgelieferte Design heftet nichts an; ein neuer Nutzer sieht das kleine Dock nur mit dem Papierkorb. Die Sichtbarkeit der Dock-Fläche wird **beim Mac-Test auf anderem Hintergrund neu beurteilt**. Der Fall mit Frist vor E1 (Nr. 89) ist damit geschlossen. |
+| 94 | **Ausgaben von Prüfungen nicht durch eine Pipe kürzen** (`tail`, `head`, `grep`), ohne `pipefail` zu setzen; bevorzugt Ausgabe in eine Datei, Rückgabewert des Prüfbefehls selbst auswerten, danach den Schluss lesen (`CLAUDE.md`). **Neue eigene Testdaten** verwenden MAC-Adressen aus `00:00:5E:00:53:00/24` und IP-Adressen aus `192.0.2.0/24`, `198.51.100.0/24` oder `203.0.113.0/24`; die Werteprüfung nimmt genau diese Bereiche aus (`CLAUDE.md`, `docs/technik.md`). Die beiden MAC-Adressen mit Frist Phase B sind ersetzt, ihre Ausnahmen gestrichen. **Überholte Ausnahmen:** Eine Ausnahme gilt nur als überholt, wenn ihre Art in diesem Lauf gesucht wurde; für Benutzer- und Rechnernamen zusätzlich nur, wenn der gesuchte Name im Repository vorkommt. |
 
 Ausgabedateien für Fremdprogramme (0.8 Nr. 48). Basis: `~/.config`, sofern nichts anderes steht.
 
@@ -1176,6 +1259,12 @@ Kürzel, fastfetch, Proton-VPN-Kopfleiste), `alpe kde ein`, `alpe design apply`.
 - `pkgname=alpe-shell`, `arch=(x86_64 aarch64)`, `license=(MIT)`
 - `depends=(quickshell>=0.3.2 qt6-base qt6-declarative qt6-multimedia qt6-svg accountsservice python matugen wtype)`
   (`quickshell>=0.3.2`: so verlangt es die Systemprüfung des Ursprungs)
+- **Aufgabe (0.8 Nr. 91): `kora-icon-theme` in `depends`** (AUR, GPL-3.0, getrenntes Paket). Zu beachten
+  beim Umsetzen: (a) `pacman` löst AUR-Abhängigkeiten nicht auf – der Weg «PKGBUILD aus dem Repo mit
+  `makepkg -si`» braucht kora vorher (AUR-Helfer oder eigener Bau, siehe 6.4); (b) das AUR-Paket
+  `kora-icon-theme` 2.0.6 führt `breeze-icons` und `hicolor-icon-theme` nur als `optdepends`, kora erbt
+  aber von beiden (`Inherits=breeze,hicolor`) – Vorschlag: `breeze-icons` und `hicolor-icon-theme`
+  ebenfalls in `depends` von `alpe-shell`.
 - `makedepends=(go make git)`
 - `optdepends`: `python-h5py` (Radar), `ffmpeg` (Video-Hintergrund auf der Sperre), `kitty`,
   `fastfetch`, `kwin-effects-better-blur-dx` / `kwin-effect-rounded-corners` (AUR, Unschärfe/Ecken),
@@ -1198,6 +1287,10 @@ Kürzel, fastfetch, Proton-VPN-Kopfleiste), `alpe kde ein`, `alpe design apply`.
 - Chroots: `fedora-43-x86_64`, `fedora-43-aarch64`, `fedora-44-…` (Asahi Remix folgt Fedora)
 - `Requires: quickshell >= 0.3.2, matugen, python3, accountsservice, qt6-qtmultimedia, wtype`;
   `Recommends: python3-h5py, ffmpeg-free, slurp, hyprlock, hypridle, kitty, fastfetch`
+- **Aufgabe (0.8 Nr. 91): `kora-icon-theme` im eigenen COPR mitbauen** (eigene Spec, Lizenz GPL-3.0,
+  Quelle `github.com/bikass/kora`), `alpe-shell` verlangt es mit `Requires: kora-icon-theme`. Dazu
+  prüfen: das Ersatzthema breeze (`Inherits=breeze,hicolor`) – unter Fedora `breeze-icon-theme`, auf
+  Fedora Asahi mit Hyprland nicht in der Grundinstallation; Vorschlag: ebenfalls `Requires`.
 - **Woher kommen Quickshell und matugen unter Fedora?**
   - Quickshell: im offiziellen Fedora-Repo (Fedora 44/Rawhide), laut Paketseite aber Stand 0.2.1
     – **zu alt** für die verlangte 0.3.2. Aktuelle Builds mit aarch64 im COPR
@@ -1224,6 +1317,10 @@ Kürzel, fastfetch, Proton-VPN-Kopfleiste), `alpe kde ein`, `alpe design apply`.
    **Kein DMS-Installer, kein `dux-shell` mehr.** Ist `dux-shell` installiert und `dms.service`
    aktiv: `alpe umzug` statt Neuinstallation.
 3. Optionale Pakete (h5py, ffmpeg, kitty, fastfetch, KWin-Effekte) wie heute, mit Merkliste.
+   **Aufgabe (0.8 Nr. 91): kora wird auf beiden Systemen mitinstalliert** – über die Abhängigkeit des
+   Pakets (AUR-Helfer bzw. COPR); auf dem Weg ohne AUR-Helfer (`makepkg -si` aus dem Repo) baut
+   `get.sh` zuerst `kora-icon-theme` aus dem AUR. Probelauf `--check` prüft, dass
+   `/usr/share/icons/kora/index.theme` danach vorhanden ist.
 4. `alpe einrichten`, unter KDE `alpe kde ein --jetzt`, unter Hyprland
    `alpe-dienst systemd enable` (`hyprland-session.target` will `alpe.service`, 0.6 Nr. 1); eine
    vorhandene `exec-once`-Zeile mit `dms run`/`alpe start` wird mit Sicherung auskommentiert,
@@ -1667,11 +1764,11 @@ unter `plugins/`** eingeschaltet (0.8 Nr. 33).
 | D6 | Sichtbare Texte, Über-Seite, Brand.apply weg, Übersetzungen | |
 | D7.N, D7.0–D7.8 | Node-Tests in test.sh; interne Namen, Widget-Bibliothek `Alpe*`, Plugin-Beschreibung, Plugins, Migration v44; Weiterleitungen weg (D7.8 erst nach Bestätigung) | **direkt nach D6, vor E1** (0.8 Nr. 6), Bereiche in 2.3.5; Halt nach D7, Mac-Test, dann 6.7 |
 | E1 | Makefile, systemd-Unit, Desktop-Dateien; **PAM-Dienste, Richtlinien und alle paketierten Pfade mit `alpe`-Namen** (0.8 Nr. 16) | `make install DESTDIR` getestet in Temp-Wurzel; Dateiliste ohne Überschneidung mit dem Paket `dms`/`dux-shell` |
-| E2 | PKGBUILD | CI-Bau |
-| E3 | RPM-Spec; `dsearch` (dux-search) wird **optionale** Abhängigkeit, keine harte, weil die Dateisuche ohne das Programm läuft: `optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec (0.8 Nr. 26) | CI-Bau x86_64 |
-| E4 | Werkzeuge: `alpe` CLI, einrichten.sh, entwicklung, doctor/update/entfernen/backup, kde-sitzung, lockscreen, kuerzel, titelleisten, design.py | bestehende Tests nachgeführt |
+| E2 | PKGBUILD; **`depends` auf `kora-icon-theme`** (AUR; 0.8 Nr. 91, Einzelheiten 6.2 – der Entscheid nennt E3/E4, das PKGBUILD selbst entsteht hier) | CI-Bau |
+| E3 | RPM-Spec; `dsearch` (dux-search) wird **optionale** Abhängigkeit, keine harte, weil die Dateisuche ohne das Programm läuft: `optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec (0.8 Nr. 26). **Aufgabe kora (0.8 Nr. 91):** `kora-icon-theme` im eigenen COPR mitbauen, `Requires: kora-icon-theme` in der Spec; Arch `depends` (6.2, 6.3) | CI-Bau x86_64 |
+| E4 | Werkzeuge: `alpe` CLI, einrichten.sh, entwicklung, doctor/update/entfernen/backup, kde-sitzung, lockscreen, kuerzel, titelleisten, design.py. **Aufgabe kora (0.8 Nr. 91):** Die Werkzeuge setzen kora als Abhängigkeit des Pakets voraus (kein eigenes Kopieren ins Home); Vorschlag dazu, noch nicht entschieden: `alpe doctor` meldet ein fehlendes Symbolthema des Designs (kora, Ersatzthema breeze), `design.py` nennt beim Einspielen ein Symbolthema, das nicht installiert ist | bestehende Tests nachgeführt |
 | F1 | Umzug: `tools/umzug.py`, `install.sh`-Übergang, Testdaten, Test; Benutzerkopien ausgelieferter Plugins mit Rückweg zur Seite legen (0.8 Nr. 32) | |
-| F2 | get.sh neu | Probelauf `--check` in Temp-`HOME` mit Attrappen |
+| F2 | get.sh neu; **installiert kora auf beiden Systemen mit** (0.8 Nr. 91, 6.4) | Probelauf `--check` in Temp-`HOME` mit Attrappen |
 | G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `Brand.version` auf 1.1 und **im selben Commit** `requires_alpe: >=1.1` für jedes Plugin, das Alpe ausliefert oder pflegt (`plugins/` im Repo, `~/alpe-plugins`; 0.8 Nr. 31). Bis dahin `>=1.0`, solange `Brand.version` noch 1.0 meldet. **CHANGELOG 1.1 enthält den Eintrag zur Behebung «Dienst hing bei stummem Systembus, Oberfläche verband sich nie»** (0.8 Nr. 85; `docs/plan/dienst-systembus.md`) | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
