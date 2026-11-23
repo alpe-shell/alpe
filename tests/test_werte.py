@@ -274,6 +274,13 @@ check(wp.funde("a/b_test.go", "10.0.0.2", ausnahmen=probe_ausnahme) == [] and pr
       and [f[3] for f in wp.funde("a/b_test.go", "10.0.0.2 10.0.0.3 /home/erika/x", ausnahmen=probe_ausnahme)] == ["/home/erika", "10.0.0.3"]
       and len(wp.funde("a/c.go", "10.0.0.2", ausnahmen=probe_ausnahme)) == 1,
       "Ausnahme gilt nur für Datei, Art und genau den erwarteten Wert – ein neuer Fund in derselben Datei schlägt an")
+# Nachbarn der Dokumentationsbereiche, zusammengesetzt, damit sie in dieser Datei nicht selbst als Fund stehen.
+NACHBARN = ["192.0.3." + "7", "198.51.101." + "1", "203.0.114." + "9", "192.0.2." + "256", "00:00:5E:00:54:" + "4A", "00:00:5F:00:53:" + "01"]
+check(wp.funde("x/probe.txt", "00:00:5E:00:53:4A 00-00-5e-00-53-ff 192.0.2.7 198.51.100.255 203.0.113.0") == []
+      and [f[3] for f in wp.funde("x/probe.txt", " ".join(NACHBARN))] == NACHBARN,
+      "Repo-Muster: Dokumentationsbereiche (RFC 7042, RFC 5737) sind kein Fund, Nachbarbereiche schon")
+check(not [a["text"] for a in ausnahmen if a["frist"] == "Phase B" and a["art"] == "MAC-Adresse"],
+      "keine MAC-Adresse mehr mit Frist Phase B: die Testdaten des Ursprungs tragen Adressen aus dem Dokumentationsbereich")
 check(wp.eigener_name("pc") == "" and wp.eigener_name("runner") == "" and wp.eigener_name("werkbank.lan") == "werkbank",
       "kurze Namen und Allerweltsnamen werden nicht gesucht")
 

@@ -351,6 +351,9 @@ Gerätekennungen. Von Hand, auch gegen einen anderen Ordner:
   gesucht). Ausnahmen dieser beiden Arten werden nur beurteilt, wenn der Name des Rechners gesucht
   wurde und im Repository überhaupt vorkommt; in der CI und auf einem Rechner mit anderem Namen sagt
   der Lauf über sie nichts aus.
+- **Dokumentationsbereiche sind kein Fund:** MAC-Adressen aus `00:00:5E:00:53:00/24` (RFC 7042) und
+  IP-Adressen aus `192.0.2.0/24`, `198.51.100.0/24` und `203.0.113.0/24` (RFC 5737). Neue eigene
+  Testdaten verwenden nur solche Werte und brauchen dann keine Ausnahme.
 
 Quelle der Prognose- und Radardaten: MeteoSchweiz. Wetterdaten über Open-Meteo.com.
 Kartengrundlage: Natural Earth. Musterdatei in `tests/data`: MeteoSchweiz Open Data.

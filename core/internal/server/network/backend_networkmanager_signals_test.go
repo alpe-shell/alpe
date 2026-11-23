@@ -213,7 +213,7 @@ func TestNetworkManagerBackend_EthernetDeviceSurvivesNetworkManagerRestart(t *te
 	dev.EXPECT().GetPropertyIP4Config().Return(nil, nil).Maybe()
 
 	wired := mock_gonetworkmanager.NewMockDeviceWired(t)
-	wired.EXPECT().GetPropertyHwAddress().Return("94:e2:3c:c1:8d:ba", nil)
+	wired.EXPECT().GetPropertyHwAddress().Return("00:00:5e:00:53:ba", nil)
 	wired.EXPECT().GetPropertySpeed().Return(uint32(1000), nil).Maybe()
 
 	backend, err := NewNetworkManagerBackend(mockNM)
@@ -279,7 +279,7 @@ func TestNetworkManagerBackend_RestartDropsDevicesOfDeadInstance(t *testing.T) {
 	newDev.EXPECT().GetPropertyIP4Config().Return(nil, nil).Maybe()
 
 	wired := mock_gonetworkmanager.NewMockDeviceWired(t)
-	wired.EXPECT().GetPropertyHwAddress().Return("94:e2:3c:c1:8d:ba", nil)
+	wired.EXPECT().GetPropertyHwAddress().Return("00:00:5e:00:53:ba", nil)
 	wired.EXPECT().GetPropertySpeed().Return(uint32(1000), nil).Maybe()
 
 	backend, err := NewNetworkManagerBackend(mockNM)

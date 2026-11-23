@@ -29,6 +29,12 @@ AUSNAHMEN_DATEI = os.path.join(REPO, "tools", "werte-ausnahmen.txt")
 PLATZHALTER = {"u", "x", "me", "user", "nutzer", "test", "name", "benutzer"}          # /home/<Platzhalter>/… ist kein Fund
 ALLERWELTSNAMEN = {"root", "user", "nutzer", "runner", "build", "builder", "mockbuild", "nobody", "claude", "localhost",
                    "archlinux", "fedora", "cachyos"}
+# Dokumentationsbereiche sind kein Fund: MAC 00:00:5E:00:53:00/24 (RFC 7042), IP 192.0.2.0/24, 198.51.100.0/24 und
+# 203.0.113.0/24 (RFC 5737). Neue eigene Testdaten verwenden nur solche Werte (CLAUDE.md, «Projektregeln»).
+DOKUMENTATION = {
+    "MAC-Adresse": re.compile(r"(?i)00[:-]00[:-]5e[:-]00[:-]53[:-][0-9a-f]{2}"),
+    "IP-Adresse": re.compile(r"(?:192\.0\.2|198\.51\.100|203\.0\.113)\.(?:25[0-5]|2[0-4]\d|1?\d?\d)"),
+}
 HOME = "Pfad in ein Home-Verzeichnis"
 HOME_PFAD = re.compile(r"(?<![\w.-])/(?:home|Users)/([^/\s\"'<>$*{}\\)|`,;:]+)")
 MUSTER = [
@@ -72,6 +78,8 @@ def funde(pfad, text, benutzer="", rechner="", ausnahmen=()):
         werte = [(HOME, m.group(0)) for m in HOME_PFAD.finditer(zeile) if m.group(1) not in PLATZHALTER]
         werte += [(art, m.group(0)) for art, muster in MUSTER + namen for m in muster.finditer(zeile)]
         for art, wert in werte:
+            if art in DOKUMENTATION and DOKUMENTATION[art].fullmatch(wert):
+                continue
             erlaubt = [a for a in ausnahmen if a["art"] == art and fnmatch.fnmatch(pfad, a["glob"]) and a["muster"].fullmatch(wert)]
             if erlaubt:
                 erlaubt[0]["treffer"] += 1

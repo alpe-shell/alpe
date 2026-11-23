@@ -451,9 +451,9 @@ test("LHDC codecs carry a name, description and category", () => {
 test("scan list sorts named devices above alias-is-address devices", () => {
     const context = methods(["hasRealName", "sortDevices"]);
     const sorted = context.sortDevices([
-        { name: "23-5F-24-05-F3-4A", address: "23:5F:24:05:F3:4A" },
+        { name: "00-00-5E-00-53-4A", address: "00:00:5E:00:53:4A" },
         { name: "ATH-M20xBT", address: "AA:BB:CC:DD:EE:FF" },
-        { name: "", deviceName: "", address: "01:02:03:04:05:06" }
+        { name: "", deviceName: "", address: "00:00:5E:00:53:01" }
     ]);
-    assert.deepEqual(sorted.map(d => d.address), ["AA:BB:CC:DD:EE:FF", "01:02:03:04:05:06", "23:5F:24:05:F3:4A"]);
+    assert.deepEqual(sorted.map(d => d.address), ["AA:BB:CC:DD:EE:FF", "00:00:5E:00:53:01", "00:00:5E:00:53:4A"]);
 });

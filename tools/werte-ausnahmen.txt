@@ -3,6 +3,8 @@
 # Eine Ausnahme gilt nur für genau den erwarteten Wert: Ein anderer Fund in derselben Datei schlägt an.
 # Fristen: «dauerhaft» mit Begründung; sonst die Etappe oder Bedingung, mit der der Eintrag wegfällt.
 # Jeder Eintrag muss mindestens einen Fund treffen, sonst meldet der Test ihn als überholt.
+# Keine Ausnahme brauchen Werte aus den Dokumentationsbereichen (MAC 00:00:5E:00:53:xx, IP 192.0.2.x, 198.51.100.x,
+# 203.0.113.x); neue eigene Testdaten verwenden nur solche.
 
 LICENSE	Benutzername	[A-Z][a-z]+	dauerhaft	Urheberzeile der Lizenz: der Name des Maintainers steht dort mit Absicht
 docs/technik.md	Gerätekennung	03f0:018b|03f0:0696|0951:1718	dauerhaft	USB-Modellkennungen eines Headsets in der Anleitung zu headsetcontrol (Produkt, kein einzelnes Gerät)
@@ -17,9 +19,7 @@ core/internal/server/network/openfortivpn_import_test.go	IP-Adresse	10\.0\.0\.2	
 core/internal/server/network/backend_*_test.go	MAC-Adresse	00:11:22:33:44:(55|66)	dauerhaft	Testdaten: erkennbar erfundene Adressen
 core/internal/server/network/backend_wpa_test.go	MAC-Adresse	02:00:01:02:03:0[4-8]	dauerhaft	Testdaten: lokal verwaltete, erfundene Adressen
 core/internal/server/bluez/broker_test.go	MAC-Adresse	AA:BB:CC:DD:EE:FF	dauerhaft	Testdaten: erkennbar erfundene Adresse
-shell/tests/bluez-codec.test.mjs	MAC-Adresse	AA:BB:CC:DD:EE:FF|01:02:03:04:05:06	dauerhaft	Testdaten: erkennbar erfundene Adressen
-core/internal/server/network/backend_networkmanager_signals_test.go	MAC-Adresse	94:e2:3c:c1:8d:ba	Phase B	Testdaten des Ursprungs, Herkunft der Adresse unbekannt (kein Gerät des Maintainers); beim Durchgehen der Ursprungs-Tests durch eine erfundene ersetzen
-shell/tests/bluez-codec.test.mjs	MAC-Adresse	23[:-]5F[:-]24[:-]05[:-]F3[:-]4A	Phase B	Testdaten des Ursprungs, Herkunft der Adresse unbekannt (kein Gerät des Maintainers); beim Durchgehen der Ursprungs-Tests durch eine erfundene ersetzen
+shell/tests/bluez-codec.test.mjs	MAC-Adresse	AA:BB:CC:DD:EE:FF	dauerhaft	Testdaten: erkennbar erfundene Adresse
 shell/tests/hyprland-lua.test.mjs	Gerätekennung	04f3:3150	dauerhaft	Testdaten des Ursprungs: Modellkennung eines Touchpads in einem Gerätenamen (Produkt, kein einzelnes Gerät)
 tests/data/einstellungen-*/settings.json	Gerätekennung	1234:abcd	Umzug-Ende	Umzugs-Testdaten: erfundene pciId im Format der Shell
 tests/test_design.py	Gerätekennung	1234:abcd	dauerhaft	Probe für den Export-Filter pciId

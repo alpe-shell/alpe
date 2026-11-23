@@ -66,7 +66,7 @@ in den Harnessen unter `entwicklung/`.
 
 **Ausgaben von Tests und Prüfungen nie durch eine Pipe kürzen** (`tail`, `head`, `grep`), ohne
 `pipefail` zu setzen – sonst gilt der Rückgabewert des letzten Befehls der Pipe, und ein roter Lauf
-sieht grün aus (so blieb `f5a5256` unbemerkt rot). Bevorzugt: die Ausgabe in eine Datei schreiben,
+sieht grün aus (so blieb am 23.11.2026 ein roter Plan-Commit unbemerkt). Bevorzugt: die Ausgabe in eine Datei schreiben,
 den Rückgabewert des Prüfbefehls selbst auswerten und erst danach den Schluss der Datei lesen.
 
 Ladeprüfung (`entwicklung/ladepruefung/ladepruefung.py`) einmal pro Halt auf dem Endstand unter
@@ -114,6 +114,10 @@ nie von Hand ändern, sondern mit `make -C core mocks` neu erzeugen: genau **moc
   (`Brand.qml`, `CHANGELOG.md`). Die nächste Fassung ist 1.1.
 - Persönliches gehört nie ins Repo: kein Wetterort, keine Sport-Favoriten, keine absoluten
   Pfade ins eigene Home-Verzeichnis, keine Bildschirmnamen. `tools/design.py` schrubbt das beim Export.
+- Neue eigene Testdaten verwenden MAC-Adressen aus `00:00:5E:00:53:00/24` (RFC 7042) und IP-Adressen
+  aus `192.0.2.0/24`, `198.51.100.0/24` oder `203.0.113.0/24` (RFC 5737). Die Werteprüfung
+  (`tools/werte-pruefen.py`) nimmt genau diese Bereiche aus; alles andere braucht eine Ausnahme mit
+  Frist und Grund in `tools/werte-ausnahmen.txt`.
 - Installationserlebnis zählt: `get.sh` muss auf einem frischen CachyOS (KDE) und einem frischen
   Fedora Asahi (Hyprland) ohne Handarbeit durchlaufen und genau das ausgelieferte Alpe-Design zeigen.
 - Lizenz und Herkunft: Alpe ist ein Fork der Dux Modular Shell (DMS). Deren Lizenz und
