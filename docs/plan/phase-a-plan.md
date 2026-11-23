@@ -433,6 +433,32 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
     eigene Variablen lesen.
   - **Angehalten.** Keine Läufe und keine Scopes offen; Worktrees: nur der Arbeitsbaum (und der
     verwaiste Eintrag `wt-alt`). Nichts gepusht.
+- **Zweite Runde am 23.11.2026 (nur Doku, kein Code; darum keine Ladeprüfung).**
+  - **`1afca9b` NOTICE (0.8 Nr. 95):** Bilder des Designs vom Maintainer, teils mit KI-Werkzeugen
+    erstellt, CC0 1.0. Bestand der übrigen Medien ohne Herkunftsangabe in `offene-faelle.md`
+    («Medien ohne Herkunftsangabe»): Logos unter `assets/logo/logo/`, Karten des Radar-Plugins,
+    Radar-Musterdatei, sieben Hintergrundmuster, Markenzeichen und Paketformat-Zeichen aus dem
+    Ursprung, fcitx5-Bilder, Drucker-Testseite (PDF-Titel noch mit dem Namen des Ursprungs).
+  - **`docs/plugins-anpassen.md` überarbeitet.** Geprüft: Alle 44 früheren `Dank*`-Hüllen waren
+    reine Weiterleitungen; `DButton`/`DankButton`, `DDropdown`/`DankDropdown`, `DToggle`/`DankToggle`
+    führen je zum selben Typ, und die Schnittstellen von neun geprüften Typen sind gegenüber dem
+    Stand des Ursprungs unverändert; `AlpeListView` und `AlpeSpinner` gibt es. **Abweichung in der
+    Anleitung, berichtigt:** Die Tabelle schrieb alle `Dank*`-Typen `qs.Alpe.Widgets` zu; zehn
+    bleiben in `qs.Widgets` bzw. `qs.Modals.Common`, drei liegen in `qs.Alpe.Common`. Die
+    `plugin.json` von hueManager 0.5.0 und sathiAi 1.26.46 (nur gelesen) enthalten weder
+    `requires_dms` noch `dankbar-widget` noch `"requires"` – keine Pflichtänderung. Die Seiten-ID
+    `plugins` gilt in 1.1 weiter. Neue Prüfbefehle je Plugin, an Kopien in einem Temp-Ordner
+    durchgespielt. `">=1.0"` gilt nur bis G1 (Aufgabe bei G1 in 10).
+  - **`~/alpe-plugins` (nur gelesen):** kein Remote, ein Commit. Vorhanden: Änderungsvermerk mit
+    Datum im Kopf von `CalculatorLauncher.qml`, `CHANGES.md`, `LICENSE` byte-gleich mit dem
+    Original. **Es fehlt:** `CHANGES.md` nennt die geänderte `README.md` (vorangestellter Hinweis
+    zu Alpe) nicht. Vor dem ersten Push nachtragen; die Umstellung auf `">=1.1"` in G1 braucht
+    einen eigenen datierten Eintrag.
+  - **Mac-Test für den Stand nach D7 neu gefasst** (`offene-faelle.md`): eigenständiger Ablauf,
+    Sicherungen `.vor-d7` (F1 lässt `.vor-phase-a` und `.vor-d7` aus, 10), Sperre nicht auslösen,
+    `lockAtStartup` in der Kopie ausschalten, alle vier Repo-Plugins, Nachtlicht, Papierkorb in
+    zwei Durchgängen (kora-Tag `v2.0.6` im Ursprung vorhanden), Tabelle für Commit und Ergebnis.
+    Der Abschnitt «Rückweg zu 1.0 nach dem Test» ist gestrichen (ohne Zweck).
 
 ---
 
@@ -1768,9 +1794,9 @@ unter `plugins/`** eingeschaltet (0.8 Nr. 33).
 | E2 | PKGBUILD; **`depends` auf `kora-icon-theme`** (AUR; 0.8 Nr. 91, Einzelheiten 6.2 – der Entscheid nennt E3/E4, das PKGBUILD selbst entsteht hier) | CI-Bau |
 | E3 | RPM-Spec; `dsearch` (dux-search) wird **optionale** Abhängigkeit, keine harte, weil die Dateisuche ohne das Programm läuft: `optdepends` im PKGBUILD, `Recommends:` in der RPM-Spec (0.8 Nr. 26). **Aufgabe kora (0.8 Nr. 91):** `kora-icon-theme` im eigenen COPR mitbauen, `Requires: kora-icon-theme` in der Spec; Arch `depends` (6.2, 6.3) | CI-Bau x86_64 |
 | E4 | Werkzeuge: `alpe` CLI, einrichten.sh, entwicklung, doctor/update/entfernen/backup, kde-sitzung, lockscreen, kuerzel, titelleisten, design.py. **Aufgabe kora (0.8 Nr. 91):** Die Werkzeuge setzen kora als Abhängigkeit des Pakets voraus (kein eigenes Kopieren ins Home); Vorschlag dazu, noch nicht entschieden: `alpe doctor` meldet ein fehlendes Symbolthema des Designs (kora, Ersatzthema breeze), `design.py` nennt beim Einspielen ein Symbolthema, das nicht installiert ist | bestehende Tests nachgeführt |
-| F1 | Umzug: `tools/umzug.py`, `install.sh`-Übergang, Testdaten, Test; Benutzerkopien ausgelieferter Plugins mit Rückweg zur Seite legen (0.8 Nr. 32) | |
+| F1 | Umzug: `tools/umzug.py`, `install.sh`-Übergang, Testdaten, Test; Benutzerkopien ausgelieferter Plugins mit Rückweg zur Seite legen (0.8 Nr. 32). **Sicherungen der Mac-Tests auslassen:** Ordner mit `.vor-phase-a` oder `.vor-d7` im Namen (`~/.config/dms.vor-d7`, `~/.config/hypr.vor-d7`, `~/.config/alpe.vor-d7`, `~/.local/state/alpe.vor-d7` und die gleichnamigen mit `.vor-phase-a`) gelten als Sicherungen und werden weder umgezogen noch umgeschrieben noch gelöscht (wie 0.8 Nr. 57), mit Test | |
 | F2 | get.sh neu; **installiert kora auf beiden Systemen mit** (0.8 Nr. 91, 6.4) | Probelauf `--check` in Temp-`HOME` mit Attrappen |
-| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `Brand.version` auf 1.1 und **im selben Commit** `requires_alpe: >=1.1` für jedes Plugin, das Alpe ausliefert oder pflegt (`plugins/` im Repo, `~/alpe-plugins`; 0.8 Nr. 31). Bis dahin `>=1.0`, solange `Brand.version` noch 1.0 meldet. **CHANGELOG 1.1 enthält den Eintrag zur Behebung «Dienst hing bei stummem Systembus, Oberfläche verband sich nie»** (0.8 Nr. 85; `docs/plan/dienst-systembus.md`) | |
+| G1 | Doku, Brand 1.1, CHANGELOG, Namensprüfung + Ausnahmeliste; `Brand.version` auf 1.1 und **im selben Commit** `requires_alpe: >=1.1` für jedes Plugin, das Alpe ausliefert oder pflegt (`plugins/` im Repo, `~/alpe-plugins`; 0.8 Nr. 31). Bis dahin `>=1.0`, solange `Brand.version` noch 1.0 meldet. **CHANGELOG 1.1 enthält den Eintrag zur Behebung «Dienst hing bei stummem Systembus, Oberfläche verband sich nie»** (0.8 Nr. 85; `docs/plan/dienst-systembus.md`). **`docs/plugins-anpassen.md` auf `requires_alpe: ">=1.1"` umstellen** (alle `sed`-Zeilen und der erklärende Absatz; bis G1 steht dort `">=1.0"`, weil `Brand.version` bis G1 1.0 meldet), im selben Commit wie `Brand.version` | |
 
 **Halte** (Zusammenfassung + Diffstat, dann Freigabe abwarten): nach A1, nach B3
 (Baumvergleich), nach C5 (statt C4, siehe 0.5), nach D3 (0.6, abgenommen), nach D6, nach D7 (0.8), nach E4, nach F2, zuletzt G1. Vor B2 zusätzlich,

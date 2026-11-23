@@ -131,37 +131,162 @@ mv ~/.local/state/alpe.vor-phase-a ~/.local/state/alpe
 (Gab es `~/.local/state/alpe` vor dem Test nicht, meldet das erste `cp` bzw. das letzte `mv`
 nur «nicht gefunden».)
 
-**Anleitung für den Stand nach D7 (Halt nach D7.8, 22.11.2026).** Ablauf wie oben für D6, mit
-`/tmp/alpe-d7` statt `/tmp/alpe-d6` und diesen Änderungen. Seit D7.8 gibt es keine Hüllen mehr:
-Ein fremdes Plugin lädt nur noch in der angepassten Fassung.
+**Anleitung für den Stand nach D7 (Halt nach D7.8, 22.11.2026; überarbeitet am 23.11.2026).**
+Eigenständiger Ablauf – die Befehle der Anleitung für D6 werden hier nicht mehr vorausgesetzt.
+Getestet wird in der echten Hyprland-Sitzung; `~/alpe` bleibt unberührt. Seit D7.8 gibt es keine
+Hüllen mehr: Ein fremdes Plugin lädt nur noch in der angepassten Fassung.
+
+**Nicht auslösen: die Sperre.** Mit der Testshell wird am Mac nicht gesperrt – kein Sperr-Kürzel,
+kein Eintrag «Sperren» im Energiemenü, den Deckel während des Tests nicht schliessen. Die Sperre
+ist durch die Ladeprüfung am PC abgedeckt (Variante «gesperrt»); schlägt sie in der echten
+Hyprland-Sitzung fehl, bleibt nur der Notbildschirm von Hyprland. Ebenso wie bei D6: die Knöpfe
+«Einrichten»/«Einbinden» nicht drücken, «Neu starten» im Energiemenü nicht auslösen.
+
+*Ergebnis – hier trägt der Maintainer ein:*
+
+| | |
+|---|---|
+| Getesteter Commit (`git -C ~/alpe-phase-a rev-parse --short HEAD`) | |
+| Datum | |
+| Hyprland, Fedora, Quickshell | |
+| Ergebnis (in Ordnung / Befunde mit Nummer des Prüfpunkts) | |
+| Papierkorb Durchgang 1 (ohne kora): Quadrat ja/nein, eingestelltes Symbolthema | |
+| Papierkorb Durchgang 2 (kora 2.0.6): Quadrat ja/nein | |
+| Dock-Fläche auf dem Hintergrund des Macs: erkennbar ja/nein | |
+| Nachtlicht: Wirkung auf dem internen Bildschirm, Meldungen zu Gamma | |
+| `dnf info breeze-icon-theme`: Name und Version | |
+| kora nach dem Test: im Home gelassen / entfernt | |
+
+*Am PC (Maintainer):*
+
+```
+git -C ~/alpe-phase-a push origin phase-a
+```
 
 *Schritt 0, einmalig und bleibend – vor dem Sichern:* die angepassten Fassungen von hueManager
 und calculator unter `~/.config/alpe/plugins` anlegen, genau nach `docs/plugins-anpassen.md`,
-Abschnitt «Mac» (je `cp -r` aus `~/.config/dms/plugins`, dann die `sed`-Zeilen). Die Kopien unter
-`~/.config/dms/plugins` bleiben unverändert, 1.0 läuft damit weiter. Weil das vor dem Sichern
-geschieht, liegen die angepassten Fassungen auch in `~/.config/alpe.vor-phase-a` und überstehen
-das Zurückholen am Ende. Prüfen (beide Befehle geben nichts aus):
+Abschnitt «Mac» (je `cp -r` aus `~/.config/dms/plugins`, dann die `sed`-Zeilen; die Import-Zeile
+für hueManager nur einmal laufen lassen). Die Kopien unter `~/.config/dms/plugins` bleiben
+unverändert, 1.0 läuft damit weiter. Weil das vor dem Sichern geschieht, liegen die angepassten
+Fassungen auch in `~/.config/alpe.vor-d7` und überstehen das Zurückholen am Ende. Prüfen wie in
+`docs/plugins-anpassen.md`, «Prüfen» – die ersten beiden und der vierte und fünfte Befehl geben
+nichts aus, die Treffer des dritten und sechsten sieht man von Hand durch (Texte und Kommentare
+sind unbedenklich, ein Aufruf des Programms `dms` nicht):
 
 ```
-grep -rn -E --include='*.qml' --include='plugin.json' '\bDank[A-Z]|qs\.DCommon|\["dms"|requires_dms' ~/.config/alpe/plugins/hueManager ~/.config/alpe/plugins/calculator
+grep -rn -E --include='*.qml' --include='plugin.json' '\bDank[A-Z]|qs\.DCommon|qs\.Modules\.DDash|\["dms"|requires_dms|dankbar-widget' ~/.config/alpe/plugins/hueManager
+grep -rn -E --include='*.qml' --include='plugin.json' '\bDank[A-Z]|qs\.DCommon|qs\.Modules\.DDash|\["dms"|requires_dms|dankbar-widget' ~/.config/alpe/plugins/calculator
+grep -rn -i -w --exclude-dir=.git 'dms' ~/.config/alpe/plugins/hueManager
+grep -rlZ -E --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/hueManager | xargs -0 -r grep -L 'import qs.Alpe.Widgets'
+grep -rlZ -E --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/calculator | xargs -0 -r grep -L 'import qs.Alpe.Widgets'
+grep -rn -i -w --exclude-dir=.git 'dms' ~/.config/alpe/plugins/calculator
+```
+
+Die alten Kopien sind unverändert (ist eine davon kein Git-Klon, der Ausweg mit `diff -rq` aus
+`docs/plugins-anpassen.md`):
+
+```
 git -C ~/.config/dms/plugins/hueManager status --short
+git -C ~/.config/dms/plugins/calculator status --short
 ```
 
-Danach sichern, bauen und die DMS-Dateien dazukopieren wie oben (`cp -rn` überschreibt die
-angepassten Fassungen nicht), dann die alten Kopien von alpeSport und alpeRadar zur Seite legen
-(Zusatz unten). Bauen und starten:
+*Schritt 1 – alte Sicherungen.* Die Sicherungen dieser Runde heissen `.vor-d7`. Zuerst nachsehen,
+ob von der Runde D6 noch Sicherungen liegen oder ob es die neuen Namen schon gibt:
 
 ```
+ls -d ~/.config/dms.vor-phase-a ~/.config/hypr.vor-phase-a ~/.config/alpe.vor-phase-a ~/.local/state/alpe.vor-phase-a
+ls -d ~/.config/dms.vor-d7 ~/.config/hypr.vor-d7 ~/.config/alpe.vor-d7 ~/.local/state/alpe.vor-d7
+```
+
+Meldet `ls` für alle «nicht gefunden», ist nichts da. Liegt eine alte Sicherung noch dort: selbst
+ansehen, ob sie noch gebraucht wird, und sie wegräumen oder umbenennen, **bevor** neu gesichert
+wird. `cp -r` in einen vorhandenen Ordner legt die neue Kopie sonst *in* den alten Ordner, und
+beim Zurückholen käme der alte Stand zurück. Ordner mit `.vor-d7` aus einem abgebrochenen Versuch
+ebenso zuerst wegräumen.
+
+*Schritt 2 – sichern, holen, bauen* (Hypr-Ordner mit, weil die Shell darin schreibt):
+
+```
+cp -r ~/.config/dms ~/.config/dms.vor-d7
+cp -r ~/.config/hypr ~/.config/hypr.vor-d7
+cp -r ~/.config/alpe ~/.config/alpe.vor-d7
+cp -r ~/.local/state/alpe ~/.local/state/alpe.vor-d7
+git -C ~/alpe fetch origin phase-a
+git -C ~/alpe-phase-a checkout --detach origin/phase-a
+git -C ~/alpe-phase-a rev-parse --short HEAD
+bash ~/alpe-phase-a/tools/test.sh
 cd ~/alpe-phase-a/core
 make dev BUILD_DIR=/tmp/alpe-d7
+/tmp/alpe-d7/alpe-dienst doctor
 /tmp/alpe-d7/alpe-dienst --help
 /tmp/alpe-d7/alpe-dienst dl --help
+```
+
+(Gibt es `~/.local/state/alpe` noch nicht, meldet das vierte `cp` nur «nicht gefunden».) Den
+Hash aus der siebten Zeile oben in die Tabelle eintragen. Bei `doctor` steht unter «Compositor»
+Hyprland. `--help` zeigt oben den Schriftzug «ALPE» (nicht mehr «DMS»), `dl --help` bei
+`--user-agent` den Vorgabewert `Alpe/1.0.0 (+https://github.com/alpe-shell/alpe)`.
+
+*Schritt 3 – Dateien von 1.0 dazukopieren* (`-n`: nichts überschreiben, also auch nicht die
+angepassten Fassungen aus Schritt 0):
+
+```
 systemctl --user stop dms.service
+cp -rn ~/.config/dms/. ~/.config/alpe/
+mkdir -p ~/.local/state/alpe
+cp -rn ~/.local/state/dms/. ~/.local/state/alpe/
+mkdir -p ~/.config/hypr/alpe
+cp -rn ~/.config/hypr/dms/. ~/.config/hypr/alpe/
+```
+
+Sperrt 1.0 am Mac beim Start (`lockAtStartup`), täte es die Testshell auch. Nachsehen und, falls
+`true` dasteht, **nur in der Kopie** ausschalten:
+
+```
+grep lockAtStartup ~/.config/alpe/settings.json
+sed -i -E 's/"lockAtStartup": true/"lockAtStartup": false/' ~/.config/alpe/settings.json
+```
+
+*Schritt 4 – Plugins aus dem Repo statt der alten Kopien* (Plan 0.8 Nr. 32). Das Repo liefert
+vier Plugins: `alpeMeteoSwiss`, `alpeRadar`, `alpeSport`, `claudeCodeUsage`. Alte Kopien davon
+aus 1.0 laden unter 1.1 nicht mehr und würden als Benutzerkopie die Repo-Fassung verdecken.
+Welche am Mac als alte Kopie liegen (für die fehlenden meldet `ls` «nicht gefunden»):
+
+```
+ls -d ~/.config/dms/plugins/alpeMeteoSwiss ~/.config/dms/plugins/alpeRadar ~/.config/dms/plugins/alpeSport ~/.config/dms/plugins/claudeCodeUsage
+```
+
+Jede davon ist mit Schritt 3 auch nach `~/.config/alpe/plugins` gekommen. Dort zur Seite legen und
+die Repo-Fassung einsetzen – alle vier Zeilen ausführen; für ein Plugin, das am Mac nicht liegt,
+meldet `mv` nur «nicht gefunden»:
+
+```
+mkdir -p ~/.config/alpe/plugins.beiseite-d7
+mv ~/.config/alpe/plugins/alpeMeteoSwiss ~/.config/alpe/plugins.beiseite-d7/
+mv ~/.config/alpe/plugins/alpeRadar ~/.config/alpe/plugins.beiseite-d7/
+mv ~/.config/alpe/plugins/alpeSport ~/.config/alpe/plugins.beiseite-d7/
+mv ~/.config/alpe/plugins/claudeCodeUsage ~/.config/alpe/plugins.beiseite-d7/
+cp -r ~/alpe-phase-a/plugins/alpeMeteoSwiss ~/.config/alpe/plugins/
+cp -r ~/alpe-phase-a/plugins/alpeRadar ~/.config/alpe/plugins/
+cp -r ~/alpe-phase-a/plugins/alpeSport ~/.config/alpe/plugins/
+cp -r ~/alpe-phase-a/plugins/claudeCodeUsage ~/.config/alpe/plugins/
+```
+
+`~/.config/dms/plugins` bleibt unberührt; dort liest 1.0 weiter seine Kopien. Zurückgeholt wird
+nichts einzeln: Der Rückbau am Ende entfernt `~/.config/alpe` ganz und setzt die Sicherung ein.
+
+*Schritt 5 – Testshell starten:*
+
+```
 /tmp/alpe-d7/alpe-dienst -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-d7.log
 ```
 
-`--help` zeigt oben den Schriftzug «ALPE» (nicht mehr «DMS»), `dl --help` bei `--user-agent`
-den Vorgabewert `Alpe/1.0.0 (+https://github.com/alpe-shell/alpe)`.
+Die Hyprland-Kürzel der 1.0-Einrichtung (`dms ipc call …`) erreichen die Testshell nicht; Aufrufe
+im zweiten Terminal, z. B. `/tmp/alpe-d7/alpe-dienst ipc call spotlight toggle`.
+`/tmp/alpe-d7/alpe-dienst restart` lädt nur die Testshell neu und ändert nichts an `dms.service`.
+Durchklicken wie bei D6 (Arbeitsflächen, Starter, Dock, Kontrollzentrum, Tastaturlayout,
+Einstellungen → Tastenkürzel, Fensterregeln, Anzeige, Maus & Touchpad; Energiemenü nur öffnen;
+`/tmp/alpe-d7/alpe-dienst screenshot window`; `notify-send test`).
 
 Neu seit D6 – bitte gezielt ansehen:
 
@@ -205,62 +330,100 @@ Neu seit D6 – bitte gezielt ansehen:
   festhalten, am besten mit Bild: Breite und Form des Docks nur mit dem Papierkorb, Abstände,
   Trennstrich, ob es leer wirkt oder verrutscht. Danach wieder anheften – oder es bleiben
   lassen, das Zurückholen am Ende stellt die Session wieder her.
-- **Papierkorb im Dock:** Er muss ein richtiges Symbol zeigen (leer `user-trash`, mit Inhalt
-  `user-trash-full` aus dem Symbolthema), kein schwarzes Quadrat und keinen leeren Platz. Beides
-  ansehen: Papierkorb leer, dann eine Datei hineinlegen. Welches Symbolthema eingestellt ist,
-  dazuschreiben. Findet das Thema das Symbol nicht, zeichnet `DockTrashButton.qml` ersatzweise
-  ein Schriftsymbol (`delete`) – auch das ist kein Quadrat. Am PC zeigt das Bild der Ladeprüfung
-  (verschachteltes Hyprland, 22.11.2026) das richtige Symbol, aber auf einem schwarzen Quadrat,
-  mit und ohne Anheftungen. Ursache ist das Symbol aus dem Ersatzthema Adwaita, das Qt mit
-  schwarzem Grund rendert – siehe «Ladeprüfung» unten; am Mac ist Adwaita die Vorgabe von
-  Fedora. Am Mac festhalten: Quadrat hinter dem Papierkorb ja/nein, eingestelltes Symbolthema,
-  und wie das kleine Dock nur mit dem Papierkorb wirkt. **Nachtrag 23.11.2026 (Plan 0.8
-  Nr. 91–93):** kora kommt künftig als Abhängigkeit mit (E3/F2); solange es am Mac nicht
-  installiert ist, ist ein Quadrat hinter dem Papierkorb mit Adwaita der bekannte Befund und
-  kein neuer. Das Dock ohne Anheftungen bleibt für 1.1 so; am Mac bitte die **Sichtbarkeit der
-  Dock-Fläche auf dem dortigen Hintergrund** beurteilen (am PC war sie auf der dunklen
-  Material-Vorlage fast unsichtbar).
+- **Nachtlicht (eigener Prüfpunkt; seit der Behebung am Systembus hängt die Überwachung des
+  Ruhezustands erst Augenblicke nach dem Start am Bus):** Das Nachtlicht einschalten (in der
+  Oberfläche «Nachtmodus»: Kachel im Kontrollzentrum oder in den Einstellungen bei der Anzeige,
+  Stichwort «Nachtmodus, Gamma, Kontrast»). Festhalten: Wird
+  der **interne Bildschirm des MacBooks** sichtbar wärmer, sofort oder mit Übergang, und bleibt
+  es dabei? Dann wieder ausschalten und festhalten, ob die Farbe zurückkommt. Danach das Protokoll
+  auf Meldungen zu Gamma ansehen (zweites Terminal) und die Zeilen in die Tabelle übernehmen:
+
+  ```
+  grep -i -E "gamma|night|nachtlicht" /tmp/alpe-d7.log
+  ```
+
+  Erwartet ist keine Zeile mit «failed», «not available» oder «appears dead»; war das Nachtlicht
+  schon beim Start an, meldet der Dienst «Gamma control enabled at startup». Den Deckel dafür
+  nicht schliessen (siehe oben).
+- **Papierkorb und Symbolthema, zwei Durchgänge** (Plan 0.8 Nr. 91–93; ersetzt die früheren
+  Fassungen dieses Punkts). Der Papierkorb im Dock zeigt leer `user-trash`, mit Inhalt
+  `user-trash-full` aus dem Symbolthema; findet die Shell keines, zeichnet `DockTrashButton.qml`
+  ein Schriftsymbol. Für beide Durchgänge das Dock ohne Anheftungen ansehen: alle Anheftungen
+  lösen (Rechtsklick → «Aus Dock loslösen»), offene Fenster schliessen; das Zurückholen am Ende
+  stellt die Session wieder her.
+  *Durchgang 1 – ohne kora, wie der Mac heute ist.* Eingestelltes Symbolthema festhalten
+  (Einstellungen → «Theme & Farben», Auswahl des Symbolthemas). Mit Adwaita – der Vorgabe von Fedora – ist ein
+  **deckend schwarzes Quadrat hinter dem Papierkorb erwartet und kein neuer Befund**: QtSvg 6.12
+  zeichnet in `user-trash.svg` von Adwaita die `<clipPath>`-Elemente, die ausserhalb von `<defs>`
+  stehen, als schwarze Fläche («Ladeprüfung» unten, Fall zu Adwaita). Festhalten: Quadrat
+  ja/nein, leer und nach dem Hineinlegen einer Datei.
+  *Durchgang 2 – mit kora 2.0.6 aus dem Ursprung im Home.* Den Tag `v2.0.6` gibt es im Ursprung
+  (geprüft am 23.11.2026); der Ordner `kora` liegt dort direkt in der Wurzel. Gibt es
+  `~/.local/share/icons/kora` schon, zuerst ansehen und nicht überschreiben:
+
+  ```
+  ls -d ~/.local/share/icons/kora
+  git clone --depth 1 --branch v2.0.6 https://github.com/bikass/kora.git /tmp/kora-2.0.6
+  mkdir -p ~/.local/share/icons
+  cp -a /tmp/kora-2.0.6/kora ~/.local/share/icons/
+  dnf info breeze-icon-theme
+  /tmp/alpe-d7/alpe-dienst restart
+  ```
+
+  `dnf info` liefert den Paketnamen und die Version des Ersatzthemas für E4 (kora erbt von breeze;
+  ist das Paket am Mac nicht installiert, das ebenfalls festhalten). Nach dem Neuladen in den
+  Einstellungen als Symbolthema «kora» wählen. **Achtung:** Die Shell schreibt das gewählte
+  Symbolthema auch für GTK- und Qt-Programme (ausserhalb der gesicherten Ordner); darum **vor dem
+  Rückbau das vorherige Symbolthema wieder wählen**. Erwartet: der Papierkorb aus kora, **kein
+  Quadrat**, leer ein grauer Eimer, mit Inhalt derselbe mit Papier darin. Festhalten: Quadrat
+  ja/nein.
+  *Dock-Fläche:* In beiden Durchgängen beurteilen, ob die kleine gerundete Dock-Fläche um den
+  Papierkorb **auf dem Hintergrund des Macs** erkennbar ist (am PC war sie auf der dunklen
+  Material-Vorlage fast unsichtbar); das Dock ohne Anheftungen bleibt für 1.1, wie es ist.
+  *Nach dem Test:* kora entweder im Home liegen lassen (dann findet es auch 1.0, und der Umzug
+  trifft später auf ein vorhandenes Thema im Home neben dem aus dem Paket) oder entfernen – was
+  davon, in die Tabelle:
+
+  ```
+  rm -r ~/.local/share/icons/kora
+  rm -rf /tmp/kora-2.0.6
+  ```
 - **Tastenkürzel, Fensterregeln, Über-Seite, Mitteilungen:** wie in der Liste für D6.
 
 Die Ladeprüfung in den Varianten «gesperrt» und «offen» (Plan 0.8 Nr. 70) läuft nur am PC.
 
-Auswerten wie oben, mit `/tmp/alpe-d7.log`; zusätzlich darf der erste Befehl nichts finden. Der
-zweite zeigt, was das Protokoll zu den beiden Plugins sagt (am PC meldet hueManager dort eine
-Warnung aus eigenem Code, `Color.js … used before its declaration` – die gab es schon unter 1.0):
+*Schritt 6 – beenden und auswerten.* Testshell mit Strg+C beenden. Der erste Befehl darf nichts
+finden. Der zweite zeigt, was das Protokoll zu den beiden fremden Plugins sagt (am PC meldet
+hueManager dort eine Warnung aus eigenem Code, `Color.js … used before its declaration` – die gab
+es schon unter 1.0); der dritte zählt die frühere sporadische Meldung der Einstellungssuche:
 
 ```
 grep -E "is not a type|is not installed|is deprecated" /tmp/alpe-d7.log
 grep -E "hueManager|calculator" /tmp/alpe-d7.log
 grep -c "Cannot find member data" /tmp/alpe-d7.log
+grep -E "ReferenceError|TypeError|is not defined|Cannot assign|Unable to assign" /tmp/alpe-d7.log
+ls ~/.config/hypr/alpe
 ```
 
-Beenden und zurückholen wie oben. Die angepassten Plugins bleiben dabei unter
-`~/.config/alpe/plugins` (sie stecken in der Sicherung von Schritt 0 an).
-
-**Zusatz zu den Repo-Plugins** (Plan 0.8 Nr. 32). Ab D7.2b importieren die Repo-Plugins
-`qs.Alpe.*`; die alten Kopien von alpeSport und alpeRadar (aus 1.0, über `cp -rn` oben auch in
-`~/.config/alpe/plugins`) laden damit nicht mehr und würden als Benutzerkopie die Repo-Fassung
-verdecken. Für den Test zur Seite legen und die Repo-Fassung einsetzen, nach dem `cp -rn` und vor
-dem Start der Testshell:
+*Schritt 7 – Rückbau.* Vorher das Symbolthema zurückstellen (Durchgang 2). Dann den Stand vor dem
+Test zurückholen und 1.0 wieder starten. Wichtig für den späteren Umzug: Ein
+`~/.config/alpe/settings.json` aus dem Test würde das Sicherheitsnetz von `alpe start` (Plan 6.6)
+abschalten.
 
 ```
-mkdir -p ~/.config/alpe/plugins.beiseite-d7
-mv ~/.config/alpe/plugins/alpeSport ~/.config/alpe/plugins.beiseite-d7/
-mv ~/.config/alpe/plugins/alpeRadar ~/.config/alpe/plugins.beiseite-d7/
-cp -r ~/alpe-phase-a/plugins/alpeSport ~/.config/alpe/plugins/
-cp -r ~/alpe-phase-a/plugins/alpeRadar ~/.config/alpe/plugins/
+rm -rf ~/.config/alpe ~/.local/state/alpe ~/.config/hypr/alpe
+mv ~/.config/alpe.vor-d7 ~/.config/alpe
+mv ~/.local/state/alpe.vor-d7 ~/.local/state/alpe
+systemctl --user start dms.service
 ```
 
-(Meldet `mv`, dass es eine Kopie nicht gibt, ist sie nicht da – dann nur die Repo-Fassung
-kopieren.) `~/.config/dms/plugins` bleibt unberührt; dort liest 1.0 weiter seine Kopien.
-Nach dem Test die alten Kopien zurückholen:
-
-```
-rm -r ~/.config/alpe/plugins/alpeSport ~/.config/alpe/plugins/alpeRadar
-mv ~/.config/alpe/plugins.beiseite-d7/alpeSport ~/.config/alpe/plugins/
-mv ~/.config/alpe/plugins.beiseite-d7/alpeRadar ~/.config/alpe/plugins/
-rmdir ~/.config/alpe/plugins.beiseite-d7
-```
+(Gab es `~/.local/state/alpe` vor dem Test nicht, meldet das zweite `mv` nur «nicht gefunden».)
+Die angepassten Plugins aus Schritt 0 liegen danach wieder unter `~/.config/alpe/plugins`, weil
+sie in der Sicherung stecken; die zur Seite gelegten alten Kopien der Repo-Plugins sind mit
+`~/.config/alpe` entfernt (ihre Originale liegen unverändert unter `~/.config/dms/plugins`).
+`~/.config/dms.vor-d7` und `~/.config/hypr.vor-d7` bleiben als Sicherung liegen, bis geprüft ist,
+dass 1.0 wie vorher läuft; dann selbst wegräumen. Der Umzug (F1) lässt Ordner mit `.vor-phase-a`
+und `.vor-d7` im Namen aus (Plan 10, F1).
 
 ## Nach C4: Liste für D
 
@@ -300,17 +463,16 @@ vorkommt:
 grep -rn "dms:" ~/.config/hypr
 ```
 
-**Rückweg zu 1.0 nach dem Test (Plan 0.8 Nr. 41):** Die Testshell schreibt `session.json` schon
-beim ersten Start auf Version 8. Wer die Session des Tests für 1.0 weiterverwenden will, nimmt
-dafür nur die Sicherung `session.v7.json` – nie die migrierte `session.json`:
-
-```
-cp ~/.local/state/alpe/session.v7.json ~/.local/state/dms/session.json
-```
-
-(Im normalen Test ist das nicht nötig: 1.0 liest weiter `~/.local/state/dms/session.json`, die der
-Test nicht anfasst.) Dasselbe gilt für `settings.v42.json` bzw. `settings.v43.json` unter
-`~/.config/alpe/`.
+~~**Rückweg zu 1.0 nach dem Test (Plan 0.8 Nr. 41):** `session.v7.json` aus
+`~/.local/state/alpe` nach `~/.local/state/dms/session.json` kopieren, ebenso
+`settings.v42.json` bzw. `settings.v43.json`.~~ **Gestrichen am 23.11.2026 – der Abschnitt hat
+keinen Zweck:** 1.0 liest `~/.local/state/dms/session.json` und `~/.config/dms/settings.json`,
+und die fasst der Test nicht an. `session.v7.json` ist nur die Kopie dieser Datei vom Beginn des
+Tests (über `cp -rn` nach `~/.local/state/alpe` gekommen und dort vor der Migration gesichert);
+sie zurückzukopieren brächte nichts Neues und würde höchstens Änderungen überschreiben, die 1.0
+seither gemacht hat. Ausserdem löscht der Rückbau `~/.local/state/alpe` samt dieser Datei. Was
+bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Version 44) aus
+`~/.local/state/alpe` bzw. `~/.config/alpe` nach `dms/` kopieren** – 1.0 kann sie nicht lesen.
 
 ## Nach D1: Folgen der neuen Namen
 
@@ -650,10 +812,11 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   ersetzt die Prüfung nicht: 16 QML-Dateien nennen `DeferredAction`, `.flush()` ruft von aussen
   nur `Modules/SurfaceWidgets/ApplicationStrip.qml` (`modelUpdate.flush()`), dazu zweimal
   `socket.flush()` (anderer Typ). Danach je beheben oder mit Begründung einordnen.
-  **Am Mac prüfen (zur Anleitung für den Stand nach D7):** Nachtlicht ein- und ausschalten und über
-  die Zeitsteuerung laufen lassen; Deckel zu und wieder auf – die Farbtemperatur muss nach dem
-  Aufwachen stimmen (die Überwachung des Ruhezustands hängt jetzt erst Augenblicke nach dem Start
-  am Bus); WLAN-Liste, Bluetooth, Helligkeitstasten, Sperren beim Zuklappen.
+  **Am Mac prüfen (zur Anleitung für den Stand nach D7):** Nachtlicht – eigener Prüfpunkt in der
+  Anleitung («Mac-Test»); WLAN-Liste, Bluetooth, Helligkeitstasten. ~~Deckel zu und wieder auf,
+  Sperren beim Zuklappen~~ **nicht mit der Testshell** (überarbeitet am 23.11.2026): Die Sperre
+  wird am Mac mit der Testshell nicht ausgelöst; ob die Farbtemperatur nach dem Aufwachen stimmt,
+  zeigt sich erst nach dem Umzug mit der eingerichteten 1.1.
 - ~~**Offen (22.11.2026, Frist: vor E1 – Entscheid des Maintainers, weil es das Erste ist, was ein
   neuer Nutzer sieht): Dock ohne angeheftete Programme.**~~ **Geschlossen am 23.11.2026 (Plan 0.8
   Nr. 91–93):** kora wird als Abhängigkeit mitgeliefert, der Papierkorb kommt damit aus kora (kein
