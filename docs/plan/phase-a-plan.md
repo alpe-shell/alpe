@@ -459,6 +459,10 @@ Stand: **entschieden am 21.11.2026, siehe 0.5.** Ursprüngliche Vorschläge:
     `lockAtStartup` in der Kopie ausschalten, alle vier Repo-Plugins, Nachtlicht, Papierkorb in
     zwei Durchgängen (kora-Tag `v2.0.6` im Ursprung vorhanden), Tabelle für Commit und Ergebnis.
     Der Abschnitt «Rückweg zu 1.0 nach dem Test» ist gestrichen (ohne Zweck).
+  - **Geprüft:** `1afca9b`, `308ff7d` (Plugin-Anleitung), `48cf23c` (Plan, Mac-Test) je auf dem
+    Commit im Temp-Worktree mit `tools/test.sh` grün (32 Schritte, nichts übersprungen). Kein
+    Commit dieser Runde ändert Code der Shell oder des Dienstes; die Haltprüfung auf `016b2d4`
+    gilt weiter. **Angehalten**, nichts gepusht.
 
 ---
 
