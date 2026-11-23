@@ -18,6 +18,8 @@ einer Grundlinie vergleichen.
               --bild DATEI                nur mit --offen: Bildschirmfoto (PNG) des geladenen Schreibtischs,
                                           bevor etwas geöffnet wird, mit «alpe-dienst screenshot full» (0.8 Nr. 71)
               --grundlinie-datei DATEI    statt der eingecheckten Grundlinie (Messung auf einem anderen Stand)
+    Umgebung: ALPE_LP_PAPIERKORB=voll     Probe für das Dock: im Temp-HOME liegt eine Datei im Papierkorb
+                                          (Symbol user-trash-full statt user-trash); keine Grundlinie
 
 Sporadische Meldungen (Plan 0.8 Nr. 76): Kommt eine Meldung beim Schreiben der Grundlinie nicht in jedem
 Lauf vor, steht sie dort als «SPORADISCH k/n: <Meldung>» (k von n Läufen). Beim Vergleich darf sie
@@ -219,6 +221,18 @@ def stummer_bus():
     return os.environ.get("ALPE_LP_STUMMER_BUS") == "1"
 
 
+# Probe für das Papierkorb-Symbol im Dock (user-trash / user-trash-full aus dem Symbolthema): Mit
+# ALPE_LP_PAPIERKORB=voll liegt im Temp-HOME eine Datei im Papierkorb. Kein Vergleichslauf für die Grundlinie.
+PAPIERKORB_VOLL = """mkdir -p "$XDG_DATA_HOME/Trash/files" "$XDG_DATA_HOME/Trash/info"
+echo probe > "$XDG_DATA_HOME/Trash/files/probe.txt"
+printf '[Trash Info]\\nPath=%s/probe.txt\\nDeletionDate=2026-01-01T00:00:00\\n' "$HOME" > "$XDG_DATA_HOME/Trash/info/probe.txt.trashinfo"
+"""
+
+
+def voller_papierkorb():
+    return os.environ.get("ALPE_LP_PAPIERKORB") == "voll"
+
+
 def stumm_probleme(result):
     """Gegenprobe: Die Oberfläche ist verbunden (health), und der Dienst meldet den Ausfall genau einmal."""
     zahl = ANSI.sub("", result["shell.log"]).count(STUMM_MELDUNG)
@@ -356,14 +370,14 @@ cp -r {repo}/plugins/. "$XDG_CONFIG_HOME/alpe/plugins/"
     ALPE_DESIGN_NO_SERVICE=1 ALPE_SHELL_DIR={shell} python3 {repo}/tools/design.py apply --ja --variante kde --bilder nein </dev/null
     python3 "$base/vorbereitung.py" - {extra} {probe} {session10} {entsperrt} {logo}
 }} > "$base/vorbereitung.log" 2>&1
-# 3. Leerer Ersatz für den Systembus.
+{papierkorb}# 3. Leerer Ersatz für den Systembus.
 dbus-daemon --config-file="$base/systembus.conf" --nofork > "$base/systembus.log" 2>&1 &
 i=0; while [ ! -S {sock} ] && [ $i -lt 50 ]; do i=$((i + 1)); sleep 0.1; done
 # 4. Compositor ohne Bildschirm; endet mit dem Sitzungsskript.
 dbus-run-session -- kwin_wayland --virtual --width 1920 --height 1080 --socket lp --no-lockscreen \\
     --exit-with-session {start} > "$base/compositor.log" 2>&1
 echo "$?" > "$base/compositor.exit"
-""".format(base=q(base), repo=q(REPO), shell=q(SHELL), sock=q(sock), start=q(start),
+""".format(base=q(base), repo=q(REPO), shell=q(SHELL), sock=q(sock), start=q(start), papierkorb=PAPIERKORB_VOLL if voller_papierkorb() else "",
            extra=q(os.pathsep.join(extra_plugins)), probe="1" if probe else "0", entsperrt="1" if entsperrt else "0", logo=logo_mode(),
            session10=q(os.path.join(REPO, "tests", "data", "einstellungen-1.0", "session.json")))
 
@@ -669,6 +683,9 @@ def main(argv):
         return 2
     if write and stummer_bus():
         say("FEHLER: Mit ALPE_LP_STUMMER_BUS=1 (Gegenprobe) wird keine Grundlinie geschrieben")
+        return 2
+    if write and voller_papierkorb():
+        say("FEHLER: Mit ALPE_LP_PAPIERKORB=voll (Probe) wird keine Grundlinie geschrieben")
         return 2
     for need in ("kwin_wayland", "systemd-run", "dbus-run-session") + (("Hyprland",) if compositor == "hyprland" else ()):
         if not shutil.which(need):

@@ -114,6 +114,21 @@ try:
     check("grim" not in skript and "screenshot full" in skript, "Bild: fester Weg alpe-dienst screenshot full, ohne grim (0.8 Nr. 71)")
     aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)
     check(aufruf.returncode == 2 and "--offen" in aufruf.stdout + aufruf.stderr, "--bild ohne --offen wird abgelehnt")
+    # Probe für das Papierkorb-Symbol im Dock: nur mit Schalter liegt etwas im Papierkorb des Temp-HOME.
+    schalter = os.environ.pop("ALPE_LP_PAPIERKORB", None)
+    try:
+        leer = lp.runner_script("/b", "kwin", "/b/sb", "/b/sitzung.sh")
+        os.environ["ALPE_LP_PAPIERKORB"] = "voll"
+        voll = lp.runner_script("/b", "kwin", "/b/sb", "/b/sitzung.sh")
+        check("Trash" not in leer and '"$XDG_DATA_HOME/Trash/files/probe.txt"' in voll and "probe.txt.trashinfo" in voll
+              and voll.index("Trash/files") < voll.index("kwin_wayland"),
+              "ALPE_LP_PAPIERKORB=voll legt vor dem Start eine Datei in den Papierkorb des Temp-HOME, ohne Schalter nichts")
+        aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--grundlinie"], capture_output=True, text=True, env=dict(os.environ))
+        check(aufruf.returncode == 2 and "ALPE_LP_PAPIERKORB" in aufruf.stdout + aufruf.stderr, "mit vollem Papierkorb wird keine Grundlinie geschrieben")
+    finally:
+        os.environ.pop("ALPE_LP_PAPIERKORB", None)
+        if schalter is not None:
+            os.environ["ALPE_LP_PAPIERKORB"] = schalter
 
     # Sporadische Meldungen in der Grundlinie (Plan 0.8 Nr. 76).
     text = lp.baseline_text({"WARN immer": 3, "WARN manchmal": 1}, 3)
