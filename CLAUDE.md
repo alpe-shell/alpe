@@ -64,6 +64,11 @@ Alles muss grün sein – nach jedem Commit, und zwar auf dem Commit selbst in e
 Arbeitsbaum (Plan 0.8 Nr. 72). Neue Funktion → neuer Test. Shell-Skripte: `bash -n`, QML-Seiten laden
 in den Harnessen unter `entwicklung/`.
 
+**Ausgaben von Tests und Prüfungen nie durch eine Pipe kürzen** (`tail`, `head`, `grep`), ohne
+`pipefail` zu setzen – sonst gilt der Rückgabewert des letzten Befehls der Pipe, und ein roter Lauf
+sieht grün aus (so blieb `f5a5256` unbemerkt rot). Bevorzugt: die Ausgabe in eine Datei schreiben,
+den Rückgabewert des Prüfbefehls selbst auswerten und erst danach den Schluss der Datei lesen.
+
 Ladeprüfung (`entwicklung/ladepruefung/ladepruefung.py`) einmal pro Halt auf dem Endstand unter
 KWin und Hyprland, **in zwei Varianten**: «gesperrt» (ohne Option; das Design sperrt beim Start)
 und «offen» (`--offen`: ohne `lockAtStartup`, mit sichtbarer Material-Vorlage, **dazu als
