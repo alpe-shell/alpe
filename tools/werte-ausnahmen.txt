@@ -7,6 +7,7 @@
 # 203.0.113.x); neue eigene Testdaten verwenden nur solche.
 
 LICENSE	Benutzername	[A-Z][a-z]+	dauerhaft	Urheberzeile der Lizenz: der Name des Maintainers steht dort mit Absicht
+NOTICE	Benutzername	[A-Z][a-z]+	dauerhaft	Urheberangabe der Bilder des Designs, dieselbe wie in LICENSE (Plan 0.8 Nr. 95)
 docs/technik.md	Gerätekennung	03f0:018b|03f0:0696|0951:1718	dauerhaft	USB-Modellkennungen eines Headsets in der Anleitung zu headsetcontrol (Produkt, kein einzelnes Gerät)
 core/cmd/alpe-dienst/commands_clipboard.go	IP-Adresse	120\.0\.0\.0	dauerhaft	keine Adresse: Versionsnummer eines Browsers im User-Agent
 shell/Modules/ProcessList/Connections.js	IP-Adresse	1\.2\.3\.4	dauerhaft	Beispiel im Kommentar zum Zerlegen von Adresse und Port

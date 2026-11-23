@@ -720,10 +720,37 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   weder, dass die Meldung neu ist, noch dass sie alt ist (Plan 0.8 Nr. 76). Nicht in der
   Grundlinie; bis zu einem Entscheid kann der Lauf KWin «offen» damit gelegentlich rot sein.
   Zusammen mit den beiden sporadischen Meldungen unter Hyprland klären (Frist dort: vor G1).
-- **Bilder des Designs ohne Lizenzangabe (23.11.2026):** `design/kde/bilder/` enthält
+- ~~**Bilder des Designs ohne Lizenzangabe (23.11.2026):** `design/kde/bilder/` enthält
   `jagged-peaks-wolkenzug.mp4`, `wallpaper.jpg` und `wall.png`; `NOTICE` nennt sie nicht, die
   Dateien tragen keine Urheberangabe. Das Bergbild der Sperre ist ein Standbild aus dem Video.
-  Herkunft und Lizenz bestätigt der Maintainer; danach Eintrag in `NOTICE`.
+  Herkunft und Lizenz bestätigt der Maintainer; danach Eintrag in `NOTICE`.~~ **Erledigt
+  (Plan 0.8 Nr. 95):** vom Maintainer, teils mit KI-Werkzeugen erstellt, CC0 1.0; in `NOTICE`.
+- **Medien ohne Herkunftsangabe in `NOTICE` (Bestand vom 23.11.2026; nichts wird ohne Angabe des
+  Maintainers eingetragen).** Geprüft: alle versionierten Bilder, Videos und Klänge (43 Dateien in
+  neun Ordnern) sowie zwei weitere Binärdateien; in `lockscreen/`, `docs/` und im README liegen
+  keine Bilder. Genannt sind in `NOTICE` die Klänge (`shell/assets/sounds/`), die Schriften und
+  jetzt `design/kde/bilder/`. **Ohne Eintrag:**
+  - *Seit Alpe 1.0 (`c988364`), nicht aus dem Ursprung:* `assets/logo/logo/` – `alpe-avatar.png`,
+    `alpe-avatar.svg`, `alpe-logo-dunkel.svg`, `alpe-logo-hell.svg`, `alpe-social.png`,
+    `alpe-social.svg`, `alpe-zeichen.png`, `alpe-zeichen.svg` (Logos von Alpe; Urheber und Lizenz
+    nirgends genannt). `plugins/alpeRadar/map-lines.png`, `map-water.png` (Kartengrundlage; laut
+    `tools/build-basemap.py` und `docs/technik.md` aus Natural Earth, gemeinfrei – steht nicht in
+    `NOTICE`). `tests/data/rzc263201930vl.001.h5` (Radar-Musterdatei; laut `docs/technik.md`
+    MeteoSchweiz Open Data – `NOTICE` nennt nur allgemein «Wetterdaten und Radarbilder»).
+  - *Aus dem Ursprung (`a21d715`), dort ohne eigene Angabe und in `NOTICE` nur über den
+    allgemeinen Abschnitt zur Dux Modular Shell erfasst:*
+    `shell/Alpe/Widgets/wallpaper-patterns/` – `bank-note.svg`, `bubbles.svg`,
+    `endless-clouds.svg`, `graph-paper.svg`, `plus.svg`, `topography.svg`, `wiggle.svg` (die
+    Dateien tragen keinen Vermerk; die Namen gleichen denen einer verbreiteten freien
+    Mustersammlung – Herkunft nicht belegt, zu klären). `shell/assets/discord.svg`, `reddit.svg`
+    (Markenzeichen Dritter; unbenutzt bzw. Rest, siehe «Werkzeuge»). `shell/assets/hyprland.svg`
+    (Zeichen von Hyprland). `shell/assets/package-sources/appimage.svg`, `flatpak.svg`, `nix.svg`,
+    `snap.svg` (Zeichen der Paketformate). `shell/matugen/templates/fcitx5/highlight.svg`,
+    `panel.svg` (Teile des fcitx5-Themas). `core/internal/config/embedded/testpage.pdf`
+    (Drucker-Testseite; **der PDF-Titel lautet noch «DankMaterialShell Test Page»** – die
+    Namensprüfung sieht in die Binärdatei nicht hinein).
+  - *Aus eigenem Code erzeugt, darum wohl ohne Eintrag richtig:* `shell/assets/alpe-zeichen.svg`,
+    `alpe-zeichen-akzent.svg` (aus `LogoShape.js`, vom Test geprüft).
 - **Verweise im ausgelieferten Design, die nur auf dem exportierenden Rechner aufgehen (geprüft am
   23.11.2026; Massstab: vom Paket `alpe-shell` oder seinen Abhängigkeiten geliefert oder in der
   Grundinstallation von CachyOS mit KDE und Fedora Asahi mit Hyprland vorhanden).** Es gibt ein
