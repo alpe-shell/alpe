@@ -87,6 +87,14 @@ Bilder des ausgelieferten Designs (design/kde/bilder/)
              erstellt
   Lizenz:    CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
+Logo und Name (assets/logo/logo/)
+  Dateien:   alpe-zeichen, alpe-logo-hell, alpe-logo-dunkel, alpe-avatar, alpe-social (SVG und
+             PNG) samt erzeugen.py; dasselbe Zeichen in der Oberfläche
+             (shell/Alpe/Widgets/LogoShape.js und die daraus erzeugten Dateien)
+  Rechte:    Die Rechte am Logo und am Namen «Alpe» liegen beim Maintainer. Das Logo steht
+             nicht unter CC0 (anders als die Bilder des ausgelieferten Designs oben).
+  Erlaubt:   Logo und Name dürfen benutzt werden, um Alpe zu bezeichnen.
+
 
 Teile Dritter in Alpe
 ---------------------
@@ -94,6 +102,29 @@ Teile Dritter in Alpe
   Alfa Slab One, JetBrains Mono       SIL Open Font License 1.1 (OFL-Dateien bei den Schriften)
   Wetterdaten und Radarbilder         MeteoSchweiz Open Data, Quellenangabe «MeteoSchweiz»
                                       in der Oberfläche
+
+Hintergrundmuster (shell/Alpe/Widgets/wallpaper-patterns/)
+  Dateien:   bank-note.svg, bubbles.svg, endless-clouds.svg, graph-paper.svg, plus.svg,
+             topography.svg, wiggle.svg (mit der Dux Modular Shell übernommen)
+  Herkunft:  Hero Patterns von Steve Schoger, https://heropatterns.com/
+             (Muster «Bank Note», «Bubbles», «Endless Clouds», «Graph Paper», «Plus»,
+             «Topography», «Wiggle»; Pfaddaten am 24.11.2026 mit dem Ursprung verglichen)
+  Lizenz:    Creative Commons Namensnennung 4.0 International (CC BY 4.0),
+             https://creativecommons.org/licenses/by/4.0/
+  Änderung:  Die Shell färbt die Muster zur Laufzeit ein und kachelt sie.
+
+Musterdatei der Radar-Tests (tests/data/rzc263201930vl.001.h5)
+  Herkunft:  Niederschlagsradar, Produkt PRECIP (Kürzel RZC, ODIM HDF5) aus dem Open-Data-
+             Angebot von MeteoSchweiz, Bundesamt für Meteorologie und Klimatologie
+  Lizenz:    CC BY 4.0 nach den Nutzungsbedingungen von MeteoSchweiz,
+             https://opendatadocs.meteoswiss.ch/general/terms-of-use
+  Quelle:    MeteoSchweiz
+
+Kartengrundlage des Radar-Tabs (plugins/alpeRadar/map-lines.png, map-water.png)
+  Herkunft:  erzeugt mit tools/build-basemap.py aus Natural Earth,
+             https://www.naturalearthdata.com/
+  Lizenz:    gemeinfrei (Public Domain); eine Nennung ist nicht verlangt.
+             Made with Natural Earth.
 
 Plugin claudeCodeUsage (plugins/claudeCodeUsage/)
   Herkunft:  https://github.com/titeya/dms-claudecode, Version 1.3.6, angepasst für Alpe
