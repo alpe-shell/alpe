@@ -8,6 +8,8 @@
 
 Durchsucht alle versionierten Textdateien (git ls-files; ohne Git alle Dateien ausser .git) nach
 Pfaden in ein Home-Verzeichnis, Benutzer- und Rechnernamen, IP- und MAC-Adressen und Gerätekennungen.
+Binärdateien (Schriften, Bilder, Klänge, Video, PDF, Shader) werden roh nach denselben Werten durchsucht:
+als Bytefolge und ohne NUL-Bytes (UTF-16); kurze Namen und ungültige Adressen dort nicht (siehe roh_funde).
 Benutzer- und Rechnername stehen nicht hier (sie wären selbst ein persönlicher Wert), sondern kommen
 vom Rechner, auf dem das Skript läuft; Allerweltsnamen und Namen aus einem Zeichen werden nicht gesucht.
 Heisst der Rechner wie eine Distribution oder ein Produkt (MEHRDEUTIGE_NAMEN, etwa «Asahi») oder ist der Name
@@ -45,16 +47,17 @@ NAME_IM_ZUSAMMENHANG = (r"(?i)(?:(?<=[\w.-]@)%(n)s(?![A-Za-z0-9])"              
                         r"|(?<=/home/)%(n)s(?![A-Za-z0-9])|(?<=/Users/)%(n)s(?![A-Za-z0-9])"         # Pfad in ein Home
                         r"|(?:host_?name|rechnername)\w*[\"']?\s*[:=]?\s*[\"']?%(n)s(?![A-Za-z0-9])"  # Hostname-Feld
                         r"|(?<![\w-])(?:ssh|scp|hostnamectl(?:\s+set-hostname)?)\s+%(n)s(?![A-Za-z0-9])"
-                        r"|(?:SYSLOG_ZEIT)%(n)s(?=(?:\.[\w.-]+)? (?:[^\s:\[\]]+(?:\[\d+\])?:(?:\s|$)|\S+ (?:-|\d+) \S+ )))")   # Rechnerfeld im Syslog-Format
+                        r"|(?<= )(?=%(n)s[. ])(?:SYSLOG_ZEIT)%(n)s(?=(?:\.[\w.-]+)? (?:[^\s:\[\]]+(?:\[\d+\])?:(?:\s|$)|\S+ (?:-|\d+) \S+ )))")   # Rechnerfeld im Syslog-Format
 # Zeitstempel vor dem Rechnerfeld (journalctl -o short, short-precise, short-iso, short-iso-precise, short-full,
 # with-unit; RFC 3164 und RFC 5424): Uhrzeit, wahlweise ein bis sechs Stellen Sekundenbruchteile, wahlweise Zeitzone
-# (Z, ±hhmm, ±hh:mm oder ein Kürzel aus drei bis fünf Grossbuchstaben wie « CET»), dann ein Leerzeichen. Als
+# (Z, ±hhmm, ±hh:mm, « ±hh» oder ein Kürzel aus drei bis fünf Grossbuchstaben wie « CET» – nur gross, trotz (?i)
+# des ganzen Musters, sonst gälte jedes kurze Wort nach einer Uhrzeit als Zone), dann ein Leerzeichen. Als
 # Rückblick, damit der Fund nur den Namen umfasst; Python verlangt dafür feste Breiten, darum eine Alternative je
 # Schreibweise.
 # Grenzen: Ausgaben ohne Uhrzeit vor dem Rechnerfeld (journalctl -o short-unix, short-monotonic, short-delta) werden
 # nicht erkannt; bei RFC 5424 nur, wenn die PROCID «-» oder eine Zahl ist.
 SYSLOG_ZEIT = "|".join(r"(?<=\d\d:\d\d:\d\d%s%s )" % (bruch, zone) for bruch in [""] + [r"\.\d{%d}" % n for n in range(1, 7)]
-                       for zone in ["", "Z", r"[+-]\d{4}", r"[+-]\d\d:\d\d"] + [" [A-Z]{%d}" % n for n in (3, 4, 5)])
+                       for zone in ["", "Z", r"[+-]\d{4}", r"[+-]\d\d:\d\d", r" [+-]\d\d"] + [" (?-i:[A-Z]{%d})" % n for n in (3, 4, 5)])
 NAME_IM_ZUSAMMENHANG = NAME_IM_ZUSAMMENHANG.replace("SYSLOG_ZEIT", SYSLOG_ZEIT)
 KURZ = 4   # kürzere Namen gelten wie die mehrdeutigen: nur im Zusammenhang
 # Dokumentationsbereiche sind kein Fund: MAC 00:00:5E:00:53:00/24 (RFC 7042), IP 192.0.2.0/24, 198.51.100.0/24 und
@@ -106,11 +109,16 @@ def namens_muster(name):
 
 def funde(pfad, text, benutzer="", rechner="", ausnahmen=()):
     """Persönliche Werte in einem Text: Liste (pfad, zeile, art, wert). Ausgenommen ist nur der erwartete Wert."""
-    namen = [(art, namens_muster(n)) for art, n in (("Benutzername", benutzer), ("Rechnername", rechner)) if n]
+    # Namensmuster (teuer, vor allem im Zusammenhang) nur auf Zeilen anwenden, in denen der Name überhaupt steht.
+    klein = text.lower()
+    namen = [(art, namens_muster(n), n.lower()) for art, n in (("Benutzername", benutzer), ("Rechnername", rechner)) if n and n.lower() in klein]
     ergebnis = []
     for nummer, zeile in enumerate(text.splitlines(), 1):
         werte = [(HOME, m.group(0)) for m in HOME_PFAD.finditer(zeile) if m.group(1) not in PLATZHALTER]
-        werte += [(art, m.group(0)) for art, muster in MUSTER + namen for m in muster.finditer(zeile)]
+        werte += [(art, m.group(0)) for art, muster in MUSTER for m in muster.finditer(zeile)]
+        if namen:
+            zeile_klein = zeile.lower()
+            werte += [(art, m.group(0)) for art, muster, name in namen if name in zeile_klein for m in muster.finditer(zeile)]
         for art, wert in werte:
             if art in DOKUMENTATION and DOKUMENTATION[art].fullmatch(wert):
                 continue
@@ -122,6 +130,53 @@ def funde(pfad, text, benutzer="", rechner="", ausnahmen=()):
     return ergebnis
 
 
+# Rohsuche in Binärdateien: Als Adresse zählt dort nur, was auch eine sein kann (jede Stelle 0–255, keine führende
+# Null) – in Schriften und Videos stehen Ziffernfolgen mit führenden Nullen, die keine Adressen sind.
+# Alles ausser druckbarem ASCII gilt dort als Trenner: Sonst zählte ein beliebiges Byte ab 0x80 vor oder nach einem
+# Wert als Buchstabe, und die Wortgrenzen der Muster griffen nicht.
+# (Trenner ist das Leerzeichen, nicht der Zeilenumbruch: Sonst zerfiele ein Video in Millionen Zeilen.)
+NUR_ASCII = bytes(b if 0x20 <= b < 0x7F or b == 0x0A else 0x20 for b in range(256))
+IP_STRENG = re.compile(r"(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)")
+ROH = 0   # Zeilennummer der Funde aus der Rohsuche (eine Binärdatei hat keine Zeilen)
+
+
+def ist_binaer(roh):
+    """Binär ist, was ein NUL-Byte enthält oder kein UTF-8 ist."""
+    if b"\0" in roh:
+        return True
+    try:
+        roh.decode("utf-8")
+    except UnicodeDecodeError:
+        return True
+    return False
+
+
+def roh_funde(pfad, roh, benutzer="", rechner="", ausnahmen=()):
+    """Rohsuche nach denselben Werten in den Bytes einer Binärdatei: Liste (pfad, ROH, art, wert), je Wert einmal.
+
+    Gesucht wird in zwei Fassungen: die Bytes, wie sie sind (trifft ASCII in Metadaten), und dieselben ohne
+    NUL-Bytes (trifft UTF-16, wie es PDF-, Schrift- und Bilddateien für Titel und Namen verwenden); in beiden gilt
+    jedes Byte ausserhalb des druckbaren ASCII als Trenner (ein Name mit Umlaut wird also nicht gefunden). Grenzen, weil
+    komprimierte Daten jede kurze Bytefolge irgendwo enthalten: Namen unter KURZ Zeichen werden hier nicht gesucht
+    (ihr «Zusammenhang» ist drei, vier Bytes lang), und eine IP-Adresse muss streng gültig sein (IP_STRENG).
+    Komprimierte Ströme (PNG-Textblöcke mit zlib, PDF mit /Filter) werden nicht entpackt.
+    """
+    fassungen = [f.translate(NUR_ASCII).decode("ascii") for f in [roh] + ([roh.replace(b"\0", b"")] if b"\0" in roh else [])]
+    benutzer, rechner = (n if len(n) >= KURZ else "" for n in (benutzer, rechner))
+    gesehen, ergebnis = set(), []
+    for fassung in fassungen:
+        for _pfad, _zeile, art, wert in funde(pfad, fassung, benutzer, rechner):
+            if (art, wert) in gesehen or (art == "IP-Adresse" and not IP_STRENG.fullmatch(wert)):
+                continue
+            gesehen.add((art, wert))
+            erlaubt = [a for a in ausnahmen if a["art"] == art and fnmatch.fnmatch(pfad, a["glob"]) and a["muster"].fullmatch(wert)]
+            if erlaubt:
+                erlaubt[0]["treffer"] += 1
+            else:
+                ergebnis.append((pfad, ROH, art, wert))
+    return ergebnis
+
+
 def dateien(wurzel):
     liste = subprocess.run(["git", "-C", wurzel, "ls-files", "-z"], capture_output=True)
     if liste.returncode == 0 and liste.stdout:
@@ -130,10 +185,17 @@ def dateien(wurzel):
                   for d in ds if ".git" not in ordner.split(os.sep))
 
 
-def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None):
-    """Alle versionierten Textdateien unter wurzel: (Zahl gelesener Dateien, Funde)."""
+def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None, zaehler=None):
+    """Alle versionierten Dateien unter wurzel: (Zahl gelesener Textdateien, Funde).
+
+    Textdateien mit einer Endung aus ENDUNGEN (oder ohne Endung) werden zeilenweise durchsucht, Binärdateien roh
+    (roh_funde). zaehler (ein dict) bekommt die Listen «roh» (roh durchsuchte Binärdateien) und «ausgelassen»
+    (Textdateien mit anderer Endung, etwa .svg oder .frag – weiterhin nicht durchsucht).
+    """
     benutzer = eigener_name(pwd.getpwuid(os.getuid()).pw_name) if benutzer is None else benutzer
     rechner = eigener_name(socket.gethostname()) if rechner is None else rechner
+    zaehler = {} if zaehler is None else zaehler
+    zaehler.update(roh=[], ausgelassen=[])
     gelesen, ergebnis = 0, []
     for pfad in dateien(wurzel):
         voll = os.path.join(wurzel, pfad)
@@ -144,15 +206,21 @@ def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None):
         # prüft niemand; persönliche Werte gehören dort so wenig hin wie anderswo (docs/technik.md, «Tests»).
         if os.path.abspath(voll) == AUSNAHMEN_DATEI:
             continue
-        if not (pfad.endswith(ENDUNGEN) or "." not in os.path.basename(pfad)) or not os.path.isfile(voll) or os.path.islink(voll):
+        if not os.path.isfile(voll) or os.path.islink(voll):
             continue
         try:
-            with open(voll, encoding="utf-8") as handle:
-                text = handle.read()
-        except (UnicodeDecodeError, OSError):
+            with open(voll, "rb") as handle:
+                roh = handle.read()
+        except OSError:
             continue
-        gelesen += 1
-        ergebnis += funde(pfad, text, benutzer, rechner, ausnahmen)
+        if ist_binaer(roh):
+            zaehler["roh"].append(pfad)
+            ergebnis += roh_funde(pfad, roh, benutzer, rechner, ausnahmen)
+        elif pfad.endswith(ENDUNGEN) or "." not in os.path.basename(pfad):
+            gelesen += 1
+            ergebnis += funde(pfad, roh.decode("utf-8"), benutzer, rechner, ausnahmen)
+        else:
+            zaehler["ausgelassen"].append(pfad)
     return gelesen, ergebnis
 
 
@@ -179,6 +247,8 @@ def ueberholte(ausnahmen, ergebnis, benutzer, rechner):
 
 
 def zeile(fund):
+    if fund[1] == ROH:
+        return "%s (Binärdatei, Rohsuche) %s «%s»" % (fund[0], fund[2], fund[3])
     return "%s:%d %s «%s»" % fund
 
 
@@ -190,13 +260,15 @@ def main(argv):
         return 2
     wurzel = os.path.abspath(ordner[0]) if ordner else REPO
     ausnahmen = [] if "--ohne-ausnahmen" in optionen else lade_ausnahmen()
-    gelesen, ergebnis = durchsuche(wurzel, ausnahmen)
+    zaehler = {}
+    gelesen, ergebnis = durchsuche(wurzel, ausnahmen, zaehler=zaehler)
     for fund in ergebnis:
         print(zeile(fund))
     if "--ausnahmen" in optionen:
         for a in ausnahmen:
             print("Ausnahme %s | %s | %s | Frist: %s | %s | %d Treffer" % (a["glob"], a["art"], a["text"], a["frist"], a["grund"], a["treffer"]))
-    print("%d Dateien gelesen, %d Funde in %d Dateien" % (gelesen, len(ergebnis), len({f[0] for f in ergebnis})))
+    print("%d Dateien gelesen, %d Binärdateien roh durchsucht, %d Textdateien mit anderer Endung nicht durchsucht; %d Funde in %d Dateien"
+          % (gelesen, len(zaehler["roh"]), len(zaehler["ausgelassen"]), len(ergebnis), len({f[0] for f in ergebnis})))
     return 1 if ergebnis else 0
 
 

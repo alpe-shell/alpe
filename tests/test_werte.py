@@ -7,6 +7,7 @@ werden übergangsweise weiter erkannt. Prozessliste und doctor kennen den alten 
 import os
 import re
 import sys
+import tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHELL = os.environ.get("ALPE_SHELL_DIR") or os.path.join(REPO, "shell")
@@ -230,11 +231,55 @@ _spec = importlib.util.spec_from_file_location("werte_pruefen", os.path.join(REP
 wp = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(wp)
 ausnahmen = wp.lade_ausnahmen()
-repo_gelesen, repo_treffer = wp.durchsuche(REPO, ausnahmen)
+repo_zaehler = {}
+repo_gelesen, repo_treffer = wp.durchsuche(REPO, ausnahmen, zaehler=repo_zaehler)
 benutzer, rechner = wp.eigener_name(__import__("pwd").getpwuid(os.getuid()).pw_name), wp.eigener_name(__import__("socket").gethostname())
 check(repo_gelesen > 1500 and repo_treffer == [],
       "ganzes Repo ohne persönliche Werte (%d Dateien; Benutzername %s, Rechnername %s): %s"
       % (repo_gelesen, "gesucht" if benutzer else "nicht gesucht", "gesucht" if rechner else "nicht gesucht", [wp.zeile(f) for f in repo_treffer[:12]]))
+# Binärdateien (bis zum 24.11.2026 übersprungen: 61 Dateien) werden roh durchsucht; der Lauf oben schliesst sie ein.
+roh_endungen = sorted({os.path.splitext(p)[1] for p in repo_zaehler["roh"]})
+check(len(repo_zaehler["roh"]) >= 61 and {".ttf", ".png", ".jpg", ".mp4", ".pdf", ".qsb", ".wav"} <= set(roh_endungen)
+      and not [f for f in repo_treffer if f[1] == wp.ROH],
+      "Rohsuche: %d Binärdateien durchsucht (%s), kein Fund" % (len(repo_zaehler["roh"]), " ".join(roh_endungen)))
+check(all(not p.endswith(wp.ENDUNGEN) for p in repo_zaehler["ausgelassen"]),
+      "weiterhin nicht durchsucht: %d Textdateien mit anderer Endung (%s)"
+      % (len(repo_zaehler["ausgelassen"]), " ".join(sorted({os.path.splitext(p)[1] or os.path.basename(p) for p in repo_zaehler["ausgelassen"]}))))
+# Proben der Rohsuche: erfundene Werte in Bytes, wie sie in Metadaten stehen (ASCII, UTF-16 LE und BE), zwischen
+# Fülldaten. Zusammengesetzt, damit die Werte in dieser Datei nicht als Fund stehen.
+heim = "/".join(("", "home", "erika", "Bilder", "berg.png"))
+fuell = bytes(range(256)) * 4
+for lage, daten, art in (("Pfad in ein Home als ASCII", fuell + heim.encode("ascii") + b"\0" + fuell, "Pfad in ein Home-Verzeichnis"),
+                         ("Pfad in ein Home als UTF-16 LE", fuell + heim.encode("utf-16-le") + fuell, "Pfad in ein Home-Verzeichnis"),
+                         ("Pfad in ein Home als UTF-16 BE (wie im PDF-Titel)", b"\xfe\xff" + heim.encode("utf-16-be") + fuell, "Pfad in ein Home-Verzeichnis"),
+                         ("Benutzername im Autorfeld", fuell + b"/Author (Erika)" + fuell, "Benutzername"),
+                         ("Rechnername als UTF-16", fuell + "Aufgenommen auf werkbank".encode("utf-16-le") + fuell, "Rechnername"),
+                         ("MAC-Adresse", fuell + b"\x01" + ("aa:bb:cc:dd:ee:" + "01").encode() + b"\x02" + fuell, "MAC-Adresse"),
+                         ("IP-Adresse", fuell + b"\x01" + ("192.168.1." + "21").encode() + b"\x02" + fuell, "IP-Adresse")):
+    # Die Pfad-Proben laufen ohne Namenssuche, sonst wäre «erika» im Pfad ein zweiter Fund.
+    namen_roh = ("", "") if art.startswith("Pfad") else ("erika", "werkbank")
+    check(wp.ist_binaer(daten) and [f[1:3] for f in wp.roh_funde("x/probe.bin", daten, *namen_roh)] == [(wp.ROH, art)],
+          "Rohsuche findet in einer Binärdatei: " + lage)
+check(wp.roh_funde("x/probe.bin", fuell + ("002.202.202." + "20").encode() + b" 192.0.2.7 00:00:5E:00:53:4A /home/nutzer/x" + fuell, "erika", "werkbank") == [],
+      "Rohsuche: Ziffernfolge mit führender Null, Dokumentationsbereiche und Platzhalter sind kein Fund")
+kurz_roh = "p" + "x7"
+check(wp.roh_funde("x/probe.bin", fuell + ("erika@" + kurz_roh + ":~$ ").encode() + fuell, "", kurz_roh) == []
+      and wp.funde("x/probe.txt", "erika@" + kurz_roh + ":~$ ", "", kurz_roh) != [],
+      "Rohsuche: ein Name unter vier Zeichen wird in Binärdaten nicht gesucht (bekannte Grenze, in komprimierten Daten träfe er zufällig)")
+probe_roh_ausnahme = [{"glob": "x/*.bin", "art": "IP-Adresse", "muster": re.compile(r"10\.0\.0\.2"), "treffer": 0}]
+check(wp.roh_funde("x/probe.bin", fuell + b" 10.0.0.2 " + fuell, ausnahmen=probe_roh_ausnahme) == [] and probe_roh_ausnahme[0]["treffer"] == 1
+      and len(wp.roh_funde("y/probe.bin", fuell + b" 10.0.0.2 " + fuell, ausnahmen=probe_roh_ausnahme)) == 1,
+      "Rohsuche: die Ausnahmeliste gilt auch für Binärdateien, nur für Datei, Art und Wert")
+with tempfile.TemporaryDirectory(prefix="alpe-werte-roh-") as roh_ordner:
+    with open(os.path.join(roh_ordner, "bild.png"), "wb") as handle:
+        handle.write(b"\x89PNG\r\n\x1a\n" + fuell + b"tEXtComment\0" + heim.encode() + fuell)
+    with open(os.path.join(roh_ordner, "muster.svg"), "w", encoding="utf-8") as handle:
+        handle.write("<svg/>\n")
+    roh_zaehler = {}
+    _gelesen, roh_treffer = wp.durchsuche(roh_ordner, [], benutzer="", rechner="", zaehler=roh_zaehler)
+    check([wp.zeile(f) for f in roh_treffer] == ["bild.png (Binärdatei, Rohsuche) Pfad in ein Home-Verzeichnis «%s»" % "/".join(("", "home", "erika"))]
+          and roh_zaehler == {"roh": ["bild.png"], "ausgelassen": ["muster.svg"]},
+          "Rohsuche im Lauf über einen Ordner: Fund in einer Binärdatei wird gemeldet und benannt; Textdateien mit anderer Endung werden gezählt")
 ueberholt = ["%s %s %s" % (a["glob"], a["art"], a["text"]) for a in wp.ueberholte(ausnahmen, repo_treffer, benutzer, rechner)]
 check(ueberholt == [], "jede Ausnahme trifft mindestens einen Fund (sonst ist sie überholt): %s" % ueberholt)
 # Überholt darf eine Ausnahme nur heissen, wenn ihre Art in diesem Lauf gesucht wurde. Benutzer- und Rechnername
@@ -308,6 +353,7 @@ SYSLOG = ("<34>Oct 11 22:14:15 %s su: 'su root' failed for lonvick on /dev/pts/8
           "2003-10-11T22:14:15.003000+01:00 %s su[42]: von 192.0.2.7",
           "Sat 2003-10-11 22:14:15 CET %s systemd[1]: Started su.",          # journalctl -o short-full, with-unit
           "Sat 2003-10-11 22:14:15 AEST %s su[42]: 'su root' failed",
+          "Sat 2003-10-11 22:14:15 +04 %s su[42]: Zone ohne Buchstabenkürzel",
           "<34>1 2003-10-11T22:14:15.5Z %s su 42 ID47 - 'su root' failed")    # RFC 5424: ein bis sechs Stellen Bruchteile
 kurz = "p" + "x7"   # erfundener kurzer Rechnername, zusammengesetzt
 check(wp.eigener_name(kurz) == kurz and wp.eigener_name("x") == "" and wp.eigener_name("runner") == "" and wp.eigener_name("werkbank.lan") == "werkbank",
@@ -321,7 +367,9 @@ for probe in ("erika@%s:~$ ls" % kurz, "ssh %s" % kurz, "HOSTNAME=%s" % kurz, "/
     check(any(f[2] == "Rechnername" for f in wp.funde("x/probe.txt", probe, "", kurz)), "kurzer Rechnername «%s»: im eindeutigen Zusammenhang ein Fund: %s" % (kurz, probe))
 for name in (distro.lower(), kurz):
     for probe in ("um 22:14:15 %s gestartet" % name, "Oct 11 22:14:15 mymachine %s[42]: läuft" % name, "Oct 11 22:14:15 mymachine su: %s: nicht gefunden" % name,
-                  "die Taste %s und der Wert %s7" % (name, name), "22:14:15 %s" % name, "x%s y-%s %s.conf" % (name, name, name),
+                  "um 22:14:15 lief %s su: ein kleingeschriebenes Wort nach der Uhrzeit ist keine Zeitzone" % name,
+                  "Oct 11 22:14:15 host %s su[42]: Rechner mit vier Buchstaben vor dem Namen" % name,
+                  "die Taste %s und der Wert %s7" % (name, name), "22:14:15%s" % name, "x%s y-%s %s.conf" % (name, name, name),
                   "1065910455.003000 %s su[42]: Ausgabe ohne Uhrzeit (short-unix) – bekannte Grenze" % name):
         check(wp.funde("x/probe.txt", probe, "", name) == [], "Rechner «%s»: kein Fund ausserhalb des Rechnerfelds: %s" % (name, probe))
 
