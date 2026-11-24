@@ -112,6 +112,55 @@ try:
     check(lp.logo_mode() == "alpe" and lp.logo_mode(tmp) == "alpe", "Logo-Modus des Endstands ist alpe")
     skript = lp.session_script("/b", "/d", "/b/x.png")
     check("grim" not in skript and "screenshot full" in skript, "Bild: fester Weg alpe-dienst screenshot full, ohne grim (0.8 Nr. 71)")
+    # «Weg A»: Unter KWin kommt das Bild über kwinbild.py von der Test-Instanz, nie vom Bus der echten Sitzung.
+    echt = "unix:path=/run/user/%d/bus" % os.getuid()
+    skript_kwin = lp.session_script("/b", "/d", "/b/x.png", kwin_scope="alpe-ladepruefung-1.scope", fremde_busse=[echt + ",guid=abc", ""])
+    check("kwinbild.py" in skript_kwin and "screenshot full" not in skript_kwin and "--scope alpe-ladepruefung-1.scope" in skript_kwin
+          and "--fremd " + lp.q(echt + ",guid=abc") in skript_kwin and skript_kwin.count("--fremd") == 1,
+          "Bild unter KWin: kwinbild.py mit Scope und der Busadresse der echten Sitzung als fremd (befristet, nur KWin)")
+    kb_spec = importlib.util.spec_from_file_location("kwinbild", os.path.join(os.path.dirname(lp.__file__), "kwinbild.py"))
+    kb = importlib.util.module_from_spec(kb_spec)
+    kb_spec.loader.exec_module(kb)
+    test_bus = "unix:path=/tmp/dbus-AbCdEf,guid=0123"
+    check(kb.adresse_pruefen(test_bus, [echt]) is None and kb.adresse_pruefen(test_bus, ["", "unix:path=/tmp/dbus-anders"]) is None,
+          "kwinbild: eigener Bus der Test-Instanz wird angenommen")
+    for lage, adresse, fremde in (("leer", "", []), ("gleich der Sitzung des Maintainers", "unix:path=/tmp/dbus-AbCdEf,guid=9", ["unix:path=/tmp/dbus-AbCdEf"]),
+                                  ("gleich trotz anderer Schreibweise", "unix:path=/tmp//dbus-AbCdEf", ["unix:guid=7,path=/tmp/dbus-AbCdEf"]),
+                                  ("Sitzungsbus unter /run/user, auch ohne --fremd", echt, []),
+                                  ("abstrakter Name gleich", "unix:abstract=/tmp/dbus-x,guid=1", ["unix:abstract=/tmp/dbus-x"]),
+                                  ("zwei Adressen", test_bus + ";unix:path=/tmp/dbus-zwei", []), ("kein Unix-Socket", "tcp:host=localhost,port=1", []),
+                                  ("autolaunch", "autolaunch:", [])):
+        check(kb.adresse_pruefen(adresse, fremde) is not None, "kwinbild bricht ab – Busadresse " + lage)
+    proc_attrappe = os.path.join(tmp, "proc")
+    for pid, pfad in ((11, "0::/user.slice/user-1000.slice/user@1000.service/app.slice/alpe-ladepruefung-1.scope\n"),
+                      (12, "0::/user.slice/user-1000.slice/user@1000.service/session.slice/plasma-kwin_wayland.service\n"),
+                      (13, "0::/user.slice/user-1000.slice/user@1000.service/app.slice/alpe-ladepruefung-10.scope\n")):
+        os.makedirs(os.path.join(proc_attrappe, str(pid)))
+        with open(os.path.join(proc_attrappe, str(pid), "cgroup"), "w") as handle:
+            handle.write(pfad)
+    check(kb.im_scope(11, "alpe-ladepruefung-1.scope", proc_attrappe) and not kb.im_scope(12, "alpe-ladepruefung-1.scope", proc_attrappe)
+          and not kb.im_scope(13, "alpe-ladepruefung-1.scope", proc_attrappe) and not kb.im_scope(99, "alpe-ladepruefung-1.scope", proc_attrappe)
+          and not kb.im_scope(11, "", proc_attrappe),
+          "kwinbild: nur ein KWin im Scope der Ladeprüfung gilt (das KWin der Sitzung, ein anderer Scope, ein fehlender Prozess nicht)")
+    ohne_bus = subprocess.run([sys.executable, kb.__file__, os.path.join(tmp, "k.png"), "--scope", "alpe-ladepruefung-1.scope"], capture_output=True,
+                              text=True, env={k: v for k, v in os.environ.items() if k != "DBUS_SESSION_BUS_ADDRESS"})
+    mit_echtem = subprocess.run([sys.executable, kb.__file__, os.path.join(tmp, "k.png"), "--scope", "alpe-ladepruefung-1.scope", "--fremd", "unix:path=/tmp/dbus-echt"],
+                                capture_output=True, text=True, env=dict(os.environ, DBUS_SESSION_BUS_ADDRESS="unix:path=/tmp/dbus-echt,guid=1"))
+    check(ohne_bus.returncode == 3 and mit_echtem.returncode == 3 and "ABBRUCH, kein Bild" in mit_echtem.stdout and not os.path.exists(os.path.join(tmp, "k.png")),
+          "kwinbild als Programm: ohne Busadresse und mit der Adresse der echten Sitzung Abbruch (3), kein Bild, kein Busaufruf")
+    import struct
+    import zlib
+    roh = bytes([10, 20, 30, 255, 40, 50, 60, 255, 0, 0, 0, 0]) + bytes([70, 80, 90, 255, 1, 2, 3, 255, 0, 0, 0, 0])   # 2 × 2, Zeilenlänge 12
+    bild_rgbx, bild_bgrx = kb.png(2, 2, 12, 16, roh), kb.png(2, 2, 12, 4, roh)
+    def punkte(datei):
+        idat = datei[datei.index(b"IDAT") + 4:datei.index(b"IEND") - 8]
+        return zlib.decompress(idat)
+    check(bild_rgbx[:8] == b"\x89PNG\r\n\x1a\n" and struct.unpack(">II", bild_rgbx[16:24]) == (2, 2)
+          and punkte(bild_rgbx) == bytes([0, 10, 20, 30, 40, 50, 60, 0, 70, 80, 90, 1, 2, 3])
+          and punkte(bild_bgrx) == bytes([0, 30, 20, 10, 60, 50, 40, 0, 90, 80, 70, 3, 2, 1]),
+          "kwinbild: Rohdaten RGBX und BGRX werden zu einem PNG mit richtiger Farbreihenfolge, Füllbytes der Zeile fallen weg")
+    aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--offen", "--bild-sperre", os.path.join(tmp, "x.png")], capture_output=True, text=True)
+    check(aufruf.returncode == 2 and "gesperrt" in aufruf.stdout + aufruf.stderr, "--bild-sperre mit --offen wird abgelehnt")
     aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)
     check(aufruf.returncode == 2 and "--offen" in aufruf.stdout + aufruf.stderr, "--bild ohne --offen wird abgelehnt")
     # Probe für das Papierkorb-Symbol im Dock: nur mit Schalter liegt etwas im Papierkorb des Temp-HOME.

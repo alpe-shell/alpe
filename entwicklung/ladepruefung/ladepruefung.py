@@ -16,7 +16,10 @@ einer Grundlinie vergleichen.
                                           das ausgelieferte Design selbst; eigene Grundlinie grundlinie-<c>-offen.txt.
                                           Ohne --offen: Variante «gesperrt». Beide bei jedem Halt (0.8 Nr. 70)
               --bild DATEI                nur mit --offen: Bildschirmfoto (PNG) des geladenen Schreibtischs,
-                                          bevor etwas geöffnet wird, mit «alpe-dienst screenshot full» (0.8 Nr. 71)
+                                          bevor etwas geöffnet wird, mit «alpe-dienst screenshot full» (0.8 Nr. 71).
+                                          Unter KWin befristet über kwinbild.py (org.kde.KWin.ScreenShot2 der
+                                          Test-Instanz; bricht ab, wenn der Bus nicht eindeutig der Test-Instanz gehört)
+              --bild-sperre DATEI         nur ohne --offen: dasselbe für den Sperrbildschirm der Variante «gesperrt»
               --grundlinie-datei DATEI    statt der eingecheckten Grundlinie (Messung auf einem anderen Stand)
     Umgebung: ALPE_LP_PAPIERKORB=voll     Probe für das Dock: im Temp-HOME liegt eine Datei im Papierkorb
                                           (Symbol user-trash-full statt user-trash); keine Grundlinie
@@ -285,10 +288,22 @@ def stop_scope(unit):
 
 # ---------------------------------------------------------------- Skripte für den Lauf (laufen im Scope)
 
-def session_script(base, dienst, bild=None):
-    """Startet den Dienst mit der Oberfläche, öffnet Popouts und Einstellungsseiten, beendet den Dienst."""
+def session_script(base, dienst, bild=None, kwin_scope=None, fremde_busse=()):
+    """Startet den Dienst mit der Oberfläche, öffnet Popouts und Einstellungsseiten, beendet den Dienst.
+
+    kwin_scope: Name des Scopes, wenn der Lauf unter KWin läuft. Dann kommt das Bild nicht vom Dienst (im virtuellen
+    kwin_wayland gibt es kein wlr-screencopy), sondern über kwinbild.py von der Test-Instanz («Weg A», befristete
+    Abweichung von Plan 0.8 Nr. 71, nur KWin). fremde_busse: Session-Bus-Adressen, die nie angesprochen werden
+    dürfen (die Sitzung des Maintainers); kwinbild.py bricht ab, wenn die Adresse im Lauf eine davon ist oder
+    org.kde.KWin an diesem Bus nicht im Scope läuft.
+    """
     calls = []
-    if bild:
+    if bild and kwin_scope:
+        calls.append("""python3 {skript} {bild} --scope {scope} {fremd} >> {base}/bild.log 2>&1
+echo "kwinbild.py: Rückgabewert $?" >> {base}/bild.log
+sleep 1""".format(skript=q(os.path.join(HERE, "kwinbild.py")), bild=q(bild), scope=q(kwin_scope), base=q(base),
+                  fremd=" ".join("--fremd " + q(a) for a in fremde_busse if a)))
+    elif bild:
         # Bildschirmfoto des geladenen Schreibtischs, bevor etwas geöffnet wird (--bild): fester Weg ist das
         # Bildschirmfoto des Dienstes (Plan 0.8 Nr. 71; grim wird nicht benutzt).
         calls.append("""mkdir -p {base}/bild
@@ -498,7 +513,8 @@ def one_run(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=
         handle.write((SYSTEMBUS_STUMM if stummer_bus() else SYSTEMBUS).format(sock=sock))
     session = os.path.join(base, "sitzung.sh")
     with open(session, "w") as handle:
-        handle.write(session_script(base, dienst, bild))
+        handle.write(session_script(base, dienst, bild, kwin_scope=unit if compositor == "kwin" else None,
+                                    fremde_busse=[os.environ.get("DBUS_SESSION_BUS_ADDRESS", "")]))
     os.chmod(session, 0o755)
     if compositor == "hyprland":
         hyprland_files(base, session)
@@ -678,6 +694,11 @@ def main(argv):
     if bild and not offen:
         say("FEHLER: --bild gehört zur Variante «offen» (--offen); hinter der Sperre gäbe es nur den Sperrbildschirm")
         return 2
+    if "--bild-sperre" in args:
+        if bild or offen:
+            say("FEHLER: --bild-sperre gehört zur Variante «gesperrt» (ohne --offen und ohne --bild)")
+            return 2
+        bild = os.path.abspath(args[args.index("--bild-sperre") + 1])
     if write and (probe or extra_plugins or bild):
         say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins, --probe-zeichen und --bild")
         return 2
@@ -728,7 +749,11 @@ def main(argv):
             for line in result["probe"]:
                 say("   Probe nach dem Lauf – " + line)
             if bild:
-                say("   Bildschirmfoto – " + (result["bild.log"].strip().splitlines() or ["FEHLER: keines entstanden"])[-1])
+                for line in result["bild.log"].strip().splitlines() or ["FEHLER: keines entstanden"]:
+                    say("   Bildschirmfoto – " + line)
+                if "ABBRUCH, kein Bild" in result["bild.log"]:
+                    say("FEHLER: Der Session-Bus im Lauf gehört nicht eindeutig zur Test-Instanz – kein Bild, Lauf ungültig")
+                    return 2
             if any(line.startswith("FEHLER") for line in result["probe"]):
                 return 2
             if result["stubs.log"]:
