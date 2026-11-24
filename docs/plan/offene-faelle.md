@@ -953,6 +953,20 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   einmal mit, unter einem Compositor (0.8 Nr. 85). Die Grundlinien sind danach neu gemessen
   (`9685ebe`, 0.8 Nr. 80). **Für G1:** Changelog-Eintrag 1.1 zur Behebung «Dienst hing bei stummem
   Systembus, Oberfläche verband sich nie».
+- **Nachtrag vom Halt am 24.11.2026 (Hyprland, Variante «offen», Endstand `54bb5c0`; nicht
+  eingeordnet, Grundlinie unverändert):** In vier Läufen auf dem Endstand traten drei Meldungen
+  auf, die in `grundlinie-hyprland-offen.txt` nicht stehen, jede in einem der vier Läufe:
+  (1) das Notizblock-Paar «Tab file does not exist …/untitled-<ID>.txt» samt `FileView`-Meldung –
+  bisher nur in «gesperrt» als sporadisch 1/3 geführt; (2) `@Common/DeferredAction.qml`:
+  «TypeError: Cannot read property 'stop' of null» – dieselbe Datei wie die geführte
+  `flush`-Meldung, anderer Wortlaut; (3) «ShaderEffect: 'source' does not have a matching
+  property». Gegenmessung nach 0.8 Nr. 76 auf `b04b1bf` (Stand vor dieser Runde): 3 Läufe, 39/39,
+  keine der drei. Das reicht bei dieser Häufigkeit weder für «neu durch diese Runde» noch für
+  «schon vorher»: Von den Commits der Runde berühren nur `899fefc` (`layout.js` der Sperre, drei
+  leere `monitor`-Werte) und `19a16c4` (vier matugen-Vorlagen im Design aus) überhaupt, was die
+  Shell im Lauf lädt; `DeferredAction.qml`, `NotepadStorageService.qml` und die Shader sind
+  unverändert. **Herkunft offen, Frist wie unten vor G1;** vor einer Aufnahme als `SPORADISCH`
+  in die Grundlinie mehr Läufe auf beiden Ständen (Entscheid des Maintainers).
 - **Sporadische Meldungen unter Hyprland aus der Neumessung (22.11.2026), nicht behoben –
   Herkunft offen, Frist: vor G1:** je in
   1 von 3 Läufen (a) `NotepadStorageService`: «Tab file does not exist …/untitled-<ID>.txt» samt
@@ -1050,6 +1064,18 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Dateien tragen keine Urheberangabe. Das Bergbild der Sperre ist ein Standbild aus dem Video.
   Herkunft und Lizenz bestätigt der Maintainer; danach Eintrag in `NOTICE`.~~ **Erledigt
   (Plan 0.8 Nr. 95):** vom Maintainer, teils mit KI-Werkzeugen erstellt, CC0 1.0; in `NOTICE`.
+- **Nachtrag 24.11.2026 zur Liste unten (Auftrag des Maintainers, `NOTICE`):** eingetragen sind
+  jetzt (1) die sieben Muster unter `shell/Alpe/Widgets/wallpaper-patterns/` – **Hero Patterns von
+  Steve Schoger, CC BY 4.0** (Lizenzvermerk auf `heropatterns.com`; die Pfaddaten aller sieben
+  stehen in der Musterliste der Seite, `js/app.js`: fünf zeichengleich im Anfang, `bubbles` und
+  `bank-note` dort in gekürzter relativer Schreibweise mit denselben Koordinaten); (2) die
+  Radar-Musterdatei – MeteoSchweiz Open Data, Produkt PRECIP/RZC im Format ODIM HDF5, CC BY 4.0,
+  verlangte Angabe «Quelle: MeteoSchweiz» (`opendatadocs.meteoswiss.ch`, Nutzungsbedingungen und
+  Seite zu den Radarprodukten); (3) die Karten des Radar-Tabs – Natural Earth, gemeinfrei, Nennung
+  nicht verlangt; (4) die Logos – Rechte am Logo und am Namen beim Maintainer, Nutzung zur
+  Bezeichnung von Alpe erlaubt, nicht CC0. Die Drucker-Testseite ist neu erzeugt
+  (`entwicklung/testseite/erzeugen.py`). **Weiterhin ohne Eintrag:** die Zeichen Dritter unter
+  `shell/assets/` und die Teile des fcitx5-Themas.
 - **Medien ohne Herkunftsangabe in `NOTICE` (Bestand vom 23.11.2026; nichts wird ohne Angabe des
   Maintainers eingetragen).** Geprüft: alle versionierten Bilder, Videos und Klänge (43 Dateien in
   neun Ordnern) sowie zwei weitere Binärdateien; in `lockscreen/`, `docs/` und im README liegen
@@ -1146,7 +1172,33 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Weg braucht (KWin-Schnittstelle `org.kde.KWin.ScreenShot2`, verlangt eine Freigabe über die
   Desktop-Datei). Ebenso: `--bild` gibt es nur in der Variante «offen»; ein Bild des
   Sperrbildschirms brauchte am 23.11.2026 einen Temp-Worktree mit aufgehobener Sperre.
-  **Eingeschätzt am 23.11.2026 (nicht umgesetzt; Entscheid offen, Vorschlag unten).**
+  **Weg A umgesetzt am 24.11.2026 (Plan 0.8 Nr. 103), befristet und nur für KWin, bis Weg B nach
+  G1 entschieden ist:** `entwicklung/ladepruefung/kwinbild.py`, aufgerufen von `--bild` und neu
+  `--bild-sperre` unter KWin. Das Skript ermittelt die Busadresse im Lauf und bricht ohne Aufnahme
+  ab, wenn sie fehlt, keine eindeutige Unix-Adresse ist, der Adresse der Sitzung des Maintainers
+  (beim Start der Ladeprüfung aus `DBUS_SESSION_BUS_ADDRESS` gelesen) oder `/run/user/<uid>/bus`
+  gleicht, oder wenn der Prozess hinter `org.kde.KWin` an diesem Bus nicht im Scope des Laufs
+  läuft; die Ladeprüfung wertet einen solchen Abbruch als ungültigen Lauf. Test in
+  `tests/test_ladepruefung.py`; Probelauf «offen» unter KWin am 24.11.2026 mit Bild 1920 × 1080.
+  **Kein Bild der Sperre unter KWin (24.11.2026, offen):** `--bild-sperre` liefert unter KWin den
+  Schreibtisch (Bergbild, Leiste, Dock), nicht die Sperre. Unter KWin sperrt nicht die Shell,
+  sondern der Sperrbildschirm von KDE mit dem Paket `org.alpe.desktop`; die Ladeprüfung startet
+  `kwin_wayland` mit `--no-lockscreen`, und `loginctl` ist eine Attrappe. Die Variante «gesperrt»
+  prüft unter KWin also nur, dass die Shell mit `lockAtStartup` lädt. Ein Bild der KDE-Sperre
+  brauchte einen eigenen Weg (Sperre in der Test-Instanz zulassen; ob ScreenShot2 sie dann
+  aufnimmt, ist nicht geprüft) – Entscheid des Maintainers. Unter Hyprland zeigt `--bild-sperre`
+  die Sperre der Shell.
+  **Die Aussage unten, KWin 6.8.3 prüfe an ScreenShot2 keine Berechtigung, gilt als unbelegt und
+  ist vor Weg B am Quelltext von KWin zu prüfen.** Belegt ist nur das Verhalten der installierten
+  Binärdateien. Ergänzende Suche am 24.11.2026 in `/usr/lib/libkwin.so.6.8.3` (Paket `kwin`
+  6.8.3-1.1), im Plugin `screenshot.so` und in `kwin_wayland`, je als ASCII, UTF-16 LE/BE und in den
+  exportierten Symbolen: kein `X-KDE-DBUS-Restricted-Interfaces`, kein `X-KDE-Wayland-Interfaces`,
+  kein `KWIN_SCREENSHOT…`, kein `…PERMISSION_CHECK…`, kein `NotAuthorized`/`NoAuthorized`, kein
+  Symbol mit `fetchRestricted…` oder `…RestrictedInterfaces…`; `libkwin.so` enthält `desktopFile…`
+  nur für Fenster und Fensterregeln. Das stützt die Probe, beweist aber nichts: Zeichenketten
+  können zusammengesetzt, die Prüfung in einer anderen Bibliothek oder per Richtlinie des Busses
+  gelöst sein.
+  **Einschätzung vom 23.11.2026:**
   *Berechtigungsprüfung am installierten KWin 6.8.3:* Die Annahme «verlangt eine Freigabe über die
   Desktop-Datei» trifft auf dieser Version nicht zu. Belege: (1) Im Plugin
   `/usr/lib/qt6/plugins/kwin/plugins/screenshot.so` (Paket `kwin` 6.8.3) gibt es die Fehlernamen
@@ -1293,6 +1345,18 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   `isHyprlandOrNiri`/`isNiriOrMango`, Eintrag `hyprlandNiriOnly`.
 
 ## Werkzeuge
+
+- **Lücke der Namensprüfung: Binärdateien (24.11.2026, offen).** `tools/namen-pruefen.py` überspringt
+  jede Datei mit einem Nullbyte in den ersten 8192 Bytes; Metadaten und Inhalte von PDF, PNG, JPEG,
+  MP4, Schriften, Klängen, `.qsb` und HDF5 sieht sie nicht (61 versionierte Dateien). So blieb die
+  Drucker-Testseite des Ursprungs unbemerkt (Titel, Metadaten und Seitentext nannten ihn). Einmalige
+  Suche am 24.11.2026 über alle 61 Dateien nach den ausgeschriebenen Namen des Ursprungs (roh, als
+  UTF-16 und in entpackten PDF-Strömen): Fund nur in der Testseite; die drei Bilder des Designs
+  zeigen bloss zufällige Drei-Buchstaben-Folgen in komprimierten Daten. Die Testseite ist jetzt
+  unkomprimierter Text und wird von der Namensprüfung gelesen, dazu prüft `tests/test_werte.py` sie.
+  Für die übrigen Binärdateien gibt es keine laufende Prüfung; ein Suchen nach den kurzen Mustern
+  (`dms`, `dank`, `dux`) wäre dort voller Scheintreffer – sinnvoll wäre höchstens eine Prüfung der
+  Metadatenfelder je Dateityp (PNG-Textblöcke, EXIF, Namenstabellen der Schriften).
 
 - ~~`extract_settings_index.py` bricht ab~~ erledigt in D6 (`eab4f12`): Alpe-Seiten werden
   ausdrücklich übersprungen (sie kommen zur Laufzeit dazu), Index neu erzeugt.
