@@ -294,5 +294,35 @@ seiten = werkzeug.renamed({"settingsHiddenPages": ["auto", "dank_dash", "dankbar
 check(seiten == {"settingsHiddenPages": ["auto", "dash", "bar_dot", "printers"], "anderes": ["dank_dash"]},
       "ausgeblendete Seiten tragen die neuen Seiten-IDs, ohne Doppel; andere Listen bleiben\n%s" % seiten)
 
+# ---------------------------------------------------------------- matugen-Vorlagen fremder Programme
+# Das ausgelieferte Design schaltet die Vorlagen für Firefox, Neovim, Zen und Zed nicht ein. Der Export schreibt
+# sie immer aus; eingespielt werden sie nur ohne bestehende Einstellungen.
+vier = ["matugenTemplateFirefox", "matugenTemplateNeovim", "matugenTemplateZenBrowser", "matugenTemplateZed"]
+check(sorted(werkzeug.SETTINGS_NUR_NEU) == sorted(vier) and not any(werkzeug.SETTINGS_NUR_NEU.values()), "SETTINGS_NUR_NEU: genau die vier Vorlagen, alle aus")
+for variante in sorted(os.listdir(os.path.join(os.path.dirname(HERE), "design"))):
+    pfad = os.path.join(os.path.dirname(HERE), "design", variante, "settings.json")
+    if os.path.isfile(pfad):
+        geliefert = json.load(open(pfad, encoding="utf-8"))
+        check(all(geliefert.get(key) is False for key in vier), "design/%s: Vorlagen für Firefox, Neovim, Zen und Zed sind aus" % variante)
+m1 = home("matugen-autor")
+write(os.path.join(m1, ".config", "alpe", "settings.json"), dict({"configVersion": 44, "cornerRadius": 9}, **{key: True for key in vier}))
+out = run(m1, "export", "--bilder", "nein")
+exportiert = json.load(open(os.path.join(design, "kde", "settings.json"), encoding="utf-8"))
+check(out.returncode == 0 and all(exportiert.get(key) is False for key in vier) and exportiert.get("cornerRadius") == 9,
+      "Export: hat der Exportierende die vier Vorlagen an, stehen sie im Design trotzdem aus\n%s" % out.stdout[-300:])
+m2 = home("matugen-frisch")
+out = run(m2, "apply", "--ja")
+frisch = json.load(open(os.path.join(m2, ".config", "alpe", "settings.json"), encoding="utf-8"))
+check(out.returncode == 0 and all(frisch.get(key) is False for key in vier), "Einspielen ohne bestehende Einstellungen: die vier Vorlagen sind aus")
+m3 = home("matugen-bestand")
+bestand = {"configVersion": 44, "cornerRadius": 3, "matugenTemplateFirefox": True, "matugenTemplateNeovim": False}   # Zen und Zed fehlen: Vorgabe der Shell
+write(os.path.join(m3, ".config", "alpe", "settings.json"), bestand)
+out = run(m3, "apply", "--ja")
+danach = json.load(open(os.path.join(m3, ".config", "alpe", "settings.json"), encoding="utf-8"))
+check(out.returncode == 0 and danach.get("cornerRadius") == 9 and {key: danach.get(key, "fehlt") for key in vier}
+      == {"matugenTemplateFirefox": True, "matugenTemplateNeovim": False, "matugenTemplateZenBrowser": "fehlt", "matugenTemplateZed": "fehlt"},
+      "Einspielen mit bestehenden Einstellungen: die vier Vorlagen bleiben, wie sie waren (auch fehlende Schlüssel), der Rest kommt vom Design\n%s"
+      % {key: danach.get(key, "fehlt") for key in vier})
+
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

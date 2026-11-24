@@ -91,6 +91,12 @@ MATERIAL_VALUES = {"preset": {"dank": "alpe"}, "shape": {"dankLogo": "alpeLogo"}
 SCREEN_KEYS = {"screenPreferences": ["all"], "frameScreenPreferences": ["all"]}
 # settings.json: so beim neuen Nutzer, egal wie beim Exportierenden
 SETTINGS_FORCE = {"useAutoLocation": True}
+# matugen-Vorlagen für fremde Programme, die das ausgelieferte Design nicht einschaltet (Firefox, Neovim, Zen,
+# Zed): Der Export schreibt sie immer aus, egal wie beim Exportierenden. Eingespielt werden sie nur, wenn es noch
+# gar keine Einstellungen gibt (frische Installation). Wer schon Einstellungen hat, behält seinen Stand – auch
+# wenn der Schlüssel in seiner Datei fehlt, weil die Shell Vorgabewerte nicht ausschreibt (Vorgabe meist «an»).
+SETTINGS_NUR_NEU = {"matugenTemplateFirefox": False, "matugenTemplateNeovim": False,
+                    "matugenTemplateZenBrowser": False, "matugenTemplateZed": False}
 
 # session.json: Übernommen wird nur, was hier als Gestaltung steht (Plan 0.8 Nr. 79, Liste in 7.8). Jeder
 # Schlüssel aus SessionSpec.js und SharedSessionSpec.js steht in genau einer der beiden Listen; ein neuer
@@ -492,6 +498,7 @@ def export(variant, mode, ask=input):
             continue
         out[key] = value
     out.update(SETTINGS_FORCE)
+    out.update(SETTINGS_NUR_NEU)
     dynamic = out.get("currentThemeName") == "dynamic"
     save_json(os.path.join(target, "settings.json"), out)
 
@@ -793,6 +800,10 @@ def write_design(variant, source, base):
     # Vorgaben wie «Wetter nach Standort» nur für den, der selbst noch nichts eingestellt hat
     for key in SETTINGS_FORCE:
         if key in settings:
+            incoming.pop(key, None)
+    # matugen-Vorlagen fremder Programme: nur bei einer frischen Installation (SETTINGS_NUR_NEU)
+    if settings:
+        for key in SETTINGS_NUR_NEU:
             incoming.pop(key, None)
     settings.update(incoming)
     save_json(SETTINGS, settings)
