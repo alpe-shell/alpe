@@ -187,24 +187,43 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
 (`899fefc`, `19a16c4`, `09021df`) und zwei Beobachtungen am Bild der Sperre.
 
 1. **hyprlock ohne `eDP-1`:** `lockscreen/hyprlock.conf` nennt seit `899fefc` in keiner
-   `monitor`-Zeile mehr einen Bildschirm (vorher dreimal `eDP-1`). Zu prüfen: hyprlock zeigt die Sperre (Hintergrund, Uhr,
-   Datum, Passwortfeld) weiterhin am internen Bildschirm des MacBooks, und – falls ein zweiter
-   Bildschirm angeschlossen ist – auch dort; im Journal steht keine Meldung von hyprlock zu
-   `monitor`.
+   `monitor`-Zeile mehr einen Bildschirm (vorher dreimal `eDP-1`). **Geprüft werden muss genau diese
+   Datei aus dem ausgecheckten Stand** – nicht die Dateien, die am Mac schon liegen: Das Programm
+   hyprlock liest sonst `~/.config/hypr/hyprlock.conf`, die Shell-Sperre zieht eine vorhandene
+   `~/.config/alpe/hyprlock.conf` vor (am Mac aus 1.0 vorhanden), und nichts im Repo kopiert die
+   Vorlage dorthin; ein Test ohne ausdrückliche Angabe der Datei prüfte den alten Stand mit
+   `eDP-1` und wäre immer grün. Zu prüfen: Mit der Vorlage aus dem Repo zeigt hyprlock Hintergrund,
+   Uhr, Datum und Passwortfeld am internen Bildschirm und – falls angeschlossen – an einem zweiten;
+   die Ausgabe von hyprlock (im Terminal, nicht im Journal) nennt keinen Fehler zu `monitor`.
+   **Offen beim Maintainer:** der Aufruf (wie hyprlock die Repo-Datei übergeben bekommt; die Option
+   dafür ist hier nicht nachgeschlagen) und der Rückweg, falls die Sperre hängt. Ob am Mac je
+   hyprlock mit dieser Vorlage lief, ist nicht belegt. **Hinweis für F1:** Bei bestehenden Nutzern
+   bleibt die alte Datei mit `eDP-1` massgebend; die Änderung aus `899fefc` erreicht sie nicht von
+   selbst.
 2. **matugen-Vorlagen aus:** Das ausgelieferte Design schaltet seit `19a16c4` die Vorlagen für
-   Firefox, Neovim, Zen und Zed aus (Plan 0.8 Nr. 104). Zu prüfen bei einem frisch eingespielten
-   Design (noch keine Einstellungen): Die vier Schalter stehen in den Einstellungen auf «aus», und
-   nach einem Wechsel des Hintergrunds entstehen für diese vier Programme keine Farbdateien.
-   Bestehende Einstellungen am Mac bleiben, wie sie sind (dort nichts zu erwarten).
+   Firefox, Neovim, Zen und Zed aus (Plan 0.8 Nr. 104). **Im Ablauf der Anleitung
+   unten am Mac nicht prüfbar:** Sie kopiert die bestehenden Einstellungen (Schritt 3), ein frisch
+   eingespieltes Design kommt dort nicht vor, und bestehende Einstellungen bleiben, wie sie sind.
+   Prüfbar ist der Punkt erst mit einem frischen Stand – mit E4 bzw. dem Installationstest (VM am
+   PC, frisches Fedora Asahi) oder in einem Temp-`HOME`: Dann stehen die vier Schalter in den
+   Einstellungen auf «aus». Am Mac bis dahin nur festhalten, dass sich an den vorhandenen
+   Schaltern nichts geändert hat.
 3. **CUPS-Rückzug:** Der Dienst meldet einen Ausfall von CUPS seit `09021df` einmal und versucht
-   es dann in wachsenden Abständen (5 s bis 1 min) wieder. Zu prüfen ohne laufendes CUPS bzw. mit
-   gestopptem `cups.service`: Im Journal des Dienstes steht die Warnung zum Drucker-Abonnement
-   einmal, nicht bei jedem Versuch der Oberfläche; nach dem Start von CUPS gelingt der nächste
-   Versuch nach der Pause (höchstens eine Minute), ohne Neustart von Dienst oder Shell. Am Mac
-   läuft sonst kein CUPS – der erste Teil zeigt sich dort schon beim gewöhnlichen Start.
+   es dann in wachsenden Abständen (5 s bis 1 min) wieder. Am Mac läuft kein CUPS; der
+   Punkt zeigt sich dort beim gewöhnlichen Start der Testshell. Zu prüfen im Protokoll der
+   Testshell (die Anleitung schreibt es nach `/tmp/alpe-d7.log`, nicht ins Journal): Die Warnung
+   `Failed to initialize cups manager: … (further attempts are not reported; retrying quietly with
+   back-off)` steht nach einigen Minuten genau einmal –
+   `grep -c "Failed to initialize cups manager" /tmp/alpe-d7.log` ergibt 1; vor `09021df`
+   schrieb jeder Versuch eine Warnung. **Nicht Teil der Prüfung, weil nicht belegt:** dass sich
+   der Dienst nach einem späteren Start von CUPS von selbst wieder verbindet. Der Rückzug ist
+   passiv – einen neuen Versuch gibt es erst, wenn die Oberfläche wieder eine Anfrage oder ein
+   Abonnement schickt und die Pause abgelaufen ist; ob sie das von selbst tut, hat niemand
+   gemessen, ebenso wenig, ob unter Fedora ein gestoppter `cups.service` bei aktivem `cups.socket`
+   genügt.
 4. **Passwortfeld im Bild der Sperre:** Im Haltbild der Test-Instanz (1280 × 720) ist das Feld
    nur rund 85 Pixel breit und gut 20 hoch, der Platzhalter kaum lesbar, und der Mauszeiger liegt
-   in jedem Bild genau darauf. Ursache ist der Massstab (`size = 200, 50` auf dem Bezugsbildschirm
+   in beiden Haltbildern vom 24.11.2026 genau darauf. Ursache ist der Massstab (`size = 200, 50` auf dem Bezugsbildschirm
    2560 × 1664). Zu prüfen am Bildschirm des MacBooks (2560 × 1664): Breite und Lesbarkeit des
    Felds und des Platzhalters.
 5. **Streifen im Bild der Sperre:** Im oberen Viertel des Haltbilds stehen feine waagrechte
