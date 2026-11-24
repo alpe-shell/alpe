@@ -102,6 +102,17 @@ Nr. 77), je gegen die eigene
 Grundlinie (Plan 0.8 Nr. 70). Grundlinien können Meldungen als sporadisch kennzeichnen
 (`SPORADISCH k/n: …`, beobachtete Häufigkeit); eine neue Meldung, die nicht in jedem Lauf auftritt,
 wird vor dem Einordnen mehrfach gegen den Stand vor der Änderung gegengemessen (Plan 0.8 Nr. 76).
+**Ladeprüfungen laufen nur in Ruhe:** nie neben Tests (`tools/test.sh`, `tools/test-commit.sh`,
+`go test`, `go vet`, qmllint), Builds oder anderen Läufen (auch keiner zweiten Ladeprüfung, keinem
+Klon oder Download) – erst starten, wenn alles andere beendet ist, und nichts anstossen, bis der Lauf
+zu Ende ist. Anlass: Am 24.11.2026 erschienen unter Hyprland «offen» drei Meldungen je einmal in vier
+Läufen unter Last und in 24 ruhigen Läufen nie (`docs/plan/offene-faelle.md`, «Ladeprüfung»).
+**Wiederholungsregel für genau diese drei** – Notizblock «Tab file does not exist» (samt der
+`FileView`-Zeile dazu), `DeferredAction.qml` «Cannot read property 'stop' of null», ShaderEffect
+«'source' does not have a matching property»: Sind sie die einzigen fremden Meldungen eines Laufs,
+wird er bis zu zweimal in Ruhe wiederholt. Die Prüfung gilt als bestanden, sobald ein Lauf ohne
+fremde Meldung endet; die Zählung aller Läufe, auch der mit Meldung, kommt in den Bericht. Jede
+andere fremde Meldung bleibt ein Fehler, und die drei stehen in keiner Grundlinie «offen».
 Unter Hyprland `ALPE_LP_TMP=/tmp/claude-1000` (höchstens 19 Zeichen, sonst legt Hyprland seinen
 Socket nicht an); ein Lauf ohne Hyprland-IPC gilt als gescheitert.
 Unter beiden Compositors gilt ein Lauf nur, wenn die Oberfläche die Verbindung zum Dienst meldet
