@@ -142,20 +142,45 @@ ist durch die Ladeprüfung am PC abgedeckt (Variante «gesperrt»); schlägt sie
 Hyprland-Sitzung fehl, bleibt nur der Notbildschirm von Hyprland. Ebenso wie bei D6: die Knöpfe
 «Einrichten»/«Einbinden» nicht drücken, «Neu starten» im Energiemenü nicht auslösen.
 
-*Ergebnis – hier trägt der Maintainer ein:*
+*Ergebnis (eingetragen am 24.11.2026 nach den Angaben des Maintainers):*
 
 | | |
 |---|---|
-| Getesteter Commit (`git -C ~/alpe-phase-a rev-parse --short HEAD`) | |
-| Datum | |
-| Hyprland, Fedora, Quickshell | |
-| Ergebnis (in Ordnung / Befunde mit Nummer des Prüfpunkts) | |
-| Papierkorb Durchgang 1 (ohne kora): Quadrat ja/nein, eingestelltes Symbolthema | |
-| Papierkorb Durchgang 2 (kora 2.0.6): Quadrat ja/nein | |
-| Dock-Fläche auf dem Hintergrund des Macs: erkennbar ja/nein | |
-| Nachtlicht: Wirkung auf dem internen Bildschirm, Meldungen zu Gamma | |
-| `dnf info breeze-icon-theme`: Name und Version | |
-| kora nach dem Test: im Home gelassen / entfernt | |
+| Getesteter Commit | `b04b1bf` |
+| Datum | 23.11.2026 |
+| Hyprland, Fedora, Quickshell | Hyprland 0.57.2, Fedora Asahi Remix 45, Quickshell 0.3.2 (COPR `avengemedia/quickshell`) |
+| Ergebnis | **In Ordnung.** Verbindung zum Dienst (`Connected`), WLAN-Liste, Bluetooth, Helligkeitsregler, Systemmonitor-Widgets, hueManager und calculator (angepasste Fassungen, Rechner samt Kopieren), Alpe-Zeichen (Starter-Knopf, Material «Alpe», Punkt), Über-Seite, Kürzel-Kategorie «Alpe», Fensterregeln, Notizblock «Pfad kopieren», Einstellungssuche (0 × «Cannot find member data»), Bildschirmfoto über `alpe-dienst screenshot region` samt Zwischenablage, Layer `alpe:screenshot`, IPC `spotlight`/`processlist`/`dash`/`settings`, Migration `settings` v42→44 und `session` v7→8 mit den Sicherungen `settings.v42.json` und `session.v7.json`. Keine Meldungen «is not a type», «not installed», «deprecated», keine `TypeError`/`ReferenceError`. |
+| Kürzel aus `hypr/dms/binds.lua` | `dms ipc call …` und `dms screenshot …` greifen erwartungsgemäss nicht; das schreibt F1 um. |
+| Papierkorb Durchgang 1 (ohne kora) | **entfällt:** kora ist am Mac als Systempaket installiert (`kora-icon-theme-2.0.6-1.20260824git7a75842.fc43`, fremdes COPR `hazel-bunny/ricing`). Der Befund zu Adwaita ist durch die Ladeprüfung am PC belegt. |
+| Papierkorb Durchgang 2 (kora 2.0.6) | Thema «kora»: **kein Quadrat**, leer und voll. |
+| Dock-Fläche auf dem Hintergrund des Macs | nicht gesondert beurteilt; das Dock nur mit Papierkorb wirkt gut. Der Entscheid «so lassen» bleibt. |
+| Nachtlicht | **keine sichtbare Wirkung** am internen Bildschirm, obwohl der Dienst «Wayland gamma control initialized successfully» meldet; unter 1.0 gleich. Plattform-Fall, siehe unten. |
+| `dnf info breeze-icon-theme` | `breeze-icon-theme` 6.32.0-1.fc45 ist verfügbar, am Mac nicht installiert. Der Paketname für E4 ist damit bestätigt. |
+| kora nach dem Test | unverändert (Systempaket, nichts im Home angelegt) |
+
+**Plattform-Fall ohne Frist: Nachtlicht am internen Bildschirm des MacBooks.** Der Dienst bindet
+`wlr-gamma-control` erfolgreich («Wayland gamma control initialized successfully»), das Einschalten
+des Nachtlichts ändert das Bild aber nicht – unter 1.0 genauso, also kein Fehler aus Phase A.
+Vermutung (nicht belegt): Der Bildschirmtreiber von Asahi setzt die Gamma-Tabelle nicht um.
+Hyprland nimmt die Tabelle an, darum meldet der Dienst keinen Fehler und kann den Fall nicht
+erkennen. Nichts zu tun in Phase A; neu ansehen, wenn sich am Treiber etwas ändert.
+
+**Zwischenfall beim Mac-Test (23.11.2026, behoben; Ursache: die Anleitung).** Beim Anpassen der
+Plugins lief am Mac der Block für sathiAi aus `docs/plugins-anpassen.md`, obwohl es sathiAi dort
+nicht gibt. `cp` und `cd` scheiterten; die drei folgenden `sed -i`-Zeilen mit dem relativen Muster
+`**.qml` liefen darum im Home-Verzeichnis und schrieben alle `.qml`-Dateien in nicht versteckten
+Ordnern neu – darunter `~/dux-shell` (der laufende Baum von 1.0) und `~/alpe`. Quickshell lud den
+laufenden Baum sofort neu und scheiterte («Config reload failed»). Alles ist über `git restore`
+zurückgeholt und mit `git status` und `grep` geprüft; 1.0 läuft wieder ohne Ladefehler.
+Lehren, umgesetzt am 24.11.2026:
+
+- `docs/plugins-anpassen.md` kennt kein `cd` und keine relativen Muster mehr; jeder `sed`-Befehl
+  nennt den absoluten Pfad, über jedem Block steht der Rechner und ein Prüfbefehl, ob das Plugin
+  überhaupt da ist.
+- Ein laufender Baum wird von Quickshell bei jeder Dateiänderung neu geladen. Umzug (F1) und
+  Aktualisierung (E4) dürfen ihn darum nie in Teilschritten verändern (Plan 10, F1 und E4).
+- Die Mac-Test-Anleitung unten ist nach den Erfahrungen dieser Runde überarbeitet (Stand holen
+  auf einen festen Hash, `lockAtStartup`, hypridle/hyprsunset, Rückbau mit Prüfungen).
 
 *Am PC (Maintainer):*
 
