@@ -983,13 +983,16 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   | 12 (24.11.2026, 19:48–20:48, abwechselnd mit der Zeile darunter) | `b04b1bf` | in Ruhe | 0 | 0 | 0 |
   | 12 (dieselbe Messung) | `54bb5c0` | in Ruhe | 0 | 0 | 0 |
   | 1 (24.11.2026, ab 18:59, Haltprüfung) | `54bb5c0` | daneben lief `go vet ./...` über `core/` (belegt) | 1 | 0 | 0 |
-  | 3 (24.11.2026, 19:07–19:14) | `54bb5c0` | daneben nur leichte Lesezugriffe der Sitzung (Bilder ansehen, `grep`); eine Last ist für diese drei Läufe **nicht** belegt | 0 | 1 | 1 |
+  | 3 (24.11.2026, 19:07–19:14) | `54bb5c0` | daneben nur leichte Lesezugriffe der Sitzung (Bilder ansehen, `grep`) und das `rm -rf` eines Temp-Ordners; eine Last ist für diese drei Läufe **nicht** belegt | 0 | 1 | 1 |
 
   Also 0 von 12 auf `b04b1bf` und 0 von 12 auf `54bb5c0` in Ruhe, je einmal in 4 Läufen unter Last.
   **«Unter Last» ist dabei die Einordnung des Maintainers, kein Messbefund:** Gemessen ist ein
   paralleles `go vet` nur beim Lauf mit dem Notizblock-Paar; bei den Läufen mit «stop of null» und
-  ShaderEffect liefen nur die genannten Lesezugriffe. Gemeinsam ist den vier Läufen, dass die
-  Sitzung daneben arbeitete; die 24 Läufe ohne Fund liefen streng nacheinander, ohne Tests und Builds.
+  ShaderEffect liefen nur die genannten Lesezugriffe. Auch während der 24 Läufe ohne Fund hat die
+  Sitzung daneben gelesen (Dateien, `grep`, Bildwerte, zwei Web-Abfragen), und auch die drei Läufe
+  von 19:07–19:14 liefen nacheinander. Belegt unterscheiden sich diese drei von den 24 nur darin,
+  dass sie in einem Aufruf mit drei Läufen liefen statt je einzeln, und im `rm -rf` eines
+  Temp-Ordners. Ein Unterschied in der Last ist für sie also nicht belegt.
   **Die drei Meldungen trafen drei verschiedene Läufe** (gefolgert aus den Zählungen der vier
   Läufe: 39 + Notizblock-Paar im ersten, dann 39, 40, 40 Meldungen): Von den vier Läufen war also
   nur einer ohne fremde Meldung, von den 24 ruhigen alle 24.
@@ -1103,6 +1106,20 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Dateien tragen keine Urheberangabe. Das Bergbild der Sperre ist ein Standbild aus dem Video.
   Herkunft und Lizenz bestätigt der Maintainer; danach Eintrag in `NOTICE`.~~ **Erledigt
   (Plan 0.8 Nr. 95):** vom Maintainer, teils mit KI-Werkzeugen erstellt, CC0 1.0; in `NOTICE`.
+- **Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):** Entschieden ist, dass das
+  Lizenzfeld MIT, CC-BY-4.0 und CC0-1.0 nennt (Plan 6.2, 6.3, Abschnitt 10). Unter `shell/` liegen
+  nach `NOTICE` und Plan Abschnitt 3 aber auch Teile unter anderen Lizenzen: Schriften (OFL-1.1,
+  Apache-2.0), Klänge (CC-BY-SA 4.0, CC-BY 3.0, GPLv2+), `suncalc.js` (BSD-2-Clause), dazu die
+  Go-Abhängigkeiten im Programm. Die Radar-Musterdatei (CC BY 4.0) liegt unter `tests/` und kommt
+  vermutlich nicht ins Paket; CC-BY-4.0 stünde dann nur wegen der Hintergrundmuster im Feld.
+  Optionen: (a) bei den drei bleiben, `NOTICE` trägt den Rest; (b) vollständige Aufzählung aus
+  der tatsächlichen Dateiliste von `make install` (E1), in beiden Paketen; (c) drei im PKGBUILD,
+  vollständig nur in der Spec. Empfehlung der Gegenprüfung: (b), festgelegt nach E1 und vor
+  E2/E3. Bis zum Entscheid bleibt der Plan bei den drei.
+- **Hero Patterns, Vergleich mit den Download-Dateien (24.11.2026, Nachtlauf):** Die sieben Muster
+  sind mit `https://heropatterns.com/svg/<name>.zip` verglichen: `graph-paper.svg` byte-gleich,
+  die sechs anderen gleich bis auf genau einen zusätzlichen Zeilenumbruch am Dateiende. Die
+  Füllfarbe Schwarz ist die des Originals. So steht es in `NOTICE`.
 - **Nachtrag 24.11.2026 zur Liste unten (Auftrag des Maintainers, `NOTICE`):** eingetragen sind
   jetzt (1) die sieben Muster unter `shell/Alpe/Widgets/wallpaper-patterns/` – **Hero Patterns von
   Steve Schoger, CC BY 4.0** (Lizenzvermerk auf `heropatterns.com`; die Pfaddaten aller sieben

@@ -109,15 +109,16 @@ Hintergrundmuster (shell/Alpe/Widgets/wallpaper-patterns/)
   Urheber:   Steve Schoger
   Herkunft:  Hero Patterns, https://heropatterns.com/
              (Muster «Bank Note», «Bubbles», «Endless Clouds», «Graph Paper», «Plus»,
-             «Topography», «Wiggle»; Pfaddaten am 24.11.2026 mit dem Ursprung verglichen)
+             «Topography», «Wiggle»; am 24.11.2026 mit den Download-Dateien der Website
+             verglichen, https://heropatterns.com/svg/<name>.zip)
   Lizenz:    Creative Commons Namensnennung 4.0 International (CC BY 4.0),
              https://creativecommons.org/licenses/by/4.0/
-  Verändert: Die Dateien sind von Alpe nicht verändert: byte-gleich mit dem Stand, in dem sie
-             mit der Dux Modular Shell 2.1.2 übernommen wurden. Gegenüber Hero Patterns sind
-             die Pfaddaten unverändert; die Füllfarbe ist Schwarz statt der Vorgabefarbe der
-             Website (dort beim Herunterladen wählbar – ob so heruntergeladen oder vor der
-             Übernahme von Hand gesetzt, ist nicht belegt). Die Dateien selbst bleiben, wie
-             sie sind; die Shell färbt die Muster erst zur Laufzeit ein und kachelt sie.
+  Verändert: nein, bis auf einen Zeilenumbruch: graph-paper.svg ist byte-gleich mit der
+             Download-Datei von Hero Patterns; die sechs anderen tragen gegenüber ihrer
+             Download-Datei genau einen zusätzlichen Zeilenumbruch am Dateiende, sonst
+             nichts. Von Alpe sind die Dateien nicht verändert (byte-gleich mit dem Stand,
+             in dem sie mit der Dux Modular Shell 2.1.2 übernommen wurden). Die Shell
+             färbt die Muster erst zur Laufzeit ein und kachelt sie.
 
 Musterdatei der Radar-Tests (tests/data/rzc263201930vl.001.h5)
   Urheber:   Bundesamt für Meteorologie und Klimatologie MeteoSchweiz
