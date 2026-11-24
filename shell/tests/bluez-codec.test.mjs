@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
@@ -31,6 +31,15 @@ function methods(names) {
 }
 
 const luaScript = new URL("../scripts/bluez-card-profile.lua", import.meta.url).pathname;
+
+// Alpe: Die beiden Tests unten führen das Skript mit dem Programm «lua» aus. Das braucht nur dieser
+// Test – zur Laufzeit startet die Shell das Skript mit wpexec (WirePlumber). Fehlt lua (so auf
+// Fedora Asahi), überspringen sich die zwei Tests mit Begründung, statt als Fehlschlag zu zählen.
+// ALPE_TEST_LUA nennt ein anderes Programm (auch für den Test dieses Überspringens).
+const luaProgram = process.env.ALPE_TEST_LUA || "lua";
+const luaMissing = spawnSync(luaProgram, ["-v"]).error?.code === "ENOENT"
+    ? "Programm «" + luaProgram + "» ist nicht installiert (nur für diesen Test nötig, nicht zur Laufzeit)"
+    : false;
 
 // list mode emits the profile index and the raw description; set mode matches a
 // profile by index, by name, or by an untranslated codec literal passed from the
@@ -145,8 +154,8 @@ function parseDeviceOutput(output) {
     return cases;
 }
 
-test("list mode reports every available profile by index and raw description", () => {
-    const output = execFileSync("lua", ["-", luaScript], { input: deviceDriver, encoding: "utf8" });
+test("list mode reports every available profile by index and raw description", { skip: luaMissing }, () => {
+    const output = execFileSync(luaProgram, ["-", luaScript], { input: deviceDriver, encoding: "utf8" });
     const cases = parseDeviceOutput(output);
     assert.deepEqual(cases.list.codecs, [
         ["3", "a2dp-sink", "高保真回放 (A2DP 信宿, 编码 LHDC v5)", "1"],
@@ -155,8 +164,8 @@ test("list mode reports every available profile by index and raw description", (
     ]);
 });
 
-test("set mode matches a profile by index, name or untranslated codec literal", () => {
-    const output = execFileSync("lua", ["-", luaScript], { input: deviceDriver, encoding: "utf8" });
+test("set mode matches a profile by index, name or untranslated codec literal", { skip: luaMissing }, () => {
+    const output = execFileSync(luaProgram, ["-", luaScript], { input: deviceDriver, encoding: "utf8" });
     const cases = parseDeviceOutput(output);
     assert.deepEqual(cases["set-index"], { codecs: [], set: "Profile:5", ok: "a2dp-sink", fail: null, handled: true });
     assert.deepEqual(cases["set-name"], { codecs: [], set: "Profile:4", ok: "a2dp-sink-sbc_xq", fail: null, handled: true });

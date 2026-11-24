@@ -6,7 +6,8 @@ Fehlschläge (tests/data/node-bekannte-fehlschlaege.txt).
 
 Ergebnis 0: nur bekannte Fehlschläge. 1: ein neuer Fehlschlag (oder eine Testdatei bricht ab, ohne
 einen Test zu melden). Bekannte Fehlschläge, die inzwischen bestehen, werden genannt, machen aber
-nicht rot – dann die Liste nachführen.
+nicht rot – dann die Liste nachführen. Tests, die sich selbst überspringen (etwa weil ein Programm
+fehlt, das nur der Test braucht), werden mit ihrem Grund genannt und zählen nicht als Fehlschlag.
 """
 import glob
 import os
@@ -26,7 +27,7 @@ def bekannte():
 
 def main():
     known = bekannte()
-    failed, passed_files = set(), 0
+    failed, passed_files, skipped = set(), 0, []
     files = sorted(glob.glob(os.path.join(SHELL, "tests", "*.test.mjs")))
     for path in files:
         name = os.path.basename(path)
@@ -36,6 +37,12 @@ def main():
                  if re.match(r"^\s*not ok \d+ - ", line)]
         for test in notok:
             failed.add("%s: %s" % (name, test))
+        # Übersprungene Tests (TAP: «ok N - Name # SKIP Grund») zählen nicht als Fehlschlag, werden aber
+        # einzeln genannt – etwa wenn ein Programm fehlt, das nur der Test braucht (lua am Mac).
+        for line in proc.stdout.splitlines():
+            match = re.match(r"^\s*ok \d+ - (.*?) # SKIP\s*(.*)$", line)
+            if match:
+                skipped.append("%s: %s – %s" % (name, match.group(1), match.group(2) or "ohne Grund"))
         if proc.returncode != 0 and not notok:
             failed.add("%s: (Datei bricht ab, kein Test gemeldet)" % name)
         if proc.returncode == 0:
@@ -43,6 +50,8 @@ def main():
     neu = sorted(failed - known)
     behoben = sorted(known - failed)
     print("%d Dateien, %d ohne Fehlschlag, %d Fehlschläge (%d bekannt)" % (len(files), passed_files, len(failed), len(failed & known)))
+    for item in skipped:
+        print("ÜBERSPRUNGEN " + item)
     for item in behoben:
         print("HINWEIS bekannter Fehlschlag besteht jetzt (Liste nachführen): " + item)
     for item in neu:

@@ -49,6 +49,21 @@ r = run()
 check(r.returncode == 1 and "neu.test.mjs: bricht neu" in r.stdout, "neuer Fehlschlag: rot")
 os.remove(os.path.join(tmp, "tests", "neu.test.mjs"))
 
+datei("lueckig.test.mjs", 'test("braucht ein Programm", { skip: "Programm fehlt" }, () => assert.equal(1, 2));\n')
+r = run()
+check(r.returncode == 0 and "ÜBERSPRUNGEN lueckig.test.mjs: braucht ein Programm – Programm fehlt" in r.stdout,
+      "ein Test, der sich überspringt: grün, mit Grund genannt, kein neuer Fehlschlag")
+os.remove(os.path.join(tmp, "tests", "lueckig.test.mjs"))
+
+# Der Codec-Test der Oberfläche führt ein Lua-Skript mit dem Programm «lua» aus; fehlt es (Fedora Asahi),
+# überspringen sich genau diese zwei Tests. Nachgestellt mit einem Programmnamen, den es nicht gibt.
+SHELL_ECHT = os.path.join(os.path.dirname(HERE), "shell")
+codec = subprocess.run(["node", "--test", "--test-reporter=tap", "tests/bluez-codec.test.mjs"], cwd=SHELL_ECHT, capture_output=True,
+                       text=True, env=dict(os.environ, ALPE_TEST_LUA="lua-gibt-es-nicht"))
+check(codec.returncode == 0 and codec.stdout.count("# SKIP") == 2 and "not ok" not in codec.stdout
+      and "ist nicht installiert" in codec.stdout,
+      "bluez-codec.test.mjs ohne lua: zwei Tests übersprungen mit Begründung, kein Fehlschlag")
+
 datei("kaputt.test.mjs", 'import "./gibtsnicht.mjs";\n')
 r = run()
 check(r.returncode == 1 and "kaputt.test.mjs" in r.stdout, "Datei, die beim Laden abbricht: rot")
