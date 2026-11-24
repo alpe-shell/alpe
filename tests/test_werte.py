@@ -220,7 +220,7 @@ check(PERSOENLICHE_SCHLUESSEL.search('"weatherLocation": "Ort"') and not PERSOEN
 # Nicht nur design/: Alle versionierten Textdateien werden auf Pfade in ein Home-Verzeichnis, Benutzer- und
 # Rechnernamen, IP- und MAC-Adressen und Gerätekennungen durchsucht. Benutzer- und Rechnername stehen nicht hier
 # im Test (sie wären selbst ein persönlicher Wert), sondern kommen vom Rechner, auf dem er läuft; Allerweltsnamen
-# und Namen unter vier Zeichen werden dabei nicht gesucht. Die strengeren Muster oben (Bildschirmnamen,
+# und Namen aus einem Zeichen werden dabei nicht gesucht, mehrdeutige und kurze Namen nur im Zusammenhang. Die strengeren Muster oben (Bildschirmnamen,
 # Koordinaten, E-Mail-Adressen, Schlüssel mit Wert) gelten weiterhin nur für design/.
 # Suche und Muster stehen in tools/werte-pruefen.py (läuft auch gegen andere Ordner), die Ausnahmen in
 # tools/werte-ausnahmen.txt: je Datei, Art und erwartetem Wert, mit Frist und Grund.
@@ -241,7 +241,8 @@ check(ueberholt == [], "jede Ausnahme trifft mindestens einen Fund (sonst ist si
 # kommen vom Rechner; nachgestellt werden die Lagen, in denen der Lauf über solche Ausnahmen nichts weiss.
 # Die erfundenen Namen sind zusammengesetzt, damit sie in dieser Datei nicht als Wort stehen.
 namens_ausnahmen = [a for a in ausnahmen if a["art"] in wp.RECHNERABHAENGIG]
-for lage, b, r in (("CI: Allerweltsname, kurzer Rechnername – beide Arten nicht gesucht", wp.eigener_name("runner"), wp.eigener_name("ci")),
+for lage, b, r in (("CI: Allerweltsname, Rechnername aus einem Zeichen – beide Arten nicht gesucht", wp.eigener_name("runner"), wp.eigener_name("c")),
+                   ("CI: Allerweltsname, kurzer Rechnername – nur im Zusammenhang gesucht, kommt nirgends vor", wp.eigener_name("runner"), wp.eigener_name("ci")),
                    ("CI: Rechnername gesucht, kommt nirgends vor", wp.eigener_name("runner"), wp.eigener_name("fv-" + "az1234-567")),
                    ("anderer Rechner: Benutzername gesucht, kommt nirgends vor", wp.eigener_name("wen" + "delin"), "")):
     lage_ausnahmen = wp.lade_ausnahmen()
@@ -296,6 +297,29 @@ for probe in ("erika@%s:~$ ls" % distro.lower(), "ssh %s" % distro.lower(), '"ho
           "Rechner «%s»: im eindeutigen Zusammenhang weiterhin ein Fund: %s" % (distro, probe))
 check(any(f[2] == "Rechnername" for f in wp.funde("x/probe.txt", "Bild von der Werkbank", "", "werkbank")),
       "ein Rechnername, der nichts anderes bezeichnet, wird weiterhin als blosses Wort gemeldet")
+# Rechnerfeld von Journal-Zeilen im Syslog-Format, und kurze Rechnernamen (Namen unter vier Zeichen wurden bis zum
+# 24.11.2026 gar nicht gesucht). Die Zeilen sind die Beispiele aus RFC 3164 (5.4) und RFC 5424
+# (6.5), dazu die Schreibweisen von journalctl; an der Stelle von «mymachine» steht der gesuchte Name.
+SYSLOG = ("<34>Oct 11 22:14:15 %s su: 'su root' failed for lonvick on /dev/pts/8",
+          "<34>1 2003-10-11T22:14:15.003Z %s.example.com su - ID47 - BOM'su root' failed for lonvick on /dev/pts/8",
+          "Oct 11 22:14:15 %s su[42]: 'su root' failed for lonvick on /dev/pts/8",
+          "Oct 11 22:14:15.003000 %s kernel: usb 1-1: new device",
+          "2003-10-11T22:14:15+0100 %s systemd[1]: Started su.",
+          "2003-10-11T22:14:15.003000+01:00 %s su[42]: von 192.0.2.7")
+kurz = "p" + "x7"   # erfundener kurzer Rechnername, zusammengesetzt
+check(wp.eigener_name(kurz) == kurz and wp.eigener_name("x") == "" and wp.eigener_name("runner") == "" and wp.eigener_name("werkbank.lan") == "werkbank",
+      "kurze Namen ab zwei Zeichen werden gesucht (nur im Zusammenhang), ein einzelnes Zeichen und Allerweltsnamen nicht")
+for name in (distro.lower(), kurz, "mymachine"):
+    for probe in SYSLOG:
+        treffer = wp.funde("x/probe.txt", probe % name, "", name)
+        check([(f[2], f[3]) for f in treffer] == [("Rechnername", name)],
+              "Rechner «%s»: Rechnerfeld im Syslog-Format ist ein Fund (genau der Name): %s" % (name, probe % name))
+for probe in ("erika@%s:~$ ls" % kurz, "ssh %s" % kurz, "HOSTNAME=%s" % kurz, "/".join(("", "home", kurz, "bild.png"))):
+    check(any(f[2] == "Rechnername" for f in wp.funde("x/probe.txt", probe, "", kurz)), "kurzer Rechnername «%s»: im eindeutigen Zusammenhang ein Fund: %s" % (kurz, probe))
+for name in (distro.lower(), kurz):
+    for probe in ("um 22:14:15 %s gestartet" % name, "Oct 11 22:14:15 mymachine %s[42]: läuft" % name, "Oct 11 22:14:15 mymachine su: %s: nicht gefunden" % name,
+                  "die Taste %s und der Wert %s7" % (name, name), "22:14:15 %s" % name, "x%s y-%s %s.conf" % (name, name, name)):
+        check(wp.funde("x/probe.txt", probe, "", name) == [], "Rechner «%s»: kein Fund ausserhalb des Rechnerfelds: %s" % (name, probe))
 
 
 def probe_ueberholt(art, treffer=0):
@@ -328,8 +352,6 @@ check(wp.funde("x/probe.txt", "00:00:5E:00:53:4A 00-00-5e-00-53-ff 192.0.2.7 198
       "Repo-Muster: Dokumentationsbereiche (RFC 7042, RFC 5737) sind kein Fund, Nachbarbereiche schon")
 check(not [a["text"] for a in ausnahmen if a["frist"] == "Phase B" and a["art"] == "MAC-Adresse"],
       "keine MAC-Adresse mehr mit Frist Phase B: die Testdaten des Ursprungs tragen Adressen aus dem Dokumentationsbereich")
-check(wp.eigener_name("pc") == "" and wp.eigener_name("runner") == "" and wp.eigener_name("werkbank.lan") == "werkbank",
-      "kurze Namen und Allerweltsnamen werden nicht gesucht")
 
 # Kein fremdes Plugin im Bar-Layout: sathiAi stand bis zum Halt nach D7 im ausgelieferten Design.
 FREMD_IM_DESIGN = set()

@@ -9,9 +9,11 @@
 Durchsucht alle versionierten Textdateien (git ls-files; ohne Git alle Dateien ausser .git) nach
 Pfaden in ein Home-Verzeichnis, Benutzer- und Rechnernamen, IP- und MAC-Adressen und Gerätekennungen.
 Benutzer- und Rechnername stehen nicht hier (sie wären selbst ein persönlicher Wert), sondern kommen
-vom Rechner, auf dem das Skript läuft; Allerweltsnamen und Namen unter vier Zeichen werden nicht gesucht.
-Heisst der Rechner wie eine Distribution oder ein Produkt (MEHRDEUTIGE_NAMEN, etwa «Asahi»), wird der Name nur
-in eindeutigem Zusammenhang gemeldet: nutzer@name, Hostname-Feld oder -Befehl, Pfad in ein Home.
+vom Rechner, auf dem das Skript läuft; Allerweltsnamen und Namen aus einem Zeichen werden nicht gesucht.
+Heisst der Rechner wie eine Distribution oder ein Produkt (MEHRDEUTIGE_NAMEN, etwa «Asahi») oder ist der Name
+kürzer als vier Zeichen (als blosses Wort träfe er überall), wird er nur in eindeutigem Zusammenhang gemeldet:
+nutzer@name, Hostname-Feld oder -Befehl, Pfad in ein Home, Rechnerfeld einer Journal-Zeile im Syslog-Format
+(«Oct 11 22:14:15 name su[42]: …», auch mit ISO-Zeitstempel).
 
 Ausnahmen stehen in tools/werte-ausnahmen.txt, gleich aufgebaut wie tools/namen-ausnahmen.txt:
 PFAD-GLOB, ART, WERT-MUSTER, FRIST, GRUND. Eine Ausnahme gilt nur für genau den erwarteten Wert;
@@ -42,7 +44,15 @@ NAME_IM_ZUSAMMENHANG = (r"(?i)(?:(?<=[\w.-]@)%(n)s(?![A-Za-z0-9])"              
                         r"|(?<![A-Za-z0-9])%(n)s(?=@[\w-])"                                          # name@rechner
                         r"|(?<=/home/)%(n)s(?![A-Za-z0-9])|(?<=/Users/)%(n)s(?![A-Za-z0-9])"         # Pfad in ein Home
                         r"|(?:host_?name|rechnername)\w*[\"']?\s*[:=]?\s*[\"']?%(n)s(?![A-Za-z0-9])"  # Hostname-Feld
-                        r"|(?<![\w-])(?:ssh|scp|hostnamectl(?:\s+set-hostname)?)\s+%(n)s(?![A-Za-z0-9]))")
+                        r"|(?<![\w-])(?:ssh|scp|hostnamectl(?:\s+set-hostname)?)\s+%(n)s(?![A-Za-z0-9])"
+                        r"|(?:SYSLOG_ZEIT)%(n)s(?=(?:\.[\w.-]+)? (?:[^\s:\[\]]+(?:\[\d+\])?:(?:\s|$)|\S+ (?:-|\d+) \S+ )))")   # Rechnerfeld im Syslog-Format
+# Zeitstempel vor dem Rechnerfeld (journalctl -o short, short-precise, short-iso, short-iso-precise; RFC 3164 und
+# RFC 5424): Uhrzeit, wahlweise Sekundenbruchteile und Zeitzone, dann ein Leerzeichen. Als Rückblick, damit der Fund
+# nur den Namen umfasst; Python verlangt dafür feste Breiten, darum eine Alternative je Schreibweise.
+SYSLOG_ZEIT = "|".join(r"(?<=\d\d:\d\d:\d\d%s%s )" % (bruch, zone) for bruch in ("", r"\.\d{3}", r"\.\d{6}")
+                       for zone in ("", "Z", r"[+-]\d{4}", r"[+-]\d\d:\d\d"))
+NAME_IM_ZUSAMMENHANG = NAME_IM_ZUSAMMENHANG.replace("SYSLOG_ZEIT", SYSLOG_ZEIT)
+KURZ = 4   # kürzere Namen gelten wie die mehrdeutigen: nur im Zusammenhang
 # Dokumentationsbereiche sind kein Fund: MAC 00:00:5E:00:53:00/24 (RFC 7042), IP 192.0.2.0/24, 198.51.100.0/24 und
 # 203.0.113.0/24 (RFC 5737). Neue eigene Testdaten verwenden nur solche Werte (CLAUDE.md, «Projektregeln»).
 DOKUMENTATION = {
@@ -80,12 +90,12 @@ def lade_ausnahmen(datei=AUSNAHMEN_DATEI):
 
 def eigener_name(name):
     name = (name or "").split(".")[0]
-    return name if len(name) >= 4 and name.lower() not in ALLERWELTSNAMEN | PLATZHALTER else ""
+    return name if len(name) >= 2 and name.lower() not in ALLERWELTSNAMEN | PLATZHALTER else ""
 
 
 def namens_muster(name):
-    """Muster für einen Benutzer- oder Rechnernamen: als ganzes Wort, ein mehrdeutiger Name nur im Zusammenhang."""
-    if name.lower() in MEHRDEUTIGE_NAMEN:
+    """Muster für einen Benutzer- oder Rechnernamen: als ganzes Wort; ein mehrdeutiger oder kurzer Name nur im Zusammenhang."""
+    if name.lower() in MEHRDEUTIGE_NAMEN or len(name) < KURZ:
         return re.compile(NAME_IM_ZUSAMMENHANG % {"n": re.escape(name)})
     return re.compile(r"(?i)(?<![A-Za-z0-9])%s(?![A-Za-z0-9])" % re.escape(name))
 

@@ -347,8 +347,10 @@ Gerätekennungen. Von Hand, auch gegen einen anderen Ordner:
   Begründungen in der Liste prüft darum niemand; persönliche Werte gehören auch dort nicht hin.
 - **Überholte Ausnahmen:** Eine Ausnahme ohne Treffer gilt als überholt und macht den Test rot – aber
   nur, wenn ihre Art in diesem Lauf gesucht wurde. Benutzer- und Rechnername kommen vom Rechner, auf
-  dem der Test läuft (Namen unter vier Zeichen und Allerweltsnamen wie `runner` werden nicht
-  gesucht). Ausnahmen dieser beiden Arten werden nur beurteilt, wenn der Name des Rechners gesucht
+  dem der Test läuft (Namen aus einem Zeichen und Allerweltsnamen wie `runner` werden nicht
+  gesucht; Namen unter vier Zeichen und solche, die auch eine Distribution oder ein Produkt
+  bezeichnen, nur in eindeutigem Zusammenhang: `nutzer@name`, Hostname-Feld oder -Befehl, Pfad in
+  ein Home, Rechnerfeld einer Journal-Zeile im Syslog-Format). Ausnahmen dieser beiden Arten werden nur beurteilt, wenn der Name des Rechners gesucht
   wurde und im Repository überhaupt vorkommt; in der CI und auf einem Rechner mit anderem Namen sagt
   der Lauf über sie nichts aus.
 - **Dokumentationsbereiche sind kein Fund:** MAC-Adressen aus `00:00:5E:00:53:00/24` (RFC 7042) und
