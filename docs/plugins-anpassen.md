@@ -19,13 +19,30 @@ unverändert weiter, und 1.1 findet beim ersten Start schon die passende Fassung
 (`alpe umzug`, Plan 7.2) überschreibt eine Fassung, die unter `~/.config/alpe/plugins/` schon
 liegt, nicht.
 
-Alle Befehle unten sind für fish geschrieben, ein Befehl pro Zeile. Gibt es den Zielordner schon
-(etwa von einem früheren Versuch), zuerst ansehen und selbst entscheiden – `cp -r` würde sonst
-eine zweite Kopie *in* den vorhandenen Ordner legen:
+Alle Befehle unten sind für fish geschrieben, ein Befehl pro Zeile.
+
+**Drei Regeln, damit kein Befehl am falschen Ort läuft** (Zwischenfall vom 23.11.2026,
+`docs/plan/offene-faelle.md`, «Mac-Test»):
+
+1. **Jeder Block gilt nur auf dem Rechner, der darüber steht**, und nur, wenn der Prüfbefehl am
+   Anfang des Blocks den Ordner des Plugins nennt. Meldet `ls` «nicht gefunden», liegt das Plugin
+   auf diesem Rechner nicht: den ganzen Block auslassen.
+2. **Kein `cd`, keine relativen Muster.** Jeder `sed`-Befehl nennt den vollen Pfad unter
+   `~/.config/alpe/plugins/<Plugin>/`. Einen Befehl nie auf ein Muster wie `**.qml` ohne Pfad
+   davor kürzen – er träfe alle QML-Dateien unter dem Ordner, in dem das Terminal gerade steht.
+3. **`cp -r` nur in einen Zielordner, den es noch nicht gibt.** Gibt es ihn schon (etwa von einem
+   früheren Versuch), legt `cp -r` eine verschachtelte Kopie *in* den vorhandenen Ordner
+   (`…/hueManager/hueManager`). Darum vor einem zweiten Versuch nicht erneut kopieren, sondern die
+   Kopie zuerst ganz löschen – mit festem Pfad und `rm -rf`, weil die Git-Packdateien in der Kopie
+   schreibgeschützt sind und `rm -r` bei jeder nachfragt:
 
 ```
 ls ~/.config/alpe/plugins
+rm -rf ~/.config/alpe/plugins/hueManager
 ```
+
+(Die zweite Zeile nur für das Plugin, das neu kopiert werden soll, und nur unter
+`~/.config/alpe/plugins/` – nie unter `~/.config/dms/plugins/`.)
 
 ## Was sich ändert
 
@@ -73,12 +90,21 @@ Benutzt `DankIcon`, `DankSlider`, `DankListView`, `DankToggle`, `DankDropdown`, 
 aus `qs.Widgets` in `src/HueSettings.qml` und `src/Widgets/*.qml`. Kein Aufruf von `dms` im
 Plugin selbst (nur in `devenv.nix`, für die Entwicklung).
 
+**Gilt am PC und am Mac.** Zuerst prüfen, ob das Plugin auf diesem Rechner liegt und ob es die
+Kopie noch nicht gibt – die erste Zeile muss den Ordner nennen, die zweite «nicht gefunden» melden:
+
+```
+ls -d ~/.config/dms/plugins/hueManager
+ls -d ~/.config/alpe/plugins/hueManager
+```
+
+Nur dann:
+
 ```
 mkdir -p ~/.config/alpe/plugins
 cp -r ~/.config/dms/plugins/hueManager ~/.config/alpe/plugins/hueManager
-cd ~/.config/alpe/plugins/hueManager
-sed -i -E 's/\bDank(Icon|Slider|ListView|Toggle|Dropdown|Button)\b/Alpe\1/g' src/**.qml
-sed -i -E 's/^import qs\.Widgets$/import qs.Widgets\nimport qs.Alpe.Widgets/' src/**.qml
+sed -i -E 's/\bDank(Icon|Slider|ListView|Toggle|Dropdown|Button)\b/Alpe\1/g' ~/.config/alpe/plugins/hueManager/src/**.qml
+sed -i -E 's/^import qs\.Widgets$/import qs.Widgets\nimport qs.Alpe.Widgets/' ~/.config/alpe/plugins/hueManager/src/**.qml
 ```
 
 **Die letzte Zeile (Import) darf nur einmal laufen.** Sie hängt hinter jedes `import qs.Widgets`
@@ -105,13 +131,22 @@ Benutzt `qs.DCommon.Widgets` mit `DActionButton`, `DTextField`, `DDropdown`, `DB
 eigene Datei des Plugins und darf so heissen; umbenennen ist freiwillig. Eigene Änderungen an der
 alten Kopie (etwa ein anderes Symbol in `Sathi.qml`) kommen mit der Kopie mit.
 
+**Gilt nur am PC – am Mac gibt es sathiAi nicht; dort den ganzen Block auslassen.** Zuerst prüfen:
+Die erste Zeile muss den Ordner nennen, die zweite «nicht gefunden» melden.
+
+```
+ls -d ~/.config/dms/plugins/sathiAi
+ls -d ~/.config/alpe/plugins/sathiAi
+```
+
+Nur dann:
+
 ```
 mkdir -p ~/.config/alpe/plugins
 cp -r ~/.config/dms/plugins/sathiAi ~/.config/alpe/plugins/sathiAi
-cd ~/.config/alpe/plugins/sathiAi
-sed -i -E 's/^(\s*)import qs\.DCommon\.Widgets/\1import qs.Alpe.Widgets/' **.qml
-sed -i -E 's/\bD(ActionButton|TextField|Dropdown|Button|Toggle|Spinner)\b/Alpe\1/g' **.qml
-sed -i -E 's/\["dms", /["alpe-dienst", /' **.qml
+sed -i -E 's/^(\s*)import qs\.DCommon\.Widgets/\1import qs.Alpe.Widgets/' ~/.config/alpe/plugins/sathiAi/**.qml
+sed -i -E 's/\bD(ActionButton|TextField|Dropdown|Button|Toggle|Spinner)\b/Alpe\1/g' ~/.config/alpe/plugins/sathiAi/**.qml
+sed -i -E 's/\["dms", /["alpe-dienst", /' ~/.config/alpe/plugins/sathiAi/**.qml
 ```
 
 `Sathi.qml` fängt einen Fehlschlag von `notify` ab und zeigt dann eine Meldung über
@@ -130,21 +165,39 @@ Autors und wird von Alpe nicht gelesen.
 
 ### hueManager
 
-Dieselben fünf Befehle wie am PC (Abschnitt oben).
+Der Block «hueManager» oben gilt unverändert auch am Mac: die beiden Prüfbefehle, dann die vier
+Befehle, dann die Nachschau zum doppelten Import. **Den Block «sathiAi» am Mac nicht ausführen.**
 
 ### calculator (rochacbruno/DankCalculator, AGPL-3.0)
 
 Benutzt keine `Dank*`-Typen. Zu ändern sind der Aufruf der Zwischenablage (`dms cl copy`) und
 zwei Einträge in `plugin.json`.
 
+**Gilt am Mac** (am PC liegt die für Alpe angepasste Fassung schon fertig in `~/alpe-plugins`; dort
+diesen Block nicht ausführen, sondern den Ordner von dort kopieren). Zuerst prüfen: Die erste Zeile muss den Ordner nennen, die zweite
+«nicht gefunden» melden.
+
+```
+ls -d ~/.config/dms/plugins/calculator
+ls -d ~/.config/alpe/plugins/calculator
+```
+
+Nur dann:
+
 ```
 mkdir -p ~/.config/alpe/plugins
 cp -r ~/.config/dms/plugins/calculator ~/.config/alpe/plugins/calculator
-cd ~/.config/alpe/plugins/calculator
-sed -i -E 's/\["dms", "cl", "copy"/["alpe-dienst", "cl", "copy"/' CalculatorLauncher.qml
-sed -i -E 's/"requires_dms": "[^"]*"/"requires_alpe": ">=1.0"/' plugin.json
-sed -i -E 's/"requires": \["dms"\]/"requires": ["alpe-dienst"]/' plugin.json
+sed -i -E 's/\["dms", "cl", "copy"/["alpe-dienst", "cl", "copy"/' ~/.config/alpe/plugins/calculator/CalculatorLauncher.qml
+sed -i -E 's/"requires_dms": "[^"]*"/"requires_alpe": ">=1.0"/' ~/.config/alpe/plugins/calculator/plugin.json
+sed -i -E 's/"requires": \["dms"\]/"requires": ["alpe-dienst"]/' ~/.config/alpe/plugins/calculator/plugin.json
 ```
+
+**Hinweis zum Verlauf:** Das Protokoll meldet beim ersten Start «Read of
+~/.config/alpe/plugins/calculator_history.json failed». Das Plugin legt seinen Verlauf im
+Sammelordner der Plugins ab statt im eigenen Ordner (`pluginDirectory`); gibt es die Datei noch
+nicht, meldet Quickshell das Lesen als gescheitert, und das Plugin beginnt mit leerem Verlauf.
+Unter 1.0 ist es gleich (beim Mac-Test am 23.11.2026 beobachtet) – kein Fehler von Alpe, nichts
+anzupassen.
 
 Die AGPL verlangt, Änderungen kenntlich zu machen, wenn du die Fassung weitergibst: dann oben in
 `CalculatorLauncher.qml` einen Kommentar mit Datum und Änderung ergänzen und eine `CHANGES.md`
@@ -185,16 +238,27 @@ grep -rn -i -w --exclude-dir=.git 'dms' ~/.config/alpe/plugins/sathiAi
 grep -rn -i -w --exclude-dir=.git 'dms' ~/.config/alpe/plugins/calculator
 ```
 
-**3. Typen ohne Import.** Der Befehl nennt Dateien, die einen `Alpe…`-Typ benutzen, aber
-`import qs.Alpe.Widgets` nicht haben. Er gibt nichts aus, wenn alles stimmt. Ein Treffer ist nur
-dann in Ordnung, wenn die Datei ausschliesslich Typen benutzt, deren Modul geblieben ist
-(`AlpeModal` aus `qs.Modals.Common`; `AlpePopout`, `AlpeTooltip` und die anderen aus der Tabelle
-oben aus `qs.Widgets`).
+**3. Typen ohne Import.** Zwei kurze Befehle je Plugin, ohne Pipe (lange Zeilen mit Pipe brechen
+beim Einfügen um). Der erste nennt die Dateien, die einen `Alpe…`-Typ benutzen, der zweite die
+Dateien, denen `import qs.Alpe.Widgets` fehlt. **Keine Datei aus der ersten Liste darf in der
+zweiten stehen.** Eine Datei in beiden Listen ist nur dann in Ordnung, wenn sie ausschliesslich
+Typen benutzt, deren Modul geblieben ist (`AlpeModal` aus `qs.Modals.Common`; `AlpePopout`,
+`AlpeTooltip` und die anderen aus der Tabelle oben aus `qs.Widgets`). Beim calculator bleibt die
+erste Liste leer (er benutzt keine solchen Typen), die zweite nennt dann alle seine QML-Dateien.
 
 ```
-grep -rlZ -E --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/hueManager | xargs -0 -r grep -L 'import qs.Alpe.Widgets'
-grep -rlZ -E --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/sathiAi | xargs -0 -r grep -L 'import qs.Alpe.Widgets'
-grep -rlZ -E --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/calculator | xargs -0 -r grep -L 'import qs.Alpe.Widgets'
+grep -rlE --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/hueManager
+grep -rL --include='*.qml' 'import qs.Alpe.Widgets' ~/.config/alpe/plugins/hueManager
+```
+
+```
+grep -rlE --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/sathiAi
+grep -rL --include='*.qml' 'import qs.Alpe.Widgets' ~/.config/alpe/plugins/sathiAi
+```
+
+```
+grep -rlE --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/calculator
+grep -rL --include='*.qml' 'import qs.Alpe.Widgets' ~/.config/alpe/plugins/calculator
 ```
 
 **4. Die alte Kopie ist unverändert.** Ist die alte Kopie ein Git-Klon, zeigt `git status` es
