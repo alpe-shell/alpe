@@ -106,18 +106,30 @@ Teile Dritter in Alpe
 Hintergrundmuster (shell/Alpe/Widgets/wallpaper-patterns/)
   Dateien:   bank-note.svg, bubbles.svg, endless-clouds.svg, graph-paper.svg, plus.svg,
              topography.svg, wiggle.svg (mit der Dux Modular Shell übernommen)
-  Herkunft:  Hero Patterns von Steve Schoger, https://heropatterns.com/
+  Urheber:   Steve Schoger
+  Herkunft:  Hero Patterns, https://heropatterns.com/
              (Muster «Bank Note», «Bubbles», «Endless Clouds», «Graph Paper», «Plus»,
              «Topography», «Wiggle»; Pfaddaten am 24.11.2026 mit dem Ursprung verglichen)
   Lizenz:    Creative Commons Namensnennung 4.0 International (CC BY 4.0),
              https://creativecommons.org/licenses/by/4.0/
-  Änderung:  Die Shell färbt die Muster zur Laufzeit ein und kachelt sie.
+  Verändert: Die Dateien sind von Alpe nicht verändert: byte-gleich mit dem Stand, in dem sie
+             mit der Dux Modular Shell 2.1.2 übernommen wurden. Gegenüber Hero Patterns sind
+             die Pfaddaten unverändert; die Füllfarbe ist Schwarz statt der Vorgabefarbe der
+             Website (dort beim Herunterladen wählbar – ob so heruntergeladen oder vor der
+             Übernahme von Hand gesetzt, ist nicht belegt). Die Dateien selbst bleiben, wie
+             sie sind; die Shell färbt die Muster erst zur Laufzeit ein und kachelt sie.
 
 Musterdatei der Radar-Tests (tests/data/rzc263201930vl.001.h5)
+  Urheber:   Bundesamt für Meteorologie und Klimatologie MeteoSchweiz
   Herkunft:  Niederschlagsradar, Produkt PRECIP (Kürzel RZC, ODIM HDF5) aus dem Open-Data-
-             Angebot von MeteoSchweiz, Bundesamt für Meteorologie und Klimatologie
-  Lizenz:    CC BY 4.0 nach den Nutzungsbedingungen von MeteoSchweiz,
+             Angebot von MeteoSchweiz, Eintrag 20261116-ch der Sammlung
+             ch.meteoschweiz.ogd-radar-precip auf data.geo.admin.ch
+  Lizenz:    Creative Commons Namensnennung 4.0 International (CC BY 4.0) nach den
+             Nutzungsbedingungen von MeteoSchweiz,
              https://opendatadocs.meteoswiss.ch/general/terms-of-use
+             (Lizenztext: https://creativecommons.org/licenses/by/4.0/)
+  Verändert: nein – unveränderte Originaldatei; ihre SHA-256-Prüfsumme stimmt mit der im
+             Katalog von MeteoSchweiz veröffentlichten überein (geprüft am 24.11.2026).
   Quelle:    MeteoSchweiz
 
 Kartengrundlage des Radar-Tabs (plugins/alpeRadar/map-lines.png, map-water.png)
