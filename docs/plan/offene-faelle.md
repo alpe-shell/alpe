@@ -182,6 +182,40 @@ Lehren, umgesetzt am 24.11.2026:
 - Die Mac-Test-Anleitung unten ist nach den Erfahrungen dieser Runde überarbeitet (Stand holen
   auf einen festen Hash, `lockAtStartup`, hypridle/hyprsunset, Rückbau mit Prüfungen).
 
+**Für den nächsten Mac-Test zusätzlich zu prüfen (Auftrag des Maintainers vom 24.11.2026).** Diese
+Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nach dem Mac-Test
+(`899fefc`, `19a16c4`, `09021df`) und zwei Beobachtungen am Bild der Sperre.
+
+1. **hyprlock ohne `eDP-1`:** `lockscreen/hyprlock.conf` nennt seit `899fefc` in keiner
+   `monitor`-Zeile mehr einen Bildschirm (vorher dreimal `eDP-1`). Zu prüfen: hyprlock zeigt die Sperre (Hintergrund, Uhr,
+   Datum, Passwortfeld) weiterhin am internen Bildschirm des MacBooks, und – falls ein zweiter
+   Bildschirm angeschlossen ist – auch dort; im Journal steht keine Meldung von hyprlock zu
+   `monitor`.
+2. **matugen-Vorlagen aus:** Das ausgelieferte Design schaltet seit `19a16c4` die Vorlagen für
+   Firefox, Neovim, Zen und Zed aus (Plan 0.8 Nr. 104). Zu prüfen bei einem frisch eingespielten
+   Design (noch keine Einstellungen): Die vier Schalter stehen in den Einstellungen auf «aus», und
+   nach einem Wechsel des Hintergrunds entstehen für diese vier Programme keine Farbdateien.
+   Bestehende Einstellungen am Mac bleiben, wie sie sind (dort nichts zu erwarten).
+3. **CUPS-Rückzug:** Der Dienst meldet einen Ausfall von CUPS seit `09021df` einmal und versucht
+   es dann in wachsenden Abständen (5 s bis 1 min) wieder. Zu prüfen ohne laufendes CUPS bzw. mit
+   gestopptem `cups.service`: Im Journal des Dienstes steht die Warnung zum Drucker-Abonnement
+   einmal, nicht bei jedem Versuch der Oberfläche; nach dem Start von CUPS gelingt der nächste
+   Versuch nach der Pause (höchstens eine Minute), ohne Neustart von Dienst oder Shell. Am Mac
+   läuft sonst kein CUPS – der erste Teil zeigt sich dort schon beim gewöhnlichen Start.
+4. **Passwortfeld im Bild der Sperre:** Im Haltbild der Test-Instanz (1280 × 720) ist das Feld
+   nur rund 85 Pixel breit und gut 20 hoch, der Platzhalter kaum lesbar, und der Mauszeiger liegt
+   in jedem Bild genau darauf. Ursache ist der Massstab (`size = 200, 50` auf dem Bezugsbildschirm
+   2560 × 1664). Zu prüfen am Bildschirm des MacBooks (2560 × 1664): Breite und Lesbarkeit des
+   Felds und des Platzhalters.
+5. **Streifen im Bild der Sperre:** Im oberen Viertel des Haltbilds stehen feine waagrechte
+   Farbstufen im Himmel (Unschärfe, Helligkeit und Kontrast aus `hyprlock.conf` auf 8 Bit je
+   Kanal). Zu prüfen am Mac: ob die Streifen auf echter Hardware sichtbar sind.
+
+Zu 1, 4 und 5: Diese Punkte brauchen die Sperre. Die Anleitung unten verbietet, mit der
+**Testshell** zu sperren («Nicht auslösen: die Sperre») – das gilt weiter. Wie und in welcher
+Sitzung dafür gesperrt wird, legt der Maintainer fest; nichts davon ändert `layout.js` oder
+`hyprlock.conf`.
+
 *Am PC (Maintainer):*
 
 ```
@@ -764,7 +798,11 @@ wireplumber`; **ohne systemd** (`!SessionService.systemctlCommandAvailable`) üb
 `sh -c "pkill -x wireplumber; sleep 1"` und danach `wireplumber` als losgelösten Prozess.
 
 - Der Zweig greift nur ohne systemd – auf beiden Zielrechnern also nie; er ist ausgelieferter Code
-  aus dem Ursprung und in Phase A bisher nicht berührt.
+  aus dem Ursprung und in Phase A bisher nicht berührt. **Genaue Bedingung:**
+  `systemctlCommandAvailable` (`shell/Services/SessionService.qml`) heisst nur «das Programm
+  `systemctl` ist im Pfad», nicht «systemd läuft»; den laufenden Benutzer-Manager führt dort
+  `userManagerAvailable` getrennt, und `AudioService` wertet ihn nicht aus. Mit `systemctl`, aber
+  ohne Benutzer-Manager, scheitert der Neustart also mit Fehlermeldung, ohne `pkill`.
 - Er widerspricht dem Grundsatz «kein `pkill`» (`CLAUDE.md`): `pkill -x wireplumber` beendet jeden
   Prozess dieses Namens des Benutzers, nicht nur den der Sitzung.
 - **Aufgabe für E** (Paketierung; `wireplumber` bleibt harte Abhängigkeit, Plan 0.8 Nr. 96):
