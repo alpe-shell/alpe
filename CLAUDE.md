@@ -78,7 +78,14 @@ bash tools/test.sh          # = alpe test, dieselben Prüfungen wie auf GitHub A
 
 Alles muss grün sein – nach jedem Commit, und zwar auf dem Commit selbst in einem Temp-Worktree
 (`git worktree add --detach`), nicht auf einem baumgleichen Vorgänger und nicht auf dem
-Arbeitsbaum (Plan 0.8 Nr. 72). Neue Funktion → neuer Test. Shell-Skripte: `bash -n`, QML-Seiten laden
+Arbeitsbaum (Plan 0.8 Nr. 72). Dafür gibt es `bash tools/test-commit.sh HASH [HASH …]` (Temp-Worktree,
+eigenes `HOME`/`XDG_*`, Go-Caches übernommen, Protokoll `test-<voller Hash>.log` unter
+`$ALPE_TEST_PROTOKOLLE`). **Es nimmt nur volle Hashes (40 Hex-Zeichen); `HEAD`, Branch-Namen und
+gekürzte Hashes lehnt es ab** – am 24.11.2026 prüfte ein Sammellauf mit `HEAD` den falschen Commit.
+Ausgabe und Protokoll nennen den geprüften Hash.
+**Die Haltprüfung startet nur, wenn für die Spitze ein grünes Protokoll von `tools/test.sh` mit vollem
+Hash vorliegt:** `bash tools/test-commit.sh --gruen <voller Hash der Spitze>` muss 0 liefern, bevor die
+erste Ladeprüfung, qmllint oder `go vet` des Halts läuft. Neue Funktion → neuer Test. Shell-Skripte: `bash -n`, QML-Seiten laden
 in den Harnessen unter `entwicklung/`.
 
 **Ausgaben von Tests und Prüfungen nie durch eine Pipe kürzen** (`tail`, `head`, `grep`), ohne
