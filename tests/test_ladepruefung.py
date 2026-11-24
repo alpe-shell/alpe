@@ -245,6 +245,13 @@ esac
           "kwinbild: Rohdaten RGBX und BGRX werden zu einem PNG mit richtiger Farbreihenfolge, Füllbytes der Zeile fallen weg")
     aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--offen", "--bild-sperre", os.path.join(tmp, "x.png")], capture_output=True, text=True)
     check(aufruf.returncode == 2 and "gesperrt" in aufruf.stdout + aufruf.stderr, "--bild-sperre mit --offen wird abgelehnt")
+    # Unter KWin gibt es kein Bild der Sperre (dort sperrt KDE): Abbruch mit Begründung, bevor etwas gebaut oder gestartet wird.
+    sperre_kwin = os.path.join(tmp, "sperre-kwin.png")
+    aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild-sperre", sperre_kwin], capture_output=True, text=True)
+    ausgabe = aufruf.stdout + aufruf.stderr
+    check(aufruf.returncode == 2 and "--bild-sperre gibt es unter KWin nicht" in ausgabe and "--no-lockscreen" in ausgabe and "hyprland --bild-sperre" in ausgabe
+          and "Dienst bauen" not in ausgabe and "== Lauf" not in ausgabe and not os.path.exists(sperre_kwin),
+          "--bild-sperre unter KWin bricht mit klarer Meldung ab: kein Bau, kein Lauf, kein Bild (statt des Schreibtischs)")
     aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)
     check(aufruf.returncode == 2 and "--offen" in aufruf.stdout + aufruf.stderr, "--bild ohne --offen wird abgelehnt")
     # Probe für das Papierkorb-Symbol im Dock: nur mit Schalter liegt etwas im Papierkorb des Temp-HOME.

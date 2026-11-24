@@ -1188,6 +1188,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   brauchte einen eigenen Weg (Sperre in der Test-Instanz zulassen; ob ScreenShot2 sie dann
   aufnimmt, ist nicht geprüft) – Entscheid des Maintainers. Unter Hyprland zeigt `--bild-sperre`
   die Sperre der Shell.
+  **Seit dem Nachtlauf vom 24.11.2026 bricht `kwin --bild-sperre` mit einer Meldung ab** (Rückgabewert
+  2, kein Bau, kein Lauf, kein Bild) und liefert nicht mehr den Schreibtisch; Test in
+  `tests/test_ladepruefung.py`. Ein Bild der KDE-Sperre ist damit nicht gebaut.
   **Berichtigt am 24.11.2026 (Nachtlauf): Die Aussage unten, KWin 6.8.3 prüfe an ScreenShot2 keine
   Berechtigung, ist am Quelltext belegt** (vorher «unbelegt»; Einzelheiten in Plan 0.8 Nr. 103).
   Bis 6.7 prüfte das Screenshot-Plugin die Desktop-Datei des Aufrufers und antwortete sonst mit

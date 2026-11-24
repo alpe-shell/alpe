@@ -19,7 +19,10 @@ einer Grundlinie vergleichen.
                                           bevor etwas geöffnet wird, mit «alpe-dienst screenshot full» (0.8 Nr. 71).
                                           Unter KWin befristet über kwinbild.py (org.kde.KWin.ScreenShot2 der
                                           Test-Instanz; bricht ab, wenn der Bus nicht eindeutig der Test-Instanz gehört)
-              --bild-sperre DATEI         nur ohne --offen: dasselbe für den Sperrbildschirm der Variante «gesperrt»
+              --bild-sperre DATEI         nur ohne --offen und nur unter Hyprland: dasselbe für den Sperrbildschirm
+                                          der Variante «gesperrt». Unter KWin wird abgebrochen: Dort sperrt nicht die
+                                          Shell, sondern KDE, und die Test-Instanz läuft mit --no-lockscreen – das
+                                          Bild zeigte den Schreibtisch, nicht die Sperre
               --grundlinie-datei DATEI    statt der eingecheckten Grundlinie (Messung auf einem anderen Stand)
     Umgebung: ALPE_LP_PAPIERKORB=voll     Probe für das Dock: im Temp-HOME liegt eine Datei im Papierkorb
                                           (Symbol user-trash-full statt user-trash); keine Grundlinie
@@ -698,7 +701,12 @@ def main(argv):
         if bild or offen:
             say("FEHLER: --bild-sperre gehört zur Variante «gesperrt» (ohne --offen und ohne --bild)")
             return 2
-        bild = os.path.abspath(args[args.index("--bild-sperre") + 1])
+        if compositor == "kwin":
+            say("FEHLER: --bild-sperre gibt es unter KWin nicht. Dort sperrt nicht die Shell, sondern der Sperrbildschirm von KDE "
+                "(Paket org.alpe.desktop), und die Test-Instanz läuft mit --no-lockscreen – das Bild zeigte den Schreibtisch, "
+                "nicht die Sperre. Ein Bild der Sperre der Shell: «hyprland --bild-sperre DATEI». Kein Lauf gestartet.")
+            return 2
+        bild =os.path.abspath(args[args.index("--bild-sperre") + 1])
     if write and (probe or extra_plugins or bild):
         say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins, --probe-zeichen und --bild")
         return 2
