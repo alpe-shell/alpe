@@ -46,11 +46,15 @@ NAME_IM_ZUSAMMENHANG = (r"(?i)(?:(?<=[\w.-]@)%(n)s(?![A-Za-z0-9])"              
                         r"|(?:host_?name|rechnername)\w*[\"']?\s*[:=]?\s*[\"']?%(n)s(?![A-Za-z0-9])"  # Hostname-Feld
                         r"|(?<![\w-])(?:ssh|scp|hostnamectl(?:\s+set-hostname)?)\s+%(n)s(?![A-Za-z0-9])"
                         r"|(?:SYSLOG_ZEIT)%(n)s(?=(?:\.[\w.-]+)? (?:[^\s:\[\]]+(?:\[\d+\])?:(?:\s|$)|\S+ (?:-|\d+) \S+ )))")   # Rechnerfeld im Syslog-Format
-# Zeitstempel vor dem Rechnerfeld (journalctl -o short, short-precise, short-iso, short-iso-precise; RFC 3164 und
-# RFC 5424): Uhrzeit, wahlweise Sekundenbruchteile und Zeitzone, dann ein Leerzeichen. Als Rückblick, damit der Fund
-# nur den Namen umfasst; Python verlangt dafür feste Breiten, darum eine Alternative je Schreibweise.
-SYSLOG_ZEIT = "|".join(r"(?<=\d\d:\d\d:\d\d%s%s )" % (bruch, zone) for bruch in ("", r"\.\d{3}", r"\.\d{6}")
-                       for zone in ("", "Z", r"[+-]\d{4}", r"[+-]\d\d:\d\d"))
+# Zeitstempel vor dem Rechnerfeld (journalctl -o short, short-precise, short-iso, short-iso-precise, short-full,
+# with-unit; RFC 3164 und RFC 5424): Uhrzeit, wahlweise ein bis sechs Stellen Sekundenbruchteile, wahlweise Zeitzone
+# (Z, ±hhmm, ±hh:mm oder ein Kürzel aus drei bis fünf Grossbuchstaben wie « CET»), dann ein Leerzeichen. Als
+# Rückblick, damit der Fund nur den Namen umfasst; Python verlangt dafür feste Breiten, darum eine Alternative je
+# Schreibweise.
+# Grenzen: Ausgaben ohne Uhrzeit vor dem Rechnerfeld (journalctl -o short-unix, short-monotonic, short-delta) werden
+# nicht erkannt; bei RFC 5424 nur, wenn die PROCID «-» oder eine Zahl ist.
+SYSLOG_ZEIT = "|".join(r"(?<=\d\d:\d\d:\d\d%s%s )" % (bruch, zone) for bruch in [""] + [r"\.\d{%d}" % n for n in range(1, 7)]
+                       for zone in ["", "Z", r"[+-]\d{4}", r"[+-]\d\d:\d\d"] + [" [A-Z]{%d}" % n for n in (3, 4, 5)])
 NAME_IM_ZUSAMMENHANG = NAME_IM_ZUSAMMENHANG.replace("SYSLOG_ZEIT", SYSLOG_ZEIT)
 KURZ = 4   # kürzere Namen gelten wie die mehrdeutigen: nur im Zusammenhang
 # Dokumentationsbereiche sind kein Fund: MAC 00:00:5E:00:53:00/24 (RFC 7042), IP 192.0.2.0/24, 198.51.100.0/24 und

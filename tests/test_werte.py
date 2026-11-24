@@ -305,7 +305,10 @@ SYSLOG = ("<34>Oct 11 22:14:15 %s su: 'su root' failed for lonvick on /dev/pts/8
           "Oct 11 22:14:15 %s su[42]: 'su root' failed for lonvick on /dev/pts/8",
           "Oct 11 22:14:15.003000 %s kernel: usb 1-1: new device",
           "2003-10-11T22:14:15+0100 %s systemd[1]: Started su.",
-          "2003-10-11T22:14:15.003000+01:00 %s su[42]: von 192.0.2.7")
+          "2003-10-11T22:14:15.003000+01:00 %s su[42]: von 192.0.2.7",
+          "Sat 2003-10-11 22:14:15 CET %s systemd[1]: Started su.",          # journalctl -o short-full, with-unit
+          "Sat 2003-10-11 22:14:15 AEST %s su[42]: 'su root' failed",
+          "<34>1 2003-10-11T22:14:15.5Z %s su 42 ID47 - 'su root' failed")    # RFC 5424: ein bis sechs Stellen Bruchteile
 kurz = "p" + "x7"   # erfundener kurzer Rechnername, zusammengesetzt
 check(wp.eigener_name(kurz) == kurz and wp.eigener_name("x") == "" and wp.eigener_name("runner") == "" and wp.eigener_name("werkbank.lan") == "werkbank",
       "kurze Namen ab zwei Zeichen werden gesucht (nur im Zusammenhang), ein einzelnes Zeichen und Allerweltsnamen nicht")
@@ -318,7 +321,8 @@ for probe in ("erika@%s:~$ ls" % kurz, "ssh %s" % kurz, "HOSTNAME=%s" % kurz, "/
     check(any(f[2] == "Rechnername" for f in wp.funde("x/probe.txt", probe, "", kurz)), "kurzer Rechnername «%s»: im eindeutigen Zusammenhang ein Fund: %s" % (kurz, probe))
 for name in (distro.lower(), kurz):
     for probe in ("um 22:14:15 %s gestartet" % name, "Oct 11 22:14:15 mymachine %s[42]: läuft" % name, "Oct 11 22:14:15 mymachine su: %s: nicht gefunden" % name,
-                  "die Taste %s und der Wert %s7" % (name, name), "22:14:15 %s" % name, "x%s y-%s %s.conf" % (name, name, name)):
+                  "die Taste %s und der Wert %s7" % (name, name), "22:14:15 %s" % name, "x%s y-%s %s.conf" % (name, name, name),
+                  "1065910455.003000 %s su[42]: Ausgabe ohne Uhrzeit (short-unix) – bekannte Grenze" % name):
         check(wp.funde("x/probe.txt", probe, "", name) == [], "Rechner «%s»: kein Fund ausserhalb des Rechnerfelds: %s" % (name, probe))
 
 
