@@ -151,17 +151,39 @@ def ist_binaer(roh):
     return False
 
 
+HEX_KETTE = re.compile(rb"<([0-9A-Fa-f\s]{8,})>")
+
+
+def hex_ketten(roh):
+    """Inhalt der Hex-Zeichenketten einer Binärdatei als Text, je Kette eine Zeile.
+
+    PDF schreibt Titel, Autor, Programm und Erzeuger oft so: «/Title <FEFF0041006C…>» (UTF-16 BE mit Marke) oder
+    ohne Marke als Bytes. In den rohen Bytes steht der Wert dann nirgends lesbar.
+    """
+    zeilen = []
+    for treffer in HEX_KETTE.finditer(roh):
+        ziffern = b"".join(treffer.group(1).split())
+        inhalt = bytes.fromhex((ziffern + b"0" * (len(ziffern) % 2)).decode("ascii"))
+        zeilen.append(inhalt[2:].decode("utf-16-be", "replace") if inhalt.startswith(b"\xfe\xff") else inhalt.decode("latin-1"))
+    return "\n".join(zeilen)
+
+
 def roh_funde(pfad, roh, benutzer="", rechner="", ausnahmen=()):
     """Rohsuche nach denselben Werten in den Bytes einer Binärdatei: Liste (pfad, ROH, art, wert), je Wert einmal.
 
     Gesucht wird in zwei Fassungen: die Bytes, wie sie sind (trifft ASCII in Metadaten), und dieselben ohne
     NUL-Bytes (trifft UTF-16, wie es PDF-, Schrift- und Bilddateien für Titel und Namen verwenden); in beiden gilt
-    jedes Byte ausserhalb des druckbaren ASCII als Trenner (ein Name mit Umlaut wird also nicht gefunden). Grenzen, weil
+    jedes Byte ausserhalb des druckbaren ASCII als Trenner (ein Name mit Umlaut wird also nicht gefunden). Dritte
+    Fassung: der Inhalt der Hex-Zeichenketten (hex_ketten; so legt PDF Titel und Erzeuger ab). Nicht dekodiert
+    wird Base64. Weitere Grenzen, weil
     komprimierte Daten jede kurze Bytefolge irgendwo enthalten: Namen unter KURZ Zeichen werden hier nicht gesucht
     (ihr «Zusammenhang» ist drei, vier Bytes lang), und eine IP-Adresse muss streng gültig sein (IP_STRENG).
     Komprimierte Ströme (PNG-Textblöcke mit zlib, PDF mit /Filter) werden nicht entpackt.
     """
     fassungen = [f.translate(NUR_ASCII).decode("ascii") for f in [roh] + ([roh.replace(b"\0", b"")] if b"\0" in roh else [])]
+    ketten = hex_ketten(roh)
+    if ketten:
+        fassungen.append(ketten.encode("latin-1", "replace").translate(NUR_ASCII).decode("ascii"))
     benutzer, rechner = (n if len(n) >= KURZ else "" for n in (benutzer, rechner))
     gesehen, ergebnis = set(), []
     for fassung in fassungen:
@@ -213,10 +235,13 @@ def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None, zaehler=None):
                 roh = handle.read()
         except OSError:
             continue
+        gelistet = pfad.endswith(ENDUNGEN) or "." not in os.path.basename(pfad)
         if ist_binaer(roh):
             zaehler["roh"].append(pfad)
             ergebnis += roh_funde(pfad, roh, benutzer, rechner, ausnahmen)
-        elif pfad.endswith(ENDUNGEN) or "." not in os.path.basename(pfad):
+            if gelistet:   # Textendung, aber NUL-Byte oder kein UTF-8: zusätzlich zeilenweise, so gut es geht
+                ergebnis += funde(pfad, roh.decode("utf-8", "replace"), benutzer, rechner, ausnahmen)
+        elif gelistet:
             gelesen += 1
             ergebnis += funde(pfad, roh.decode("utf-8"), benutzer, rechner, ausnahmen)
         else:

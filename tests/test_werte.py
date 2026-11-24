@@ -242,8 +242,8 @@ roh_endungen = sorted({os.path.splitext(p)[1] for p in repo_zaehler["roh"]})
 check(len(repo_zaehler["roh"]) >= 61 and {".ttf", ".png", ".jpg", ".mp4", ".pdf", ".qsb", ".wav"} <= set(roh_endungen)
       and not [f for f in repo_treffer if f[1] == wp.ROH],
       "Rohsuche: %d Binärdateien durchsucht (%s), kein Fund" % (len(repo_zaehler["roh"]), " ".join(roh_endungen)))
-check(all(not p.endswith(wp.ENDUNGEN) for p in repo_zaehler["ausgelassen"]),
-      "weiterhin nicht durchsucht: %d Textdateien mit anderer Endung (%s)"
+# Keine Prüfung, nur eine Berichtszeile: Was der Lauf weiterhin nicht durchsucht, soll im Protokoll stehen.
+print("Hinweis: weiterhin nicht durchsucht: %d Textdateien mit anderer Endung (%s)"
       % (len(repo_zaehler["ausgelassen"]), " ".join(sorted({os.path.splitext(p)[1] or os.path.basename(p) for p in repo_zaehler["ausgelassen"]}))))
 # Proben der Rohsuche: erfundene Werte in Bytes, wie sie in Metadaten stehen (ASCII, UTF-16 LE und BE), zwischen
 # Fülldaten. Zusammengesetzt, damit die Werte in dieser Datei nicht als Fund stehen.
@@ -251,7 +251,11 @@ heim = "/".join(("", "home", "erika", "Bilder", "berg.png"))
 fuell = bytes(range(256)) * 4
 for lage, daten, art in (("Pfad in ein Home als ASCII", fuell + heim.encode("ascii") + b"\0" + fuell, "Pfad in ein Home-Verzeichnis"),
                          ("Pfad in ein Home als UTF-16 LE", fuell + heim.encode("utf-16-le") + fuell, "Pfad in ein Home-Verzeichnis"),
-                         ("Pfad in ein Home als UTF-16 BE (wie im PDF-Titel)", b"\xfe\xff" + heim.encode("utf-16-be") + fuell, "Pfad in ein Home-Verzeichnis"),
+                         ("Pfad in ein Home als UTF-16 BE", b"\xfe\xff" + heim.encode("utf-16-be") + fuell, "Pfad in ein Home-Verzeichnis"),
+                         ("Pfad in ein Home als Hex-Zeichenkette mit UTF-16 BE (so legt testpage.pdf Titel und Erzeuger ab)",
+                          fuell + b"/Producer <FEFF" + heim.encode("utf-16-be").hex().upper().encode() + b">" + fuell, "Pfad in ein Home-Verzeichnis"),
+                         ("Pfad in ein Home als Hex-Zeichenkette ohne Marke, mit Zeilenumbruch", fuell + b"/Producer <" + heim.encode().hex()[:20].encode()
+                          + b"\n" + heim.encode().hex()[20:].encode() + b">" + fuell, "Pfad in ein Home-Verzeichnis"),
                          ("Benutzername im Autorfeld", fuell + b"/Author (Erika)" + fuell, "Benutzername"),
                          ("Rechnername als UTF-16", fuell + "Aufgenommen auf werkbank".encode("utf-16-le") + fuell, "Rechnername"),
                          ("MAC-Adresse", fuell + b"\x01" + ("aa:bb:cc:dd:ee:" + "01").encode() + b"\x02" + fuell, "MAC-Adresse"),
@@ -313,6 +317,8 @@ for strom in re.findall(rb"stream\r?\n(.*?)endstream", testseite, re.S):
         pass
 titel = re.search(rb"/Title <FEFF([0-9A-F]+)>", testseite)
 check(erzeuger.returncode == 0, "testpage.pdf ist die Ausgabe von entwicklung/testseite/erzeugen.py: " + erzeuger.stdout.strip())
+check("Alpe – Drucker-Testseite" in wp.hex_ketten(testseite).splitlines() and "entwicklung/testseite/erzeugen.py" in wp.hex_ketten(testseite).splitlines(),
+      "Rohsuche liest die hex-kodierten Metadaten von testpage.pdf (Titel, Erzeuger) im Klartext mit")
 check(titel is not None and bytes.fromhex(titel.group(1).decode()).decode("utf-16-be") == "Alpe – Drucker-Testseite"
       and b"/Filter" not in testseite and b"CreationDate" not in testseite,
       "testpage.pdf: eigener Titel, Inhalt unkomprimiert (für jede Suche lesbar), kein Datum")
@@ -369,7 +375,7 @@ for name in (distro.lower(), kurz):
     for probe in ("um 22:14:15 %s gestartet" % name, "Oct 11 22:14:15 mymachine %s[42]: läuft" % name, "Oct 11 22:14:15 mymachine su: %s: nicht gefunden" % name,
                   "um 22:14:15 lief %s su: ein kleingeschriebenes Wort nach der Uhrzeit ist keine Zeitzone" % name,
                   "Oct 11 22:14:15 host %s su[42]: Rechner mit vier Buchstaben vor dem Namen" % name,
-                  "die Taste %s und der Wert %s7" % (name, name), "22:14:15%s" % name, "x%s y-%s %s.conf" % (name, name, name),
+                  "die Taste %s und der Wert %s7" % (name, name), "22:14:15 %s" % name, "22:14:15%s" % name, "x%s y-%s %s.conf" % (name, name, name),
                   "1065910455.003000 %s su[42]: Ausgabe ohne Uhrzeit (short-unix) – bekannte Grenze" % name):
         check(wp.funde("x/probe.txt", probe, "", name) == [], "Rechner «%s»: kein Fund ausserhalb des Rechnerfelds: %s" % (name, probe))
 

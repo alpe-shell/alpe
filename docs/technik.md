@@ -341,9 +341,12 @@ Gerätekennungen. Von Hand, auch gegen einen anderen Ordner:
 
 - **Binärdateien** (Schriften, Bilder, Klänge, Video, PDF, Shader – was ein NUL-Byte enthält oder
   kein UTF-8 ist) werden roh nach denselben Werten durchsucht: als Bytefolge und noch einmal ohne
-  NUL-Bytes (UTF-16 in Metadaten). Grenzen: Namen unter vier Zeichen werden dort nicht gesucht (in
-  komprimierten Daten träfen sie zufällig), eine IP-Adresse zählt nur streng gültig, komprimierte
-  Ströme werden nicht entpackt, Namen mit Zeichen ausserhalb von ASCII nicht gefunden.
+  NUL-Bytes (UTF-16 in Metadaten), dazu der Inhalt von Hex-Zeichenketten (`<FEFF…>`, so legt PDF
+  Titel und Erzeuger ab). Grenzen: Namen unter vier Zeichen werden dort nicht gesucht (in
+  Binärdaten träfen sie zufällig) – **ein Rechner- oder Benutzername unter vier Zeichen wird in
+  Binärdateien also gar nicht gesucht**; eine IP-Adresse zählt nur streng gültig; komprimierte
+  Ströme und Base64 werden nicht dekodiert; Namen mit Zeichen ausserhalb von ASCII werden nicht
+  gefunden.
 - **Nicht durchsucht** werden Textdateien, deren Endung nicht auf der Liste `ENDUNGEN` steht (etwa
   `.svg`, `.frag`); der Lauf nennt ihre Zahl.
 - **Ausnahmen** stehen in `tools/werte-ausnahmen.txt`: je Datei, Art und erwartetem Wert, mit Frist
