@@ -967,6 +967,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Shell im Lauf lädt; `DeferredAction.qml`, `NotepadStorageService.qml` und die Shader sind
   unverändert. **Herkunft offen, Frist wie unten vor G1;** vor einer Aufnahme als `SPORADISCH`
   in die Grundlinie mehr Läufe auf beiden Ständen (Entscheid des Maintainers).
+  *(Seither gemessen und entschieden: siehe den nächsten Eintrag und Plan 0.8 Nr. 107.)*
 - **Sporadische Meldungen unter Hyprland «offen» – Entscheid des Maintainers vom 24.11.2026: nicht
   in die Grundlinie, hier geführt. Vermerk: nur unter Last beobachtet, Herkunft offen.**
   Die drei Meldungen (normalisiert, wie die Ladeprüfung sie vergleicht):
@@ -981,9 +982,17 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   |---|---|---|---|---|---|
   | 12 (24.11.2026, 19:48–20:48, abwechselnd mit der Zeile darunter) | `b04b1bf` | in Ruhe | 0 | 0 | 0 |
   | 12 (dieselbe Messung) | `54bb5c0` | in Ruhe | 0 | 0 | 0 |
-  | 4 (24.11.2026, 18:58–19:14, Haltprüfung) | `54bb5c0` | unter Last (daneben `go vet ./...` bzw. weitere Arbeit der Sitzung) | 1 | 1 | 1 |
+  | 1 (24.11.2026, ab 18:59, Haltprüfung) | `54bb5c0` | daneben lief `go vet ./...` über `core/` (belegt) | 1 | 0 | 0 |
+  | 3 (24.11.2026, 19:07–19:14) | `54bb5c0` | daneben nur leichte Lesezugriffe der Sitzung (Bilder ansehen, `grep`); eine Last ist für diese drei Läufe **nicht** belegt | 0 | 1 | 1 |
 
   Also 0 von 12 auf `b04b1bf` und 0 von 12 auf `54bb5c0` in Ruhe, je einmal in 4 Läufen unter Last.
+  **«Unter Last» ist dabei die Einordnung des Maintainers, kein Messbefund:** Gemessen ist ein
+  paralleles `go vet` nur beim Lauf mit dem Notizblock-Paar; bei den Läufen mit «stop of null» und
+  ShaderEffect liefen nur die genannten Lesezugriffe. Gemeinsam ist den vier Läufen, dass die
+  Sitzung daneben arbeitete; die 24 Läufe ohne Fund liefen streng nacheinander, ohne Tests und Builds.
+  **Die drei Meldungen trafen drei verschiedene Läufe** (gefolgert aus den Zählungen der vier
+  Läufe: 39 + Notizblock-Paar im ersten, dann 39, 40, 40 Meldungen): Von den vier Läufen war also
+  nur einer ohne fremde Meldung, von den 24 ruhigen alle 24.
   Auch die schon geführte Meldung `DeferredAction` «Property 'flush' of object … is not a function»
   (`SPORADISCH 1/3` in `grundlinie-hyprland-offen.txt`) kam in den 24 ruhigen Läufen nie vor.
   Drei frühere Läufe auf `b04b1bf` vom selben Abend (19:14–19:22, nicht in Ruhe gemessen) zeigten
