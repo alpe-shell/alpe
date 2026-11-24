@@ -251,6 +251,28 @@ for lage, b, r in (("CI: Allerweltsname, kurzer Rechnername – beide Arten nich
           "überholte Ausnahmen – %s: keine Ausnahme gilt als überholt, obwohl die Namens-Ausnahmen keinen Treffer haben" % lage)
 
 
+# Drucker-Testseite: Die eingebettete PDF-Datei nannte den Ursprung im Titel und auf der Seite; die Namensprüfung
+# sah das nicht (sie überspringt Binärdateien). Die Datei wird jetzt erzeugt, unkomprimiert und ohne Datum.
+import subprocess
+import zlib
+
+erzeuger = subprocess.run([sys.executable, os.path.join(REPO, "entwicklung", "testseite", "erzeugen.py"), "--pruefen"], capture_output=True, text=True)
+with open(os.path.join(REPO, "core", "internal", "config", "embedded", "testpage.pdf"), "rb") as handle:
+    testseite = handle.read()
+sichtbar = testseite + testseite.decode("latin-1").replace("\x00", "").encode("latin-1")
+for strom in re.findall(rb"stream\r?\n(.*?)endstream", testseite, re.S):
+    try:
+        sichtbar += zlib.decompress(strom)
+    except zlib.error:
+        pass
+titel = re.search(rb"/Title <FEFF([0-9A-F]+)>", testseite)
+check(erzeuger.returncode == 0, "testpage.pdf ist die Ausgabe von entwicklung/testseite/erzeugen.py: " + erzeuger.stdout.strip())
+check(titel is not None and bytes.fromhex(titel.group(1).decode()).decode("utf-16-be") == "Alpe – Drucker-Testseite"
+      and b"/Filter" not in testseite and b"CreationDate" not in testseite,
+      "testpage.pdf: eigener Titel, Inhalt unkomprimiert (für jede Suche lesbar), kein Datum")
+check(not re.search(rb"(?i)dank|dms|dux", sichtbar) and b"github.com/alpe-shell/alpe" in testseite,
+      "testpage.pdf nennt den Ursprung nicht mehr (Titel, Metadaten, Seitentext), Fusszeile verweist auf Alpe")
+
 # Rechner, der wie seine Distribution heisst (Mac-Test vom 23.11.2026: 12 Funde, alles Erwähnungen der
 # Distribution). Ein solcher Name wird gesucht, aber nur in eindeutigem Zusammenhang gemeldet.
 distro = "Asa" + "hi"
