@@ -1188,9 +1188,21 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   brauchte einen eigenen Weg (Sperre in der Test-Instanz zulassen; ob ScreenShot2 sie dann
   aufnimmt, ist nicht geprüft) – Entscheid des Maintainers. Unter Hyprland zeigt `--bild-sperre`
   die Sperre der Shell.
-  **Die Aussage unten, KWin 6.8.3 prüfe an ScreenShot2 keine Berechtigung, gilt als unbelegt und
-  ist vor Weg B am Quelltext von KWin zu prüfen.** Belegt ist nur das Verhalten der installierten
-  Binärdateien. Ergänzende Suche am 24.11.2026 in `/usr/lib/libkwin.so.6.8.3` (Paket `kwin`
+  **Berichtigt am 24.11.2026 (Nachtlauf): Die Aussage unten, KWin 6.8.3 prüfe an ScreenShot2 keine
+  Berechtigung, ist am Quelltext belegt** (vorher «unbelegt»; Einzelheiten in Plan 0.8 Nr. 103).
+  Bis 6.7 prüfte das Screenshot-Plugin die Desktop-Datei des Aufrufers und antwortete sonst mit
+  `org.kde.KWin.ScreenShot2.Error.NoAuthorized`; der KWin-Commit
+  `0ea31ae72eb052cb9c9cc508318fc3f0f329ed53` («plugins/screenshot: Drop
+  X-KDE-DBUS-Restricted-Interfaces») entfernt die Prüfung, enthalten ab `v6.7.90`/`v6.8.0`. Im Tag
+  `v6.8.0` nimmt `CaptureWorkspace` (`src/plugins/screenshot/screenshotdbusinterface2.cpp`, ab
+  Zeile 415) jeden Aufrufer an; die PID dient nur noch `pidToHide`.
+  `KWIN_SCREENSHOT_NO_PERMISSION_CHECKS` gibt es dort nicht mehr; die Ladeprüfung setzt die
+  Variable nicht (auf 6.8 wirkungslos). **Damit sind die Abbruchbedingungen von `kwinbild.py` die
+  einzige Schranke zwischen Test und echter Sitzung**; jede hat einen Test durch `main()`
+  (`tests/test_ladepruefung.py`), und meldet ein älteres KWin `NoAuthorized`, bricht `kwinbild.py`
+  mit klarer Meldung ab, statt die Prüfung zu umgehen. Die Nummer des Merge-Requests ist nicht
+  nachgeschlagen. Der folgende Befund an den Binärdateien bleibt als Verlauf stehen.
+  Ergänzende Suche am 24.11.2026 in `/usr/lib/libkwin.so.6.8.3` (Paket `kwin`
   6.8.3-1.1), im Plugin `screenshot.so` und in `kwin_wayland`, je als ASCII, UTF-16 LE/BE und in den
   exportierten Symbolen: kein `X-KDE-DBUS-Restricted-Interfaces`, kein `X-KDE-Wayland-Interfaces`,
   kein `KWIN_SCREENSHOT…`, kein `…PERMISSION_CHECK…`, kein `NotAuthorized`/`NoAuthorized`, kein

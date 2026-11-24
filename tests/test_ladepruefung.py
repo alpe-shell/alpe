@@ -148,6 +148,83 @@ try:
                                 capture_output=True, text=True, env=dict(os.environ, DBUS_SESSION_BUS_ADDRESS="unix:path=/tmp/dbus-echt,guid=1"))
     check(ohne_bus.returncode == 3 and mit_echtem.returncode == 3 and "ABBRUCH, kein Bild" in mit_echtem.stdout and not os.path.exists(os.path.join(tmp, "k.png")),
           "kwinbild als Programm: ohne Busadresse und mit der Adresse der echten Sitzung Abbruch (3), kein Bild, kein Busaufruf")
+    # Jede Abbruchbedingung durch main() selbst (Plan 0.8 Nr. 103): Nur busctl ist eine Attrappe, /proc ein Temp-Ordner.
+    # Die Attrappe schreibt jeden Aufruf mit; vor bestandener Prüfung darf CaptureWorkspace nie aufgerufen werden.
+    import contextlib
+    import io
+    attrappen = os.path.join(tmp, "kb-bin")
+    os.makedirs(attrappen)
+    with open(os.path.join(attrappen, "busctl"), "w", encoding="utf-8") as handle:
+        handle.write("""#!/bin/bash
+echo "$*" >> "$KB_LOG"
+case "$*" in
+*GetConnectionUnixProcessID*)
+    case "$KB_FALL" in
+        kein-kwin) echo "Call failed: Could not get PID of name 'org.kde.KWin': no such name" >&2; exit 1 ;;
+        fremd) echo '{"type":"u","data":[12]}' ;;
+        *) echo '{"type":"u","data":[11]}' ;;
+    esac ;;
+*CaptureWorkspace*)
+    case "$KB_FALL" in
+        verweigert) echo "Call failed: The process is not authorized to take a screenshot" >&2; exit 1 ;;
+        verweigert-name) echo "Call failed: org.kde.KWin.ScreenShot2.Error.NoAuthorized" >&2; exit 1 ;;
+        gescheitert) echo "Call failed: etwas anderes" >&2; exit 1 ;;
+        *) for letztes; do :; done
+           printf '\\012\\024\\036\\377' >&"$letztes"
+           echo '{"type":"a{sv}","data":[{"type":{"type":"s","data":"raw"},"format":{"type":"u","data":16},"width":{"type":"u","data":1},"height":{"type":"u","data":1},"stride":{"type":"u","data":4}}]}' ;;
+    esac ;;
+esac
+""")
+    os.chmod(os.path.join(attrappen, "busctl"), 0o755)
+    kb_log = os.path.join(tmp, "kb-aufrufe.log")
+
+    def kb_lauf(fall, adresse=test_bus, fremde=(echt,)):
+        """kwinbild.main() mit der busctl-Attrappe: (Rückgabewert, Ausgabe, Aufrufe von busctl, Bild entstanden?)."""
+        ziel = os.path.join(tmp, "kb-%s.png" % fall)
+        alt = {name: os.environ.get(name) for name in ("PATH", "DBUS_SESSION_BUS_ADDRESS", "KB_FALL", "KB_LOG")}
+        open(kb_log, "w").close()
+        os.environ.update(PATH=attrappen + os.pathsep + alt["PATH"], DBUS_SESSION_BUS_ADDRESS=adresse, KB_FALL=fall, KB_LOG=kb_log)
+        ausgabe = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(ausgabe):
+                code = kb.main(["kwinbild.py", ziel, "--scope", "alpe-ladepruefung-1.scope"] + [t for f in fremde for t in ("--fremd", f)], proc=proc_attrappe)
+        finally:
+            for name, wert in alt.items():
+                if wert is None:
+                    os.environ.pop(name, None)
+                else:
+                    os.environ[name] = wert
+        with open(kb_log, encoding="utf-8") as handle:
+            aufrufe = handle.read()
+        return code, ausgabe.getvalue(), aufrufe, os.path.exists(ziel)
+
+    code, text, aufrufe, da = kb_lauf("adresse-fremd", adresse=echt)
+    check(code == 3 and "ABBRUCH, kein Bild" in text and aufrufe == "" and not da,
+          "kwinbild main(): Adresse der echten Sitzung – Abbruch (3), busctl wird gar nicht aufgerufen")
+    code, text, aufrufe, da = kb_lauf("kein-kwin")
+    check(code == 3 and "kein org.kde.KWin" in text and "CaptureWorkspace" not in aufrufe and "GetConnectionUnixProcessID" in aufrufe and not da,
+          "kwinbild main(): an diesem Bus gibt es kein org.kde.KWin – Abbruch (3), keine Aufnahme")
+    code, text, aufrufe, da = kb_lauf("fremd")
+    check(code == 3 and "PID 12" in text and "nicht im Scope" in text and "CaptureWorkspace" not in aufrufe and not da,
+          "kwinbild main(): KWin ausserhalb des Scopes (das der Sitzung) – Abbruch (3), keine Aufnahme")
+    for fall in ("verweigert", "verweigert-name"):
+        code, text, aufrufe, da = kb_lauf(fall)
+        check(code == 3 and "ABBRUCH, kein Bild: KWin verweigert die Aufnahme" in text and "NoAuthorized" in text
+              and "KWIN_SCREENSHOT_NO_PERMISSION_CHECKS" in text and not da,
+              "kwinbild main(): KWin meldet NoAuthorized (%s) – Abbruch (3) mit klarer Meldung, kein Bild"
+              % ("Fehlertext, wie busctl ihn ausgibt" if fall == "verweigert" else "Fehlername"))
+    code, text, aufrufe, da = kb_lauf("gescheitert")
+    check(code == 1 and text.startswith("FEHLER: CaptureWorkspace gescheitert") and not da, "kwinbild main(): anderer Fehler der Aufnahme bleibt ein Fehlschlag (1)")
+    code, text, aufrufe, da = kb_lauf("gut")
+    check(code == 0 and da and aufrufe.count("\n") == 2 and "CaptureWorkspace" in aufrufe,
+          "kwinbild main(): Gegenprobe – KWin im Scope, Aufnahme erlaubt: Bild geschrieben (die Attrappe erreicht die Aufnahme also)")
+    with open(kb.__file__, encoding="utf-8") as handle:
+        kb_quelle = handle.read()
+    with open(lp.__file__, encoding="utf-8") as handle:
+        lp_quelle = handle.read()
+    check("os.environ[" not in kb_quelle and "putenv" not in kb_quelle and not re.search(r"KWIN_SCREENSHOT_NO_PERMISSION_CHECKS\s*=", kb_quelle + lp_quelle)
+          and "KWIN_SCREENSHOT_NO_PERMISSION_CHECKS" not in lp_quelle,
+          "KWIN_SCREENSHOT_NO_PERMISSION_CHECKS wird nirgends gesetzt (auf KWin 6.8 wirkungslos, Plan 0.8 Nr. 103)")
     import struct
     import zlib
     roh = bytes([10, 20, 30, 255, 40, 50, 60, 255, 0, 0, 0, 0]) + bytes([70, 80, 90, 255, 1, 2, 3, 255, 0, 0, 0, 0])   # 2 × 2, Zeilenlänge 12

@@ -11,7 +11,13 @@ Damit nie der echte Schreibtisch aufgenommen wird, bricht das Skript ohne Aufnah
   1. DBUS_SESSION_BUS_ADDRESS fehlt oder keine eindeutige Adresse ist (genau ein Eintrag mit path= oder abstract=),
   2. die Adresse gleich einer fremden ist (--fremd: die Adresse der Sitzung des Maintainers; immer auch der
      Sitzungsbus unter /run/user/<uid>/bus),
-  3. der Prozess, dem org.kde.KWin an diesem Bus gehört, nicht im Scope UNIT der Ladeprüfung läuft.
+  3. es an diesem Bus kein org.kde.KWin gibt,
+  4. der Prozess, dem org.kde.KWin an diesem Bus gehört, nicht im Scope UNIT der Ladeprüfung läuft,
+  5. KWin die Aufnahme verweigert (org.kde.KWin.ScreenShot2.Error.NoAuthorized).
+Diese Bedingungen sind die einzige Schranke zwischen der Ladeprüfung und der echten Sitzung: KWin prüft an
+ScreenShot2 seit 6.8.0 keine Berechtigung mehr (KWin-Commit 0ea31ae7, Plan 0.8 Nr. 103). Bis 6.7 verlangt KWin eine
+Freigabe über die Desktop-Datei und antwortet sonst mit NoAuthorized (Bedingung 5); die Variable
+KWIN_SCREENSHOT_NO_PERMISSION_CHECKS setzt die Ladeprüfung nicht – auf 6.8 ist sie wirkungslos.
 Ergebnis: 0 = Bild geschrieben, 3 = aus einem der Gründe oben abgebrochen, 1 = Aufnahme gescheitert, 2 = Aufruffehler.
 """
 import json
@@ -24,6 +30,14 @@ import zlib
 # QImage::Format → Reihenfolge der Bytes je Bildpunkt im Speicher (Little Endian). Andere Formate liefert KWin
 # für CaptureWorkspace nicht; kommt doch eines, wird abgebrochen statt geraten.
 FORMATE = {4: "BGRX", 5: "BGRA", 6: "BGRA", 16: "RGBX", 17: "RGBA", 18: "RGBA"}
+
+# Verweigerte Aufnahme (KWin bis 6.7, screenshotdbusinterface2.cpp): Fehlername und Fehlertext. busctl gibt bei
+# einem gescheiterten Aufruf nur den Text aus («Call failed: …»), darum wird beides erkannt.
+NICHT_ERLAUBT = ("org.kde.KWin.ScreenShot2.Error.NoAuthorized", "The process is not authorized to take a screenshot")
+
+
+class Verweigert(str):
+    """Fehlermeldung von aufnehmen(), wenn KWin die Aufnahme verweigert hat (Abbruch statt Fehlschlag)."""
 
 
 def adress_schluessel(adresse):
@@ -103,7 +117,12 @@ def aufnehmen(adresse):
         os.close(schreiben)
     if antwort.returncode != 0:
         os.close(lesen)
-        return "CaptureWorkspace gescheitert: " + (antwort.stderr or antwort.stdout).strip()
+        ausgabe = (antwort.stderr or antwort.stdout).strip()
+        if any(marke in antwort.stderr + antwort.stdout for marke in NICHT_ERLAUBT):
+            return Verweigert("KWin verweigert die Aufnahme (%s): «%s». Dieses KWin prüft die Berechtigung über die "
+                              "Desktop-Datei des Aufrufers (bis 6.7); die Ladeprüfung setzt KWIN_SCREENSHOT_NO_PERMISSION_CHECKS "
+                              "nicht und umgeht die Prüfung nicht" % (NICHT_ERLAUBT[0], ausgabe))
+        return "CaptureWorkspace gescheitert: " + ausgabe
     try:
         werte = {name: wert["data"] for name, wert in json.loads(antwort.stdout)["data"][0].items()}
         breite, hoehe, zeile, form = int(werte["width"]), int(werte["height"]), int(werte["stride"]), int(werte["format"])
@@ -125,7 +144,8 @@ def aufnehmen(adresse):
     return breite, hoehe, zeile, form, bytes(daten)
 
 
-def main(argv):
+def main(argv, proc="/proc"):
+    """proc: Wurzel von /proc; nur der Test reicht eine Attrappe herein."""
     args = argv[1:]
     fremde, scope, ziel = [], "", ""
     while args:
@@ -148,12 +168,15 @@ def main(argv):
         pid = kwin_pid(adresse)
         if pid is None:
             grund = "an diesem Bus gibt es kein org.kde.KWin"
-        elif not im_scope(pid, scope):
+        elif not im_scope(pid, scope, proc):
             grund = "org.kde.KWin an diesem Bus (PID %d) läuft nicht im Scope %s" % (pid, scope)
     if grund is not None:
         print("ABBRUCH, kein Bild: " + grund)
         return 3
     ergebnis = aufnehmen(adresse)
+    if isinstance(ergebnis, Verweigert):
+        print("ABBRUCH, kein Bild: " + ergebnis)
+        return 3
     if isinstance(ergebnis, str):
         print("FEHLER: " + ergebnis)
         return 1
