@@ -91,6 +91,10 @@ var cupsMu sync.Mutex
 var cupsSubscriberCount int
 var cupsEverAvailable bool
 
+// Beide unter cupsMu. cupsNeuerManager ist für Tests austauschbar.
+var cupsVersuche cupsRueckzug
+var cupsNeuerManager = cups.NewManager
+
 var appPaths = utils.App()
 
 func GetSocketPath() string {
@@ -224,13 +228,25 @@ func initializeCupsManagerLocked() (bool, error) {
 	if cupsManager != nil {
 		return false, nil
 	}
-	manager, err := cups.NewManager(systemBusJetzt)
+	if !cupsVersuche.darf() {
+		return false, errCupsRueckzug
+	}
+	manager, err := cupsNeuerManager(systemBusJetzt)
 	if err != nil {
-		log.Warnf("Failed to initialize cups manager: %v", err)
+		// Alpe: einmal melden, danach leise mit Rückzug (cups_rueckzug.go).
+		if erster, pause := cupsVersuche.gescheitert(); erster {
+			log.Warnf("Failed to initialize cups manager: %v (further attempts are not reported; retrying quietly with back-off)", err)
+		} else {
+			log.Debugf("cups manager still unavailable, next attempt in %s: %v", pause, err)
+		}
 		return false, err
 	}
 	cupsManager = manager
-	log.Info("CUPS manager initialized")
+	if cupsVersuche.gelungen() {
+		log.Info("CUPS manager initialized (CUPS is reachable again)")
+	} else {
+		log.Info("CUPS manager initialized")
+	}
 	gained := !cupsEverAvailable
 	cupsEverAvailable = true
 	return gained, nil
@@ -860,8 +876,9 @@ func subscribeCups(wg *sync.WaitGroup, events chan<- ServiceEvent, stop <-chan s
 	mgr := cupsManager
 	cupsMu.Unlock()
 
-	if err != nil {
-		log.Warnf("Failed to initialize CUPS manager for subscription: %v", err)
+	if err != nil && !errors.Is(err, errCupsRueckzug) {
+		// Alpe: Die Warnung schreibt initializeCupsManagerLocked, und zwar nur beim ersten Fehlschlag.
+		log.Debugf("CUPS manager unavailable for subscription: %v", err)
 	}
 	if gained {
 		notifyCapabilityChange()
