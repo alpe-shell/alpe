@@ -706,7 +706,7 @@ def main(argv):
                 "(Paket org.alpe.desktop), und die Test-Instanz läuft mit --no-lockscreen – das Bild zeigte den Schreibtisch, "
                 "nicht die Sperre. Ein Bild der Sperre der Shell: «hyprland --bild-sperre DATEI». Kein Lauf gestartet.")
             return 2
-        bild =os.path.abspath(args[args.index("--bild-sperre") + 1])
+        bild = os.path.abspath(args[args.index("--bild-sperre") + 1])
     if write and (probe or extra_plugins or bild):
         say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins, --probe-zeichen und --bild")
         return 2

@@ -110,6 +110,11 @@ Im Temp-HOME sind dabei alle Plugins unter `plugins/` eingeschaltet,
 damit Plugins im Repo mitgeprüft werden (Plan 0.8 Nr. 33). Zum Halt gehört ein Bild der Variante
 «offen» unter Hyprland (`--offen --bild DATEI`, aufgenommen mit `alpe-dienst screenshot full`;
 grim wird nicht benutzt), das angesehen und dem Maintainer beschrieben wird (Plan 0.8 Nr. 71).
+**Haltbilder heissen nach Compositor und Variante:** `halt-<compositor>-<variante>.png`, also
+`halt-hyprland-offen.png`, `halt-hyprland-gesperrt.png` (`hyprland --bild-sperre`, die Sperre der
+Shell) und `halt-kwin-offen.png` (befristet über `kwinbild.py`). Ein Bild `halt-kwin-gesperrt` gibt
+es nicht: Unter KWin sperrt KDE, `kwin --bild-sperre` bricht ab. Unter KWin zeigt damit kein
+Haltbild das ausgelieferte Design ohne Abwandlung («offen» trägt die Abdeckungs-Zusätze).
 
 Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `shell/` – nicht in
 `tools/test.sh`: `python3 entwicklung/qmllint/qmllint-pruefung.py` vergleicht mit
