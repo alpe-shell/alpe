@@ -189,17 +189,22 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
 1. **hyprlock ohne `eDP-1`:** `lockscreen/hyprlock.conf` nennt seit `899fefc` in keiner
    `monitor`-Zeile mehr einen Bildschirm (vorher dreimal `eDP-1`). **Geprüft werden muss genau diese
    Datei aus dem ausgecheckten Stand** – nicht die Dateien, die am Mac schon liegen: Das Programm
-   hyprlock liest sonst `~/.config/hypr/hyprlock.conf`, die Shell-Sperre zieht eine vorhandene
-   `~/.config/alpe/hyprlock.conf` vor (am Mac aus 1.0 vorhanden), und nichts im Repo kopiert die
-   Vorlage dorthin; ein Test ohne ausdrückliche Angabe der Datei prüfte den alten Stand mit
+   hyprlock liest sonst `~/.config/hypr/hyprlock.conf`, und nichts kopiert die Vorlage von selbst
+   dorthin (nur die Einstellungsseite schreibt die Datei, auf Benutzeraktion). Die Shell-Sperre
+   liest gar keine `hyprlock.conf`: Sie nimmt das in den Einstellungen gespeicherte Layout
+   (`alpeLockLayout`), sonst das mitgelieferte `layout.js`; den Vorrang einer eigenen
+   `~/.config/alpe/hyprlock.conf` gibt es nur in `tools/lockscreen.sh` (KDE-Sperre) und beim
+   Design-Export. Ein Test ohne ausdrückliche Angabe der Datei prüfte den alten Stand mit
    `eDP-1` und wäre immer grün. Zu prüfen: Mit der Vorlage aus dem Repo zeigt hyprlock Hintergrund,
    Uhr, Datum und Passwortfeld am internen Bildschirm und – falls angeschlossen – an einem zweiten;
    die Ausgabe von hyprlock (im Terminal, nicht im Journal) nennt keinen Fehler zu `monitor`.
    **Offen beim Maintainer:** der Aufruf (wie hyprlock die Repo-Datei übergeben bekommt; die Option
    dafür ist hier nicht nachgeschlagen) und der Rückweg, falls die Sperre hängt. Ob am Mac je
-   hyprlock mit dieser Vorlage lief, ist nicht belegt. **Hinweis für F1:** Bei bestehenden Nutzern
-   bleibt die alte Datei mit `eDP-1` massgebend; die Änderung aus `899fefc` erreicht sie nicht von
-   selbst.
+   hyprlock mit dieser Vorlage lief, ist nicht belegt. **Hinweis für F1:** Wer das Programm
+   hyprlock mit einer eigenen `~/.config/hypr/hyprlock.conf` benutzt, behält dort `eDP-1`; die
+   Änderung aus `899fefc` erreicht diese Datei nicht von selbst. Für die Punkte 4 und 5 gilt
+   entsprechend: Ein am Mac gespeichertes `alpeLockLayout` hätte Vorrang vor `layout.js` – ob dort
+   eines gesetzt ist, ist nicht belegt.
 2. **matugen-Vorlagen aus:** Das ausgelieferte Design schaltet seit `19a16c4` die Vorlagen für
    Firefox, Neovim, Zen und Zed aus (Plan 0.8 Nr. 104). **Im Ablauf der Anleitung
    unten am Mac nicht prüfbar:** Sie kopiert die bestehenden Einstellungen (Schritt 3), ein frisch
@@ -215,7 +220,8 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    `Failed to initialize cups manager: … (further attempts are not reported; retrying quietly with
    back-off)` steht nach einigen Minuten genau einmal –
    `grep -c "Failed to initialize cups manager" /tmp/alpe-d7.log` ergibt 1; vor `09021df`
-   schrieb jeder Versuch eine Warnung. **Nicht Teil der Prüfung, weil nicht belegt:** dass sich
+   schrieb jeder Versuch eine Warnung. Ergibt der Befehl 0, war CUPS erreichbar (etwa über
+   `cups.socket`) – das ist kein Fehlschlag, der Punkt ist dann nur nicht geprüft. **Nicht Teil der Prüfung, weil nicht belegt:** dass sich
    der Dienst nach einem späteren Start von CUPS von selbst wieder verbindet. Der Rückzug ist
    passiv – einen neuen Versuch gibt es erst, wenn die Oberfläche wieder eine Anfrage oder ein
    Abonnement schickt und die Pause abgelaufen ist; ob sie das von selbst tut, hat niemand
