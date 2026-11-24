@@ -36,6 +36,20 @@ Die Shell des Maintainers ist **fish**. In Befehlen für ihn:
 - `KONTEXT.md` ist lokal und gitignored – lesen ja, nie committen.
 - Keine fremden oder urheberrechtlich geschützten Bilder ins Repository.
 
+## Dateien ändern
+
+- Versionierte Dateien werden nur mit dem Edit-Werkzeug geändert (neue Dateien mit Write) – nicht mit
+  `sed -i`, `perl -i`, einem Python- oder Shell-Skript, das per `replace` schreibt, oder einem Heredoc.
+  Das gilt auch für eine einzelne Zeile, für mehrere gleichlautende Stellen und für «nur Doku»: Der
+  Maintainer will jede Änderung im Klartext sehen, und ein `sed` oder `replace` kann unbemerkt ins
+  Leere gehen oder zu viel treffen.
+- **Wenn Edit bei einer Datei nicht geht: anhalten und den Grund nennen** (Datei, Aufruf, Fehlermeldung
+  im Wortlaut). Nicht auf `sed` oder ein Skript ausweichen. Bequemlichkeit (lange Stelle, viele
+  Stellen) ist kein Grund.
+- Davon unberührt sind Dateien, die ein eingechecktes Werkzeug erzeugt, über dieses Werkzeug:
+  Grundlinien (`ladepruefung.py --grundlinie`, `qmllint-pruefung.py`), Suchindex, Attrappen
+  (`make -C core mocks`), Massenumbenennungen mit `umbenennen.py`/`texte-ersetzen.py` samt Tabelle.
+
 ## Das laufende System
 
 Der Maintainer arbeitet auf dem PC, auf dem du läufst, und Alpe ist seine aktive Oberfläche.
