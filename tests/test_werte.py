@@ -251,6 +251,31 @@ for lage, b, r in (("CI: Allerweltsname, kurzer Rechnername – beide Arten nich
           "überholte Ausnahmen – %s: keine Ausnahme gilt als überholt, obwohl die Namens-Ausnahmen keinen Treffer haben" % lage)
 
 
+# Rechner, der wie seine Distribution heisst (Mac-Test vom 23.11.2026: 12 Funde, alles Erwähnungen der
+# Distribution). Ein solcher Name wird gesucht, aber nur in eindeutigem Zusammenhang gemeldet.
+distro = "Asa" + "hi"
+check(wp.eigener_name(distro) == distro and distro.lower() in wp.MEHRDEUTIGE_NAMEN,
+      "Rechner «%s»: der Name wird gesucht (kein Allerweltsname), gilt aber als mehrdeutig" % distro)
+distro_ausnahmen = wp.lade_ausnahmen()
+_gelesen, distro_treffer = wp.durchsuche(REPO, distro_ausnahmen, benutzer="", rechner=wp.eigener_name(distro))
+erwaehnungen = sum(len(re.findall(r"(?i)(?<![A-Za-z0-9])%s(?![A-Za-z0-9])" % distro, read(REPO, datei)))
+                   for datei in ("README.md", "CLAUDE.md"))
+check(distro_treffer == [] and erwaehnungen >= 2,
+      "Rechner «%s»: die %d Erwähnungen der Distribution in README.md und CLAUDE.md (und alle anderen im Repo) sind kein Fund: %s"
+      % (distro, erwaehnungen, [wp.zeile(f) for f in distro_treffer[:12]]))
+check(wp.ueberholte(distro_ausnahmen, distro_treffer, "", wp.eigener_name(distro)) == [],
+      "Rechner «%s»: keine Ausnahme gilt deshalb als überholt" % distro)
+for probe in ("Fedora %s Remix" % distro, "| MacBook Air M2 | Fedora %s Remix | Hyprland |" % distro, 'case "%s":' % distro.lower(),
+              "ID=fedora-%s-remix" % distro.lower(), "die %s-Treiber" % distro, "https://%slinux.org/%s" % (distro.lower(), distro.lower())):
+    check(wp.funde("x/probe.txt", probe, "", distro) == [], "Rechner «%s»: blosse Erwähnung ist kein Fund: %s" % (distro, probe))
+for probe in ("erika@%s:~$ ls" % distro.lower(), "ssh %s" % distro.lower(), '"hostname": "%s"' % distro, "Hostname: %s" % distro,
+              "hostnamectl set-hostname %s" % distro.lower(), "HOSTNAME=%s" % distro.lower(), "/".join(("", "home", distro.lower(), "bild.png"))):
+    check(any(f[2] == "Rechnername" for f in wp.funde("x/probe.txt", probe, "", distro)),
+          "Rechner «%s»: im eindeutigen Zusammenhang weiterhin ein Fund: %s" % (distro, probe))
+check(any(f[2] == "Rechnername" for f in wp.funde("x/probe.txt", "Bild von der Werkbank", "", "werkbank")),
+      "ein Rechnername, der nichts anderes bezeichnet, wird weiterhin als blosses Wort gemeldet")
+
+
 def probe_ueberholt(art, treffer=0):
     return {"glob": "x", "art": art, "muster": re.compile("x"), "text": "x", "treffer": treffer}
 
