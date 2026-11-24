@@ -38,5 +38,3 @@ WARN scene: QML FileView at @Services/NotepadStorageService.qml[<Z>]: Read of <T
 WARN scene: QML FileView at @Services/PaletteInjectService.qml[<Z>]: Read of <TMP>/h/.config/matugen/palette-inject.json failed: File does not exist.
 WARN scene: QML SportDaemon at file://<TMP>/h/.config/alpe/plugins/alpeSport/SportDaemon.qml[<Z>]: Created graphical object was not placed in the graphics scene.
 WARN: Process failed to start, likely because the binary could not be found. Command: QList("khal", "printformats")
-WARN: Unrecognized pragma "DiskCache"
-WARN: Unrecognized pragma "RenderControl"

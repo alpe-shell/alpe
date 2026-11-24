@@ -5,8 +5,6 @@
 //@ pragma Env QT_QUICK_CONTROLS_STYLE=Material
 //@ pragma UseQApplication
 //@ pragma AppId io.github.alpe_shell.Alpe
-//@ pragma RenderControl
-//@ pragma DiskCache
 
 import QtQuick
 import Quickshell
