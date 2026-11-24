@@ -201,6 +201,13 @@ esac
     code, text, aufrufe, da = kb_lauf("adresse-fremd", adresse=echt)
     check(code == 3 and "ABBRUCH, kein Bild" in text and aufrufe == "" and not da,
           "kwinbild main(): Adresse der echten Sitzung – Abbruch (3), busctl wird gar nicht aufgerufen")
+    code, text, aufrufe, da = kb_lauf("adresse-sitzungsbus", adresse=echt, fremde=())
+    check(code == 3 and "ABBRUCH, kein Bild" in text and aufrufe == "" and not da,
+          "kwinbild main(): Sitzungsbus unter /run/user ohne --fremd – Abbruch (3) durch die eingebaute Regel, busctl wird nicht aufgerufen")
+    for lage, adresse in (("zwei Adressen", test_bus + ";unix:path=/tmp/dbus-zwei"), ("kein Unix-Socket", "tcp:host=localhost,port=1"), ("autolaunch", "autolaunch:")):
+        code, text, aufrufe, da = kb_lauf("adresse-uneindeutig", adresse=adresse)
+        check(code == 3 and "nicht eindeutig" in text and aufrufe == "" and not da,
+              "kwinbild main(): Busadresse nicht eindeutig (%s) – Abbruch (3), busctl wird nicht aufgerufen" % lage)
     code, text, aufrufe, da = kb_lauf("kein-kwin")
     check(code == 3 and "kein org.kde.KWin" in text and "CaptureWorkspace" not in aufrufe and "GetConnectionUnixProcessID" in aufrufe and not da,
           "kwinbild main(): an diesem Bus gibt es kein org.kde.KWin – Abbruch (3), keine Aufnahme")

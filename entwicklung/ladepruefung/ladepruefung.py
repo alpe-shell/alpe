@@ -752,7 +752,7 @@ def main(argv):
                 for line in result["bild.log"].strip().splitlines() or ["FEHLER: keines entstanden"]:
                     say("   Bildschirmfoto – " + line)
                 if "ABBRUCH, kein Bild" in result["bild.log"]:
-                    say("FEHLER: kwinbild.py hat ohne Aufnahme abgebrochen (Grund in der Zeile darüber) – kein Bild, Lauf ungültig")
+                    say("FEHLER: kwinbild.py hat ohne Aufnahme abgebrochen (Grund in der Zeile mit «ABBRUCH» darüber) – kein Bild, Lauf ungültig")
                     return 2
             if any(line.startswith("FEHLER") for line in result["probe"]):
                 return 2
