@@ -756,6 +756,22 @@ gekündigt. **Entschieden (Plan 0.8 Nr. 22, 2.3.3):** Benutzername zur Laufzeit 
 sich ihre Laufzeit (0 = ohne Ende, je nach `MaxLeaseDuration`) nicht belegen lässt. Am PC gab es
 am 22.11.2026 keines.
 
+## Aufgabe für E: `pkill -x wireplumber` in `AudioService.qml` (Entscheid vom 24.11.2026)
+
+`shell/Services/AudioService.qml`, Funktion `reloadWireplumberConfig()`: Nach dem Schreiben der
+Alias-Datei startet die Shell WirePlumber neu. Mit systemd über `systemctl --user restart
+wireplumber`; **ohne systemd** (`!SessionService.systemctlCommandAvailable`) über
+`sh -c "pkill -x wireplumber; sleep 1"` und danach `wireplumber` als losgelösten Prozess.
+
+- Der Zweig greift nur ohne systemd – auf beiden Zielrechnern also nie; er ist ausgelieferter Code
+  aus dem Ursprung und in Phase A bisher nicht berührt.
+- Er widerspricht dem Grundsatz «kein `pkill`» (`CLAUDE.md`): `pkill -x wireplumber` beendet jeden
+  Prozess dieses Namens des Benutzers, nicht nur den der Sitzung.
+- **Aufgabe für E** (Paketierung; `wireplumber` bleibt harte Abhängigkeit, Plan 0.8 Nr. 96):
+  entscheiden und umsetzen, was ohne systemd geschieht – den Zweig entfernen (ohne systemd kein
+  Neustart, Hinweis an die Nutzerin oder den Nutzer) oder gezielt nur den eigenen Prozess beenden.
+  Mit Test. Am 24.11.2026 nicht geändert.
+
 ## Mögliche eigene Funktion: Hintergrund-Gestalter (nach Phase A)
 
 «Wallpaper creator» war ein Webdienst des Ursprungs (`wallpaper.duxlabs.dev`), der Bilder über
