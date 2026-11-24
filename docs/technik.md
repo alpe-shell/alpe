@@ -342,7 +342,9 @@ Gerätekennungen. Von Hand, auch gegen einen anderen Ordner:
 - **Binärdateien** (Schriften, Bilder, Klänge, Video, PDF, Shader – was ein NUL-Byte enthält oder
   kein UTF-8 ist) werden roh nach denselben Werten durchsucht: als Bytefolge und noch einmal ohne
   NUL-Bytes (UTF-16 in Metadaten), dazu der Inhalt von Hex-Zeichenketten (`<FEFF…>`, so legt PDF
-  Titel und Erzeuger ab). Grenzen: Namen unter vier Zeichen werden dort nicht gesucht (in
+  Titel und Erzeuger ab; UTF-16 wird darin nur mit der Marke `FEFF` erkannt, wie PDF sie verlangt).
+  Eine Datei mit Textendung, die ein NUL-Byte enthält, wird roh und zusätzlich zeilenweise
+  durchsucht. Grenzen: Namen unter vier Zeichen werden dort nicht gesucht (in
   Binärdaten träfen sie zufällig) – **ein Rechner- oder Benutzername unter vier Zeichen wird in
   Binärdateien also gar nicht gesucht**; eine IP-Adresse zählt nur streng gültig; komprimierte
   Ströme und Base64 werden nicht dekodiert; Namen mit Zeichen ausserhalb von ASCII werden nicht

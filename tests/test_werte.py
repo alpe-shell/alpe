@@ -279,11 +279,17 @@ with tempfile.TemporaryDirectory(prefix="alpe-werte-roh-") as roh_ordner:
         handle.write(b"\x89PNG\r\n\x1a\n" + fuell + b"tEXtComment\0" + heim.encode() + fuell)
     with open(os.path.join(roh_ordner, "muster.svg"), "w", encoding="utf-8") as handle:
         handle.write("<svg/>\n")
+    # Textendung, aber mit NUL-Byte: gilt als binär und wird zusätzlich zeilenweise durchsucht. Der kurze Rechnername
+    # steht im Rechnerfeld einer Journal-Zeile – roh wird er nicht gesucht, zeilenweise schon.
+    with open(os.path.join(roh_ordner, "journal.txt"), "wb") as handle:
+        handle.write(b"Kopf\0\n" + ("Oct 11 22:14:15 %s su[42]: Sitzung\n" % kurz_roh).encode())
     roh_zaehler = {}
-    _gelesen, roh_treffer = wp.durchsuche(roh_ordner, [], benutzer="", rechner="", zaehler=roh_zaehler)
-    check([wp.zeile(f) for f in roh_treffer] == ["bild.png (Binärdatei, Rohsuche) Pfad in ein Home-Verzeichnis «%s»" % "/".join(("", "home", "erika"))]
-          and roh_zaehler == {"roh": ["bild.png"], "ausgelassen": ["muster.svg"]},
-          "Rohsuche im Lauf über einen Ordner: Fund in einer Binärdatei wird gemeldet und benannt; Textdateien mit anderer Endung werden gezählt")
+    roh_gelesen, roh_treffer = wp.durchsuche(roh_ordner, [], benutzer="", rechner=kurz_roh, zaehler=roh_zaehler)
+    check([wp.zeile(f) for f in roh_treffer] == ["bild.png (Binärdatei, Rohsuche) Pfad in ein Home-Verzeichnis «%s»" % "/".join(("", "home", "erika")),
+                                               "journal.txt:2 Rechnername «%s»" % kurz_roh]
+          and roh_zaehler == {"roh": ["bild.png", "journal.txt"], "ausgelassen": ["muster.svg"]} and roh_gelesen == 0,
+          "Rohsuche im Lauf über einen Ordner: Fund in einer Binärdatei wird gemeldet und benannt; eine Datei mit Textendung und "
+          "NUL-Byte wird roh und zusätzlich zeilenweise durchsucht; Textdateien mit anderer Endung werden gezählt")
 ueberholt = ["%s %s %s" % (a["glob"], a["art"], a["text"]) for a in wp.ueberholte(ausnahmen, repo_treffer, benutzer, rechner)]
 check(ueberholt == [], "jede Ausnahme trifft mindestens einen Fund (sonst ist sie überholt): %s" % ueberholt)
 # Überholt darf eine Ausnahme nur heissen, wenn ihre Art in diesem Lauf gesucht wurde. Benutzer- und Rechnername
