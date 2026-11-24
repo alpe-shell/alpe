@@ -131,7 +131,7 @@ mv ~/.local/state/alpe.vor-phase-a ~/.local/state/alpe
 (Gab es `~/.local/state/alpe` vor dem Test nicht, meldet das erste `cp` bzw. das letzte `mv`
 nur «nicht gefunden».)
 
-**Anleitung für den Stand nach D7 (Halt nach D7.8, 22.11.2026; überarbeitet am 23.11.2026).**
+**Anleitung für den Stand nach D7 (Halt nach D7.8, 22.11.2026; überarbeitet am 23.11.2026 und nach dem Test am 24.11.2026).**
 Eigenständiger Ablauf – die Befehle der Anleitung für D6 werden hier nicht mehr vorausgesetzt.
 Getestet wird in der echten Hyprland-Sitzung; `~/alpe` bleibt unberührt. Seit D7.8 gibt es keine
 Hüllen mehr: Ein fremdes Plugin lädt nur noch in der angepassten Fassung.
@@ -188,23 +188,47 @@ Lehren, umgesetzt am 24.11.2026:
 git -C ~/alpe-phase-a push origin phase-a
 ```
 
+*Vor allem anderen – Stand holen und auschecken,* damit `docs/plugins-anpassen.md` und diese
+Anleitung im neuen Stand gelesen werden. Ausgecheckt wird der **konkrete Hash**, den der PC nach
+dem Push nennt (`git -C ~/alpe-phase-a rev-parse --short HEAD` am PC), nicht `origin/phase-a`: Ist
+`~/alpe` nur für `main` geklont, aktualisiert `fetch origin phase-a` nur `FETCH_HEAD`, und
+`origin/phase-a` bliebe auf dem alten Stand stehen. In der zweiten Zeile `HASH` ersetzen; die
+dritte muss denselben Hash zeigen:
+
+```
+git -C ~/alpe fetch origin phase-a
+git -C ~/alpe-phase-a checkout --detach HASH
+git -C ~/alpe-phase-a rev-parse --short HEAD
+```
+
+(Gibt es den Worktree noch nicht: `git -C ~/alpe worktree add --detach ~/alpe-phase-a HASH`.)
+
 *Schritt 0, einmalig und bleibend – vor dem Sichern:* die angepassten Fassungen von hueManager
-und calculator unter `~/.config/alpe/plugins` anlegen, genau nach `docs/plugins-anpassen.md`,
-Abschnitt «Mac» (je `cp -r` aus `~/.config/dms/plugins`, dann die `sed`-Zeilen; die Import-Zeile
-für hueManager nur einmal laufen lassen). Die Kopien unter `~/.config/dms/plugins` bleiben
-unverändert, 1.0 läuft damit weiter. Weil das vor dem Sichern geschieht, liegen die angepassten
-Fassungen auch in `~/.config/alpe.vor-d7` und überstehen das Zurückholen am Ende. Prüfen wie in
-`docs/plugins-anpassen.md`, «Prüfen» – die ersten beiden und der vierte und fünfte Befehl geben
-nichts aus, die Treffer des dritten und sechsten sieht man von Hand durch (Texte und Kommentare
-sind unbedenklich, ein Aufruf des Programms `dms` nicht):
+und calculator unter `~/.config/alpe/plugins` anlegen, genau nach `docs/plugins-anpassen.md`
+**im eben ausgecheckten Stand**: die Blöcke «hueManager» und «calculator», je mit den beiden
+Prüfbefehlen vorweg; **den Block «sathiAi» am Mac nicht ausführen** (Zwischenfall vom 23.11.2026).
+Liegen die angepassten Fassungen von der letzten Runde schon dort, entfällt der Schritt bis auf
+das Prüfen. Die Kopien unter `~/.config/dms/plugins` bleiben unverändert, 1.0 läuft damit weiter.
+Weil das vor dem Sichern geschieht, liegen die angepassten Fassungen auch in
+`~/.config/alpe.vor-d7` und überstehen das Zurückholen am Ende. Prüfen wie in
+`docs/plugins-anpassen.md`, «Prüfen». Die ersten beiden Befehle geben nichts aus; die Treffer des
+dritten und vierten sieht man von Hand durch (Texte und Kommentare sind unbedenklich, ein Aufruf
+des Programms `dms` nicht):
 
 ```
 grep -rn -E --include='*.qml' --include='plugin.json' '\bDank[A-Z]|qs\.DCommon|qs\.Modules\.DDash|\["dms"|requires_dms|dankbar-widget' ~/.config/alpe/plugins/hueManager
 grep -rn -E --include='*.qml' --include='plugin.json' '\bDank[A-Z]|qs\.DCommon|qs\.Modules\.DDash|\["dms"|requires_dms|dankbar-widget' ~/.config/alpe/plugins/calculator
 grep -rn -i -w --exclude-dir=.git 'dms' ~/.config/alpe/plugins/hueManager
-grep -rlZ -E --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/hueManager | xargs -0 -r grep -L 'import qs.Alpe.Widgets'
-grep -rlZ -E --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/calculator | xargs -0 -r grep -L 'import qs.Alpe.Widgets'
 grep -rn -i -w --exclude-dir=.git 'dms' ~/.config/alpe/plugins/calculator
+```
+
+Typen ohne Import, zwei kurze Befehle ohne Pipe: Der erste nennt die Dateien von hueManager mit
+einem `Alpe…`-Typ, der zweite die Dateien ohne `import qs.Alpe.Widgets`. **Keine Datei aus der
+ersten Liste darf in der zweiten stehen.** (Der calculator benutzt keine solchen Typen.)
+
+```
+grep -rlE --include='*.qml' '\bAlpe[A-Z]' ~/.config/alpe/plugins/hueManager
+grep -rL --include='*.qml' 'import qs.Alpe.Widgets' ~/.config/alpe/plugins/hueManager
 ```
 
 Die alten Kopien sind unverändert (ist eine davon kein Git-Klon, der Ausweg mit `diff -rq` aus
@@ -229,26 +253,26 @@ wird. `cp -r` in einen vorhandenen Ordner legt die neue Kopie sonst *in* den alt
 beim Zurückholen käme der alte Stand zurück. Ordner mit `.vor-d7` aus einem abgebrochenen Versuch
 ebenso zuerst wegräumen.
 
-*Schritt 2 – sichern, holen, bauen* (Hypr-Ordner mit, weil die Shell darin schreibt):
+*Schritt 2 – sichern, prüfen, bauen* (Hypr-Ordner mit, weil die Shell darin schreibt; geholt und
+ausgecheckt ist schon, siehe oben; kein `cd`, gebaut wird mit `make -C`):
 
 ```
 cp -r ~/.config/dms ~/.config/dms.vor-d7
 cp -r ~/.config/hypr ~/.config/hypr.vor-d7
 cp -r ~/.config/alpe ~/.config/alpe.vor-d7
 cp -r ~/.local/state/alpe ~/.local/state/alpe.vor-d7
-git -C ~/alpe fetch origin phase-a
-git -C ~/alpe-phase-a checkout --detach origin/phase-a
 git -C ~/alpe-phase-a rev-parse --short HEAD
 bash ~/alpe-phase-a/tools/test.sh
-cd ~/alpe-phase-a/core
-make dev BUILD_DIR=/tmp/alpe-d7
+make -C ~/alpe-phase-a/core dev BUILD_DIR=/tmp/alpe-d7
 /tmp/alpe-d7/alpe-dienst doctor
 /tmp/alpe-d7/alpe-dienst --help
 /tmp/alpe-d7/alpe-dienst dl --help
 ```
 
 (Gibt es `~/.local/state/alpe` noch nicht, meldet das vierte `cp` nur «nicht gefunden».) Den
-Hash aus der siebten Zeile oben in die Tabelle eintragen. Bei `doctor` steht unter «Compositor»
+Hash aus der fünften Zeile oben in die Tabelle eintragen. Bei `tools/test.sh` meldet am Mac
+`shell/tests/bluez-codec.test.mjs` zwei Tests als übersprungen, wenn `lua` nicht installiert ist;
+das ist kein Fehlschlag. Bei `doctor` steht unter «Compositor»
 Hyprland. `--help` zeigt oben den Schriftzug «ALPE» (nicht mehr «DMS»), `dl --help` bei
 `--user-agent` den Vorgabewert `Alpe/1.0.0 (+https://github.com/alpe-shell/alpe)`.
 
@@ -264,12 +288,24 @@ mkdir -p ~/.config/hypr/alpe
 cp -rn ~/.config/hypr/dms/. ~/.config/hypr/alpe/
 ```
 
-Sperrt 1.0 am Mac beim Start (`lockAtStartup`), täte es die Testshell auch. Nachsehen und, falls
-`true` dasteht, **nur in der Kopie** ausschalten:
+Sperrt 1.0 am Mac beim Start (`lockAtStartup`), täte es die Testshell auch. Der Vorgabewert ist
+`false` (`shell/Common/settings/SettingsSpec.js`); die Shell schreibt den Schlüssel nur, wenn er
+je umgestellt wurde. Nachsehen, **nur in der Kopie**:
 
 ```
+grep -c lockAtStartup ~/.config/alpe/settings.json
 grep lockAtStartup ~/.config/alpe/settings.json
-sed -i -E 's/"lockAtStartup": true/"lockAtStartup": false/' ~/.config/alpe/settings.json
+```
+
+- Zählt der erste Befehl 0, **fehlt der Schlüssel** (so am 23.11.2026): Es gilt die Vorgabe
+  `false`, die Testshell sperrt nicht, nichts zu tun – das `sed` unten griffe ins Leere.
+- Zeigt der zweite `"lockAtStartup": false`: nichts zu tun.
+- Zeigt er `"lockAtStartup": true`: in der Kopie ausschalten und nachsehen, dass danach `false`
+  dasteht:
+
+```
+sed -i -E 's/"lockAtStartup": *true/"lockAtStartup": false/' ~/.config/alpe/settings.json
+grep lockAtStartup ~/.config/alpe/settings.json
 ```
 
 *Schritt 4 – Plugins aus dem Repo statt der alten Kopien* (Plan 0.8 Nr. 32). Das Repo liefert
@@ -300,18 +336,72 @@ cp -r ~/alpe-phase-a/plugins/claudeCodeUsage ~/.config/alpe/plugins/
 `~/.config/dms/plugins` bleibt unberührt; dort liest 1.0 weiter seine Kopien. Zurückgeholt wird
 nichts einzeln: Der Rückbau am Ende entfernt `~/.config/alpe` ganz und setzt die Sicherung ein.
 
+*Schritt 4a – hypridle und hyprsunset.* Beide belegen Dinge, die auch der Dienst anfasst
+(`org.freedesktop.ScreenSaver`, Gamma). Nachsehen, ob und wie sie laufen:
+
+```
+systemctl --user is-active hypridle.service
+systemctl --user is-active hyprsunset.service
+pgrep -a hypridle
+pgrep -a hyprsunset
+```
+
+- **Als Dienst laufend** (`active`): für den Test stoppen und im Rückbau (Schritt 7) wieder
+  starten – in die Tabelle schreiben, welche es waren:
+
+```
+systemctl --user stop hypridle.service
+systemctl --user stop hyprsunset.service
+```
+
+- **Über `exec-once` laufend** (`pgrep` nennt einen Prozess, `is-active` meldet `inactive`): laufen
+  lassen. Der Dienst meldet dann nur als Hinweis, dass `org.freedesktop.ScreenSaver` schon einem
+  anderen Prozess gehört («already owned by another process (e.g. hypridle/swayidle)»); so war es
+  am 23.11.2026.
+- Läuft keines: nichts zu tun.
+
 *Schritt 5 – Testshell starten:*
 
 ```
 /tmp/alpe-d7/alpe-dienst -c ~/alpe-phase-a/shell run 2>&1 | tee /tmp/alpe-d7.log
 ```
 
+**Direkt nach dem Start** im zweiten Terminal – die Zahl muss 1 oder grösser sein, sonst hat sich
+die Oberfläche nicht mit dem Dienst verbunden, und der Test sagt nichts aus (abbrechen, Protokoll
+aufheben):
+
+```
+grep -c "Connected (API" /tmp/alpe-d7.log
+```
+
 Die Hyprland-Kürzel der 1.0-Einrichtung (`dms ipc call …`) erreichen die Testshell nicht; Aufrufe
-im zweiten Terminal, z. B. `/tmp/alpe-d7/alpe-dienst ipc call spotlight toggle`.
+im zweiten Terminal **immer mit vollem Pfad** – ein `alpe-dienst` ohne Pfad gibt es am Mac vor dem
+Umzug nicht:
+
+```
+/tmp/alpe-d7/alpe-dienst ipc call spotlight toggle
+/tmp/alpe-d7/alpe-dienst ipc call processlist focusOrToggle
+/tmp/alpe-d7/alpe-dienst ipc call dash toggle overview
+/tmp/alpe-d7/alpe-dienst ipc call dash toggle wallpaper
+/tmp/alpe-d7/alpe-dienst ipc call settings focusOrToggle
+/tmp/alpe-d7/alpe-dienst ipc call settings tabs
+```
+
+(`processlist focusOrToggle` öffnet den Systemmonitor.)
 `/tmp/alpe-d7/alpe-dienst restart` lädt nur die Testshell neu und ändert nichts an `dms.service`.
 Durchklicken wie bei D6 (Arbeitsflächen, Starter, Dock, Kontrollzentrum, Tastaturlayout,
 Einstellungen → Tastenkürzel, Fensterregeln, Anzeige, Maus & Touchpad; Energiemenü nur öffnen;
 `/tmp/alpe-d7/alpe-dienst screenshot window`; `notify-send test`).
+
+Geräte und Dienst – am Mac zu prüfen, weil die Ladeprüfung am PC sie nicht abdeckt:
+
+- **WLAN-Liste:** Kontrollzentrum → WLAN: Netze erscheinen, das verbundene ist markiert.
+- **Bluetooth:** Kontrollzentrum → Bluetooth: gekoppelte Geräte erscheinen; bei einem verbundenen
+  Kopfhörer die **Codec-Auswahl** öffnen (Liste der Codecs erscheint, Wechsel wirkt).
+- **Helligkeitsregler:** Regler im Kontrollzentrum und die Helligkeitstasten ändern die
+  Helligkeit des internen Bildschirms.
+- **Systemmonitor-Widgets:** CPU-, Speicher- und Temperaturanzeigen der Leiste zeigen Werte (keine
+  Striche); `/tmp/alpe-d7/alpe-dienst ipc call processlist focusOrToggle` öffnet die Prozessliste.
 
 Neu seit D6 – bitte gezielt ansehen:
 
@@ -337,10 +427,15 @@ Neu seit D6 – bitte gezielt ansehen:
 - **Notizblock:** eine gespeicherte Notiz öffnen, neben dem Dateinamen den Knopf «Pfad kopieren»
   drücken und in einem Terminal einfügen – der Pfad der Datei muss kommen (der Knopf rief bis
   D7.8a noch `dms clipboard copy` und tat unter 1.1 nichts).
-- **Bildschirmfoto und Pipette ohne Animation:** `/tmp/alpe-d7/alpe-dienst screenshot region`
-  starten und während der Auswahl im zweiten Terminal `hyprctl layers | grep alpe:` – die Fläche
-  heisst `alpe:screenshot` (Pipette: `alpe:eyedropper`, Plan 0.8 Nr. 75); sie soll ohne Einblenden erscheinen,
-  wenn in der eigenen Hyprland-Datei eine Regel für `^alpe:.*` steht.
+- **Bildschirmfoto und Pipette ohne Animation:** Start und Layer-Prüfung als **eine Zeile**:
+
+  ```
+  /tmp/alpe-d7/alpe-dienst screenshot region & sleep 2; hyprctl layers | grep alpe:
+  ```
+
+  Die Fläche heisst `alpe:screenshot` (Pipette: `alpe:eyedropper`, Plan 0.8 Nr. 75); sie soll ohne
+  Einblenden erscheinen, wenn in der eigenen Hyprland-Datei eine Regel für `^alpe:.*` steht.
+  Danach die Auswahl abschliessen und prüfen, dass das Bild in der Zwischenablage liegt.
 - **Einstellungssuche (Abschluss des Halts nach D7):** Die Registrierung der Zeilen und Karten
   für die Suche hängt neu als Eigenschaft an der Zeile. Einstellungen öffnen, im Suchfeld
   «Sperre» und danach «Schrift» suchen, je einen Treffer wählen: Die Seite wechselt, rollt zur
@@ -376,7 +471,17 @@ Neu seit D6 – bitte gezielt ansehen:
   ein Schriftsymbol. Für beide Durchgänge das Dock ohne Anheftungen ansehen: alle Anheftungen
   lösen (Rechtsklick → «Aus Dock loslösen»), offene Fenster schliessen; das Zurückholen am Ende
   stellt die Session wieder her.
-  *Durchgang 1 – ohne kora, wie der Mac heute ist.* Eingestelltes Symbolthema festhalten
+  **Ist kora schon installiert, entfällt Durchgang 1** (so am 23.11.2026: Systempaket
+  `kora-icon-theme` aus einem fremden COPR); der Befund zu Adwaita ist durch die Ladeprüfung am PC
+  belegt. Dann auch nichts ins Home klonen, sondern in Durchgang 2 nur das Thema «kora» wählen.
+  Nachsehen:
+
+  ```
+  rpm -q kora-icon-theme
+  ls -d /usr/share/icons/kora ~/.local/share/icons/kora
+  ```
+
+  *Durchgang 1 – ohne kora (nur wenn keiner der Befehle oben kora findet).* Eingestelltes Symbolthema festhalten
   (Einstellungen → «Theme & Farben», Auswahl des Symbolthemas). Mit Adwaita – der Vorgabe von Fedora – ist ein
   **deckend schwarzes Quadrat hinter dem Papierkorb erwartet und kein neuer Befund**: QtSvg 6.12
   zeichnet in `user-trash.svg` von Adwaita die `<clipPath>`-Elemente, die ausserhalb von `<defs>`
@@ -435,14 +540,44 @@ Test zurückholen und 1.0 wieder starten. Wichtig für den späteren Umzug: Ein
 `~/.config/alpe/settings.json` aus dem Test würde das Sicherheitsnetz von `alpe start` (Plan 6.6)
 abschalten.
 
+**Zuerst sicherstellen, dass die Testshell wirklich beendet ist.** Am 23.11.2026 lief sie beim
+Löschen noch und schrieb `~/.config/hypr/alpe` gleich wieder neu. Der Befehl darf nichts ausgeben;
+nennt er einen Prozess, die Testshell im ersten Terminal mit Strg+C beenden und noch einmal
+nachsehen (einen einzelnen übrig gebliebenen Prozess über seine Nummer beenden: `kill NUMMER`):
+
+```
+pgrep -a alpe-dienst
+```
+
+Erst dann löschen und zurückholen:
+
 ```
 rm -rf ~/.config/alpe ~/.local/state/alpe ~/.config/hypr/alpe
 mv ~/.config/alpe.vor-d7 ~/.config/alpe
 mv ~/.local/state/alpe.vor-d7 ~/.local/state/alpe
-systemctl --user start dms.service
 ```
 
 (Gab es `~/.local/state/alpe` vor dem Test nicht, meldet das zweite `mv` nur «nicht gefunden».)
+Jetzt vergleichen, ob die Ordner von 1.0 noch so sind wie vor dem Test. **Beide Befehle müssen
+ohne Ausgabe enden;** jede Zeile nennt eine Datei, die sich während des Tests geändert hat – dann
+1.0 noch nicht starten, sondern die Datei ansehen und aus der Sicherung zurückholen:
+
+```
+diff -rq ~/.config/dms.vor-d7 ~/.config/dms
+diff -rq ~/.config/hypr.vor-d7 ~/.config/hypr
+```
+
+Erst bei leerer Ausgabe 1.0 starten, gestoppte Dienste aus Schritt 4a wieder starten (nur die,
+die vorher `active` waren) und das Journal auf Ladefehler prüfen – der letzte Befehl darf nichts
+finden:
+
+```
+systemctl --user start dms.service
+systemctl --user start hypridle.service
+systemctl --user start hyprsunset.service
+journalctl --user -u dms.service --since "-2min" --no-pager -g "Config reload failed|is not a type|is not installed|ReferenceError|TypeError"
+```
+
 Die angepassten Plugins aus Schritt 0 liegen danach wieder unter `~/.config/alpe/plugins`, weil
 sie in der Sicherung stecken; die zur Seite gelegten alten Kopien der Repo-Plugins sind mit
 `~/.config/alpe` entfernt (ihre Originale liegen unverändert unter `~/.config/dms/plugins`).
@@ -469,12 +604,14 @@ Testshell erwartungsgemäss **nicht** – das ist kein Befund. Betroffen sind al
 mit `dms ipc call …`, `dms screenshot …` (das Programm `dms` erreicht nur die Shell 1.0), das
 IPC-Ziel `dankdash` (entfällt ohne Übergang; neu `dash toggle wallpaper`) und Seiten-IDs wie
 `dank_dash` oder `dankbar_widgets` als Argument von `settings`. Erst der Umzug (F1, Plan 7.4
-Schritt 6) schreibt sie um. Zum Prüfen im Terminal:
+Schritt 6) schreibt sie um. Zum Prüfen im Terminal, mit vollem Pfad der Testshell (ein
+`alpe-dienst` ohne Pfad gibt es am Mac vor dem Umzug nicht):
 
 ```
-alpe-dienst ipc call dash toggle overview
-alpe-dienst ipc call dash toggle wallpaper
-alpe-dienst ipc call settings tabs
+/tmp/alpe-d7/alpe-dienst ipc call dash toggle overview
+/tmp/alpe-d7/alpe-dienst ipc call dash toggle wallpaper
+/tmp/alpe-d7/alpe-dienst ipc call settings tabs
+/tmp/alpe-d7/alpe-dienst ipc call processlist focusOrToggle
 ```
 
 **Layer-Regeln am Mac im D7-Stand (Plan 0.8 Nr. 42, Tabelle):** Eigene Hyprland-Regeln mit
