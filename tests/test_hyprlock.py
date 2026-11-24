@@ -79,6 +79,13 @@ if os.path.isfile(neutral) and os.path.isfile(eingecheckt):
     check(run(neutral, "--quelle", "lockscreen/hyprlock.conf", "--quiet") == vorlage,
           "layout.js der Sperre ist aus lockscreen/hyprlock.conf erzeugt (neu erzeugen: alpe-hyprlock.py … --quelle lockscreen/hyprlock.conf -o …)")
     check("/home/" not in vorlage and " am 20" not in vorlage.splitlines()[1], "layout.js der Sperre: kein Pfad in ein Home-Verzeichnis, kein Datum")
+    # hyprlock zeigt ein Element mit «monitor = NAME» nur an diesem Anschluss, mit leerem Wert überall
+    # (src/renderer/Renderer.cpp: «!c.monitor.empty() && c.monitor != POUTPUT->stringPort && …» überspringt).
+    # Die ausgelieferte Vorlage nennt darum keinen Bildschirm.
+    with open(neutral, encoding="utf-8") as handle:
+        monitore = [zeile.split("=", 1)[1].strip() for zeile in handle if zeile.strip().startswith("monitor")]
+    check(len(monitore) >= 5 and not any(monitore) and '"monitor": "' not in vorlage.replace('"monitor": ""', ""),
+          "hyprlock.conf und layout.js nennen keinen Bildschirm (monitor leer = alle Bildschirme): %s" % monitore)
 
 print("\nalle Prüfungen bestanden" if failures == 0 else f"\n{failures} FEHLER")
 sys.exit(1 if failures else 0)

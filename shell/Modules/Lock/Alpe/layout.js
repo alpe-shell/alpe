@@ -55,7 +55,7 @@ var layout = {
     "0",
     "-520"
    ],
-   "monitor": "eDP-1",
+   "monitor": "",
    "halign": "center",
    "valign": "top",
    "zindex": 5,
@@ -85,7 +85,7 @@ var layout = {
     "0",
     "20"
    ],
-   "monitor": "eDP-1",
+   "monitor": "",
    "halign": "center",
    "valign": "center",
    "zindex": 5,
@@ -115,7 +115,7 @@ var layout = {
     "0",
     "-40"
    ],
-   "monitor": "eDP-1",
+   "monitor": "",
    "halign": "center",
    "valign": "center",
    "zindex": 20,
