@@ -1,4 +1,4 @@
-# Grundlinie von qmllint über shell/ (qmllint 6.12.0): 4902 Meldungen. Neu schreiben:
+# Grundlinie von qmllint über shell/ (qmllint 6.12.0): 4900 Meldungen. Neu schreiben:
 # python3 entwicklung/qmllint/qmllint-pruefung.py --grundlinie (Plan 0.8 Nr. 63)
 Info Alpe/Dash/Overview/Card.qml: Unused import [unused-imports]
 Info Alpe/Dash/Overview/ClockCard.qml: Unused import [unused-imports]
@@ -3123,12 +3123,10 @@ Warning Modules/Lock/Alpe/HyprlockView.qml: Unqualified access [unqualified]
 Warning Modules/Lock/Alpe/HyprlockView.qml: Unqualified access [unqualified]
 Warning Modules/Lock/FadeOverlayWindow.qml: Member "Overlay" not found on type "qs::wayland::layershell::WlrLayershell" [missing-property]
 Warning Modules/Lock/FadeOverlayWindow.qml: Type PanelWindow is not creatable. [uncreatable-type]
-Warning Modules/Lock/Lock.qml: Member "name" not found on type "QuickshellScreenInfo" [missing-property]
 Warning Modules/Lock/Lock.qml: Redundant optional chaining for lookup on non-voidable and non-nullable type QString [redundant-optional-chaining]
 Warning Modules/Lock/Lock.qml: Redundant optional chaining for lookup on non-voidable and non-nullable type QString [redundant-optional-chaining]
 Warning Modules/Lock/Lock.qml: Redundant optional chaining for lookup on non-voidable and non-nullable type QString [redundant-optional-chaining]
 Warning Modules/Lock/Lock.qml: Redundant optional chaining for lookup on non-voidable and non-nullable type QString [redundant-optional-chaining]
-Warning Modules/Lock/Lock.qml: Redundant optional chaining for lookup on non-voidable and non-nullable type QuickshellScreenInfo [redundant-optional-chaining]
 Warning Modules/Lock/Lock.qml: Unqualified access [unqualified]
 Warning Modules/Lock/Lock.qml: Unqualified access [unqualified]
 Warning Modules/Lock/Lock.qml: Unqualified access [unqualified]

@@ -45,9 +45,12 @@ Der Maintainer arbeitet auf dem PC, auf dem du läufst, und Alpe ist seine aktiv
 - Lesen von `~/.config/dms`, `~/.local/state/dms`, `~/.config/alpe`, `~/.config/kwinrulesrc`
   ist erlaubt (für Migrationstests: Kopie in ein Temp-`$HOME` ziehen und dort arbeiten).
 - Tests laufen mit eigenem `HOME`/`XDG_*` in einem Temp-Verzeichnis, nie gegen das echte.
-- Abgeschottete Go-Tests (eigenes `HOME`): `GOMODCACHE` (und `GOCACHE`, `GOPATH`) auf den
-  bestehenden Cache aus `go env` setzen oder `GOFLAGS=-modcacherw` verwenden, damit kein
-  schreibgeschützter Modul-Cache im Temp-Ordner liegen bleibt (Plan 0.8 Nr. 40).
+- **Go-Tests laufen nur über den abgeschotteten Weg** (eigenes `HOME`/`XDG_*` im Temp-Ordner), nie mit
+  dem echten `HOME`. Wer von Hand startet, liest `GOMODCACHE` und `GOCACHE` (und `GOPATH`) mit
+  `go env` aus, **bevor** `HOME` wechselt, und setzt sie als feste absolute Pfade – nach dem Wechsel
+  zeigte `go env` schon in den Temp-Ordner. Sollen die Caches selbst im Temp-Ordner liegen, gehört
+  `GOFLAGS=-modcacherw` dazu, damit kein schreibgeschützter Modul-Cache liegen bleibt
+  (Plan 0.8 Nr. 40).
 - Kein `pkill`, `killall` oder `pkill -f`, auch nicht mit Pfadmustern: Die echte Shell läuft unter
   denselben Programmnamen (`qs`/`quickshell`, `dms`/`alpe`). Prozesse der Ladeprüfung nur über ihren
   Scope beenden (`systemctl --user stop alpe-ladepruefung-<zeit>.scope`).
@@ -89,8 +92,9 @@ grim wird nicht benutzt), das angesehen und dem Maintainer beschrieben wird (Pla
 
 Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `shell/` – nicht in
 `tools/test.sh`: `python3 entwicklung/qmllint/qmllint-pruefung.py` vergleicht mit
-`entwicklung/qmllint/grundlinie.txt` (4902 Meldungen, gezählt mit diesem Skript auf `6305cb1`; eine
-andere Zahl aus früheren Notizen gilt nicht). Bei jedem Halt vergleichen und jede neue Meldung einzeln
+`entwicklung/qmllint/grundlinie.txt` (4900 Meldungen seit dem 24.11.2026; vorher 4902, gezählt mit
+diesem Skript auf `6305cb1` – die zwei Meldungen zu `Modules/Lock/Lock.qml` fehlten seit D7.8 in jedem
+Lauf; eine andere Zahl aus früheren Notizen gilt nicht). Bei jedem Halt vergleichen und jede neue Meldung einzeln
 einordnen (beheben oder mit Begründung in die Grundlinie; Plan 0.8 Nr. 63).
 
 Dienst und Systembus (Plan 0.8 Nr. 82, 84, 85; `docs/plan/dienst-systembus.md`): Im Dienst ruft nichts
