@@ -967,6 +967,36 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Shell im Lauf lädt; `DeferredAction.qml`, `NotepadStorageService.qml` und die Shader sind
   unverändert. **Herkunft offen, Frist wie unten vor G1;** vor einer Aufnahme als `SPORADISCH`
   in die Grundlinie mehr Läufe auf beiden Ständen (Entscheid des Maintainers).
+- **Sporadische Meldungen unter Hyprland «offen» – Entscheid des Maintainers vom 24.11.2026: nicht
+  in die Grundlinie, hier geführt. Vermerk: nur unter Last beobachtet, Herkunft offen.**
+  Die drei Meldungen (normalisiert, wie die Ladeprüfung sie vergleicht):
+  (1) Notizblock-Paar – `WARN qml: [NotepadStorageService:<Z>] Tab file does not exist:
+  <TMP>/h/.local/state/alpe/notepad-files/untitled-<ID>.txt` samt der Zeile `QML FileView at
+  @Services/NotepadStorageService.qml[<Z>]: Read of … failed: File does not exist.`;
+  (2) `@Common/DeferredAction.qml`: «TypeError: Cannot read property 'stop' of null»;
+  (3) «ShaderEffect: 'source' does not have a matching property».
+  **Zählungen:**
+
+  | Läufe | Stand | Bedingungen | Notizblock | `stop` of null | ShaderEffect |
+  |---|---|---|---|---|---|
+  | 12 (24.11.2026, 19:48–20:48, abwechselnd mit der Zeile darunter) | `b04b1bf` | in Ruhe | 0 | 0 | 0 |
+  | 12 (dieselbe Messung) | `54bb5c0` | in Ruhe | 0 | 0 | 0 |
+  | 4 (24.11.2026, 18:58–19:14, Haltprüfung) | `54bb5c0` | unter Last (daneben `go vet ./...` bzw. weitere Arbeit der Sitzung) | 1 | 1 | 1 |
+
+  Also 0 von 12 auf `b04b1bf` und 0 von 12 auf `54bb5c0` in Ruhe, je einmal in 4 Läufen unter Last.
+  Auch die schon geführte Meldung `DeferredAction` «Property 'flush' of object … is not a function»
+  (`SPORADISCH 1/3` in `grundlinie-hyprland-offen.txt`) kam in den 24 ruhigen Läufen nie vor.
+  Drei frühere Läufe auf `b04b1bf` vom selben Abend (19:14–19:22, nicht in Ruhe gemessen) zeigten
+  ebenfalls keine der drei. **Das Notizblock-Paar steht auf `b04b1bf` schon in der Grundlinie der
+  Variante «gesperrt»** (`grundlinie-hyprland.txt`, `SPORADISCH 1/3`), wurde also vor der Runde nach
+  dem Mac-Test beobachtet, nur in der anderen Variante. In `grundlinie-hyprland-offen.txt` steht
+  keine der drei; tritt eine auf, meldet die Ladeprüfung sie weiter als neu. Dafür gilt die
+  Wiederholungsregel in `CLAUDE.md` («Ladeprüfungen laufen nur in Ruhe»): bis zu zwei
+  Wiederholungen in Ruhe, Zählung aller Läufe in den Bericht. Mögliche Ursache für (2), aus dem
+  Quelltext gefolgert und nicht durch einen Lauf belegt: `deferTimer` in `DeferredAction.qml` ist
+  ein Objekt in einer Eigenschaft; läuft `cancel()` beim Abbau oder vor der Zuweisung, ist es noch
+  oder schon `null`. **Offen beim Maintainer:** ob `SPORADISCH`-Einträge von Hand in eine
+  Grundlinie dürfen. Frist für die Herkunft: vor G1.
 - **Sporadische Meldungen unter Hyprland aus der Neumessung (22.11.2026), nicht behoben –
   Herkunft offen, Frist: vor G1:** je in
   1 von 3 Läufen (a) `NotepadStorageService`: «Tab file does not exist …/untitled-<ID>.txt» samt
