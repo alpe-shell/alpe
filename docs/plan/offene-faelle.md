@@ -981,7 +981,10 @@ wireplumber`; **ohne systemd** (`!SessionService.systemctlCommandAvailable`) üb
   laufenden Benutzer-Manager, scheitert `systemctl --user restart wireplumber` wie bisher mit Fehlermeldung.
   Die Entscheidung über den Befehl steckt in der reinen Funktion `wireplumberRestartCommand`; Test
   `shell/tests/wireplumber-restart.test.mjs` (über `tools/node-tests.py` in `tools/test.sh`). In `shell/` steht
-  danach kein `pkill` und kein `killall` mehr.
+  danach kein `pkill` und kein `killall` mehr. Der Zweig war auch auf PC und Mac erreichbar:
+  `systemctlCommandAvailable` steht anfangs auf `false`, bis die Abfrage beim Start (`SessionService.qml`) den Wert
+  setzt – wer in diesem kurzen Fenster einen Gerätenamen änderte, löste `pkill -x wireplumber` aus; jetzt
+  schlimmstenfalls einen unnötigen Hinweis (Prüfer zu 2.7).
 
 ## Mögliche eigene Funktion: Hintergrund-Gestalter (nach Phase A)
 
@@ -1338,6 +1341,31 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   **vollständig aus der Dateiliste von `make install`** gebildet und **am Ende von E1 festgelegt**
   (Auftrag des Maintainers vom 25.11.2026: Tabelle Datei oder Ordner → Lizenz nach `NOTICE`, daraus der Vorschlag für 6.2
   und 6.3). Bis dahin bleibt der Plan bei den drei; der Text darunter ist der Stand vom 24.11.2026.
+  - **Vorschlag aus der Dateiliste (25.11.2026, Nachtlauf E1 2.8; Tabelle Datei/Ordner → Lizenz in der Nachtdatei
+    und in den Belegen; Entscheid beim Maintainer):**
+    Arch `license=(MIT GPL-3.0-only Apache-2.0 BSD-2-Clause BSD-3-Clause OFL-1.1 CC-BY-4.0 CC-BY-SA-4.0 CC0-1.0 FTL
+    LicenseRef-Alpe-Logo)`; Fedora `License: MIT AND GPL-3.0-only AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND
+    OFL-1.1 AND CC-BY-4.0 AND CC-BY-SA-4.0 AND CC0-1.0 AND (FTL OR GPL-2.0-or-later) AND LicenseRef-Alpe-Logo`
+    – vorbehaltlich der offenen Punkte:
+    - **`alpe-dienst` linkt `github.com/pilebones/go-udev` (GPL-3.0, README «GNU GPL v3» ohne «or later»)**,
+      benutzt in `core/internal/server/brightness/udev_linux.go`; aus dem Ursprung übernommen. Das Programm als
+      Ganzes fällt damit unter die Bedingungen der GPL-3.0; `NOTICE` sagt das nicht. Entscheid offen: so lassen
+      (GPL-3.0 ins Feld, Quellarchiv liegt ohnehin bei), oder `go-udev` durch eigenen Netlink-Code ersetzen.
+    - `github.com/yeqown/reedsolomon` (indirekt über `go-qrcode`): im Modul keine Lizenzdatei, die README nennt
+      keine Lizenz – Lizenz ungeklärt.
+    - `github.com/golang/freetype`: FreeType License oder GPL-2.0-or-later nach Wahl; die FTL verlangt eine Nennung
+      in der Dokumentation.
+    - **Klänge** (`shell/assets/sounds/freedesktop/`, ausgeliefert nur vier): `audio-volume-change` und `message`
+      CC-BY-SA (ohne Fassung), `message-new-instant` steht in `CREDITS` ohne eigenen Block vor der Gruppe von
+      Damien Sandras (GPLv2+) – vermutlich **GPLv2+**; **`desktop-login` hat in `CREDITS` keinen Eintrag**. Die
+      CC-BY-3.0-Klänge aus `NOTICE` werden nicht ausgeliefert.
+    - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
+      (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
+      Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter
+      `shell/assets/`: `hyprland.svg`, `package-sources/{flatpak,snap,appimage,nix}.svg` (benutzt),
+      `discord.svg`, `reddit.svg` (nirgends benutzt).
+    - `LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`); die mit
+      `alpe-dienst completion` erzeugten Vervollständigungen stammen aus Vorlagen von cobra (Apache-2.0).
 - ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
   Lizenzfeld MIT, CC-BY-4.0 und CC0-1.0 nennt (Plan 6.2, 6.3, Abschnitt 10). Unter `shell/` liegen
   nach `NOTICE` und Plan Abschnitt 3 aber auch Teile unter anderen Lizenzen: Schriften (OFL-1.1,

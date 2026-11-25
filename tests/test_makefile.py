@@ -5,7 +5,8 @@
 
 Prüft in einem Temp-Ordner: «make build» baut den Dienst ohne eingebettete Oberfläche und mit der Version aus
 Brand.qml; «make install DESTDIR=… PREFIX=/usr» legt den Baum nach 6.1 an (Werkzeuge nur aus der ausdrücklichen
-Liste, keine Tests der Oberfläche); «make dist» schreibt ein Quellarchiv mit vendorten Go-Modulen, aus dem sich der
+Liste, keine Tests der Oberfläche), und die ganze Dateiliste stimmt mit dem Codeblock in Plan 6.1 überein; keine
+Datei gehört zugleich dem Paket des Ursprungs (pacman -Ql, nur wenn es installiert ist; E1 2.8); «make dist» schreibt ein Quellarchiv mit vendorten Go-Modulen, aus dem sich der
 Dienst ohne Netz bauen lässt. Ohne make, go oder git (oder mit ALPE_SKIP_GO) wird der Teil übersprungen.
 """
 import os
@@ -122,6 +123,45 @@ try:
         im_repo = set(subprocess.run(["git", "-C", REPO, "ls-files", "shell"], capture_output=True, text=True).stdout.split())
         installiert = {os.path.relpath(os.path.join(d, f), os.path.join(share)) for d, _, fs in os.walk(os.path.join(share, "shell")) for f in fs}
         check(installiert <= im_repo, "unter /usr/share/alpe/shell nur Dateien aus dem Repository: %s" % sorted(installiert - im_repo)[:5])
+
+    # Nachtlauf E1 2.8: die ganze Dateiliste gegen den Codeblock in Plan 6.1. Jede installierte Datei liegt unter
+    # einem Eintrag, jeder Eintrag ist da. Ein Eintrag mit «/» am Ende ist ein Ordner, «{a,b}» steht für mehrere,
+    # «…» in den Klammern heisst «weitere Dateien in diesem Ordner erlaubt».
+    plan = open(os.path.join(REPO, "docs", "plan", "phase-a-plan.md"), encoding="utf-8").read()
+    block = re.search(r"^### 6\.1 .*?^```\n(.*?)^```", plan, re.M | re.S).group(1)
+    dateien, ordner, pflicht = set(), set(), set()
+    for zeile in block.splitlines():
+        if not zeile.startswith("/"):
+            continue
+        eintrag = zeile.split()[0]
+        teile = re.match(r"(.*?)\{(.*?)\}(.*)$", eintrag)
+        varianten = [teile.group(1) + v + teile.group(3) for v in teile.group(2).split(",")] if teile else [eintrag]
+        for pfad in varianten:
+            if pfad.endswith("…") or pfad.endswith("…/"):
+                ordner.add(pfad[:pfad.rindex("/") + 1])
+            elif pfad.endswith("/"):
+                ordner.add(pfad)
+                pflicht.add(pfad)
+            else:
+                dateien.add(pfad)
+                pflicht.add(pfad)
+    liste = sorted("/" + os.path.relpath(os.path.join(d, f), wurzel) for d, ds, fs in os.walk(wurzel)
+                   for f in fs + [x for x in ds if os.path.islink(os.path.join(d, x))])
+    ausserhalb = [p for p in liste if p not in dateien and not any(p.startswith(o) for o in ordner)]
+    fehlend = [p for p in sorted(pflicht) if (p not in liste) if not p.endswith("/")] \
+        + [o for o in sorted(pflicht) if o.endswith("/") and not any(p.startswith(o) for p in liste)]
+    check(len(dateien) >= 10 and len(ordner) >= 6 and not ausserhalb and not fehlend,
+          "Dateiliste von make install = Plan 6.1 (%d Dateien; ausserhalb von 6.1: %s; fehlt: %s)" % (len(liste), ausserhalb[:5], fehlend))
+    # Kein Pfad gehört zugleich dem Paket des Ursprungs (nur gelesen mit pacman -Ql; Ordner wie /usr/share/applications
+    # teilen sich alle Pakete und zählen nicht). Es darf während des Umzugs als Rückweg installiert bleiben (Plan 6.2).
+    # alpe-namen-ausnahme: umzug-ende
+    if shutil.which("pacman") and subprocess.run(["pacman", "-Q", "dux-shell"], capture_output=True).returncode == 0:
+        fremd = {z.split(" ", 1)[1] for z in subprocess.run(["pacman", "-Ql", "dux-shell"], capture_output=True, text=True).stdout.splitlines()
+                 if " " in z and not z.endswith("/")}
+        check(fremd and not fremd & set(liste), "keine Datei zugleich im Paket dux-shell (%d Dateien dort): %s" % (len(fremd), sorted(fremd & set(liste))))
+    else:
+        print("pacman oder das Paket dux-shell fehlt – Abgleich mit dux-shell übersprungen")
+    # alpe-namen-ausnahme: umzug-ende
 
     if shutil.which("git") and subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:
         # Erster Lauf ausdrücklich mit umask 022, der zweite unten mit 002 – sonst bewiese der Vergleich nichts,
