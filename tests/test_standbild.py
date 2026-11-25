@@ -7,7 +7,9 @@ ebenso, es ist nicht grösser als 1 MiB, steht in NOTICE und im Manifest; das Sk
 Dazu design.py export: Das Standbild bleibt beim Export erhalten und steht im Manifest – nur für Videos des
 eingespielten Designs, nicht für eigene Videos der Nutzer.
 """
+import contextlib
 import importlib.util
+import io
 import json
 import os
 import re
@@ -55,8 +57,48 @@ filter_js = re.search(r'^var FILTER = "(.*)";$', poster_js, re.M)
 quality_js = re.search(r'^var QUALITY = "(.*)";$', poster_js, re.M)
 check(filter_js and quality_js and filter_js.group(1) == sb.FILTER and quality_js.group(1) == sb.QUALITAET,
       "tools/standbild.py ruft ffmpeg mit demselben Filter und derselben Qualität auf wie die Shell (VideoPoster.js)")
+# Ganzer Aufruf, Argument für Argument: so steht er im sh-Skript der Shell ($2 = Video, Ziel = "$1.part.jpg").
+js_script = re.search(r"function script\(\) \{(.*?)\n\}", poster_js, re.S).group(1)
+js_aufruf = re.sub(r"'\s*\+\s*'", "", re.sub(r"'\s*\+\s*(FILTER|QUALITY)\s*\+\s*'", lambda m: {"FILTER": sb.FILTER, "QUALITY": sb.QUALITAET}[m.group(1)],
+                                                   re.sub(r"\n\s*\+ ", " + ", js_script)))
+py_aufruf = " ".join('"%s"' % a if a in ("$2", sb.FILTER, '$1.part.jpg') else a for a in sb.aufruf("$1.part.jpg", sb.QUALITAET, video="$2"))
+check(py_aufruf in js_aufruf, "Ganzer ffmpeg-Aufruf gleich wie in der Shell: %s" % py_aufruf)
+# Ersatzqualität (Grenze 1 MiB) mit einer ffmpeg-Attrappe: Sie schreibt je nach -q:v eine Datei bestimmter Grösse.
+with tempfile.TemporaryDirectory(prefix="alpe-standbild-ersatz-") as tmp:
+    attrappe = os.path.join(tmp, "bin", "ffmpeg")
+    os.makedirs(os.path.dirname(attrappe))
+    with open(attrappe, "w") as handle:
+        handle.write('#!/bin/sh\nfor a; do ziel="$a"; done\nq=""; prev=""\nfor a; do [ "$prev" = "-q:v" ] && q="$a"; prev="$a"; done\n'
+                     'echo "$q" >> "%s"\ngroesse=$(cat "%s/groesse-$q")\nhead -c "$groesse" /dev/zero > "$ziel"\n' % (os.path.join(tmp, "aufrufe"), tmp))
+    os.chmod(attrappe, 0o755)
+    video = os.path.join(tmp, "video.mp4")
+    with open(video, "wb") as handle:
+        handle.write(b"VIDEO")
+    alt = (sb.VIDEO, sb.BILD, sb.QUELLE_SHA256, os.environ.get("PATH", ""))
+    sb.VIDEO, sb.BILD, sb.QUELLE_SHA256 = video, os.path.join(tmp, "bild.jpg"), sb.sha256(video)
+    os.environ["PATH"] = os.path.dirname(attrappe) + os.pathsep + alt[3]
+    try:
+        def ersatz_lauf(g2, g5):
+            for q, g in (("2", g2), ("5", g5)):
+                with open(os.path.join(tmp, "groesse-" + q), "w") as handle:
+                    handle.write(str(g))
+            for name in ("aufrufe", "bild.jpg"):
+                if os.path.exists(os.path.join(tmp, name)):
+                    os.remove(os.path.join(tmp, name))
+            ausgabe = io.StringIO()   # Meldungen des Skripts nicht ins Protokoll (sie sähen aus wie Testfehler)
+            with contextlib.redirect_stdout(ausgabe), contextlib.redirect_stderr(ausgabe):
+                code = sb.main(["standbild.py"])
+            aufrufe = open(os.path.join(tmp, "aufrufe")).read().split() if os.path.exists(os.path.join(tmp, "aufrufe")) else []
+            return code, aufrufe, os.path.getsize(sb.BILD) if os.path.exists(sb.BILD) else None
+        check(ersatz_lauf(1000, 10) == (0, ["2"], 1000), "Unter 1 MiB: Aufruf der Shell (-q:v 2), keine Ersatzqualität")
+        check(ersatz_lauf(2 * 1024 * 1024, 500000) == (0, ["2", "5"], 500000), "Über 1 MiB: feste Ersatzqualität -q:v 5")
+        check(ersatz_lauf(2 * 1024 * 1024, 2 * 1024 * 1024) == (1, ["2", "5"], None), "Auch mit -q:v 5 über 1 MiB: Abbruch ohne Bild")
+    finally:
+        sb.VIDEO, sb.BILD, sb.QUELLE_SHA256 = alt[0], alt[1], alt[2]
+        os.environ["PATH"] = alt[3]
 service = open(os.path.join(SHELL, "Services", "VideoWallpaperService.qml"), encoding="utf-8").read()
-check("VideoPoster.script()" in service and "VideoPoster.BUNDLED_EXIT" in service and "ffmpeg -nostdin" not in service,
+check("VideoPoster.script()" in service and "VideoPoster.outcome(" in service and "VideoPoster.pending(" in service
+      and "VideoPoster.mayRequest(" in service and "ffmpeg -nostdin" not in service,
       "VideoWallpaperService nimmt das Skript aus VideoPoster.js (mitgeliefertes Standbild vor ffmpeg)")
 skript = open(os.path.join(REPO, "tools", "standbild.py"), encoding="utf-8").read()
 check(skript.count("shutil.copyfile(teil, BILD)") == 1 and "open(BILD, \"w" not in skript,

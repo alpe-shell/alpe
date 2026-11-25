@@ -67,9 +67,13 @@ def pruefen(video=VIDEO, bild=BILD, quelle=QUELLE_SHA256, bild_summe=BILD_SHA256
     return fehler
 
 
+def aufruf(ziel, qualitaet, video=None):
+    """Der ffmpeg-Aufruf, Argument für Argument wie im sh-Skript der Shell (VideoPoster.script())."""
+    return ["ffmpeg", "-nostdin", "-v", "error", "-i", video or VIDEO, "-vf", FILTER, "-frames:v", "1", "-q:v", qualitaet, "-y", ziel]
+
+
 def erzeugen(ziel, qualitaet):
-    subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", VIDEO, "-vf", FILTER, "-frames:v", "1", "-q:v", qualitaet,
-                    "-y", ziel], check=True)
+    subprocess.run(aufruf(ziel, qualitaet), check=True)
     return os.path.getsize(ziel)
 
 

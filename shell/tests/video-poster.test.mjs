@@ -56,6 +56,70 @@ test("script: mitgeliefertes Standbild ohne ffmpeg, sonst 127", () => {
     }
 });
 
+test("outcome: Rückgabewert des Skripts", () => {
+    assert.equal(poster.outcome(poster.BUNDLED_EXIT, "/d/berg.jpg"), "bundled");
+    assert.equal(poster.outcome(poster.BUNDLED_EXIT, ""), "failed", "10 ohne mitgeliefertes Bild gilt nicht als Standbild");
+    assert.equal(poster.outcome(127, "/d/berg.jpg"), "missing");
+    assert.equal(poster.outcome(127, ""), "missing");
+    assert.equal(poster.outcome(0, ""), "generated");
+    assert.equal(poster.outcome(1, ""), "failed");
+});
+
+// Ablauf des Dienstes ohne ffmpeg, mit den reinen Funktionen und dem echten Skript (wie _next() in
+// VideoWallpaperService.qml): Nach dem einen Lauf wartet framePending() nicht mehr, und request() stellt nicht
+// erneut ein.
+function ablauf(video, bundled) {
+    const state = { ffmpegMissing: false, queued: false, failed: false, poster: "" };
+    let aufrufe = 0;
+    for (let runde = 0; runde < 5 && poster.mayRequest(bundled, state); runde++) {
+        aufrufe++;
+        const code = skript([join(tmpdir(), "alpe-poster-cache-nie", "x.jpg"), video, bundled]);
+        const result = poster.outcome(code, bundled);
+        if (result === "bundled")
+            state.poster = bundled;
+        else if (result === "missing") {
+            state.failed = true;
+            state.ffmpegMissing = true;
+        } else if (result === "failed")
+            state.failed = true;
+    }
+    return { aufrufe, pending: poster.pending(true, bundled, state), state };
+}
+
+test("Dienst ohne ffmpeg: Video des Designs ohne .jpg – ein Lauf, danach kein Warten", () => {
+    const dir = mkdtempSync(join(tmpdir(), "alpe-poster-"));
+    try {
+        writeFileSync(join(dir, "berg.mp4"), "VIDEO");
+        const r = ablauf(join(dir, "berg.mp4"), join(dir, "berg.jpg"));
+        assert.equal(r.aufrufe, 1);
+        assert.equal(r.pending, false, "framePending() wird falsch – Rückfall auf die Samenfarbe wie vorher");
+        assert.equal(r.state.ffmpegMissing, true);
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+});
+
+test("Dienst ohne ffmpeg: Video des Designs mit .jpg – mitgeliefertes Bild", () => {
+    const dir = mkdtempSync(join(tmpdir(), "alpe-poster-"));
+    try {
+        writeFileSync(join(dir, "berg.mp4"), "VIDEO");
+        writeFileSync(join(dir, "berg.jpg"), "BILD");
+        const r = ablauf(join(dir, "berg.mp4"), join(dir, "berg.jpg"));
+        assert.equal(r.aufrufe, 1);
+        assert.equal(r.state.poster, join(dir, "berg.jpg"));
+        assert.equal(r.pending, false);
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+});
+
+test("Dienst ohne ffmpeg: eigenes Video – wie bisher kein Standbild, kein Warten", () => {
+    const r = ablauf("/home/u/Videos/berg.mp4", "");
+    assert.equal(r.aufrufe, 1);
+    assert.equal(r.pending, false);
+    assert.equal(poster.pending(true, "", { ffmpegMissing: true }), false, "ffmpeg fehlt: ein eigenes Video wartet nicht");
+});
+
 test("script: derselbe ffmpeg-Aufruf wie zuvor in VideoWallpaperService (Filter, Qualität)", () => {
     const s = poster.script();
     assert.ok(s.includes(`-vf "${poster.FILTER}" -frames:v 1 -q:v ${poster.QUALITY} `));

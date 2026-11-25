@@ -35,6 +35,32 @@ function bundledPoster(video, dir) {
     return path.substring(0, dot) + ".jpg";
 }
 
+// Was der Dienst mit dem Rückgabewert des Skripts macht (rein, damit es sich mit Node prüfen lässt):
+//   "bundled"   – mitgeliefertes Standbild nehmen (nur, wenn es eins gibt)
+//   "missing"   – ffmpeg fehlt: dieses Video gilt als gescheitert (sonst wartete framePending() ewig auf ein Bild,
+//                 das nie kommt – auch für ein Video des Designs ohne .jpg), ffmpegMissing setzen
+//   "generated" – Standbild im Cache liegt vor
+//   "failed"    – sonst
+function outcome(exitCode, bundled) {
+    if (exitCode === BUNDLED_EXIT && bundled)
+        return "bundled";
+    if (exitCode === 127)
+        return "missing";
+    if (exitCode === 0)
+        return "generated";
+    return "failed";
+}
+
+// Kann für dieses Video noch ein Standbild kommen? (framePending des Dienstes; state: ffmpegMissing, failed, poster)
+function pending(isVideo, bundled, state) {
+    return isVideo && !state.poster && (!state.ffmpegMissing || !!bundled) && !state.failed;
+}
+
+// Darf das Video eingestellt werden? (request des Dienstes; state zusätzlich: queued)
+function mayRequest(bundled, state) {
+    return !(state.ffmpegMissing && !bundled) && !state.queued && !state.failed && !state.poster;
+}
+
 // sh-Skript: $1 Standbild im Cache, $2 Video, $3 mitgeliefertes Standbild oder leer.
 // Liegt $3 vor: Rückgabewert BUNDLED_EXIT, ohne ffmpeg. Fehlt ffmpeg: 127. -nt behält ein Bild, das neuer ist als
 // sein Video; der Filter thumbnail überspringt schwarze Bilder am Anfang.

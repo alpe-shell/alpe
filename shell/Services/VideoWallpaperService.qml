@@ -52,11 +52,20 @@ Singleton {
 
     // True while a frame for this video may still arrive.
     function framePending(path) {
-        return WallpaperFormats.isVideo(path) && !posters[path] && (!ffmpegMissing || bundledPoster(path) !== "") && !_failed[path];
+        return VideoPoster.pending(WallpaperFormats.isVideo(path), bundledPoster(path), {
+            "poster": posters[path],
+            "ffmpegMissing": ffmpegMissing,
+            "failed": _failed[path]
+        });
     }
 
     function request(video) {
-        if ((ffmpegMissing && bundledPoster(video) === "") || _queued[video] || _failed[video] || posters[video])
+        if (!VideoPoster.mayRequest(bundledPoster(video), {
+            "ffmpegMissing": ffmpegMissing,
+            "queued": _queued[video],
+            "failed": _failed[video],
+            "poster": posters[video]
+        }))
             return;
         _queued[video] = true;
         _queue.push(video);
@@ -75,14 +84,20 @@ Singleton {
         Proc.runCommand("videoWallpaperPoster", ["sh", "-c", VideoPoster.script(), "sh", poster, video, bundled], (output, exitCode) => {
             delete _queued[video];
             _busy = false;
-            if (exitCode === VideoPoster.BUNDLED_EXIT) {
+            const result = VideoPoster.outcome(exitCode, bundled);
+            if (result === "bundled") {
                 posters = Object.assign({}, posters, {
                     [video]: bundled
                 });
                 _next();
                 return;
             }
-            if (exitCode === 127) {
+            if (result === "missing") {
+                // Dieses Video bekommt kein Standbild (auch ein Video des Designs ohne .jpg): als gescheitert
+                // eintragen, damit framePending() nicht ewig wartet und request() es nicht erneut einstellt.
+                _failed = Object.assign({}, _failed, {
+                    [video]: true
+                });
                 ffmpegMissing = true;
                 // Videos des Designs bekommen ihr mitgeliefertes Standbild trotzdem
                 _queue = _queue.filter(v => bundledPoster(v) !== "");
@@ -94,7 +109,7 @@ Singleton {
                 _next();
                 return;
             }
-            if (exitCode !== 0) {
+            if (result === "failed") {
                 // reassigned, not mutated, so framePending() bindings see the failure
                 _failed = Object.assign({}, _failed, {
                     [video]: true

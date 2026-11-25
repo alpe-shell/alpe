@@ -303,7 +303,8 @@ class Images:
         ziel = os.path.splitext(name)[0] + ".jpg"
         quelle = None
         neben = os.path.splitext(video)[0] + ".jpg"
-        if os.path.realpath(video).startswith(os.path.realpath(INSTALLED) + os.sep) and os.path.isfile(neben):
+        # Wörtlicher Pfad, keine aufgelösten Links – wie die Shell (VideoPoster.bundledPoster)
+        if os.path.abspath(video).startswith(os.path.abspath(INSTALLED) + os.sep) and os.path.isfile(neben):
             quelle = neben
         elif self.previous and os.path.isdir(self.previous):
             for alt in sorted(os.listdir(self.previous)):
