@@ -97,13 +97,25 @@ Code
 Zeichen Dritter (shell/assets/), nur zur Bezeichnung
   Die Zeichen gehören ihren Inhabern. Alpe benutzt sie nur, um das jeweilige Programm oder
   Paketformat zu bezeichnen, und leitet daraus keine Verbindung zu den Inhabern ab.
-  hyprland.svg                 Zeichen von Hyprland (hyprwm); Prozessliste und Starter-Knopf.
-                               Mit der Dux Modular Shell übernommen (bytegleich mit deren
-                               quickshell/assets/hyprland.svg); eine Quelle beim Inhaber ist
-                               nicht belegt.
-  package-sources/flatpak.svg  Zeichen von Flatpak und Snapcraft; Herkunftsabzeichen im Starter.
-  package-sources/snap.svg     Pfaddaten aus Simple Icons (https://simpleicons.org, CC0 1.0),
-                               ergänzt um die Füllfarbe.
+  hyprland.svg                 Zeichen von Hyprland, eingetragene Marke von Hyprland Development;
+                               Prozessliste und Starter-Knopf. Mit der Dux Modular Shell
+                               übernommen (bytegleich mit deren quickshell/assets/hyprland.svg).
+                               Der Inhaber stellt seine Logodateien nicht unter eine freie
+                               Lizenz («ARR», hyprwm/Hyprland, assets/logo/LICENSE); die Nutzung
+                               regelt https://hypr.land/trademark-usage/ (erlaubt zur Bezeichnung
+                               von Hyprland, mit der offiziellen Vorlage). Diese Datei ist nicht
+                               die heutige offizielle Vorlage (andere Pfade und Farbverlauf).
+  package-sources/flatpak.svg  Zeichen von Flatpak; Herkunftsabzeichen im Starter. Pfaddaten aus
+                               Simple Icons (https://simpleicons.org), Füllfarbe = Markenfarbe
+                               nach Simple Icons. Lizenz des Zeichens: Creative Commons
+                               Namensnennung 3.0 (CC BY 3.0), © Flatpak Team,
+                               https://flatpak.org/press. (Simple Icons selbst steht unter
+                               CC0 1.0, das gilt aber nicht für jedes Zeichen darin.)
+  package-sources/snap.svg     Zeichen von Snapcraft (Canonical); Herkunftsabzeichen im Starter.
+                               Pfaddaten und Füllfarbe aus Simple Icons; Lizenz des Zeichens
+                               nach Simple Icons: Creative Commons Namensnennung – Weitergabe
+                               unter gleichen Bedingungen 3.0 (CC BY-SA 3.0), Quelle
+                               https://design.ubuntu.com/resources.
   package-sources/nix.svg      Nix-Schneeflocke; bytegleich mit logo/nix-snowflake-colours.svg
                                aus https://github.com/NixOS/nixos-artwork; entworfen von Simon
                                Frankau, überarbeitet von Tim Cuthbertson; CC BY 4.0

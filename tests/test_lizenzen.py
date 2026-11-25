@@ -9,6 +9,9 @@ golang/freetype (Alpe wählt die FTL): NOTICE nennt Fassung, Wahl, Nennung des F
 go-qrcode/writer/standard einbindet; make dist und make install legen licenses/ftl.txt ab (Inhalt: test_makefile.py).
 yeqown/reedsolomon (MIT, am Ursprung belegt): NOTICE nennt Fassung, Lizenz mit Fundstelle und jede Datei, die
 go-qrcode/v2 einbindet. Klänge (1.4): NOTICE beschreibt genau die ausgelieferten Dateien unter shell/assets/sounds/.
+Zeichen Dritter und Code-Teile (1.5): NOTICE nennt genau die fremden SVG unter shell/assets/ (Flatpak CC BY 3.0,
+Snapcraft CC BY-SA 3.0, Hyprland ARR nach Markenrichtlinie) und fzf.js, Hct.js, MaterialShapeData.js mit der Lizenz,
+die im Kopf der Datei steht.
 Ohne Bau, ohne Netz.
 """
 import os
@@ -150,13 +153,30 @@ if zeichen:
     check(fremd and fremd == genannt, "NOTICE nennt genau die Zeichen Dritter unter shell/assets/ (nur in NOTICE: %s; fehlt: %s)"
           % (sorted(genannt - fremd), sorted(fremd - genannt)))
     check("nur, um das jeweilige Programm oder" in zeichen.group(1), "NOTICE: Zeichen nur zur Bezeichnung")
+    # Simple Icons ist CC0, die Zeichen darin nicht (Nachbesserung zu 1.5): Flatpak CC BY 3.0, Snapcraft CC BY-SA 3.0,
+    # Hyprland ARR nach der Markenrichtlinie des Inhabers.
+    eintraege = re.split(r"\n(?=  [\w/.-]+\.svg\s)", zeichen.group(1))
+    def eintrag_zu(name):
+        return next((e for e in eintraege if e.lstrip().startswith(name)), "")
+    def lizenz_des_zeichens(name):
+        """Text nach «Lizenz des Zeichens» bis zum Satzende «.» vor einer Klammer oder dem Eintragsende."""
+        teil = eintrag_zu(name).split("Lizenz des Zeichens", 1)
+        return teil[1].split("(Simple Icons selbst", 1)[0] if len(teil) == 2 else ""
+    check("(CC BY 3.0)" in lizenz_des_zeichens("package-sources/flatpak.svg") and "CC0" not in lizenz_des_zeichens("package-sources/flatpak.svg"),
+          "NOTICE: flatpak.svg unter CC BY 3.0 (nicht CC0)")
+    check("(CC BY-SA 3.0)" in lizenz_des_zeichens("package-sources/snap.svg") and "CC0" not in lizenz_des_zeichens("package-sources/snap.svg"),
+          "NOTICE: snap.svg unter CC BY-SA 3.0 (nicht CC0)")
+    check("ARR" in eintrag_zu("hyprland.svg") and "https://hypr.land/trademark-usage/" in eintrag_zu("hyprland.svg"),
+          "NOTICE: hyprland.svg mit Hinweis auf ARR und die Markenrichtlinie")
 check(not os.path.exists(os.path.join(REPO, "shell", "assets", "discord.svg"))
       and not os.path.exists(os.path.join(REPO, "shell", "assets", "reddit.svg")), "discord.svg und reddit.svg sind entfernt (1.5)")
-for datei, lizenz in (("shell/Alpe/Common/fzf.js", "BSD-3-Clause"), ("shell/Alpe/Common/Hct.js", "Apache License 2.0"),
-                      ("shell/Alpe/Widgets/MaterialShapeData.js", "Apache License 2.0")):
+for datei, lizenz, im_kopf in (("shell/Alpe/Common/fzf.js", "BSD-3-Clause", "BSD 3-Clause License"),
+                               ("shell/Alpe/Common/Hct.js", "Apache License 2.0", "Apache-2.0"),
+                               ("shell/Alpe/Widgets/MaterialShapeData.js", "Apache License 2.0", "Apache-2.0")):
     zeile = re.search(r"^  %s\s*\n?\s+(.*)$" % re.escape(datei), notice, re.M)
-    check(os.path.isfile(os.path.join(REPO, datei)) and zeile is not None and zeile.group(1).startswith(lizenz),
-          "NOTICE nennt %s mit %s" % (datei, lizenz))
+    kopf = "".join(open(os.path.join(REPO, datei), encoding="utf-8").readlines()[:12]) if os.path.isfile(os.path.join(REPO, datei)) else ""
+    check(im_kopf in kopf and zeile is not None and zeile.group(1).startswith(lizenz),
+          "NOTICE nennt %s mit %s, wie im Kopf der Datei («%s»)" % (datei, lizenz, im_kopf))
 
 # Im Quellarchiv (git archive HEAD) ist nur, was versioniert ist.
 if subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:

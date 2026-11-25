@@ -1389,8 +1389,10 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter
       `shell/assets/`: `hyprland.svg`, `package-sources/{flatpak,snap,appimage,nix}.svg` (benutzt),
       `discord.svg`, `reddit.svg` (nirgends benutzt). **Erledigt im Nachtlauf vom 26.11.2026 (Plan 0.8 Nr. 117):**
-      alle drei Code-Teile und die fünf Zeichen in `NOTICE`, `discord.svg`/`reddit.svg` entfernt; unbelegt geparkt:
-      Quelle von `hyprland.svg` beim Inhaber, Herkunft von `appimage.svg`.
+      alle drei Code-Teile und die fünf Zeichen in `NOTICE`, `discord.svg`/`reddit.svg` entfernt. **Für das
+      Lizenzfeld neu (nicht vermuten, bei E2/E3 entscheiden):** Flatpak-Zeichen CC-BY-3.0, Snapcraft-Zeichen
+      CC-BY-SA-3.0 (beide nach Simple Icons, das selbst CC0 ist), Hyprland-Zeichen ARR nach der Markenrichtlinie
+      von hyprwm (die Datei ist nicht die offizielle Vorlage); Herkunft von `appimage.svg` unbelegt. Geparkt.
     - `LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`); die mit
       `alpe-dienst completion` erzeugten Vervollständigungen stammen aus Vorlagen von cobra (Apache-2.0).
 - ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
