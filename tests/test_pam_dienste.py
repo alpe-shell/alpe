@@ -55,6 +55,10 @@ check('"# BEGIN ALPE LOCKSCREEN AUTH' in pam_go and '"# END ALPE LOCKSCREEN AUTH
 schreiben = re.findall(r"writeManagedPamFile\([^,]+, (deps\.\w+)", pam_go) + re.findall(r'"rm", "-f", (deps\.\w+)', pam_go)
 check(sorted(set(schreiben)) == ["deps.alpePath", "deps.alpeU2fPath"],
       "Dienst schreibt und löscht nur die alpe-Dienste, nie die aus 1.0: %s" % sorted(set(schreiben)))
+check(not re.search(r"(runSudoCmd|WriteFile|Remove|Rename)\([^)\n]*(legacy|Legacy)", pam_go)
+      and set(re.findall(r"deps\.legacy\w*", pam_go)) <= {"deps.legacyPath", "deps.legacyU2fPath"}
+      and all(z.strip().startswith("reportLegacyPamFile(") for z in pam_go.splitlines() if "deps.legacy" in z),
+      "Dienst: die Pfade von 1.0 gehen nur an reportLegacyPamFile (lesen), nie an sudo, Schreiben, Löschen oder Umbenennen")
 check("reportLegacyPamFile(logFunc, deps.legacyPath" in pam_go and "reportLegacyPamFile(logFunc, deps.legacyU2fPath" in pam_go,
       "Dienst: Dienste aus 1.0 werden beim Abgleich erkannt und gemeldet")
 
@@ -82,12 +86,16 @@ runner = next((shutil.which(c) for c in ("qmltestrunner6", "/usr/lib/qt6/bin/qml
                if shutil.which(c)), None)
 if runner:
     with tempfile.TemporaryDirectory(prefix="alpe-tst-pam-") as tmp:
-        env = dict(os.environ, HOME=tmp, XDG_CACHE_HOME=os.path.join(tmp, "c"), QML_DISABLE_DISK_CACHE="1", QT_QPA_PLATFORM="offscreen")
+        env = dict(os.environ, HOME=tmp, XDG_CACHE_HOME=os.path.join(tmp, "c"), XDG_CONFIG_HOME=os.path.join(tmp, "k"),
+                   XDG_STATE_HOME=os.path.join(tmp, "s"), XDG_DATA_HOME=os.path.join(tmp, "d"), XDG_RUNTIME_DIR=tmp,
+                   QML_DISABLE_DISK_CACHE="1", QT_QPA_PLATFORM="offscreen")
         out = subprocess.run([runner, "-import", os.path.join(SHELL, "tests", "lock", "mocks"), "-input", os.path.join(SHELL, "tests", "lock"),
                               "-o", "-,txt"], capture_output=True, text=True, env=env, timeout=300)
         summe = re.search(r"Totals: (\d+) passed, (\d+) failed", out.stdout)
-        check(out.returncode == 0 and summe is not None and summe.group(2) == "0" and int(summe.group(1)) >= 39,
-              "QML-Test der Sperre (tst_Pam.qml): %s" % (summe.group(0) if summe else out.stdout[-500:] + out.stderr[-500:]))
+        ohne_richtlinie = [z for z in out.stdout.splitlines() if z.startswith("PASS") and "test_pamStacksWithoutPolicy(" in z]
+        check(out.returncode == 0 and summe is not None and summe.group(2) == "0" and int(summe.group(1)) >= 43 and len(ohne_richtlinie) == 4,
+              "QML-Test der Sperre (tst_Pam.qml), mit vier Fällen ohne Richtlinie (Weg am Mac): %s"
+              % (summe.group(0) if summe else out.stdout[-500:] + out.stderr[-500:]))
 else:
     print("qmltestrunner fehlt – QML-Test der Sperre übersprungen")
 

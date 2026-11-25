@@ -156,6 +156,48 @@ TestCase {
         compare(Log.warnings.length, data.warnings);
     }
 
+    // Ohne Richtlinie (der Weg am Mac): neuer Dienst zuerst, der von 1.0 nur als Rückfall, dann der Dienst im
+    // Nutzerordner, zuletzt die mitgelieferten Stapel (Plan 0.8 Nr. 16). Jeder Weg endet in einem echten Stapel.
+    function test_pamStacksWithoutPolicy_data() {
+        // alpe-namen-ausnahme: umzug-ende
+        const alle = ["/etc/pam.d/alpe", "/etc/pam.d/dankshell", "/etc/pam.d/alpe-u2f", "/etc/pam.d/dankshell-u2f"];
+        return [
+            {
+                tag: "alpeAndLegacy",
+                missing: [],
+                passwd: "/etc/pam.d/alpe",
+                u2f: "/etc/pam.d/alpe-u2f"
+            },
+            {
+                tag: "legacyOnly",
+                missing: ["/etc/pam.d/alpe", "/etc/pam.d/alpe-u2f"],
+                passwd: "/etc/pam.d/dankshell",
+                u2f: "/etc/pam.d/dankshell-u2f"
+            },
+            {
+                tag: "userService",
+                missing: alle,
+                passwd: "/test/pam/alpe",
+                u2f: "/test/assets/pam/u2f"
+            },
+            {
+                tag: "nothing",
+                missing: alle.concat(["/test/pam/alpe"]),
+                passwd: "/test/assets/pam/login",
+                u2f: "/test/assets/pam/u2f"
+            }
+        ];
+        // alpe-namen-ausnahme: umzug-ende
+    }
+
+    function test_pamStacksWithoutPolicy(data) {
+        MockFiles.missing = data.missing;
+        SettingsData.enableU2f = true;
+        const pam = createTemporaryObject(factory, tests);
+        compare(pam.passwd.configDirectory + "/" + pam.passwd.config, data.passwd);
+        compare(pam.u2f.configDirectory + "/" + pam.u2f.config, data.u2f);
+    }
+
     function test_disabledContextIgnoresLateSuccess() {
         const pam = lockedPam();
         SettingsData.enableFprint = false;
