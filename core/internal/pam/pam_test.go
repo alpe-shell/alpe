@@ -495,8 +495,9 @@ func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 		}
 	})
 
-	// Plan 0.8 Nr. 16: Der Dienst der Einrichtung von 1.0 wird erkannt und nicht verändert; geschrieben wird der
-	// neue Dienst daneben.
+	// Plan 0.8 Nr. 16: Der Dienst der Einrichtung von 1.0 wird erkannt und nicht verändert. Ist er verwaltet, wird
+	// der neue Dienst daneben geschrieben und löst ihn ab; ist er eigen und fehlt alpe, entsteht kein alpe
+	// (Entscheid vom 25.11.2026, Plan 0.8 Nr. 118).
 	for _, legacyManaged := range []bool{true, false} {
 		t.Run(fmt.Sprintf("legacy service from 1.0 is left unchanged (managed=%v)", legacyManaged), func(t *testing.T) {
 			t.Parallel()
@@ -529,12 +530,51 @@ func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 			if len(logs) == 0 || !strings.Contains(logs[0], env.legacyPath+" from Alpe 1.0 "+kind) {
 				t.Fatalf("expected legacy recognition log %q, got %v", kind, logs)
 			}
+			if !legacyManaged {
+				if _, err := os.Stat(env.alpePath); !os.IsNotExist(err) {
+					t.Fatalf("a custom legacy service must not be replaced by a new alpe service, stat err = %v", err)
+				}
+				last := logs[len(logs)-1]
+				if !strings.Contains(last, "Custom "+env.legacyPath+" from Alpe 1.0 found and no "+env.alpePath) || !strings.Contains(last, "is not created") {
+					t.Fatalf("expected a message that alpe is not created, got %v", logs)
+				}
+				return
+			}
 			output := readFileString(t, env.alpePath)
 			if !strings.Contains(output, LockscreenPamManagedBlockStart) || !strings.Contains(output, "auth sufficient pam_unix.so try_first_pass nullok") {
 				t.Fatalf("expected the Alpe service to be written next to the legacy one:\n%s", output)
 			}
 		})
 	}
+
+	// Gibt es alpe schon (von Alpe verwaltet), wird es auch neben einem eigenen alten Dienst weiter nachgeführt: Die
+	// Regel gilt nur, solange alpe fehlt.
+	t.Run("custom legacy service with a managed alpe: alpe is still updated", func(t *testing.T) {
+		t.Parallel()
+
+		env := newPamTestEnv(t)
+		env.writePamFile(t, "login", "#%PAM-1.0\nauth include system-auth\naccount include system-auth\n")
+		env.writePamFile(t, "system-auth", "auth sufficient pam_unix.so try_first_pass nullok\naccount required pam_access.so\n")
+		env.writePamFile(t, "alpe", "#%PAM-1.0\n"+LockscreenPamManagedBlockStart+"\nauth required pam_env.so\n"+LockscreenPamManagedBlockEnd+"\n")
+		legacy := "#%PAM-1.0\nauth required pam_unix.so\n"
+		if err := os.WriteFile(env.legacyPath, []byte(legacy), 0o644); err != nil {
+			t.Fatal(err)
+		}
+
+		var logs []string
+		if err := syncLockscreenPamConfigWithDeps(func(msg string) { logs = append(logs, msg) }, "", env.deps(false)); err != nil {
+			t.Fatalf("syncLockscreenPamConfigWithDeps returned error: %v", err)
+		}
+		if got := readFileString(t, env.legacyPath); got != legacy {
+			t.Fatalf("legacy service changed:\n%s", got)
+		}
+		if output := readFileString(t, env.alpePath); !strings.Contains(output, "auth sufficient pam_unix.so try_first_pass nullok") {
+			t.Fatalf("expected the managed alpe service to be rewritten:\n%s", output)
+		}
+		if !strings.Contains(logs[len(logs)-1], "Created or updated "+env.alpePath+" ") {
+			t.Fatalf("expected success log, got %v", logs)
+		}
+	})
 
 	t.Run("mutable systems fail when login stack cannot be converted safely", func(t *testing.T) {
 		t.Parallel()

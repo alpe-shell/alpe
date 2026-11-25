@@ -918,7 +918,9 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
    **Offen beim Maintainer (Nachtlauf vom 25.11.2026, Prüfung zu 2.5):** (1) Eine **eigene** `/etc/pam.d/dankshell`
    aus 1.0 wird abgelöst, sobald `auth sync` läuft (etwa beim Einschalten von U2F): Es schreibt `/etc/pam.d/alpe` aus
    dem login-Stapel, und die Sperre nimmt `alpe` vor `dankshell` – unter 1.0 hiess es an dieser Stelle «Custom …
-   Skipping». (2) Die Richtlinie des Administrators aus 1.0 (`/etc/dms/cli-policy.json`) wird nicht mehr gelesen;
+   Skipping». **Entschieden am 25.11.2026, umgesetzt im Nachtlauf vom 26.11.2026 (Plan 0.8 Nr. 118):** Findet
+   `auth sync` eine eigene, nicht verwaltete `dankshell` und keine `alpe`, schreibt es `alpe` nicht und meldet das;
+   eine verwaltete `dankshell` wird wie bisher abgelöst. (2) Die Richtlinie des Administrators aus 1.0 (`/etc/dms/cli-policy.json`) wird nicht mehr gelesen;
    sicherheitsrelevante Schalter (`disable_custom_lock_pam`, `disable_lock_ipc_unlock`, `disable_logind_unlock`,
    `lock_settings`) fielen damit ohne Meldung weg. Am PC gibt es weder `/etc/dms` noch `/usr/share/dms`; am Mac ist
    es nicht nachgesehen. Optionen und Empfehlungen im lokalen Bericht des Nachtlaufs; für F1 zu entscheiden.

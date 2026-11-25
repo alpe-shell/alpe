@@ -306,17 +306,19 @@ func HasLegacyManagedLockscreenU2FPamFile(content string) bool {
 		strings.Contains(content, legacyLockscreenU2FPamManagedBlockEnd)
 }
 
-// reportLegacyPamFile meldet einen PAM-Dienst der Einrichtung von 1.0, ohne ihn anzufassen.
-func reportLegacyPamFile(logFunc func(string), path string, readFile func(string) ([]byte, error), managed func(string) bool) {
+// reportLegacyPamFile meldet einen PAM-Dienst der Einrichtung von 1.0, ohne ihn anzufassen. Rückgabe: true, wenn es
+// ihn gibt und er eigen ist (ohne den verwalteten Block von 1.0).
+func reportLegacyPamFile(logFunc func(string), path string, readFile func(string) ([]byte, error), managed func(string) bool) bool {
 	data, err := readFile(path)
 	if err != nil {
-		return
+		return false
 	}
 	if managed(string(data)) {
 		logFunc("ℹ " + path + " from Alpe 1.0 (managed block of the previous shell) found – left unchanged.")
-	} else {
-		logFunc("ℹ " + path + " from Alpe 1.0 (custom) found – left unchanged.")
+		return false
 	}
+	logFunc("ℹ " + path + " from Alpe 1.0 (custom) found – left unchanged.")
+	return true
 }
 
 func pamDirectiveType(line string) string {
@@ -921,7 +923,7 @@ func syncLockscreenPamConfigWithDeps(logFunc func(string), sudoPassword string, 
 		return nil
 	}
 
-	reportLegacyPamFile(logFunc, deps.legacyPath, deps.readFile, HasLegacyManagedLockscreenPamFile)
+	customLegacy := reportLegacyPamFile(logFunc, deps.legacyPath, deps.readFile, HasLegacyManagedLockscreenPamFile)
 
 	existingData, err := deps.readFile(deps.alpePath)
 	if err == nil {
@@ -931,6 +933,12 @@ func syncLockscreenPamConfigWithDeps(logFunc func(string), sudoPassword string, 
 		}
 	} else if !os.IsNotExist(err) {
 		return fmt.Errorf("failed to read %s: %w", deps.alpePath, err)
+	} else if customLegacy {
+		// Entscheid vom 25.11.2026: Ein eigener, nicht verwalteter Dienst aus 1.0 (LegacyPamPath) bleibt der Dienst der
+		// Sperre (die Oberfläche nimmt alpe vor dem alten Dienst, shell/Modules/Lock/Pam.qml) – darum hier kein neues
+		// alpe, das ihn ablösen würde. Ein verwalteter alter Dienst wird wie bisher durch alpe abgelöst.
+		logFunc(fmt.Sprintf("ℹ Custom %[1]s from Alpe 1.0 found and no %[2]s: %[2]s is not created, the lock screen keeps using %[1]s. Remove or rename it to let Alpe manage %[2]s.", deps.legacyPath, deps.alpePath))
+		return nil
 	}
 
 	content, err := buildManagedLockscreenPamContent([]string{deps.pamDir}, deps.readFile)

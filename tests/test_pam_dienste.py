@@ -57,8 +57,9 @@ check(sorted(set(schreiben)) == ["deps.alpePath", "deps.alpeU2fPath"],
       "Dienst schreibt und löscht nur die alpe-Dienste, nie die aus 1.0: %s" % sorted(set(schreiben)))
 check(not re.search(r"(runSudoCmd|WriteFile|Remove|Rename)\([^)\n]*(legacy|Legacy)", pam_go)
       and set(re.findall(r"deps\.legacy\w*", pam_go)) <= {"deps.legacyPath", "deps.legacyU2fPath"}
-      and all(z.strip().startswith("reportLegacyPamFile(") for z in pam_go.splitlines() if "deps.legacy" in z),
-      "Dienst: die Pfade von 1.0 gehen nur an reportLegacyPamFile (lesen), nie an sudo, Schreiben, Löschen oder Umbenennen")
+      # gelesen nur in reportLegacyPamFile (dessen Ergebnis darf zugewiesen werden), sonst nur in einer Meldung (0.8 Nr. 118)
+      and all(re.match(r"(\w+ := )?reportLegacyPamFile\(|logFunc\(fmt\.Sprintf\(\"", z.strip()) for z in pam_go.splitlines() if "deps.legacy" in z),
+      "Dienst: die Pfade von 1.0 gehen nur an reportLegacyPamFile (lesen) und in Meldungen, nie an sudo, Schreiben, Löschen oder Umbenennen")
 check("reportLegacyPamFile(logFunc, deps.legacyPath" in pam_go and "reportLegacyPamFile(logFunc, deps.legacyU2fPath" in pam_go,
       "Dienst: Dienste aus 1.0 werden beim Abgleich erkannt und gemeldet")
 
