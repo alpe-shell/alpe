@@ -87,6 +87,13 @@ Bilder des ausgelieferten Designs (design/kde/bilder/)
              erstellt
   Lizenz:    CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
+Standbild der Sperre (design/kde/bilder/jagged-peaks-wolkenzug.jpg)
+  Herkunft:  eigene Ableitung des eigenen Videos jagged-peaks-wolkenzug.mp4 (oben): ein Einzelbild,
+             erzeugt mit tools/standbild.py (ffmpeg, derselbe Aufruf wie in der Shell); Prüfsummen von
+             Video und Bild stehen im Skript
+  Urheber:   wie das Video
+  Lizenz:    wie das Video, CC0 1.0 Universal
+
 Logo und Name (assets/logo/logo/)
   Dateien:   alpe-zeichen, alpe-logo-hell, alpe-logo-dunkel, alpe-avatar, alpe-social (SVG und
              PNG) samt erzeugen.py; dasselbe Zeichen in der Oberfläche

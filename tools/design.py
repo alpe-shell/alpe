@@ -18,6 +18,7 @@ Ordner. Bilder (Hintergrund, Sperrbildschirm) kommen nur mit, wenn man sie beim 
 bestätigt – fremde Fotos dürfen nicht in ein öffentliches Repository.
 """
 import datetime
+import filecmp
 import glob
 import importlib.util
 import json
@@ -26,6 +27,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 HOME = os.path.expanduser("~")
 CONFIG = os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config")
@@ -171,6 +173,7 @@ SECRET = re.compile(r"(password|passwd|token|secret|api[_-]?key)", re.I)
 
 IMAGE_EXT = (".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif", ".bmp", ".mp4", ".webm", ".mkv", ".mov")
 MAX_BYTES = 50 * 1024 * 1024    # GitHub lehnt Dateien ab 100 MB ab; Videos darüber gehören nicht ins Repository
+VIDEO_EXT = (".mp4", ".webm", ".mkv", ".mov")   # Videos unter IMAGE_EXT; zu ihnen gehört ein Standbild (Plan 0.8 Nr. 106)
 
 
 def say(text=""):
@@ -243,10 +246,13 @@ def fill(value, base):
 # ---------------------------------------------------------------- Bilder
 
 class Images:
-    """Sammelt Bildpfade, fragt einmal je Datei, ob sie mit darf, und kopiert die erlaubten."""
+    """Sammelt Bildpfade, fragt einmal je Datei, ob sie mit darf, und kopiert die erlaubten.
 
-    def __init__(self, target, mode, ask=input):
-        self.target, self.mode, self.ask = target, mode, ask
+    previous: Ordner bilder/ des bisherigen Exports (vor dem Abräumen gesichert) oder None – daraus kommt das
+    Standbild eines Videos, wenn es neben dem Video selbst nicht liegt (standbild)."""
+
+    def __init__(self, target, mode, ask=input, previous=None):
+        self.target, self.mode, self.ask, self.previous = target, mode, ask, previous
         self.decided = {}
         self.taken, self.left = [], []
 
@@ -279,10 +285,41 @@ class Images:
                 shutil.copy2(path, os.path.join(self.target, name))
                 result = TOKEN + "/bilder/" + name
                 self.taken.append(name)
+                if name.lower().endswith(VIDEO_EXT):
+                    self.standbild(path, name)
             else:
                 self.left.append((path, "nicht als eigenes bestätigt"))
         self.decided[path] = result
         return result
+
+    def standbild(self, video, name):
+        """Standbild eines Videos des Designs mitnehmen (Plan 0.8 Nr. 106): gleichnamiges .jpg neben dem Video.
+
+        Quelle ist das .jpg neben dem Video im eingespielten Design (INSTALLED, dorthin legt «apply» beides), oder –
+        liegt es dort nicht – das Standbild aus dem bisherigen Export, wenn dort dasselbe Video lag (gleicher Inhalt).
+        Für eigene Videos der Nutzer ausserhalb des Designs wird kein .jpg daneben genommen, wie in der Shell
+        (shell/Common/VideoPoster.js). Das Bild kommt unter dem Namen des Videos mit .jpg in bilder/ und ins Manifest.
+        """
+        ziel = os.path.splitext(name)[0] + ".jpg"
+        quelle = None
+        neben = os.path.splitext(video)[0] + ".jpg"
+        if os.path.realpath(video).startswith(os.path.realpath(INSTALLED) + os.sep) and os.path.isfile(neben):
+            quelle = neben
+        elif self.previous and os.path.isdir(self.previous):
+            for alt in sorted(os.listdir(self.previous)):
+                alt_video = os.path.join(self.previous, alt)
+                alt_bild = os.path.splitext(alt_video)[0] + ".jpg"
+                if (alt.lower().endswith(VIDEO_EXT) and os.path.isfile(alt_bild)
+                        and filecmp.cmp(alt_video, video, shallow=False)):
+                    quelle = alt_bild
+                    break
+        if not quelle:
+            return
+        if os.path.exists(os.path.join(self.target, ziel)) or ziel in self.taken:
+            self.left.append((quelle, "Standbild: %s ist schon belegt" % ziel))
+            return
+        shutil.copy2(quelle, os.path.join(self.target, ziel))
+        self.taken.append(ziel)
 
 
 def scrub(value, images, where, dropped):
@@ -469,10 +506,22 @@ def drop_foreign_widgets(settings, dropped):
 
 def export(variant, mode, ask=input):
     target = os.path.join(DESIGN_ROOT, variant)
-    if os.path.isdir(target):
-        shutil.rmtree(target)
-    os.makedirs(target)
-    images = Images(os.path.join(target, "bilder"), mode, ask)
+    # Der bisherige Ordner bilder/ wird vor dem Abräumen gesichert: Aus ihm kommt das Standbild eines Videos, wenn
+    # es neben dem Video im eingespielten Design fehlt (Images.standbild, Plan 0.8 Nr. 106).
+    previous = tempfile.mkdtemp(prefix="alpe-design-vorher-")
+    try:
+        if os.path.isdir(os.path.join(target, "bilder")):
+            shutil.copytree(os.path.join(target, "bilder"), os.path.join(previous, "bilder"))
+        if os.path.isdir(target):
+            shutil.rmtree(target)
+        os.makedirs(target)
+        return export_into(variant, target, mode, ask, os.path.join(previous, "bilder"))
+    finally:
+        shutil.rmtree(previous, ignore_errors=True)
+
+
+def export_into(variant, target, mode, ask, previous):
+    images = Images(os.path.join(target, "bilder"), mode, ask, previous)
     notes, dropped = [], []
 
     settings = renamed(load_json(SETTINGS, {}) or {})

@@ -5,14 +5,18 @@ import QtQuick
 import Quickshell
 import qs.Common
 import "../Common/WallpaperFormats.js" as WallpaperFormats
+import "../Common/VideoPoster.js" as VideoPoster
 
 // matugen, thumbnails and every blurred or lock surface need a still image,
 // so each video wallpaper gets one cached frame, extracted once per file change.
+// Videos des eingespielten Designs bringen ihr Standbild als gleichnamiges .jpg mit (Plan 0.8 Nr. 106); es wird
+// vor ffmpeg genommen, und nur für Videos im Ordner des Designs, nie für eigene Videos der Nutzer.
 Singleton {
     id: root
 
     readonly property var log: Log.scoped("VideoWallpaperService")
     readonly property string posterDir: Paths.strip(Paths.cache) + "/video-wallpaper"
+    readonly property string designDir: VideoPoster.designDir(Paths.strip(Paths.data))
 
     // video path -> frame path, holds only frames that exist on disk
     property var posters: ({})
@@ -30,6 +34,11 @@ Singleton {
         return `${posterDir}/${Qt.md5(video)}.jpg`;
     }
 
+    // Mitgeliefertes Standbild neben einem Video des eingespielten Designs, sonst "".
+    function bundledPoster(video) {
+        return VideoPoster.bundledPoster(video, designDir);
+    }
+
     // Image consumers bind to this: the path itself, or a video's frame once it exists.
     function imageFor(path) {
         if (!path || !WallpaperFormats.isVideo(path))
@@ -43,11 +52,11 @@ Singleton {
 
     // True while a frame for this video may still arrive.
     function framePending(path) {
-        return WallpaperFormats.isVideo(path) && !posters[path] && !ffmpegMissing && !_failed[path];
+        return WallpaperFormats.isVideo(path) && !posters[path] && (!ffmpegMissing || bundledPoster(path) !== "") && !_failed[path];
     }
 
     function request(video) {
-        if (ffmpegMissing || _queued[video] || _failed[video] || posters[video])
+        if ((ffmpegMissing && bundledPoster(video) === "") || _queued[video] || _failed[video] || posters[video])
             return;
         _queued[video] = true;
         _queue.push(video);
@@ -60,16 +69,29 @@ Singleton {
         _busy = true;
         const video = _queue.shift();
         const poster = posterPath(video);
-        // -nt keeps a frame that is newer than its video; the thumbnail filter skips black intro frames.
-        const script = 'command -v ffmpeg >/dev/null || exit 127; [ "$1" -nt "$2" ] && exit 0; mkdir -p "${1%/*}" && ffmpeg -nostdin -v error -i "$2" -vf "thumbnail=60,scale=\'min(3840,iw)\':-2" -frames:v 1 -q:v 2 -y "$1.part.jpg" 2>&1 && mv -f "$1.part.jpg" "$1"';
-        Proc.runCommand("videoWallpaperPoster", ["sh", "-c", script, "sh", poster, video], (output, exitCode) => {
+        const bundled = bundledPoster(video);
+        // Das Skript (VideoPoster.js) nimmt zuerst das mitgelieferte Standbild; sonst behält -nt ein Bild, das neuer
+        // ist als sein Video, und der Filter thumbnail überspringt schwarze Bilder am Anfang.
+        Proc.runCommand("videoWallpaperPoster", ["sh", "-c", VideoPoster.script(), "sh", poster, video, bundled], (output, exitCode) => {
             delete _queued[video];
             _busy = false;
+            if (exitCode === VideoPoster.BUNDLED_EXIT) {
+                posters = Object.assign({}, posters, {
+                    [video]: bundled
+                });
+                _next();
+                return;
+            }
             if (exitCode === 127) {
                 ffmpegMissing = true;
-                _queue = [];
-                _queued = {};
+                // Videos des Designs bekommen ihr mitgeliefertes Standbild trotzdem
+                _queue = _queue.filter(v => bundledPoster(v) !== "");
+                const kept = {};
+                for (const v of _queue)
+                    kept[v] = true;
+                _queued = kept;
                 log.warn("ffmpeg not found, video wallpapers play without a theme or thumbnail frame");
+                _next();
                 return;
             }
             if (exitCode !== 0) {
