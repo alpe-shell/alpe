@@ -1359,12 +1359,15 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       in der Dokumentation.
     - **Klänge** (`shell/assets/sounds/freedesktop/`, ausgeliefert nur vier, je `.oga` und `.wav`):
       `audio-volume-change`, `message` und `message-new-instant` sind bytegleich mit `sound-theme-freedesktop` 0.8
-      (Prüfsummen gegen das Arch-Paket, nur gelesen). `audio-volume-change` und `message`: CC-BY-SA, nach Debian
-      CC-BY-SA-3.0. **`message-new-instant`: ungeklärt** – `CREDITS` gibt ihm keinen eigenen Eintrag, Debian fasst
-      das Thema als «CC-BY-3.0 and CC-BY-SA-3.0 and GPL-2 and GPL-2+» zusammen; möglicherweise GPL-2.0-only.
-      **`desktop-login` gehört nicht zum Klangthema** (nicht im Paket, nicht in Debians `copyright`, auch nicht
-      gleich `service-login`); über DMS übernommen, **Herkunft und Lizenz unbekannt**. Die CC-BY-3.0-Klänge aus
-      `NOTICE` werden nicht ausgeliefert.
+      (`sha256sum` der `.oga` gegen das Arch-Paket 0.8-6 am PC, nur gelesen, 25.11.2026). `audio-volume-change` und
+      `message`: CC-BY-SA, nach Debian CC-BY-SA-3.0. **`message-new-instant`: Herkunft belegt (Klangthema),
+      Lizenz ungeklärt** – `CREDITS` gibt ihm keinen eigenen Eintrag, Debian fasst das Thema als «CC-BY-3.0 and
+      CC-BY-SA-3.0 and GPL-2 and GPL-2+» zusammen; ob GPL-2.0-only oder -or-later, ist nicht belegt (früher hier
+      «vermutlich GPLv2+» aus der Stellung in `CREDITS` – das trägt nicht). **`desktop-login` gehört nicht zum
+      Klangthema:** nicht im Paket am PC, nicht in Debians `copyright`, und die Prüfsumme gleicht weder
+      `service-login` noch `service-logout`; über DMS übernommen, **Herkunft und Lizenz unbekannt**. Die
+      CC-BY-3.0-Klänge aus `NOTICE` werden nicht ausgeliefert. Nachschlagen am Ursprung und Entfernen von
+      `desktop-login`: Entscheid des Maintainers vom 25.11.2026 (Nachtlauf 26.11.2026, Punkt 1.4).
     - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
       (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter
