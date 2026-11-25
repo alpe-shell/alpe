@@ -974,6 +974,14 @@ wireplumber`; **ohne systemd** (`!SessionService.systemctlCommandAvailable`) üb
   entscheiden und umsetzen, was ohne systemd geschieht – den Zweig entfernen (ohne systemd kein
   Neustart, Hinweis an die Nutzerin oder den Nutzer) oder gezielt nur den eigenen Prozess beenden.
   Mit Test. Am 24.11.2026 nicht geändert.
+- **Erledigt am 25.11.2026 (E1, Nachtlauf 2.7):** Zweig entfernt. Die Bedingung bleibt
+  `SessionService.systemctlCommandAvailable` (Programm `systemctl` im Pfad). Ohne es startet die Oberfläche
+  WirePlumber nicht neu und beendet keinen Prozess, sondern zeigt den Hinweis «Gerätenamen gespeichert – Das
+  Audiosystem wurde nicht neu gestartet …» (`wireplumberReloadCompleted(false)`). Mit `systemctl`, aber ohne
+  laufenden Benutzer-Manager, scheitert `systemctl --user restart wireplumber` wie bisher mit Fehlermeldung.
+  Die Entscheidung über den Befehl steckt in der reinen Funktion `wireplumberRestartCommand`; Test
+  `shell/tests/wireplumber-restart.test.mjs` (über `tools/node-tests.py` in `tools/test.sh`). In `shell/` steht
+  danach kein `pkill` und kein `killall` mehr.
 
 ## Mögliche eigene Funktion: Hintergrund-Gestalter (nach Phase A)
 

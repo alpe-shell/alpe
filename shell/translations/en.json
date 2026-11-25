@@ -4674,6 +4674,12 @@
     "comment": ""
   },
   {
+    "term": "Device names saved",
+    "context": "Device names saved",
+    "reference": "Services/AudioService.qml",
+    "comment": ""
+  },
+  {
     "term": "Device names updated",
     "context": "Device names updated",
     "reference": "Services/AudioService.qml",
@@ -16803,6 +16809,12 @@
     "term": "The arrow points in the direction the wind is blowing. The label shows where it comes from.",
     "context": "The arrow points in the direction the wind is blowing. The label shows where it comes from.",
     "reference": "Alpe/Dash/Weather/WeatherMetricCard.qml",
+    "comment": ""
+  },
+  {
+    "term": "The audio system was not restarted. The new names apply after WirePlumber restarts or after the next sign-in.",
+    "context": "The audio system was not restarted. The new names apply after WirePlumber restarts or after the next sign-in.",
+    "reference": "Services/AudioService.qml",
     "comment": ""
   },
   {

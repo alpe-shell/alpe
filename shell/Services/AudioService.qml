@@ -905,6 +905,12 @@ EOFCONFIG
         return config;
     }
 
+    // Befehl für den Neustart von WirePlumber, oder null: Ohne das Programm systemctl startet Alpe WirePlumber nicht
+    // neu und beendet keine Prozesse über ihren Namen (Nachtlauf E1 2.7, offene-faelle.md).
+    function wireplumberRestartCommand(systemctlAvailable) {
+        return systemctlAvailable ? ["systemctl", "--user", "restart", "wireplumber"] : null;
+    }
+
     function reloadWireplumberConfig() {
         if (freebsdAudio)
             return;
@@ -912,20 +918,17 @@ EOFCONFIG
             return;
         }
 
-        wireplumberReloading = true;
-        wireplumberReloadStarted();
-
-        if (!SessionService.systemctlCommandAvailable) {
-            Proc.runCommand("restartWireplumber", ["sh", "-c", "pkill -x wireplumber; sleep 1"], () => {
-                Quickshell.execDetached(["wireplumber"]);
-                wireplumberReloading = false;
-                ToastService.showInfo(I18n.tr("Audio system restarted"), I18n.tr("Device names updated"));
-                wireplumberReloadCompleted(true);
-            }, 5000);
+        const restartCommand = wireplumberRestartCommand(SessionService.systemctlCommandAvailable);
+        if (!restartCommand) {
+            ToastService.showInfo(I18n.tr("Device names saved"), I18n.tr("The audio system was not restarted. The new names apply after WirePlumber restarts or after the next sign-in."));
+            wireplumberReloadCompleted(false);
             return;
         }
 
-        Proc.runCommand("restartWireplumber", ["systemctl", "--user", "restart", "wireplumber"], (output, exitCode) => {
+        wireplumberReloading = true;
+        wireplumberReloadStarted();
+
+        Proc.runCommand("restartWireplumber", restartCommand, (output, exitCode) => {
             wireplumberReloading = false;
 
             if (exitCode === 0) {

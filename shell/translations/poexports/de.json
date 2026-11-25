@@ -2216,6 +2216,9 @@
   "Device connections": {
     "Device connections": "Geräteverbindungen"
   },
+  "Device names saved": {
+    "Device names saved": "Gerätenamen gespeichert"
+  },
   "Device names updated": {
     "Device names updated": "Gerätenamen aktualisiert"
   },
@@ -7999,6 +8002,9 @@
   },
   "The arrow points in the direction the wind is blowing. The label shows where it comes from.": {
     "The arrow points in the direction the wind is blowing. The label shows where it comes from.": "Der Pfeil zeigt in die Richtung, in die der Wind weht. Das Label gibt an, woher er kommt."
+  },
+  "The audio system was not restarted. The new names apply after WirePlumber restarts or after the next sign-in.": {
+    "The audio system was not restarted. The new names apply after WirePlumber restarts or after the next sign-in.": "Das Audiosystem wurde nicht neu gestartet. Die neuen Namen gelten, sobald WirePlumber neu startet, spätestens nach der nächsten Anmeldung."
   },
   "The below settings will modify your GTK and Qt settings. If you wish to preserve your current configurations, please back them up (%1 and %2).": {
     "The below settings will modify your GTK and Qt settings. If you wish to preserve your current configurations, please back them up (%1 and %2).": "Die folgenden Einstellungen werden Ihre GTK- und Qt-Einstellungen ändern. Wenn Sie Ihre aktuellen Konfigurationen beibehalten möchten, sichern Sie diese bitte (%1 und %2)."
