@@ -17,6 +17,31 @@ const (
 	AdminPath    = "/etc/alpe/cli-policy.json"
 )
 
+// Rückfall (Entscheid vom 25.11.2026, Plan 0.8 Nr. 119): Solange AdminPath fehlt, gilt die Richtlinie des
+// Administrators aus 1.0, mit einer Meldung – sonst fielen ihre Schalter für die Sperre ohne Meldung weg. Nur der
+// Pfad des Administrators; die Richtlinie des Pakets von 1.0 unter /usr/share wird nie gelesen.
+// alpe-namen-ausnahme: umzug-ende
+const LegacyAdminPath = "/etc/dms/cli-policy.json"
+
+// alpe-namen-ausnahme: umzug-ende
+
+// warnLegacyAdmin meldet den Rückfall; Tests ersetzen die Funktion, um die Meldung zu sehen.
+var warnLegacyAdmin = func(format string, v ...any) { log.Warnf(format, v...) }
+
+// EffectiveAdminPath ist AdminPath, ausser AdminPath fehlt und LegacyAdminPath gibt es: dann LegacyAdminPath, mit
+// einer Meldung. Fehlen beide, AdminPath.
+func EffectiveAdminPath(fs afero.Fs) string {
+	if _, err := fs.Stat(AdminPath); err == nil || !os.IsNotExist(err) {
+		return AdminPath
+	}
+	if _, err := fs.Stat(LegacyAdminPath); err != nil {
+		return AdminPath
+	}
+	warnLegacyAdmin("CLI policy: %s is missing, using the policy of Alpe 1.0 from %s. Copy it to %s to keep it; the old path is read only until the move from 1.0 is finished.",
+		AdminPath, LegacyAdminPath, AdminPath)
+	return LegacyAdminPath
+}
+
 type File struct {
 	PolicyVersion         int       `json:"policy_version"`
 	ImmutableSystem       *bool     `json:"immutable_system"`
@@ -77,10 +102,10 @@ func LoadFile(fs afero.Fs, path string) (*File, error) {
 	return &policy, nil
 }
 
-// load returns the policy files that exist, PackagedPath first.
+// load returns the policy files that exist, PackagedPath first, then the admin policy (EffectiveAdminPath).
 func load(fs afero.Fs) ([]*File, error) {
 	var policies []*File
-	for _, path := range []string{PackagedPath, AdminPath} {
+	for _, path := range []string{PackagedPath, EffectiveAdminPath(fs)} {
 		policy, err := LoadFile(fs, path)
 		if err != nil {
 			return nil, err

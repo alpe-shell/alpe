@@ -127,7 +127,7 @@ func getImmutablePolicy() (*immutableCommandPolicy, error) {
 			immutablePolicyErr = err
 			return
 		}
-		if err := mergePolicyFile(&immutablePolicy, clipolicy.AdminPath); err != nil {
+		if err := mergePolicyFile(&immutablePolicy, clipolicy.EffectiveAdminPath(afero.NewOsFs())); err != nil {
 			immutablePolicyErr = err
 			return
 		}

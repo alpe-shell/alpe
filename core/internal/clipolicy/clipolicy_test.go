@@ -2,6 +2,7 @@ package clipolicy
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -191,3 +192,69 @@ func TestLockSettingBool(t *testing.T) {
 		})
 	}
 }
+
+// Entscheid vom 25.11.2026 (Plan 0.8 Nr. 119): Die Richtlinie des Administrators aus 1.0 gilt als Rückfall, solange
+// AdminPath fehlt, mit einer Meldung; die Richtlinie des Pakets von 1.0 nie.
+// alpe-namen-ausnahme: umzug-ende
+func TestLegacyAdminFallback(t *testing.T) {
+	const legacyPackagedPath = "/usr/share/dms/cli-policy.json"
+	tests := []struct {
+		name            string
+		admin, legacy   string
+		legacyPackaged  string
+		wantPath        string
+		wantDisabled    bool
+		wantWarn        bool
+		wantErrContains string
+	}{
+		{name: "no policy files", wantPath: AdminPath},
+		{name: "only the admin policy of 1.0", legacy: `{"disable_logind_unlock": true}`, wantPath: LegacyAdminPath, wantDisabled: true, wantWarn: true},
+		{name: "admin policy wins, 1.0 not read", admin: `{"disable_logind_unlock": false}`, legacy: `{"disable_logind_unlock": true}`, wantPath: AdminPath},
+		{name: "packaged policy of 1.0 is never read", legacyPackaged: `{"disable_logind_unlock": true}`, wantPath: AdminPath},
+		{name: "malformed admin policy of 1.0", legacy: "{not json", wantPath: LegacyAdminPath, wantWarn: true, wantErrContains: "failed to parse " + LegacyAdminPath},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
+			for path, content := range map[string]string{AdminPath: tt.admin, LegacyAdminPath: tt.legacy, legacyPackagedPath: tt.legacyPackaged} {
+				if content != "" {
+					require.NoError(t, afero.WriteFile(fs, path, []byte(content), 0o644))
+				}
+			}
+			var warnings []string
+			saved := warnLegacyAdmin
+			warnLegacyAdmin = func(format string, v ...any) { warnings = append(warnings, fmt.Sprintf(format, v...)) }
+			defer func() { warnLegacyAdmin = saved }()
+
+			assert.Equal(t, tt.wantPath, EffectiveAdminPath(fs))
+			disabled, err := LogindUnlockDisabled(fs)
+			if tt.wantErrContains != "" {
+				require.ErrorContains(t, err, tt.wantErrContains)
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, tt.wantDisabled, disabled)
+			}
+			if tt.wantWarn {
+				require.NotEmpty(t, warnings)
+				assert.Contains(t, warnings[0], AdminPath+" is missing")
+				assert.Contains(t, warnings[0], LegacyAdminPath)
+			} else {
+				assert.Empty(t, warnings)
+			}
+		})
+	}
+
+	// Die Schalter für die Sperre kommen aus der alten Richtlinie bei der Oberfläche an.
+	fs := afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, LegacyAdminPath, []byte(`{"disable_custom_lock_pam": true, "lock_settings": {"lockBeforeSuspend": true}}`), 0o644))
+	saved := warnLegacyAdmin
+	warnLegacyAdmin = func(string, ...any) {}
+	defer func() { warnLegacyAdmin = saved }()
+	env, err := ShellEnv(fs)
+	require.NoError(t, err)
+	assert.Contains(t, env, "ALPE_POLICY_DISABLE_CUSTOM_LOCK_PAM=1")
+	assert.Contains(t, env, `ALPE_POLICY_LOCK_SETTINGS={"lockBeforeSuspend":true}`)
+}
+
+// alpe-namen-ausnahme: umzug-ende

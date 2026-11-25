@@ -910,7 +910,8 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
    `/usr/share/alpe/cli-policy.json` und `/etc/alpe/cli-policy.json` (Plan 2.3.3). Die alten Dienste werden erkannt
    und nicht verändert. Für F1 und den Mac (nur dort sperrt die Shell mit `Pam.qml`; unter KWin sperrt KDE): Ein
    Nutzer von 1.0 hat `/etc/pam.d/dankshell`; die Sperre nimmt ihn, bis `alpe-dienst auth sync` `/etc/pam.d/alpe`
-   geschrieben hat. Geprüft ist das im QML-Test `tst_Pam.qml` mit Attrappen – mit Richtlinie und ohne (Weg am Mac:
+   geschrieben hat – **seit Plan 0.8 Nr. 118 nur noch für eine verwaltete `dankshell`**; eine eigene bleibt, solange
+   `alpe` fehlt, und `auth sync` meldet das. Geprüft ist das im QML-Test `tst_Pam.qml` mit Attrappen – mit Richtlinie und ohne (Weg am Mac:
    `alpe` vor `dankshell`, dann Dienst im Nutzerordner, dann die mitgelieferten Stapel) –, nicht an einer echten
    Sperre. Nebenbefund: `shell/tests/run-qml.py` zeigt noch auf den alten Ordner `quickshell/` und läuft so nicht;
    `tests/test_pam_dienste.py` ruft `qmltestrunner` für `tst_Pam.qml` direkt auf. Die Attrappen kennen das
@@ -924,6 +925,10 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
    sicherheitsrelevante Schalter (`disable_custom_lock_pam`, `disable_lock_ipc_unlock`, `disable_logind_unlock`,
    `lock_settings`) fielen damit ohne Meldung weg. Am PC gibt es weder `/etc/dms` noch `/usr/share/dms`; am Mac ist
    es nicht nachgesehen. Optionen und Empfehlungen im lokalen Bericht des Nachtlaufs; für F1 zu entscheiden.
+   **Zu (2) entschieden am 25.11.2026, umgesetzt im Nachtlauf vom 26.11.2026 (Plan 0.8 Nr. 119):**
+   `/etc/dms/cli-policy.json` gilt als Rückfall, solange `/etc/alpe/cli-policy.json` fehlt, mit Meldung, Frist
+   Umzug-Ende; `/usr/share/dms` nie. Für F1: der Umzug sollte die Datei nach `/etc/alpe` kopieren (braucht root) oder
+   den Befehl nennen.
 7. ~~**Gesperrte Pakete**~~ → mit E4 entfernen (0.8 Nr. 17). **Gesperrte Pakete** `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) und die
    Hold-Anzeige auf der Wartungsseite: gehören zur 1.0-Einrichtung; Plan 2.2 sagt «entfällt».
    **Vorschlag:** mit E4 entfernen (nach dem Umzug ist `dux-shell` weg).

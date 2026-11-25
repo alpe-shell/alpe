@@ -58,12 +58,14 @@ check(sorted(set(schreiben)) == ["deps.alpePath", "deps.alpeU2fPath"],
 check(not re.search(r"(runSudoCmd|WriteFile|Remove|Rename)\([^)\n]*(legacy|Legacy)", pam_go)
       and set(re.findall(r"deps\.legacy\w*", pam_go)) <= {"deps.legacyPath", "deps.legacyU2fPath"}
       # gelesen nur in reportLegacyPamFile (dessen Ergebnis darf zugewiesen werden), sonst nur in einer Meldung (0.8 Nr. 118)
-      and all(re.match(r"(\w+ := )?reportLegacyPamFile\(|logFunc\(fmt\.Sprintf\(\"", z.strip()) for z in pam_go.splitlines() if "deps.legacy" in z),
+      and all(re.match(r"(\w+ := )?reportLegacyPamFile\(|logFunc\(fmt\.Sprintf\(\"[^\"]*\", deps\.legacyPath, deps\.alpePath\)\)$", z.strip())
+              for z in pam_go.splitlines() if "deps.legacy" in z),
       "Dienst: die Pfade von 1.0 gehen nur an reportLegacyPamFile (lesen) und in Meldungen, nie an sudo, Schreiben, Löschen oder Umbenennen")
 check("reportLegacyPamFile(logFunc, deps.legacyPath" in pam_go and "reportLegacyPamFile(logFunc, deps.legacyU2fPath" in pam_go,
       "Dienst: Dienste aus 1.0 werden beim Abgleich erkannt und gemeldet")
 
 for pfad in (("core", "internal", "pam", "pam.go"), ("core", "internal", "pam", "pam_test.go"),
+             ("core", "internal", "clipolicy", "clipolicy.go"), ("core", "internal", "clipolicy", "clipolicy_test.go"),
              ("shell", "Modules", "Lock", "Pam.qml"), ("shell", "Common", "settings", "Processes.qml"),
              ("shell", "tests", "lock", "tst_Pam.qml")):
     text = lies(REPO, *pfad)
@@ -79,6 +81,12 @@ check('systemPamWatcher.loaded ? "alpe" : (legacyPamWatcher.loaded ? "dankshell"
 clipolicy = lies(REPO, "core", "internal", "clipolicy", "clipolicy.go")
 check('PackagedPath = "/usr/share/alpe/cli-policy.json"' in clipolicy and 'AdminPath    = "/etc/alpe/cli-policy.json"' in clipolicy,
       "Richtlinien: /usr/share/alpe/cli-policy.json und /etc/alpe/cli-policy.json")
+# Plan 0.8 Nr. 119: Rückfall nur auf die Richtlinie des Administrators aus 1.0, nie auf die des Pakets von 1.0.
+check('LegacyAdminPath = "/etc/dms/cli-policy.json"' in clipolicy and "/usr/share/dms" not in clipolicy
+      and "EffectiveAdminPath(fs)" in clipolicy and "warnLegacyAdmin(" in clipolicy,
+      "Richtlinien: /etc/dms/cli-policy.json als Rückfall mit Meldung, /usr/share/dms nie")
+check("clipolicy.EffectiveAdminPath(" in lies(REPO, "core", "cmd", "alpe-dienst", "immutable_policy.go"),
+      "Richtlinien: auch die Befehlssperre (immutable_policy.go) nimmt den Rückfall")
 ausnahmen = lies(REPO, "tools", "namen-ausnahmen.txt")
 check(not [z for z in ausnahmen.splitlines() if z and not z.startswith("#") and len(z.split("\t")) > 2 and z.split("\t")[2] == "E1"],
       "Namens-Ausnahmeliste: keine Einträge mehr mit Frist E1")
