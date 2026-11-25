@@ -855,6 +855,14 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
   (Weg ohne Paket), dann je Ordner aus `XDG_DATA_DIRS`, also `/usr/share/alpe/shell` –, danach wie bisher unter
   `quickshell/alpe`. Go-Test `internal/config/shellconfig_test.go` (läuft mit `go test ./...` am Halt; `tools/test.sh`
   führt im Dienst nur `TestReadAlpeOff` aus).
+  - **Wann die Suche greift:** `doctor` und die Versionsanzeige fragen zuerst `shellApp.ResolveConfig` (dux-go
+    `shellapp`): `-c`, `ALPE_SHELL_DIR`, dann der Pfad der laufenden Instanz aus `<Runtime>/alpe.path` (geschrieben
+    beim Start, `supervise.go`), dann die eingebettete Oberfläche. `LocateShellConfig` greift also nur ohne laufende
+    Shell und bei einem Dienst ohne eingebettete Oberfläche (so baut ihn das Makefile in der Wurzel; mit
+    `make -C core build`, Tag `withshell`, nie).
+  - **Für E4 (Prüfer zu 2.6):** «Install Type» in `checkShellInstallation` stuft `~/.local/share/alpe/shell` (Weg
+    ohne Paket, 6.4) als «System package» ein – erst seit 2.6 erreichbar, Bezeichnung falsch. Ebenfalls offen
+    (Maintainer): ob `doctor` ohne laufende Shell dieselbe Auflösung nimmt wie `alpe start` (Nachtlauf, «Geparkt»).
 - Bewusst gleich geblieben (D6/D7): Dateinamen `dms-colors.json`/`dms-typography.json` im
   Cache-Ordner, fcitx5-Theme-Name `dms` (in der fcitx5-Einstellung der Nutzer gewählt),
   Lualine-Theme `dms`, Kennung `source: "dms"` zwischen Kürzel-Parser und Oberfläche,

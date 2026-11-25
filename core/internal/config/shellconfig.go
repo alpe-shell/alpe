@@ -12,7 +12,8 @@ import (
 // LocateShellConfig sucht die Oberfläche (shell.qml) in den Quickshell-Ordnern unter dem Namen
 // von Alpe. Die Ordner des Ursprungs gehören nicht dazu: Dort läge nicht Alpe.
 //
-// Reihenfolge (Plan 6.1, E1): (1) eine eigene Oberfläche unter <XDG_CONFIG_HOME>/quickshell/alpe (Entwicklung);
+// Reihenfolge (Ort des Baums nach Plan 6.1; die Reihenfolge selbst legt der Plan nicht fest, Nachtlauf E1 2.6):
+// (1) eine eigene Oberfläche unter <XDG_CONFIG_HOME>/quickshell/alpe (vom Ursprung übernommen);
 // (2) der installierte Baum <Datenordner>/alpe/shell – das Paket legt ihn nach /usr/share/alpe/shell, der Weg ohne
 // Paket (make install PREFIX=$HOME/.local, 6.4) nach <XDG_DATA_HOME>/alpe/shell; (3) wie bisher
 // <Datenordner>/quickshell/alpe und <XDG_CONFIG_DIRS>/quickshell/alpe.
