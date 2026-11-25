@@ -42,8 +42,12 @@ check(unit["Unit"]["PartOf"] == "graphical-session.target" and unit["Unit"]["Req
       and "graphical-session.target" in unit["Unit"]["After"].split(), "Unit: PartOf, After, Requisite = graphical-session.target")
 check(unit["Unit"]["Conflicts"] == "dms.service" and "dms.service" in unit["Unit"]["After"].split(),
       "Unit: Conflicts=dms.service und After=dms.service (nie zwei Shells gleichzeitig)")
-check(unit["Service"]["Type"] == "notify" and unit["Service"]["NotifyAccess"] == "main"
-      and unit["Service"]["BusName"] == "org.freedesktop.Notifications", "Unit: Type=notify, NotifyAccess=main, BusName")
+check(unit["Service"]["Type"] == "notify" and unit["Service"]["NotifyAccess"] == "main",
+      "Unit: Type=notify, NotifyAccess=main")
+# Plan 0.8 Nr. 120: kein BusName= – zwei Units mit demselben Busnamen (alpe.service, dms.service aus 1.0) laden nicht
+# nebeneinander; bei Type=notify ist er nicht nötig.
+check("BusName" not in unit["Service"] and not re.search(r"^\s*BusName\s*=", text, re.M),
+      "Unit: kein BusName= (alpe.service und dms.service laden nebeneinander)")
 umgebung = unit["Service"]["Environment"].split()
 check({"QS_DISABLE_CRASH_HANDLER=1", "MALLOC_ARENA_MAX=2"} <= set(umgebung), "Unit: Environment QS_DISABLE_CRASH_HANDLER=1 MALLOC_ARENA_MAX=2")
 session = open(os.path.join(SHELL, "Services", "SessionService.qml"), encoding="utf-8").read()

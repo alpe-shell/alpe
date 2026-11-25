@@ -13,7 +13,8 @@ Before=tray.target
 [Service]
 # «alpe start» geht per exec in «alpe-dienst … run» über (gleiche PID), sonst passte NotifyAccess=main nicht.
 Type=notify
-BusName=org.freedesktop.Notifications
+# Kein BusName= (Plan 0.8 Nr. 120): Zwei Units mit demselben Busnamen laden nicht nebeneinander, und dms.service aus
+# 1.0 trägt BusName=org.freedesktop.Notifications; bei Type=notify meldet die Bereitschaft sd_notify, nicht der Bus.
 NotifyAccess=main
 # MALLOC_ARENA_MAX=2 begrenzt die Speicher-Arenen der Shell; ALPE_SHELL_ARENA=1 sagt der Shell, dass die
 # Begrenzung nur für sie gilt – Programme, die man aus ihr startet, bekommen sie nicht (SessionService.qml).

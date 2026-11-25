@@ -832,7 +832,10 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
   `Conflicts=`/`After=dms.service` in `alpe.service` laden `dms.service` immer mit. Gefolgert, nicht gemessen:
   betroffen sind Umzug (7.2 Nr. 7) und `alpe umzug --zurueck`. **In der VM messen** (beide Pakete installiert,
   Umzug, Rückweg). Entscheid des Maintainers offen: `BusName=` streichen (bei `Type=notify` nur empfohlen),
-  `conflicts=dux-shell` (Rückweg fällt weg) oder Ladereihenfolge im Umzug regeln.
+  `conflicts=dux-shell` (Rückweg fällt weg) oder Ladereihenfolge im Umzug regeln. **Entschieden am 25.11.2026,
+  umgesetzt im Nachtlauf vom 26.11.2026 (Plan 0.8 Nr. 120):** `BusName=` gestrichen; `systemd-analyze --user verify`
+  meldet den Konflikt mit der neuen Unit nicht mehr. Die Messung mit beiden Paketen steht unter «Installationstest in
+  der VM (Liste)».
 - **Desktop-Datei `io.github.alpe_shell.Alpe.desktop` (E4):** `Exec=alpe-dienst run -c /usr/share/alpe/shell`
   gilt nur für den Übergang, solange es `alpe start` nicht gibt; nach 6.6 ist `ExecStart` von `alpe.service` der
   einzige Startweg, und wer die Datei startet, umginge das Sicherheitsnetz `alpe umzug --nur-dateien`. Bei E4
@@ -1694,6 +1697,17 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Desktop-Datei aus dem Paket (E1) sollte die Zeile verschwinden – dann prüfen, ob Portale
   (Dateiauswahl, Bildschirmfreigabe) die Shell richtig zuordnen.
 - Die Ladeprüfung läuft nur, wo `kwin_wayland` installiert ist (auch für Hyprland).
+
+## Installationstest in der VM (Liste)
+
+Der echte Installationstest macht der Maintainer in der CachyOS-VM (Snapshot «frisch») und am Mac (`CLAUDE.md`).
+Punkte, die nur dort messbar sind:
+
+1. **`alpe.service` und `dms.service` nebeneinander** (Plan 0.8 Nr. 120, seit dem Nachtlauf vom 26.11.2026 ohne
+   `BusName=`): beide Pakete installiert (`alpe-shell` und `dux-shell`), `systemctl --user daemon-reload`, dann
+   `systemctl --user status alpe.service dms.service` – beide geladen, keine Meldung «Two services allocated for the
+   same bus name»; Umzug (7.2 Nr. 7) und `alpe umzug --zurueck` durchspielen, danach jeweils nur eine Shell aktiv und
+   Mitteilungen kommen an (`notify-send test`).
 
 ## Aufräumen (Entscheid 4, C5)
 
