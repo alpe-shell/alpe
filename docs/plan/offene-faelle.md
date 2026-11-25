@@ -1356,7 +1356,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       `go-udev` bleibt, `GPL-3.0-only` ins Feld, eigener Eintrag in `NOTICE`, Lizenztext im Paket; kein Ersatz in
       Phase A, Phase B löst den Go-Dienst ab.
     - `github.com/yeqown/reedsolomon` (indirekt über `go-qrcode`): im Modul keine Lizenzdatei, die README nennt
-      keine Lizenz – Lizenz ungeklärt. **Geklärt am 26.11.2026 (Plan 0.8 Nr. 115):** MIT; der Autor hat die Datei
+      keine Lizenz – Lizenz ungeklärt. **Geklärt am 25.11.2026 (Nachtlauf vom 26.11.2026, Plan 0.8 Nr. 115):** MIT; der Autor hat die Datei
       `LICENSE` am 08.03.2026 in sein Repository gelegt (Code unverändert gegenüber v1.0.0); Eintrag in `NOTICE`.
     - `github.com/golang/freetype`: FreeType License oder GPL-2.0-or-later nach Wahl; die FTL verlangt eine Nennung
       in der Dokumentation. **Entschieden am 25.11.2026 (Plan 0.8 Nr. 114):** Alpe wählt die FTL; Text unverändert
@@ -1372,6 +1372,12 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       `service-login` noch `service-logout`; über DMS übernommen, **Herkunft und Lizenz unbekannt**. Die
       CC-BY-3.0-Klänge aus `NOTICE` werden nicht ausgeliefert. Nachschlagen am Ursprung und Entfernen von
       `desktop-login`: Entscheid des Maintainers vom 25.11.2026 (Nachtlauf 26.11.2026, Punkt 1.4; lokaler Bericht).
+      **Nachtrag (Nachtlauf vom 26.11.2026, Plan 0.8 Nr. 116):** Der Satz «`desktop-login` gehört nicht zum
+      Klangthema» ist **überholt** – die Datei gehörte bis 0.6 dazu (bytegleich mit dem Stand vor Commit `7c4e2f7`
+      von 2009, `CREDITS` damals: Red Hat, Inc., Mike Langlie, CC-BY-SA); im heutigen Paket fehlt sie, weil der
+      Ursprung sie in 0.7 entfernt hat. Entfernt ist sie wie entschieden. `message-new-instant`: auch in keiner
+      früheren Fassung von `CREDITS` ein Eintrag – Lizenz am Ursprung nicht angegeben. Die Fassung der CC-BY-SA nennt
+      der Ursprung nirgends (CC-BY-SA-3.0 ist die Einordnung von Debian, Fedora und Arch). Beides geparkt.
     - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
       (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter

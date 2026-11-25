@@ -1164,9 +1164,11 @@ EOFCONFIG
             "power-plug": "../assets/sounds/plasma/power-plug.wav",
             "power-unplug": "../assets/sounds/plasma/power-unplug.wav",
             "message": "../assets/sounds/freedesktop/message.wav",
-            "message-new-instant": "../assets/sounds/freedesktop/message-new-instant.wav",
-            "desktop-login": "../assets/sounds/freedesktop/desktop-login.wav"
+            "message-new-instant": "../assets/sounds/freedesktop/message-new-instant.wav"
         };
+        // Alpe liefert keinen Anmeldeklang mit (desktop-login.oga/.wav entfernt, Entscheid vom 25.11.2026):
+        // ohne Klang aus dem Systemthema bleibt die Quelle leer, playSound spielt dann nichts und meldet nichts.
+        const withoutBundledSound = ["desktop-login"];
 
         const specialConditions = {
             "smooth": ["audio-volume-change"]
@@ -1183,6 +1185,9 @@ EOFCONFIG
             log.debug("Using system sound for", soundEvent, ":", soundFilePaths[soundEvent]);
             return soundFilePaths[soundEvent];
         }
+
+        if (withoutBundledSound.includes(soundEvent))
+            return "";
 
         const bundledPath = Qt.resolvedUrl(soundMap[soundEvent] || "../assets/sounds/freedesktop/message.wav");
         log.debug("Using bundled sound for", soundEvent, ":", bundledPath);
@@ -1230,6 +1235,9 @@ EOFCONFIG
         }
         const player = root[playerName];
         if (!soundsAvailable || !player || notificationsAudioMuted || shouldMuteForMedia())
+            return;
+        // kein Klang für dieses Ereignis (etwa die Anmeldung ohne Systemthema): still nichts abspielen
+        if (!player.source || player.source.toString() === "")
             return;
         player.play();
     }

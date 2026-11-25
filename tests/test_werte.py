@@ -238,8 +238,9 @@ check(repo_gelesen > 1500 and repo_treffer == [],
       "ganzes Repo ohne persönliche Werte (%d Dateien; Benutzername %s, Rechnername %s): %s"
       % (repo_gelesen, "gesucht" if benutzer else "nicht gesucht", "gesucht" if rechner else "nicht gesucht", [wp.zeile(f) for f in repo_treffer[:12]]))
 # Binärdateien (bis zum 24.11.2026 übersprungen: 61 Dateien) werden roh durchsucht; der Lauf oben schliesst sie ein.
+# Seit dem 26.11.2026 (desktop-login.oga/.wav entfernt, Plan 0.8 Nr. 116) sind es 60.
 roh_endungen = sorted({os.path.splitext(p)[1] for p in repo_zaehler["roh"]})
-check(len(repo_zaehler["roh"]) >= 61 and {".ttf", ".png", ".jpg", ".mp4", ".pdf", ".qsb", ".wav"} <= set(roh_endungen)
+check(len(repo_zaehler["roh"]) >= 60 and {".ttf", ".png", ".jpg", ".mp4", ".pdf", ".qsb", ".wav"} <= set(roh_endungen)
       and not [f for f in repo_treffer if f[1] == wp.ROH],
       "Rohsuche: %d Binärdateien durchsucht (%s), kein Fund" % (len(repo_zaehler["roh"]), " ".join(roh_endungen)))
 # Textdateien mit anderer Endung (bis zum 25.11.2026 nur gezählt: 52 Dateien) werden durchsucht wie alle anderen

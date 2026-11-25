@@ -7,6 +7,8 @@ go-udev (GPL-3.0-only) im Dienst: NOTICE nennt das Modul mit der Fassung aus cor
 einbindet; der Lizenztext liegt unter LICENSES/ und make install legt ihn nach /usr/share/licenses/alpe-shell.
 golang/freetype (Alpe wählt die FTL): NOTICE nennt Fassung, Wahl, Nennung des FreeType-Teams und jede Datei, die
 go-qrcode/writer/standard einbindet; make dist und make install legen licenses/ftl.txt ab (Inhalt: test_makefile.py).
+yeqown/reedsolomon (MIT, am Ursprung belegt): NOTICE nennt Fassung, Lizenz mit Fundstelle und jede Datei, die
+go-qrcode/v2 einbindet. Klänge (1.4): NOTICE beschreibt genau die ausgelieferten Dateien unter shell/assets/sounds/.
 Ohne Bau, ohne Netz.
 """
 import os
@@ -108,13 +110,34 @@ check(fassung is not None and eintrag != "", "NOTICE hat einen eigenen Eintrag f
 if fassung and eintrag:
     check(re.search(r"Fassung:\s+%s\b" % re.escape(fassung.group(1)), eintrag) is not None,
           "NOTICE nennt die Fassung aus core/go.mod (%s)" % fassung.group(1))
-    check("MIT" in eintrag and "c5f4bc9af094852b52e593a5f964647c43028c51" in eintrag
+    check(re.search(r"^  Lizenz:\s+MIT\b", eintrag, re.M) is not None and "c5f4bc9af094852b52e593a5f964647c43028c51" in eintrag
           and "https://github.com/yeqown/reedsolomon/blob/master/LICENSE" in eintrag,
           "NOTICE: Lizenz MIT mit Fundstelle (Commit und Adresse der LICENSE am Ursprung)")
     benutzt = go_dateien_mit_import("github.com/yeqown/go-qrcode/v2")
     genannt = sorted(re.findall(r"core/\S+\.go", eintrag))
     check(benutzt and benutzt == genannt,
           "NOTICE nennt jede Datei, die go-qrcode/v2 (und damit reedsolomon) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
+
+# --- Klänge (1.4): NOTICE nennt genau die Klangdateien, die im Repository liegen (und damit ausgeliefert werden) ---
+klaenge = re.search(r"^Klänge \(shell/assets/sounds/\)\n((?:  .*\n)+)", notice, re.M)
+check(klaenge is not None, "NOTICE hat den Abschnitt «Klänge (shell/assets/sounds/)»")
+if klaenge:
+    genannt = set()
+    ordner = None
+    for zeile in klaenge.group(1).splitlines():
+        kopf = re.match(r"^  (\w+)/\s", zeile)
+        if kopf:
+            ordner = kopf.group(1)
+        for name, endungen in re.findall(r"([\w-]+)\.((?:oga|ogg|wav)(?:/\.(?:oga|ogg|wav))*)\b", zeile):
+            for endung in endungen.split("/."):
+                genannt.add("%s/%s.%s" % (ordner, name, endung))
+    klang_ordner = os.path.join(REPO, "shell", "assets", "sounds")
+    vorhanden = {os.path.relpath(os.path.join(d, f), klang_ordner) for d, _, fs in os.walk(klang_ordner)
+                 for f in fs if f.endswith((".oga", ".ogg", ".wav"))}
+    check(vorhanden and genannt == vorhanden,
+          "NOTICE nennt genau die Klangdateien im Repository (nur in NOTICE: %s; nicht in NOTICE: %s)"
+          % (sorted(genannt - vorhanden), sorted(vorhanden - genannt)))
+    check("desktop-login" not in klaenge.group(1), "desktop-login steht nicht mehr unter den Klängen (entfernt, 1.4)")
 
 # Im Quellarchiv (git archive HEAD) ist nur, was versioniert ist.
 if subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:
