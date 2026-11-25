@@ -1229,7 +1229,11 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Dateien tragen keine Urheberangabe. Das Bergbild der Sperre ist ein Standbild aus dem Video.
   Herkunft und Lizenz bestätigt der Maintainer; danach Eintrag in `NOTICE`.~~ **Erledigt
   (Plan 0.8 Nr. 95):** vom Maintainer, teils mit KI-Werkzeugen erstellt, CC0 1.0; in `NOTICE`.
-- **Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):** Entschieden ist, dass das
+- **Lizenzfeld der Pakete – entschieden am 25.11.2026 (Maintainer): Option (b).** Das Lizenzfeld wird
+  **vollständig aus der Dateiliste von `make install`** gebildet und **am Ende von E1 festgelegt**
+  (Nachtlauf-Auftrag 2.8: Tabelle Datei oder Ordner → Lizenz nach `NOTICE`, daraus der Vorschlag für 6.2
+  und 6.3). Bis dahin bleibt der Plan bei den drei; der Text darunter ist der Stand vom 24.11.2026.
+- ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
   Lizenzfeld MIT, CC-BY-4.0 und CC0-1.0 nennt (Plan 6.2, 6.3, Abschnitt 10). Unter `shell/` liegen
   nach `NOTICE` und Plan Abschnitt 3 aber auch Teile unter anderen Lizenzen: Schriften (OFL-1.1,
   Apache-2.0), Klänge (CC-BY-SA 4.0, CC-BY 3.0, GPLv2+), `suncalc.js` (BSD-2-Clause), dazu die
@@ -1370,13 +1374,14 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   **Seit dem Nachtlauf vom 24.11.2026 bricht `kwin --bild-sperre` mit einer Meldung ab** (Rückgabewert
   2, kein Bau, kein Lauf, kein Bild) und liefert nicht mehr den Schreibtisch; Test in
   `tests/test_ladepruefung.py`. Ein Bild der KDE-Sperre ist damit nicht gebaut.
-  **Nachtrag vom 25.11.2026 (Plan 0.8 Nr. 71, 112):** `kwinbild.py` rufen heute `kwin --offen --bild` und
-  neu `kwin --bild-schreibtisch` auf – nicht mehr `--bild-sperre` (der Satz oben «aufgerufen von `--bild`
+  **Nachtrag vom 25.11.2026 (Plan 0.8 Nr. 71, 112):** `kwinbild.py` wird heute von `kwin --offen --bild`
+  und neu von `kwin --bild-schreibtisch` aufgerufen – nicht mehr von `--bild-sperre` (der Satz oben «aufgerufen von `--bild`
   und neu `--bild-sperre`» gilt seit `73ab9c5` nicht mehr). `--bild-schreibtisch` nimmt in der Variante
   «gesperrt» den Schreibtisch im ausgelieferten Design auf (ohne Abdeckungs-Zusätze), Haltbild
   `halt-kwin-gesperrt-schreibtisch.png`; es ist Pflicht bei jedem Halt, solange Weg A besteht. Die Aussage
   «Die Variante «gesperrt» prüft unter KWin also nur, dass die Shell mit `lockAtStartup` lädt» bleibt für
-  die Sperre richtig; zu sehen ist unter KWin jetzt zusätzlich der Schreibtisch dahinter. Die KDE-Sperre
+  die Sperre richtig; zu sehen ist unter KWin jetzt zusätzlich der Schreibtisch (in der Test-Instanz
+  erscheint keine Sperre). Die KDE-Sperre
   selbst zeigt weiter kein Haltbild (Nr. 108).
   **Berichtigt am 24.11.2026 (Nachtlauf): Die Aussage unten, KWin 6.8.3 prüfe an ScreenShot2 keine
   Berechtigung, ist am Quelltext belegt** (vorher «unbelegt»; Einzelheiten in Plan 0.8 Nr. 103).
