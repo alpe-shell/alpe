@@ -1,6 +1,6 @@
 # Alpe – Bau, Installation, Prüfung und Quellarchiv (Plan Abschnitt 1 und 6.1).
 #
-#   make build                              Dienst bauen (ohne eingebettete Oberfläche) nach $(BUILD)/
+#   make build                              Dienst (ohne eingebettete Oberfläche) und Sperrpaket nach $(BUILD)/
 #   make install DESTDIR=… PREFIX=/usr      Paketbaum unter DESTDIR anlegen (das Paket setzt DESTDIR immer)
 #   make test                               dieselben Prüfungen wie tools/test.sh
 #   make dist                               Quellarchiv $(BUILD)/alpe-<Version>.tar.gz mit vendorten Go-Modulen
@@ -42,23 +42,46 @@ TOOLS := alpe activate-plugins.py design.py entfernen.sh fastfetch.py hyprlock2q
 EXCLUDES := --exclude-from=core/shell-test-excludes.txt --exclude=.qmlls.ini --exclude=__pycache__ \
 	--exclude='*.qmlc' --exclude='*.jsc' --exclude='./translations/*.py' --exclude=./scripts/qmllint-entrypoints.sh
 
-.PHONY: all build install test dist help
+.PHONY: all build dienst sperrpaket install test dist help
+
+# Sperrpaket für den KDE-Sperrbildschirm, beim Bau zusammengesetzt (Plan 6.1, 0.8 Nr. 86)
+SPERR := $(BUILD_ABS)/plasma/org.alpe.desktop
+LOCKVIEW := shell/Modules/Lock/Alpe
 
 all: build
 
-# «build» baut immer neu. «install» nimmt den gebauten Dienst, wie er ist, und baut nur, wenn er fehlt – im
+build: dienst sperrpaket
+
+# «build» baut immer neu. «install» nimmt Dienst und Sperrpaket, wie sie gebaut sind, und baut nur, was fehlt – im
 # Paketbau läuft install in einem eigenen Schritt mit eigener Umgebung (makepkg: package(), RPM: %install); ein
 # Neubau dort verlöre die GOFLAGS des Bauschritts (-buildmode=pie, Plan 6.2).
-build:
+dienst:
 	@test -n "$(VERSION)" || { echo "Version aus $(BRAND_QML) nicht lesbar"; exit 1; }
 	@mkdir -p $(BUILD_ABS)
 	cd core && CGO_ENABLED=0 $(GO) build -trimpath -buildvcs=false -ldflags '$(LDFLAGS)' -o $(BUILD_ABS)/alpe-dienst ./cmd/alpe-dienst
 	@echo "gebaut: $(BUILD)/alpe-dienst $(VERSION) (ohne eingebettete Oberfläche)"
 
-$(BUILD_ABS)/alpe-dienst:
-	$(MAKE) build
+# Das Paket aus lockscreen/org.alpe.desktop, dazu die Ansicht aus shell/Modules/Lock/Alpe (HyprlockView.qml,
+# layout.js und der ganze Ordner fonts) – dieselben Schritte wie «lockscreen.sh install» ins Home. Die Version in
+# metadata.json kommt aus Brand.qml wie die des Dienstes (Plan 0.8 Nr. 86; tests/test_version.py).
+sperrpaket:
+	@test -n "$(VERSION)" || { echo "Version aus $(BRAND_QML) nicht lesbar"; exit 1; }
+	rm -rf $(SPERR)
+	mkdir -p $(dir $(SPERR))
+	cp -R lockscreen/org.alpe.desktop $(SPERR)
+	cp $(LOCKVIEW)/HyprlockView.qml $(LOCKVIEW)/layout.js $(SPERR)/contents/lockscreen/
+	cp -R $(LOCKVIEW)/fonts/. $(SPERR)/contents/lockscreen/fonts/
+	sed 's/"Version": *"[^"]*"/"Version": "$(VERSION)"/' lockscreen/org.alpe.desktop/metadata.json > $(SPERR)/metadata.json
+	@grep -q '"Version": "$(VERSION)"' $(SPERR)/metadata.json || { echo "Version in metadata.json nicht gesetzt"; exit 1; }
+	@echo "zusammengesetzt: $(BUILD)/plasma/org.alpe.desktop $(VERSION)"
 
-install: $(BUILD_ABS)/alpe-dienst
+$(BUILD_ABS)/alpe-dienst:
+	$(MAKE) dienst
+
+$(SPERR)/metadata.json:
+	$(MAKE) sperrpaket
+
+install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json
 	install -Dm755 $(BUILD_ABS)/alpe-dienst $(DESTDIR)$(PREFIX)/bin/alpe-dienst
 	install -d $(SHARE)/shell $(SHARE)/plugins $(SHARE)/tools $(SHARE)/design $(SHARE)/lockscreen $(SHARE)/assets
 	# Logo für fastfetch: tools/fastfetch.py liest ../assets/fastfetch-logo.txt (Baum spiegelt das Repo, Plan 1)
@@ -70,6 +93,8 @@ install: $(BUILD_ABS)/alpe-dienst
 	for t in $(TOOLS); do \
 		if [ -x tools/$$t ]; then install -m755 tools/$$t $(SHARE)/tools/$$t; else install -m644 tools/$$t $(SHARE)/tools/$$t; fi || exit 1; \
 	done
+	install -d $(DESTDIR)$(PREFIX)/share/plasma/shells/org.alpe.desktop
+	tar -C $(SPERR) -cf - . | tar -C $(DESTDIR)$(PREFIX)/share/plasma/shells/org.alpe.desktop --no-same-owner -xf -
 	install -d $(DESTDIR)$(PREFIX)/bin
 	ln -sfn ../share/alpe/tools/alpe $(DESTDIR)$(PREFIX)/bin/alpe
 	install -Dm644 LICENSE $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/LICENSE
@@ -85,6 +110,7 @@ test:
 dist:
 	@test -n "$(IM_REPO)" || { echo "make dist braucht dieses Git-Repository ($(CURDIR))"; exit 1; }
 	$(eval DIST_VERSION := $(shell git show HEAD:$(BRAND_QML) | $(VERSION_SED) | head -1))
+	@test -n "$(DIST_VERSION)" || { echo "Version aus HEAD:$(BRAND_QML) nicht lesbar"; exit 1; }
 	rm -rf $(BUILD_ABS)/dist
 	mkdir -p $(BUILD_ABS)/dist
 	git archive --format=tar --prefix=alpe-$(DIST_VERSION)/ HEAD | tar -C $(BUILD_ABS)/dist -xf -

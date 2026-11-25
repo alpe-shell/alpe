@@ -87,6 +87,11 @@ try:
           and not any(f.endswith(".py") for f in os.listdir(os.path.join(share, "shell", "translations"))),
           "Oberfläche und Plugins ohne Tests und ohne Übersetzungswerkzeuge")
     check(os.path.isfile(os.path.join(share, "design", "kde", "bilder", "jagged-peaks-wolkenzug.jpg")), "Design mit Standbild der Sperre")
+    sperr = os.path.join(usr, "share", "plasma", "shells", "org.alpe.desktop")
+    check(all(os.path.isfile(os.path.join(sperr, *p)) for p in (("metadata.json",), ("contents", "lockscreen", "LockScreen.qml"),
+                                                                ("contents", "lockscreen", "HyprlockView.qml"), ("contents", "lockscreen", "layout.js")))
+          and '"Version": "%s"' % brand in open(os.path.join(sperr, "metadata.json"), encoding="utf-8").read(),
+          "/usr/share/plasma/shells/org.alpe.desktop zusammengesetzt, Version aus Brand.qml")
     check(all(os.path.isfile(os.path.join(usr, "share", "licenses", "alpe-shell", f)) for f in ("LICENSE", "NOTICE")),
           "/usr/share/licenses/alpe-shell/{LICENSE,NOTICE}")
     check(os.access(os.path.join(share, "tools", "alpe"), os.X_OK) and os.access(os.path.join(share, "shell", "scripts", "gtk.sh"), os.X_OK)
@@ -99,7 +104,13 @@ try:
         check(installiert <= im_repo, "unter /usr/share/alpe/shell nur Dateien aus dem Repository: %s" % sorted(installiert - im_repo)[:5])
 
     if shutil.which("git") and subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:
-        out = make("dist", "BUILD=" + bau, env=env)
+        # Erster Lauf ausdrücklich mit umask 022, der zweite unten mit 002 – sonst bewiese der Vergleich nichts,
+        # wenn die Umgebung schon 002 hat.
+        alt_umask = os.umask(0o022)
+        try:
+            out = make("dist", "BUILD=" + bau, env=env)
+        finally:
+            os.umask(alt_umask)
         archiv = os.path.join(bau, "alpe-%s.tar.gz" % brand)
         check(out.returncode == 0 and os.path.isfile(archiv), "make dist: Quellarchiv alpe-%s.tar.gz" % brand, out)
         if os.path.isfile(archiv):

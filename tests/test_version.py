@@ -39,6 +39,34 @@ expect(make("print-version"), brand, "Makefile liest die Version aus Brand.qml")
 # Eine zufällig gesetzte Umgebungsvariable darf die Version nicht still ersetzen.
 expect(make("print-version", env=dict(os.environ, VERSION="9.9.9")), brand, "VERSION aus der Umgebung wirkt nicht")
 
+# Sperrpaket (Plan 0.8 Nr. 86): «make sperrpaket» im Makefile der Wurzel setzt es zusammen; die Version in
+# metadata.json kommt aus derselben Quelle wie Brand.version – nicht aus der Datei im Repository.
+import json
+sperr_tmp = tempfile.mkdtemp(prefix="alpe-sperrpaket-")
+try:
+    out = subprocess.run(["make", "-s", "-C", HERE, "sperrpaket", "BUILD=" + sperr_tmp], capture_output=True, text=True,
+                         env=dict(os.environ, VERSION="9.9.9"))
+    expect(out.returncode, 0, "make sperrpaket: %s" % out.stderr)
+    paket = os.path.join(sperr_tmp, "plasma", "org.alpe.desktop")
+    meta = json.load(open(os.path.join(paket, "metadata.json"), encoding="utf-8"))
+    expect(meta["KPlugin"]["Version"], brand, "Version in metadata.json des Sperrpakets = Brand.version")
+    expect(meta["KPlugin"]["Id"], "org.alpe.desktop", "Id des Sperrpakets")
+    quelle = json.load(open(os.path.join(HERE, "lockscreen", "org.alpe.desktop", "metadata.json"), encoding="utf-8"))
+    quelle["KPlugin"]["Version"] = brand
+    expect(meta, quelle, "metadata.json sonst unverändert aus lockscreen/org.alpe.desktop")
+    ansicht = os.path.join(HERE, "shell", "Modules", "Lock", "Alpe")
+    lock = os.path.join(paket, "contents", "lockscreen")
+    for name in ("HyprlockView.qml", "layout.js"):
+        expect(open(os.path.join(lock, name), "rb").read() == open(os.path.join(ansicht, name), "rb").read(), True,
+               "%s aus shell/Modules/Lock/Alpe im Paket" % name)
+    for name in os.listdir(os.path.join(ansicht, "fonts")):
+        expect(open(os.path.join(lock, "fonts", name), "rb").read() == open(os.path.join(ansicht, "fonts", name), "rb").read(), True,
+               "ganzer Ordner fonts aus shell/Modules/Lock/Alpe im Paket: %s" % name)
+    for name in ("LockScreen.qml", "CapsLock.qml", "config.xml"):
+        expect(os.path.isfile(os.path.join(lock, name)), True, "%s aus lockscreen/org.alpe.desktop im Paket" % name)
+finally:
+    shutil.rmtree(sperr_tmp, ignore_errors=True)
+
 if os.environ.get("ALPE_SKIP_GO") or not shutil.which("go"):
     print("go fehlt oder ALPE_SKIP_GO – Bau übersprungen; %d Prüfungen bestanden" % checks)
     sys.exit(0)
