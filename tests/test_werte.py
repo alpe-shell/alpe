@@ -246,7 +246,7 @@ check(len(repo_zaehler["roh"]) >= 61 and {".ttf", ".png", ".jpg", ".mp4", ".pdf"
 # (Plan 0.8 Nr. 110); der Lauf oben schliesst sie ein und zählt sie mit.
 andere_endungen = sorted({os.path.splitext(p)[1] or os.path.basename(p) for p in repo_zaehler["andere_endung"]})
 check(len(repo_zaehler["andere_endung"]) >= 52 and {".svg", ".frag"} <= set(andere_endungen)
-      and set(repo_zaehler["andere_endung"]) <= set(wp.dateien(REPO)) and not [f for f in repo_treffer if f[0] in repo_zaehler["andere_endung"]],
+      and not [f for f in repo_treffer if f[0] in repo_zaehler["andere_endung"]],
       "Textdateien mit anderer Endung durchsucht: %d (%s), kein Fund" % (len(repo_zaehler["andere_endung"]), " ".join(andere_endungen)))
 # SVG-Pfaddaten: Zahlenfolgen im Attribut d sehen wie IP-Adressen aus und zählen nicht (topography.svg, hyprland.svg).
 # Nur dort: dieselbe Zahl in einem anderen Attribut, in Text oder in einer anderen Datei zählt, und jede andere Art
@@ -258,6 +258,12 @@ check([f[1:] for f in wp.funde("x/muster.svg", svg_probe)] == [(4, "IP-Adresse",
       "SVG: eine IP-Adresse in Pfaddaten (Attribut d, auch über zwei Zeilen) ist kein Fund, in einem anderen Attribut und im Text schon")
 check([f[1] for f in wp.funde("x/muster.txt", svg_probe)] == [2, 3, 4, 5] and len(wp.funde("x/MUSTER.SVG", svg_probe)) == 2,
       "SVG: die Ausnahme der Pfaddaten gilt nur für Dateien mit Endung .svg (gross oder klein); in einer anderen Datei zählt jede Zeile")
+# Nur das Attribut d selbst: Endet ein anderer Attributname auf «d» (id, data-d, xlink:d), zählt die Adresse darin;
+# d mit einfachen Anführungszeichen ist Pfaddaten wie mit doppelten.
+attribut_probe = ('<path id="%s" />\n<path data-d="%s" />\n<use xlink:d="%s" />\n<path d=\'M0 0 %s\' />\n'
+                  % (pfad_ip, pfad_ip, pfad_ip, pfad_ip))
+check([f[1:] for f in wp.funde("x/muster.svg", attribut_probe)] == [(1, "IP-Adresse", pfad_ip), (2, "IP-Adresse", pfad_ip), (3, "IP-Adresse", pfad_ip)],
+      "SVG: eine IP-Adresse in id, data-d und xlink:d ist ein Fund (nur das Attribut d zählt als Pfaddaten), in d='…' keiner")
 mac_probe = "aa:bb:cc:dd:ee:" + "02"
 heim_probe = "/".join(("", "home", "erika"))
 check([f[2:] for f in wp.funde("x/muster.svg", '<path d="M0 0 %s %s" />' % (mac_probe, heim_probe))]

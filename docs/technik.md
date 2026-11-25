@@ -353,7 +353,9 @@ Gerätekennungen. Von Hand, auch gegen einen anderen Ordner:
   52 Dateien mit einer Endung ausserhalb von `ENDUNGEN` – `.svg`, `.frag`, `.colors` … – undurchsucht).
   Der Lauf nennt ihre Zahl. **In SVG-Dateien zählt eine «IP-Adresse» innerhalb von Pfaddaten (Attribut
   `d`) nicht:** Koordinatenfolgen wie in `topography.svg` sehen aus wie Adressen. Ausgenommen ist dort
-  nur diese Art; ein Pfad in ein Home oder eine MAC-Adresse zählt auch in Pfaddaten.
+  nur diese Art; ein Pfad in ein Home oder eine MAC-Adresse zählt auch in Pfaddaten. Erkannt wird das
+  Attribut am Muster `d="…"` bzw. `d='…'` ohne XML-Parser: Steht dieses Muster in einem Kommentar, im
+  Text oder in einem anderen Attributwert, gilt es dort ebenfalls als Pfaddaten.
 - **Ausnahmen** stehen in `tools/werte-ausnahmen.txt`: je Datei, Art und erwartetem Wert, mit Frist
   und Grund. Ein anderer Fund in derselben Datei schlägt an.
 - **Die Ausnahmeliste selbst wird als ganze Datei nicht durchsucht** – bewusste Regel: Sie muss die
