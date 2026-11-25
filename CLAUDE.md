@@ -130,7 +130,8 @@ grim wird nicht benutzt), das angesehen und dem Maintainer beschrieben wird (Pla
 Design, Variante «gesperrt» ohne Abdeckungs-Zusätze – **nicht die Sperre**; unter KWin sperrt KDE,
 `kwin --bild-sperre` bricht ab). Die zwei KWin-Bilder kommen über `kwinbild.py` und gelten, solange
 dieser Weg A besteht (Plan 0.8 Nr. 103, befristet bis zum Entscheid über Weg B nach G1). Jedes der vier
-wird angesehen und dem Maintainer beschrieben.
+wird angesehen und dem Maintainer beschrieben. Ein Bildlauf gilt zugleich als Lauf seiner Variante gegen die
+Grundlinie (`kwin --bild-schreibtisch` also als KWin «gesperrt»).
 
 Zur Haltprüfung gehört qmllint aus Qt 6 (`/usr/lib/qt6/bin/qmllint`) über `shell/` – nicht in
 `tools/test.sh`: `python3 entwicklung/qmllint/qmllint-pruefung.py` vergleicht mit

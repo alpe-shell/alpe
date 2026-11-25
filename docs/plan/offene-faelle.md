@@ -203,7 +203,7 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    25.11.2026 (Maintainer):** hyprlock wird **in der echten Sitzung** mit `hyprlock --config` und der
    Datei aus dem ausgecheckten Stand gestartet. **Vorher** eine zweite Anmeldung als Rückweg öffnen
    (TTY oder SSH) und mit `hyprlock --help` prüfen, dass die installierte Fassung die Option `--config`
-   kennt (an der Quelle belegt: `-c`/`--config` seit hyprlock v0.4.0, `src/main.cpp`). Am Mac, ein
+   kennt (an der Quelle belegt: `-c`/`--config` spätestens seit hyprlock v0.4.0, `src/main.cpp`). Am Mac, ein
    Befehl pro Zeile:
 
    ```
@@ -222,7 +222,8 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    hyprctl --instance 0 dispatch exec -- hyprlock
    ```
 
-   Unter der Lua-Konfiguration (Hyprland ab 0.55) lauten sie anders; massgeblich ist, was der rote
+   Unter der Lua-Konfiguration (Hyprland ab 0.55 – aus einem Forenbeitrag, nicht an der Quelle gelesen)
+   lauten sie anders; massgeblich ist, was der rote
    Bildschirm nennt. Welche Hyprland-Fassung und welche Konfigurationsart am Mac laufen, ist hier nicht
    nachgeschlagen. Muss hyprlock selbst beendet werden, dann nur über seine PID, nie über den Namen.
    **Erwartet** (aus dem Quelltext gefolgert, nicht gemessen): `hyprlock.conf` setzt `general { grace = 1 }`;
@@ -297,7 +298,7 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    weniger als über einen längeren – beim Lesen des Ergebnisses beachten.
 9. **Priorität der COPR-Repos** (Plan 0.8 Nr. 99): Ausgabe von `dnf repolist -v` festhalten, vor
    allem die Angabe zur `priority` der COPR-Repos (`hazel-bunny/ricing` und weitere). **Berichtigt am
-   25.11.2026 (an der Quelle nachgeschlagen):** dnf5 – unter Fedora seit 41 das `dnf` – kennt keine
+   25.11.2026 (an der Quelle nachgeschlagen):** dnf5 – unter Fedora seit 41 das `dnf` (nicht an der Quelle gelesen) – kennt keine
    globale Option `-v` (Handbuch `dnf5(8)`: nur `-q`), und `repo list` kennt nur `--all`, `--enabled`,
    `--disabled`, `--json` (`dnf5-repo(8)`); `repolist` ist ein Alias für `repo list`, `repoinfo` einer für
    `repo info` (`aliases.d/compatibility.conf`). Die Priorität zeigt `repo info` (Zeilen «Priority» und
@@ -1262,7 +1263,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   (Plan 0.8 Nr. 95):** vom Maintainer, teils mit KI-Werkzeugen erstellt, CC0 1.0; in `NOTICE`.
 - **Lizenzfeld der Pakete – entschieden am 25.11.2026 (Maintainer): Option (b).** Das Lizenzfeld wird
   **vollständig aus der Dateiliste von `make install`** gebildet und **am Ende von E1 festgelegt**
-  (Nachtlauf-Auftrag 2.8: Tabelle Datei oder Ordner → Lizenz nach `NOTICE`, daraus der Vorschlag für 6.2
+  (Auftrag des Maintainers vom 25.11.2026: Tabelle Datei oder Ordner → Lizenz nach `NOTICE`, daraus der Vorschlag für 6.2
   und 6.3). Bis dahin bleibt der Plan bei den drei; der Text darunter ist der Stand vom 24.11.2026.
 - ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
   Lizenzfeld MIT, CC-BY-4.0 und CC0-1.0 nennt (Plan 6.2, 6.3, Abschnitt 10). Unter `shell/` liegen
