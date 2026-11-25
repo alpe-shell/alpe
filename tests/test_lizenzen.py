@@ -76,6 +76,23 @@ check(os.path.isfile(gpl) and lies("LICENSES", "GPL-3.0-only.txt").lstrip().star
 check(re.search(r"^\tinstall -Dm644 LICENSES/GPL-3\.0-only\.txt \$\(DESTDIR\)\$\(PREFIX\)/share/licenses/alpe-shell/GPL-3\.0-only\.txt$",
                 makefile, re.M) is not None,
       "make install legt den Text der GPL-3.0 nach /usr/share/licenses/alpe-shell")
+# --- golang/freetype: Alpe wählt die FTL (Entscheid 1.2) ---
+modul = "github.com/golang/freetype"
+fassung = re.search(r"^\s*%s (v\S+)" % re.escape(modul), gomod, re.M)
+eintrag = block(modul)
+check(fassung is not None and eintrag != "", "NOTICE hat einen eigenen Eintrag für %s (in core/go.mod)" % modul)
+if fassung and eintrag:
+    check(re.search(r"Fassung:\s+%s\b" % re.escape(fassung.group(1)), eintrag) is not None,
+          "NOTICE nennt die Fassung aus core/go.mod (%s)" % fassung.group(1))
+    check("Alpe wählt die FreeType" in eintrag and "core/vendor/github.com/golang/freetype/licenses/ftl.txt" in eintrag
+          and "/usr/share/licenses/alpe-shell/FTL.txt" in eintrag and "FreeType-Teams" in eintrag,
+          "NOTICE: Wahl der FTL, Orte des Lizenztexts, Nennung des FreeType-Teams")
+check(re.search(r"^FTL_VENDOR := core/vendor/\$\(FREETYPE\)/licenses/ftl\.txt$", makefile, re.M) is not None
+      and re.search(r"^FREETYPE := github\.com/golang/freetype$", makefile, re.M) is not None
+      and "install -Dm644 \"$$src\" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)" in makefile
+      and "install -Dm644 \"$$src\" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt" in makefile,
+      "make dist legt licenses/ftl.txt in den vendor-Baum, make install nach /usr/share/licenses/alpe-shell/FTL.txt")
+
 # Im Quellarchiv (git archive HEAD) ist nur, was versioniert ist.
 if subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:
     versioniert = subprocess.run(["git", "-C", REPO, "ls-files", "--error-unmatch", "LICENSES/GPL-3.0-only.txt"],

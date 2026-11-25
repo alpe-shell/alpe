@@ -77,9 +77,10 @@ Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre L
 Go-Module im Programm alpe-dienst
 ---------------------------------
 
-Die Module aus core/go.mod werden beim Bau statisch in das Programm alpe-dienst gelinkt. Im
-Quellarchiv (make dist) liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die
-«go mod vendor» übernimmt.
+Die Module aus core/go.mod, deren Pakete der Dienst einbindet, werden beim Bau statisch in das
+Programm alpe-dienst gelinkt (Module, die nur Tests brauchen, nicht). Im Quellarchiv (make dist)
+liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die «go mod vendor» übernimmt, und
+den unten genannten, die make dist dazulegt.
 
 github.com/pilebones/go-udev
   Fassung:   v0.10.0 (core/go.mod)
@@ -91,6 +92,19 @@ github.com/pilebones/go-udev
   Folge:     Der Quelltext von Alpe steht unter der MIT-Lizenz (LICENSE). Das Programm
              alpe-dienst als Ganzes enthält go-udev und wird deshalb unter den Bedingungen der
              GPL-3.0 weitergegeben; der vollständige Quelltext dazu ist das Quellarchiv von Alpe.
+
+github.com/golang/freetype
+  Fassung:   v0.0.0-20170609003504-e2365dfdc4a0 (core/go.mod, indirekt)
+  Benutzt:   über github.com/fogleman/gg (Zeichnen) aus github.com/yeqown/go-qrcode, eingebunden
+             in core/internal/qrcode/
+  Lizenz:    nach Wahl FreeType License (FTL) oder GPL-2.0-or-later; Alpe wählt die FreeType
+             License. Lizenztext: licenses/ftl.txt des Moduls, unverändert; im Quellarchiv
+             core/vendor/github.com/golang/freetype/licenses/ftl.txt (legt make dist dazu), im
+             Paket /usr/share/licenses/alpe-shell/FTL.txt.
+  Nennung:   alpe-dienst beruht teilweise auf der Arbeit des FreeType-Teams (The FreeType
+             Project, https://www.freetype.org). Nach dem Wortlaut, den die FTL vorschlägt:
+             «Portions of this software are copyright © 1996-2002, 2006 The FreeType Project
+             (www.freetype.org). All rights reserved.» (Jahre aus dem Kopf von ftl.txt)
 
 
 Alpe-eigene Teile im Shell-Code

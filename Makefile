@@ -29,6 +29,9 @@ LDFLAGS := -s -w -X main.Version=$(VERSION) -X github.com/alpe-shell/alpe/core/i
 	-X main.buildTime=$(BUILD_TIME) -X main.commit=$(COMMIT) $(EXTRA_LDFLAGS)
 
 BUILD_ABS := $(abspath $(BUILD))
+# golang/freetype (über go-qrcode im Dienst): Lizenztext der FTL, im Quellarchiv unter vendor/ (siehe dist)
+FREETYPE := github.com/golang/freetype
+FTL_VENDOR := core/vendor/$(FREETYPE)/licenses/ftl.txt
 SHARE := $(DESTDIR)$(PREFIX)/share/alpe
 
 # Werkzeuge, die Nutzer brauchen – ausdrücklich, keine Wildcard (Plan 0.8 Nr. 109 (3)). Prüf- und
@@ -129,6 +132,10 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 	install -Dm644 NOTICE $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/NOTICE
 	# Lizenztexte der Teile Dritter, die nicht unter MIT stehen (NOTICE): GPL-3.0 für go-udev im Dienst
 	install -Dm644 LICENSES/GPL-3.0-only.txt $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/GPL-3.0-only.txt
+	# FreeType License für golang/freetype im Dienst (Alpe wählt die FTL, NOTICE): die Originaldatei unverändert – aus
+	# dem vendor-Baum des Quellarchivs, sonst (Bau im Repository) aus dem Modul-Cache
+	src=$(FTL_VENDOR); [ -f "$$src" ] || src="$$(cd core && $(GO) list -m -f '{{.Dir}}' $(FREETYPE))/licenses/ftl.txt"; \
+		install -Dm644 "$$src" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt
 
 test:
 	bash tools/test.sh
@@ -146,6 +153,10 @@ dist:
 	git archive --format=tar --prefix=alpe-$(DIST_VERSION)/ HEAD | tar -C $(BUILD_ABS)/dist -xf -
 	git rev-parse --short=8 HEAD > $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/COMMIT
 	cd $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/core && $(GO) mod vendor
+	# «go mod vendor» übernimmt nur Paketordner; den Text der FTL (licenses/ftl.txt) von golang/freetype legt es nicht
+	# ab. Die FTL verlangt ihn unverändert bei jeder Weitergabe des Quelltexts (NOTICE).
+	src="$$(cd core && $(GO) list -m -f '{{.Dir}}' $(FREETYPE))/licenses/ftl.txt" \
+		&& install -Dm644 "$$src" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)
 	tar -C $(BUILD_ABS)/dist --sort=name --owner=0 --group=0 --numeric-owner --mode=u+rwX,go=rX \
 		--mtime=@$$(git log -1 --format=%ct HEAD) -cf - alpe-$(DIST_VERSION) | gzip -n > $(BUILD_ABS)/alpe-$(DIST_VERSION).tar.gz
 	rm -rf $(BUILD_ABS)/dist

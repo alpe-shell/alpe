@@ -1357,7 +1357,8 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     - `github.com/yeqown/reedsolomon` (indirekt über `go-qrcode`): im Modul keine Lizenzdatei, die README nennt
       keine Lizenz – Lizenz ungeklärt.
     - `github.com/golang/freetype`: FreeType License oder GPL-2.0-or-later nach Wahl; die FTL verlangt eine Nennung
-      in der Dokumentation.
+      in der Dokumentation. **Entschieden am 25.11.2026 (Plan 0.8 Nr. 114):** Alpe wählt die FTL; Text unverändert
+      ins Quellarchiv und ins Paket, Nennung in `NOTICE`.
     - **Klänge** (`shell/assets/sounds/freedesktop/`, ausgeliefert nur vier, je `.oga` und `.wav`):
       `audio-volume-change`, `message` und `message-new-instant` sind bytegleich mit `sound-theme-freedesktop` 0.8
       (`sha256sum` der `.oga` gegen das Arch-Paket 0.8-6 am PC, nur gelesen, 25.11.2026). `audio-volume-change` und

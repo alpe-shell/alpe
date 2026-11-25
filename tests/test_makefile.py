@@ -118,6 +118,14 @@ try:
     gpl_paket = os.path.join(usr, "share", "licenses", "alpe-shell", "GPL-3.0-only.txt")
     check(os.path.isfile(gpl_paket) and open(gpl_paket, "rb").read() == open(os.path.join(REPO, "LICENSES", "GPL-3.0-only.txt"), "rb").read(),
           "/usr/share/licenses/alpe-shell/GPL-3.0-only.txt = LICENSES/GPL-3.0-only.txt (go-udev im Dienst, NOTICE)")
+    # FTL von golang/freetype: unverändert aus dem Modul (Original in Latin-1, darum Bytevergleich)
+    ft_dir = subprocess.run(["go", "list", "-m", "-f", "{{.Dir}}", "github.com/golang/freetype"], cwd=os.path.join(REPO, "core"),
+                            capture_output=True, text=True, env=env).stdout.strip()
+    ftl_original = open(os.path.join(ft_dir, "licenses", "ftl.txt"), "rb").read() if ft_dir else b""
+    ftl_paket = os.path.join(usr, "share", "licenses", "alpe-shell", "FTL.txt")
+    check(ftl_original.startswith(b"                    The FreeType Project LICENSE") and os.path.isfile(ftl_paket)
+          and open(ftl_paket, "rb").read() == ftl_original,
+          "/usr/share/licenses/alpe-shell/FTL.txt = licenses/ftl.txt von golang/freetype, bytegleich")
     check(os.access(os.path.join(share, "tools", "alpe"), os.X_OK) and os.access(os.path.join(share, "shell", "scripts", "gtk.sh"), os.X_OK)
           and not os.access(os.path.join(share, "tools", "design.py"), os.X_OK),
           "Dateimodi wie im Repository (tools/alpe und shell/scripts/gtk.sh ausführbar, tools/design.py nicht)")
@@ -182,6 +190,9 @@ try:
                 check("alpe-%s/core/vendor/modules.txt" % brand in namen and "alpe-%s/shell/shell.qml" % brand in namen
                       and "alpe-%s/COMMIT" % brand in namen and not any("/.git/" in n for n in namen),
                       "Archiv mit vendorten Go-Modulen und Datei COMMIT, ohne .git")
+                ftl_name = "alpe-%s/core/vendor/github.com/golang/freetype/licenses/ftl.txt" % brand
+                check(ftl_name in namen and handle.extractfile(ftl_name).read() == ftl_original,
+                      "Archiv enthält licenses/ftl.txt von golang/freetype unverändert (go mod vendor legt sie nicht ab)")
                 handle.extractall(os.path.join(tmp, "aus"), filter="data")
             # Reproduzierbar: ein zweiter Lauf mit anderer umask ergibt dasselbe Archiv.
             bau_b = os.path.join(tmp, "bau-b")
@@ -199,6 +210,13 @@ try:
             out = make("build", "BUILD=" + os.path.join(tmp, "bau2"), cwd=quelle, env=env_vendor)
             check(out.returncode == 0 and subprocess.run([os.path.join(tmp, "bau2", "alpe-dienst"), "version"], capture_output=True, text=True).stdout.strip()
                   == "alpe-dienst " + brand, "aus dem Archiv ohne Netz gebaut (-mod=vendor, GOPROXY=off), Version stimmt", out)
+            # Installation aus dem Archiv wie im Paketbau: FTL aus dem vendor-Baum, ohne Modul-Cache
+            wurzel2 = os.path.join(tmp, "wurzel2")
+            out = make("install", "BUILD=" + os.path.join(tmp, "bau2"), "DESTDIR=" + wurzel2, "PREFIX=/usr", cwd=quelle,
+                       env=dict(env_vendor, GOMODCACHE=os.path.join(tmp, "leerer-modcache")))
+            ftl2 = os.path.join(wurzel2, "usr", "share", "licenses", "alpe-shell", "FTL.txt")
+            check(out.returncode == 0 and os.path.isfile(ftl2) and open(ftl2, "rb").read() == ftl_original,
+                  "make install aus dem Archiv: FTL.txt aus dem vendor-Baum, ohne Modul-Cache und Netz", out)
     else:
         print("kein Git-Repository – make dist übersprungen")
 finally:
