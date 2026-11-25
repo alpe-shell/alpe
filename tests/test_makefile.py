@@ -52,7 +52,9 @@ if not shutil.which("make") or not shutil.which("go") or os.environ.get("ALPE_SK
 tmp = tempfile.mkdtemp(prefix="alpe-make-")
 try:
     env = dict(os.environ)
-    env.pop("GOFLAGS", None)
+    # -mod=… aus der Umgebung stört den Bau aus dem Repository; anderes (etwa -modcacherw, CLAUDE.md) bleibt.
+    flags = [f for f in env.get("GOFLAGS", "").split() if not f.startswith("-mod=")]
+    env["GOFLAGS"] = " ".join(flags)
     bau = os.path.join(tmp, "bau")
     out = make("build", "BUILD=" + bau, env=env)
     dienst = os.path.join(bau, "alpe-dienst")
@@ -64,14 +66,21 @@ try:
         check("withshell" not in info and "-trimpath=true" in info, "ohne eingebettete Oberfläche (kein Tag withshell), -trimpath")
 
     wurzel = os.path.join(tmp, "wurzel")
+    vorher = os.stat(dienst).st_mtime_ns if os.path.exists(dienst) else None
     out = make("install", "BUILD=" + bau, "DESTDIR=" + wurzel, "PREFIX=/usr", env=env)
     check(out.returncode == 0, "make install DESTDIR=… PREFIX=/usr läuft durch", out)
+    check(vorher is not None and os.stat(dienst).st_mtime_ns == vorher,
+          "make install baut den Dienst nicht neu (im Paketbau gingen sonst die GOFLAGS des Bauschritts verloren)")
     usr = os.path.join(wurzel, "usr")
     check(os.access(os.path.join(usr, "bin", "alpe-dienst"), os.X_OK), "/usr/bin/alpe-dienst")
     check(os.readlink(os.path.join(usr, "bin", "alpe")) == "../share/alpe/tools/alpe" if os.path.islink(os.path.join(usr, "bin", "alpe")) else False,
           "/usr/bin/alpe -> ../share/alpe/tools/alpe")
     share = os.path.join(usr, "share", "alpe")
-    check(sorted(os.listdir(share)) == ["design", "lockscreen", "plugins", "shell", "tools"], "/usr/share/alpe/{shell,plugins,tools,design,lockscreen}")
+    check(sorted(os.listdir(share)) == ["assets", "design", "lockscreen", "plugins", "shell", "tools"],
+          "/usr/share/alpe/{shell,plugins,tools,design,lockscreen,assets}")
+    check(os.listdir(os.path.join(share, "assets")) == ["fastfetch-logo.txt"]
+          and os.path.isfile(os.path.join(share, "tools", "..", "assets", "fastfetch-logo.txt")),
+          "Logo für fastfetch dort, wo tools/fastfetch.py es liest (../assets/fastfetch-logo.txt), sonst nichts aus assets/")
     check(sorted(os.listdir(os.path.join(share, "tools"))) == sorted(tools_liste), "unter /usr/share/alpe/tools genau die Werkzeuge der Liste")
     check(os.path.isfile(os.path.join(share, "shell", "shell.qml")) and not os.path.exists(os.path.join(share, "shell", "tests"))
           and not os.path.exists(os.path.join(share, "plugins", "claudeCodeUsage", "tests"))
@@ -97,8 +106,19 @@ try:
             with tarfile.open(archiv) as handle:
                 namen = handle.getnames()
                 check("alpe-%s/core/vendor/modules.txt" % brand in namen and "alpe-%s/shell/shell.qml" % brand in namen
-                      and not any("/.git/" in n for n in namen), "Archiv mit vendorten Go-Modulen, ohne .git")
+                      and "alpe-%s/COMMIT" % brand in namen and not any("/.git/" in n for n in namen),
+                      "Archiv mit vendorten Go-Modulen und Datei COMMIT, ohne .git")
                 handle.extractall(os.path.join(tmp, "aus"), filter="data")
+            # Reproduzierbar: ein zweiter Lauf mit anderer umask ergibt dasselbe Archiv.
+            bau_b = os.path.join(tmp, "bau-b")
+            alt_umask = os.umask(0o002)
+            try:
+                out_b = make("dist", "BUILD=" + bau_b, env=env)
+            finally:
+                os.umask(alt_umask)
+            archiv_b = os.path.join(bau_b, os.path.basename(archiv))
+            gleich = out_b.returncode == 0 and os.path.isfile(archiv_b) and open(archiv, "rb").read() == open(archiv_b, "rb").read()
+            check(gleich, "make dist ist reproduzierbar (zweiter Lauf mit umask 002 bytegleich)", out_b)
             quelle = os.path.join(tmp, "aus", "alpe-%s" % brand)
             # Bau aus dem Archiv wie im Paketbau: ohne Netz, mit den vendorten Modulen.
             env_vendor = dict(env, GOFLAGS="-mod=vendor", GOPROXY="off")

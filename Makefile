@@ -13,14 +13,20 @@ PREFIX ?= /usr
 DESTDIR ?=
 BUILD ?= build
 GO ?= go
+# Zusatz zu den ldflags für den Paketbau (etwa eine Build-ID); ersetzt die Versionsflags nicht
+EXTRA_LDFLAGS ?=
 
 BRAND_QML := shell/Common/Brand.qml
-VERSION := $(shell sed -n 's/.*property string version: "\([^"]*\)".*/\1/p' $(BRAND_QML) | head -1)
-COMMIT := $(shell git rev-parse --short=8 HEAD 2>/dev/null || echo unknown)
+VERSION_SED := sed -n 's/.*property string version: "\([^"]*\)".*/\1/p'
+VERSION := $(shell $(VERSION_SED) $(BRAND_QML) | head -1)
+# Nur das eigene Repository zählt (nicht ein umschliessendes, etwa der Klon eines AUR-Pakets); im Quellarchiv
+# steht der Commit in der Datei COMMIT, die «make dist» schreibt.
+IM_REPO := $(shell [ "$$(git -C $(CURDIR) rev-parse --show-toplevel 2>/dev/null)" = "$(CURDIR)" ] && echo ja)
+COMMIT := $(if $(IM_REPO),$(shell git rev-parse --short=8 HEAD),$(or $(shell cat COMMIT 2>/dev/null),unknown))
 # Reproduzierbar, wenn SOURCE_DATE_EPOCH gesetzt ist (Paketbau); sonst die Zeit des Baus.
 BUILD_TIME := $(shell date -u $${SOURCE_DATE_EPOCH:+-d @$$SOURCE_DATE_EPOCH} '+%Y-%m-%d_%H:%M:%S')
 LDFLAGS := -s -w -X main.Version=$(VERSION) -X github.com/alpe-shell/alpe/core/internal/brand.Version=$(VERSION) \
-	-X main.buildTime=$(BUILD_TIME) -X main.commit=$(COMMIT)
+	-X main.buildTime=$(BUILD_TIME) -X main.commit=$(COMMIT) $(EXTRA_LDFLAGS)
 
 BUILD_ABS := $(abspath $(BUILD))
 SHARE := $(DESTDIR)$(PREFIX)/share/alpe
@@ -40,15 +46,23 @@ EXCLUDES := --exclude-from=core/shell-test-excludes.txt --exclude=.qmlls.ini --e
 
 all: build
 
+# «build» baut immer neu. «install» nimmt den gebauten Dienst, wie er ist, und baut nur, wenn er fehlt – im
+# Paketbau läuft install in einem eigenen Schritt mit eigener Umgebung (makepkg: package(), RPM: %install); ein
+# Neubau dort verlöre die GOFLAGS des Bauschritts (-buildmode=pie, Plan 6.2).
 build:
 	@test -n "$(VERSION)" || { echo "Version aus $(BRAND_QML) nicht lesbar"; exit 1; }
 	@mkdir -p $(BUILD_ABS)
-	cd core && CGO_ENABLED=0 $(GO) build -trimpath -ldflags '$(LDFLAGS)' -o $(BUILD_ABS)/alpe-dienst ./cmd/alpe-dienst
+	cd core && CGO_ENABLED=0 $(GO) build -trimpath -buildvcs=false -ldflags '$(LDFLAGS)' -o $(BUILD_ABS)/alpe-dienst ./cmd/alpe-dienst
 	@echo "gebaut: $(BUILD)/alpe-dienst $(VERSION) (ohne eingebettete Oberfläche)"
 
-install: build
+$(BUILD_ABS)/alpe-dienst:
+	$(MAKE) build
+
+install: $(BUILD_ABS)/alpe-dienst
 	install -Dm755 $(BUILD_ABS)/alpe-dienst $(DESTDIR)$(PREFIX)/bin/alpe-dienst
-	install -d $(SHARE)/shell $(SHARE)/plugins $(SHARE)/tools $(SHARE)/design $(SHARE)/lockscreen
+	install -d $(SHARE)/shell $(SHARE)/plugins $(SHARE)/tools $(SHARE)/design $(SHARE)/lockscreen $(SHARE)/assets
+	# Logo für fastfetch: tools/fastfetch.py liest ../assets/fastfetch-logo.txt (Baum spiegelt das Repo, Plan 1)
+	install -m644 assets/fastfetch-logo.txt $(SHARE)/assets/fastfetch-logo.txt
 	tar -C shell $(EXCLUDES) -cf - . | tar -C $(SHARE)/shell --no-same-owner -xf -
 	tar -C plugins $(EXCLUDES) -cf - . | tar -C $(SHARE)/plugins --no-same-owner -xf -
 	tar -C design --exclude=__pycache__ -cf - . | tar -C $(SHARE)/design --no-same-owner -xf -
@@ -65,17 +79,21 @@ test:
 	bash tools/test.sh
 
 # Quellarchiv aus dem eingecheckten Stand (git archive HEAD), Go-Module vendort, damit der Paketbau ohne Netz
-# läuft (Plan 6.2). Reproduzierbar: feste Reihenfolge, Besitzer 0, Zeit des Commits, gzip ohne Namen und Zeit.
+# läuft (Plan 6.2). Version und Commit kommen aus HEAD, nicht aus dem Arbeitsbaum. Reproduzierbar: feste
+# Reihenfolge, Besitzer 0, Modi unabhängig von der umask, Zeit des Commits, gzip ohne Namen und Zeit. Das Ergebnis
+# hängt noch an der Go-Version, die vendort (vendor/modules.txt).
 dist:
-	@git rev-parse --git-dir >/dev/null 2>&1 || { echo "make dist braucht ein Git-Repository"; exit 1; }
+	@test -n "$(IM_REPO)" || { echo "make dist braucht dieses Git-Repository ($(CURDIR))"; exit 1; }
+	$(eval DIST_VERSION := $(shell git show HEAD:$(BRAND_QML) | $(VERSION_SED) | head -1))
 	rm -rf $(BUILD_ABS)/dist
 	mkdir -p $(BUILD_ABS)/dist
-	git archive --format=tar --prefix=alpe-$(VERSION)/ HEAD | tar -C $(BUILD_ABS)/dist -xf -
-	cd $(BUILD_ABS)/dist/alpe-$(VERSION)/core && $(GO) mod vendor
-	tar -C $(BUILD_ABS)/dist --sort=name --owner=0 --group=0 --numeric-owner \
-		--mtime=@$$(git log -1 --format=%ct HEAD) -cf - alpe-$(VERSION) | gzip -n > $(BUILD_ABS)/alpe-$(VERSION).tar.gz
+	git archive --format=tar --prefix=alpe-$(DIST_VERSION)/ HEAD | tar -C $(BUILD_ABS)/dist -xf -
+	git rev-parse --short=8 HEAD > $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/COMMIT
+	cd $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/core && $(GO) mod vendor
+	tar -C $(BUILD_ABS)/dist --sort=name --owner=0 --group=0 --numeric-owner --mode=u+rwX,go=rX \
+		--mtime=@$$(git log -1 --format=%ct HEAD) -cf - alpe-$(DIST_VERSION) | gzip -n > $(BUILD_ABS)/alpe-$(DIST_VERSION).tar.gz
 	rm -rf $(BUILD_ABS)/dist
-	@echo "Quellarchiv: $(BUILD)/alpe-$(VERSION).tar.gz"
+	@echo "Quellarchiv: $(BUILD)/alpe-$(DIST_VERSION).tar.gz"
 
 help:
 	@sed -n '2,10p' Makefile

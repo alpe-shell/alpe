@@ -812,6 +812,16 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
   `install.sh` (Desktop-Datei `dev.duxlabs.shell`). Umgestellt sind in D2 nur die Werkzeuge,
   die Dateien der Shell schreiben oder lesen (`design.py`, `activate-plugins.py`, `maclock.sh`,
   `alpe sport`, Sport-Plugin).
+- **Werkzeuge und Oberfläche im Paket (E4; gefunden bei der Prüfung des Makefiles am 25.11.2026):** Einige
+  Stellen erwarten weiter den Klon `~/alpe` statt des installierten Baums `/usr/share/alpe`:
+  `shell/Modules/Settings/AlpeLockDesignTab.qml` ruft für «hyprlock.conf übernehmen» fest
+  `~/alpe/tools/hyprlock2qml.py` auf (im Paket liegt es unter `/usr/share/alpe/tools`); Hinweistexte nennen
+  `~/alpe/install.sh` und `backend.sh` (`AlpePerformanceTab.qml`, `AlpeLockTab.qml`, `AlpeMaintenanceTab.qml`);
+  `tools/alpe` verweist in `doctor` auf `backend.sh` und `install.sh` und ruft für `alpe update` `install.sh` auf;
+  `alpe test` braucht `tools/test.sh`, das nicht ins Paket kommt (geparkt im Nachtlauf vom 25.11.2026).
+  `design.py export` schreibt nach `<ALPE_DIR>/design`, im Paket also nach `/usr/share/alpe/design` (nicht
+  beschreibbar) – Export ist ein Werkzeug für das Repository, das ist bei E4 festzuhalten. `make -C core build`
+  bettet die Oberfläche weiter ein (Tag `withshell`), das Makefile in der Wurzel nicht – Kandidat zum Aufräumen.
 - `doctor` sucht die Oberfläche noch unter `quickshell/dms` (`config.LocateDMSConfig`); mit E1
   (`/usr/share/alpe/shell`) anpassen.
 - Bewusst gleich geblieben (D6/D7): Dateinamen `dms-colors.json`/`dms-typography.json` im
