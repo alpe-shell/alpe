@@ -1346,7 +1346,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     Arch `license=(MIT GPL-3.0-only Apache-2.0 BSD-2-Clause BSD-3-Clause OFL-1.1 CC-BY-4.0 CC-BY-SA-4.0 CC0-1.0 FTL
     LicenseRef-Alpe-Logo)`; Fedora `License: MIT AND GPL-3.0-only AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND
     OFL-1.1 AND CC-BY-4.0 AND CC-BY-SA-4.0 AND CC0-1.0 AND (FTL OR GPL-2.0-or-later) AND LicenseRef-Alpe-Logo`
-    – vorbehaltlich der offenen Punkte:
+    – vorbehaltlich der offenen Punkte (dazu vermutlich `CC-BY-SA-3.0` für die Klänge; Schriften ohne Reserved
+    Font Name, etwa Fira Code, als `OFL-1.1-no-RFN`; `gopkg.in/yaml.v3` MIT und Apache-2.0 – Schreibweisen bei E2/E3
+    mit `namcap`/`rpmlint` prüfen):
     - **`alpe-dienst` linkt `github.com/pilebones/go-udev` (GPL-3.0, README «GNU GPL v3» ohne «or later»)**,
       benutzt in `core/internal/server/brightness/udev_linux.go`; aus dem Ursprung übernommen. Das Programm als
       Ganzes fällt damit unter die Bedingungen der GPL-3.0; `NOTICE` sagt das nicht. Entscheid offen: so lassen
@@ -1355,10 +1357,14 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       keine Lizenz – Lizenz ungeklärt.
     - `github.com/golang/freetype`: FreeType License oder GPL-2.0-or-later nach Wahl; die FTL verlangt eine Nennung
       in der Dokumentation.
-    - **Klänge** (`shell/assets/sounds/freedesktop/`, ausgeliefert nur vier): `audio-volume-change` und `message`
-      CC-BY-SA (ohne Fassung), `message-new-instant` steht in `CREDITS` ohne eigenen Block vor der Gruppe von
-      Damien Sandras (GPLv2+) – vermutlich **GPLv2+**; **`desktop-login` hat in `CREDITS` keinen Eintrag**. Die
-      CC-BY-3.0-Klänge aus `NOTICE` werden nicht ausgeliefert.
+    - **Klänge** (`shell/assets/sounds/freedesktop/`, ausgeliefert nur vier, je `.oga` und `.wav`):
+      `audio-volume-change`, `message` und `message-new-instant` sind bytegleich mit `sound-theme-freedesktop` 0.8
+      (Prüfsummen gegen das Arch-Paket, nur gelesen). `audio-volume-change` und `message`: CC-BY-SA, nach Debian
+      CC-BY-SA-3.0. **`message-new-instant`: ungeklärt** – `CREDITS` gibt ihm keinen eigenen Eintrag, Debian fasst
+      das Thema als «CC-BY-3.0 and CC-BY-SA-3.0 and GPL-2 and GPL-2+» zusammen; möglicherweise GPL-2.0-only.
+      **`desktop-login` gehört nicht zum Klangthema** (nicht im Paket, nicht in Debians `copyright`, auch nicht
+      gleich `service-login`); über DMS übernommen, **Herkunft und Lizenz unbekannt**. Die CC-BY-3.0-Klänge aus
+      `NOTICE` werden nicht ausgeliefert.
     - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
       (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter
