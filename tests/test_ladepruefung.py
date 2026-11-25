@@ -254,6 +254,40 @@ esac
           "--bild-sperre unter KWin bricht mit klarer Meldung ab: kein Bau, kein Lauf, kein Bild (statt des Schreibtischs)")
     aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)
     check(aufruf.returncode == 2 and "--offen" in aufruf.stdout + aufruf.stderr, "--bild ohne --offen wird abgelehnt")
+    # Bild des Schreibtischs im ausgelieferten Design unter KWin (Plan 0.8 Nr. 112): nur Variante «gesperrt», nur KWin.
+    schreibtisch = os.path.join(tmp, "halt-kwin-gesperrt-schreibtisch.png")
+    for lage, extra, erwartet in (("mit --offen", ["kwin", "--offen"], "gesperrt"),
+                                  ("mit --bild-sperre (KWin)", ["kwin", "--bild-sperre", os.path.join(tmp, "s.png")], "--bild-sperre gibt es unter KWin nicht"),
+                                  ("mit --bild-sperre (Hyprland)", ["hyprland", "--bild-sperre", os.path.join(tmp, "s.png")], "--bild-schreibtisch gehört zur Variante"),
+                                  ("unter Hyprland", ["hyprland"], "nur unter KWin"),
+                                  ("mit --grundlinie", ["kwin", "--grundlinie"], "Grundlinie gilt")):
+        aufruf = subprocess.run([sys.executable, lp.__file__] + extra + ["--bild-schreibtisch", schreibtisch], capture_output=True, text=True)
+        ausgabe = aufruf.stdout + aufruf.stderr
+        check(aufruf.returncode == 2 and erwartet in ausgabe and "Dienst bauen" not in ausgabe and "== Lauf" not in ausgabe
+              and not os.path.exists(schreibtisch),
+              "--bild-schreibtisch %s wird abgelehnt: kein Bau, kein Lauf, kein Bild" % lage)
+    # Gegenprobe ohne Compositor: main() mit Attrappe statt eines Laufs – der Schalter führt zur Variante «gesperrt»
+    # (offen=False, also ohne Abdeckungs-Zusätze) mit dem Bild unter KWin, also über kwinbild.py (session_script mit
+    # kwin_scope, siehe oben).
+    class Gestoppt(Exception):
+        pass
+    gesehen = {}
+
+    def lauf_attrappe(compositor, dienst, keep, unit, extra_plugins=(), probe=False, bild=None, offen=False):
+        gesehen.update(compositor=compositor, bild=bild, offen=offen, probe=probe, plugins=list(extra_plugins))
+        raise Gestoppt()
+    echte = (lp.one_run, lp.active_scopes, lp.shutil.which)
+    lp.one_run, lp.active_scopes = lauf_attrappe, (lambda: [])
+    lp.shutil.which = lambda name: "/usr/bin/" + name
+    try:
+        lp.main(["ladepruefung.py", "kwin", "--dienst", os.path.join(tmp, "alpe-dienst"), "--bild-schreibtisch", schreibtisch])
+        gestoppt = False
+    except Gestoppt:
+        gestoppt = True
+    finally:
+        lp.one_run, lp.active_scopes, lp.shutil.which = echte
+    check(gestoppt and gesehen == {"compositor": "kwin", "bild": schreibtisch, "offen": False, "probe": False, "plugins": []},
+          "--bild-schreibtisch unter KWin: Lauf der Variante «gesperrt» ohne Zusätze, mit Bild (%s)" % gesehen)
     # Probe für das Papierkorb-Symbol im Dock: nur mit Schalter liegt etwas im Papierkorb des Temp-HOME.
     schalter = os.environ.pop("ALPE_LP_PAPIERKORB", None)
     try:

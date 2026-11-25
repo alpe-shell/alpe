@@ -23,6 +23,11 @@ einer Grundlinie vergleichen.
                                           der Variante «gesperrt». Unter KWin wird abgebrochen: Dort sperrt nicht die
                                           Shell, sondern KDE, und die Test-Instanz läuft mit --no-lockscreen – das
                                           Bild zeigte den Schreibtisch, nicht die Sperre
+              --bild-schreibtisch DATEI   nur ohne --offen und nur unter KWin: Bild des Schreibtischs im
+                                          ausgelieferten Design (Variante «gesperrt», ohne Abdeckungs-Zusätze), über
+                                          kwinbild.py wie --bild. Haltbild halt-kwin-gesperrt-schreibtisch.png: Es
+                                          zeigt nicht die Sperre (unter KWin sperrt KDE), sondern den Schreibtisch
+                                          dahinter (Plan 0.8 Nr. 71, 112)
               --grundlinie-datei DATEI    statt der eingecheckten Grundlinie (Messung auf einem anderen Stand)
     Umgebung: ALPE_LP_PAPIERKORB=voll     Probe für das Dock: im Temp-HOME liegt eine Datei im Papierkorb
                                           (Symbol user-trash-full statt user-trash); keine Grundlinie
@@ -707,6 +712,17 @@ def main(argv):
                 "nicht die Sperre. Ein Bild der Sperre der Shell: «hyprland --bild-sperre DATEI». Kein Lauf gestartet.")
             return 2
         bild = os.path.abspath(args[args.index("--bild-sperre") + 1])
+    if "--bild-schreibtisch" in args:
+        # Unter KWin sperrt KDE, nicht die Shell: In der Variante «gesperrt» liegt auf dem Bildschirm der Test-Instanz
+        # der Schreibtisch im ausgelieferten Design. Dieses Bild zeigt ihn – ausdrücklich nicht die Sperre.
+        if bild or offen or "--bild-sperre" in args:
+            say("FEHLER: --bild-schreibtisch gehört zur Variante «gesperrt» (ohne --offen, --bild und --bild-sperre)")
+            return 2
+        if compositor != "kwin":
+            say("FEHLER: --bild-schreibtisch gibt es nur unter KWin. Unter Hyprland sperrt die Shell selbst, das Bild der "
+                "Variante «gesperrt» ist dort die Sperre: «hyprland --bild-sperre DATEI». Kein Lauf gestartet.")
+            return 2
+        bild = os.path.abspath(args[args.index("--bild-schreibtisch") + 1])
     if write and (probe or extra_plugins or bild):
         say("FEHLER: Die Grundlinie gilt für den Lauf ohne --plugins, --probe-zeichen und --bild")
         return 2
