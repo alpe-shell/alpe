@@ -19,6 +19,8 @@ core/bin/
 core/dms
 core/alpe-dienst
 core/internal/shellembed/dist/
+# Bau über das Makefile in der Wurzel (make build, make dist)
+/build/
 # Werkzeuge der QML-Entwicklung
 *.qmlc
 *.jsc
