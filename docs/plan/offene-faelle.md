@@ -1705,9 +1705,16 @@ Punkte, die nur dort messbar sind:
 
 1. **`alpe.service` und `dms.service` nebeneinander** (Plan 0.8 Nr. 120, seit dem Nachtlauf vom 26.11.2026 ohne
    `BusName=`): beide Pakete installiert (`alpe-shell` und `dux-shell`), `systemctl --user daemon-reload`, dann
-   `systemctl --user status alpe.service dms.service` – beide geladen, keine Meldung «Two services allocated for the
-   same bus name»; Umzug (7.2 Nr. 7) und `alpe umzug --zurueck` durchspielen, danach jeweils nur eine Shell aktiv und
-   Mitteilungen kommen an (`notify-send test`).
+   `systemctl --user status alpe.service dms.service` – beide geladen; der Ladefehler «Two services allocated for the
+   same bus name» stünde nicht sicher in `status`, darum zusätzlich `systemd-analyze --user verify
+   /usr/lib/systemd/user/alpe.service` und `journalctl --user -b -g "same bus name"` (beide ohne Treffer); Umzug (7.2
+   Nr. 7) und `alpe umzug --zurueck` durchspielen, danach jeweils nur eine Shell aktiv und Mitteilungen kommen an
+   (`notify-send test`). **Am Mac** dasselbe mit dem Paket von 1.0 dort (`dms-shell`; ob dessen Unit `BusName=` trägt,
+   ist nicht nachgesehen – `systemctl --user cat dms.service`).
+2. **Nebenwirkung von Plan 0.8 Nr. 120 (gefolgert):** Ohne `BusName=` lädt `alpe.service` auch neben Units anderer
+   Mitteilungsdienste (dunst, mako, swaync), die den Namen tragen. Laufen beide, meldet die Shell beim Start
+   «notifications handled by external process» (`core/internal/systemd/notify.go`). In der VM bzw. am Mac mit einem
+   installierten Mitteilungsdienst ansehen.
 
 ## Aufräumen (Entscheid 4, C5)
 

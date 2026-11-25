@@ -49,7 +49,7 @@ function builtinLayout(id) {
     let strength = defaultStrength;
     switch (id) {
     case "alpe":
-        layers = [layer("softBurst", 0.842, 0.45, 1.5, 0, "primaryContainer"), layer("alpeLogo", 0.842, 0.45, 0.38, 0, "primary"), layer("sunny", 0.133, 0.21, 0.26, 10, "tertiary"), layer("pill", 0.241, 0.91, 0.5, -25, "secondaryContainer")];
+        layers = [layer("softBurst", 0.842, 0.453, 1.5, 0, "primaryContainer"), layer("alpeLogo", 0.842, 0.453, 0.38, 0, "primary"), layer("sunny", 0.133, 0.21, 0.26, 10, "tertiary"), layer("pill", 0.241, 0.91, 0.5, -25, "secondaryContainer")];
         break;
     case "bloom":
         layers = [layer("flower", 0.903, 0.495, 1.15, 12, "primaryContainer"), layer("circle", 0.497, 0.75, 0.7, 0, "secondary", "tertiaryContainer"), layer("cookie6", 0.144, 0.27, 0.3, 0, "primary")];
