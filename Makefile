@@ -127,6 +127,8 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 	install -Dm644 $(KOMPL)/alpe-dienst.fish $(DESTDIR)$(PREFIX)/share/fish/vendor_completions.d/alpe-dienst.fish
 	install -Dm644 LICENSE $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/LICENSE
 	install -Dm644 NOTICE $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/NOTICE
+	# Lizenztexte der Teile Dritter, die nicht unter MIT stehen (NOTICE): GPL-3.0 für go-udev im Dienst
+	install -Dm644 LICENSES/GPL-3.0-only.txt $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/GPL-3.0-only.txt
 
 test:
 	bash tools/test.sh

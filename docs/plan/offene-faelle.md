@@ -1351,8 +1351,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     mit `namcap`/`rpmlint` prüfen):
     - **`alpe-dienst` linkt `github.com/pilebones/go-udev` (GPL-3.0, README «GNU GPL v3» ohne «or later»)**,
       benutzt in `core/internal/server/brightness/udev_linux.go`; aus dem Ursprung übernommen. Das Programm als
-      Ganzes fällt damit unter die Bedingungen der GPL-3.0; `NOTICE` sagt das nicht. Entscheid offen: so lassen
-      (GPL-3.0 ins Feld, Quellarchiv liegt ohnehin bei), oder `go-udev` durch eigenen Netlink-Code ersetzen.
+      Ganzes fällt damit unter die Bedingungen der GPL-3.0. **Entschieden am 25.11.2026 (Plan 0.8 Nr. 113):**
+      `go-udev` bleibt, `GPL-3.0-only` ins Feld, eigener Eintrag in `NOTICE`, Lizenztext im Paket; kein Ersatz in
+      Phase A, Phase B löst den Go-Dienst ab.
     - `github.com/yeqown/reedsolomon` (indirekt über `go-qrcode`): im Modul keine Lizenzdatei, die README nennt
       keine Lizenz – Lizenz ungeklärt.
     - `github.com/golang/freetype`: FreeType License oder GPL-2.0-or-later nach Wahl; die FTL verlangt eine Nennung
@@ -1367,7 +1368,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       Klangthema:** nicht im Paket am PC, nicht in Debians `copyright`, und die Prüfsumme gleicht weder
       `service-login` noch `service-logout`; über DMS übernommen, **Herkunft und Lizenz unbekannt**. Die
       CC-BY-3.0-Klänge aus `NOTICE` werden nicht ausgeliefert. Nachschlagen am Ursprung und Entfernen von
-      `desktop-login`: Entscheid des Maintainers vom 25.11.2026 (Nachtlauf 26.11.2026, Punkt 1.4).
+      `desktop-login`: Entscheid des Maintainers vom 25.11.2026 (Nachtlauf 26.11.2026, Punkt 1.4; lokaler Bericht).
     - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
       (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter

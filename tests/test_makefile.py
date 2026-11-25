@@ -115,6 +115,9 @@ try:
           "PREFIX=/opt/alpe: ExecStart und Exec zeigen auf /opt/alpe", out)
     check(all(os.path.isfile(os.path.join(usr, "share", "licenses", "alpe-shell", f)) for f in ("LICENSE", "NOTICE")),
           "/usr/share/licenses/alpe-shell/{LICENSE,NOTICE}")
+    gpl_paket = os.path.join(usr, "share", "licenses", "alpe-shell", "GPL-3.0-only.txt")
+    check(os.path.isfile(gpl_paket) and open(gpl_paket, "rb").read() == open(os.path.join(REPO, "LICENSES", "GPL-3.0-only.txt"), "rb").read(),
+          "/usr/share/licenses/alpe-shell/GPL-3.0-only.txt = LICENSES/GPL-3.0-only.txt (go-udev im Dienst, NOTICE)")
     check(os.access(os.path.join(share, "tools", "alpe"), os.X_OK) and os.access(os.path.join(share, "shell", "scripts", "gtk.sh"), os.X_OK)
           and not os.access(os.path.join(share, "tools", "design.py"), os.X_OK),
           "Dateimodi wie im Repository (tools/alpe und shell/scripts/gtk.sh ausführbar, tools/design.py nicht)")

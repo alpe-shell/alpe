@@ -70,7 +70,27 @@ Code
                                       ursprünglich aus Material Color Utilities (Google,
                                       Apache License 2.0); übernommen sind nur Zahlenwerte
 
-Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
+Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen
+(einzeln genannt unten unter «Go-Module im Programm alpe-dienst»).
+
+
+Go-Module im Programm alpe-dienst
+---------------------------------
+
+Die Module aus core/go.mod werden beim Bau statisch in das Programm alpe-dienst gelinkt. Im
+Quellarchiv (make dist) liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die
+«go mod vendor» übernimmt.
+
+github.com/pilebones/go-udev
+  Fassung:   v0.10.0 (core/go.mod)
+  Benutzt:   core/internal/server/brightness/udev_linux.go (Paket netlink: Ereignisse des
+             Kernels zu Helligkeitsgeräten über NETLINK_KOBJECT_UEVENT)
+  Lizenz:    GNU General Public License, Version 3 (GPL-3.0-only; das Modul nennt «GNU GPL v3»
+             ohne «or later»). Lizenztext: LICENSES/GPL-3.0-only.txt (bytegleich mit der
+             Datei LICENSE des Moduls), im Paket /usr/share/licenses/alpe-shell/GPL-3.0-only.txt.
+  Folge:     Der Quelltext von Alpe steht unter der MIT-Lizenz (LICENSE). Das Programm
+             alpe-dienst als Ganzes enthält go-udev und wird deshalb unter den Bedingungen der
+             GPL-3.0 weitergegeben; der vollständige Quelltext dazu ist das Quellarchiv von Alpe.
 
 
 Alpe-eigene Teile im Shell-Code
