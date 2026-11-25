@@ -38,7 +38,7 @@ Die Shell des Maintainers ist **fish**. In Befehlen für ihn:
 
 ## Dateien ändern
 
-- Versionierte Dateien werden nur mit dem Edit-Werkzeug geändert (neue Dateien mit Write) – nicht mit
+- Dateien werden nur mit dem Edit-Werkzeug geändert (neue Dateien mit Write) – nicht mit
   `sed -i`, `perl -i`, einem Python- oder Shell-Skript, das per `replace` schreibt, oder einem Heredoc.
   Das gilt auch für eine einzelne Zeile, für mehrere gleichlautende Stellen und für «nur Doku»: Der
   Maintainer will jede Änderung im Klartext sehen, und ein `sed` oder `replace` kann unbemerkt ins
@@ -46,9 +46,11 @@ Die Shell des Maintainers ist **fish**. In Befehlen für ihn:
 - **Wenn Edit bei einer Datei nicht geht: anhalten und den Grund nennen** (Datei, Aufruf, Fehlermeldung
   im Wortlaut). Nicht auf `sed` oder ein Skript ausweichen. Bequemlichkeit (lange Stelle, viele
   Stellen) ist kein Grund.
-- Davon unberührt sind Dateien, die ein eingechecktes Werkzeug erzeugt, über dieses Werkzeug:
-  Grundlinien (`ladepruefung.py --grundlinie`, `qmllint-pruefung.py`), Suchindex, Attrappen
-  (`make -C core mocks`), Massenumbenennungen mit `umbenennen.py`/`texte-ersetzen.py` samt Tabelle.
+- Ausgenommen sind nur zwei Arten erzeugter Dateien, und nur über ihr eingechecktes Werkzeug:
+  Attrappen über `make -C core mocks` (Plan 0.8 Nr. 62, 66) und gemessene Grundlinien über
+  `--grundlinie` (`ladepruefung.py`, `qmllint-pruefung.py`; Plan 0.8 Nr. 63, 70, 76). Suchindex und
+  Massenumbenennungen (`umbenennen.py`, `texte-ersetzen.py`) sind offen und werden entschieden, wenn sie
+  anstehen (Plan 0.8 Nr. 111); dann vorher fragen.
 
 ## Das laufende System
 
