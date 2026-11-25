@@ -109,6 +109,20 @@ github.com/golang/freetype
              «Portions of this software are copyright © 1996-2002, 2006 The FreeType Project
              (www.freetype.org). All rights reserved.» (Jahre aus dem Kopf von ftl.txt)
 
+github.com/yeqown/reedsolomon
+  Fassung:   v1.0.0 (core/go.mod, indirekt; Fehlerkorrektur der QR-Codes)
+  Benutzt:   über github.com/yeqown/go-qrcode/v2 (MIT), eingebunden in
+             core/internal/qrcode/qrcode.go, core/internal/server/network/manager.go und
+             core/internal/server/network/qr_generator.go
+  Lizenz:    MIT, Copyright (c) 2026 yeqown; Wortlaut wie die MIT-Lizenz oben (Abschnitt Dux
+             Modular Shell). Die Fassung v1.0.0 enthält keine Lizenzdatei. Fundstelle: Der Autor hat
+             am 08.03.2026 die Datei LICENSE (MIT) in sein Repository gelegt, Commit
+             c5f4bc9af094852b52e593a5f964647c43028c51 auf master,
+             https://github.com/yeqown/reedsolomon/blob/master/LICENSE; der Vergleich v1.0.0...master
+             zeigt als einzige Änderung diese Datei, der Code ist also derselbe wie in v1.0.0.
+             Die Dateiköpfe nennen github.com/skip2/go-qrcode (MIT, Copyright (c) 2014 Tom Harwood)
+             als Vorlage.
+
 
 Alpe-eigene Teile im Shell-Code
 -------------------------------

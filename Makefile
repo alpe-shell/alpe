@@ -136,7 +136,7 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 	# dem vendor-Baum des Quellarchivs, sonst (Bau im Repository) aus dem Modul-Cache
 	src=$(FTL_VENDOR); \
 	if [ ! -f "$$src" ]; then \
-		dir="$$(cd core && $(GO) list -mod=mod -m -f '{{.Dir}}' $(FREETYPE))"; \
+		dir="$$(cd core && $(GO) list -mod=readonly -m -f '{{.Dir}}' $(FREETYPE))"; \
 		[ -n "$$dir" ] || { echo "Lizenztext von $(FREETYPE) fehlt: weder $(FTL_VENDOR) noch das Modul im Modul-Cache (go mod download $(FREETYPE))"; exit 1; }; \
 		src="$$dir/licenses/ftl.txt"; \
 	fi; \
@@ -161,7 +161,7 @@ dist:
 	# «go mod vendor» übernimmt nur Paketordner; den Text der FTL (licenses/ftl.txt) von golang/freetype legt es nicht
 	# ab. Die FTL verlangt ihn unverändert bei jeder Weitergabe des Quelltexts (NOTICE).
 	# Die Fassung kommt aus dem go.mod von HEAD (im entpackten Stand gelesen, nicht im Arbeitsbaum).
-	dir="$$(cd $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/core && $(GO) list -mod=mod -m -f '{{.Dir}}' $(FREETYPE))"; \
+	dir="$$(cd $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/core && $(GO) list -mod=readonly -m -f '{{.Dir}}' $(FREETYPE))"; \
 		[ -n "$$dir" ] || { echo "$(FREETYPE) nicht im Modul-Cache"; exit 1; }; \
 		install -Dm644 "$$dir/licenses/ftl.txt" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)
 	tar -C $(BUILD_ABS)/dist --sort=name --owner=0 --group=0 --numeric-owner --mode=u+rwX,go=rX \

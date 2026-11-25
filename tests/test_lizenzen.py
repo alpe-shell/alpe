@@ -100,6 +100,22 @@ check(re.search(r"^FTL_VENDOR := core/vendor/\$\(FREETYPE\)/licenses/ftl\.txt$",
       and "install -Dm644 \"$$src\" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt" in makefile,
       "make dist legt licenses/ftl.txt in den vendor-Baum, make install nach /usr/share/licenses/alpe-shell/FTL.txt")
 
+# --- yeqown/reedsolomon: MIT, am Ursprung belegt (1.3); die Fassung im Modul hat keine Lizenzdatei ---
+modul = "github.com/yeqown/reedsolomon"
+fassung = re.search(r"^\s*%s (v\S+)" % re.escape(modul), gomod, re.M)
+eintrag = block(modul)
+check(fassung is not None and eintrag != "", "NOTICE hat einen eigenen Eintrag für %s (in core/go.mod)" % modul)
+if fassung and eintrag:
+    check(re.search(r"Fassung:\s+%s\b" % re.escape(fassung.group(1)), eintrag) is not None,
+          "NOTICE nennt die Fassung aus core/go.mod (%s)" % fassung.group(1))
+    check("MIT" in eintrag and "c5f4bc9af094852b52e593a5f964647c43028c51" in eintrag
+          and "https://github.com/yeqown/reedsolomon/blob/master/LICENSE" in eintrag,
+          "NOTICE: Lizenz MIT mit Fundstelle (Commit und Adresse der LICENSE am Ursprung)")
+    benutzt = go_dateien_mit_import("github.com/yeqown/go-qrcode/v2")
+    genannt = sorted(re.findall(r"core/\S+\.go", eintrag))
+    check(benutzt and benutzt == genannt,
+          "NOTICE nennt jede Datei, die go-qrcode/v2 (und damit reedsolomon) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
+
 # Im Quellarchiv (git archive HEAD) ist nur, was versioniert ist.
 if subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:
     versioniert = subprocess.run(["git", "-C", REPO, "ls-files", "--error-unmatch", "LICENSES/GPL-3.0-only.txt"],

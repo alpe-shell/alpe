@@ -1356,7 +1356,8 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       `go-udev` bleibt, `GPL-3.0-only` ins Feld, eigener Eintrag in `NOTICE`, Lizenztext im Paket; kein Ersatz in
       Phase A, Phase B löst den Go-Dienst ab.
     - `github.com/yeqown/reedsolomon` (indirekt über `go-qrcode`): im Modul keine Lizenzdatei, die README nennt
-      keine Lizenz – Lizenz ungeklärt.
+      keine Lizenz – Lizenz ungeklärt. **Geklärt am 26.11.2026 (Plan 0.8 Nr. 115):** MIT; der Autor hat die Datei
+      `LICENSE` am 08.03.2026 in sein Repository gelegt (Code unverändert gegenüber v1.0.0); Eintrag in `NOTICE`.
     - `github.com/golang/freetype`: FreeType License oder GPL-2.0-or-later nach Wahl; die FTL verlangt eine Nennung
       in der Dokumentation. **Entschieden am 25.11.2026 (Plan 0.8 Nr. 114):** Alpe wählt die FTL; Text unverändert
       ins Quellarchiv und ins Paket, Nennung in `NOTICE`.
