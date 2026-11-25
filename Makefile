@@ -42,7 +42,7 @@ TOOLS := alpe activate-plugins.py design.py entfernen.sh fastfetch.py hyprlock2q
 EXCLUDES := --exclude-from=core/shell-test-excludes.txt --exclude=.qmlls.ini --exclude=__pycache__ \
 	--exclude='*.qmlc' --exclude='*.jsc' --exclude='./translations/*.py' --exclude=./scripts/qmllint-entrypoints.sh
 
-.PHONY: all build dienst sperrpaket install test dist help
+.PHONY: all build dienst sperrpaket vervollstaendigung install test dist help
 
 # Sperrpaket für den KDE-Sperrbildschirm, beim Bau zusammengesetzt (Plan 6.1, 0.8 Nr. 86)
 SPERR := $(BUILD_ABS)/plasma/org.alpe.desktop
@@ -60,19 +60,34 @@ dienst:
 	@mkdir -p $(BUILD_ABS)
 	cd core && CGO_ENABLED=0 $(GO) build -trimpath -buildvcs=false -ldflags '$(LDFLAGS)' -o $(BUILD_ABS)/alpe-dienst ./cmd/alpe-dienst
 	@echo "gebaut: $(BUILD)/alpe-dienst $(VERSION) (ohne eingebettete Oberfläche)"
+	$(MAKE) --no-print-directory vervollstaendigung
+
+# Shell-Vervollständigungen für alpe-dienst, aus dem gebauten Dienst erzeugt (cobra «completion»; schreibt nichts
+# ins Home). Im Paket: bash-completion, zsh site-functions, fish vendor_completions.d (Plan 6.1).
+KOMPL := $(BUILD_ABS)/completions
+vervollstaendigung: $(BUILD_ABS)/alpe-dienst
+	@mkdir -p $(KOMPL)
+	$(BUILD_ABS)/alpe-dienst completion bash > $(KOMPL)/alpe-dienst.bash
+	$(BUILD_ABS)/alpe-dienst completion zsh > $(KOMPL)/_alpe-dienst
+	$(BUILD_ABS)/alpe-dienst completion fish > $(KOMPL)/alpe-dienst.fish
+
+$(KOMPL)/alpe-dienst.fish:
+	$(MAKE) --no-print-directory vervollstaendigung
 
 # Das Paket aus lockscreen/org.alpe.desktop, dazu die Ansicht aus shell/Modules/Lock/Alpe (HyprlockView.qml,
 # layout.js und der ganze Ordner fonts) – dieselben Schritte wie «lockscreen.sh install» ins Home. Die Version in
 # metadata.json kommt aus Brand.qml wie die des Dienstes (Plan 0.8 Nr. 86; tests/test_version.py).
 sperrpaket:
 	@test -n "$(VERSION)" || { echo "Version aus $(BRAND_QML) nicht lesbar"; exit 1; }
-	rm -rf $(SPERR)
+	rm -rf $(SPERR) $(SPERR).neu
 	mkdir -p $(dir $(SPERR))
-	cp -R lockscreen/org.alpe.desktop $(SPERR)
-	cp $(LOCKVIEW)/HyprlockView.qml $(LOCKVIEW)/layout.js $(SPERR)/contents/lockscreen/
-	cp -R $(LOCKVIEW)/fonts/. $(SPERR)/contents/lockscreen/fonts/
-	sed 's/"Version": *"[^"]*"/"Version": "$(VERSION)"/' lockscreen/org.alpe.desktop/metadata.json > $(SPERR)/metadata.json
-	@grep -q '"Version": "$(VERSION)"' $(SPERR)/metadata.json || { echo "Version in metadata.json nicht gesetzt"; exit 1; }
+	cp -R lockscreen/org.alpe.desktop $(SPERR).neu
+	cp $(LOCKVIEW)/HyprlockView.qml $(LOCKVIEW)/layout.js $(SPERR).neu/contents/lockscreen/
+	cp -R $(LOCKVIEW)/fonts/. $(SPERR).neu/contents/lockscreen/fonts/
+	sed 's/"Version": *"[^"]*"/"Version": "$(VERSION)"/' lockscreen/org.alpe.desktop/metadata.json > $(SPERR).neu/metadata.json
+	@grep -q '"Version": "$(VERSION)"' $(SPERR).neu/metadata.json || { echo "Version in metadata.json nicht gesetzt"; exit 1; }
+	# erst vollständig, dann an seinen Ort – ein abgebrochener Zusammenbau gilt für «install» nicht als fertig
+	mv $(SPERR).neu $(SPERR)
 	@echo "zusammengesetzt: $(BUILD)/plasma/org.alpe.desktop $(VERSION)"
 
 $(BUILD_ABS)/alpe-dienst:
@@ -81,7 +96,7 @@ $(BUILD_ABS)/alpe-dienst:
 $(SPERR)/metadata.json:
 	$(MAKE) sperrpaket
 
-install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json
+install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fish
 	install -Dm755 $(BUILD_ABS)/alpe-dienst $(DESTDIR)$(PREFIX)/bin/alpe-dienst
 	install -d $(SHARE)/shell $(SHARE)/plugins $(SHARE)/tools $(SHARE)/design $(SHARE)/lockscreen $(SHARE)/assets
 	# Logo für fastfetch: tools/fastfetch.py liest ../assets/fastfetch-logo.txt (Baum spiegelt das Repo, Plan 1)
@@ -97,6 +112,19 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json
 	tar -C $(SPERR) -cf - . | tar -C $(DESTDIR)$(PREFIX)/share/plasma/shells/org.alpe.desktop --no-same-owner -xf -
 	install -d $(DESTDIR)$(PREFIX)/bin
 	ln -sfn ../share/alpe/tools/alpe $(DESTDIR)$(PREFIX)/bin/alpe
+	# Unit und Desktop-Dateien: Pfade auf PREFIX umgeschrieben (im Repository stehen sie für PREFIX=/usr)
+	install -d $(DESTDIR)$(PREFIX)/lib/systemd/user $(DESTDIR)$(PREFIX)/share/applications
+	sed 's#/usr/bin/#$(PREFIX)/bin/#g' packaging/systemd/alpe.service > $(DESTDIR)$(PREFIX)/lib/systemd/user/alpe.service
+	chmod 644 $(DESTDIR)$(PREFIX)/lib/systemd/user/alpe.service
+	for d in io.github.alpe_shell.Alpe io.github.alpe_shell.Alpe.Notepad alpe-open; do \
+		sed 's#/usr/share/alpe/#$(PREFIX)/share/alpe/#g' packaging/desktop/$$d.desktop > $(DESTDIR)$(PREFIX)/share/applications/$$d.desktop \
+			&& chmod 644 $(DESTDIR)$(PREFIX)/share/applications/$$d.desktop || exit 1; \
+	done
+	# Symbol der App-ID: das Alpe-Zeichen (Rechte beim Maintainer, NOTICE «Logo und Name»)
+	install -Dm644 assets/logo/logo/alpe-zeichen.svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/io.github.alpe_shell.Alpe.svg
+	install -Dm644 $(KOMPL)/alpe-dienst.bash $(DESTDIR)$(PREFIX)/share/bash-completion/completions/alpe-dienst
+	install -Dm644 $(KOMPL)/_alpe-dienst $(DESTDIR)$(PREFIX)/share/zsh/site-functions/_alpe-dienst
+	install -Dm644 $(KOMPL)/alpe-dienst.fish $(DESTDIR)$(PREFIX)/share/fish/vendor_completions.d/alpe-dienst.fish
 	install -Dm644 LICENSE $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/LICENSE
 	install -Dm644 NOTICE $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/NOTICE
 

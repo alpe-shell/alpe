@@ -92,6 +92,26 @@ try:
                                                                 ("contents", "lockscreen", "HyprlockView.qml"), ("contents", "lockscreen", "layout.js")))
           and '"Version": "%s"' % brand in open(os.path.join(sperr, "metadata.json"), encoding="utf-8").read(),
           "/usr/share/plasma/shells/org.alpe.desktop zusammengesetzt, Version aus Brand.qml")
+    appid = "io.github.alpe_shell.Alpe"
+    pakete = ["lib/systemd/user/alpe.service", "share/applications/%s.desktop" % appid, "share/applications/%s.Notepad.desktop" % appid,
+              "share/applications/alpe-open.desktop", "share/icons/hicolor/scalable/apps/%s.svg" % appid,
+              "share/bash-completion/completions/alpe-dienst", "share/zsh/site-functions/_alpe-dienst",
+              "share/fish/vendor_completions.d/alpe-dienst.fish"]
+    fehlt = [p for p in pakete if not os.path.isfile(os.path.join(usr, p))]
+    check(not fehlt, "Unit, Desktop-Dateien, Symbol und Vervollständigungen nach 6.1 installiert (fehlt: %s)" % fehlt)
+    if not fehlt:
+        check(open(os.path.join(usr, "share", "bash-completion", "completions", "alpe-dienst"), encoding="utf-8").read().startswith("# bash completion")
+              and "#compdef alpe-dienst" in open(os.path.join(usr, "share", "zsh", "site-functions", "_alpe-dienst"), encoding="utf-8").read()
+              and "complete -c alpe-dienst" in open(os.path.join(usr, "share", "fish", "vendor_completions.d", "alpe-dienst.fish"), encoding="utf-8").read(),
+              "Vervollständigungen aus dem gebauten Dienst (bash, zsh, fish)")
+    # Mit anderem PREFIX zeigen Unit und Desktop-Datei auf den Baum unter PREFIX.
+    anders = os.path.join(tmp, "wurzel-opt")
+    out = make("install", "BUILD=" + bau, "DESTDIR=" + anders, "PREFIX=/opt/alpe", env=env)
+    opt = os.path.join(anders, "opt", "alpe")
+    check(out.returncode == 0
+          and "ExecStart=/opt/alpe/bin/alpe start --session" in open(os.path.join(opt, "lib", "systemd", "user", "alpe.service"), encoding="utf-8").read()
+          and "Exec=alpe-dienst run -c /opt/alpe/share/alpe/shell" in open(os.path.join(opt, "share", "applications", appid + ".desktop"), encoding="utf-8").read(),
+          "PREFIX=/opt/alpe: ExecStart und Exec zeigen auf /opt/alpe", out)
     check(all(os.path.isfile(os.path.join(usr, "share", "licenses", "alpe-shell", f)) for f in ("LICENSE", "NOTICE")),
           "/usr/share/licenses/alpe-shell/{LICENSE,NOTICE}")
     check(os.access(os.path.join(share, "tools", "alpe"), os.X_OK) and os.access(os.path.join(share, "shell", "scripts", "gtk.sh"), os.X_OK)

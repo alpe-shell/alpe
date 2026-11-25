@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Alpe
+GenericName=Desktop Shell
+GenericName[de]=Desktop-Shell
+Comment=Desktop shell for KDE Plasma and Hyprland
+Comment[de]=Desktop-Shell für KDE Plasma und Hyprland
+Exec=alpe-dienst run -c /usr/share/alpe/shell
+Icon=io.github.alpe_shell.Alpe
+Terminal=false
+NoDisplay=true
+StartupNotify=false
+Categories=Utility;

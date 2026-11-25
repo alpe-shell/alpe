@@ -822,6 +822,13 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
   `design.py export` schreibt nach `<ALPE_DIR>/design`, im Paket also nach `/usr/share/alpe/design` (nicht
   beschreibbar) – Export ist ein Werkzeug für das Repository, das ist bei E4 festzuhalten. `make -C core build`
   bettet die Oberfläche weiter ein (Tag `withshell`), das Makefile in der Wurzel nicht – Kandidat zum Aufräumen.
+- **Sperrpaket (E4; aus der Prüfung zu 2.3 am 25.11.2026):** (a) `make install` legt `lockscreen/` weiter ganz
+  nach `/usr/share/alpe/lockscreen/`; dort liegt ein zweites `org.alpe.desktop/metadata.json` mit der alten Version
+  «1.9.2». Zur Laufzeit braucht davon nur `lockscreen.sh` etwas (`SOURCE`, `hyprlock.conf`); nach Variante A
+  (6.7) entfällt das Kopieren – bei E4 entscheiden, ob nur `hyprlock.conf` installiert wird oder der Doppelgänger
+  bewusst bleibt. (b) Das Paket setzen heute zwei Stellen zusammen: `make sperrpaket` und `lockscreen.sh install`.
+  Variante A verlangt «derselbe Zusammenbau wie im Paketbau, ein gemeinsames Skript» – bei E4 rufen
+  `alpe entwicklung ein` bzw. `lockscreen.sh` `make sperrpaket` auf.
 - `doctor` sucht die Oberfläche noch unter `quickshell/dms` (`config.LocateDMSConfig`); mit E1
   (`/usr/share/alpe/shell`) anpassen.
 - Bewusst gleich geblieben (D6/D7): Dateinamen `dms-colors.json`/`dms-typography.json` im

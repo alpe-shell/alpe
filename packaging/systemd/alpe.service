@@ -1,0 +1,32 @@
+# Alpe – Benutzer-Unit der Shell (Plan 6.1; abgeleitet von dms.service des Ursprungs).
+# Eingeschaltet wird sie je Compositor: unter KDE «systemctl --user enable alpe.service», unter Hyprland
+# «alpe-dienst systemd enable» (hyprland-session.target). Nie zwei Shells gleichzeitig: Conflicts=dms.service.
+[Unit]
+Description=Alpe
+PartOf=graphical-session.target
+After=graphical-session.target dms.service
+Requisite=graphical-session.target
+Conflicts=dms.service
+# Bereit erst, wenn der Tray-Host da ist; Programme mit Tray-Symbol nach tray.target finden ihn so.
+Before=tray.target
+
+[Service]
+# «alpe start» geht per exec in «alpe-dienst … run» über (gleiche PID), sonst passte NotifyAccess=main nicht.
+Type=notify
+BusName=org.freedesktop.Notifications
+NotifyAccess=main
+# MALLOC_ARENA_MAX=2 begrenzt die Speicher-Arenen der Shell; ALPE_SHELL_ARENA=1 sagt der Shell, dass die
+# Begrenzung nur für sie gilt – Programme, die man aus ihr startet, bekommen sie nicht (SessionService.qml).
+Environment=QS_DISABLE_CRASH_HANDLER=1 MALLOC_ARENA_MAX=2 ALPE_SHELL_ARENA=1
+ExecStart=/usr/bin/alpe start --session
+ExecReload=/bin/kill -USR1 $MAINPID
+LimitNOFILE=16384:infinity
+Restart=on-failure
+RestartForceExitStatus=TEMPFAIL
+SuccessExitStatus=TEMPFAIL
+RestartSec=1.23
+TimeoutStartSec=90s
+TimeoutStopSec=10
+
+[Install]
+WantedBy=graphical-session.target

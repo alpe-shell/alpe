@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=Alpe Notepad
+Name[de]=Alpe-Notizblock
+GenericName=Text Editor
+GenericName[de]=Texteditor
+Comment=Quick notes and text files in Alpe
+Comment[de]=Schnelle Notizen und Textdateien in Alpe
+Exec=alpe-dienst ipc call notepad openFile %f
+Icon=io.github.alpe_shell.Alpe
+Terminal=false
+NoDisplay=true
+Categories=Utility;TextEditor;
+MimeType=text/plain;text/markdown;
+StartupNotify=false

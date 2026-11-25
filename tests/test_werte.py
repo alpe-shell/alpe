@@ -69,8 +69,8 @@ check('"DOT" : "ISLAND"' in insel and "DANK" not in insel, "IPC-Antworten der In
 
 # ---------------------------------------------------------------- D7.7b4: «jedes Mal fragen»
 # Die Standardprogramme bieten den Eintrag alpe-open an; die Desktop-Datei dazu liegt im Repo
-# (Installation: E3, mimeapps.list: F1 – Plan 0.8 Nr. 50).
-desktop = os.path.join(REPO, "packaging", "alpe-open.desktop")
+# (Installation über make install seit E1, mimeapps.list: F1 – Plan 0.8 Nr. 50).
+desktop = os.path.join(REPO, "packaging", "desktop", "alpe-open.desktop")
 if os.path.isdir(os.path.join(REPO, "packaging")):
     eintrag = dict(zeile.split("=", 1) for zeile in read(desktop).splitlines() if "=" in zeile)
     tab = read(SHELL, "Modules", "Settings", "DefaultAppsTab.qml")

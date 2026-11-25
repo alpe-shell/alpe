@@ -63,6 +63,8 @@ core/internal/keybinds/providers/hyprland.go	"dms"|«dms ipc	Umzug-Ende	Kürzel 
 core/internal/keybinds/providers/altnamen_test.go	*	Umzug-Ende	Test dazu
 core/cmd/alpe-dienst/server_client.go	laufendes DMS \(dms-<pid>\.sock\)	Umzug-Ende	Kommentar: Sockets eines daneben laufenden DMS nie ansprechen
 core/cmd/alpe-dienst/systemd_restart_test.go	dms\.service	Umzug-Ende	Test: die Einheit des Ursprungs ist nicht die eigene
+packaging/systemd/alpe.service	dms\.service	Umzug-Ende	Einheit des Ursprungs in Conflicts/After: nie zwei Shells gleichzeitig (Plan 6.1)
+tests/test_paketdateien.py	dms\.service|/usr/bin/dms|\\bdms\\b|"dms" not in	Umzug-Ende	Test: die Unit nennt nur die Einheit des Ursprungs, keinen Befehl von ihm (wie packaging/systemd/alpe.service)
 core/cmd/alpe-dienst/commands_doctor.go	"dux-calendar"|"dux-files"	solange die Anbindung besteht	doctor: optionale fremde Programme (Kalender, Dateiverwaltung) unter ihrem Paketnamen
 *	\b(ppd|logind)Msg\b	dauerhaft	kein Name: Bezeichner auf …dMsg
 core/.mockery.yml	github\.com/duxlabs-dev/dux-go	Phase B	Importpfad dux-go (Attrappe für dessen Wayland-Schnittstelle)
