@@ -13,11 +13,8 @@ shell/Modules/Settings/AlpeMaintenanceTab.qml	heldPackages	E4	Paketnamen des Urs
 core/internal/server/sysupdate/*.go	"dms(-git|-cli)?"|LookPath\("dms"\)|dms-shell|dux-shell|/usr/bin/dms|dms-1\.7|"dms: 	E4	Paketnamen des Ursprungs (Erkennung der Shell-Aktualisierung; Beispielausgaben der Paketverwaltungen)
 *	DMSerifDisplay|DM Serif|dm-serif-display|dmSerifDisplayFont	dauerhaft	fremder Schriftname DM Serif Display
 *	dev\.duxlabs\.calendar|dankcal|Dux Calendar|CalendarDuxBackend|\b(dux(Backend|BinaryExists|NeedsLaunch|Warning|Connected)|isDux(Task|Active)|launchDuxCalendar)\b	solange die Anbindung besteht	fremde App Dux Calendar
-core/*	dankshell|LOCKSCREEN (U2F )?AUTH	E1	PAM-Dienste und Blockmarken auf Systemen mit 1.0 (0.8 Nr. 16)
-*	/usr/share/dms|/etc/dms	E1	Richtlinienpfade des Pakets dms (0.8 Nr. 16)
 *	\b\w*[a-z]dMs\b	dauerhaft	kein Name: Bezeichner auf …dMs (Millisekunden, z. B. scrollHoldMs)
 shell/LICENSE_CHANGE_12_11_2025.md	*	dauerhaft	Herkunft: Lizenzwechsel des Ursprungs
-shell/*	dankshell	E1	PAM-Dienste und ihre Dateien auf Systemen mit 1.0 (0.8 Nr. 16)
 shell/Common/KeybindActions.js	DMS- und Alpe-1\.0|«dms |spawn dms 	Umzug-Ende	Kürzel aus 1.0 lesen (normalizeLegacyAction)
 shell/tests/keybinds-legacy-actions.test.mjs	*	Umzug-Ende	Test dazu
 shell/Common/ConfigIncludeResolve.js	DMS bzw\. Alpe 1\.0	Umzug-Ende	alte Kopfzeile in hyprland.lua lesen
@@ -100,8 +97,7 @@ entwicklung/pageharness/qs/Common/Brand.qml	upstream|Dux Modular Shell|duxlabs-d
 entwicklung/pageharness/qs/Common/Brand.qml	heldPackages	E4	Paketnamen des Ursprungs (Kopie von shell/Common/Brand.qml)
 entwicklung/pageharness/*	"dms" : "comp"|component: "dms"|dms\.service	E4	Testdaten: Kürzel-Komponente und Dienst der Einrichtung von 1.0 (wie tests/test_kwin.py)
 shell/scripts/alpe-kwin.py	== "dms"	E4	Kürzel-Komponente der Einrichtung von 1.0 einsortieren (wie tools/*)
-entwicklung/qmllint/grundlinie.txt	dankshell	E1	Meldung zu einem Bezeichner der PAM-Dienste (wie shell/*)
-shell/tests/lock/tst_Pam.qml	policyWithoutDankshell	E1	Test zu den PAM-Diensten auf Systemen mit 1.0 (wie shell/*)
+tests/test_pam_dienste.py	dankshell|DMS LOCKSCREEN|/etc/dms|/usr/share/dms	Umzug-Ende	Test: alte PAM-Dienste, Blockmarken und Richtlinienpfade stehen nur innerhalb der Marken (0.8 Nr. 16)
 plugins/alpeMeteoSwiss/fetch	dux-go/weather	Phase B	Vertrag der Wetter-Plugins aus dux-go
 shell/Alpe/FileBrowser/NaturalSort.js	dux-go files/sort\.go	Phase B	Verweis auf die Sortierung in dux-go
 plugins/claudeCodeUsage/*	titeya/dms-claudecode|statt `Dank\*`	dauerhaft	Herkunft und Änderungsvermerk des übernommenen Plugins (MIT)

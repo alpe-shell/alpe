@@ -83,9 +83,9 @@ TestCase {
         const policy = {
             policy: true,
             missing: [],
-            passwd: "/etc/pam.d/dankshell",
-            fprint: "/etc/pam.d/dankshell-fprint",
-            u2f: "/etc/pam.d/dankshell-u2f",
+            passwd: "/etc/pam.d/alpe",
+            fprint: "/etc/pam.d/alpe-fprint",
+            u2f: "/etc/pam.d/alpe-u2f",
             fprintStatus: "active",
             secondFactor: true,
             warnings: 0
@@ -105,22 +105,32 @@ TestCase {
             Object.assign({}, policy, {
                 tag: "policy"
             }),
+            // alpe-namen-ausnahme: umzug-ende
+            // Die Dienste von 1.0 dienen als Rückfall, solange es die neuen noch nicht gibt (Plan 0.8 Nr. 16).
             Object.assign({}, policy, {
-                tag: "policyWithoutDankshell",
-                missing: ["/etc/pam.d/dankshell"],
+                tag: "policyWithLegacyServicesOnly",
+                missing: ["/etc/pam.d/alpe", "/etc/pam.d/alpe-u2f", "/etc/pam.d/alpe-fprint"],
+                passwd: "/etc/pam.d/dankshell",
+                fprint: "/etc/pam.d/dankshell-fprint",
+                u2f: "/etc/pam.d/dankshell-u2f"
+            }),
+            Object.assign({}, policy, {
+                tag: "policyWithoutAnyService",
+                missing: ["/etc/pam.d/alpe", "/etc/pam.d/dankshell"],
                 passwd: "/etc/pam.d/login"
             }),
             Object.assign({}, policy, {
                 tag: "policyWithoutU2fStack",
-                missing: ["/etc/pam.d/dankshell-u2f"],
+                missing: ["/etc/pam.d/alpe-u2f", "/etc/pam.d/dankshell-u2f"],
                 secondFactor: false,
                 warnings: 1
             }),
             Object.assign({}, policy, {
                 tag: "policyWithoutFprintStack",
-                missing: ["/etc/pam.d/dankshell-fprint"],
+                missing: ["/etc/pam.d/alpe-fprint", "/etc/pam.d/dankshell-fprint"],
                 fprintStatus: "disabled"
             })
+            // alpe-namen-ausnahme: umzug-ende
         ];
     }
 

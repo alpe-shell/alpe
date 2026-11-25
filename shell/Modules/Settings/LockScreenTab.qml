@@ -854,7 +854,7 @@ Item {
                         leftIconName: "key"
                         labelText: I18n.tr("Path")
                         width: parent.width - validateU2fPamButton.width - Theme.spacingS
-                        placeholderText: "/etc/pam.d/dankshell-u2f"
+                        placeholderText: "/etc/pam.d/alpe-u2f"
                         text: SettingsData.lockU2fPamPath
                     }
 

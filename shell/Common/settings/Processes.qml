@@ -15,7 +15,8 @@ Singleton {
 
     property var settingsRoot: null
 
-    property string dankshellU2fPamText: ""
+    property string systemU2fPamText: ""
+    property string legacyU2fPamText: ""
     property string u2fKeysText: ""
 
     property string fingerprintProbeOutput: ""
@@ -29,7 +30,8 @@ Singleton {
     readonly property string u2fKeysPath: homeDir ? homeDir + "/.config/Yubico/u2f_keys" : ""
     property bool authProbeRequested: false
     readonly property bool homeU2fKeysDetected: u2fKeysPath !== "" && (authWatchers.item?.u2fKeys.loaded ?? false) && u2fKeysText.trim() !== ""
-    readonly property bool lockU2fCustomConfigDetected: PamStack.moduleEnabled(dankshellU2fPamText, "pam_u2f")
+    // U2F-Dienst von Alpe (/etc/pam.d/alpe-u2f) oder der aus 1.0, den die Sperre als Rückfall nimmt (Pam.qml)
+    readonly property bool lockU2fCustomConfigDetected: PamStack.moduleEnabled(systemU2fPamText, "pam_u2f") || PamStack.moduleEnabled(legacyU2fPamText, "pam_u2f")
     readonly property bool lockU2fCustomSourceDetected: (settingsRoot?.lockU2fPamPath || "") !== "" && (authWatchers.item?.customU2fPam.loaded ?? false)
 
     function envFlag(name) {
@@ -120,7 +122,7 @@ Singleton {
     function detectAuthCapabilities() {
         authProbeRequested = true;
         // FileView cannot watch paths that do not exist yet, so reload the U2F PAM
-        authWatchers.item.dankshellU2fPam.reload();
+        authWatchers.item.reloadU2fPam();
         authWatchers.item.u2fKeys.reload();
 
         if (forcedFprintAvailable === null) {
@@ -289,18 +291,34 @@ Singleton {
         id: authWatchers
         active: root.authProbeRequested
         sourceComponent: Item {
-            property alias dankshellU2fPam: dankshellU2fPamWatcher
             property alias customU2fPam: customU2fPamWatcher
             property alias u2fKeys: u2fKeysWatcher
 
+            // U2F-Dienst von Alpe und der aus 1.0 (nur gelesen)
+            function reloadU2fPam() {
+                systemU2fPamWatcher.reload();
+                legacyU2fPamWatcher.reload();
+            }
+
             FileView {
-                id: dankshellU2fPamWatcher
+                id: systemU2fPamWatcher
+                path: "/etc/pam.d/alpe-u2f"
+                watchChanges: true
+                printErrors: false
+                onLoaded: root.systemU2fPamText = text()
+                onLoadFailed: root.systemU2fPamText = ""
+            }
+
+            // alpe-namen-ausnahme: umzug-ende
+            FileView {
+                id: legacyU2fPamWatcher
                 path: "/etc/pam.d/dankshell-u2f"
                 watchChanges: true
                 printErrors: false
-                onLoaded: root.dankshellU2fPamText = text()
-                onLoadFailed: root.dankshellU2fPamText = ""
+                onLoaded: root.legacyU2fPamText = text()
+                onLoadFailed: root.legacyU2fPamText = ""
             }
+            // alpe-namen-ausnahme: umzug-ende
 
             FileView {
                 id: customU2fPamWatcher

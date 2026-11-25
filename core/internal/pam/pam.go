@@ -15,15 +15,31 @@ import (
 )
 
 const (
-	LockscreenPamManagedBlockStart = "# BEGIN DMS LOCKSCREEN AUTH (managed by dms greeter sync)"
-	LockscreenPamManagedBlockEnd   = "# END DMS LOCKSCREEN AUTH"
+	LockscreenPamManagedBlockStart = "# BEGIN ALPE LOCKSCREEN AUTH (managed by alpe-dienst auth sync)"
+	LockscreenPamManagedBlockEnd   = "# END ALPE LOCKSCREEN AUTH"
 
-	LockscreenU2FPamManagedBlockStart = "# BEGIN DMS LOCKSCREEN U2F AUTH (managed by dms auth sync)"
-	LockscreenU2FPamManagedBlockEnd   = "# END DMS LOCKSCREEN U2F AUTH"
+	LockscreenU2FPamManagedBlockStart = "# BEGIN ALPE LOCKSCREEN U2F AUTH (managed by alpe-dienst auth sync)"
+	LockscreenU2FPamManagedBlockEnd   = "# END ALPE LOCKSCREEN U2F AUTH"
 
-	DankshellPamPath    = "/etc/pam.d/dankshell"
-	DankshellU2FPamPath = "/etc/pam.d/dankshell-u2f"
+	AlpePamPath    = "/etc/pam.d/alpe"
+	AlpeU2FPamPath = "/etc/pam.d/alpe-u2f"
 )
+
+// Alpe (Plan 0.8 Nr. 16): PAM-Dienste und Blockmarken der Einrichtung von 1.0 (vom Ursprung). Sie werden erkannt
+// (Meldung beim Abgleich; die Shell nimmt den alten Dienst, solange es den neuen noch nicht gibt), aber nie
+// geschrieben, umbenannt oder gelöscht – sie gehören dem Paket des Ursprungs bzw. der Einrichtung von 1.0.
+// alpe-namen-ausnahme: umzug-ende
+const (
+	legacyLockscreenPamManagedBlockStart    = "# BEGIN DMS LOCKSCREEN AUTH (managed by dms greeter sync)"
+	legacyLockscreenPamManagedBlockEnd      = "# END DMS LOCKSCREEN AUTH"
+	legacyLockscreenU2FPamManagedBlockStart = "# BEGIN DMS LOCKSCREEN U2F AUTH (managed by dms auth sync)"
+	legacyLockscreenU2FPamManagedBlockEnd   = "# END DMS LOCKSCREEN U2F AUTH"
+
+	LegacyPamPath    = "/etc/pam.d/dankshell"
+	LegacyU2FPamPath = "/etc/pam.d/dankshell-u2f"
+)
+
+// alpe-namen-ausnahme: umzug-ende
 
 // lockscreenPamEntryCandidates are the /etc/pam.d entry-point services tried in
 // order. "login" is first so systems that ship it behave exactly as before; the
@@ -75,15 +91,17 @@ type SyncAuthOptions struct {
 }
 
 type syncDeps struct {
-	pamDir           string
-	dankshellPath    string
-	dankshellU2fPath string
-	isNixOS          func() bool
-	readFile         func(string) ([]byte, error)
-	stat             func(string) (os.FileInfo, error)
-	createTemp       func(string, string) (*os.File, error)
-	removeFile       func(string) error
-	runSudoCmd       func(string, string, ...string) error
+	pamDir        string
+	alpePath      string
+	alpeU2fPath   string
+	legacyPath    string // nur gelesen (Einrichtung von 1.0)
+	legacyU2fPath string // nur gelesen (Einrichtung von 1.0)
+	isNixOS       func() bool
+	readFile      func(string) ([]byte, error)
+	stat          func(string) (os.FileInfo, error)
+	createTemp    func(string, string) (*os.File, error)
+	removeFile    func(string) error
+	runSudoCmd    func(string, string, ...string) error
 }
 
 type lockscreenPamIncludeDirective struct {
@@ -138,14 +156,16 @@ func (r lockscreenPamResolver) locate(target string) (string, error) {
 
 func defaultSyncDeps() syncDeps {
 	return syncDeps{
-		pamDir:           "/etc/pam.d",
-		dankshellPath:    DankshellPamPath,
-		dankshellU2fPath: DankshellU2FPamPath,
-		isNixOS:          IsNixOS,
-		readFile:         os.ReadFile,
-		stat:             os.Stat,
-		createTemp:       os.CreateTemp,
-		removeFile:       os.Remove,
+		pamDir:        "/etc/pam.d",
+		alpePath:      AlpePamPath,
+		alpeU2fPath:   AlpeU2FPamPath,
+		legacyPath:    LegacyPamPath,
+		legacyU2fPath: LegacyU2FPamPath,
+		isNixOS:       IsNixOS,
+		readFile:      os.ReadFile,
+		stat:          os.Stat,
+		createTemp:    os.CreateTemp,
+		removeFile:    os.Remove,
 		runSudoCmd: func(password, command string, args ...string) error {
 			return privesc.Run(context.Background(), password, append([]string{command}, args...)...)
 		},
@@ -272,6 +292,31 @@ func hasManagedLockscreenPamFile(content string) bool {
 func hasManagedLockscreenU2FPamFile(content string) bool {
 	return strings.Contains(content, LockscreenU2FPamManagedBlockStart) &&
 		strings.Contains(content, LockscreenU2FPamManagedBlockEnd)
+}
+
+// HasLegacyManagedLockscreenPamFile erkennt den Block der Einrichtung von 1.0 (vom Ursprung); geschrieben wird er nie.
+func HasLegacyManagedLockscreenPamFile(content string) bool {
+	return strings.Contains(content, legacyLockscreenPamManagedBlockStart) &&
+		strings.Contains(content, legacyLockscreenPamManagedBlockEnd)
+}
+
+// HasLegacyManagedLockscreenU2FPamFile wie HasLegacyManagedLockscreenPamFile, für den U2F-Dienst.
+func HasLegacyManagedLockscreenU2FPamFile(content string) bool {
+	return strings.Contains(content, legacyLockscreenU2FPamManagedBlockStart) &&
+		strings.Contains(content, legacyLockscreenU2FPamManagedBlockEnd)
+}
+
+// reportLegacyPamFile meldet einen PAM-Dienst der Einrichtung von 1.0, ohne ihn anzufassen.
+func reportLegacyPamFile(logFunc func(string), path string, readFile func(string) ([]byte, error), managed func(string) bool) {
+	data, err := readFile(path)
+	if err != nil {
+		return
+	}
+	if managed(string(data)) {
+		logFunc("ℹ " + path + " from Alpe 1.0 (managed block of the previous shell) found – left unchanged.")
+	} else {
+		logFunc("ℹ " + path + " from Alpe 1.0 (custom) found – left unchanged.")
+	}
 }
 
 func pamDirectiveType(line string) string {
@@ -796,7 +841,7 @@ func moduleReferenceExists(ref string, deps lockscreenPamValidateDeps) bool {
 	return deps.pamModuleExists(ref)
 }
 
-const UserLockscreenPamService = "dankshell"
+const UserLockscreenPamService = "alpe"
 
 const UserLockscreenPamFallbackService = "other"
 
@@ -872,53 +917,58 @@ func buildManagedLockscreenU2FPamContent() string {
 
 func syncLockscreenPamConfigWithDeps(logFunc func(string), sudoPassword string, deps syncDeps) error {
 	if deps.isNixOS() {
-		logFunc("ℹ NixOS detected. DMS does not write /etc/pam.d/dankshell; the lock screen uses a sanitized password-only service in the user state directory unless you select a custom PAM source.")
+		logFunc("ℹ NixOS detected. Alpe does not write " + deps.alpePath + "; the lock screen uses a sanitized password-only service in the user state directory unless you select a custom PAM source.")
 		return nil
 	}
 
-	existingData, err := deps.readFile(deps.dankshellPath)
+	reportLegacyPamFile(logFunc, deps.legacyPath, deps.readFile, HasLegacyManagedLockscreenPamFile)
+
+	existingData, err := deps.readFile(deps.alpePath)
 	if err == nil {
 		if !hasManagedLockscreenPamFile(string(existingData)) {
-			logFunc("ℹ Custom /etc/pam.d/dankshell found (no DMS block). Skipping.")
+			logFunc("ℹ Custom " + deps.alpePath + " found (no Alpe block). Skipping.")
 			return nil
 		}
 	} else if !os.IsNotExist(err) {
-		return fmt.Errorf("failed to read %s: %w", deps.dankshellPath, err)
+		return fmt.Errorf("failed to read %s: %w", deps.alpePath, err)
 	}
 
 	content, err := buildManagedLockscreenPamContent([]string{deps.pamDir}, deps.readFile)
 	if err != nil {
-		return fmt.Errorf("failed to build %s from %s: %w", deps.dankshellPath, filepath.Join(deps.pamDir, "login"), err)
+		return fmt.Errorf("failed to build %s from %s: %w", deps.alpePath, filepath.Join(deps.pamDir, "login"), err)
 	}
 
-	if err := writeManagedPamFile(content, deps.dankshellPath, sudoPassword, deps); err != nil {
-		return fmt.Errorf("failed to write %s: %w", deps.dankshellPath, err)
+	if err := writeManagedPamFile(content, deps.alpePath, sudoPassword, deps); err != nil {
+		return fmt.Errorf("failed to write %s: %w", deps.alpePath, err)
 	}
 
-	logFunc("✓ Created or updated /etc/pam.d/dankshell for lock screen authentication")
+	logFunc("✓ Created or updated " + deps.alpePath + " for lock screen authentication")
 	return nil
 }
 
 func syncLockscreenU2FPamConfigWithDeps(logFunc func(string), sudoPassword string, enabled bool, deps syncDeps) error {
 	if deps.isNixOS() {
-		logFunc("ℹ NixOS detected. DMS does not manage /etc/pam.d/dankshell-u2f on NixOS. Keep using the bundled U2F helper or configure a custom PAM service yourself.")
+		logFunc("ℹ NixOS detected. Alpe does not manage " + deps.alpeU2fPath + " on NixOS. Keep using the bundled U2F helper or configure a custom PAM service yourself.")
 		return nil
 	}
 
-	existingData, err := deps.readFile(deps.dankshellU2fPath)
+	// Der U2F-Dienst von 1.0 wird nur gemeldet – auch beim Abschalten nie gelöscht.
+	reportLegacyPamFile(logFunc, deps.legacyU2fPath, deps.readFile, HasLegacyManagedLockscreenU2FPamFile)
+
+	existingData, err := deps.readFile(deps.alpeU2fPath)
 	if err != nil && !os.IsNotExist(err) {
-		return fmt.Errorf("failed to read %s: %w", deps.dankshellU2fPath, err)
+		return fmt.Errorf("failed to read %s: %w", deps.alpeU2fPath, err)
 	}
 
 	if enabled {
 		if err == nil && !hasManagedLockscreenU2FPamFile(string(existingData)) {
-			logFunc("ℹ Custom /etc/pam.d/dankshell-u2f found (no DMS block). Skipping.")
+			logFunc("ℹ Custom " + deps.alpeU2fPath + " found (no Alpe block). Skipping.")
 			return nil
 		}
-		if err := writeManagedPamFile(buildManagedLockscreenU2FPamContent(), deps.dankshellU2fPath, sudoPassword, deps); err != nil {
-			return fmt.Errorf("failed to write %s: %w", deps.dankshellU2fPath, err)
+		if err := writeManagedPamFile(buildManagedLockscreenU2FPamContent(), deps.alpeU2fPath, sudoPassword, deps); err != nil {
+			return fmt.Errorf("failed to write %s: %w", deps.alpeU2fPath, err)
 		}
-		logFunc("✓ Created or updated /etc/pam.d/dankshell-u2f for lock screen security-key authentication")
+		logFunc("✓ Created or updated " + deps.alpeU2fPath + " for lock screen security-key authentication")
 		return nil
 	}
 
@@ -926,14 +976,14 @@ func syncLockscreenU2FPamConfigWithDeps(logFunc func(string), sudoPassword strin
 		return nil
 	}
 	if err == nil && !hasManagedLockscreenU2FPamFile(string(existingData)) {
-		logFunc("ℹ Custom /etc/pam.d/dankshell-u2f found (no DMS block). Leaving it untouched.")
+		logFunc("ℹ Custom " + deps.alpeU2fPath + " found (no Alpe block). Leaving it untouched.")
 		return nil
 	}
 
-	if err := deps.runSudoCmd(sudoPassword, "rm", "-f", deps.dankshellU2fPath); err != nil {
-		return fmt.Errorf("failed to remove %s: %w", deps.dankshellU2fPath, err)
+	if err := deps.runSudoCmd(sudoPassword, "rm", "-f", deps.alpeU2fPath); err != nil {
+		return fmt.Errorf("failed to remove %s: %w", deps.alpeU2fPath, err)
 	}
-	logFunc("✓ Removed DMS-managed /etc/pam.d/dankshell-u2f")
+	logFunc("✓ Removed Alpe-managed " + deps.alpeU2fPath)
 	return nil
 }
 

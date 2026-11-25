@@ -893,6 +893,12 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
    `/usr/share/dms/cli-policy.json`, `/etc/dms/cli-policy.json`; CUPS-Benutzername `dms`.
    Umbenennen hiesse Systemdateien migrieren (sudo) bzw. alte Verbindungen doppelt führen.
    **Vorschlag:** Ausnahmeliste; die Richtlinien-Pfade mit E1 (Paket) neu entscheiden.
+   **Erledigt am 25.11.2026 (E1):** PAM-Dienste `alpe`/`alpe-u2f`, Blockmarke «ALPE LOCKSCREEN AUTH», Richtlinien
+   `/usr/share/alpe/cli-policy.json` und `/etc/alpe/cli-policy.json` (Plan 2.3.3). Die alten Dienste werden erkannt
+   und nicht verändert. Für F1 und die VM: Ein Nutzer von 1.0 hat `/etc/pam.d/dankshell`; die Sperre nimmt ihn, bis
+   `alpe-dienst auth sync` `/etc/pam.d/alpe` geschrieben hat (der Rückfall ist im QML-Test `tst_Pam.qml` geprüft,
+   nicht an einer echten Sperre). Nebenbefund: `shell/tests/run-qml.py` zeigt noch auf den alten Ordner
+   `quickshell/` und läuft so nicht; `tests/test_pam_dienste.py` ruft `qmltestrunner` für `tst_Pam.qml` direkt auf.
 7. ~~**Gesperrte Pakete**~~ → mit E4 entfernen (0.8 Nr. 17). **Gesperrte Pakete** `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) und die
    Hold-Anzeige auf der Wartungsseite: gehören zur 1.0-Einrichtung; Plan 2.2 sagt «entfällt».
    **Vorschlag:** mit E4 entfernen (nach dem Umzug ist `dux-shell` weg).

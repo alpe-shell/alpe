@@ -437,12 +437,12 @@ func TestBuildManagedLockscreenPamContent_VendorDirFallback(t *testing.T) {
 func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 	t.Parallel()
 
-	t.Run("custom dankshell file is skipped untouched", func(t *testing.T) {
+	t.Run("custom alpe file is skipped untouched", func(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)
 		customContent := "#%PAM-1.0\nauth required pam_unix.so\n"
-		env.writePamFile(t, "dankshell", customContent)
+		env.writePamFile(t, "alpe", customContent)
 
 		var logs []string
 		err := syncLockscreenPamConfigWithDeps(func(msg string) {
@@ -452,21 +452,21 @@ func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 			t.Fatalf("syncLockscreenPamConfigWithDeps returned error: %v", err)
 		}
 
-		if got := readFileString(t, env.dankshellPath); got != customContent {
-			t.Fatalf("custom dankshell content changed\ngot:\n%s\nwant:\n%s", got, customContent)
+		if got := readFileString(t, env.alpePath); got != customContent {
+			t.Fatalf("custom alpe content changed\ngot:\n%s\nwant:\n%s", got, customContent)
 		}
-		if len(logs) == 0 || !strings.Contains(logs[0], "Custom /etc/pam.d/dankshell found") {
+		if len(logs) == 0 || !strings.Contains(logs[0], "Custom "+env.alpePath+" found") {
 			t.Fatalf("expected custom-file skip log, got %v", logs)
 		}
 	})
 
-	t.Run("managed dankshell file is rewritten from resolved login stack", func(t *testing.T) {
+	t.Run("managed alpe file is rewritten from resolved login stack", func(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)
 		env.writePamFile(t, "login", "#%PAM-1.0\nauth include system-auth\naccount include system-auth\n")
 		env.writePamFile(t, "system-auth", "auth sufficient pam_unix.so try_first_pass nullok\nauth sufficient pam_u2f.so cue\naccount required pam_access.so\n")
-		env.writePamFile(t, "dankshell", "#%PAM-1.0\n"+LockscreenPamManagedBlockStart+"\nauth required pam_env.so\n"+LockscreenPamManagedBlockEnd+"\n")
+		env.writePamFile(t, "alpe", "#%PAM-1.0\n"+LockscreenPamManagedBlockStart+"\nauth required pam_env.so\n"+LockscreenPamManagedBlockEnd+"\n")
 
 		var logs []string
 		err := syncLockscreenPamConfigWithDeps(func(msg string) {
@@ -476,7 +476,7 @@ func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 			t.Fatalf("syncLockscreenPamConfigWithDeps returned error: %v", err)
 		}
 
-		output := readFileString(t, env.dankshellPath)
+		output := readFileString(t, env.alpePath)
 		for _, want := range []string{
 			LockscreenPamManagedBlockStart,
 			"auth sufficient pam_unix.so try_first_pass nullok",
@@ -484,16 +484,57 @@ func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 			LockscreenPamManagedBlockEnd,
 		} {
 			if !strings.Contains(output, want) {
-				t.Errorf("missing expected string %q in rewritten dankshell:\n%s", want, output)
+				t.Errorf("missing expected string %q in rewritten alpe:\n%s", want, output)
 			}
 		}
 		if strings.Contains(output, "pam_u2f") {
-			t.Errorf("rewritten dankshell still contains pam_u2f:\n%s", output)
+			t.Errorf("rewritten alpe still contains pam_u2f:\n%s", output)
 		}
-		if len(logs) == 0 || !strings.Contains(logs[len(logs)-1], "Created or updated /etc/pam.d/dankshell") {
+		if len(logs) == 0 || !strings.Contains(logs[len(logs)-1], "Created or updated "+env.alpePath+" ") {
 			t.Fatalf("expected success log, got %v", logs)
 		}
 	})
+
+	// Plan 0.8 Nr. 16: Der Dienst der Einrichtung von 1.0 wird erkannt und nicht verändert; geschrieben wird der
+	// neue Dienst daneben.
+	for _, legacyManaged := range []bool{true, false} {
+		t.Run(fmt.Sprintf("legacy service from 1.0 is left unchanged (managed=%v)", legacyManaged), func(t *testing.T) {
+			t.Parallel()
+
+			env := newPamTestEnv(t)
+			env.writePamFile(t, "login", "#%PAM-1.0\nauth include system-auth\naccount include system-auth\n")
+			env.writePamFile(t, "system-auth", "auth sufficient pam_unix.so try_first_pass nullok\naccount required pam_access.so\n")
+			legacy := "#%PAM-1.0\nauth required pam_unix.so\n"
+			if legacyManaged {
+				legacy = "#%PAM-1.0\n" + legacyLockscreenPamManagedBlockStart + "\nauth required pam_env.so\n" + legacyLockscreenPamManagedBlockEnd + "\n"
+			}
+			if err := os.WriteFile(env.legacyPath, []byte(legacy), 0o644); err != nil {
+				t.Fatal(err)
+			}
+
+			var logs []string
+			err := syncLockscreenPamConfigWithDeps(func(msg string) {
+				logs = append(logs, msg)
+			}, "", env.deps(false))
+			if err != nil {
+				t.Fatalf("syncLockscreenPamConfigWithDeps returned error: %v", err)
+			}
+			if got := readFileString(t, env.legacyPath); got != legacy {
+				t.Fatalf("legacy service changed\ngot:\n%s\nwant:\n%s", got, legacy)
+			}
+			kind := "(custom)"
+			if legacyManaged {
+				kind = "(managed block"
+			}
+			if len(logs) == 0 || !strings.Contains(logs[0], env.legacyPath+" from Alpe 1.0 "+kind) {
+				t.Fatalf("expected legacy recognition log %q, got %v", kind, logs)
+			}
+			output := readFileString(t, env.alpePath)
+			if !strings.Contains(output, LockscreenPamManagedBlockStart) || !strings.Contains(output, "auth sufficient pam_unix.so try_first_pass nullok") {
+				t.Fatalf("expected the Alpe service to be written next to the legacy one:\n%s", output)
+			}
+		})
+	}
 
 	t.Run("mutable systems fail when login stack cannot be converted safely", func(t *testing.T) {
 		t.Parallel()
@@ -508,7 +549,7 @@ func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 		}
 	})
 
-	t.Run("NixOS remains informational and does not write dankshell", func(t *testing.T) {
+	t.Run("NixOS remains informational and does not write alpe", func(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)
@@ -523,8 +564,8 @@ func TestSyncLockscreenPamConfigWithDeps(t *testing.T) {
 		if len(logs) == 0 || !strings.Contains(logs[0], "NixOS detected") || !strings.Contains(logs[0], "sanitized password-only service") {
 			t.Fatalf("expected NixOS informational log describing the user-state fallback, got %v", logs)
 		}
-		if _, err := os.Stat(env.dankshellPath); !os.IsNotExist(err) {
-			t.Fatalf("expected no dankshell file to be written on NixOS path, stat err = %v", err)
+		if _, err := os.Stat(env.alpePath); !os.IsNotExist(err) {
+			t.Fatalf("expected no alpe file to be written on NixOS path, stat err = %v", err)
 		}
 	})
 }
@@ -545,11 +586,11 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 			t.Fatalf("syncLockscreenU2FPamConfigWithDeps returned error: %v", err)
 		}
 
-		got := readFileString(t, env.dankshellU2fPath)
+		got := readFileString(t, env.alpeU2fPath)
 		if got != buildManagedLockscreenU2FPamContent() {
-			t.Fatalf("unexpected managed dankshell-u2f content:\n%s", got)
+			t.Fatalf("unexpected managed alpe-u2f content:\n%s", got)
 		}
-		if len(logs) == 0 || !strings.Contains(logs[len(logs)-1], "Created or updated /etc/pam.d/dankshell-u2f") {
+		if len(logs) == 0 || !strings.Contains(logs[len(logs)-1], "Created or updated "+env.alpeU2fPath) {
 			t.Fatalf("expected create log, got %v", logs)
 		}
 	})
@@ -558,13 +599,13 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)
-		env.writePamFile(t, "dankshell-u2f", "#%PAM-1.0\n"+LockscreenU2FPamManagedBlockStart+"\nauth required pam_u2f.so old\n"+LockscreenU2FPamManagedBlockEnd+"\n")
+		env.writePamFile(t, "alpe-u2f", "#%PAM-1.0\n"+LockscreenU2FPamManagedBlockStart+"\nauth required pam_u2f.so old\n"+LockscreenU2FPamManagedBlockEnd+"\n")
 
 		if err := syncLockscreenU2FPamConfigWithDeps(func(string) {}, "", true, env.deps(false)); err != nil {
 			t.Fatalf("syncLockscreenU2FPamConfigWithDeps returned error: %v", err)
 		}
-		if got := readFileString(t, env.dankshellU2fPath); got != buildManagedLockscreenU2FPamContent() {
-			t.Fatalf("managed dankshell-u2f was not rewritten:\n%s", got)
+		if got := readFileString(t, env.alpeU2fPath); got != buildManagedLockscreenU2FPamContent() {
+			t.Fatalf("managed alpe-u2f was not rewritten:\n%s", got)
 		}
 	})
 
@@ -572,7 +613,7 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)
-		env.writePamFile(t, "dankshell-u2f", buildManagedLockscreenU2FPamContent())
+		env.writePamFile(t, "alpe-u2f", buildManagedLockscreenU2FPamContent())
 
 		var logs []string
 		err := syncLockscreenU2FPamConfigWithDeps(func(msg string) {
@@ -581,10 +622,10 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 		if err != nil {
 			t.Fatalf("syncLockscreenU2FPamConfigWithDeps returned error: %v", err)
 		}
-		if _, err := os.Stat(env.dankshellU2fPath); !os.IsNotExist(err) {
-			t.Fatalf("expected managed dankshell-u2f to be removed, stat err = %v", err)
+		if _, err := os.Stat(env.alpeU2fPath); !os.IsNotExist(err) {
+			t.Fatalf("expected managed alpe-u2f to be removed, stat err = %v", err)
 		}
-		if len(logs) == 0 || !strings.Contains(logs[len(logs)-1], "Removed DMS-managed /etc/pam.d/dankshell-u2f") {
+		if len(logs) == 0 || !strings.Contains(logs[len(logs)-1], "Removed Alpe-managed "+env.alpeU2fPath) {
 			t.Fatalf("expected removal log, got %v", logs)
 		}
 	})
@@ -594,7 +635,7 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 
 		env := newPamTestEnv(t)
 		customContent := "#%PAM-1.0\nauth required pam_u2f.so cue\n"
-		env.writePamFile(t, "dankshell-u2f", customContent)
+		env.writePamFile(t, "alpe-u2f", customContent)
 
 		var logs []string
 		err := syncLockscreenU2FPamConfigWithDeps(func(msg string) {
@@ -603,13 +644,68 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 		if err != nil {
 			t.Fatalf("syncLockscreenU2FPamConfigWithDeps returned error: %v", err)
 		}
-		if got := readFileString(t, env.dankshellU2fPath); got != customContent {
-			t.Fatalf("custom dankshell-u2f content changed\ngot:\n%s\nwant:\n%s", got, customContent)
+		if got := readFileString(t, env.alpeU2fPath); got != customContent {
+			t.Fatalf("custom alpe-u2f content changed\ngot:\n%s\nwant:\n%s", got, customContent)
 		}
-		if len(logs) == 0 || !strings.Contains(logs[0], "Custom /etc/pam.d/dankshell-u2f found") {
+		if len(logs) == 0 || !strings.Contains(logs[0], "Custom "+env.alpeU2fPath+" found") {
 			t.Fatalf("expected custom-file log, got %v", logs)
 		}
 	})
+
+	// Plan 0.8 Nr. 16: Der U2F-Dienst der Einrichtung von 1.0 wird erkannt und nie verändert – weder beim
+	// Einschalten noch beim Abschalten (dann löschte die alte Logik einen verwalteten Dienst).
+	for _, enabled := range []bool{true, false} {
+		t.Run(fmt.Sprintf("legacy u2f service from 1.0 is left unchanged (enabled=%v)", enabled), func(t *testing.T) {
+			t.Parallel()
+
+			env := newPamTestEnv(t)
+			legacy := "#%PAM-1.0\n" + legacyLockscreenU2FPamManagedBlockStart + "\nauth required pam_u2f.so cue\n" + legacyLockscreenU2FPamManagedBlockEnd + "\n"
+			if err := os.WriteFile(env.legacyU2fPath, []byte(legacy), 0o644); err != nil {
+				t.Fatal(err)
+			}
+
+			var logs []string
+			err := syncLockscreenU2FPamConfigWithDeps(func(msg string) {
+				logs = append(logs, msg)
+			}, "", enabled, env.deps(false))
+			if err != nil {
+				t.Fatalf("syncLockscreenU2FPamConfigWithDeps returned error: %v", err)
+			}
+			if got := readFileString(t, env.legacyU2fPath); got != legacy {
+				t.Fatalf("legacy u2f service changed\ngot:\n%s\nwant:\n%s", got, legacy)
+			}
+			if len(logs) == 0 || !strings.Contains(logs[0], env.legacyU2fPath+" from Alpe 1.0 (managed block") || !strings.Contains(logs[0], "left unchanged") {
+				t.Fatalf("expected legacy recognition log, got %v", logs)
+			}
+			_, statErr := os.Stat(env.alpeU2fPath)
+			if enabled && statErr != nil {
+				t.Fatalf("expected %s to be written when enabled: %v", env.alpeU2fPath, statErr)
+			}
+			if !enabled && !os.IsNotExist(statErr) {
+				t.Fatalf("expected no %s when disabled, stat err = %v", env.alpeU2fPath, statErr)
+			}
+		})
+	}
+}
+
+func TestLegacyManagedBlocksAreRecognizedNotWritten(t *testing.T) {
+	t.Parallel()
+
+	legacy := "#%PAM-1.0\n" + legacyLockscreenPamManagedBlockStart + "\nauth required pam_unix.so\n" + legacyLockscreenPamManagedBlockEnd + "\n"
+	if !HasLegacyManagedLockscreenPamFile(legacy) || hasManagedLockscreenPamFile(legacy) {
+		t.Fatalf("legacy block must be recognized as legacy and not as the Alpe block")
+	}
+	if HasLegacyManagedLockscreenPamFile(buildManagedLockscreenU2FPamContent()) || !HasLegacyManagedLockscreenU2FPamFile("#%PAM-1.0\n"+legacyLockscreenU2FPamManagedBlockStart+"\n"+legacyLockscreenU2FPamManagedBlockEnd+"\n") {
+		t.Fatalf("legacy u2f block recognition is wrong")
+	}
+	for _, written := range []string{buildManagedLockscreenU2FPamContent(), LockscreenPamManagedBlockStart, LockscreenPamManagedBlockEnd} {
+		if strings.Contains(written, legacyLockscreenPamManagedBlockEnd) || !strings.Contains(written, "ALPE LOCKSCREEN") {
+			t.Fatalf("written block markers must be the Alpe ones: %q", written)
+		}
+	}
+	if AlpePamPath != "/etc/pam.d/alpe" || AlpeU2FPamPath != "/etc/pam.d/alpe-u2f" || UserLockscreenPamService != "alpe" {
+		t.Fatalf("PAM service names must be alpe and alpe-u2f")
+	}
 }
 
 func TestListLockscreenPamServices(t *testing.T) {
@@ -819,9 +915,9 @@ func TestValidateLockscreenU2fPam(t *testing.T) {
 
 		env := newPamTestEnv(t)
 		env.availableModules["pam_u2f.so"] = true
-		env.writePamFile(t, "dankshell-u2f", "#%PAM-1.0\nauth required pam_u2f.so cue authfile=/etc/u2f-mappings\naccount required pam_permit.so\n")
+		env.writePamFile(t, "alpe-u2f", "#%PAM-1.0\nauth required pam_u2f.so cue authfile=/etc/u2f-mappings\naccount required pam_permit.so\n")
 
-		result := validateLockscreenU2fPam("dankshell-u2f", "", env.validateDeps())
+		result := validateLockscreenU2fPam("alpe-u2f", "", env.validateDeps())
 		if !result.Valid {
 			t.Fatalf("expected valid dedicated U2F stack, got %+v", result)
 		}
@@ -880,9 +976,9 @@ func TestValidateLockscreenU2fPam(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)
-		env.writePamFile(t, "dankshell-u2f", "#%PAM-1.0\nauth required pam_u2f.so cue\n")
+		env.writePamFile(t, "alpe-u2f", "#%PAM-1.0\nauth required pam_u2f.so cue\n")
 
-		result := validateLockscreenU2fPam("dankshell-u2f", "", env.validateDeps())
+		result := validateLockscreenU2fPam("alpe-u2f", "", env.validateDeps())
 		if result.Valid || !containsSubstr(result.Errors, "pam_u2f.so is not installed") {
 			t.Fatalf("expected missing-module error, got %+v", result)
 		}
@@ -900,8 +996,10 @@ func containsSubstr(items []string, substr string) bool {
 
 type pamTestEnv struct {
 	pamDir           string
-	dankshellPath    string
-	dankshellU2fPath string
+	alpePath         string
+	alpeU2fPath      string
+	legacyPath       string
+	legacyU2fPath    string
 	tmpDir           string
 	homeDir          string
 	availableModules map[string]bool
@@ -922,9 +1020,13 @@ func newPamTestEnv(t *testing.T) *pamTestEnv {
 	}
 
 	return &pamTestEnv{
-		pamDir:           pamDir,
-		dankshellPath:    filepath.Join(pamDir, "dankshell"),
-		dankshellU2fPath: filepath.Join(pamDir, "dankshell-u2f"),
+		pamDir:      pamDir,
+		alpePath:    filepath.Join(pamDir, "alpe"),
+		alpeU2fPath: filepath.Join(pamDir, "alpe-u2f"),
+		// alpe-namen-ausnahme: umzug-ende
+		legacyPath:    filepath.Join(pamDir, "dankshell"),
+		legacyU2fPath: filepath.Join(pamDir, "dankshell-u2f"),
+		// alpe-namen-ausnahme: umzug-ende
 		tmpDir:           tmpDir,
 		homeDir:          homeDir,
 		availableModules: map[string]bool{},
@@ -933,12 +1035,14 @@ func newPamTestEnv(t *testing.T) *pamTestEnv {
 
 func (e *pamTestEnv) deps(isNixOS bool) syncDeps {
 	return syncDeps{
-		pamDir:           e.pamDir,
-		dankshellPath:    e.dankshellPath,
-		dankshellU2fPath: e.dankshellU2fPath,
-		isNixOS:          func() bool { return isNixOS },
-		readFile:         os.ReadFile,
-		stat:             os.Stat,
+		pamDir:        e.pamDir,
+		alpePath:      e.alpePath,
+		alpeU2fPath:   e.alpeU2fPath,
+		legacyPath:    e.legacyPath,
+		legacyU2fPath: e.legacyU2fPath,
+		isNixOS:       func() bool { return isNixOS },
+		readFile:      os.ReadFile,
+		stat:          os.Stat,
 		createTemp: func(_ string, pattern string) (*os.File, error) {
 			return os.CreateTemp(e.tmpDir, pattern)
 		},
@@ -1002,30 +1106,30 @@ func TestSyncAuthConfigWithDeps(t *testing.T) {
 			t.Fatalf("syncAuthConfigWithDeps returned error: %v", err)
 		}
 
-		if _, err := os.Stat(env.dankshellPath); err != nil {
-			t.Fatalf("expected dankshell to be created: %v", err)
+		if _, err := os.Stat(env.alpePath); err != nil {
+			t.Fatalf("expected alpe to be created: %v", err)
 		}
-		if got := readFileString(t, env.dankshellU2fPath); got != buildManagedLockscreenU2FPamContent() {
-			t.Fatalf("unexpected dankshell-u2f content:\n%s", got)
+		if got := readFileString(t, env.alpeU2fPath); got != buildManagedLockscreenU2FPamContent() {
+			t.Fatalf("unexpected alpe-u2f content:\n%s", got)
 		}
 	})
 
-	t.Run("removes dankshell-u2f when disabled", func(t *testing.T) {
+	t.Run("removes alpe-u2f when disabled", func(t *testing.T) {
 		t.Parallel()
 
 		env := newPamTestEnv(t)
 		env.writeSettings(t, `{"enableU2f":false}`)
 		env.writePamFile(t, "login", "#%PAM-1.0\nauth include system-auth\naccount include system-auth\n")
 		env.writePamFile(t, "system-auth", "auth sufficient pam_unix.so try_first_pass nullok\naccount required pam_access.so\n")
-		env.writePamFile(t, "dankshell-u2f", buildManagedLockscreenU2FPamContent())
+		env.writePamFile(t, "alpe-u2f", buildManagedLockscreenU2FPamContent())
 
 		err := syncAuthConfigWithDeps(func(string) {}, "", SyncAuthOptions{HomeDir: env.homeDir}, env.deps(false))
 		if err != nil {
 			t.Fatalf("syncAuthConfigWithDeps returned error: %v", err)
 		}
 
-		if _, err := os.Stat(env.dankshellU2fPath); !os.IsNotExist(err) {
-			t.Fatalf("expected dankshell-u2f to be removed, stat err = %v", err)
+		if _, err := os.Stat(env.alpeU2fPath); !os.IsNotExist(err) {
+			t.Fatalf("expected alpe-u2f to be removed, stat err = %v", err)
 		}
 	})
 }

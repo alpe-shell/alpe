@@ -98,8 +98,8 @@ Scope {
         if (!root.u2fSuppressedByPrimaryPam && SettingsData.enableU2f && SettingsData.u2fMode === "and" && u2f.available) {
             u2f.startForSecondFactor();
         } else {
-            if (AdminPolicy.disableCustomLockPam && SettingsData.enableU2f && SettingsData.u2fMode === "and" && !u2fConfigWatcher.loaded)
-                log.warn("/etc/pam.d/dankshell-u2f is missing, unlocking without the security key");
+            if (AdminPolicy.disableCustomLockPam && SettingsData.enableU2f && SettingsData.u2fMode === "and" && root.systemU2fPamService === "")
+                log.warn("/etc/pam.d/alpe-u2f is missing, unlocking without the security key");
             completeUnlock();
         }
     }
@@ -128,17 +128,20 @@ Scope {
         printErrors: false
     }
 
+    // PAM-Dienste der Sperre (Plan 0.8 Nr. 16): «alpe», «alpe-u2f», unter der Richtlinie «alpe-fprint». Die Dienste
+    // der Einrichtung von 1.0 werden erkannt und als Rückfall benutzt, solange es den neuen noch nicht gibt –
+    // verändert werden sie nie (nur gelesen, von PAM).
     FileView {
-        id: dankshellConfigWatcher
+        id: systemPamWatcher
 
-        path: "/etc/pam.d/dankshell"
+        path: "/etc/pam.d/alpe"
         printErrors: false
     }
 
     FileView {
         id: u2fConfigWatcher
 
-        path: "/etc/pam.d/dankshell-u2f"
+        path: "/etc/pam.d/alpe-u2f"
         watchChanges: true
         printErrors: false
     }
@@ -146,9 +149,37 @@ Scope {
     FileView {
         id: fprintConfigWatcher
 
+        path: AdminPolicy.disableCustomLockPam ? "/etc/pam.d/alpe-fprint" : ""
+        printErrors: false
+    }
+
+    // alpe-namen-ausnahme: umzug-ende
+    FileView {
+        id: legacyPamWatcher
+
+        path: "/etc/pam.d/dankshell"
+        printErrors: false
+    }
+
+    FileView {
+        id: legacyU2fConfigWatcher
+
+        path: "/etc/pam.d/dankshell-u2f"
+        watchChanges: true
+        printErrors: false
+    }
+
+    FileView {
+        id: legacyFprintConfigWatcher
+
         path: AdminPolicy.disableCustomLockPam ? "/etc/pam.d/dankshell-fprint" : ""
         printErrors: false
     }
+
+    readonly property string systemPamService: systemPamWatcher.loaded ? "alpe" : (legacyPamWatcher.loaded ? "dankshell" : "")
+    readonly property string systemU2fPamService: u2fConfigWatcher.loaded ? "alpe-u2f" : (legacyU2fConfigWatcher.loaded ? "dankshell-u2f" : "")
+    readonly property string policyFprintPamService: fprintConfigWatcher.loaded ? "alpe-fprint" : (legacyFprintConfigWatcher.loaded ? "dankshell-fprint" : "")
+    // alpe-namen-ausnahme: umzug-ende
 
     FileView {
         id: customU2fPamWatcher
@@ -157,14 +188,14 @@ Scope {
         printErrors: false
     }
 
-    // Fallback stack written by `alpe-dienst auth resolve-lock` when no managed
-    // /etc/pam.d/dankshell exists. See #2789.
+    // Rückfall, den `alpe-dienst auth resolve-lock` schreibt, wenn es keinen verwalteten PAM-Dienst
+    // unter /etc/pam.d gibt. See #2789.
     readonly property string userPamDir: Paths.strip(Paths.state) + "/pam"
 
     FileView {
         id: userPamWatcher
 
-        path: root.userPamDir + "/dankshell"
+        path: root.userPamDir + "/alpe"
         printErrors: false
     }
 
@@ -192,15 +223,15 @@ Scope {
 
         config: {
             if (AdminPolicy.disableCustomLockPam)
-                return dankshellConfigWatcher.loaded ? "dankshell" : "login";
+                return root.systemPamService !== "" ? root.systemPamService : "login";
             if (root.customPamActive)
                 return SettingsData.lockPamPath.slice(SettingsData.lockPamPath.lastIndexOf("/") + 1);
             if (SettingsData.lockPamExternallyManaged)
                 return "login";
-            if (dankshellConfigWatcher.loaded)
-                return "dankshell";
+            if (root.systemPamService !== "")
+                return root.systemPamService;
             if (userPamWatcher.loaded)
-                return "dankshell";
+                return "alpe";
             return "login";
         }
         configDirectory: {
@@ -212,7 +243,7 @@ Scope {
             }
             if (SettingsData.lockPamExternallyManaged)
                 return "/etc/pam.d";
-            if (dankshellConfigWatcher.loaded)
+            if (root.systemPamService !== "")
                 return "/etc/pam.d";
             if (userPamWatcher.loaded)
                 return root.userPamDir;
@@ -314,7 +345,7 @@ Scope {
     PamContext {
         id: fprint
 
-        readonly property bool available: SettingsData.lockFingerprintReady && (!AdminPolicy.disableCustomLockPam || fprintConfigWatcher.loaded)
+        readonly property bool available: SettingsData.lockFingerprintReady && (!AdminPolicy.disableCustomLockPam || root.policyFprintPamService !== "")
         property int tries: 0
         property int errorTries: 0
         property double attemptStartedAt: 0
@@ -322,7 +353,7 @@ Scope {
         readonly property int maxErrorTries: 200
         readonly property int daemonIdleExitMs: 30000
         // sessionTimeoutMs mirrors `timeout=` in assets/pam/fprint; under the
-        // policy, /etc/pam.d/dankshell-fprint must carry the same value
+        // policy, /etc/pam.d/alpe-fprint must carry the same value
         readonly property int sessionTimeoutMs: 90000
         readonly property int verifyStartSlackMs: 10000
         readonly property bool retrying: errorRetry.running
@@ -417,7 +448,7 @@ Scope {
                 Qt.callLater(checkAvail);
         }
 
-        config: AdminPolicy.disableCustomLockPam ? "dankshell-fprint" : "fprint"
+        config: AdminPolicy.disableCustomLockPam ? (root.policyFprintPamService !== "" ? root.policyFprintPamService : "alpe-fprint") : "fprint"
         configDirectory: AdminPolicy.disableCustomLockPam ? "/etc/pam.d" : Quickshell.shellDir + "/assets/pam"
 
         onPamMessage: {
@@ -462,7 +493,7 @@ Scope {
     PamContext {
         id: u2f
 
-        property bool available: SettingsData.lockU2fReady && (!AdminPolicy.disableCustomLockPam || u2fConfigWatcher.loaded)
+        property bool available: SettingsData.lockU2fReady && (!AdminPolicy.disableCustomLockPam || root.systemU2fPamService !== "")
 
         function checkAvail(): void {
             if (!available || !SettingsData.enableU2f || !root.lockSecured || root.u2fSuppressedByPrimaryPam) {
@@ -500,10 +531,10 @@ Scope {
 
         config: {
             if (AdminPolicy.disableCustomLockPam)
-                return "dankshell-u2f";
+                return root.systemU2fPamService !== "" ? root.systemU2fPamService : "alpe-u2f";
             if (root.customU2fPamActive)
                 return SettingsData.lockU2fPamPath.slice(SettingsData.lockU2fPamPath.lastIndexOf("/") + 1);
-            return u2fConfigWatcher.loaded ? "dankshell-u2f" : "u2f";
+            return root.systemU2fPamService !== "" ? root.systemU2fPamService : "u2f";
         }
         configDirectory: {
             if (AdminPolicy.disableCustomLockPam)
@@ -512,7 +543,7 @@ Scope {
                 const idx = SettingsData.lockU2fPamPath.lastIndexOf("/");
                 return idx > 0 ? SettingsData.lockU2fPamPath.slice(0, idx) : "/";
             }
-            return u2fConfigWatcher.loaded ? "/etc/pam.d" : Quickshell.shellDir + "/assets/pam";
+            return root.systemU2fPamService !== "" ? "/etc/pam.d" : Quickshell.shellDir + "/assets/pam";
         }
 
         onMessageChanged: {
@@ -666,10 +697,11 @@ Scope {
         root.responseSubmitted = false;
         fprint.tries = 0;
         fprint.errorTries = 0;
-        if (!SettingsData.lockPamExternallyManaged && !dankshellConfigWatcher.loaded && !userPamWatcher.loaded)
+        if (!SettingsData.lockPamExternallyManaged && root.systemPamService === "" && !userPamWatcher.loaded)
             ensureUserPamConfig();
         // FileView cannot watch a path that does not exist yet; re-read so a
         // dedicated service created after startup is used on the next lock.
+        systemPamWatcher.reload();
         u2fConfigWatcher.reload();
         fprint.checkAvail();
         u2f.checkAvail();

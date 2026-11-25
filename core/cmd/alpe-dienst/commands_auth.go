@@ -44,7 +44,7 @@ var authResolveLockCmd = &cobra.Command{
 	Use:   "resolve-lock",
 	Short: "Generate the lock-screen PAM config from the system auth stack",
 	Long: "Resolve the distribution's PAM auth stack into a self-contained lock-screen config under the user state directory.\n" +
-		"Runs unprivileged (reads /etc/pam.d, writes to the user's state dir) and is used by the shell as a fallback when /etc/pam.d/dankshell is not managed.\n" +
+		"Runs unprivileged (reads /etc/pam.d, writes to the user's state dir) and is used by the shell as a fallback when /etc/pam.d/alpe is not managed.\n" +
 		"Prints the path of the generated file.",
 	Run: func(cmd *cobra.Command, args []string) {
 		quiet, _ := cmd.Flags().GetBool("quiet")

@@ -11,9 +11,10 @@ import (
 	"github.com/spf13/afero"
 )
 
+// Richtlinien des Pakets und des Administrators (Plan 0.8 Nr. 16): eigene Pfade, keine des Pakets des Ursprungs.
 const (
-	PackagedPath = "/usr/share/dms/cli-policy.json"
-	AdminPath    = "/etc/dms/cli-policy.json"
+	PackagedPath = "/usr/share/alpe/cli-policy.json"
+	AdminPath    = "/etc/alpe/cli-policy.json"
 )
 
 type File struct {
