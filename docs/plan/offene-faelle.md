@@ -198,8 +198,19 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    `eDP-1` und wäre immer grün. Zu prüfen: Mit der Vorlage aus dem Repo zeigt hyprlock Hintergrund,
    Uhr, Datum und Passwortfeld am internen Bildschirm und – falls angeschlossen – an einem zweiten;
    die Ausgabe von hyprlock (im Terminal, nicht im Journal) nennt keinen Fehler zu `monitor`.
-   **Offen beim Maintainer:** der Aufruf (wie hyprlock die Repo-Datei übergeben bekommt; die Option
-   dafür ist hier nicht nachgeschlagen) und der Rückweg, falls die Sperre hängt. Ob am Mac je
+   ~~**Offen beim Maintainer:** der Aufruf (wie hyprlock die Repo-Datei übergeben bekommt; die Option
+   dafür ist hier nicht nachgeschlagen) und der Rückweg, falls die Sperre hängt.~~ **Entschieden am
+   25.11.2026 (Maintainer):** hyprlock wird **in der echten Sitzung** mit `hyprlock --config` und der
+   Datei aus dem ausgecheckten Stand gestartet. **Vorher** eine zweite Anmeldung als Rückweg öffnen
+   (TTY oder SSH), damit eine hängende Sperre von dort beendet werden kann, und mit `hyprlock --help`
+   prüfen, dass die installierte Fassung die Option `--config` kennt. Am Mac, ein Befehl pro Zeile:
+
+   ```
+   hyprlock --help
+   hyprlock --config ~/alpe-phase-a/lockscreen/hyprlock.conf
+   ```
+
+   Nennt `hyprlock --help` die Option nicht, wird der Punkt nicht geprüft und notiert. Ob am Mac je
    hyprlock mit dieser Vorlage lief, ist nicht belegt. **Hinweis für F1:** Wer das Programm
    hyprlock mit einer eigenen `~/.config/hypr/hyprlock.conf` benutzt, behält dort `eDP-1`; die
    Änderung aus `899fefc` erreicht diese Datei nicht von selbst. Für die Punkte 4 und 5 gilt
@@ -231,15 +242,47 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    nur rund 85 Pixel breit und gut 20 hoch, der Platzhalter kaum lesbar, und der Mauszeiger liegt
    in beiden Haltbildern vom 24.11.2026 genau darauf. Ursache ist der Massstab (`size = 200, 50` auf dem Bezugsbildschirm
    2560 × 1664). Zu prüfen am Bildschirm des MacBooks (2560 × 1664): Breite und Lesbarkeit des
-   Felds und des Platzhalters.
+   Felds und des Platzhalters. **Entschieden am 25.11.2026: erst nach F1 an der Shell-Sperre zu
+   beurteilen**, nicht in diesem Mac-Test.
 5. **Streifen im Bild der Sperre:** Im oberen Viertel des Haltbilds stehen feine waagrechte
    Farbstufen im Himmel (Unschärfe, Helligkeit und Kontrast aus `hyprlock.conf` auf 8 Bit je
-   Kanal). Zu prüfen am Mac: ob die Streifen auf echter Hardware sichtbar sind.
+   Kanal). Zu prüfen am Mac: ob die Streifen auf echter Hardware sichtbar sind. **Entschieden am
+   25.11.2026: erst nach F1 an der Shell-Sperre zu beurteilen**, nicht in diesem Mac-Test.
+6. **Die drei sporadischen Meldungen** (Plan 0.8 Nr. 107; am PC nur unter Last beobachtet): Nach dem
+   Start der Testshell ihr Protokoll durchsehen – die Anleitung unten schreibt es nach
+   `/tmp/alpe-d7.log`; läuft die Shell später als Dienst (`alpe.service`, erst mit dem Paket), steht es
+   im Journal (`journalctl --user -u alpe.service -b`), und dieselbe Suche gilt dort. Gesucht: Notizblock «Tab file does not exist» (samt der
+   `FileView`-Zeile dazu), `DeferredAction.qml` «Cannot read property 'stop' of null», ShaderEffect
+   «'source' does not have a matching property». Der Befehl zählt die Zeilen; jede Zahl über 0 mit
+   den Zeilen selbst notieren:
 
-Zu 1, 4 und 5: Diese Punkte brauchen die Sperre. Die Anleitung unten verbietet, mit der
-**Testshell** zu sperren («Nicht auslösen: die Sperre») – das gilt weiter. Wie und in welcher
-Sitzung dafür gesperrt wird, legt der Maintainer fest; nichts davon ändert `layout.js` oder
-`hyprlock.conf`.
+   ```
+   grep -c -e "Tab file does not exist" -e "Cannot read property 'stop' of null" -e "does not have a matching property" /tmp/alpe-d7.log
+   ```
+7. **Keine Zeile «Unrecognized pragma»** (Plan 0.8 Nr. 97: die Pragmas `RenderControl` und
+   `DiskCache` sind aus `shell/shell.qml` entfernt). Erwartet: 0.
+
+   ```
+   grep -c "Unrecognized pragma" /tmp/alpe-d7.log
+   ```
+8. **Werteprüfung und ein kurzer Benutzername:** Ist der Benutzername am Mac kürzer als vier
+   Zeichen, sucht die Werteprüfung (`tools/werte-pruefen.py`, `tests/test_werte.py`) ihn nur im
+   Zusammenhang (`nutzer@…`, Pfad in ein Home, Hostname-Feld …) und in Binärdateien roh gar nicht
+   (Plan 0.8 Nr. 109 (2), `docs/technik.md`). Ein grüner Abschnitt `test_werte` sagt über einen
+   solchen Namen also weniger als über einen längeren – beim Lesen des Ergebnisses beachten.
+9. **Priorität der COPR-Repos** (Plan 0.8 Nr. 99): Ausgabe von `dnf repolist -v` festhalten, vor
+   allem die Angabe zur `priority` der COPR-Repos (`hazel-bunny/ricing` und weitere). Ob dnf5 mit
+   `-v` die Priorität in dieser Form zeigt, ist hier nicht nachgeschlagen; zeigt es sie nicht, das
+   notieren.
+
+   ```
+   dnf repolist -v
+   ```
+
+Zu 1: Dieser Punkt braucht die Sperre durch das Programm hyprlock in der echten Sitzung (siehe 1).
+Die Anleitung unten verbietet, mit der **Testshell** zu sperren («Nicht auslösen: die Sperre») – das
+gilt weiter. Die Punkte 4 und 5 (Passwortfeld, Streifen) entfallen in diesem Mac-Test; sie werden
+nach F1 an der Shell-Sperre beurteilt. Nichts davon ändert `layout.js` oder `hyprlock.conf`.
 
 *Am PC (Maintainer):*
 
@@ -1086,8 +1129,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   Wiederholungen in Ruhe, Zählung aller Läufe in den Bericht. Mögliche Ursache für (2), aus dem
   Quelltext gefolgert und nicht durch einen Lauf belegt: `deferTimer` in `DeferredAction.qml` ist
   ein Objekt in einer Eigenschaft; läuft `cancel()` beim Abbau oder vor der Zuweisung, ist es noch
-  oder schon `null`. **Offen beim Maintainer:** ob `SPORADISCH`-Einträge von Hand in eine
-  Grundlinie dürfen. Frist für die Herkunft: vor G1.
+  oder schon `null`. ~~**Offen beim Maintainer:** ob `SPORADISCH`-Einträge von Hand in eine
+  Grundlinie dürfen.~~ **Entschieden am 25.11.2026 (Plan 0.8 Nr. 109 (6)):** nie von Hand, Grundlinien
+  werden nur gemessen. Frist für die Herkunft: vor G1.
 - **Sporadische Meldungen unter Hyprland aus der Neumessung (22.11.2026), nicht behoben –
   Herkunft offen, Frist: vor G1:** je in
   1 von 3 Läufen (a) `NotepadStorageService`: «Tab file does not exist …/untitled-<ID>.txt» samt
