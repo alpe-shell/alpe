@@ -6,8 +6,10 @@
 Geschrieben werden nur /etc/pam.d/alpe und alpe-u2f mit der Blockmarke «ALPE LOCKSCREEN AUTH»; die Dienste und
 Blöcke der Einrichtung von 1.0 (dankshell, dankshell-u2f, «DMS LOCKSCREEN AUTH») werden erkannt und nicht
 verändert – sie stehen nur innerhalb der Bereichsmarken der Namensprüfung (Frist Umzug-Ende). Richtlinien unter
-/usr/share/alpe/cli-policy.json und /etc/alpe/cli-policy.json. Der QML-Test der Sperre (shell/tests/lock/tst_Pam.qml)
-läuft mit qmltestrunner, wenn es installiert ist.
+/usr/share/alpe/cli-policy.json und /etc/alpe/cli-policy.json. Seit Plan 0.8 Nr. 118 schreibt auth sync kein alpe neben
+einer eigenen dankshell (die Pfade von 1.0 nur in reportLegacyPamFile und in Meldungen); seit Nr. 119 gilt
+/etc/dms/cli-policy.json als Rückfall, solange /etc/alpe/cli-policy.json fehlt, /usr/share/dms nie. Der QML-Test der
+Sperre (shell/tests/lock/tst_Pam.qml) läuft mit qmltestrunner, wenn es installiert ist.
 """
 import os
 import re

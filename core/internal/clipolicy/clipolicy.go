@@ -23,8 +23,6 @@ const (
 // alpe-namen-ausnahme: umzug-ende
 const LegacyAdminPath = "/etc/dms/cli-policy.json"
 
-// alpe-namen-ausnahme: umzug-ende
-
 // warnLegacyAdmin meldet den Rückfall; Tests ersetzen die Funktion, um die Meldung zu sehen.
 var warnLegacyAdmin = func(format string, v ...any) { log.Warnf(format, v...) }
 
@@ -34,13 +32,18 @@ func EffectiveAdminPath(fs afero.Fs) string {
 	if _, err := fs.Stat(AdminPath); err == nil || !os.IsNotExist(err) {
 		return AdminPath
 	}
-	if _, err := fs.Stat(LegacyAdminPath); err != nil {
+	// Nur «fehlt» heisst: kein Rückfall. Ein anderer Fehler (etwa keine Leserechte) gibt den alten Pfad zurück, damit
+	// LoadFile den Lesefehler meldet und die Schalter sicher eingeschaltet werden, statt dass die Richtlinie still
+	// wegfällt.
+	if _, err := fs.Stat(LegacyAdminPath); os.IsNotExist(err) {
 		return AdminPath
 	}
 	warnLegacyAdmin("CLI policy: %s is missing, using the policy of Alpe 1.0 from %s. Copy it to %s to keep it; the old path is read only until the move from 1.0 is finished.",
 		AdminPath, LegacyAdminPath, AdminPath)
 	return LegacyAdminPath
 }
+
+// alpe-namen-ausnahme: umzug-ende
 
 type File struct {
 	PolicyVersion         int       `json:"policy_version"`

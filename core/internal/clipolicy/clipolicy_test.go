@@ -3,6 +3,7 @@ package clipolicy
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -196,6 +197,27 @@ func TestLockSettingBool(t *testing.T) {
 // Entscheid vom 25.11.2026 (Plan 0.8 Nr. 119): Die Richtlinie des Administrators aus 1.0 gilt als Rückfall, solange
 // AdminPath fehlt, mit einer Meldung; die Richtlinie des Pakets von 1.0 nie.
 // alpe-namen-ausnahme: umzug-ende
+
+// deniedFs liefert für einen Pfad bei Stat und Open «permission denied», als läge er in einem Ordner ohne Leserechte.
+type deniedFs struct {
+	afero.Fs
+	denied string
+}
+
+func (d deniedFs) Stat(name string) (os.FileInfo, error) {
+	if name == d.denied {
+		return nil, &os.PathError{Op: "stat", Path: name, Err: os.ErrPermission}
+	}
+	return d.Fs.Stat(name)
+}
+
+func (d deniedFs) Open(name string) (afero.File, error) {
+	if name == d.denied {
+		return nil, &os.PathError{Op: "open", Path: name, Err: os.ErrPermission}
+	}
+	return d.Fs.Open(name)
+}
+
 func TestLegacyAdminFallback(t *testing.T) {
 	const legacyPackagedPath = "/usr/share/dms/cli-policy.json"
 	tests := []struct {
@@ -244,6 +266,24 @@ func TestLegacyAdminFallback(t *testing.T) {
 			}
 		})
 	}
+
+	// Ist der alte Pfad da, aber nicht lesbar, fällt die Richtlinie nicht still weg: alter Pfad, Meldung, Lesefehler,
+	// und ShellEnv schaltet alle Schalter ein (Prüfung zu 1.7, Befund 1).
+	t.Run("admin policy of 1.0 not readable", func(t *testing.T) {
+		fs := deniedFs{Fs: afero.NewMemMapFs(), denied: LegacyAdminPath}
+		var warnings []string
+		saved := warnLegacyAdmin
+		warnLegacyAdmin = func(format string, v ...any) { warnings = append(warnings, fmt.Sprintf(format, v...)) }
+		defer func() { warnLegacyAdmin = saved }()
+
+		assert.Equal(t, LegacyAdminPath, EffectiveAdminPath(fs))
+		_, err := LogindUnlockDisabled(fs)
+		require.ErrorContains(t, err, LegacyAdminPath)
+		require.NotEmpty(t, warnings)
+		env, err := ShellEnv(fs)
+		require.Error(t, err)
+		assert.Contains(t, env, "ALPE_POLICY_DISABLE_CUSTOM_LOCK_PAM=1")
+	})
 
 	// Die Schalter für die Sperre kommen aus der alten Richtlinie bei der Oberfläche an.
 	fs := afero.NewMemMapFs()
