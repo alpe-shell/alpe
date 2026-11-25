@@ -238,15 +238,16 @@ check(repo_gelesen > 1500 and repo_treffer == [],
       "ganzes Repo ohne persönliche Werte (%d Dateien; Benutzername %s, Rechnername %s): %s"
       % (repo_gelesen, "gesucht" if benutzer else "nicht gesucht", "gesucht" if rechner else "nicht gesucht", [wp.zeile(f) for f in repo_treffer[:12]]))
 # Binärdateien (bis zum 24.11.2026 übersprungen: 61 Dateien) werden roh durchsucht; der Lauf oben schliesst sie ein.
-# Seit dem 26.11.2026 (desktop-login.oga/.wav entfernt, Plan 0.8 Nr. 116) sind es 60.
+# Seit dem 25.11.2026 (Nachtlauf vom 26.11.2026: desktop-login.oga/.wav entfernt, Plan 0.8 Nr. 116) sind es 60.
 roh_endungen = sorted({os.path.splitext(p)[1] for p in repo_zaehler["roh"]})
 check(len(repo_zaehler["roh"]) >= 60 and {".ttf", ".png", ".jpg", ".mp4", ".pdf", ".qsb", ".wav"} <= set(roh_endungen)
       and not [f for f in repo_treffer if f[1] == wp.ROH],
       "Rohsuche: %d Binärdateien durchsucht (%s), kein Fund" % (len(repo_zaehler["roh"]), " ".join(roh_endungen)))
 # Textdateien mit anderer Endung (bis zum 25.11.2026 nur gezählt: 52 Dateien) werden durchsucht wie alle anderen
+# (seit dem Nachtlauf vom 26.11.2026 50: shell/assets/discord.svg und reddit.svg entfernt, Plan 0.8 Nr. 117)
 # (Plan 0.8 Nr. 110); der Lauf oben schliesst sie ein und zählt sie mit.
 andere_endungen = sorted({os.path.splitext(p)[1] or os.path.basename(p) for p in repo_zaehler["andere_endung"]})
-check(len(repo_zaehler["andere_endung"]) >= 52 and {".svg", ".frag"} <= set(andere_endungen)
+check(len(repo_zaehler["andere_endung"]) >= 50 and {".svg", ".frag"} <= set(andere_endungen)
       and not [f for f in repo_treffer if f[0] in repo_zaehler["andere_endung"]],
       "Textdateien mit anderer Endung durchsucht: %d (%s), kein Fund" % (len(repo_zaehler["andere_endung"]), " ".join(andere_endungen)))
 # SVG-Pfaddaten: Zahlenfolgen im Attribut d sehen wie IP-Adressen aus und zählen nicht (topography.svg, hyprland.svg).

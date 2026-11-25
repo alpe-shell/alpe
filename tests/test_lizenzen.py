@@ -139,6 +139,25 @@ if klaenge:
           % (sorted(genannt - vorhanden), sorted(vorhanden - genannt)))
     check("desktop-login" not in klaenge.group(1), "desktop-login steht nicht mehr unter den Klängen (entfernt, 1.4)")
 
+# --- Zeichen Dritter und Code-Teile (1.5) ---
+zeichen = re.search(r"^Zeichen Dritter \(shell/assets/\), nur zur Bezeichnung\n((?:  .*\n)+)", notice, re.M)
+check(zeichen is not None, "NOTICE hat den Abschnitt «Zeichen Dritter (shell/assets/), nur zur Bezeichnung»")
+if zeichen:
+    assets = os.path.join(REPO, "shell", "assets")
+    fremd = {os.path.relpath(os.path.join(d, f), assets) for d, _, fs in os.walk(assets) for f in fs
+             if f.endswith(".svg") and not f.startswith("alpe-zeichen")}
+    genannt = set(re.findall(r"^  ([\w/.-]+\.svg)\s", zeichen.group(1), re.M))
+    check(fremd and fremd == genannt, "NOTICE nennt genau die Zeichen Dritter unter shell/assets/ (nur in NOTICE: %s; fehlt: %s)"
+          % (sorted(genannt - fremd), sorted(fremd - genannt)))
+    check("nur, um das jeweilige Programm oder" in zeichen.group(1), "NOTICE: Zeichen nur zur Bezeichnung")
+check(not os.path.exists(os.path.join(REPO, "shell", "assets", "discord.svg"))
+      and not os.path.exists(os.path.join(REPO, "shell", "assets", "reddit.svg")), "discord.svg und reddit.svg sind entfernt (1.5)")
+for datei, lizenz in (("shell/Alpe/Common/fzf.js", "BSD-3-Clause"), ("shell/Alpe/Common/Hct.js", "Apache License 2.0"),
+                      ("shell/Alpe/Widgets/MaterialShapeData.js", "Apache License 2.0")):
+    zeile = re.search(r"^  %s\s*\n?\s+(.*)$" % re.escape(datei), notice, re.M)
+    check(os.path.isfile(os.path.join(REPO, datei)) and zeile is not None and zeile.group(1).startswith(lizenz),
+          "NOTICE nennt %s mit %s" % (datei, lizenz))
+
 # Im Quellarchiv (git archive HEAD) ist nur, was versioniert ist.
 if subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:
     versioniert = subprocess.run(["git", "-C", REPO, "ls-files", "--error-unmatch", "LICENSES/GPL-3.0-only.txt"],

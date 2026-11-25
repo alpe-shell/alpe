@@ -1361,7 +1361,8 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     - `github.com/golang/freetype`: FreeType License oder GPL-2.0-or-later nach Wahl; die FTL verlangt eine Nennung
       in der Dokumentation. **Entschieden am 25.11.2026 (Plan 0.8 Nr. 114):** Alpe wählt die FTL; Text unverändert
       ins Quellarchiv und ins Paket, Nennung in `NOTICE`.
-    - **Klänge** (`shell/assets/sounds/freedesktop/`, ausgeliefert nur vier, je `.oga` und `.wav`):
+    - **Klänge** (`shell/assets/sounds/freedesktop/`, ausgeliefert ~~nur vier~~ seit Plan 0.8 Nr. 116 nur drei, je
+      `.oga` und `.wav`):
       `audio-volume-change`, `message` und `message-new-instant` sind bytegleich mit `sound-theme-freedesktop` 0.8
       (`sha256sum` der `.oga` gegen das Arch-Paket 0.8-6 am PC, nur gelesen, 25.11.2026). `audio-volume-change` und
       `message`: CC-BY-SA, nach Debian CC-BY-SA-3.0. **`message-new-instant`: Herkunft belegt (Klangthema),
@@ -1378,11 +1379,18 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       Ursprung sie in 0.7 entfernt hat. Entfernt ist sie wie entschieden. `message-new-instant`: auch in keiner
       früheren Fassung von `CREDITS` ein Eintrag – Lizenz am Ursprung nicht angegeben. Die Fassung der CC-BY-SA nennt
       der Ursprung nirgends (CC-BY-SA-3.0 ist die Einordnung von Debian, Fedora und Arch). Beides geparkt.
+      **`message` (Borealis) ist am Ursprung widersprüchlich:** `CREDITS` (ab 14.09.2009) nennt CC-BY-SA, das README
+      nannte vorher «Creative Commons Share-Alike 3.0 Unported» und ab Commit `bc4fe27` (01.09.2009, «Borealis is
+      actually artistic, not gpl») «Artistic License»; eine dritte Seite (Miranda NG) beschreibt Borealis als
+      Artistic License mit Zusätzen. Lizenz von `message` damit ungeklärt, geparkt; im Lizenzfeld (E2) keine
+      Vermutung.
     - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
       (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter
       `shell/assets/`: `hyprland.svg`, `package-sources/{flatpak,snap,appimage,nix}.svg` (benutzt),
-      `discord.svg`, `reddit.svg` (nirgends benutzt).
+      `discord.svg`, `reddit.svg` (nirgends benutzt). **Erledigt im Nachtlauf vom 26.11.2026 (Plan 0.8 Nr. 117):**
+      alle drei Code-Teile und die fünf Zeichen in `NOTICE`, `discord.svg`/`reddit.svg` entfernt; unbelegt geparkt:
+      Quelle von `hyprland.svg` beim Inhaber, Herkunft von `appimage.svg`.
     - `LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`); die mit
       `alpe-dienst completion` erzeugten Vervollständigungen stammen aus Vorlagen von cobra (Apache-2.0).
 - ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
@@ -1728,7 +1736,8 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   `CompositorService.qml`-Attrappe mit `isNiri`).
 - ~~Übersetzungen mit Texten entfernter Seiten~~ bereinigt in D6 (`f2a34f7`).
 - Assets `discord.svg`, `reddit.svg`, `matrix-logo-white.svg` sind unbenutzt bzw. nur noch
-  für den Discord-Link des Ursprungs da (Entfernen laut 4.3 in C4).
+  für den Discord-Link des Ursprungs da (Entfernen laut 4.3 in C4). **`discord.svg` und `reddit.svg` entfernt am
+  25.11.2026 (Nachtlauf vom 26.11.2026, Plan 0.8 Nr. 117).**
 - **Offen (23.11.2026, Frist: G1): `docs/technik.md` beschreibt noch `tools/upstream.sh` und
   `schichten/*.patch`** (Abschnitte «Aufbau in drei Schichten» und «Neue Version des
   Ursprungsprojekts»). Beides gibt es seit B3 nicht mehr (`4a9a1c2` «Schichten aufgelöst»). Im
