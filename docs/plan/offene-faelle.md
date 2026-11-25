@@ -202,16 +202,37 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    dafür ist hier nicht nachgeschlagen) und der Rückweg, falls die Sperre hängt.~~ **Entschieden am
    25.11.2026 (Maintainer):** hyprlock wird **in der echten Sitzung** mit `hyprlock --config` und der
    Datei aus dem ausgecheckten Stand gestartet. **Vorher** eine zweite Anmeldung als Rückweg öffnen
-   (TTY oder SSH), damit eine hängende Sperre von dort beendet werden kann, und mit `hyprlock --help`
-   prüfen, dass die installierte Fassung die Option `--config` kennt. Am Mac, ein Befehl pro Zeile:
+   (TTY oder SSH) und mit `hyprlock --help` prüfen, dass die installierte Fassung die Option `--config`
+   kennt (an der Quelle belegt: `-c`/`--config` seit hyprlock v0.4.0, `src/main.cpp`). Am Mac, ein
+   Befehl pro Zeile:
 
    ```
    hyprlock --help
    hyprlock --config ~/alpe-phase-a/lockscreen/hyprlock.conf
    ```
 
-   Nennt `hyprlock --help` die Option nicht, wird der Punkt nicht geprüft und notiert. Ob am Mac je
-   hyprlock mit dieser Vorlage lief, ist nicht belegt. **Hinweis für F1:** Wer das Programm
+   **Rückweg, wenn die Sperre hängt (berichtigt am 25.11.2026):** Wird hyprlock beendet, **bleibt die
+   Sitzung gesperrt** – Hyprland hält sie nach dem Protokoll ext-session-lock fest und zeigt einen roten
+   Bildschirm, der die Befehle zur Wiederherstellung nennt. Von der zweiten Anmeldung aus genau diese
+   Befehle ausführen. Wortlaut als Beispiel für die Hyprlang-Konfiguration (aus der Hyprland-Diskussion
+   #14395; nicht am Mac gesehen):
+
+   ```
+   hyprctl --instance 0 'keyword misc:allow_session_lock_restore 1'
+   hyprctl --instance 0 dispatch exec -- hyprlock
+   ```
+
+   Unter der Lua-Konfiguration (Hyprland ab 0.55) lauten sie anders; massgeblich ist, was der rote
+   Bildschirm nennt. Welche Hyprland-Fassung und welche Konfigurationsart am Mac laufen, ist hier nicht
+   nachgeschlagen. Muss hyprlock selbst beendet werden, dann nur über seine PID, nie über den Namen.
+   **Erwartet** (aus dem Quelltext gefolgert, nicht gemessen): `hyprlock.conf` setzt `general { grace = 1 }`;
+   ab hyprlock v0.9.0 gibt es diese Option nicht mehr, eine neuere Fassung meldet darum «Config has
+   errors … Proceeding ignoring faulty entries» zu `grace` – das ist kein Fehler zu `monitor`. Der Block
+   `background` hat kein `path` (nur Farbe), und `AlfaSlabOne` liegt nur unter
+   `shell/Modules/Lock/Alpe/fonts`; ohne systemweite Installation nimmt hyprlock eine Ersatzschrift. Das
+   Bild sieht also anders aus als die Shell-Sperre; für die Prüfung von `monitor` ist das unerheblich.
+   (Ergänzung, vorsichtige Lesart:) Nennt `hyprlock --help` die Option nicht, wird der Punkt nicht
+   geprüft und notiert. Ob am Mac je hyprlock mit dieser Vorlage lief, ist nicht belegt. **Hinweis für F1:** Wer das Programm
    hyprlock mit einer eigenen `~/.config/hypr/hyprlock.conf` benutzt, behält dort `eDP-1`; die
    Änderung aus `899fefc` erreicht diese Datei nicht von selbst. Für die Punkte 4 und 5 gilt
    entsprechend: Ein am Mac gespeichertes `alpeLockLayout` hätte Vorrang vor `layout.js` – ob dort
@@ -253,11 +274,13 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    `/tmp/alpe-d7.log`; läuft die Shell später als Dienst (`alpe.service`, erst mit dem Paket), steht es
    im Journal (`journalctl --user -u alpe.service -b`), und dieselbe Suche gilt dort. Gesucht: Notizblock «Tab file does not exist» (samt der
    `FileView`-Zeile dazu), `DeferredAction.qml` «Cannot read property 'stop' of null», ShaderEffect
-   «'source' does not have a matching property». Der Befehl zählt die Zeilen; jede Zahl über 0 mit
-   den Zeilen selbst notieren:
+   «'source' does not have a matching property». Die `FileView`-Zeile lautet «Read of
+   …untitled-<ID>.txt failed: File does not exist.» (`grundlinie-hyprland.txt`). Die erste Zeile zählt,
+   die zweite zeigt die Zeilen mit Nummer; jede Zahl über 0 mit den Zeilen selbst notieren:
 
    ```
-   grep -c -e "Tab file does not exist" -e "Cannot read property 'stop' of null" -e "does not have a matching property" /tmp/alpe-d7.log
+   grep -c -e "Tab file does not exist" -e "Cannot read property 'stop' of null" -e "'source' does not have a matching property" -e "txt failed: File does not exist" /tmp/alpe-d7.log
+   grep -n -e "Tab file does not exist" -e "Cannot read property 'stop' of null" -e "'source' does not have a matching property" -e "txt failed: File does not exist" /tmp/alpe-d7.log
    ```
 7. **Keine Zeile «Unrecognized pragma»** (Plan 0.8 Nr. 97: die Pragmas `RenderControl` und
    `DiskCache` sind aus `shell/shell.qml` entfernt). Erwartet: 0.
@@ -268,15 +291,23 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
 8. **Werteprüfung und ein kurzer Benutzername:** Ist der Benutzername am Mac kürzer als vier
    Zeichen, sucht die Werteprüfung (`tools/werte-pruefen.py`, `tests/test_werte.py`) ihn nur im
    Zusammenhang (`nutzer@…`, Pfad in ein Home, Hostname-Feld …) und in Binärdateien roh gar nicht
-   (Plan 0.8 Nr. 109 (2), `docs/technik.md`). Ein grüner Abschnitt `test_werte` sagt über einen
-   solchen Namen also weniger als über einen längeren – beim Lesen des Ergebnisses beachten.
+   (`docs/technik.md`, Absatz «Binärdateien» der Werteprüfung; Kopf und `roh_funde` von
+   `tools/werte-pruefen.py`). Namen unter zwei Zeichen und Allerweltsnamen (`user`, `nutzer`, `root` …)
+   werden gar nicht gesucht. Ein grüner Abschnitt `test_werte` sagt über einen solchen Namen also
+   weniger als über einen längeren – beim Lesen des Ergebnisses beachten.
 9. **Priorität der COPR-Repos** (Plan 0.8 Nr. 99): Ausgabe von `dnf repolist -v` festhalten, vor
-   allem die Angabe zur `priority` der COPR-Repos (`hazel-bunny/ricing` und weitere). Ob dnf5 mit
-   `-v` die Priorität in dieser Form zeigt, ist hier nicht nachgeschlagen; zeigt es sie nicht, das
-   notieren.
+   allem die Angabe zur `priority` der COPR-Repos (`hazel-bunny/ricing` und weitere). **Berichtigt am
+   25.11.2026 (an der Quelle nachgeschlagen):** dnf5 – unter Fedora seit 41 das `dnf` – kennt keine
+   globale Option `-v` (Handbuch `dnf5(8)`: nur `-q`), und `repo list` kennt nur `--all`, `--enabled`,
+   `--disabled`, `--json` (`dnf5-repo(8)`); `repolist` ist ein Alias für `repo list`, `repoinfo` einer für
+   `repo info` (`aliases.d/compatibility.conf`). Die Priorität zeigt `repo info` (Zeilen «Priority» und
+   «Cost», `libdnf5-cli/output/repo_info.cpp`). Dass am Mac dnf5 läuft, ist gefolgert, nicht dort
+   gesehen. Darum zwei Zeilen: die vorgegebene (deren Ausgabe zeigt zugleich, welches dnf läuft; ein
+   Argumentfehler ist dann zu erwarten) und `dnf repoinfo` für Priorität und Kosten:
 
    ```
    dnf repolist -v
+   dnf repoinfo
    ```
 
 Zu 1: Dieser Punkt braucht die Sperre durch das Programm hyprlock in der echten Sitzung (siehe 1).
