@@ -848,8 +848,13 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
   bewusst bleibt. (b) Das Paket setzen heute zwei Stellen zusammen: `make sperrpaket` und `lockscreen.sh install`.
   Variante A verlangt «derselbe Zusammenbau wie im Paketbau, ein gemeinsames Skript» – bei E4 rufen
   `alpe entwicklung ein` bzw. `lockscreen.sh` `make sperrpaket` auf.
-- `doctor` sucht die Oberfläche noch unter `quickshell/dms` (`config.LocateDMSConfig`); mit E1
-  (`/usr/share/alpe/shell`) anpassen.
+- ~~`doctor` sucht die Oberfläche noch unter `quickshell/dms` (`config.LocateDMSConfig`); mit E1
+  (`/usr/share/alpe/shell`) anpassen.~~ **Erledigt am 25.11.2026 (E1):** `config.LocateShellConfig` (von
+  `alpe-dienst doctor` und der Versionsanzeige benutzt) sucht nach einer eigenen Oberfläche unter
+  `~/.config/quickshell/alpe` zuerst im installierten Baum `<Datenordner>/alpe/shell` – `$XDG_DATA_HOME/alpe/shell`
+  (Weg ohne Paket), dann je Ordner aus `XDG_DATA_DIRS`, also `/usr/share/alpe/shell` –, danach wie bisher unter
+  `quickshell/alpe`. Go-Test `internal/config/shellconfig_test.go` (läuft mit `go test ./...` am Halt; `tools/test.sh`
+  führt im Dienst nur `TestReadAlpeOff` aus).
 - Bewusst gleich geblieben (D6/D7): Dateinamen `dms-colors.json`/`dms-typography.json` im
   Cache-Ordner, fcitx5-Theme-Name `dms` (in der fcitx5-Einstellung der Nutzer gewählt),
   Lualine-Theme `dms`, Kennung `source: "dms"` zwischen Kürzel-Parser und Oberfläche,
