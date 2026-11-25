@@ -95,8 +95,11 @@ github.com/pilebones/go-udev
 
 github.com/golang/freetype
   Fassung:   v0.0.0-20170609003504-e2365dfdc4a0 (core/go.mod, indirekt)
-  Benutzt:   über github.com/fogleman/gg (Zeichnen) aus github.com/yeqown/go-qrcode, eingebunden
-             in core/internal/qrcode/
+  Benutzt:   über github.com/fogleman/gg (Zeichnen) aus github.com/yeqown/go-qrcode/writer/standard
+             (QR-Codes), eingebunden in core/internal/qrcode/qrcode.go,
+             core/internal/server/network/manager.go und core/internal/server/network/qr_generator.go
+  Urheber:   Copyright 2010 The Freetype-Go Authors (AUTHORS des Moduls); abgeleitet von FreeType,
+             Copyright 1996-2010 David Turner, Robert Wilhelm und Werner Lemberg
   Lizenz:    nach Wahl FreeType License (FTL) oder GPL-2.0-or-later; Alpe wählt die FreeType
              License. Lizenztext: licenses/ftl.txt des Moduls, unverändert; im Quellarchiv
              core/vendor/github.com/golang/freetype/licenses/ftl.txt (legt make dist dazu), im

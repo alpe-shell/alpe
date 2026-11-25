@@ -1346,6 +1346,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     Arch `license=(MIT GPL-3.0-only Apache-2.0 BSD-2-Clause BSD-3-Clause OFL-1.1 CC-BY-4.0 CC-BY-SA-4.0 CC0-1.0 FTL
     LicenseRef-Alpe-Logo)`; Fedora `License: MIT AND GPL-3.0-only AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND
     OFL-1.1 AND CC-BY-4.0 AND CC-BY-SA-4.0 AND CC0-1.0 AND (FTL OR GPL-2.0-or-later) AND LicenseRef-Alpe-Logo`
+    (seit Plan 0.8 Nr. 114 bei Fedora nur `FTL`, weil Alpe die FTL gewählt hat)
     – vorbehaltlich der offenen Punkte (dazu vermutlich `CC-BY-SA-3.0` für die Klänge; Schriften ohne Reserved
     Font Name, etwa Fira Code, als `OFL-1.1-no-RFN`; `gopkg.in/yaml.v3` MIT und Apache-2.0 – Schreibweisen bei E2/E3
     mit `namcap`/`rpmlint` prüfen):

@@ -5,6 +5,8 @@
 
 go-udev (GPL-3.0-only) im Dienst: NOTICE nennt das Modul mit der Fassung aus core/go.mod und jede Datei, die es
 einbindet; der Lizenztext liegt unter LICENSES/ und make install legt ihn nach /usr/share/licenses/alpe-shell.
+golang/freetype (Alpe wählt die FTL): NOTICE nennt Fassung, Wahl, Nennung des FreeType-Teams und jede Datei, die
+go-qrcode/writer/standard einbindet; make dist und make install legen licenses/ftl.txt ab (Inhalt: test_makefile.py).
 Ohne Bau, ohne Netz.
 """
 import os
@@ -87,9 +89,14 @@ if fassung and eintrag:
     check("Alpe wählt die FreeType" in eintrag and "core/vendor/github.com/golang/freetype/licenses/ftl.txt" in eintrag
           and "/usr/share/licenses/alpe-shell/FTL.txt" in eintrag and "FreeType-Teams" in eintrag,
           "NOTICE: Wahl der FTL, Orte des Lizenztexts, Nennung des FreeType-Teams")
+    # freetype kommt über fogleman/gg aus go-qrcode/writer/standard ins Programm; jede einbindende Datei steht im Eintrag.
+    benutzt = go_dateien_mit_import("github.com/yeqown/go-qrcode/writer/standard")
+    genannt = sorted(re.findall(r"core/\S+\.go", eintrag))
+    check(benutzt and benutzt == genannt,
+          "NOTICE nennt jede Datei, die go-qrcode/writer/standard (und damit freetype) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
 check(re.search(r"^FTL_VENDOR := core/vendor/\$\(FREETYPE\)/licenses/ftl\.txt$", makefile, re.M) is not None
       and re.search(r"^FREETYPE := github\.com/golang/freetype$", makefile, re.M) is not None
-      and "install -Dm644 \"$$src\" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)" in makefile
+      and "install -Dm644 \"$$dir/licenses/ftl.txt\" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)" in makefile
       and "install -Dm644 \"$$src\" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt" in makefile,
       "make dist legt licenses/ftl.txt in den vendor-Baum, make install nach /usr/share/licenses/alpe-shell/FTL.txt")
 

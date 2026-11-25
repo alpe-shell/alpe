@@ -126,6 +126,11 @@ try:
     check(ftl_original.startswith(b"                    The FreeType Project LICENSE") and os.path.isfile(ftl_paket)
           and open(ftl_paket, "rb").read() == ftl_original,
           "/usr/share/licenses/alpe-shell/FTL.txt = licenses/ftl.txt von golang/freetype, bytegleich")
+    # Im Repository ohne Modul im Modul-Cache: verständlicher Abbruch statt «cannot stat /licenses/ftl.txt»
+    out = make("install", "BUILD=" + bau, "DESTDIR=" + os.path.join(tmp, "wurzel-ohne-cache"), "PREFIX=/usr",
+               env=dict(env, GOMODCACHE=os.path.join(tmp, "leerer-modcache-repo"), GOPROXY="off", GOFLAGS="-modcacherw"))
+    check(out.returncode != 0 and "Lizenztext von github.com/golang/freetype fehlt" in out.stdout + out.stderr,
+          "make install im Repository ohne Modul-Cache bricht mit einer Meldung zum Lizenztext ab", out)
     check(os.access(os.path.join(share, "tools", "alpe"), os.X_OK) and os.access(os.path.join(share, "shell", "scripts", "gtk.sh"), os.X_OK)
           and not os.access(os.path.join(share, "tools", "design.py"), os.X_OK),
           "Dateimodi wie im Repository (tools/alpe und shell/scripts/gtk.sh ausführbar, tools/design.py nicht)")
