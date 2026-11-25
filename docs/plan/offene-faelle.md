@@ -822,6 +822,25 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
   `design.py export` schreibt nach `<ALPE_DIR>/design`, im Paket also nach `/usr/share/alpe/design` (nicht
   beschreibbar) – Export ist ein Werkzeug für das Repository, das ist bei E4 festzuhalten. `make -C core build`
   bettet die Oberfläche weiter ein (Tag `withshell`), das Makefile in der Wurzel nicht – Kandidat zum Aufräumen.
+- **Zwei Units mit demselben Busnamen (E2/F1; aus der Prüfung zu 2.4 am 25.11.2026):** `alpe.service` und
+  `dms.service` (Paket `dux-shell`) tragen beide `BusName=org.freedesktop.Notifications`. Sind beide installiert –
+  so sieht es 6.2 vor (kein `conflicts`, `dux-shell` bleibt als Rückweg) –, lädt eine der beiden nicht:
+  `systemd-analyze --user verify` am PC meldete «dms.service: Two services allocated for the same bus name
+  org.freedesktop.Notifications, refusing operation»; nach dem Quelltext von systemd (`src/core/service.c`,
+  `service_setup_bus_name()` beim Laden, nachgeschlagen von der Gegenprüfung) ist das ein Ladefehler, den
+  `Conflicts=` nicht abwendet (es wirkt erst beim Start). Welche Unit es trifft, hängt von der Ladereihenfolge ab;
+  `Conflicts=`/`After=dms.service` in `alpe.service` laden `dms.service` immer mit. Gefolgert, nicht gemessen:
+  betroffen sind Umzug (7.2 Nr. 7) und `alpe umzug --zurueck`. **In der VM messen** (beide Pakete installiert,
+  Umzug, Rückweg). Entscheid des Maintainers offen: `BusName=` streichen (bei `Type=notify` nur empfohlen),
+  `conflicts=dux-shell` (Rückweg fällt weg) oder Ladereihenfolge im Umzug regeln.
+- **Desktop-Datei `io.github.alpe_shell.Alpe.desktop` (E4):** `Exec=alpe-dienst run -c /usr/share/alpe/shell`
+  gilt nur für den Übergang, solange es `alpe start` nicht gibt; nach 6.6 ist `ExecStart` von `alpe.service` der
+  einzige Startweg, und wer die Datei startet, umginge das Sicherheitsnetz `alpe umzug --nur-dateien`. Bei E4
+  anpassen (Vorschlag der Gegenprüfung: `Exec=alpe start`); `tests/test_paketdateien.py` legt den heutigen Wert fest
+  und wird dann rot – gewollt. Dazu `alpe doctor`: prüft weiter `dev.duxlabs.shell.desktop` im Home und empfiehlt
+  `install.sh` (nach dem Umzug eine falsche Warnung). Die Unit landet mit `PREFIX=$HOME/.local` unter
+  `~/.local/lib/systemd/user`, das nicht im Suchpfad der Benutzer-Units liegt; 6.4 kopiert sie selbst nach
+  `~/.config/systemd/user/`.
 - **Sperrpaket (E4; aus der Prüfung zu 2.3 am 25.11.2026):** (a) `make install` legt `lockscreen/` weiter ganz
   nach `/usr/share/alpe/lockscreen/`; dort liegt ein zweites `org.alpe.desktop/metadata.json` mit der alten Version
   «1.9.2». Zur Laufzeit braucht davon nur `lockscreen.sh` etwas (`SOURCE`, `hyprlock.conf`); nach Variante A
