@@ -349,8 +349,11 @@ Gerätekennungen. Von Hand, auch gegen einen anderen Ordner:
   Binärdateien also gar nicht gesucht**; eine IP-Adresse zählt nur streng gültig; komprimierte
   Ströme und Base64 werden nicht dekodiert; Namen mit Zeichen ausserhalb von ASCII werden nicht
   gefunden.
-- **Nicht durchsucht** werden Textdateien, deren Endung nicht auf der Liste `ENDUNGEN` steht (etwa
-  `.svg`, `.frag`); der Lauf nennt ihre Zahl.
+- **Jede Textdatei wird durchsucht, gleich welcher Endung** (seit dem 25.11.2026; vorher blieben die
+  52 Dateien mit einer Endung ausserhalb von `ENDUNGEN` – `.svg`, `.frag`, `.colors` … – undurchsucht).
+  Der Lauf nennt ihre Zahl. **In SVG-Dateien zählt eine «IP-Adresse» innerhalb von Pfaddaten (Attribut
+  `d`) nicht:** Koordinatenfolgen wie in `topography.svg` sehen aus wie Adressen. Ausgenommen ist dort
+  nur diese Art; ein Pfad in ein Home oder eine MAC-Adresse zählt auch in Pfaddaten.
 - **Ausnahmen** stehen in `tools/werte-ausnahmen.txt`: je Datei, Art und erwartetem Wert, mit Frist
   und Grund. Ein anderer Fund in derselben Datei schlägt an.
 - **Die Ausnahmeliste selbst wird als ganze Datei nicht durchsucht** – bewusste Regel: Sie muss die

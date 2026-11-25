@@ -6,9 +6,10 @@
     Optionen: --ohne-ausnahmen   Ausnahmeliste nicht anwenden (alle Funde zeigen)
               --ausnahmen        Ausnahmeliste mit Frist, Grund und Zahl der Treffer zeigen
 
-Durchsucht alle versionierten Textdateien (git ls-files; ohne Git alle Dateien ausser .git) nach
-Pfaden in ein Home-Verzeichnis, Benutzer- und Rechnernamen, IP- und MAC-Adressen und Gerätekennungen.
-Binärdateien (Schriften, Bilder, Klänge, Video, PDF, Shader) werden roh nach denselben Werten durchsucht:
+Durchsucht alle versionierten Textdateien (git ls-files; ohne Git alle Dateien ausser .git), gleich welcher
+Endung, nach Pfaden in ein Home-Verzeichnis, Benutzer- und Rechnernamen, IP- und MAC-Adressen und
+Gerätekennungen. In SVG-Dateien zählt eine «IP-Adresse» innerhalb von Pfaddaten (Attribut d) nicht: Dort stehen
+Zahlenfolgen wie «.39.22.78.44» (pfaddaten). Binärdateien (Schriften, Bilder, Klänge, Video, PDF, Shader) werden roh nach denselben Werten durchsucht:
 als Bytefolge und ohne NUL-Bytes (UTF-16); kurze Namen und ungültige Adressen dort nicht (siehe roh_funde).
 Benutzer- und Rechnername stehen nicht hier (sie wären selbst ein persönlicher Wert), sondern kommen
 vom Rechner, auf dem das Skript läuft; Allerweltsnamen und Namen aus einem Zeichen werden nicht gesucht.
@@ -75,9 +76,15 @@ MUSTER = [
 ]
 RECHNERABHAENGIG = ("Benutzername", "Rechnername")   # der gesuchte Wert kommt vom Rechner, auf dem die Prüfung läuft
 ARTEN = [HOME, *RECHNERABHAENGIG] + [art for art, _muster in MUSTER]
+# Textendungen: Eine Datei mit einer dieser Endungen (oder ohne Endung), die doch ein NUL-Byte enthält oder kein UTF-8
+# ist, wird roh und zusätzlich zeilenweise durchsucht. Jede andere Textdatei wird seit dem 25.11.2026 ebenfalls
+# zeilenweise durchsucht (vorher nur gezählt: 52 Dateien, .svg, .frag, .colors …; Plan 0.8 Nr. 110).
 ENDUNGEN = (".json", ".jsonc", ".conf", ".txt", ".md", ".lua", ".toml", ".ini", ".css", ".qml", ".py", ".sh", ".js", ".mjs",
             ".go", ".tsv", ".yml", ".yaml", ".xml", ".desktop", ".service", ".spec", ".fish", ".templ", ".mod", ".kvconfig",
             ".theme", ".html", ".patch", ".diff")
+# Pfaddaten einer SVG-Datei: der Wert des Attributs d (auch über mehrere Zeilen). Davor steht kein Teil eines anderen
+# Attributnamens (etwa «data-d» oder «xlink:d»).
+SVG_PFADDATEN = re.compile(r"""(?<![\w:.-])d\s*=\s*(?:"[^"]*"|'[^']*')""")
 
 
 def lade_ausnahmen(datei=AUSNAHMEN_DATEI):
@@ -107,15 +114,31 @@ def namens_muster(name):
     return re.compile(r"(?i)(?<![A-Za-z0-9])%s(?![A-Za-z0-9])" % re.escape(name))
 
 
+def pfaddaten(pfad, text):
+    """Bereiche (Anfang, Ende) der Pfaddaten (Attribut d) im ganzen Text, nur für eine Datei mit Endung .svg.
+
+    Pfaddaten sind Folgen von Koordinaten («…,6.19.39.22.78.44,…»); was darin wie eine IP-Adresse aussieht,
+    ist keine. Ausgenommen wird dort nur die Art «IP-Adresse», jede andere Art zählt auch in Pfaddaten.
+    """
+    if not pfad.lower().endswith(".svg"):
+        return []
+    return [m.span() for m in SVG_PFADDATEN.finditer(text)]
+
+
 def funde(pfad, text, benutzer="", rechner="", ausnahmen=()):
     """Persönliche Werte in einem Text: Liste (pfad, zeile, art, wert). Ausgenommen ist nur der erwartete Wert."""
     # Namensmuster (teuer, vor allem im Zusammenhang) nur auf Zeilen anwenden, in denen der Name überhaupt steht.
     klein = text.lower()
     namen = [(art, namens_muster(n), n.lower()) for art, n in (("Benutzername", benutzer), ("Rechnername", rechner)) if n and n.lower() in klein]
+    bereiche = pfaddaten(pfad, text)
     ergebnis = []
-    for nummer, zeile in enumerate(text.splitlines(), 1):
+    anfang = 0   # Stelle des Zeilenanfangs im ganzen Text (für die Pfaddaten, die über Zeilen reichen können)
+    for nummer, teil in enumerate(text.splitlines(keepends=True), 1):
+        zeile = teil.splitlines()[0]
         werte = [(HOME, m.group(0)) for m in HOME_PFAD.finditer(zeile) if m.group(1) not in PLATZHALTER]
-        werte += [(art, m.group(0)) for art, muster in MUSTER for m in muster.finditer(zeile)]
+        werte += [(art, m.group(0)) for art, muster in MUSTER for m in muster.finditer(zeile)
+                  if not (art == "IP-Adresse" and any(a <= anfang + m.start() < e for a, e in bereiche))]
+        anfang += len(teil)
         if namen:
             zeile_klein = zeile.lower()
             werte += [(art, m.group(0)) for art, muster, name in namen if name in zeile_klein for m in muster.finditer(zeile)]
@@ -210,14 +233,14 @@ def dateien(wurzel):
 def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None, zaehler=None):
     """Alle versionierten Dateien unter wurzel: (Zahl gelesener Textdateien, Funde).
 
-    Textdateien mit einer Endung aus ENDUNGEN (oder ohne Endung) werden zeilenweise durchsucht, Binärdateien roh
-    (roh_funde). zaehler (ein dict) bekommt die Listen «roh» (roh durchsuchte Binärdateien) und «ausgelassen»
-    (Textdateien mit anderer Endung, etwa .svg oder .frag – weiterhin nicht durchsucht).
+    Textdateien (UTF-8 ohne NUL-Byte) werden zeilenweise durchsucht, gleich welcher Endung; Binärdateien roh
+    (roh_funde). zaehler (ein dict) bekommt die Listen «roh» (roh durchsuchte Binärdateien) und «andere_endung»
+    (Textdateien, deren Endung nicht in ENDUNGEN steht, etwa .svg oder .frag – durchsucht wie alle anderen).
     """
     benutzer = eigener_name(pwd.getpwuid(os.getuid()).pw_name) if benutzer is None else benutzer
     rechner = eigener_name(socket.gethostname()) if rechner is None else rechner
     zaehler = {} if zaehler is None else zaehler
-    zaehler.update(roh=[], ausgelassen=[])
+    zaehler.update(roh=[], andere_endung=[])
     gelesen, ergebnis = 0, []
     for pfad in dateien(wurzel):
         voll = os.path.join(wurzel, pfad)
@@ -241,11 +264,11 @@ def durchsuche(wurzel, ausnahmen=(), benutzer=None, rechner=None, zaehler=None):
             ergebnis += roh_funde(pfad, roh, benutzer, rechner, ausnahmen)
             if gelistet:   # Textendung, aber NUL-Byte oder kein UTF-8: zusätzlich zeilenweise, so gut es geht
                 ergebnis += funde(pfad, roh.decode("utf-8", "replace"), benutzer, rechner, ausnahmen)
-        elif gelistet:
-            gelesen += 1
-            ergebnis += funde(pfad, roh.decode("utf-8"), benutzer, rechner, ausnahmen)
         else:
-            zaehler["ausgelassen"].append(pfad)
+            gelesen += 1
+            if not gelistet:
+                zaehler["andere_endung"].append(pfad)
+            ergebnis += funde(pfad, roh.decode("utf-8"), benutzer, rechner, ausnahmen)
     return gelesen, ergebnis
 
 
@@ -292,8 +315,8 @@ def main(argv):
     if "--ausnahmen" in optionen:
         for a in ausnahmen:
             print("Ausnahme %s | %s | %s | Frist: %s | %s | %d Treffer" % (a["glob"], a["art"], a["text"], a["frist"], a["grund"], a["treffer"]))
-    print("%d Dateien gelesen, %d Binärdateien roh durchsucht, %d Textdateien mit anderer Endung nicht durchsucht; %d Funde in %d Dateien"
-          % (gelesen, len(zaehler["roh"]), len(zaehler["ausgelassen"]), len(ergebnis), len({f[0] for f in ergebnis})))
+    print("%d Textdateien gelesen (davon %d mit anderer Endung), %d Binärdateien roh durchsucht; %d Funde in %d Dateien"
+          % (gelesen, len(zaehler["andere_endung"]), len(zaehler["roh"]), len(ergebnis), len({f[0] for f in ergebnis})))
     return 1 if ergebnis else 0
 
 

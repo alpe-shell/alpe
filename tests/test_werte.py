@@ -242,9 +242,27 @@ roh_endungen = sorted({os.path.splitext(p)[1] for p in repo_zaehler["roh"]})
 check(len(repo_zaehler["roh"]) >= 61 and {".ttf", ".png", ".jpg", ".mp4", ".pdf", ".qsb", ".wav"} <= set(roh_endungen)
       and not [f for f in repo_treffer if f[1] == wp.ROH],
       "Rohsuche: %d Binärdateien durchsucht (%s), kein Fund" % (len(repo_zaehler["roh"]), " ".join(roh_endungen)))
-# Keine Prüfung, nur eine Berichtszeile: Was der Lauf weiterhin nicht durchsucht, soll im Protokoll stehen.
-print("Hinweis: weiterhin nicht durchsucht: %d Textdateien mit anderer Endung (%s)"
-      % (len(repo_zaehler["ausgelassen"]), " ".join(sorted({os.path.splitext(p)[1] or os.path.basename(p) for p in repo_zaehler["ausgelassen"]}))))
+# Textdateien mit anderer Endung (bis zum 25.11.2026 nur gezählt: 52 Dateien) werden durchsucht wie alle anderen
+# (Plan 0.8 Nr. 110); der Lauf oben schliesst sie ein und zählt sie mit.
+andere_endungen = sorted({os.path.splitext(p)[1] or os.path.basename(p) for p in repo_zaehler["andere_endung"]})
+check(len(repo_zaehler["andere_endung"]) >= 52 and {".svg", ".frag"} <= set(andere_endungen)
+      and set(repo_zaehler["andere_endung"]) <= set(wp.dateien(REPO)) and not [f for f in repo_treffer if f[0] in repo_zaehler["andere_endung"]],
+      "Textdateien mit anderer Endung durchsucht: %d (%s), kein Fund" % (len(repo_zaehler["andere_endung"]), " ".join(andere_endungen)))
+# SVG-Pfaddaten: Zahlenfolgen im Attribut d sehen wie IP-Adressen aus und zählen nicht (topography.svg, hyprland.svg).
+# Nur dort: dieselbe Zahl in einem anderen Attribut, in Text oder in einer anderen Datei zählt, und jede andere Art
+# zählt auch in Pfaddaten. Die Proben sind zusammengesetzt, damit sie in dieser Datei nicht als Fund stehen.
+pfad_ip = "1.18.66." + "08"
+svg_probe = ('<svg>\n<path fill="#000" d="m288.53,0c4.14,5.84-6.19.39.22.78.44,%s,1.77\n  l2,0 %s" />\n'
+             '<path data-wert="%s" d=\'M0 0\' />\n<desc>%s</desc>\n</svg>\n') % (pfad_ip, pfad_ip, pfad_ip, pfad_ip)
+check([f[1:] for f in wp.funde("x/muster.svg", svg_probe)] == [(4, "IP-Adresse", pfad_ip), (5, "IP-Adresse", pfad_ip)],
+      "SVG: eine IP-Adresse in Pfaddaten (Attribut d, auch über zwei Zeilen) ist kein Fund, in einem anderen Attribut und im Text schon")
+check([f[1] for f in wp.funde("x/muster.txt", svg_probe)] == [2, 3, 4, 5] and len(wp.funde("x/MUSTER.SVG", svg_probe)) == 2,
+      "SVG: die Ausnahme der Pfaddaten gilt nur für Dateien mit Endung .svg (gross oder klein); in einer anderen Datei zählt jede Zeile")
+mac_probe = "aa:bb:cc:dd:ee:" + "02"
+heim_probe = "/".join(("", "home", "erika"))
+check([f[2:] for f in wp.funde("x/muster.svg", '<path d="M0 0 %s %s" />' % (mac_probe, heim_probe))]
+      == [("Pfad in ein Home-Verzeichnis", heim_probe), ("MAC-Adresse", mac_probe)],
+      "SVG: andere Arten (Pfad in ein Home, MAC-Adresse) zählen auch in Pfaddaten")
 # Proben der Rohsuche: erfundene Werte in Bytes, wie sie in Metadaten stehen (ASCII, UTF-16 LE und BE), zwischen
 # Fülldaten. Zusammengesetzt, damit die Werte in dieser Datei nicht als Fund stehen.
 heim = "/".join(("", "home", "erika", "Bilder", "berg.png"))
@@ -278,7 +296,7 @@ with tempfile.TemporaryDirectory(prefix="alpe-werte-roh-") as roh_ordner:
     with open(os.path.join(roh_ordner, "bild.png"), "wb") as handle:
         handle.write(b"\x89PNG\r\n\x1a\n" + fuell + b"tEXtComment\0" + heim.encode() + fuell)
     with open(os.path.join(roh_ordner, "muster.svg"), "w", encoding="utf-8") as handle:
-        handle.write("<svg/>\n")
+        handle.write('<svg>\n<path d="M0,0 %s" />\n<desc>%s</desc>\n</svg>\n' % (pfad_ip, pfad_ip))
     # Textendung, aber mit NUL-Byte: gilt als binär und wird zusätzlich zeilenweise durchsucht. Der kurze Rechnername
     # steht im Rechnerfeld einer Journal-Zeile – roh wird er nicht gesucht, zeilenweise schon.
     with open(os.path.join(roh_ordner, "journal.txt"), "wb") as handle:
@@ -286,10 +304,12 @@ with tempfile.TemporaryDirectory(prefix="alpe-werte-roh-") as roh_ordner:
     roh_zaehler = {}
     roh_gelesen, roh_treffer = wp.durchsuche(roh_ordner, [], benutzer="", rechner=kurz_roh, zaehler=roh_zaehler)
     check([wp.zeile(f) for f in roh_treffer] == ["bild.png (Binärdatei, Rohsuche) Pfad in ein Home-Verzeichnis «%s»" % "/".join(("", "home", "erika")),
-                                               "journal.txt:2 Rechnername «%s»" % kurz_roh]
-          and roh_zaehler == {"roh": ["bild.png", "journal.txt"], "ausgelassen": ["muster.svg"]} and roh_gelesen == 0,
-          "Rohsuche im Lauf über einen Ordner: Fund in einer Binärdatei wird gemeldet und benannt; eine Datei mit Textendung und "
-          "NUL-Byte wird roh und zusätzlich zeilenweise durchsucht; Textdateien mit anderer Endung werden gezählt")
+                                               "journal.txt:2 Rechnername «%s»" % kurz_roh,
+                                               "muster.svg:3 IP-Adresse «%s»" % pfad_ip]
+          and roh_zaehler == {"roh": ["bild.png", "journal.txt"], "andere_endung": ["muster.svg"]} and roh_gelesen == 1,
+          "Lauf über einen Ordner: Fund in einer Binärdatei wird gemeldet und benannt; eine Datei mit Textendung und "
+          "NUL-Byte wird roh und zusätzlich zeilenweise durchsucht; eine Textdatei mit anderer Endung (.svg) wird gelesen und "
+          "gezählt, ihr Fund ausserhalb der Pfaddaten gemeldet")
 ueberholt = ["%s %s %s" % (a["glob"], a["art"], a["text"]) for a in wp.ueberholte(ausnahmen, repo_treffer, benutzer, rechner)]
 check(ueberholt == [], "jede Ausnahme trifft mindestens einen Fund (sonst ist sie überholt): %s" % ueberholt)
 # Überholt darf eine Ausnahme nur heissen, wenn ihre Art in diesem Lauf gesucht wurde. Benutzer- und Rechnername
