@@ -1712,9 +1712,10 @@ Punkte, die nur dort messbar sind:
    (`notify-send test`). **Am Mac** dasselbe mit dem Paket von 1.0 dort (`dms-shell`; ob dessen Unit `BusName=` trägt,
    ist nicht nachgesehen – `systemctl --user cat dms.service`).
 2. **Nebenwirkung von Plan 0.8 Nr. 120 (gefolgert):** Ohne `BusName=` lädt `alpe.service` auch neben Units anderer
-   Mitteilungsdienste (dunst, mako, swaync), die den Namen tragen. Laufen beide, meldet die Shell beim Start
-   «notifications handled by external process» (`core/internal/systemd/notify.go`). In der VM bzw. am Mac mit einem
-   installierten Mitteilungsdienst ansehen.
+   Mitteilungsdienste (dunst, mako, swaync), die den Namen tragen. Besitzt beim Start ein anderer Prozess den Namen,
+   setzt der Dienst den sd_notify-Status «notifications handled by external process» (`core/internal/systemd/notify.go`)
+   – zu sehen als «Status:» in `systemctl --user status alpe.service`. In der VM bzw. am Mac mit einem installierten
+   Mitteilungsdienst ansehen.
 
 ## Aufräumen (Entscheid 4, C5)
 

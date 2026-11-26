@@ -51,6 +51,9 @@ Die Shell des Maintainers ist **fish**. In Befehlen für ihn:
   `--grundlinie` (`ladepruefung.py`, `qmllint-pruefung.py`; Plan 0.8 Nr. 63, 70, 76). Suchindex und
   Massenumbenennungen (`umbenennen.py`, `texte-ersetzen.py`) sind offen und werden entschieden, wenn sie
   anstehen (Plan 0.8 Nr. 111); dann vorher fragen.
+- Ausgaben von Programmen (Belege, Protokolle, Build- und Install-Ergebnisse in Temp-Ordnern) fallen nicht unter
+  diese Regel; versionierte Dateien, die eingecheckte Werkzeuge erzeugen, werden einzeln entschieden – entschieden
+  ist ausser den zwei oben das Standbild der Sperre über `tools/standbild.py` (Plan 0.8 Nr. 106, 122).
 
 ## Das laufende System
 
