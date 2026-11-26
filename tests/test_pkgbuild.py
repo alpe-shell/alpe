@@ -60,7 +60,7 @@ plan_optdepends = re.findall(r"`([a-z0-9][a-z0-9.+-]*)`", re.search(r"^- `optdep
 brand = re.search(r'readonly property string version:\s*"([^"]+)"', open(os.path.join(REPO, "shell", "Common", "Brand.qml"), encoding="utf-8").read()).group(1)
 
 check(felder.get("pkgname") == ["alpe-shell"], "pkgname=alpe-shell")
-check(felder.get("pkgver") == [brand], "pkgver = Version aus Brand.qml (%s; offene Frage zu pkgver im Plan)" % brand)
+check(felder.get("pkgver") == [brand], "pkgver = Version aus Brand.qml (%s; entschieden, Plan 0.8 Nr. 134)" % brand)
 check(sorted(felder.get("arch", [])) == ["aarch64", "x86_64"], "arch=(x86_64 aarch64)")
 depends = felder.get("depends", [])
 check(sorted(depends) == sorted(plan_depends + ["kora-icon-theme"]),
