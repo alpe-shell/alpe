@@ -173,6 +173,10 @@ if zeichen:
           "NOTICE: snap.svg unter CC BY-SA 3.0 (nicht CC0)")
     check("ARR" in eintrag_zu("hyprland.svg") and "https://hypr.land/trademark-usage/" in eintrag_zu("hyprland.svg"),
           "NOTICE: hyprland.svg mit Hinweis auf ARR und die Markenrichtlinie")
+    # Entscheid vom 26.11.2026: AppImage ohne fremdes Zeichen, Symbol aus der mitgelieferten Symbolschrift
+    check(not os.path.exists(os.path.join(assets, "package-sources", "appimage.svg")) and "appimage.svg" not in zeichen.group(1)
+          and "«deployed_code» aus Material" in zeichen.group(1),
+          "AppImage: kein Zeichen mehr (appimage.svg entfernt), NOTICE nennt das Symbol aus der Symbolschrift")
 check(not os.path.exists(os.path.join(REPO, "shell", "assets", "discord.svg"))
       and not os.path.exists(os.path.join(REPO, "shell", "assets", "reddit.svg")), "discord.svg und reddit.svg sind entfernt (1.5)")
 for datei, lizenz, im_kopf in (("shell/Alpe/Common/fzf.js", "BSD-3-Clause", "BSD 3-Clause License"),

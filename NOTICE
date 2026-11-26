@@ -109,8 +109,8 @@ Zeichen Dritter (shell/assets/), nur zur Bezeichnung
                                aus https://github.com/NixOS/nixos-artwork; entworfen von Simon
                                Frankau, überarbeitet von Tim Cuthbertson; CC BY 4.0
                                (https://creativecommons.org/licenses/by/4.0/).
-  package-sources/appimage.svg Zeichen von AppImage; Herkunft der Datei nicht belegt (ähnlich,
-                               nicht gleich resources/appimagetool.svg aus AppImage/appimagetool).
+  Für AppImage zeigt der Starter kein Zeichen, sondern das Symbol «deployed_code» aus Material
+  Symbols Rounded (siehe Schriften).
 
 Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen
 (einzeln genannt unten unter «Go-Module im Programm alpe-dienst»).
