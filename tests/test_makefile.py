@@ -7,7 +7,8 @@ Prüft in einem Temp-Ordner: «make build» baut den Dienst ohne eingebettete Ob
 Brand.qml; «make install DESTDIR=… PREFIX=/usr» legt den Baum nach 6.1 an (Werkzeuge nur aus der ausdrücklichen
 Liste, keine Tests der Oberfläche), und die ganze Dateiliste stimmt mit dem Codeblock in Plan 6.1 überein; keine
 Datei gehört zugleich dem Paket des Ursprungs (pacman -Ql, nur wenn es installiert ist; E1 2.8); «make dist» schreibt ein Quellarchiv mit vendorten Go-Modulen, aus dem sich der
-Dienst ohne Netz bauen lässt. Ohne make, go oder git (oder mit ALPE_SKIP_GO) wird der Teil übersprungen.
+Dienst ohne Netz bauen lässt. Ohne make, go oder git (oder mit ALPE_SKIP_GO) wird der Teil übersprungen – ausser mit
+ALPE_GO_PFLICHT (Go-Schritt der CI, Plan 0.8 Nr. 137): dann ist das ein Fehler.
 """
 import os
 import re
@@ -68,7 +69,8 @@ mit_test_ok = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s*python3 t
 check(len(mit_version) == 1 and setup_go and mit_version[0] > setup_go[0] and mit_version == mit_test_ok
       and "ALPE_SKIP_GO" not in schritte_ok[mit_version[0]],
       "CI: tests/test_version.py läuft im Go-Schritt mit (nach setup-go, ohne ALPE_SKIP_GO; Nr. 137)")
-check(mit_test_ok and re.search(r'^\s+ALPE_GO_PFLICHT: "1"\s*$', schritte_ok[mit_test_ok[0]], re.M) is not None,
+# nur der Teil vor «run:» des Go-Schritts (sonst zählte ein env: auf Job-Ebene des nächsten Jobs mit)
+check(mit_test_ok and re.search(r'^\s+ALPE_GO_PFLICHT: "1"\s*$', schritte_ok[mit_test_ok[0]].split("\n        run:", 1)[0], re.M) is not None,
       "CI: im Go-Schritt ist ALPE_GO_PFLICHT gesetzt – fehlendes go, make oder git ist dort ein Fehler (Nr. 137)")
 mit_skip = [i for i, s in enumerate(schritte_ok) if "ALPE_SKIP_GO" in s]
 erster = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s+run: bash tools/test\.sh\s*$", s, re.M)]
@@ -81,12 +83,21 @@ check(re.search(r"^permissions:\n  contents: read\s*$", kopf, re.M) is not None,
 # Plan 0.8 Nr. 137: Mit ALPE_GO_PFLICHT darf nichts still überspringen. Probe: beide Tests mit ALPE_SKIP_GO und
 # ALPE_GO_PFLICHT müssen rot enden (ALPE_PFLICHT_PROBE verhindert, dass sich die Probe selbst wieder aufruft).
 if not os.environ.get("ALPE_PFLICHT_PROBE"):
-    probe_env = dict(os.environ, ALPE_GO_PFLICHT="1", ALPE_SKIP_GO="1", ALPE_PFLICHT_PROBE="1")
-    for skript in ("test_version.py", "test_makefile.py"):
-        probe = subprocess.run([sys.executable, os.path.join(REPO, "tests", skript)], capture_output=True, text=True, env=probe_env)
-        check(probe.returncode == 1 and "ALPE_GO_PFLICHT" in probe.stdout,
-              "ALPE_GO_PFLICHT mit ALPE_SKIP_GO: tests/%s endet rot statt «übersprungen» (rc %d)" % (skript, probe.returncode),
-              probe)
+    leerer_pfad = tempfile.mkdtemp(prefix="alpe-leerer-pfad-")
+    try:
+        proben = (("mit ALPE_SKIP_GO", dict(os.environ, ALPE_GO_PFLICHT="1", ALPE_SKIP_GO="1", ALPE_PFLICHT_PROBE="1")),
+                  # Kernfall: go, make und git fehlen (PATH auf einen leeren Ordner, Python über sys.executable)
+                  ("ohne go, make und git", dict({k: v for k, v in os.environ.items() if k != "ALPE_SKIP_GO"},
+                                                 PATH=leerer_pfad, ALPE_GO_PFLICHT="1", ALPE_PFLICHT_PROBE="1")))
+        for art, probe_env in proben:
+            for skript in ("test_version.py", "test_makefile.py"):
+                probe = subprocess.run([sys.executable, os.path.join(REPO, "tests", skript)], capture_output=True, text=True,
+                                       env=probe_env)
+                check(probe.returncode == 1 and "FEHLER ALPE_GO_PFLICHT" in probe.stdout,
+                      "ALPE_GO_PFLICHT %s: tests/%s endet rot mit der Pflicht-Meldung statt «übersprungen» (rc %d)"
+                      % (art, skript, probe.returncode), probe)
+    finally:
+        shutil.rmtree(leerer_pfad, ignore_errors=True)
 
 # Plan 0.8 Nr. 137: Im Go-Schritt der CI (ALPE_GO_PFLICHT) ist Fehlendes ein Fehler, kein Übersprung.
 if os.environ.get("ALPE_GO_PFLICHT"):
