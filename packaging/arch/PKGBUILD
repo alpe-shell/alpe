@@ -4,8 +4,8 @@
 # «make build», «go test» und «make install DESTDIR». Kein conflicts/replaces: Das Paket teilt keine Datei mit dem
 # Paket von Alpe 1.0, das während des Umzugs als Rückweg installiert bleiben darf (Plan 6.2).
 #
-# Die Version folgt shell/Common/Brand.qml; Brand.version steigt erst mit G1 auf 1.1 (offene Frage zu pkgver: Plan 6.2
-# und 0.8 Nr. 126).
+# Die Version folgt shell/Common/Brand.qml (pkgver = Brand.version, entschieden: Plan 6.2 und 0.8 Nr. 134); sie steigt
+# auf 1.1 mit einem eigenen Commit nach F2, vor den echten Tests.
 
 pkgname=alpe-shell
 pkgver=1.0
