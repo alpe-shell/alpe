@@ -1525,7 +1525,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     Dateien tragen keinen Vermerk; die Namen gleichen denen einer verbreiteten freien
     Mustersammlung – Herkunft nicht belegt, zu klären). `shell/assets/discord.svg`, `reddit.svg`
     (Markenzeichen Dritter; unbenutzt bzw. Rest, siehe «Werkzeuge»). `shell/assets/hyprland.svg`
-    (Zeichen von Hyprland). `shell/assets/package-sources/appimage.svg`, `flatpak.svg`, `nix.svg`,
+    (Zeichen von Hyprland). `shell/assets/package-sources/appimage.svg` (seit Plan 0.8 Nr. 129 entfernt), `flatpak.svg`, `nix.svg`,
     `snap.svg` (Zeichen der Paketformate). `shell/matugen/templates/fcitx5/highlight.svg`,
     `panel.svg` (Teile des fcitx5-Themas). `core/internal/config/embedded/testpage.pdf`
     (Drucker-Testseite; **der PDF-Titel lautet noch «DankMaterialShell Test Page»** – die
