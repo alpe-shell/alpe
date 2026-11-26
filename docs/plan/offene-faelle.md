@@ -363,7 +363,8 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
     echo $XDG_DATA_DIRS
     ```
 13. **Weitere Punkte aus dem Nachtlauf vom 26.11.2026** (Hinweise der Prüfungen zu 1.4, 1.7 und 1.8):
-    `rpm -q sound-theme-freedesktop` (könnte die Shell die freedesktop-Klänge aus dem Paket nehmen?);
+    `rpm -q sound-theme-freedesktop` (~~könnte die Shell die freedesktop-Klänge aus dem Paket nehmen?~~ seit Plan
+    0.8 Nr. 128 nimmt sie sie daraus – Paketname und `ls /usr/share/sounds/freedesktop/stereo/` am Mac bestätigen);
     `ls -l /etc/dms /usr/share/dms` und, falls vorhanden, `rpm -qf /etc/dms/cli-policy.json` (Rückfall der
     Richtlinie, Plan 0.8 Nr. 119 – gehört die Datei einem Paket von 1.0, vor dessen Entfernung bei F1 nach
     `/etc/alpe` kopieren; ob sie dort `%config(noreplace)` ist, zeigt `rpm -qc <Paket>`); `systemctl --user cat
@@ -1462,6 +1463,10 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       actually artistic, not gpl») «Artistic License»; eine dritte Seite (Miranda NG) beschreibt Borealis als
       Artistic License mit Zusätzen. Lizenz von `message` damit ungeklärt, geparkt; im Lizenzfeld (E2) keine
       Vermutung.
+      **Erledigt durch den Entscheid vom 26.11.2026 (Nachtlauf vom 27.11.2026, Plan 0.8 Nr. 128):** Alpe liefert die
+      drei Klänge und `CREDITS` nicht mehr mit; die Shell nimmt sie aus dem installierten Paket
+      `sound-theme-freedesktop` (Abhängigkeit in 6.2 und 6.3), fehlt eine Datei, bleibt es still. Die offenen Fragen
+      zu Fassung und Lizenz betreffen damit nicht mehr das Paket von Alpe.
     - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
       (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter

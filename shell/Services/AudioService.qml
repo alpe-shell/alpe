@@ -113,6 +113,12 @@ Singleton {
     property var availableSoundThemes: []
     property string currentSoundTheme: ""
     property var soundFilePaths: ({})
+    // Alpe (Entscheid vom 26.11.2026): Lautstärke, Mitteilung und kritische Mitteilung kommen aus dem installierten
+    // freedesktop-Klangthema ($XDG_DATA_DIRS/sounds/freedesktop/stereo, Paket sound-theme-freedesktop), auch ohne
+    // Systemthema; Alpe liefert davon keine Kopien mit. Fehlt die Datei, bleibt es still.
+    readonly property var freedesktopSoundEvents: ["audio-volume-change", "message", "message-new-instant"]
+    property var freedesktopSoundPaths: ({})
+    property bool freedesktopSoundsResolved: false
 
     readonly property var volumeChangeSound: soundsLoader.item?.volumeChangeSound ?? null
     readonly property var powerPlugSound: soundsLoader.item?.powerPlugSound ?? null
@@ -1152,33 +1158,88 @@ EOFCONFIG
 
     function markSoundThemeResolved() {
         soundThemeResolved = true;
+        playPendingSound();
+    }
+
+    // erst abspielen, wenn die Pfade feststehen: die freedesktop-Klänge immer, die des Systemthemas, wenn es gewählt ist
+    function soundsResolved() {
+        return freedesktopSoundsResolved && (!SettingsData.useSystemSoundTheme || soundThemeResolved);
+    }
+
+    function playPendingSound() {
+        if (!soundsResolved())
+            return;
         const player = pendingSoundPlayer;
         pendingSoundPlayer = "";
         if (player)
             playSound(player);
     }
 
-    function getSoundPath(soundEvent) {
-        const soundMap = {
-            "audio-volume-change": "../assets/sounds/freedesktop/audio-volume-change.wav",
-            "power-plug": "../assets/sounds/plasma/power-plug.wav",
-            "power-unplug": "../assets/sounds/plasma/power-unplug.wav",
-            "message": "../assets/sounds/freedesktop/message.wav",
-            "message-new-instant": "../assets/sounds/freedesktop/message-new-instant.wav"
-        };
-        // Alpe liefert keinen Anmeldeklang mit (desktop-login.oga/.wav entfernt, Entscheid vom 25.11.2026):
-        // ohne Klang aus dem Systemthema bleibt die Quelle leer, playSound spielt dann nichts und meldet nichts.
-        const withoutBundledSound = ["desktop-login"];
+    function freedesktopSoundDirs() {
+        // XDG Base Directory: ohne XDG_DATA_DIRS gelten /usr/local/share und /usr/share
+        const xdgDataDirs = Quickshell.env("XDG_DATA_DIRS");
+        const dataDirs = xdgDataDirs && xdgDataDirs.trim() !== "" ? xdgDataDirs.split(":").filter(dir => dir !== "") : ["/usr/local/share", "/usr/share"];
+        return dataDirs.map(dir => dir.replace(/\/+$/, "") + "/sounds/freedesktop/stereo");
+    }
 
+    function fileUrl(path) {
+        return "file://" + path.split("/").map(encodeURIComponent).join("/");
+    }
+
+    function discoverFreedesktopSounds() {
+        // je Ereignis die erste vorhandene Datei in der Reihenfolge von XDG_DATA_DIRS; die Ordner kommen als Argumente
+        const script = `
+            for event_key in ${freedesktopSoundEvents.join(" ")}; do
+                for dir in "$@"; do
+                    for ext in oga ogg wav; do
+                        if [ -f "$dir/$event_key.$ext" ]; then
+                            printf '%s=%s\\n' "$event_key" "$dir/$event_key.$ext"
+                            continue 3
+                        fi
+                    done
+                done
+            done
+            exit 0
+        `;
+        Proc.runCommand("discoverFreedesktopSounds", ["sh", "-c", script, "sh"].concat(freedesktopSoundDirs()), (output, exitCode) => {
+            const paths = {};
+            if (exitCode === 0) {
+                for (const line of (output || "").split("\n")) {
+                    const cut = line.indexOf("=");
+                    if (cut > 0 && freedesktopSoundEvents.includes(line.slice(0, cut)))
+                        paths[line.slice(0, cut)] = fileUrl(line.slice(cut + 1));
+                }
+            }
+            freedesktopSoundPaths = paths;
+            freedesktopSoundsResolved = true;
+            playPendingSound();
+        }, 0);
+    }
+
+    function defaultSoundPath(soundEvent) {
+        // mitgeliefert sind nur die Klänge von Harmony 2 (Plasma); keinen Anmeldeklang (desktop-login entfernt,
+        // Entscheid vom 25.11.2026) und keine Kopien aus dem freedesktop-Klangthema. Ohne Datei bleibt die Quelle
+        // leer, playSound spielt dann nichts und meldet nichts.
+        const soundMap = {
+            "power-plug": "../assets/sounds/plasma/power-plug.wav",
+            "power-unplug": "../assets/sounds/plasma/power-unplug.wav"
+        };
+        if (freedesktopSoundEvents.includes(soundEvent))
+            return freedesktopSoundPaths[soundEvent] || "";
+        return soundMap[soundEvent] ? Qt.resolvedUrl(soundMap[soundEvent]) : "";
+    }
+
+    function getSoundPath(soundEvent) {
+        // beim Thema «smooth» klingt die Lautstärke nach dem Standard, nicht nach dem Thema
         const specialConditions = {
             "smooth": ["audio-volume-change"]
         };
 
         const themeLower = currentSoundTheme.toLowerCase();
         if (SettingsData.useSystemSoundTheme && specialConditions[themeLower]?.includes(soundEvent)) {
-            const bundledPath = Qt.resolvedUrl(soundMap[soundEvent] || "../assets/sounds/freedesktop/message.wav");
-            log.debug("Using bundled sound (special condition) for", soundEvent, ":", bundledPath);
-            return bundledPath;
+            const specialPath = defaultSoundPath(soundEvent);
+            log.debug("Using default sound (special condition) for", soundEvent, ":", specialPath);
+            return specialPath;
         }
 
         if (SettingsData.useSystemSoundTheme && soundFilePaths[soundEvent]) {
@@ -1186,12 +1247,9 @@ EOFCONFIG
             return soundFilePaths[soundEvent];
         }
 
-        if (withoutBundledSound.includes(soundEvent))
-            return "";
-
-        const bundledPath = Qt.resolvedUrl(soundMap[soundEvent] || "../assets/sounds/freedesktop/message.wav");
-        log.debug("Using bundled sound for", soundEvent, ":", bundledPath);
-        return bundledPath;
+        const standardPath = defaultSoundPath(soundEvent);
+        log.debug("Using default sound for", soundEvent, ":", standardPath);
+        return standardPath;
     }
 
     function reloadSounds() {
@@ -1228,8 +1286,8 @@ EOFCONFIG
         if (!SettingsData.soundsEnabled)
             return;
         ensurePlayers();
-        // before the theme paths land the player holds the bundled file, and the source swap stops it
-        if (SettingsData.useSystemSoundTheme && !soundThemeResolved) {
+        // before the paths land the player holds no or the wrong file, and the source swap stops it
+        if (!soundsResolved()) {
             pendingSoundPlayer = playerName;
             return;
         }
@@ -2053,6 +2111,7 @@ EOFCONFIG
         detectAudioBackend();
         rebuildTypedNodeLists();
         loadDeviceAliases();
+        discoverFreedesktopSounds();
         if (SettingsData.soundsEnabled && SettingsData.useSystemSoundTheme)
             getCurrentSoundTheme();
         root.applyMonoStartupPreference();

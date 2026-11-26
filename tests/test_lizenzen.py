@@ -141,6 +141,11 @@ if klaenge:
           "NOTICE nennt genau die Klangdateien im Repository (nur in NOTICE: %s; nicht in NOTICE: %s)"
           % (sorted(genannt - vorhanden), sorted(vorhanden - genannt)))
     check("desktop-login" not in klaenge.group(1), "desktop-login steht nicht mehr unter den Klängen (entfernt, 1.4)")
+    # Entscheid vom 26.11.2026: die freedesktop-Klänge kommen aus dem installierten Klangthema, keine Kopien, kein CREDITS
+    check(not os.path.exists(os.path.join(klang_ordner, "freedesktop")) and not genannt & {"freedesktop/" + n for n in (
+          "audio-volume-change.oga", "message.oga", "message-new-instant.oga")}
+          and "sound-theme-freedesktop" in klaenge.group(1),
+          "Klänge: keine Kopien aus dem freedesktop-Klangthema (auch kein CREDITS), NOTICE verweist auf sound-theme-freedesktop")
 
 # --- Zeichen Dritter und Code-Teile (1.5) ---
 zeichen = re.search(r"^Zeichen Dritter \(shell/assets/\), nur zur Bezeichnung\n((?:  .*\n)+)", notice, re.M)
