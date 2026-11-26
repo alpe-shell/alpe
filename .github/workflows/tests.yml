@@ -80,7 +80,7 @@ jobs:
       - name: Paket bauen (makepkg -s, mit check)
         run: |
           mkdir /tmp/paket
-          cp packaging/arch/PKGBUILD /tmp/alpe-dist/alpe-*.tar.gz /tmp/paket/
+          cp packaging/arch/PKGBUILD /tmp/alpe-dist/alpe-shell-*.tar.gz /tmp/paket/
           chown -R bauer: /tmp/paket
           cd /tmp/paket
           sudo -u bauer makepkg -s --noconfirm

@@ -101,7 +101,7 @@ if fassung and eintrag:
           "NOTICE nennt jede Datei, die go-qrcode/writer/standard (und damit freetype) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
 check(re.search(r"^FTL_VENDOR := core/vendor/\$\(FREETYPE\)/licenses/ftl\.txt$", makefile, re.M) is not None
       and re.search(r"^FREETYPE := github\.com/golang/freetype$", makefile, re.M) is not None
-      and "install -Dm644 \"$$dir/licenses/ftl.txt\" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)" in makefile
+      and "install -Dm644 \"$$dir/licenses/ftl.txt\" $(BUILD_ABS)/dist/$(DIST_NAME)/$(FTL_VENDOR)" in makefile
       and "install -Dm644 \"$$src\" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt" in makefile,
       "make dist legt licenses/ftl.txt in den vendor-Baum, make install nach /usr/share/licenses/alpe-shell/FTL.txt")
 

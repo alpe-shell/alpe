@@ -201,15 +201,20 @@ try:
             out = make("dist", "BUILD=" + bau, env=env)
         finally:
             os.umask(alt_umask)
-        archiv = os.path.join(bau, "alpe-%s.tar.gz" % brand)
-        check(out.returncode == 0 and os.path.isfile(archiv), "make dist: Quellarchiv alpe-%s.tar.gz" % brand, out)
+        # Name = Paketname und Version, ein Ordner gleichen Namens (Plan 0.8 Nr. 132)
+        dist_name = "alpe-shell-%s" % brand
+        archiv = os.path.join(bau, dist_name + ".tar.gz")
+        check(out.returncode == 0 and os.path.isfile(archiv) and not os.path.exists(os.path.join(bau, "alpe-%s.tar.gz" % brand)),
+              "make dist: Quellarchiv %s.tar.gz (nicht mehr alpe-%s.tar.gz)" % (dist_name, brand), out)
         if os.path.isfile(archiv):
             with tarfile.open(archiv) as handle:
                 namen = handle.getnames()
-                check("alpe-%s/core/vendor/modules.txt" % brand in namen and "alpe-%s/shell/shell.qml" % brand in namen
-                      and "alpe-%s/COMMIT" % brand in namen and not any("/.git/" in n for n in namen),
+                check("%s/core/vendor/modules.txt" % dist_name in namen and "%s/shell/shell.qml" % dist_name in namen
+                      and "%s/COMMIT" % dist_name in namen and not any("/.git/" in n for n in namen),
                       "Archiv mit vendorten Go-Modulen und Datei COMMIT, ohne .git")
-                ftl_name = "alpe-%s/core/vendor/github.com/golang/freetype/licenses/ftl.txt" % brand
+                check(namen and all(n == dist_name or n.startswith(dist_name + "/") for n in namen),
+                      "alles im Archiv liegt im Ordner %s/" % dist_name)
+                ftl_name = "%s/core/vendor/github.com/golang/freetype/licenses/ftl.txt" % dist_name
                 check(ftl_name in namen and handle.extractfile(ftl_name).read() == ftl_original,
                       "Archiv enthält licenses/ftl.txt von golang/freetype unverändert (go mod vendor legt sie nicht ab)")
                 handle.extractall(os.path.join(tmp, "aus"), filter="data")
@@ -223,7 +228,7 @@ try:
             archiv_b = os.path.join(bau_b, os.path.basename(archiv))
             gleich = out_b.returncode == 0 and os.path.isfile(archiv_b) and open(archiv, "rb").read() == open(archiv_b, "rb").read()
             check(gleich, "make dist ist reproduzierbar (zweiter Lauf mit umask 002 bytegleich)", out_b)
-            quelle = os.path.join(tmp, "aus", "alpe-%s" % brand)
+            quelle = os.path.join(tmp, "aus", dist_name)
             # Bau aus dem Archiv wie im Paketbau: ohne Netz, mit den vendorten Modulen.
             env_vendor = dict(env, GOFLAGS="-mod=vendor", GOPROXY="off")
             out = make("build", "BUILD=" + os.path.join(tmp, "bau2"), cwd=quelle, env=env_vendor)

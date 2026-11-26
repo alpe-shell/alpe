@@ -1,6 +1,6 @@
 # Alpe – Paket für Arch Linux und CachyOS (Plan 6.2; E2 im Nachtlauf vom 26.11.2026)
 #
-# Gebaut wird aus dem Quellarchiv von «make dist» (alpe-<Version>.tar.gz, Go-Module vendort): ohne Netz, mit
+# Gebaut wird aus dem Quellarchiv von «make dist» (alpe-shell-<Version>.tar.gz, Go-Module vendort): ohne Netz, mit
 # «make build», «go test» und «make install DESTDIR». Kein conflicts/replaces: Das Paket teilt keine Datei mit dem
 # Paket von Alpe 1.0, das während des Umzugs als Rückweg installiert bleiben darf (Plan 6.2).
 #
@@ -39,7 +39,8 @@ optdepends=('python-h5py: Niederschlagsradar'
             'dsearch: Dateisuche im Starter')
 # Der Dienst ist mit -s -w gebaut (Makefile); ein Debug-Paket bliebe leer.
 options=(!debug)
-source=("alpe-$pkgver.tar.gz::$url/releases/download/v$pkgver/alpe-$pkgver.tar.gz")
+# Das Archiv von «make dist» heisst wie das Paket (Plan 0.8 Nr. 132), nicht wie der «Source code» von GitHub zum Tag.
+source=("$url/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
 # Die Prüfsumme des veröffentlichten Archivs trägt erst die Veröffentlichung ein (offene Frage, Plan 6.2 und 0.8 Nr. 126).
 sha256sums=('SKIP')
 
@@ -52,13 +53,13 @@ _go_umgebung() {
 }
 
 build() {
-  cd "alpe-$pkgver"
+  cd "$pkgname-$pkgver"
   _go_umgebung
   make build
 }
 
 check() {
-  cd "alpe-$pkgver/core"
+  cd "$pkgname-$pkgver/core"
   _go_umgebung
   # Die Tests des Dienstes laufen mit eigenem Home und eigenen XDG-Ordnern, nie gegen das des Bauenden.
   local heim="$srcdir/check-home"
@@ -71,6 +72,6 @@ check() {
 }
 
 package() {
-  cd "alpe-$pkgver"
+  cd "$pkgname-$pkgver"
   make install DESTDIR="$pkgdir" PREFIX=/usr
 }

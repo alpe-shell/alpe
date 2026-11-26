@@ -73,11 +73,13 @@ check(set(plan_optdepends) <= set(opt) and set(opt) - set(plan_optdepends) <= {"
       "optdepends = Liste aus Plan 6.2 und dsearch (0.8 Nr. 26), je mit Zweck: %s" % sorted(set(opt) ^ set(plan_optdepends)))
 check(not felder.get("conflicts") and not felder.get("replaces"), "kein conflicts und kein replaces (Plan 6.2)")
 check(felder.get("license") == plan_license, "license = das in Plan 6.2 festgelegte Feld (%d Kennungen)" % len(plan_license))
-check(felder.get("source") == ["alpe-%s.tar.gz::https://github.com/alpe-shell/alpe/releases/download/v%s/alpe-%s.tar.gz" % (brand, brand, brand)],
-      "Quelle: das Archiv von make dist (alpe-<Version>.tar.gz) aus dem Release")
+check(felder.get("source") == ["https://github.com/alpe-shell/alpe/releases/download/v%s/alpe-shell-%s.tar.gz" % (brand, brand)],
+      "Quelle: das Archiv von make dist (alpe-shell-<Version>.tar.gz, Plan 0.8 Nr. 132) aus dem Release")
+check(funktionen.count('cd "$pkgname-$pkgver') == 3 and "alpe-$pkgver" not in funktionen,
+      "build/check/package wechseln in den Ordner alpe-shell-<Version>/ des Archivs ($pkgname-$pkgver)")
 check("make build" in funktionen.split("== build", 1)[1].split("== check", 1)[0], "build(): make build")
 pruefen = funktionen.split("== check", 1)[1].split("== package", 1)[0]
-check('cd "alpe-$pkgver/core"' in pruefen and "go test -count=1 ./..." in pruefen and 'HOME="$heim"' in pruefen
+check('cd "$pkgname-$pkgver/core"' in pruefen and "go test -count=1 ./..." in pruefen and 'HOME="$heim"' in pruefen
       and "XDG_RUNTIME_DIR=" in pruefen and "-u DBUS_SESSION_BUS_ADDRESS" in pruefen,
       "check(): go test ./... in core, mit eigenem Home und XDG-Ordnern, ohne Session-Bus")
 umgebung = funktionen.split("_go_umgebung ()", 1)[-1]
@@ -94,7 +96,7 @@ check(job is not None, "CI: eigener Job «arch-paket»")
 if job:
     text = job.group(1)
     check(re.search(r"^    container: archlinux:latest$", text, re.M) is not None, "CI-Job läuft im Container archlinux:latest")
-    check("make dist" in text and "cp packaging/arch/PKGBUILD /tmp/alpe-dist/alpe-*.tar.gz" in text,
+    check("make dist" in text and "cp packaging/arch/PKGBUILD /tmp/alpe-dist/alpe-shell-*.tar.gz" in text,
           "CI-Job baut aus dem Archiv von make dist, das neben dem PKGBUILD liegt")
     # -d auch in zusammengezogenen Kurzoptionen (-sd, -sdi) – Prüfung zu 2.4
     check("sudo -u bauer makepkg -s --noconfirm" in text and not re.search(r"^\s*makepkg", text, re.M) and "--nodeps" not in text
