@@ -7,6 +7,8 @@ Liest das PKGBUILD mit bash (ohne makepkg und ohne etwas zu bauen) und vergleich
 depends (Liste aus 6.2 und kora-icon-theme, quickshell>=0.3.2, kein lua), makedepends, optdepends, kein conflicts und
 kein replaces, das Lizenzfeld wie in 6.2 festgelegt, Quelle das Archiv von make dist, und die Schritte: make build,
 go test im Ordner core mit -mod=vendor ohne Netz und eigenem Home, make install mit DESTDIR und PREFIX=/usr.
+Dazu der CI-Job «arch-paket» (Plan 9, 0.8 Nr. 127): archlinux:latest, Bau aus dem Archiv von make dist, makepkg -s als
+eigener Benutzer ohne -d, namcap, kora aus dem AUR, Token nur lesend, Zeitgrenze.
 """
 import os
 import re
@@ -94,9 +96,14 @@ if job:
     check(re.search(r"^    container: archlinux:latest$", text, re.M) is not None, "CI-Job läuft im Container archlinux:latest")
     check("make dist" in text and "cp packaging/arch/PKGBUILD /tmp/alpe-dist/alpe-*.tar.gz" in text,
           "CI-Job baut aus dem Archiv von make dist, das neben dem PKGBUILD liegt")
+    # -d auch in zusammengezogenen Kurzoptionen (-sd, -sdi) – Prüfung zu 2.4
     check("sudo -u bauer makepkg -s --noconfirm" in text and not re.search(r"^\s*makepkg", text, re.M) and "--nodeps" not in text
-          and not re.search(r"makepkg[^\n]*\s-d\b", text),
+          and not re.search(r"makepkg[^\n]*\s-[A-Za-z]*d", text),
           "CI-Job: makepkg -s als eigener Benutzer, nie als root, ohne -d/--nodeps")
+    check(re.search(r"uses: actions/checkout@v\d+\n\s+with:\n\s+persist-credentials: false", text) is not None
+          and re.search(r"^    permissions:\n      contents: read$", text, re.M) is not None,
+          "CI-Job: Token nur lesend und nicht im Arbeitsbaum (fremder Code aus dem AUR läuft im Job)")
+    check(re.search(r"^    timeout-minutes: \d+$", text, re.M) is not None, "CI-Job: mit Zeitgrenze")
     check("namcap PKGBUILD" in text and "namcap alpe-shell-*.pkg.tar.zst" in text, "CI-Job: namcap auf PKGBUILD und Paket")
     check("aur.archlinux.org/kora-icon-theme.git" in text, "CI-Job: kora-icon-theme aus dem AUR (Abhängigkeit, nicht in den Paketquellen)")
     check("python3 tests/test_makefile.py" not in text, "CI-Job ruft tests/test_makefile.py nicht auf (der Check in test_makefile.py verlangt genau einen Aufruf)")

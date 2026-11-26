@@ -49,6 +49,11 @@ jobs:
   arch-paket:
     runs-on: ubuntu-latest
     container: archlinux:latest
+    timeout-minutes: 45
+    # Das Token darf nur lesen und liegt nicht im Arbeitsbaum (persist-credentials: false) – im Job läuft fremder
+    # Code aus dem AUR (kora-icon-theme) unter dem Benutzer, dem der Arbeitsbaum gehört.
+    permissions:
+      contents: read
     steps:
       - name: Werkzeuge und Benutzer für makepkg
         run: |
@@ -57,6 +62,8 @@ jobs:
           echo 'bauer ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/bauer
 
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - name: Quellarchiv (make dist)
         run: |
