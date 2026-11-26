@@ -313,32 +313,52 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    dnf repoinfo
    ```
 10. **Sperre der Shell mit dem Bergbild, ohne Videocache** (Entscheid vom 25.11.2026; Plan 0.8 Nr. 106, Standbild
-    `design/kde/bilder/jagged-peaks-wolkenzug.jpg`): Die Sperre der Shell zeigt das Bergbild, und der Ordner
-    `~/.cache/alpe/video-wallpaper` **entsteht nicht** (das Standbild kommt aus dem Design, `ffmpeg` wird nicht
-    gebraucht). Nur am Mac prüfbar (nur dort sperrt die Shell, und dort gibt es `ffmpeg-free`). Die Testshell darf in
-    diesem Test nicht sperren (siehe unten) – darum **nach F1 an der Shell-Sperre**; danach:
+    `design/kde/bilder/jagged-peaks-wolkenzug.jpg`): Die Sperre der Shell zeigt das Bergbild, und im Ordner
+    `~/.cache/alpe/video-wallpaper` **entsteht nichts Neues** (das Standbild kommt aus dem Design, `ffmpeg` wird nicht
+    gebraucht). Am PC ist die Sperre mit dem Standbild in der Haltprüfung abgedeckt (Hyprland «gesperrt» im
+    Temp-HOME); am Mac geht es um die **echte, umgezogene Sitzung** (dort gibt es `ffmpeg-free`). Die Testshell darf in
+    diesem Test nicht sperren (Regel oben in der Anleitung, «Nicht auslösen: die Sperre») – darum **nach F1 an der
+    Shell-Sperre**. **Vorbedingungen** (sonst gilt der Punkt als nicht prüfbar, mit Verweis auf Plan 0.8 Nr. 106
+    (iii)): Der Hintergrund ist das Video des Designs (`wallpaperPath` in `~/.config/alpe/settings.json`), und neben
+    dem Video liegt im Ordner des Designs das `.jpg` (das Standbild greift nur für Videos unter
+    `~/.local/share/alpe/design/` mit `.jpg` daneben; wer aus 1.0 kommt, hat dort nur das `.mp4`, bis das Design neu
+    eingespielt ist). Den Cache **vor F1** festhalten, weil ihn frühere Tests am Mac schon angelegt haben können (der
+    Rückbau räumt `~/.cache/alpe` nicht ab):
 
     ```
-    ls -ld ~/.cache/alpe/video-wallpaper
+    grep -o '"wallpaperPath": *"[^"]*"' ~/.config/alpe/settings.json
+    ls -l ~/.local/share/alpe/design/kde/bilder/ ~/.local/share/alpe/design/hyprland/bilder/
+    ls -l --time-style=full-iso ~/.cache/alpe/video-wallpaper
     ```
 
-    Erwartet: «Datei oder Verzeichnis nicht gefunden».
+    Nach F1 und einer Sperre dieselbe letzte Zeile noch einmal. Erwartet: keine Datei, die nach F1 entstanden ist
+    (oder weiterhin «Datei oder Verzeichnis nicht gefunden»). Ob der Ordner vorher gelöscht wird, entscheidet der
+    Maintainer.
 11. **PAM-Dienste nach F1** (Entscheid vom 25.11.2026; Plan 0.8 Nr. 118): **Vorher** eine zweite Anmeldung als
     Rückweg öffnen (TTY oder SSH). Dann die Dienste ansehen und die Sperre der Shell mit dem Passwort entsperren (mit
     U2F, falls eingerichtet):
 
     ```
     ls -l /etc/pam.d/dankshell /etc/pam.d/dankshell-u2f /etc/pam.d/alpe /etc/pam.d/alpe-u2f
+    grep -c "LOCKSCREEN AUTH" /etc/pam.d/dankshell /etc/pam.d/alpe
     ```
 
-    Gibt es eine **eigene** `dankshell` (ohne den Block «DMS LOCKSCREEN AUTH») und keine `alpe`, meldet
+    Die zweite Zeile zeigt, ob ein Dienst verwaltet ist (2 = Block vorhanden) oder eigen (0). Gibt es eine **eigene**
+    `dankshell` (ohne den Block «DMS LOCKSCREEN AUTH») und keine `alpe`, meldet
     `alpe-dienst auth sync` «Custom /etc/pam.d/dankshell from Alpe 1.0 found and no /etc/pam.d/alpe …», legt `alpe`
     nicht an, und die Sperre entsperrt weiter über `dankshell` (Hinweis der Prüfung zu 1.6 im Nachtlauf vom
-    26.11.2026).
+    26.11.2026). Die Meldung steht in der Ausgabe von `alpe-dienst auth sync` (eigener Aufruf oder Ausgabe des
+    Umzugs). **Risiko bei F1:** Gehört `dankshell` dem Paket von 1.0 und nimmt die Paketentfernung sie weg, gibt es
+    danach weder `dankshell` noch `alpe` – dann bleibt nur der Rückweg über die zweite Anmeldung. Darum vorher Punkt 13
+    (`rpm -qf` auf die PAM-Dienste).
 12. **`alpe-dienst doctor --verbose` nach F1 ohne laufende Shell** (Entscheid vom 25.11.2026; Plan 2.6 von E1):
     erwartet «Alpe Configuration» = `/usr/share/alpe/shell`; dabei `XDG_DATA_DIRS` der Hyprland-Sitzung festhalten.
+    Die Erwartung gilt nur, wenn es weder `~/.config/quickshell/alpe` noch `~/.local/share/alpe/shell` gibt (beide gehen
+    vor, `core/internal/config/shellconfig.go`). «Ohne laufende Shell»: vorher `systemctl --user stop alpe.service`,
+    danach wieder `start` (führt der Maintainer aus).
 
     ```
+    ls -d ~/.config/quickshell/alpe ~/.local/share/alpe/shell
     alpe-dienst doctor --verbose
     echo $XDG_DATA_DIRS
     ```
@@ -346,8 +366,11 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
     `rpm -q sound-theme-freedesktop` (könnte die Shell die freedesktop-Klänge aus dem Paket nehmen?);
     `ls -l /etc/dms /usr/share/dms` und, falls vorhanden, `rpm -qf /etc/dms/cli-policy.json` (Rückfall der
     Richtlinie, Plan 0.8 Nr. 119 – gehört die Datei einem Paket von 1.0, vor dessen Entfernung bei F1 nach
-    `/etc/alpe` kopieren); `systemctl --user cat dms.service` (trägt die Unit des Pakets von 1.0 am Mac `BusName=`?
-    Siehe «Installationstest in der VM (Liste)», Punkt 1).
+    `/etc/alpe` kopieren; ob sie dort `%config(noreplace)` ist, zeigt `rpm -qc <Paket>`); `systemctl --user cat
+    dms.service` (trägt die Unit des Pakets von 1.0 am Mac `BusName=`? Siehe «Installationstest in der VM (Liste)»,
+    Punkt 1; ob neben `alpe.service` ein anderer Mitteilungsdienst läuft – mako, swaync, dunst –, siehe dort Punkt 2);
+    `rpm -qf /etc/pam.d/dankshell /etc/pam.d/dankshell-u2f` (gehören die PAM-Dienste von 1.0 einem Paket? Siehe
+    Punkt 11, Risiko bei F1).
 
 Zu 1: Dieser Punkt braucht die Sperre durch das Programm hyprlock in der echten Sitzung (siehe 1).
 Die Anleitung unten verbietet, mit der **Testshell** zu sperren («Nicht auslösen: die Sperre») – das
@@ -857,7 +880,8 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
   `~/alpe/tools/hyprlock2qml.py` auf (im Paket liegt es unter `/usr/share/alpe/tools`); Hinweistexte nennen
   `~/alpe/install.sh` und `backend.sh` (`AlpePerformanceTab.qml`, `AlpeLockTab.qml`, `AlpeMaintenanceTab.qml`);
   `tools/alpe` verweist in `doctor` auf `backend.sh` und `install.sh` und ruft für `alpe update` `install.sh` auf;
-  `alpe test` braucht `tools/test.sh`, das nicht ins Paket kommt (geparkt im Nachtlauf vom 25.11.2026).
+  `alpe test` braucht `tools/test.sh`, das nicht ins Paket kommt (geparkt im Nachtlauf vom 25.11.2026; **entschieden
+  am 25.11.2026, Plan 0.8 Nr. 125 (2):** im Paket meldet `alpe test` «nur im Repository» mit Rückgabewert ungleich 0, E4).
   `design.py export` schreibt nach `<ALPE_DIR>/design`, im Paket also nach `/usr/share/alpe/design` (nicht
   beschreibbar) – Export ist ein Werkzeug für das Repository, das ist bei E4 festzuhalten. `make -C core build`
   bettet die Oberfläche weiter ein (Tag `withshell`), das Makefile in der Wurzel nicht – Kandidat zum Aufräumen.
@@ -904,8 +928,9 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
     Shell und bei einem Dienst ohne eingebettete Oberfläche (so baut ihn das Makefile in der Wurzel; mit
     `make -C core build`, Tag `withshell`, nie).
   - **Für E4 (Prüfer zu 2.6):** «Install Type» in `checkShellInstallation` stuft `~/.local/share/alpe/shell` (Weg
-    ohne Paket, 6.4) als «System package» ein – erst seit 2.6 erreichbar, Bezeichnung falsch. Ebenfalls offen
-    (Maintainer): ob `doctor` ohne laufende Shell dieselbe Auflösung nimmt wie `alpe start` (Nachtlauf, «Geparkt»).
+    ohne Paket, 6.4) als «System package» ein – erst seit 2.6 erreichbar, Bezeichnung falsch. ~~Ebenfalls offen
+    (Maintainer): ob `doctor` ohne laufende Shell dieselbe Auflösung nimmt wie `alpe start` (Nachtlauf, «Geparkt»).~~
+    **Entschieden am 25.11.2026 (Plan 0.8 Nr. 125 (1)):** gemeinsame Pfadauflösung für `alpe start` und `doctor`, bei E4.
 - Bewusst gleich geblieben (D6/D7): Dateinamen `dms-colors.json`/`dms-typography.json` im
   Cache-Ordner, fcitx5-Theme-Name `dms` (in der fcitx5-Einstellung der Nutzer gewählt),
   Lualine-Theme `dms`, Kennung `source: "dms"` zwischen Kürzel-Parser und Oberfläche,

@@ -119,7 +119,10 @@ liest er dagegen schon.
 - **Entwicklung am PC (6.5):** Ohne Paket gibt es kein Systempaket. `alpe entwicklung ein` legt
   dann bewusst eine Nutzerkopie aus dem Repo an (derselbe Zusammenbau wie im Paketbau, ein
   gemeinsames Skript), `alpe entwicklung aus` entfernt sie; `alpe doctor` nennt sie. Das ist die
-  einzige Stelle, an der eine Nutzerkopie entsteht.
+  einzige Stelle, an der eine Nutzerkopie entsteht. **Seit Plan 0.8 Nr. 125 (3) (Entscheid vom 25.11.2026) nicht
+  mehr die einzige:** Auch der Weg ohne Paket (6.4, `make build install PREFIX=$HOME/.local`) legt eine Nutzerkopie
+  unter `~/.local/share/plasma/shells/org.alpe.desktop` an; das wird hingenommen, `doctor` und `entfernen` behandeln
+  sie wie die von `alpe entwicklung ein`.
 
 Für A spricht: Paket-Aktualisierungen wirken sofort; kein Verdecken; der Sperrbildschirm kann
 nicht hinter der Shell zurückbleiben; `$HOME` wird vom Einrichten nur über `kwriteconfig6`
