@@ -1,0 +1,7 @@
+# rpmlint: begründete Ausnahmen für alpe-shell (Nachtlauf vom 27.11.2026, Punkt 2.2)
+#
+#   rpmlint -r packaging/fedora/alpe-shell.rpmlintrc packaging/fedora/alpe-shell.spec …
+#
+# Summary und Beschreibung sind deutsch (Projektregel: alle Texte für Menschen auf Hochdeutsch in Schweizer
+# Schreibweise). rpmlint prüft die Rechtschreibung gegen en_US und meldet jedes deutsche Wort.
+addFilter("spelling-error")
