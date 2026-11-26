@@ -46,6 +46,16 @@ check(tools_liste and not set(tools_liste) & VERBOTEN and all(os.path.isfile(os.
 alle = {t for t in os.listdir(os.path.join(REPO, "tools")) if os.path.isfile(os.path.join(REPO, "tools", t))}
 check(alle <= set(tools_liste) | VERBOTEN, "jede Datei unter tools/ ist eingeordnet (Paket oder nicht): %s" % sorted(alle - set(tools_liste) - VERBOTEN))
 
+# Plan 0.8 Nr. 124: In der CI läuft dieser Test nach dem Einrichten von Go noch einmal, ohne ALPE_SKIP_GO – sonst liefen
+# Bau, Installation und Quellarchiv dort nie. Ohne YAML-Parser: Schritte sind die Blöcke, die mit «      - » beginnen.
+workflow = open(os.path.join(REPO, ".github", "workflows", "tests.yml"), encoding="utf-8").read()
+schritte = re.split(r"\n(?=      - )", workflow)
+mit_test = [i for i, s in enumerate(schritte) if re.search(r"^\s*python3 tests/test_makefile\.py\s*$", s, re.M)]
+setup_go = [i for i, s in enumerate(schritte) if "actions/setup-go@" in s]
+check(len(mit_test) == 1 and setup_go and mit_test[0] > setup_go[0] and "ALPE_SKIP_GO" not in schritte[mit_test[0]]
+      and "working-directory" not in schritte[mit_test[0]],
+      "CI: tests/test_makefile.py läuft nach setup-go in der Wurzel, ohne ALPE_SKIP_GO (Bau, Installation, Quellarchiv)")
+
 if not shutil.which("make") or not shutil.which("go") or os.environ.get("ALPE_SKIP_GO"):
     print("make oder go fehlt, oder ALPE_SKIP_GO – Bau, Installation und Archiv übersprungen")
     sys.exit(1 if failures else 0)

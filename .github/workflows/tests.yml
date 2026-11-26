@@ -37,6 +37,9 @@ jobs:
           go-version-file: core/go.mod
           cache: false
 
-      - name: Go-Tests der Alpe-Änderungen
-        working-directory: core
-        run: go test ./internal/server -run 'TestReadAlpeOff' -count=1
+      # Im Go-Schritt ohne ALPE_SKIP_GO: der Teil von tests/test_makefile.py, der baut, installiert und das
+      # Quellarchiv prüft (oben übersprungen, Plan 0.8 Nr. 124).
+      - name: Go-Tests der Alpe-Änderungen, Makefile (Bau, Installation, Quellarchiv)
+        run: |
+          (cd core && go test ./internal/server -run 'TestReadAlpeOff' -count=1)
+          python3 tests/test_makefile.py
