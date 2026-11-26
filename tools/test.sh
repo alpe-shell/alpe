@@ -80,6 +80,26 @@ else
     echo "go oder $ALPE_DIR/core fehlt – übersprungen"
 fi
 
+# Plan 0.8 Nr. 136: PAM-Dienste und Richtlinie des Dienstes (sicherheitsrelevant) bei jedem Lauf, abgeschottet – eigenes
+# HOME und alle XDG-Ordner in einem Temp-Ordner, ohne Session-Bus und Display; die Go-Caches werden vor dem Wechsel von
+# HOME festgehalten (CLAUDE.md, Plan 0.8 Nr. 40).
+step "Dienst: PAM und Richtlinie (go test -count=1 ./internal/pam ./internal/clipolicy, abgeschottet)"
+if [ -n "${ALPE_SKIP_GO:-}" ]; then
+    echo "ALPE_SKIP_GO gesetzt – übersprungen"
+elif command -v go >/dev/null && [ -d "$ALPE_DIR/core" ]; then
+    go_heim="$(mktemp -d)"
+    mkdir -p "$go_heim/.config" "$go_heim/.local/share" "$go_heim/.local/state" "$go_heim/.cache" "$go_heim/run"
+    chmod 700 "$go_heim/run"
+    run env -u DBUS_SESSION_BUS_ADDRESS -u WAYLAND_DISPLAY -u DISPLAY \
+        GOMODCACHE="$(go env GOMODCACHE)" GOCACHE="$(go env GOCACHE)" GOPATH="$(go env GOPATH)" \
+        HOME="$go_heim" XDG_CONFIG_HOME="$go_heim/.config" XDG_DATA_HOME="$go_heim/.local/share" \
+        XDG_STATE_HOME="$go_heim/.local/state" XDG_CACHE_HOME="$go_heim/.cache" XDG_RUNTIME_DIR="$go_heim/run" \
+        bash -c 'cd "$1" && go test -count=1 ./internal/pam ./internal/clipolicy' _ "$ALPE_DIR/core"
+    rm -rf "$go_heim"
+else
+    echo "go oder $ALPE_DIR/core fehlt – übersprungen"
+fi
+
 echo
 if [ "$fails" = 0 ]; then printf '\033[32malles grün\033[0m\n'; else printf '\033[31m%d Prüfung(en) fehlgeschlagen\033[0m\n' "$fails"; fi
 exit $((fails > 0))

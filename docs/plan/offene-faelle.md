@@ -980,7 +980,9 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
    und nicht verändert. Für F1 und den Mac (nur dort sperrt die Shell mit `Pam.qml`; unter KWin sperrt KDE): Ein
    Nutzer von 1.0 hat `/etc/pam.d/dankshell`; die Sperre nimmt ihn, bis `alpe-dienst auth sync` `/etc/pam.d/alpe`
    geschrieben hat – **seit Plan 0.8 Nr. 118 nur noch für eine verwaltete `dankshell`**; eine eigene bleibt, solange
-   `alpe` fehlt, und `auth sync` meldet das. Geprüft ist das im QML-Test `tst_Pam.qml` mit Attrappen – mit Richtlinie und ohne (Weg am Mac:
+   `alpe` fehlt, und `auth sync` meldet das. **Seit Plan 0.8 Nr. 135 gilt dasselbe für U2F:** eine eigene
+   `dankshell-u2f` bleibt, solange `alpe-u2f` fehlt; beim Einschalten von U2F meldet `auth sync` das (die Sperre nimmt
+   `alpe-u2f` vor `dankshell-u2f`). Am Mac nachsehen, ob dort eine eigene `dankshell-u2f` liegt (Liste oben). Geprüft ist das im QML-Test `tst_Pam.qml` mit Attrappen – mit Richtlinie und ohne (Weg am Mac:
    `alpe` vor `dankshell`, dann Dienst im Nutzerordner, dann die mitgelieferten Stapel) –, nicht an einer echten
    Sperre. Nebenbefund: `shell/tests/run-qml.py` zeigt noch auf den alten Ordner `quickshell/` und läuft so nicht;
    `tests/test_pam_dienste.py` ruft `qmltestrunner` für `tst_Pam.qml` direkt auf. Die Attrappen kennen das

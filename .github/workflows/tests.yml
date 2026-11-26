@@ -42,6 +42,7 @@ jobs:
       - name: Go-Tests der Alpe-Änderungen, Makefile (Bau, Installation, Quellarchiv)
         run: |
           (cd core && go test ./internal/server -run 'TestReadAlpeOff' -count=1)
+          (cd core && go test -count=1 ./internal/pam ./internal/clipolicy)   # wie tools/test.sh (Plan 0.8 Nr. 136)
           python3 tests/test_makefile.py
 
   # Plan 9 und 0.8 Nr. 127: das PKGBUILD in archlinux:latest bauen, aus dem Archiv von make dist, mit makepkg und namcap.
