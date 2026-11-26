@@ -1416,6 +1416,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   **vollständig aus der Dateiliste von `make install`** gebildet und **am Ende von E1 festgelegt**
   (Auftrag des Maintainers vom 25.11.2026: Tabelle Datei oder Ordner → Lizenz nach `NOTICE`, daraus der Vorschlag für 6.2
   und 6.3). Bis dahin bleibt der Plan bei den drei; der Text darunter ist der Stand vom 24.11.2026.
+  - **Umgesetzt in E2 (Nachtlauf vom 26.11.2026, Plan 0.8 Nr. 126):** Das Feld im PKGBUILD steht in Plan 6.2 («Umgesetzt
+    in E2») mit Beleg je Kennung und der Liste dessen, was ungeklärt und darum nicht im Feld ist. Der Vorschlag unten
+    ist damit überholt (Stand 25.11.2026).
   - **Vorschlag aus der Dateiliste (25.11.2026, Nachtlauf E1 2.8; Tabelle Datei/Ordner → Lizenz in der Nachtdatei
     und in den Belegen; Entscheid beim Maintainer):**
     Arch `license=(MIT GPL-3.0-only Apache-2.0 BSD-2-Clause BSD-3-Clause OFL-1.1 CC-BY-4.0 CC-BY-SA-4.0 CC0-1.0 FTL

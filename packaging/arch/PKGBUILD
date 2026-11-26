@@ -4,7 +4,8 @@
 # «make build», «go test» und «make install DESTDIR». Kein conflicts/replaces: Das Paket teilt keine Datei mit dem
 # Paket von Alpe 1.0, das während des Umzugs als Rückweg installiert bleiben darf (Plan 6.2).
 #
-# Die Version folgt shell/Common/Brand.qml (offene Frage zu pkgver: lokaler Bericht des Nachtlaufs, Plan 6.2).
+# Die Version folgt shell/Common/Brand.qml; Brand.version steigt erst mit G1 auf 1.1 (offene Frage zu pkgver: Plan 6.2
+# und 0.8 Nr. 126).
 
 pkgname=alpe-shell
 pkgver=1.0
@@ -12,8 +13,8 @@ pkgrel=1
 pkgdesc='Alpe – Desktop-Shell für Linux, massgeschneidert für die Schweiz (KDE Plasma mit KWin, Hyprland)'
 arch=(x86_64 aarch64)
 url='https://github.com/alpe-shell/alpe'
-# Vollständig aus der Dateiliste von «make install» (Plan 6.2, 0.8 Nr. 113–117; Einzelheiten in NOTICE). Was noch
-# ungeklärt ist, steht in offene-faelle.md («Lizenzfeld der Pakete») und nicht hier.
+# Vollständig aus der Dateiliste von «make install» (Plan 6.2, 0.8 Nr. 113–117, 126; Einzelheiten in NOTICE). Was noch
+# ungeklärt ist, steht in Plan 6.2 («Ungeklärt und darum nicht im Feld») und nicht hier.
 license=(MIT GPL-3.0-only Apache-2.0 BSD-2-Clause BSD-3-Clause OFL-1.1 CC-BY-3.0 CC-BY-4.0 CC-BY-SA-3.0 CC-BY-SA-4.0
          CC0-1.0 FTL LicenseRef-Alpe-Logo)
 depends=('quickshell>=0.3.2' qt6-base qt6-declarative qt6-multimedia qt6-svg accountsservice python matugen wtype
@@ -39,12 +40,12 @@ optdepends=('python-h5py: Niederschlagsradar'
 # Der Dienst ist mit -s -w gebaut (Makefile); ein Debug-Paket bliebe leer.
 options=(!debug)
 source=("alpe-$pkgver.tar.gz::$url/releases/download/v$pkgver/alpe-$pkgver.tar.gz")
-# Die Prüfsumme des veröffentlichten Archivs trägt erst die Veröffentlichung ein (offene Frage, Plan 6.2).
+# Die Prüfsumme des veröffentlichten Archivs trägt erst die Veröffentlichung ein (offene Frage, Plan 6.2 und 0.8 Nr. 126).
 sha256sums=('SKIP')
 
 _go_umgebung() {
   export CGO_ENABLED=0
-  export GOFLAGS='-mod=vendor -buildmode=pie'
+  export GOFLAGS='-mod=vendor -trimpath -buildmode=pie'
   export GOPROXY=off
   # Caches im Bauordner, nicht im Home dessen, der baut
   export GOCACHE="$srcdir/go-cache" GOPATH="$srcdir/go-path"

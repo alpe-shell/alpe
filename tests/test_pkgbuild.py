@@ -79,8 +79,9 @@ check('cd "alpe-$pkgver/core"' in pruefen and "go test -count=1 ./..." in pruefe
       and "XDG_RUNTIME_DIR=" in pruefen and "-u DBUS_SESSION_BUS_ADDRESS" in pruefen,
       "check(): go test ./... in core, mit eigenem Home und XDG-Ordnern, ohne Session-Bus")
 umgebung = funktionen.split("_go_umgebung ()", 1)[-1]
-check("-mod=vendor" in umgebung and "GOPROXY=off" in umgebung and "CGO_ENABLED=0" in umgebung and "-buildmode=pie" in umgebung,
-      "Go-Umgebung: -mod=vendor, GOPROXY=off (ohne Netz), CGO_ENABLED=0, -buildmode=pie (Plan 6.2)")
+check("-mod=vendor" in umgebung and "-trimpath" in umgebung and "GOPROXY=off" in umgebung and "CGO_ENABLED=0" in umgebung
+      and "-buildmode=pie" in umgebung,
+      "Go-Umgebung: GOFLAGS -mod=vendor -trimpath -buildmode=pie, GOPROXY=off (ohne Netz), CGO_ENABLED=0 (Plan 6.2)")
 check('make install DESTDIR="$pkgdir" PREFIX=/usr' in funktionen.split("== package", 1)[1], 'package(): make install DESTDIR="$pkgdir" PREFIX=/usr')
 
 print("\n%s" % ("alle Prüfungen bestanden" if not failures else "%d FEHLER" % failures))
