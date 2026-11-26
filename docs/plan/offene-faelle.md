@@ -295,7 +295,9 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    (`docs/technik.md`, Absatz «Binärdateien» der Werteprüfung; Kopf und `roh_funde` von
    `tools/werte-pruefen.py`). Namen unter zwei Zeichen und Allerweltsnamen (`user`, `nutzer`, `root` …)
    werden gar nicht gesucht. Ein grüner Abschnitt `test_werte` sagt über einen solchen Namen also
-   weniger als über einen längeren – beim Lesen des Ergebnisses beachten.
+   weniger als über einen längeren – beim Lesen des Ergebnisses beachten. **Den Abschnitt `test_werte`
+   aus Schritt 2 festhalten** (Ausgabe von `tools/test.sh` dort, die Zeilen unter `== tests/test_werte.py`;
+   Entscheid vom 25.11.2026).
 9. **Priorität der COPR-Repos** (Plan 0.8 Nr. 99): Ausgabe von `dnf repolist -v` festhalten, vor
    allem die Angabe zur `priority` der COPR-Repos (`hazel-bunny/ricing` und weitere). **Berichtigt am
    25.11.2026 (an der Quelle nachgeschlagen):** dnf5 – unter Fedora seit 41 das `dnf` (nicht an der Quelle gelesen) – kennt keine
@@ -310,11 +312,48 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
    dnf repolist -v
    dnf repoinfo
    ```
+10. **Sperre der Shell mit dem Bergbild, ohne Videocache** (Entscheid vom 25.11.2026; Plan 0.8 Nr. 106, Standbild
+    `design/kde/bilder/jagged-peaks-wolkenzug.jpg`): Die Sperre der Shell zeigt das Bergbild, und der Ordner
+    `~/.cache/alpe/video-wallpaper` **entsteht nicht** (das Standbild kommt aus dem Design, `ffmpeg` wird nicht
+    gebraucht). Nur am Mac prüfbar (nur dort sperrt die Shell, und dort gibt es `ffmpeg-free`). Die Testshell darf in
+    diesem Test nicht sperren (siehe unten) – darum **nach F1 an der Shell-Sperre**; danach:
+
+    ```
+    ls -ld ~/.cache/alpe/video-wallpaper
+    ```
+
+    Erwartet: «Datei oder Verzeichnis nicht gefunden».
+11. **PAM-Dienste nach F1** (Entscheid vom 25.11.2026; Plan 0.8 Nr. 118): **Vorher** eine zweite Anmeldung als
+    Rückweg öffnen (TTY oder SSH). Dann die Dienste ansehen und die Sperre der Shell mit dem Passwort entsperren (mit
+    U2F, falls eingerichtet):
+
+    ```
+    ls -l /etc/pam.d/dankshell /etc/pam.d/dankshell-u2f /etc/pam.d/alpe /etc/pam.d/alpe-u2f
+    ```
+
+    Gibt es eine **eigene** `dankshell` (ohne den Block «DMS LOCKSCREEN AUTH») und keine `alpe`, meldet
+    `alpe-dienst auth sync` «Custom /etc/pam.d/dankshell from Alpe 1.0 found and no /etc/pam.d/alpe …», legt `alpe`
+    nicht an, und die Sperre entsperrt weiter über `dankshell` (Hinweis der Prüfung zu 1.6 im Nachtlauf vom
+    26.11.2026).
+12. **`alpe-dienst doctor --verbose` nach F1 ohne laufende Shell** (Entscheid vom 25.11.2026; Plan 2.6 von E1):
+    erwartet «Alpe Configuration» = `/usr/share/alpe/shell`; dabei `XDG_DATA_DIRS` der Hyprland-Sitzung festhalten.
+
+    ```
+    alpe-dienst doctor --verbose
+    echo $XDG_DATA_DIRS
+    ```
+13. **Weitere Punkte aus dem Nachtlauf vom 26.11.2026** (Hinweise der Prüfungen zu 1.4, 1.7 und 1.8):
+    `rpm -q sound-theme-freedesktop` (könnte die Shell die freedesktop-Klänge aus dem Paket nehmen?);
+    `ls -l /etc/dms /usr/share/dms` und, falls vorhanden, `rpm -qf /etc/dms/cli-policy.json` (Rückfall der
+    Richtlinie, Plan 0.8 Nr. 119 – gehört die Datei einem Paket von 1.0, vor dessen Entfernung bei F1 nach
+    `/etc/alpe` kopieren); `systemctl --user cat dms.service` (trägt die Unit des Pakets von 1.0 am Mac `BusName=`?
+    Siehe «Installationstest in der VM (Liste)», Punkt 1).
 
 Zu 1: Dieser Punkt braucht die Sperre durch das Programm hyprlock in der echten Sitzung (siehe 1).
 Die Anleitung unten verbietet, mit der **Testshell** zu sperren («Nicht auslösen: die Sperre») – das
 gilt weiter. Die Punkte 4 und 5 (Passwortfeld, Streifen) entfallen in diesem Mac-Test; sie werden
-nach F1 an der Shell-Sperre beurteilt. Nichts davon ändert `layout.js` oder `hyprlock.conf`.
+nach F1 an der Shell-Sperre beurteilt, ebenso die Punkte 10 bis 12 (Nachtlauf vom 26.11.2026). Punkt 13 geht schon
+jetzt (nur lesend). Nichts davon ändert `layout.js` oder `hyprlock.conf`.
 
 *Am PC (Maintainer):*
 
