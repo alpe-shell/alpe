@@ -141,6 +141,14 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 		src="$$dir/licenses/ftl.txt"; \
 	fi; \
 	install -Dm644 "$$src" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt
+	# Lizenztexte der vendorten Go-Module (statisch in alpe-dienst gelinkt; Plan 0.8 Nr. 131): Liegt core/vendor vor
+	# (Quellarchiv von make dist), kommen alle LICENSE*, COPYING* und NOTICE* je Modul unverändert nach
+	# licenses/alpe-shell/vendor/<Modul>/ (Pfad wie unter core/vendor). Im Repository gibt es kein core/vendor.
+	if [ -d core/vendor ]; then \
+		for f in $$(cd core/vendor && find . -type f \( -name 'LICENSE*' -o -name 'COPYING*' -o -name 'NOTICE*' \) -printf '%P\n' | LC_ALL=C sort); do \
+			install -Dm644 "core/vendor/$$f" "$(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/vendor/$$f" || exit 1; \
+		done; \
+	fi
 
 test:
 	bash tools/test.sh

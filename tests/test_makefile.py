@@ -136,6 +136,10 @@ try:
     check(ftl_original.startswith(b"                    The FreeType Project LICENSE") and os.path.isfile(ftl_paket)
           and open(ftl_paket, "rb").read() == ftl_original,
           "/usr/share/licenses/alpe-shell/FTL.txt = licenses/ftl.txt von golang/freetype, bytegleich")
+    # Im Repository gibt es kein core/vendor: dann auch keinen Ordner vendor/ unter den Lizenzen (Plan 0.8 Nr. 131)
+    check(not os.path.exists(os.path.join(REPO, "core", "vendor"))
+          and not os.path.exists(os.path.join(usr, "share", "licenses", "alpe-shell", "vendor")),
+          "make install im Repository (ohne core/vendor): kein licenses/alpe-shell/vendor/")
     # Im Repository ohne Modul im Modul-Cache: verständlicher Abbruch statt «cannot stat /licenses/ftl.txt»
     out = make("install", "BUILD=" + bau, "DESTDIR=" + os.path.join(tmp, "wurzel-ohne-cache"), "PREFIX=/usr",
                env=dict(env, GOMODCACHE=os.path.join(tmp, "leerer-modcache-repo"), GOPROXY="off", GOFLAGS="-modcacherw"))
@@ -232,6 +236,20 @@ try:
             ftl2 = os.path.join(wurzel2, "usr", "share", "licenses", "alpe-shell", "FTL.txt")
             check(out.returncode == 0 and os.path.isfile(ftl2) and open(ftl2, "rb").read() == ftl_original,
                   "make install aus dem Archiv: FTL.txt aus dem vendor-Baum, ohne Modul-Cache und Netz", out)
+            # Plan 0.8 Nr. 131: alle LICENSE*, COPYING*, NOTICE* aus core/vendor/<Modul>/ unverändert nach
+            # licenses/alpe-shell/vendor/<Modul>/ – genau diese, bytegleich, und nichts sonst in diesem Ordner.
+            vendor_quelle = os.path.join(quelle, "core", "vendor")
+            erwartet = {os.path.relpath(os.path.join(d, f), vendor_quelle) for d, _, fs in os.walk(vendor_quelle) for f in fs
+                        if f.startswith(("LICENSE", "COPYING", "NOTICE"))}
+            vendor_paket = os.path.join(wurzel2, "usr", "share", "licenses", "alpe-shell", "vendor")
+            da = {os.path.relpath(os.path.join(d, f), vendor_paket) for d, _, fs in os.walk(vendor_paket) for f in fs}
+            gleich_inhalt = all(open(os.path.join(vendor_quelle, p), "rb").read() == open(os.path.join(vendor_paket, p), "rb").read()
+                                for p in erwartet & da)
+            check(len(erwartet) >= 20 and da == erwartet and gleich_inhalt
+                  and "github.com/pilebones/go-udev/LICENSE" in da and any(p.startswith("golang.org/x/") for p in da)
+                  and all(os.stat(os.path.join(vendor_paket, p)).st_mode & 0o777 == 0o644 for p in da),
+                  "make install aus dem Archiv: %d Lizenzdateien der vendorten Module unter licenses/alpe-shell/vendor/<Modul>/, "
+                  "bytegleich, 0644 (nur im Paket: %s; fehlt: %s)" % (len(da), sorted(da - erwartet)[:3], sorted(erwartet - da)[:3]), out)
     else:
         print("kein Git-Repository – make dist übersprungen")
 finally:

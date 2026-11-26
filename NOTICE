@@ -112,8 +112,11 @@ Zeichen Dritter (shell/assets/), nur zur Bezeichnung
   Für AppImage zeigt der Starter kein Zeichen, sondern das Symbol «deployed_code» aus Material
   Symbols Rounded (siehe Schriften).
 
-Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen
-(einzeln genannt unten unter «Go-Module im Programm alpe-dienst»).
+Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
+Deren Lizenztexte liegen im Quellarchiv unter core/vendor/<Modul>/ und im Paket unter
+/usr/share/licenses/alpe-shell/vendor/<Modul>/; einzeln genannt sind unten unter «Go-Module im
+Programm alpe-dienst» nur die Module mit Besonderheiten (GPL, Wahl der Lizenz, fehlende
+Lizenzdatei).
 
 
 Go-Module im Programm alpe-dienst
@@ -122,7 +125,10 @@ Go-Module im Programm alpe-dienst
 Die Module aus core/go.mod, deren Pakete der Dienst einbindet, werden beim Bau statisch in das
 Programm alpe-dienst gelinkt (Module, die nur Tests brauchen, nicht). Im Quellarchiv (make dist)
 liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die «go mod vendor» übernimmt, und
-den unten genannten, die make dist dazulegt.
+den unten genannten, die make dist dazulegt. make install legt aus core/vendor/<Modul>/ alle
+Dateien LICENSE*, COPYING* und NOTICE* unverändert nach /usr/share/licenses/alpe-shell/vendor/
+<Modul>/. Die drei Module unten haben Besonderheiten; für alle übrigen gilt die Lizenzdatei
+im Modul.
 
 github.com/pilebones/go-udev
   Fassung:   v0.10.0 (core/go.mod)

@@ -1476,6 +1476,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       Lizenzfeld neu (nicht vermuten, bei E2/E3 entscheiden):** Flatpak-Zeichen CC-BY-3.0, Snapcraft-Zeichen
       CC-BY-SA-3.0 (beide nach Simple Icons, das selbst CC0 ist), Hyprland-Zeichen ARR nach der Markenrichtlinie
       von hyprwm (die Datei ist nicht die offizielle Vorlage); Herkunft von `appimage.svg` unbelegt. Geparkt.
+      Flatpak und Snapcraft: bleiben mit Nennung (entschieden mit Plan 0.8 Nr. 130).
       **AppImage erledigt (Entscheid vom 26.11.2026, Plan 0.8 Nr. 129):** `appimage.svg` entfernt, der Starter zeigt
       das Symbol `deployed_code` aus der mitgelieferten Symbolschrift.
     - `LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`); die mit
