@@ -25,8 +25,10 @@ set -uo pipefail
 
 ALPE_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
 SHELL_DIR="${ALPE_SHELL_DIR:-$ALPE_DIR/shell}"
-OWN="$HOME/.local/lib/alpe/alpe"
-DROPIN="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/dms.service.d/zz-alpe-backend.conf"
+# Fremde Programme über Variablen (Tests setzen Attrappen ein, Muster tests/data/kwinstub; Plan E4, Nachtlauf 27.11.2026)
+SYSTEMCTL="${ALPE_SYSTEMCTL:-systemctl}"
+JOURNALCTL="${ALPE_JOURNALCTL:-journalctl}"
+LOGINCTL="${ALPE_LOGINCTL:-loginctl}"
 
 say() { printf '%s\n' "$*"; }
 ok() { printf '  \033[32m✓\033[0m %s\n' "$*"; }
@@ -34,14 +36,20 @@ warn() { printf '  \033[33m!\033[0m %s\n' "$*"; }
 bad() { printf '  \033[31m✗\033[0m %s\n' "$*"; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
+# Der Hintergrunddienst alpe-dienst (E4.1): ALPE_DIENST (Entwicklungsmodus, Tests), sonst neben dem eigenen Ort, wenn
+# dieses Werkzeug aus <PREFIX>/share/alpe läuft (Paket, Weg ohne Paket), sonst aus dem PATH. Nie der Dienst von 1.0.
 backend() {
-    if [ -x "$OWN" ] && [ -e "$DROPIN" ]; then printf '%s' "$OWN"; return 0; fi
     local candidate
-    # Alpe 1.0: Dort heisst der Dienst aus dem Paket noch «dms» (bis zum Umzug, Plan 7).
-    for candidate in /usr/bin/alpe-dienst /usr/local/bin/alpe-dienst /usr/bin/dms /usr/local/bin/dms "$HOME/.local/bin/dms"; do
-        [ -x "$candidate" ] && [ "$(readlink -f "$candidate")" != "$(readlink -f "${BASH_SOURCE[0]}")" ] && { printf '%s' "$candidate"; return 0; }
-    done
-    [ -x "$OWN" ] && { printf '%s' "$OWN"; return 0; }
+    if [ -n "${ALPE_DIENST:-}" ]; then
+        [ -x "$ALPE_DIENST" ] && { printf '%s' "$ALPE_DIENST"; return 0; }
+        return 1
+    fi
+    case "$ALPE_DIR" in
+    */share/alpe)
+        candidate="${ALPE_DIR%/share/alpe}/bin/alpe-dienst"
+        [ -x "$candidate" ] && { printf '%s' "$candidate"; return 0; } ;;
+    esac
+    candidate="$(command -v alpe-dienst 2>/dev/null)" && [ -n "$candidate" ] && { printf '%s' "$candidate"; return 0; }
     return 1
 }
 
@@ -270,13 +278,17 @@ kde) shift; exec bash "$ALPE_DIR/tools/kde-sitzung.sh" "$@" ;;
 kuerzel) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec python3 "$ALPE_DIR/tools/kuerzel.py" "$@" ;;
 entfernen) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec bash "$ALPE_DIR/tools/entfernen.sh" "$@" ;;
 design) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec python3 "$ALPE_DIR/tools/design.py" "$@" ;;
-restart) systemctl --user restart dms.service 2>/dev/null || { b="$(backend)" && exec "$b" restart; } ;;
+# Plan 6.8: Den Neustart der Unit übernimmt allein «alpe restart»; ohne aktive Unit startet «alpe-dienst restart» die
+# eigene Instanz neu (der Dienst selbst ruft nie systemctl auf).
+restart)
+    if "$SYSTEMCTL" --user is-active --quiet alpe.service 2>/dev/null; then exec "$SYSTEMCTL" --user restart alpe.service
+    else b="$(backend)" || { say "kein Hintergrunddienst gefunden"; exit 1; }; exec "$b" restart; fi ;;
 lock)
-    if kde; then exec loginctl lock-session
+    if kde; then exec "$LOGINCTL" lock-session
     # Hyprland mit hyprlock und hypridle: über logind, dann sperrt hypridle mit hyprlock.
-    elif have hyprlock && pgrep -u "$USER" -x hypridle >/dev/null; then exec loginctl lock-session
+    elif have hyprlock && pgrep -u "$USER" -x hypridle >/dev/null; then exec "$LOGINCTL" lock-session
     else b="$(backend)" && exec "$b" ipc call lock lock; fi ;;
-log) exec journalctl --user -u dms.service -n 200 -f ;;
+log) exec "$JOURNALCTL" --user -u alpe.service -n 200 -f ;;
 test) ALPE_SHELL_DIR="$SHELL_DIR" exec bash "$ALPE_DIR/tools/test.sh" ;;
 help|-h|--help)
     sed -n '2,21p' "$(readlink -f "${BASH_SOURCE[0]}")" | sed 's/^# \{0,1\}//'
