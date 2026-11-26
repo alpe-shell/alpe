@@ -878,7 +878,8 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
 - **Desktop-Datei `io.github.alpe_shell.Alpe.desktop` (E4):** `Exec=alpe-dienst run -c /usr/share/alpe/shell`
   gilt nur für den Übergang, solange es `alpe start` nicht gibt; nach 6.6 ist `ExecStart` von `alpe.service` der
   einzige Startweg, und wer die Datei startet, umginge das Sicherheitsnetz `alpe umzug --nur-dateien`. Bei E4
-  anpassen (Vorschlag der Gegenprüfung: `Exec=alpe start`); `tests/test_paketdateien.py` legt den heutigen Wert fest
+  anpassen (Vorschlag der Gegenprüfung: `Exec=alpe start` – **entschieden am 25.11.2026, Plan 0.8 Nr. 125 (1)**,
+  zusammen mit einer gemeinsamen Pfadauflösung für `alpe start` und `doctor`); `tests/test_paketdateien.py` legt den heutigen Wert fest
   und wird dann rot – gewollt. Dazu `alpe doctor`: prüft weiter `dev.duxlabs.shell.desktop` im Home und empfiehlt
   `install.sh` (nach dem Umzug eine falsche Warnung). Die Unit landet mit `PREFIX=$HOME/.local` unter
   `~/.local/lib/systemd/user`, das nicht im Suchpfad der Benutzer-Units liegt; 6.4 kopiert sie selbst nach
