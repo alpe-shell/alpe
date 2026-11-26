@@ -67,6 +67,10 @@ check(sorted(depends) == sorted(plan_depends + ["kora-icon-theme"]),
       "depends = Liste aus Plan 6.2 und kora-icon-theme (0.8 Nr. 91): %s" % sorted(set(depends) ^ set(plan_depends + ["kora-icon-theme"])))
 check("quickshell>=0.3.2" in depends and {"wireplumber", "breeze-icons", "hicolor-icon-theme", "kora-icon-theme"} <= set(depends)
       and not any(d == "lua" or d.startswith("lua") for d in depends), "depends: quickshell>=0.3.2, wireplumber, breeze-icons, hicolor-icon-theme, kora, kein lua")
+# ausdrücklich, nicht nur über die Liste im Plan: Klänge aus dem System (0.8 Nr. 128), wtype nur optional (Nr. 133)
+check("sound-theme-freedesktop" in depends and "wtype" not in depends
+      and any(o.startswith("wtype: ") for o in felder.get("optdepends", [])),
+      "sound-theme-freedesktop in depends (Nr. 128); wtype nicht in depends, sondern in optdepends mit Zweck (Nr. 133)")
 check(sorted(felder.get("makedepends", [])) == ["git", "go", "make"], "makedepends=(go make git)")
 opt = [o.split(":", 1)[0] for o in felder.get("optdepends", [])]
 check(set(plan_optdepends) <= set(opt) and set(opt) - set(plan_optdepends) <= {"dsearch"} and all(":" in o for o in felder.get("optdepends", [])),

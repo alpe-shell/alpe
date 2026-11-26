@@ -17,7 +17,7 @@ url='https://github.com/alpe-shell/alpe'
 # ungeklärt ist, steht in Plan 6.2 («Ungeklärt und darum nicht im Feld») und nicht hier.
 license=(MIT GPL-3.0-only Apache-2.0 BSD-2-Clause BSD-3-Clause OFL-1.1 CC-BY-3.0 CC-BY-4.0 CC-BY-SA-3.0 CC-BY-SA-4.0
          CC0-1.0 FTL LicenseRef-Alpe-Logo)
-depends=('quickshell>=0.3.2' qt6-base qt6-declarative qt6-multimedia qt6-svg accountsservice python matugen wtype
+depends=('quickshell>=0.3.2' qt6-base qt6-declarative qt6-multimedia qt6-svg accountsservice python matugen
          wireplumber breeze-icons hicolor-icon-theme kora-icon-theme sound-theme-freedesktop)
 makedepends=(go make git)
 optdepends=('python-h5py: Niederschlagsradar'
@@ -36,6 +36,7 @@ optdepends=('python-h5py: Niederschlagsradar'
             'i2c-tools: Helligkeit externer Bildschirme'
             'qt6ct: Qt-Thema'
             'headsetcontrol: Headsets'
+            'wtype: Texteingabe für eigene Befehle und Plugins'
             'dsearch: Dateisuche im Starter')
 # Der Dienst ist mit -s -w gebaut (Makefile); ein Debug-Paket bliebe leer.
 options=(!debug)
