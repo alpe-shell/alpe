@@ -46,14 +46,17 @@ Die Shell des Maintainers ist **fish**. In Befehlen für ihn:
 - **Wenn Edit bei einer Datei nicht geht: anhalten und den Grund nennen** (Datei, Aufruf, Fehlermeldung
   im Wortlaut). Nicht auf `sed` oder ein Skript ausweichen. Bequemlichkeit (lange Stelle, viele
   Stellen) ist kein Grund.
-- Ausgenommen sind nur zwei Arten erzeugter Dateien, und nur über ihr eingechecktes Werkzeug:
-  Attrappen über `make -C core mocks` (Plan 0.8 Nr. 62, 66) und gemessene Grundlinien über
-  `--grundlinie` (`ladepruefung.py`, `qmllint-pruefung.py`; Plan 0.8 Nr. 63, 70, 76). Suchindex und
+- Ausgenommen sind nur diese drei Arten erzeugter Dateien, und nur über ihr eingechecktes Werkzeug:
+  Attrappen über `make -C core mocks` (Plan 0.8 Nr. 62, 66), gemessene Grundlinien über
+  `--grundlinie` (`ladepruefung.py`, `qmllint-pruefung.py`; Plan 0.8 Nr. 63, 70, 76) und das Standbild der
+  Sperre über `tools/standbild.py` (Plan 0.8 Nr. 106, 122). Suchindex und
   Massenumbenennungen (`umbenennen.py`, `texte-ersetzen.py`) sind offen und werden entschieden, wenn sie
   anstehen (Plan 0.8 Nr. 111); dann vorher fragen.
-- Ausgaben von Programmen (Belege, Protokolle, Build- und Install-Ergebnisse in Temp-Ordnern) fallen nicht unter
-  diese Regel; versionierte Dateien, die eingecheckte Werkzeuge erzeugen, werden einzeln entschieden – entschieden
-  ist ausser den zwei oben das Standbild der Sperre über `tools/standbild.py` (Plan 0.8 Nr. 106, 122).
+- Ausgaben von Programmen (Protokolle, Build- und Install-Ergebnisse in Temp-Ordnern) fallen nicht unter
+  diese Regel; Belege gehören zu diesen Ausgaben, wo sie auch liegen. Von der Sitzung verfasster oder geänderter
+  Inhalt bleibt unter der Regel, auch in Temp-Ordnern (etwa eine Temp-Kopie für eine Gegenprobe oder eine
+  Hilfsdatei). Weitere versionierte Dateien, die eingecheckte Werkzeuge erzeugen, werden einzeln entschieden
+  (Plan 0.8 Nr. 122, 138).
 
 ## Das laufende System
 
