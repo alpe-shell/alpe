@@ -732,15 +732,17 @@ def main(argv):
     if write and voller_papierkorb():
         say("FEHLER: Mit ALPE_LP_PAPIERKORB=voll (Probe) wird keine Grundlinie geschrieben")
         return 2
-    for need in ("kwin_wayland", "systemd-run", "dbus-run-session") + (("Hyprland",) if compositor == "hyprland" else ()):
-        if not shutil.which(need):
-            say("übersprungen: %s nicht installiert" % need)
-            return 0
+    # Alle Ablehnungen stehen vor der Suche nach den Programmen (Plan 0.8 Nr. 123): Die Tests rufen sie mit einem PATH
+    # ohne kwin_wayland auf, damit ein durchgerutschter Fall «übersprungen» endet statt einen echten Lauf zu starten.
     root = os.environ.get("ALPE_LP_TMP") or tempfile.gettempdir()
     if compositor == "hyprland" and socket_path_too_long(root):
         say("FEHLER: %s ist für Hyprlands Socket zu lang (%d Zeichen, höchstens %d) – kürzeres $ALPE_LP_TMP wählen"
             % (root, len(os.path.abspath(root)), 107 - HYPR_SOCKET_REST))
         return 2
+    for need in ("kwin_wayland", "systemd-run", "dbus-run-session") + (("Hyprland",) if compositor == "hyprland" else ()):
+        if not shutil.which(need):
+            say("übersprungen: %s nicht installiert" % need)
+            return 0
     running = active_scopes()
     if running:
         say("FEHLER: Es läuft schon eine Ladeprüfung: %s" % ", ".join(running))

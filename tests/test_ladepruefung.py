@@ -243,16 +243,31 @@ esac
           and punkte(bild_rgbx) == bytes([0, 10, 20, 30, 40, 50, 60, 0, 70, 80, 90, 1, 2, 3])
           and punkte(bild_bgrx) == bytes([0, 30, 20, 10, 60, 50, 40, 0, 90, 80, 70, 3, 2, 1]),
           "kwinbild: Rohdaten RGBX und BGRX werden zu einem PNG mit richtiger Farbreihenfolge, Füllbytes der Zeile fallen weg")
-    aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--offen", "--bild-sperre", os.path.join(tmp, "x.png")], capture_output=True, text=True)
+    # Ablehnungstests (Plan 0.8 Nr. 123): immer mit --dienst auf einen Pfad, den es nicht gibt (kein Bau), und einem
+    # PATH ohne kwin_wayland – rutscht eine Ablehnung durch, endet der Aufruf mit «übersprungen» statt mit einem echten
+    # Lauf mitten in tools/test.sh.
+    ohne_kwin = os.path.join(tmp, "path-ohne-kwin")
+    os.makedirs(ohne_kwin, exist_ok=True)
+    kein_dienst = os.path.join(tmp, "kein-alpe-dienst")
+
+    def abgelehnt(argumente, **umgebung):
+        return subprocess.run([sys.executable, lp.__file__] + argumente + ["--dienst", kein_dienst], capture_output=True, text=True,
+                              env=dict(os.environ, PATH=ohne_kwin, **umgebung))
+    # Selbstprobe des Netzes: ein Aufruf, der nicht abgelehnt wird, endet so «übersprungen», ohne Bau und ohne Lauf.
+    netz = abgelehnt(["kwin"])
+    check(netz.returncode == 0 and "übersprungen: kwin_wayland nicht installiert" in netz.stdout and "Dienst bauen" not in netz.stdout
+          and "== Lauf" not in netz.stdout and not os.path.exists(kein_dienst),
+          "Ablehnungstests laufen mit --dienst ohne Datei und PATH ohne kwin_wayland: ein durchgerutschter Fall startet nichts")
+    aufruf = abgelehnt(["kwin", "--offen", "--bild-sperre", os.path.join(tmp, "x.png")])
     check(aufruf.returncode == 2 and "gesperrt" in aufruf.stdout + aufruf.stderr, "--bild-sperre mit --offen wird abgelehnt")
     # Unter KWin gibt es kein Bild der Sperre (dort sperrt KDE): Abbruch mit Begründung, bevor etwas gebaut oder gestartet wird.
     sperre_kwin = os.path.join(tmp, "sperre-kwin.png")
-    aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild-sperre", sperre_kwin], capture_output=True, text=True)
+    aufruf = abgelehnt(["kwin", "--bild-sperre", sperre_kwin])
     ausgabe = aufruf.stdout + aufruf.stderr
     check(aufruf.returncode == 2 and "--bild-sperre gibt es unter KWin nicht" in ausgabe and "--no-lockscreen" in ausgabe and "hyprland --bild-sperre" in ausgabe
           and "Dienst bauen" not in ausgabe and "== Lauf" not in ausgabe and not os.path.exists(sperre_kwin),
           "--bild-sperre unter KWin bricht mit klarer Meldung ab: kein Bau, kein Lauf, kein Bild (statt des Schreibtischs)")
-    aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--bild", os.path.join(tmp, "x.png")], capture_output=True, text=True)
+    aufruf = abgelehnt(["kwin", "--bild", os.path.join(tmp, "x.png")])
     check(aufruf.returncode == 2 and "--offen" in aufruf.stdout + aufruf.stderr, "--bild ohne --offen wird abgelehnt")
     # Bild des Schreibtischs im ausgelieferten Design unter KWin (Plan 0.8 Nr. 112): nur Variante «gesperrt», nur KWin.
     schreibtisch = os.path.join(tmp, "halt-kwin-gesperrt-schreibtisch.png")
@@ -261,7 +276,7 @@ esac
                                   ("mit --bild-sperre (Hyprland)", ["hyprland", "--bild-sperre", os.path.join(tmp, "s.png")], "--bild-schreibtisch gehört zur Variante"),
                                   ("unter Hyprland", ["hyprland"], "nur unter KWin"),
                                   ("mit --grundlinie", ["kwin", "--grundlinie"], "Grundlinie gilt")):
-        aufruf = subprocess.run([sys.executable, lp.__file__] + extra + ["--bild-schreibtisch", schreibtisch], capture_output=True, text=True)
+        aufruf = abgelehnt(extra + ["--bild-schreibtisch", schreibtisch])
         ausgabe = aufruf.stdout + aufruf.stderr
         check(aufruf.returncode == 2 and erwartet in ausgabe and "Dienst bauen" not in ausgabe and "== Lauf" not in ausgabe
               and not os.path.exists(schreibtisch),
@@ -297,7 +312,7 @@ esac
         check("Trash" not in leer and '"$XDG_DATA_HOME/Trash/files/probe.txt"' in voll and "probe.txt.trashinfo" in voll
               and voll.index("Trash/files") < voll.index("kwin_wayland"),
               "ALPE_LP_PAPIERKORB=voll legt vor dem Start eine Datei in den Papierkorb des Temp-HOME, ohne Schalter nichts")
-        aufruf = subprocess.run([sys.executable, lp.__file__, "kwin", "--grundlinie"], capture_output=True, text=True, env=dict(os.environ))
+        aufruf = abgelehnt(["kwin", "--grundlinie"])
         check(aufruf.returncode == 2 and "ALPE_LP_PAPIERKORB" in aufruf.stdout + aufruf.stderr, "mit vollem Papierkorb wird keine Grundlinie geschrieben")
     finally:
         os.environ.pop("ALPE_LP_PAPIERKORB", None)
@@ -317,10 +332,9 @@ esac
     # Hyprland-IPC: zu langer Temp-Ordner wird abgelehnt, ein Lauf ohne Sockets gilt als gescheitert.
     check(not lp.socket_path_too_long("/tmp") and not lp.socket_path_too_long("/tmp/claude-1000") and lp.socket_path_too_long("/tmp/claude-1000/h7/lp"),
           "Länge des Socket-Pfads: /tmp und /tmp/claude-1000 gehen, ein tieferer Ordner nicht")
-    if shutil.which("kwin_wayland") and shutil.which("Hyprland"):
-        lang = subprocess.run([sys.executable, lp.__file__, "hyprland"], capture_output=True, text=True,
-                              env=dict(os.environ, ALPE_LP_TMP=os.path.join(tmp, "ein-langer-ordner")))
-        check(lang.returncode == 2 and "zu lang" in lang.stdout, "hyprland mit zu langem $ALPE_LP_TMP bricht vor dem Start ab")
+    # Seit Plan 0.8 Nr. 123 vor der Suche nach den Programmen geprüft – der Test braucht kein Hyprland mehr.
+    lang = abgelehnt(["hyprland"], ALPE_LP_TMP=os.path.join(tmp, "ein-langer-ordner"))
+    check(lang.returncode == 2 and "zu lang" in lang.stdout, "hyprland mit zu langem $ALPE_LP_TMP bricht vor dem Start ab")
     gut = {"abbruch": "", "hung": False, "limit": 1, "shell.log": "Configuration Loaded\nbackend ready\n INFO ShellBackend: Connected (API v2, CLI 1.1) - []\n", "ipc.log": "--- bereit\nEnde nach Plan\n",
            "compositor": "hyprland", "umgebung.log": "HYPRLAND_INSTANCE_SIGNATURE=abc_1_2\nXDG_RUNTIME_DIR=/r\nSocket .socket.sock da\nSocket .socket2.sock da\n"}
     check(lp.health(gut) == [], "Lauf unter Hyprland mit Signatur und beiden Sockets ist in Ordnung")
