@@ -4,9 +4,17 @@ das Makefile in core/ liest sie dort, und der damit gebaute Dienst meldet sie.
     python3 tests/test_version.py
 
 Der Bau läuft über «make dev» in einen Temp-Ordner (ohne eingebettete Oberfläche, nichts im
-Quellbaum). Ohne go oder make, oder mit ALPE_SKIP_GO, wird nur das Makefile geprüft bzw. übersprungen.
+Quellbaum). Ohne go oder make, oder mit ALPE_SKIP_GO, wird nur das Makefile geprüft bzw. übersprungen – ausser mit
+ALPE_GO_PFLICHT (Go-Schritt der CI, Plan 0.8 Nr. 137): dann ist Fehlendes (go, make, git) ein Fehler.
 """
 import os, re, shutil, subprocess, sys, tempfile
+
+# Plan 0.8 Nr. 137: Im Go-Schritt der CI darf der Bau nicht still übersprungen werden.
+if os.environ.get("ALPE_GO_PFLICHT"):
+    _fehlt = [p for p in ("go", "make", "git") if not shutil.which(p)]
+    if _fehlt or os.environ.get("ALPE_SKIP_GO"):
+        print("FEHLER ALPE_GO_PFLICHT gesetzt, aber %s" % ("es fehlt: " + ", ".join(_fehlt) if _fehlt else "ALPE_SKIP_GO ist gesetzt"))
+        sys.exit(1)
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CORE = os.path.join(HERE, "core")

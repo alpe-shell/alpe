@@ -112,6 +112,11 @@ if job:
     check(re.search(r"^    timeout-minutes: \d+$", text, re.M) is not None, "CI-Job: mit Zeitgrenze")
     check("namcap PKGBUILD" in text and "namcap alpe-shell-*.pkg.tar.zst" in text, "CI-Job: namcap auf PKGBUILD und Paket")
     check("aur.archlinux.org/kora-icon-theme.git" in text, "CI-Job: kora-icon-theme aus dem AUR (Abhängigkeit, nicht in den Paketquellen)")
+    # Plan 0.8 Nr. 137: auf einen Commit des AUR-Repositorys festgenagelt, vor makepkg (Lieferkette, Wiederholbarkeit)
+    kora = re.search(r"git clone (?:--depth \d+ )?https://aur\.archlinux\.org/kora-icon-theme\.git (\S+)\n(.*?)makepkg -si", text, re.S)
+    check(kora is not None and "--depth" not in kora.group(0)
+          and re.search(r"git (?:-c \S+ )?checkout [0-9a-f]{40}\n", kora.group(2)) is not None,
+          "CI-Job: kora-icon-theme auf einen vollen Commit des AUR-Repositorys festgenagelt (checkout vor makepkg, Nr. 137)")
     check("python3 tests/test_makefile.py" not in text, "CI-Job ruft tests/test_makefile.py nicht auf (der Check in test_makefile.py verlangt genau einen Aufruf)")
 
 print("\n%s" % ("alle Prüfungen bestanden" if not failures else "%d FEHLER" % failures))

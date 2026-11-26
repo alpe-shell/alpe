@@ -56,6 +56,44 @@ check(len(mit_test) == 1 and setup_go and mit_test[0] > setup_go[0] and "ALPE_SK
       and "working-directory" not in schritte[mit_test[0]],
       "CI: tests/test_makefile.py läuft nach setup-go in der Wurzel, ohne ALPE_SKIP_GO (Bau, Installation, Quellarchiv)")
 
+
+# Plan 0.8 Nr. 137: Kommentare zählen nicht (eine auskommentierte Zeile wirkt nicht).
+def ohne_kommentar(block):
+    return "\n".join(re.sub(r"(^|\s)#.*$", "", z) for z in block.splitlines())
+
+
+schritte_ok = [ohne_kommentar(s) for s in schritte]
+mit_version = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s*python3 tests/test_version\.py\s*$", s, re.M)]
+mit_test_ok = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s*python3 tests/test_makefile\.py\s*$", s, re.M)]
+check(len(mit_version) == 1 and setup_go and mit_version[0] > setup_go[0] and mit_version == mit_test_ok
+      and "ALPE_SKIP_GO" not in schritte_ok[mit_version[0]],
+      "CI: tests/test_version.py läuft im Go-Schritt mit (nach setup-go, ohne ALPE_SKIP_GO; Nr. 137)")
+check(mit_test_ok and re.search(r'^\s+ALPE_GO_PFLICHT: "1"\s*$', schritte_ok[mit_test_ok[0]], re.M) is not None,
+      "CI: im Go-Schritt ist ALPE_GO_PFLICHT gesetzt – fehlendes go, make oder git ist dort ein Fehler (Nr. 137)")
+mit_skip = [i for i, s in enumerate(schritte_ok) if "ALPE_SKIP_GO" in s]
+erster = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s+run: bash tools/test\.sh\s*$", s, re.M)]
+check(len(erster) == 1 and mit_skip == erster and erster[0] < setup_go[0],
+      "CI: ALPE_SKIP_GO steht nur im ersten Schritt (tools/test.sh vor setup-go), nicht auf Job- oder Workflow-Ebene (Nr. 137)")
+kopf = ohne_kommentar(workflow.split("\njobs:", 1)[0])
+check(re.search(r"^permissions:\n  contents: read\s*$", kopf, re.M) is not None,
+      "CI: permissions contents: read auf Ebene des Workflows (Nr. 137)")
+
+# Plan 0.8 Nr. 137: Mit ALPE_GO_PFLICHT darf nichts still überspringen. Probe: beide Tests mit ALPE_SKIP_GO und
+# ALPE_GO_PFLICHT müssen rot enden (ALPE_PFLICHT_PROBE verhindert, dass sich die Probe selbst wieder aufruft).
+if not os.environ.get("ALPE_PFLICHT_PROBE"):
+    probe_env = dict(os.environ, ALPE_GO_PFLICHT="1", ALPE_SKIP_GO="1", ALPE_PFLICHT_PROBE="1")
+    for skript in ("test_version.py", "test_makefile.py"):
+        probe = subprocess.run([sys.executable, os.path.join(REPO, "tests", skript)], capture_output=True, text=True, env=probe_env)
+        check(probe.returncode == 1 and "ALPE_GO_PFLICHT" in probe.stdout,
+              "ALPE_GO_PFLICHT mit ALPE_SKIP_GO: tests/%s endet rot statt «übersprungen» (rc %d)" % (skript, probe.returncode),
+              probe)
+
+# Plan 0.8 Nr. 137: Im Go-Schritt der CI (ALPE_GO_PFLICHT) ist Fehlendes ein Fehler, kein Übersprung.
+if os.environ.get("ALPE_GO_PFLICHT"):
+    fehlt = [p for p in ("make", "go", "git") if not shutil.which(p)]
+    check(not fehlt and not os.environ.get("ALPE_SKIP_GO"),
+          "ALPE_GO_PFLICHT: make, go und git vorhanden, ALPE_SKIP_GO nicht gesetzt (fehlt: %s; ALPE_SKIP_GO: %s)"
+          % (fehlt, os.environ.get("ALPE_SKIP_GO", "")))
 if not shutil.which("make") or not shutil.which("go") or os.environ.get("ALPE_SKIP_GO"):
     print("make oder go fehlt, oder ALPE_SKIP_GO – Bau, Installation und Archiv übersprungen")
     sys.exit(1 if failures else 0)
@@ -257,6 +295,7 @@ try:
                   "bytegleich, 0644 (nur im Paket: %s; fehlt: %s)" % (len(da), sorted(da - erwartet)[:3], sorted(erwartet - da)[:3]), out)
     else:
         print("kein Git-Repository – make dist übersprungen")
+        check(not os.environ.get("ALPE_GO_PFLICHT"), "ALPE_GO_PFLICHT: make dist darf nicht übersprungen werden (kein Git-Repository)")
 finally:
     shutil.rmtree(tmp, ignore_errors=True)
 

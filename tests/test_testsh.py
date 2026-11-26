@@ -41,16 +41,23 @@ if not m:
 schritt = m.group(0)
 check("go test -count=1 ./internal/pam ./internal/clipolicy" in schritt, "der Schritt ruft go test -count=1 für ./internal/pam und ./internal/clipolicy auf")
 check(text.index(schritt) > text.index('step "Hintergrunddienst (go test)"'), "eigener Schritt nach dem bisherigen Go-Schritt")
-# In der CI läuft tools/test.sh mit ALPE_SKIP_GO; die Pakete laufen dort im Go-Schritt mit.
+# In der CI läuft tools/test.sh mit ALPE_SKIP_GO; die Pakete laufen dort im Go-Schritt mit. Wie in test_makefile.py:
+# Schritte sind die Blöcke ab «      - »; Kommentare zählen nicht; genau ein Schritt nach setup-go, ohne ALPE_SKIP_GO.
 workflow = open(os.path.join(REPO, ".github", "workflows", "tests.yml"), encoding="utf-8").read()
-check("(cd core && go test -count=1 ./internal/pam ./internal/clipolicy)" in workflow,
-      "CI: der Go-Schritt führt ./internal/pam und ./internal/clipolicy aus (tools/test.sh überspringt sie dort)")
+schritte = ["\n".join(re.sub(r"(^|\s)#.*$", "", z) for z in s.splitlines()) for s in re.split(r"\n(?=      - )", workflow)]
+setup_go = [i for i, s in enumerate(schritte) if "actions/setup-go@" in s]
+mit_pam = [i for i, s in enumerate(schritte)
+           if re.search(r"^\s*\(cd core && go test -count=1 \./internal/pam \./internal/clipolicy\)\s*$", s, re.M)]
+check(len(mit_pam) == 1 and setup_go and mit_pam[0] > setup_go[0] and "ALPE_SKIP_GO" not in schritte[mit_pam[0]],
+      "CI: genau ein Schritt nach setup-go führt ./internal/pam und ./internal/clipolicy aus, ohne ALPE_SKIP_GO "
+      "(tools/test.sh überspringt sie dort)")
 
-# Attrappe für go: «go env X» liefert einen festen Cache-Pfad (wie vor dem Wechsel von HOME), «go test …» schreibt
+# Attrappe für go: «go env X» liefert einen Cache-Pfad unter dem HOME, in dem es gefragt wird – so zeigt der Test, ob die
+# Caches vor dem Wechsel von HOME festgehalten werden (Plan 0.8 Nr. 40; Prüfung zu 1.10). «go test …» schreibt
 # Argumente, Ordner und Umgebung in eine Datei und endet mit $GO_ATTRAPPE_RC.
 ATTRAPPE = r'''#!/bin/bash
 if [ "$1" = env ]; then
-    echo "/echte-caches/$2"
+    echo "$HOME/caches/$2"
     exit 0
 fi
 {
@@ -117,8 +124,8 @@ try:
           {k: umgebung.get(k) for k in erwartet})
     check(not {"DBUS_SESSION_BUS_ADDRESS", "WAYLAND_DISPLAY", "DISPLAY"} & set(umgebung), "ohne Session-Bus und Display",
           sorted({"DBUS_SESSION_BUS_ADDRESS", "WAYLAND_DISPLAY", "DISPLAY"} & set(umgebung)))
-    check(umgebung.get("GOMODCACHE") == "/echte-caches/GOMODCACHE" and umgebung.get("GOCACHE") == "/echte-caches/GOCACHE"
-          and umgebung.get("GOPATH") == "/echte-caches/GOPATH", "Go-Caches vor dem Wechsel von HOME festgehalten (go env)",
+    check(all(umgebung.get(k) == echtes_heim + "/caches/" + k for k in ("GOMODCACHE", "GOCACHE", "GOPATH")),
+          "Go-Caches vor dem Wechsel von HOME festgehalten (go env unter dem HOME des Aufrufers, nicht im Temp-HOME)",
           {k: umgebung.get(k) for k in ("GOMODCACHE", "GOCACHE", "GOPATH")})
     check(os.listdir(temp_fuer_mktemp) == [], "der Temp-Ordner wird danach entfernt", os.listdir(temp_fuer_mktemp))
     check(os.listdir(echtes_heim) == [], "im HOME des Aufrufers entsteht nichts", os.listdir(echtes_heim))

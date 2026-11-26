@@ -5,6 +5,10 @@ on:
   push:
   pull_request:
 
+# Plan 0.8 Nr. 137: das Token darf in allen Jobs nur lesen (der Job arch-paket setzt es zusätzlich selbst).
+permissions:
+  contents: read
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -38,12 +42,16 @@ jobs:
           cache: false
 
       # Im Go-Schritt ohne ALPE_SKIP_GO: der Teil von tests/test_makefile.py, der baut, installiert und das
-      # Quellarchiv prüft (oben übersprungen, Plan 0.8 Nr. 124).
-      - name: Go-Tests der Alpe-Änderungen, Makefile (Bau, Installation, Quellarchiv)
+      # Quellarchiv prüft, und von tests/test_version.py, der baut (oben übersprungen, Plan 0.8 Nr. 124, 137).
+      # ALPE_GO_PFLICHT: fehlt hier go, make oder git, ist das ein Fehler statt eines Übersprungs (Nr. 137).
+      - name: Go-Tests der Alpe-Änderungen, Makefile (Bau, Installation, Quellarchiv), Version
+        env:
+          ALPE_GO_PFLICHT: "1"
         run: |
           (cd core && go test ./internal/server -run 'TestReadAlpeOff' -count=1)
           (cd core && go test -count=1 ./internal/pam ./internal/clipolicy)   # wie tools/test.sh (Plan 0.8 Nr. 136)
           python3 tests/test_makefile.py
+          python3 tests/test_version.py
 
   # Plan 9 und 0.8 Nr. 127: das PKGBUILD in archlinux:latest bauen, aus dem Archiv von make dist, mit makepkg und namcap.
   # makepkg läuft nie als root; kora-icon-theme kommt aus dem AUR (nicht in den Paketquellen, Plan 6.2).
@@ -72,10 +80,13 @@ jobs:
           sudo -u bauer git config --global --add safe.directory "$GITHUB_WORKSPACE"
           sudo -u bauer make dist BUILD=/tmp/alpe-dist
 
+      # Festgenagelt auf einen Commit des AUR-Repositorys (Plan 0.8 Nr. 137): kora-icon-theme 2.0.6-1, gelesen am
+      # 26.11.2026. Ein neuer Stand im AUR wird erst übernommen, wenn jemand ihn angesehen und hier eingetragen hat.
       - name: kora-icon-theme aus dem AUR
         run: |
-          sudo -u bauer git clone --depth 1 https://aur.archlinux.org/kora-icon-theme.git /tmp/kora
+          sudo -u bauer git clone https://aur.archlinux.org/kora-icon-theme.git /tmp/kora
           cd /tmp/kora
+          sudo -u bauer git -c advice.detachedHead=false checkout 3c8eea0fc119e23eb1bbd2114970302ae55acd50
           sudo -u bauer makepkg -si --noconfirm
 
       - name: Paket bauen (makepkg -s, mit check)
