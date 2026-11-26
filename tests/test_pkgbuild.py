@@ -84,5 +84,22 @@ check("-mod=vendor" in umgebung and "-trimpath" in umgebung and "GOPROXY=off" in
       "Go-Umgebung: GOFLAGS -mod=vendor -trimpath -buildmode=pie, GOPROXY=off (ohne Netz), CGO_ENABLED=0 (Plan 6.2)")
 check('make install DESTDIR="$pkgdir" PREFIX=/usr' in funktionen.split("== package", 1)[1], 'package(): make install DESTDIR="$pkgdir" PREFIX=/usr')
 
+# CI (Plan 9, 0.8 Nr. 127): eigener Job, der das PKGBUILD in archlinux:latest aus dem Archiv von make dist baut, mit
+# makepkg (nie als root) und namcap. Ohne YAML-Parser (in der CI nicht installiert): der Block des Jobs bis zum nächsten.
+workflow = open(os.path.join(REPO, ".github", "workflows", "tests.yml"), encoding="utf-8").read()
+job = re.search(r"^  arch-paket:\n(.*?)(?=^  \S|\Z)", workflow, re.M | re.S)
+check(job is not None, "CI: eigener Job «arch-paket»")
+if job:
+    text = job.group(1)
+    check(re.search(r"^    container: archlinux:latest$", text, re.M) is not None, "CI-Job läuft im Container archlinux:latest")
+    check("make dist" in text and "cp packaging/arch/PKGBUILD /tmp/alpe-dist/alpe-*.tar.gz" in text,
+          "CI-Job baut aus dem Archiv von make dist, das neben dem PKGBUILD liegt")
+    check("sudo -u bauer makepkg -s --noconfirm" in text and not re.search(r"^\s*makepkg", text, re.M) and "--nodeps" not in text
+          and not re.search(r"makepkg[^\n]*\s-d\b", text),
+          "CI-Job: makepkg -s als eigener Benutzer, nie als root, ohne -d/--nodeps")
+    check("namcap PKGBUILD" in text and "namcap alpe-shell-*.pkg.tar.zst" in text, "CI-Job: namcap auf PKGBUILD und Paket")
+    check("aur.archlinux.org/kora-icon-theme.git" in text, "CI-Job: kora-icon-theme aus dem AUR (Abhängigkeit, nicht in den Paketquellen)")
+    check("python3 tests/test_makefile.py" not in text, "CI-Job ruft tests/test_makefile.py nicht auf (der Check in test_makefile.py verlangt genau einen Aufruf)")
+
 print("\n%s" % ("alle Prüfungen bestanden" if not failures else "%d FEHLER" % failures))
 sys.exit(1 if failures else 0)

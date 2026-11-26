@@ -43,3 +43,46 @@ jobs:
         run: |
           (cd core && go test ./internal/server -run 'TestReadAlpeOff' -count=1)
           python3 tests/test_makefile.py
+
+  # Plan 9 und 0.8 Nr. 127: das PKGBUILD in archlinux:latest bauen, aus dem Archiv von make dist, mit makepkg und namcap.
+  # makepkg läuft nie als root; kora-icon-theme kommt aus dem AUR (nicht in den Paketquellen, Plan 6.2).
+  arch-paket:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Werkzeuge und Benutzer für makepkg
+        run: |
+          pacman -Syu --noconfirm --needed base-devel git go namcap sudo
+          useradd -m bauer
+          echo 'bauer ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/bauer
+
+      - uses: actions/checkout@v5
+
+      - name: Quellarchiv (make dist)
+        run: |
+          chown -R bauer: "$GITHUB_WORKSPACE"
+          sudo -u bauer git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          sudo -u bauer make dist BUILD=/tmp/alpe-dist
+
+      - name: kora-icon-theme aus dem AUR
+        run: |
+          sudo -u bauer git clone --depth 1 https://aur.archlinux.org/kora-icon-theme.git /tmp/kora
+          cd /tmp/kora
+          sudo -u bauer makepkg -si --noconfirm
+
+      - name: Paket bauen (makepkg -s, mit check)
+        run: |
+          mkdir /tmp/paket
+          cp packaging/arch/PKGBUILD /tmp/alpe-dist/alpe-*.tar.gz /tmp/paket/
+          chown -R bauer: /tmp/paket
+          cd /tmp/paket
+          sudo -u bauer makepkg -s --noconfirm
+
+      - name: namcap
+        run: |
+          cd /tmp/paket
+          namcap PKGBUILD
+          namcap alpe-shell-*.pkg.tar.zst
+
+      - name: Dateiliste des Pakets
+        run: pacman -Qlp /tmp/paket/alpe-shell-*.pkg.tar.zst
