@@ -92,16 +92,30 @@ check(not fremd and "copr.fedorainfracloud.org" not in text, "keine fremden COPR
 requires = tags("Requires")
 recommends = tags("Recommends")
 suggests = tags("Suggests")
-pflicht = ["quickshell >= 0.3.2", "matugen", "python3", "accountsservice", "qt6-qtmultimedia", "wireplumber",
+pflicht = ["quickshell >= 0.3.2", "matugen >= 4.1", "python3", "accountsservice", "qt6-qtmultimedia", "wireplumber",
            "kora-icon-theme", "breeze-icon-theme", "sound-theme-freedesktop"]
 check(all(p in requires for p in pflicht), "Requires: Plan 6.3 und sound-theme-freedesktop (%s)" % [p for p in pflicht if p not in requires])
+# matugen genau einmal und mit Mindestfassung 4.1, wie im PKGBUILD (0.8 Nr. 144) und in Plan 6.3
+# Vergleich mit der Liste `Requires: …` in 6.3 selbst, nicht mit dem ganzen Abschnitt (die Begründung nennt die Grenze auch)
+plan_requires = [r.strip() for r in re.search(r"`Requires: ([^`]*)`", plan63).group(1).split(",")]
+check([r for r in requires if r.split()[0] == "matugen"] == ["matugen >= 4.1"]
+      and [r for r in plan_requires if r.split()[0] == "matugen"] == ["matugen >= 4.1"],
+      "Requires: matugen >= 4.1 genau einmal, wie in der Liste `Requires:` von Plan 6.3 (0.8 Nr. 144)")
 check(not any(r.split()[0] in ("lua", "wtype") for r in requires), "Requires ohne lua und ohne wtype")
 check(not any("kora-icon-theme" in r and r != "kora-icon-theme" for r in requires), "kora-icon-theme ohne Version (0.8 Nr. 99)")
 plan_recommends = re.search(r"`Recommends: ([^`]*)`", plan63).group(1).replace(",", " ").split()
 check(set(plan_recommends) <= set(recommends), "Recommends: Liste aus Plan 6.3 (%s)" % sorted(set(plan_recommends) - set(recommends)))
 check("wtype" in recommends and "/usr/bin/dsearch" in recommends, "Recommends: wtype und /usr/bin/dsearch (0.8 Nr. 26)")
+# Zweck von wtype als Kommentar direkt über der Zeile Recommends: wtype (0.8 Nr. 146)
+wtype_kommentar = re.search(r"^#([^\n]*)\nRecommends:\s+wtype$", text, re.M)
+check(wtype_kommentar is not None
+      and "Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)" in wtype_kommentar.group(1),
+      "Kommentar über Recommends: wtype nennt den Zweck «Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)»")
 check(not set(recommends) & set(r.split()[0] for r in requires), "nichts zugleich in Requires und Recommends")
 check(not any("kwin" in s.lower() for s in suggests + recommends), "keine KWin-Effekte (kein Paket in Fedora)")
+# Suggests: die übrigen optdepends, nicht mehr vorläufig (0.8 Nr. 141 (8))
+check("(power-profiles-daemon or tuned-ppd)" in suggests, "Suggests: Energieprofile als (power-profiles-daemon or tuned-ppd)")
+check("vorläufig" not in text.lower(), "Suggests-Block (und die ganze Spec) nicht als vorläufig markiert")
 build_requires = tags("BuildRequires")
 check("golang >= %s" % gomod in build_requires, "BuildRequires: golang >= %s (core/go.mod)" % gomod)
 check("make" in build_requires and "systemd-rpm-macros" in build_requires, "BuildRequires: make, systemd-rpm-macros")
@@ -109,8 +123,18 @@ check("make" in build_requires and "systemd-rpm-macros" in build_requires, "Buil
 # Archivname und Ordner an genau einer Stelle
 quelle = re.findall(r"^%global quelle (\S+)$", ohne_kommentar, re.M)
 check(len(quelle) == 1, "Makro «quelle» genau einmal definiert")
-check(re.search(r"alpe(-shell)?-%\{version\}", ohne_kommentar.replace("%global quelle " + (quelle[0] if quelle else ""), "")) is None,
-      "Archiv- und Ordnername nur im Makro, sonst nirgends ausgeschrieben")
+check(quelle == ["%{name}-%{version}"], "%global quelle %{name}-%{version} (Nachtlauf vom 28.11.2026, Punkt 1.2)")
+# Derselbe Name wie das Archiv von make dist: DIST_NAME im Makefile (0.8 Nr. 132), mit Name: eingesetzt
+makefile = open(os.path.join(REPO, "Makefile"), encoding="utf-8").read()
+dist_name = re.findall(r"DIST_NAME := (\S+)\)", makefile)
+erwarteter_name = dist_name[0].replace("$(DIST_VERSION)", "<v>") if len(dist_name) == 1 else None
+spec_name = (quelle[0].replace("%{name}", tags("Name")[0] if tags("Name") else "?").replace("%{version}", "<v>")
+             if quelle else None)
+check(erwarteter_name is not None and spec_name == erwarteter_name,
+      "Archivname der Spec = DIST_NAME im Makefile (%s gegen %s)" % (spec_name, erwarteter_name))
+ausserhalb = ohne_kommentar.replace("%global quelle " + (quelle[0] if quelle else ""), "")
+check(re.search(r"(alpe(-shell)?|%\{name\})-%\{version\}", ausserhalb) is None,
+      "Archiv- und Ordnername nur im Makro, sonst nirgends ausgeschrieben (auch nicht als %{name}-%{version})")
 check(any(s.endswith("/%{quelle}.tar.gz") for s in tags("Source0")), "Source0: %{quelle}.tar.gz aus dem Release")
 check(re.search(r"^%autosetup -n %\{quelle\}$", abschnitt("prep"), re.M) is not None, "%prep: %autosetup -n %{quelle}")
 
@@ -131,6 +155,11 @@ check(re.search(r"^%\{__make\} install DESTDIR=%\{buildroot\} PREFIX=%\{_prefix\
 dateien = abschnitt("files")
 for datei in ("LICENSE", "NOTICE", "GPL-3.0-only.txt", "FTL.txt"):
     check(re.search(r"^%%license %%\{lizenzdir\}/%s$" % re.escape(datei), dateien, re.M) is not None, "%%license %s" % datei)
+# Die Texte der vendorten Go-Module (make install, 0.8 Nr. 131) als ganzer Ordner, keine einzelnen Dateien darunter
+check(re.search(r"^%license %\{lizenzdir\}/vendor/$", dateien, re.M) is not None,
+      "%license %{lizenzdir}/vendor/ (Lizenztexte der vendorten Go-Module, als Ordner)")
+check(re.search(r"^%license %\{lizenzdir\}/vendor/\S", dateien, re.M) is None,
+      "keine einzelnen Dateien unter %{lizenzdir}/vendor/ in %files")
 check(re.search(r"^%global lizenzdir %\{_defaultlicensedir\}/%\{name\}$", ohne_kommentar, re.M) is not None,
       "Makro für den Lizenzpfad (/usr/share/licenses/alpe-shell)")
 check(re.search(r"^%doc\s", dateien, re.M) is not None, "%doc vorhanden")

@@ -32,6 +32,10 @@ BUILD_ABS := $(abspath $(BUILD))
 # golang/freetype (über go-qrcode im Dienst): Lizenztext der FTL, im Quellarchiv unter vendor/ (siehe dist)
 FREETYPE := github.com/golang/freetype
 FTL_VENDOR := core/vendor/$(FREETYPE)/licenses/ftl.txt
+# sergi/go-diff (über go-git im Dienst): Apache-2.0 des Originals von Google in APACHE-LICENSE-2.0 der Modulwurzel;
+# «go mod vendor» übernimmt den Namen nicht (kein Präfix unten), darum legt make dist die Datei dazu (Plan 0.8 Nr. 145)
+GODIFF := github.com/sergi/go-diff
+GODIFF_VENDOR := core/vendor/$(GODIFF)/APACHE-LICENSE-2.0
 SHARE := $(DESTDIR)$(PREFIX)/share/alpe
 
 # Werkzeuge, die Nutzer brauchen – ausdrücklich, keine Wildcard (Plan 0.8 Nr. 109 (3)). Prüf- und
@@ -123,7 +127,7 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 		sed 's#/usr/share/alpe/#$(PREFIX)/share/alpe/#g' packaging/desktop/$$d.desktop > $(DESTDIR)$(PREFIX)/share/applications/$$d.desktop \
 			&& chmod 644 $(DESTDIR)$(PREFIX)/share/applications/$$d.desktop || exit 1; \
 	done
-	# Symbol der App-ID: das Alpe-Zeichen (Rechte beim Maintainer, NOTICE «Logo und Name»)
+	# Symbol der App-ID: das Alpe-Zeichen (CC-BY-SA-4.0, Alpe-Projekt; NOTICE «Logo und Name», Plan 0.8 Nr. 142)
 	install -Dm644 assets/logo/logo/alpe-zeichen.svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/io.github.alpe_shell.Alpe.svg
 	install -Dm644 $(KOMPL)/alpe-dienst.bash $(DESTDIR)$(PREFIX)/share/bash-completion/completions/alpe-dienst
 	install -Dm644 $(KOMPL)/_alpe-dienst $(DESTDIR)$(PREFIX)/share/zsh/site-functions/_alpe-dienst
@@ -141,11 +145,19 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 		src="$$dir/licenses/ftl.txt"; \
 	fi; \
 	install -Dm644 "$$src" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt
-	# Lizenztexte der vendorten Go-Module, darunter die in alpe-dienst gelinkten (Plan 0.8 Nr. 131): Liegt core/vendor vor
-	# (Quellarchiv von make dist), kommen alle LICENSE*, COPYING* und NOTICE* je Modul unverändert nach
-	# licenses/alpe-shell/vendor/<Modul>/ (Pfad wie unter core/vendor). Im Repository gibt es kein core/vendor.
+	# Lizenztexte der vendorten Go-Module, darunter die in alpe-dienst gelinkten (Plan 0.8 Nr. 131, 145): Liegt core/vendor
+	# vor (Quellarchiv von make dist), kommen alle Dateien mit den neun Präfixen von «go mod vendor» (AUTHORS, CONTRIBUTORS,
+	# COPYLEFT, COPYING, COPYRIGHT, LEGAL, LICENSE, NOTICE, PATENTS) und die von make dist dazugelegte APACHE-LICENSE-2.0
+	# von go-diff je Modul unverändert nach licenses/alpe-shell/vendor/<Modul>/ (Pfad wie unter core/vendor). go selbst
+	# nimmt aus den Elternordnern bis zur Modulwurzel nur Namen, die gross geschrieben mit einem Präfix beginnen, und aus
+	# den Paketordnern alle Dateien; hier wird bewusst ohne Rücksicht auf Gross- und Kleinschreibung gesucht (auch ein
+	# «License» im Paketordner kommt mit) und ohne Go-Quelltext (license.go ist Code). Im Repository gibt es kein
+	# core/vendor.
 	if [ -d core/vendor ]; then \
-		for f in $$(cd core/vendor && find . -type f \( -name 'LICENSE*' -o -name 'COPYING*' -o -name 'NOTICE*' \) -printf '%P\n' | LC_ALL=C sort); do \
+		for f in $$(cd core/vendor && find . -type f \( -iname 'AUTHORS*' -o -iname 'CONTRIBUTORS*' -o -iname 'COPYLEFT*' \
+				-o -iname 'COPYING*' -o -iname 'COPYRIGHT*' -o -iname 'LEGAL*' -o -iname 'LICENSE*' -o -iname 'NOTICE*' \
+				-o -iname 'PATENTS*' -o -path './$(GODIFF)/APACHE-LICENSE-2.0' \) ! -name '*.go' -printf '%P\n' \
+				| LC_ALL=C sort); do \
 			install -Dm644 "core/vendor/$$f" "$(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/vendor/$$f" || exit 1; \
 		done; \
 	fi
@@ -174,6 +186,10 @@ dist:
 	dir="$$(cd $(BUILD_ABS)/dist/$(DIST_NAME)/core && $(GO) list -mod=readonly -m -f '{{.Dir}}' $(FREETYPE))"; \
 		[ -n "$$dir" ] || { echo "$(FREETYPE) nicht im Modul-Cache"; exit 1; }; \
 		install -Dm644 "$$dir/licenses/ftl.txt" $(BUILD_ABS)/dist/$(DIST_NAME)/$(FTL_VENDOR)
+	# Ebenso APACHE-LICENSE-2.0 von sergi/go-diff (Apache-2.0 des Originals von Google; das Modul verweist im README darauf).
+	dir="$$(cd $(BUILD_ABS)/dist/$(DIST_NAME)/core && $(GO) list -mod=readonly -m -f '{{.Dir}}' $(GODIFF))"; \
+		[ -n "$$dir" ] || { echo "$(GODIFF) nicht im Modul-Cache"; exit 1; }; \
+		install -Dm644 "$$dir/APACHE-LICENSE-2.0" $(BUILD_ABS)/dist/$(DIST_NAME)/$(GODIFF_VENDOR)
 	tar -C $(BUILD_ABS)/dist --sort=name --owner=0 --group=0 --numeric-owner --mode=u+rwX,go=rX \
 		--mtime=@$$(git log -1 --format=%ct HEAD) -cf - $(DIST_NAME) | gzip -n > $(BUILD_ABS)/$(DIST_NAME).tar.gz
 	rm -rf $(BUILD_ABS)/dist

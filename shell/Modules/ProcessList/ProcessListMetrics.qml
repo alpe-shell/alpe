@@ -190,11 +190,21 @@ Singleton {
         return memo.icons.get(key);
     }
 
-    // A process without an icon of its own shows the one of its closest parent app that has one.
+    // The glyph of the program row (bundled symbol font), for a process whose row has no file and no themed icon.
+    function appGlyph(process) {
+        const command = process?.command ?? "";
+        const program = programName(process);
+        return programRow(command)?.glyph ?? (program !== command ? programRow(program)?.glyph : undefined) ?? "";
+    }
+
+    // A process without an icon of its own shows the one of its closest parent app that has one; a process with a glyph
+    // of its own shows the glyph instead (the rows draw it in place of the initial).
     function appIcon(process, entry) {
         indexProcesses();
         const memo = _appMemo;
         let icon = ownIcon(process, entry);
+        if (!icon && appGlyph(process))
+            return "";
         let parent = memo.byPid.get(process?.ppid);
         for (let depth = 0; !icon && parent && depth < 32; depth++) {
             const parentEntry = appEntry(parent);

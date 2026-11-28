@@ -10,8 +10,11 @@ go-qrcode/writer/standard einbindet; make dist und make install legen licenses/f
 yeqown/reedsolomon (MIT, am Ursprung belegt): NOTICE nennt Fassung, Lizenz mit Fundstelle und jede Datei, die
 go-qrcode/v2 einbindet. Klänge (1.4): NOTICE beschreibt genau die ausgelieferten Dateien unter shell/assets/sounds/.
 Zeichen Dritter und Code-Teile (1.5): NOTICE nennt genau die fremden SVG unter shell/assets/ (Flatpak CC BY 3.0,
-Snapcraft CC BY-SA 3.0, Hyprland ARR nach Markenrichtlinie) und fzf.js, Hct.js, MaterialShapeData.js mit der Lizenz,
+Snapcraft CC BY-SA 3.0; Hyprland seit dem 28.11.2026 ohne Zeichen, Symbol aus der Symbolschrift) und fzf.js, Hct.js, MaterialShapeData.js mit der Lizenz,
 die im Kopf der Datei steht.
+Logo und Zeichen von Alpe (Entscheid vom 28.11.2026, Plan 0.8 Nr. 142): NOTICE nennt CC BY-SA 4.0, «Alpe-Projekt», den
+Satz zu Name und Zeichen und jede Logo-Datei; die frühere eigene Kennung steht in keinem Lizenzfeld, in NOTICE, LICENSES/
+oder tests/.
 Ohne Bau, ohne Netz.
 """
 import os
@@ -121,6 +124,27 @@ if fassung and eintrag:
     check(benutzt and benutzt == genannt,
           "NOTICE nennt jede Datei, die go-qrcode/v2 (und damit reedsolomon) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
 
+# --- sergi/go-diff (Plan 0.8 Nr. 145): MIT, dazu der Apache-Text des Originals, den make dist und make install ablegen ---
+modul = "github.com/sergi/go-diff"
+fassung = re.search(r"^\s*%s (v\S+)" % re.escape(modul), gomod, re.M)
+eintrag = block(modul)
+check(fassung is not None and eintrag != "", "NOTICE hat einen eigenen Eintrag für %s (in core/go.mod)" % modul)
+if fassung and eintrag:
+    eintrag_text = " ".join(eintrag.split())
+    check(re.search(r"Fassung:\s+%s\b" % re.escape(fassung.group(1)), eintrag) is not None,
+          "NOTICE nennt die Fassung aus core/go.mod (%s)" % fassung.group(1))
+    check(re.search(r"^  Lizenz:\s+MIT\b", eintrag, re.M) is not None and "Apache License 2.0" in eintrag_text
+          and "core/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0" in eintrag_text
+          and "/usr/share/licenses/alpe-shell/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0" in eintrag_text,
+          "NOTICE: go-diff unter MIT, Apache-2.0 des Originals mit Ort im Quellarchiv und im Paket")
+    benutzt = go_dateien_mit_import("github.com/go-git/go-git/v6")
+    genannt = sorted(re.findall(r"core/\S+\.go", eintrag))
+    check(benutzt and benutzt == genannt,
+          "NOTICE nennt jede Datei, die go-git (und damit go-diff) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
+check("$(GODIFF_VENDOR)" in makefile and "GODIFF := github.com/sergi/go-diff" in makefile
+      and "-path './$(GODIFF)/APACHE-LICENSE-2.0'" in makefile,
+      "Makefile: make dist legt APACHE-LICENSE-2.0 von go-diff in den vendor-Baum, make install nimmt sie mit")
+
 # --- Klänge (1.4): NOTICE nennt genau die Klangdateien, die im Repository liegen (und damit ausgeliefert werden) ---
 klaenge = re.search(r"^Klänge \(shell/assets/sounds/\)\n((?:  .*\n)+)", notice, re.M)
 check(klaenge is not None, "NOTICE hat den Abschnitt «Klänge (shell/assets/sounds/)»")
@@ -158,8 +182,7 @@ if zeichen:
     check(fremd and fremd == genannt, "NOTICE nennt genau die Zeichen Dritter unter shell/assets/ (nur in NOTICE: %s; fehlt: %s)"
           % (sorted(genannt - fremd), sorted(fremd - genannt)))
     check("nur, um das jeweilige Programm oder" in zeichen.group(1), "NOTICE: Zeichen nur zur Bezeichnung")
-    # Simple Icons ist CC0, die Zeichen darin nicht (Nachbesserung zu 1.5): Flatpak CC BY 3.0, Snapcraft CC BY-SA 3.0,
-    # Hyprland ARR nach der Markenrichtlinie des Inhabers.
+    # Simple Icons ist CC0, die Zeichen darin nicht (Nachbesserung zu 1.5): Flatpak CC BY 3.0, Snapcraft CC BY-SA 3.0.
     eintraege = re.split(r"\n(?=  [\w/.-]+\.svg\s)", zeichen.group(1))
     def eintrag_zu(name):
         return next((e for e in eintraege if e.lstrip().startswith(name)), "")
@@ -171,8 +194,10 @@ if zeichen:
           "NOTICE: flatpak.svg unter CC BY 3.0 (nicht CC0)")
     check("(CC BY-SA 3.0)" in lizenz_des_zeichens("package-sources/snap.svg") and "CC0" not in lizenz_des_zeichens("package-sources/snap.svg"),
           "NOTICE: snap.svg unter CC BY-SA 3.0 (nicht CC0)")
-    check("ARR" in eintrag_zu("hyprland.svg") and "https://hypr.land/trademark-usage/" in eintrag_zu("hyprland.svg"),
-          "NOTICE: hyprland.svg mit Hinweis auf ARR und die Markenrichtlinie")
+    # Entscheid vom 28.11.2026 (Plan 0.8 Nr. 143): Hyprland ohne fremdes Zeichen, Symbol aus der Symbolschrift
+    check(not os.path.exists(os.path.join(assets, "hyprland.svg")) and "hyprland.svg" not in zeichen.group(1)
+          and "«team_dashboard» aus derselben Schrift" in " ".join(zeichen.group(1).split()),
+          "Hyprland: kein Zeichen mehr (hyprland.svg entfernt), NOTICE nennt das Symbol aus der Symbolschrift")
     # Entscheid vom 26.11.2026: AppImage ohne fremdes Zeichen, Symbol aus der mitgelieferten Symbolschrift
     check(not os.path.exists(os.path.join(assets, "package-sources", "appimage.svg")) and "appimage.svg" not in zeichen.group(1)
           and "«deployed_code» aus Material" in zeichen.group(1),
@@ -186,6 +211,43 @@ for datei, lizenz, im_kopf in (("shell/Alpe/Common/fzf.js", "BSD-3-Clause", "BSD
     kopf = "".join(open(os.path.join(REPO, datei), encoding="utf-8").readlines()[:12]) if os.path.isfile(os.path.join(REPO, datei)) else ""
     check(im_kopf in kopf and zeile is not None and zeile.group(1).startswith(lizenz),
           "NOTICE nennt %s mit %s, wie im Kopf der Datei («%s»)" % (datei, lizenz, im_kopf))
+
+# --- Logo und Zeichen von Alpe unter CC-BY-SA-4.0 (Entscheid vom 28.11.2026, Plan 0.8 Nr. 142) ---
+alte_kennung = "LicenseRef-" + "Alpe-Logo"  # zusammengesetzt, damit diese Datei die Kennung selbst nicht enthält
+logo = re.search(r"^Logo und Name \(assets/logo/logo/\)\n((?:  .*\n)+)", notice, re.M)
+check(logo is not None, "NOTICE hat den Abschnitt «Logo und Name (assets/logo/logo/)»")
+logo_text = " ".join(logo.group(1).split()) if logo else ""
+check("Urheber: Alpe-Projekt" in logo_text, "NOTICE, Logo: Urheberangabe «Alpe-Projekt»")
+check("(CC BY-SA 4.0)" in logo_text and "https://creativecommons.org/licenses/by-sa/4.0/" in logo_text,
+      "NOTICE, Logo: Lizenz CC BY-SA 4.0 mit Adresse")
+check("Name und Zeichen kennzeichnen dieses Projekt; wer eine veränderte Fassung verbreitet, wird gebeten, sie nicht "
+      "als Alpe auszugeben." in logo_text, "NOTICE, Logo: Satz zu Name und Zeichen im Wortlaut des Entscheids")
+check("beim Maintainer" not in logo_text and "Erlaubt:" not in logo_text and "nicht unter CC0" not in logo_text,
+      "NOTICE, Logo: der Text der eigenen Bedingungen ist entfernt")
+# Jede Datei unter assets/logo/logo/ ist im Abschnitt genannt (Name ohne Endung bzw. erzeugen.py), ebenso die
+# erzeugten Zeichen der Oberfläche
+logo_dir = os.path.join(REPO, "assets", "logo", "logo")
+logo_namen = sorted({os.path.splitext(f)[0] if f != "erzeugen.py" else f for f in os.listdir(logo_dir)}) if os.path.isdir(logo_dir) else []
+check(logo_namen and all(n in logo_text for n in logo_namen),
+      "NOTICE, Logo: alle Dateien unter assets/logo/logo/ genannt (fehlt: %s)" % [n for n in logo_namen if n not in logo_text])
+for pfad in ("shell/Alpe/Widgets/LogoShape.js", "shell/assets/alpe-zeichen.svg", "shell/assets/alpe-zeichen-akzent.svg"):
+    check(os.path.isfile(os.path.join(REPO, pfad)) and pfad in logo_text, "NOTICE, Logo: %s genannt" % pfad)
+# Die alte Kennung steht nirgends mehr in Lizenzfeldern, NOTICE, LICENSES/ und den Tests
+orte = [os.path.join("packaging", "arch", "PKGBUILD"), os.path.join("packaging", "fedora", "alpe-shell.spec"), "NOTICE"]
+for ordner in ("LICENSES", "tests"):
+    for wurzel, _, dateien in os.walk(os.path.join(REPO, ordner)):
+        orte += [os.path.relpath(os.path.join(wurzel, d), REPO) for d in dateien if not d.endswith(".pyc")]
+mit_kennung = []
+for ort in orte:
+    try:
+        with open(os.path.join(REPO, ort), encoding="utf-8", errors="replace") as handle:
+            if alte_kennung in handle.read():
+                mit_kennung.append(ort)
+    except OSError:
+        pass
+check(not mit_kennung, "keine eigene Logo-Kennung mehr in PKGBUILD, Spec, NOTICE, LICENSES/, tests/ (%s)" % mit_kennung)
+check(not any("logo" in f.lower() for f in os.listdir(os.path.join(REPO, "LICENSES"))),
+      "LICENSES/ ohne eigenen Text einer Logo-Lizenz")
 
 # Im Quellarchiv (git archive HEAD) ist nur, was versioniert ist.
 if subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:

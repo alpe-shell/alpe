@@ -13,11 +13,13 @@ pkgrel=1
 pkgdesc='Alpe – Desktop-Shell für Linux, massgeschneidert für die Schweiz (KDE Plasma mit KWin, Hyprland)'
 arch=(x86_64 aarch64)
 url='https://github.com/alpe-shell/alpe'
-# Vollständig aus der Dateiliste von «make install» (Plan 6.2, 0.8 Nr. 113–117, 126; Einzelheiten in NOTICE). Was noch
-# ungeklärt ist, steht in Plan 6.2 («Ungeklärt und darum nicht im Feld») und nicht hier.
+# Vollständig aus der Dateiliste von «make install» (Plan 6.2, 0.8 Nr. 113–117, 126, 142; Einzelheiten in NOTICE). Was
+# noch ungeklärt ist, steht in Plan 6.2 («Ungeklärt und darum nicht im Feld») und nicht hier. Logo und Zeichen von Alpe
+# stehen unter CC-BY-SA-4.0 (0.8 Nr. 142).
 license=(MIT GPL-3.0-only Apache-2.0 BSD-2-Clause BSD-3-Clause OFL-1.1 CC-BY-3.0 CC-BY-4.0 CC-BY-SA-3.0 CC-BY-SA-4.0
-         CC0-1.0 FTL LicenseRef-Alpe-Logo)
-depends=('quickshell>=0.3.2' qt6-base qt6-declarative qt6-multimedia qt6-svg accountsservice python matugen
+         CC0-1.0 FTL)
+# matugen>=4.1: das ausgelieferte Design setzt matugenSourceMode «lightness», das braucht --prefer ab 4.1 (0.8 Nr. 144)
+depends=('quickshell>=0.3.2' qt6-base qt6-declarative qt6-multimedia qt6-svg accountsservice python 'matugen>=4.1'
          wireplumber breeze-icons hicolor-icon-theme kora-icon-theme sound-theme-freedesktop)
 makedepends=(go make git)
 optdepends=('python-h5py: Niederschlagsradar'
@@ -27,7 +29,7 @@ optdepends=('python-h5py: Niederschlagsradar'
             'kwin-effects-better-blur-dx: Unschärfe unter KDE (AUR)'
             'kwin-effect-rounded-corners: runde Ecken unter KDE (AUR)'
             'hyprlock: Sperre unter Hyprland'
-            'plasma-workspace: Sperre unter KDE (Sperrpaket org.alpe.desktop, Anzeige der Feststelltaste)'
+            'plasma-workspace: Anzeige der Feststelltaste auf der KDE-Sperre'
             'hypridle: Ruhezustand unter Hyprland'
             'slurp: Bereich wählen für Bildschirmfotos'
             'cava: Audio-Visualisierung'
@@ -37,7 +39,7 @@ optdepends=('python-h5py: Niederschlagsradar'
             'i2c-tools: Helligkeit externer Bildschirme'
             'qt6ct: Qt-Thema'
             'headsetcontrol: Headsets'
-            'wtype: Texteingabe für eigene Befehle und Plugins'
+            'wtype: Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)'
             'dsearch: Dateisuche im Starter')
 # Der Dienst ist mit -s -w gebaut (Makefile); ein Debug-Paket bliebe leer.
 options=(!debug)

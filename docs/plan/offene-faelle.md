@@ -1476,12 +1476,14 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       `discord.svg`, `reddit.svg` (nirgends benutzt). **Erledigt im Nachtlauf vom 26.11.2026 (Plan 0.8 Nr. 117):**
       alle drei Code-Teile und die fünf Zeichen in `NOTICE`, `discord.svg`/`reddit.svg` entfernt. **Für das
       Lizenzfeld neu (nicht vermuten, bei E2/E3 entscheiden):** Flatpak-Zeichen CC-BY-3.0, Snapcraft-Zeichen
-      CC-BY-SA-3.0 (beide nach Simple Icons, das selbst CC0 ist), Hyprland-Zeichen ARR nach der Markenrichtlinie
-      von hyprwm (die Datei ist nicht die offizielle Vorlage); Herkunft von `appimage.svg` unbelegt. Geparkt.
+      CC-BY-SA-3.0 (beide nach Simple Icons, das selbst CC0 ist), ~~Hyprland-Zeichen ARR nach der Markenrichtlinie
+      von hyprwm (die Datei ist nicht die offizielle Vorlage)~~ **seit Plan 0.8 Nr. 143 (28.11.2026) entfernt,
+      Symbol `team_dashboard`**; Herkunft von `appimage.svg` unbelegt. Geparkt.
       Flatpak und Snapcraft: bleiben mit Nennung (entschieden mit Plan 0.8 Nr. 130).
       **AppImage erledigt (Entscheid vom 26.11.2026, Plan 0.8 Nr. 129):** `appimage.svg` entfernt, der Starter zeigt
       das Symbol `deployed_code` aus der mitgelieferten Symbolschrift.
-    - `LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`); die mit
+    - ~~`LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`)~~ seit Plan 0.8
+      Nr. 142 (28.11.2026) CC-BY-SA-4.0, Urheber «Alpe-Projekt»; die mit
       `alpe-dienst completion` erzeugten Vervollständigungen stammen aus Vorlagen von cobra (Apache-2.0).
 - ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
   Lizenzfeld MIT, CC-BY-4.0 und CC0-1.0 nennt (Plan 6.2, 6.3, Abschnitt 10). Unter `shell/` liegen
@@ -1506,7 +1508,8 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   verlangte Angabe «Quelle: MeteoSchweiz» (`opendatadocs.meteoswiss.ch`, Nutzungsbedingungen und
   Seite zu den Radarprodukten); (3) die Karten des Radar-Tabs – Natural Earth, gemeinfrei, Nennung
   nicht verlangt; (4) die Logos – Rechte am Logo und am Namen beim Maintainer, Nutzung zur
-  Bezeichnung von Alpe erlaubt, nicht CC0. Die Drucker-Testseite ist neu erzeugt
+  Bezeichnung von Alpe erlaubt, nicht CC0 (seit Plan 0.8 Nr. 142 vom 28.11.2026: CC-BY-SA-4.0, Urheber
+  «Alpe-Projekt»). Die Drucker-Testseite ist neu erzeugt
   (`entwicklung/testseite/erzeugen.py`). **Weiterhin ohne Eintrag:** die Zeichen Dritter unter
   `shell/assets/` und die Teile des fcitx5-Themas.
 - **Medien ohne Herkunftsangabe in `NOTICE` (Bestand vom 23.11.2026; nichts wird ohne Angabe des
@@ -1517,7 +1520,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   - *Seit Alpe 1.0 (`c988364`), nicht aus dem Ursprung:* `assets/logo/logo/` – `alpe-avatar.png`,
     `alpe-avatar.svg`, `alpe-logo-dunkel.svg`, `alpe-logo-hell.svg`, `alpe-social.png`,
     `alpe-social.svg`, `alpe-zeichen.png`, `alpe-zeichen.svg` (Logos von Alpe; Urheber und Lizenz
-    nirgends genannt). `plugins/alpeRadar/map-lines.png`, `map-water.png` (Kartengrundlage; laut
+    nirgends genannt – inzwischen in `NOTICE`, seit Plan 0.8 Nr. 142 CC-BY-SA-4.0). `plugins/alpeRadar/map-lines.png`, `map-water.png` (Kartengrundlage; laut
     `tools/build-basemap.py` und `docs/technik.md` aus Natural Earth, gemeinfrei – steht nicht in
     `NOTICE`). `tests/data/rzc263201930vl.001.h5` (Radar-Musterdatei; laut `docs/technik.md`
     MeteoSchweiz Open Data – `NOTICE` nennt nur allgemein «Wetterdaten und Radarbilder»).
@@ -1528,7 +1531,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     Dateien tragen keinen Vermerk; die Namen gleichen denen einer verbreiteten freien
     Mustersammlung – Herkunft nicht belegt, zu klären). `shell/assets/discord.svg`, `reddit.svg`
     (Markenzeichen Dritter; unbenutzt bzw. Rest, siehe «Werkzeuge»). `shell/assets/hyprland.svg`
-    (Zeichen von Hyprland). `shell/assets/package-sources/appimage.svg` (seit Plan 0.8 Nr. 129 entfernt), `flatpak.svg`, `nix.svg`,
+    (Zeichen von Hyprland; seit Plan 0.8 Nr. 143 entfernt). `shell/assets/package-sources/appimage.svg` (seit Plan 0.8 Nr. 129 entfernt), `flatpak.svg`, `nix.svg`,
     `snap.svg` (Zeichen der Paketformate). `shell/matugen/templates/fcitx5/highlight.svg`,
     `panel.svg` (Teile des fcitx5-Themas). `core/internal/config/embedded/testpage.pdf`
     (Drucker-Testseite; **der PDF-Titel lautet noch «DankMaterialShell Test Page»** – die
@@ -1853,3 +1856,28 @@ Punkte, die nur dort messbar sind:
   selben Zug prüfen: Der Abschnitt «Tests» nennt noch `~/dux-shell` als Ort der KWin-Brücke und
   des Dienstes, «Unterbau» den Dienst `dms` und `tools/backend.sh` mit dem Quellbaum des
   Ursprungs. Mit der Doku in G1 (Plan 8.) neu schreiben.
+
+## Vermerke vom 28.11.2026 (Entscheide des Maintainers, Plan 0.8 Nr. 141)
+
+- **Suchindex `soundLogin` bleibt** (Option (a) der Prüfung zu 1.1 vom 27.11.2026). Seit Plan 0.8 Nr. 128 ist der
+  Schalter «Anmeldeklang» in `shell/Modules/Settings/SoundsTab.qml` nur sichtbar, wenn ein Systemthema gewählt ist
+  (`useSystemSoundTheme`) und es den Klang `desktop-login` hat; `shell/translations/settings_search_index.json` führt `soundLogin` weiter. Ein
+  Suchtreffer «Anmeldung» führt dann auf die Seite ohne sichtbaren Schalter. Der Index wird nicht von Hand geändert;
+  neu erzeugt wird er erst mit dem Entscheid zu Plan 0.8 Nr. 111 (Suchindex), oder `SettingsSearchService` blendet
+  Treffer unsichtbarer Zeilen aus (eigener Punkt, nicht entschieden).
+- **Einfügen aus dem Zwischenablage-Verlauf unter KWin: ungeprüft** (Option (a)/(b) der Prüfung zu 1.7 vom
+  27.11.2026; der Maintainer misst es am PC). Gefolgert aus dem Code: `core/internal/clipboard/pastekey.go` bricht
+  ohne das Wayland-Protokoll `zwp_virtual_keyboard_v1` ab, `core/internal/server/clipboard/handlers.go` hat keinen
+  Ersatzweg; KWin bietet das Protokoll nicht an (KDE-Bug 497774, offen). Der Dienst meldet das schon: Er setzt
+  `pasteSupported` nur, wenn der Compositor `zwp_virtual_keyboard_manager_v1` anbietet
+  (`core/internal/server/clipboard/manager.go`), die Shell fragt `clipboard.pasteSupported` ab
+  (`shell/Services/ClipboardService.qml`, `refreshPasteSupport`); unter KWin sind dann «Einfügen» im Editor und
+  Enter-zum-Einfügen aus. Die Einfügen-Aktion am Eintrag hängt dagegen nur an `clipboardVisibleEntryActions`
+  (`shell/Modals/Clipboard/ClipboardEntry.qml`); ein Fehler erscheint dort als Mitteilung «Paste failed: …», nicht
+  sicher im Journal. Das Kopieren eines Eintrags in die Zwischenablage ist nicht betroffen. **Messung am PC, mit dem
+  Dienst, der dort läuft** (heute der von 1.0): (1) Antwort auf `clipboard.pasteSupported`; (2) ob die Einfügen-Aktion
+  am Eintrag und im Editor angeboten wird; (3) nach «Einfügen» am Eintrag: erscheint die Mitteilung «Paste failed»,
+  wird etwas eingefügt? Ein Ersatzweg über `org_kde_kwin_fake_input` ist nicht entschieden (Option (c) vom 27.11.).
+- **`entwicklung/pageharness/kuerzel_last.py` ist am Mac rot, schon auf `346312b`** (Befund vom Mac aus dem
+  Nachtlauf vom 27.11.2026, E3). Ursache unbekannt; am PC läuft der Schritt in `tools/test.sh` grün. Am Mac mit der
+  Ausgabe des Schritts (`python3 entwicklung/pageharness/kuerzel_last.py`) untersuchen.

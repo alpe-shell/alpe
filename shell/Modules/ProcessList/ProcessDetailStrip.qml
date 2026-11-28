@@ -298,13 +298,26 @@ Rectangle {
                 }
 
                 Rectangle {
+                    id: initialBox
+
                     anchors.fill: parent
                     visible: !appIcon.visible
                     radius: Theme.cornerRadiusM
                     color: Theme.secondaryContainer
 
+                    readonly property string glyph: ProcessListMetrics.appGlyph(root.live)
+
+                    AlpeIcon {
+                        anchors.centerIn: parent
+                        visible: initialBox.glyph.length > 0
+                        name: initialBox.glyph
+                        size: Math.round(initialBox.width * 0.7)
+                        color: Theme.onSecondaryContainer
+                    }
+
                     StyledText {
                         anchors.centerIn: parent
+                        visible: initialBox.glyph.length === 0
                         text: root.command.charAt(0).toUpperCase()
                         font.pixelSize: Theme.fontSizeLarge
                         font.weight: Theme.fontWeightMedium

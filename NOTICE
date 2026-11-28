@@ -86,14 +86,6 @@ Code
 Zeichen Dritter (shell/assets/), nur zur Bezeichnung
   Die Zeichen gehören ihren Inhabern. Alpe benutzt sie nur, um das jeweilige Programm oder
   Paketformat zu bezeichnen, und leitet daraus keine Verbindung zu den Inhabern ab.
-  hyprland.svg                 Zeichen von Hyprland, eingetragene Marke von Hyprland Development;
-                               Prozessliste und Starter-Knopf. Mit der Dux Modular Shell
-                               übernommen (bytegleich mit deren quickshell/assets/hyprland.svg).
-                               Der Inhaber stellt seine Logodateien nicht unter eine freie
-                               Lizenz («ARR», hyprwm/Hyprland, assets/logo/LICENSE); die Nutzung
-                               regelt https://hypr.land/trademark-usage/ (erlaubt zur Bezeichnung
-                               von Hyprland, mit der offiziellen Vorlage). Diese Datei ist nicht
-                               die heutige offizielle Vorlage (andere Pfade und Farbverlauf).
   package-sources/flatpak.svg  Zeichen von Flatpak; Herkunftsabzeichen im Starter. Pfaddaten aus
                                Simple Icons (https://simpleicons.org), Füllfarbe = Markenfarbe
                                nach Simple Icons. Lizenz des Zeichens: Creative Commons
@@ -110,13 +102,15 @@ Zeichen Dritter (shell/assets/), nur zur Bezeichnung
                                Frankau, überarbeitet von Tim Cuthbertson; CC BY 4.0
                                (https://creativecommons.org/licenses/by/4.0/).
   Für AppImage zeigt der Starter kein Zeichen, sondern das Symbol «deployed_code» aus Material
-  Symbols Rounded (siehe Schriften).
+  Symbols Rounded (siehe Schriften). Für Hyprland zeigen die Prozessliste und das Logo im Modus
+  «compositor» (Starter-Knopf in Leiste und Dock, Starter-Fläche und Punkt der Island) kein
+  Zeichen, sondern das Symbol «team_dashboard» aus derselben Schrift.
 
 Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
 Deren Lizenztexte liegen im Quellarchiv unter core/vendor/<Modul>/ und im Paket unter
 /usr/share/licenses/alpe-shell/vendor/<Modul>/; einzeln genannt sind unten unter «Go-Module im
 Programm alpe-dienst» nur die Module mit Besonderheiten (GPL, Wahl der Lizenz, fehlende
-Lizenzdatei).
+Lizenzdatei, zusätzlicher Lizenztext).
 
 
 Go-Module im Programm alpe-dienst
@@ -126,8 +120,10 @@ Die Module aus core/go.mod, deren Pakete der Dienst einbindet, werden beim Bau s
 Programm alpe-dienst gelinkt (Module, die nur Tests brauchen, nicht). Im Quellarchiv (make dist)
 liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die «go mod vendor» übernimmt, und
 den unten genannten, die make dist dazulegt. make install legt aus core/vendor/<Modul>/ alle
-Dateien LICENSE*, COPYING* und NOTICE* unverändert nach /usr/share/licenses/alpe-shell/vendor/
-<Modul>/. Die drei Module unten haben Besonderheiten; für alle übrigen gilt die Lizenzdatei
+Dateien, deren Name – ohne Rücksicht auf Gross- und Kleinschreibung, ohne Go-Quelltext – mit
+AUTHORS, CONTRIBUTORS, COPYLEFT, COPYING, COPYRIGHT, LEGAL, LICENSE, NOTICE oder PATENTS
+beginnt, und die von make dist dazugelegten Texte unverändert nach /usr/share/licenses/alpe-shell/vendor/
+<Modul>/. Die vier Module unten haben Besonderheiten; für alle übrigen gilt die Lizenzdatei
 im Modul.
 
 github.com/pilebones/go-udev
@@ -172,6 +168,20 @@ github.com/yeqown/reedsolomon
              Die Köpfe von reedsolomon.go und binary/binary.go nennen github.com/skip2/go-qrcode
              (MIT, Copyright (c) 2014 Tom Harwood) als Vorlage.
 
+github.com/sergi/go-diff
+  Fassung:   v1.4.0 (core/go.mod, indirekt)
+  Benutzt:   über github.com/go-git/go-git/v6, eingebunden in core/internal/gitssh/gitssh.go und
+             core/internal/plugins/plugin.go (Plugins aus Git-Repositories)
+  Urheber:   Copyright (c) 2012-2016 The go-diff Authors (LICENSE, AUTHORS, CONTRIBUTORS des
+             Moduls); Go-Fassung der «Diff, Match and Patch Library» von Neil Fraser, Copyright
+             (c) 2006 Google Inc.
+  Lizenz:    MIT (LICENSE des Moduls). Die ursprüngliche Bibliothek von Google steht unter der
+             Apache License 2.0; ihren vollen Text legt das Modul als APACHE-LICENSE-2.0 bei
+             (README des Moduls, «Copyright and License»). «go mod vendor» übernimmt diese Datei
+             nicht (der Name hat keines der Präfixe oben); make dist legt sie unverändert nach
+             core/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0, im Paket
+             /usr/share/licenses/alpe-shell/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0.
+
 
 Alpe-eigene Teile im Shell-Code
 -------------------------------
@@ -197,10 +207,15 @@ Standbild der Sperre (design/kde/bilder/jagged-peaks-wolkenzug.jpg)
 Logo und Name (assets/logo/logo/)
   Dateien:   alpe-zeichen, alpe-logo-hell, alpe-logo-dunkel, alpe-avatar, alpe-social (SVG und
              PNG) samt erzeugen.py; dasselbe Zeichen in der Oberfläche
-             (shell/Alpe/Widgets/LogoShape.js und die daraus erzeugten Dateien)
-  Rechte:    Die Rechte am Logo und am Namen «Alpe» liegen beim Maintainer. Das Logo steht
-             nicht unter CC0 (anders als die Bilder des ausgelieferten Designs oben).
-  Erlaubt:   Logo und Name dürfen benutzt werden, um Alpe zu bezeichnen.
+             (shell/Alpe/Widgets/LogoShape.js und die daraus erzeugten Dateien
+             shell/assets/alpe-zeichen.svg, shell/assets/alpe-zeichen-akzent.svg); das Symbol der
+             App-ID (io.github.alpe_shell.Alpe.svg) ist assets/logo/logo/alpe-zeichen.svg
+  Urheber:   Alpe-Projekt
+  Lizenz:    Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0
+             International (CC BY-SA 4.0), https://creativecommons.org/licenses/by-sa/4.0/
+             (Entscheid des Maintainers vom 28.11.2026; vorher eigene Bedingungen)
+  Name:      Name und Zeichen kennzeichnen dieses Projekt; wer eine veränderte Fassung verbreitet,
+             wird gebeten, sie nicht als Alpe auszugeben.
 
 
 Teile Dritter in Alpe

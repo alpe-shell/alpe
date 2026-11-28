@@ -7,8 +7,9 @@
 #
 # Die Version folgt shell/Common/Brand.qml (wie pkgver im PKGBUILD; tests/test_spec.py prüft beides).
 
-# Name des Quellarchivs und des Ordners darin – genau hier, sonst nirgends (packaging/fedora/LIESMICH.md)
-%global quelle alpe-%{version}
+# Name des Quellarchivs und des Ordners darin – genau hier, sonst nirgends (packaging/fedora/LIESMICH.md); wie
+# DIST_NAME im Makefile (alpe-shell-<Version>, 0.8 Nr. 132) und $pkgname-$pkgver im PKGBUILD
+%global quelle %{name}-%{version}
 # Lizenztexte, die «make install» ablegt (Makefile, Plan 6.1)
 %global lizenzdir %{_defaultlicensedir}/%{name}
 # Der Dienst ist mit -s -w gebaut (Makefile); ein Debug-Paket bliebe leer.
@@ -19,9 +20,10 @@ Version:        1.0
 Release:        1%{?dist}
 Summary:        Desktop-Shell für Linux, massgeschneidert für die Schweiz
 
-# Inhaltlich wie license=() im PKGBUILD (Plan 6.2, 0.8 Nr. 113–117, 126; Einzelheiten in NOTICE), in der
+# Inhaltlich wie license=() im PKGBUILD (Plan 6.2, 0.8 Nr. 113–117, 126, 142; Einzelheiten in NOTICE), in der
 # SPDX-Schreibweise von Fedora mit AND. FTL statt (FTL OR GPL-2.0-or-later): Alpe hat die FTL gewählt (0.8 Nr. 114).
-License:        MIT AND GPL-3.0-only AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND OFL-1.1 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-BY-SA-3.0 AND CC-BY-SA-4.0 AND CC0-1.0 AND FTL AND LicenseRef-Alpe-Logo
+# Logo und Zeichen von Alpe stehen unter CC-BY-SA-4.0 (0.8 Nr. 142).
+License:        MIT AND GPL-3.0-only AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND OFL-1.1 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-BY-SA-3.0 AND CC-BY-SA-4.0 AND CC0-1.0 AND FTL
 URL:            https://github.com/alpe-shell/alpe
 Source0:        %{url}/releases/download/v%{version}/%{quelle}.tar.gz
 
@@ -41,7 +43,9 @@ Requires:       qt6-qtmultimedia
 Requires:       qt6-qtsvg
 Requires:       accountsservice
 Requires:       python3
-Requires:       matugen
+# Das ausgelieferte Design setzt matugenSourceMode «lightness», das braucht --prefer ab matugen 4.1 (0.8 Nr. 144);
+# Fedora 45 hat nur 3.1.0 (rust-matugen), darum aus dem eigenen COPR
+Requires:       matugen >= 4.1
 # wpexec für den Codec-Wechsel bei Bluetooth; WirePlumber als Sitzungsverwalter (0.8 Nr. 96)
 Requires:       wireplumber
 Requires:       sound-theme-freedesktop
@@ -58,12 +62,13 @@ Recommends:     hyprlock
 Recommends:     hypridle
 Recommends:     kitty
 Recommends:     fastfetch
-# Nichts in Alpe ruft wtype auf (Nachtlauf vom 27.11.2026, Punkt 1.1)
+# wtype: Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland); nichts in Alpe selbst ruft es auf (0.8 Nr. 133, 146)
 Recommends:     wtype
 # Dateisuche im Starter; läuft auch ohne (0.8 Nr. 26). Als Datei, weil Fedora kein Paket dieses Namens hat.
 Recommends:     /usr/bin/dsearch
 
-# Vorläufig, Entscheid offen (Nachtlauf vom 27.11.2026, P1): die übrigen optdepends des PKGBUILD
+# Die übrigen optdepends des PKGBUILD (Entscheid des Maintainers vom 28.11.2026, 0.8 Nr. 141 (8)); Energieprofile mit
+# einem der beiden Dienste
 Suggests:       cava
 Suggests:       cups-pk-helper
 Suggests:       (power-profiles-daemon or tuned-ppd)
@@ -124,6 +129,8 @@ env -u DBUS_SESSION_BUS_ADDRESS -u WAYLAND_DISPLAY -u DISPLAY \
 %license %{lizenzdir}/NOTICE
 %license %{lizenzdir}/GPL-3.0-only.txt
 %license %{lizenzdir}/FTL.txt
+# Lizenztexte der vendorten Go-Module, Pfad wie unter core/vendor (0.8 Nr. 131); als ganzer Ordner
+%license %{lizenzdir}/vendor/
 %doc README.md CHANGELOG.md
 %{_bindir}/alpe-dienst
 %{_bindir}/alpe
