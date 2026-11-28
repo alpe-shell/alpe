@@ -247,10 +247,11 @@ check(len(repo_zaehler["roh"]) >= 54 and {".ttf", ".png", ".jpg", ".mp4", ".pdf"
 # Textdateien mit anderer Endung (bis zum 25.11.2026 nur gezählt: 52 Dateien) werden durchsucht wie alle anderen
 # (seit dem Nachtlauf vom 26.11.2026 50: shell/assets/discord.svg und reddit.svg entfernt, Plan 0.8 Nr. 117;
 # seit dem Nachtlauf vom 27.11.2026 49: package-sources/appimage.svg entfernt, Nr. 129;
-# seit dem Nachtlauf vom 28.11.2026 48: shell/assets/hyprland.svg entfernt, Nr. 143)
+# im Nachtlauf vom 28.11.2026 erst 50: packaging/fedora/alpe-shell.rpmlintrc aus E3 (Merge des Zweigs vom Mac),
+# dann 49: shell/assets/hyprland.svg entfernt, Nr. 143)
 # (Plan 0.8 Nr. 110); der Lauf oben schliesst sie ein und zählt sie mit.
 andere_endungen = sorted({os.path.splitext(p)[1] or os.path.basename(p) for p in repo_zaehler["andere_endung"]})
-check(len(repo_zaehler["andere_endung"]) >= 48 and {".svg", ".frag"} <= set(andere_endungen)
+check(len(repo_zaehler["andere_endung"]) >= 49 and {".svg", ".frag"} <= set(andere_endungen)
       and not [f for f in repo_treffer if f[0] in repo_zaehler["andere_endung"]],
       "Textdateien mit anderer Endung durchsucht: %d (%s), kein Fund" % (len(repo_zaehler["andere_endung"]), " ".join(andere_endungen)))
 # SVG-Pfaddaten: Zahlenfolgen im Attribut d sehen wie IP-Adressen aus und zählen nicht (topography.svg; bis Nr. 143
