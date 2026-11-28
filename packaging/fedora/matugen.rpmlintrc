@@ -1,0 +1,17 @@
+# rpmlint: begründete Ausnahmen für matugen (Nachtlauf vom 29.11.2026, Punkt 2.3; Entscheid P17: je Paket eine
+# eigene rpmlintrc)
+#
+#   rpmlint -r packaging/fedora/matugen.rpmlintrc packaging/fedora/matugen.spec …
+#
+# Immer mit -r und dieser Datei: Ohne -r lädt rpmlint eine rpmlintrc nur, wenn genau eine im Ordner liegt.
+# Nicht gefiltert und als Warnung hingenommen: no-manual-page-for-binary (matugen liefert keine Manpage).
+
+# Summary und Beschreibung sind deutsch (Projektregel: alle Texte für Menschen auf Hochdeutsch in Schweizer
+# Schreibweise). rpmlint prüft die Rechtschreibung gegen en_US und meldet jedes deutsche Wort.
+addFilter("spelling-error")
+# LICENSE ist der GPL-2.0-Text von matugen, unverändert aus dem Quellarchiv; er nennt die alte Postadresse der FSF.
+# Den Lizenztext ändern wir nicht.
+addFilter(r"incorrect-fsf-address /usr/share/licenses/matugen/LICENSE$")
+# Source1 ist das vendorte Crate-Archiv aus packaging/fedora/matugen-vendor.sh; es liegt nirgends zum Herunterladen
+# und kommt mit dem SRPM (Prüfsumme im Makro vendor_sha256).
+addFilter(r"invalid-url Source1: matugen-[\d.]+-vendor\.tar\.gz$")
