@@ -62,7 +62,7 @@ Recommends:     hyprlock
 Recommends:     hypridle
 Recommends:     kitty
 Recommends:     fastfetch
-# Nichts in Alpe ruft wtype auf (Nachtlauf vom 27.11.2026, Punkt 1.1)
+# wtype: Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland); nichts in Alpe selbst ruft es auf (0.8 Nr. 133, 146)
 Recommends:     wtype
 # Dateisuche im Starter; läuft auch ohne (0.8 Nr. 26). Als Datei, weil Fedora kein Paket dieses Namens hat.
 Recommends:     /usr/bin/dsearch

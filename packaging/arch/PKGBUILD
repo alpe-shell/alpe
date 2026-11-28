@@ -39,7 +39,7 @@ optdepends=('python-h5py: Niederschlagsradar'
             'i2c-tools: Helligkeit externer Bildschirme'
             'qt6ct: Qt-Thema'
             'headsetcontrol: Headsets'
-            'wtype: Texteingabe für eigene Befehle und Plugins'
+            'wtype: Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)'
             'dsearch: Dateisuche im Starter')
 # Der Dienst ist mit -s -w gebaut (Makefile); ein Debug-Paket bliebe leer.
 options=(!debug)

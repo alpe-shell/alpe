@@ -72,6 +72,10 @@ check("quickshell>=0.3.2" in depends and {"wireplumber", "breeze-icons", "hicolo
 check("sound-theme-freedesktop" in depends and "wtype" not in depends
       and any(o.startswith("wtype: ") for o in felder.get("optdepends", [])),
       "sound-theme-freedesktop in depends (Nr. 128); wtype nicht in depends, sondern in optdepends mit Zweck (Nr. 133)")
+# Zweck-Text von wtype im Wortlaut des Entscheids (0.8 Nr. 146): KWin bietet das Protokoll für Texteingabe nicht an
+check([o for o in felder.get("optdepends", []) if o.startswith("wtype:")]
+      == ["wtype: Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)"],
+      "optdepends: «wtype: Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)» (Nr. 146)")
 # matugen mit Mindestfassung 4.1 (--prefer für matugenSourceMode «lightness» des ausgelieferten Designs, 0.8 Nr. 144);
 # die Untergrenze im Dienst (core/internal/matugen/matugen.go) muss dieselbe sein
 matugen_eintraege = [d for d in depends if d == "matugen" or d.startswith("matugen") and d[len("matugen"):][:1] in "<>="]
@@ -80,8 +84,13 @@ check(matugen_eintraege == ["matugen>=4.1"]
       and "matugenSupportsPrefer = major > 4 || (major == 4 && minor >= 1)" in matugen_go,
       "depends: matugen>=4.1, wie die Grenze für --prefer im Dienst (0.8 Nr. 144): %s" % matugen_eintraege)
 design = json.load(open(os.path.join(REPO, "design", "kde", "settings.json"), encoding="utf-8"))
-check(design.get("matugenSourceMode") not in (None, "", "dominant"),
-      "das ausgelieferte Design setzt einen matugenSourceMode, der --prefer braucht (%r)" % design.get("matugenSourceMode"))
+# die Werte, die der Dienst mit --prefer weitergibt (matugenPreferValues in core/internal/matugen/sourcecolor.go)
+sourcecolor = open(os.path.join(REPO, "core", "internal", "matugen", "sourcecolor.go"), encoding="utf-8").read()
+prefer_block = re.search(r"var matugenPreferValues = map\[string\]bool\{(.*?)\n\}", sourcecolor, re.S)
+prefer_werte = set(re.findall(r'"([\w-]+)":\s*true', prefer_block.group(1))) if prefer_block else set()
+check(prefer_werte and design.get("matugenSourceMode") in prefer_werte,
+      "das ausgelieferte Design setzt einen matugenSourceMode, den der Dienst mit --prefer weitergibt (%r in %s)"
+      % (design.get("matugenSourceMode"), sorted(prefer_werte)))
 check(sorted(felder.get("makedepends", [])) == ["git", "go", "make"], "makedepends=(go make git)")
 opt = [o.split(":", 1)[0] for o in felder.get("optdepends", [])]
 check(set(plan_optdepends) <= set(opt) and set(opt) - set(plan_optdepends) <= {"dsearch"} and all(":" in o for o in felder.get("optdepends", [])),

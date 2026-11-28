@@ -96,13 +96,21 @@ pflicht = ["quickshell >= 0.3.2", "matugen >= 4.1", "python3", "accountsservice"
            "kora-icon-theme", "breeze-icon-theme", "sound-theme-freedesktop"]
 check(all(p in requires for p in pflicht), "Requires: Plan 6.3 und sound-theme-freedesktop (%s)" % [p for p in pflicht if p not in requires])
 # matugen genau einmal und mit Mindestfassung 4.1, wie im PKGBUILD (0.8 Nr. 144) und in Plan 6.3
-check([r for r in requires if r.split()[0] == "matugen"] == ["matugen >= 4.1"] and "matugen >= 4.1" in plan63,
-      "Requires: matugen >= 4.1 genau einmal, wie in Plan 6.3 (0.8 Nr. 144)")
+# Vergleich mit der Liste `Requires: …` in 6.3 selbst, nicht mit dem ganzen Abschnitt (die Begründung nennt die Grenze auch)
+plan_requires = [r.strip() for r in re.search(r"`Requires: ([^`]*)`", plan63).group(1).split(",")]
+check([r for r in requires if r.split()[0] == "matugen"] == ["matugen >= 4.1"]
+      and [r for r in plan_requires if r.split()[0] == "matugen"] == ["matugen >= 4.1"],
+      "Requires: matugen >= 4.1 genau einmal, wie in der Liste `Requires:` von Plan 6.3 (0.8 Nr. 144)")
 check(not any(r.split()[0] in ("lua", "wtype") for r in requires), "Requires ohne lua und ohne wtype")
 check(not any("kora-icon-theme" in r and r != "kora-icon-theme" for r in requires), "kora-icon-theme ohne Version (0.8 Nr. 99)")
 plan_recommends = re.search(r"`Recommends: ([^`]*)`", plan63).group(1).replace(",", " ").split()
 check(set(plan_recommends) <= set(recommends), "Recommends: Liste aus Plan 6.3 (%s)" % sorted(set(plan_recommends) - set(recommends)))
 check("wtype" in recommends and "/usr/bin/dsearch" in recommends, "Recommends: wtype und /usr/bin/dsearch (0.8 Nr. 26)")
+# Zweck von wtype als Kommentar direkt über der Zeile Recommends: wtype (0.8 Nr. 146)
+wtype_kommentar = re.search(r"^#([^\n]*)\nRecommends:\s+wtype$", text, re.M)
+check(wtype_kommentar is not None
+      and "Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)" in wtype_kommentar.group(1),
+      "Kommentar über Recommends: wtype nennt den Zweck «Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)»")
 check(not set(recommends) & set(r.split()[0] for r in requires), "nichts zugleich in Requires und Recommends")
 check(not any("kwin" in s.lower() for s in suggests + recommends), "keine KWin-Effekte (kein Paket in Fedora)")
 # Suggests: die übrigen optdepends, nicht mehr vorläufig (0.8 Nr. 141 (8))
