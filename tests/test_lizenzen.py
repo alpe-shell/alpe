@@ -12,6 +12,9 @@ go-qrcode/v2 einbindet. Klänge (1.4): NOTICE beschreibt genau die ausgelieferte
 Zeichen Dritter und Code-Teile (1.5): NOTICE nennt genau die fremden SVG unter shell/assets/ (Flatpak CC BY 3.0,
 Snapcraft CC BY-SA 3.0, Hyprland ARR nach Markenrichtlinie) und fzf.js, Hct.js, MaterialShapeData.js mit der Lizenz,
 die im Kopf der Datei steht.
+Logo und Zeichen von Alpe (Entscheid vom 28.11.2026, Plan 0.8 Nr. 142): NOTICE nennt CC BY-SA 4.0, «Alpe-Projekt», den
+Satz zu Name und Zeichen und jede Logo-Datei; die frühere eigene Kennung steht in keinem Lizenzfeld, in NOTICE, LICENSES/
+oder tests/.
 Ohne Bau, ohne Netz.
 """
 import os
@@ -186,6 +189,43 @@ for datei, lizenz, im_kopf in (("shell/Alpe/Common/fzf.js", "BSD-3-Clause", "BSD
     kopf = "".join(open(os.path.join(REPO, datei), encoding="utf-8").readlines()[:12]) if os.path.isfile(os.path.join(REPO, datei)) else ""
     check(im_kopf in kopf and zeile is not None and zeile.group(1).startswith(lizenz),
           "NOTICE nennt %s mit %s, wie im Kopf der Datei («%s»)" % (datei, lizenz, im_kopf))
+
+# --- Logo und Zeichen von Alpe unter CC-BY-SA-4.0 (Entscheid vom 28.11.2026, Plan 0.8 Nr. 142) ---
+alte_kennung = "LicenseRef-" + "Alpe-Logo"  # zusammengesetzt, damit diese Datei die Kennung selbst nicht enthält
+logo = re.search(r"^Logo und Name \(assets/logo/logo/\)\n((?:  .*\n)+)", notice, re.M)
+check(logo is not None, "NOTICE hat den Abschnitt «Logo und Name (assets/logo/logo/)»")
+logo_text = " ".join(logo.group(1).split()) if logo else ""
+check("Urheber: Alpe-Projekt" in logo_text, "NOTICE, Logo: Urheberangabe «Alpe-Projekt»")
+check("(CC BY-SA 4.0)" in logo_text and "https://creativecommons.org/licenses/by-sa/4.0/" in logo_text,
+      "NOTICE, Logo: Lizenz CC BY-SA 4.0 mit Adresse")
+check("Name und Zeichen kennzeichnen dieses Projekt; wer eine veränderte Fassung verbreitet, wird gebeten, sie nicht "
+      "als Alpe auszugeben." in logo_text, "NOTICE, Logo: Satz zu Name und Zeichen im Wortlaut des Entscheids")
+check("beim Maintainer" not in logo_text and "Erlaubt:" not in logo_text and "nicht unter CC0" not in logo_text,
+      "NOTICE, Logo: der Text der eigenen Bedingungen ist entfernt")
+# Jede Datei unter assets/logo/logo/ ist im Abschnitt genannt (Name ohne Endung bzw. erzeugen.py), ebenso die
+# erzeugten Zeichen der Oberfläche
+logo_dir = os.path.join(REPO, "assets", "logo", "logo")
+logo_namen = sorted({os.path.splitext(f)[0] if f != "erzeugen.py" else f for f in os.listdir(logo_dir)}) if os.path.isdir(logo_dir) else []
+check(logo_namen and all(n in logo_text for n in logo_namen),
+      "NOTICE, Logo: alle Dateien unter assets/logo/logo/ genannt (fehlt: %s)" % [n for n in logo_namen if n not in logo_text])
+for pfad in ("shell/Alpe/Widgets/LogoShape.js", "shell/assets/alpe-zeichen.svg", "shell/assets/alpe-zeichen-akzent.svg"):
+    check(os.path.isfile(os.path.join(REPO, pfad)) and pfad in logo_text, "NOTICE, Logo: %s genannt" % pfad)
+# Die alte Kennung steht nirgends mehr in Lizenzfeldern, NOTICE, LICENSES/ und den Tests
+orte = [os.path.join("packaging", "arch", "PKGBUILD"), os.path.join("packaging", "fedora", "alpe-shell.spec"), "NOTICE"]
+for ordner in ("LICENSES", "tests"):
+    for wurzel, _, dateien in os.walk(os.path.join(REPO, ordner)):
+        orte += [os.path.relpath(os.path.join(wurzel, d), REPO) for d in dateien if not d.endswith(".pyc")]
+mit_kennung = []
+for ort in orte:
+    try:
+        with open(os.path.join(REPO, ort), encoding="utf-8", errors="replace") as handle:
+            if alte_kennung in handle.read():
+                mit_kennung.append(ort)
+    except OSError:
+        pass
+check(not mit_kennung, "keine eigene Logo-Kennung mehr in PKGBUILD, Spec, NOTICE, LICENSES/, tests/ (%s)" % mit_kennung)
+check(not any("logo" in f.lower() for f in os.listdir(os.path.join(REPO, "LICENSES"))),
+      "LICENSES/ ohne eigenen Text einer Logo-Lizenz")
 
 # Im Quellarchiv (git archive HEAD) ist nur, was versioniert ist.
 if subprocess.run(["git", "-C", REPO, "rev-parse", "--git-dir"], capture_output=True).returncode == 0:

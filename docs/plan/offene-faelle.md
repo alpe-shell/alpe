@@ -1481,7 +1481,8 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       Flatpak und Snapcraft: bleiben mit Nennung (entschieden mit Plan 0.8 Nr. 130).
       **AppImage erledigt (Entscheid vom 26.11.2026, Plan 0.8 Nr. 129):** `appimage.svg` entfernt, der Starter zeigt
       das Symbol `deployed_code` aus der mitgelieferten Symbolschrift.
-    - `LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`); die mit
+    - ~~`LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`)~~ seit Plan 0.8
+      Nr. 142 (28.11.2026) CC-BY-SA-4.0, Urheber «Alpe-Projekt»; die mit
       `alpe-dienst completion` erzeugten Vervollständigungen stammen aus Vorlagen von cobra (Apache-2.0).
 - ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
   Lizenzfeld MIT, CC-BY-4.0 und CC0-1.0 nennt (Plan 6.2, 6.3, Abschnitt 10). Unter `shell/` liegen

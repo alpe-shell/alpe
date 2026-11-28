@@ -20,9 +20,10 @@ Version:        1.0
 Release:        1%{?dist}
 Summary:        Desktop-Shell für Linux, massgeschneidert für die Schweiz
 
-# Inhaltlich wie license=() im PKGBUILD (Plan 6.2, 0.8 Nr. 113–117, 126; Einzelheiten in NOTICE), in der
+# Inhaltlich wie license=() im PKGBUILD (Plan 6.2, 0.8 Nr. 113–117, 126, 142; Einzelheiten in NOTICE), in der
 # SPDX-Schreibweise von Fedora mit AND. FTL statt (FTL OR GPL-2.0-or-later): Alpe hat die FTL gewählt (0.8 Nr. 114).
-License:        MIT AND GPL-3.0-only AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND OFL-1.1 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-BY-SA-3.0 AND CC-BY-SA-4.0 AND CC0-1.0 AND FTL AND LicenseRef-Alpe-Logo
+# Logo und Zeichen von Alpe stehen unter CC-BY-SA-4.0 (0.8 Nr. 142).
+License:        MIT AND GPL-3.0-only AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND OFL-1.1 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-BY-SA-3.0 AND CC-BY-SA-4.0 AND CC0-1.0 AND FTL
 URL:            https://github.com/alpe-shell/alpe
 Source0:        %{url}/releases/download/v%{version}/%{quelle}.tar.gz
 

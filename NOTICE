@@ -197,10 +197,15 @@ Standbild der Sperre (design/kde/bilder/jagged-peaks-wolkenzug.jpg)
 Logo und Name (assets/logo/logo/)
   Dateien:   alpe-zeichen, alpe-logo-hell, alpe-logo-dunkel, alpe-avatar, alpe-social (SVG und
              PNG) samt erzeugen.py; dasselbe Zeichen in der Oberfläche
-             (shell/Alpe/Widgets/LogoShape.js und die daraus erzeugten Dateien)
-  Rechte:    Die Rechte am Logo und am Namen «Alpe» liegen beim Maintainer. Das Logo steht
-             nicht unter CC0 (anders als die Bilder des ausgelieferten Designs oben).
-  Erlaubt:   Logo und Name dürfen benutzt werden, um Alpe zu bezeichnen.
+             (shell/Alpe/Widgets/LogoShape.js und die daraus erzeugten Dateien
+             shell/assets/alpe-zeichen.svg, shell/assets/alpe-zeichen-akzent.svg); das Symbol der
+             App-ID (io.github.alpe_shell.Alpe.svg) ist assets/logo/logo/alpe-zeichen.svg
+  Urheber:   Alpe-Projekt
+  Lizenz:    Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0
+             International (CC BY-SA 4.0), https://creativecommons.org/licenses/by-sa/4.0/
+             (Entscheid des Maintainers vom 28.11.2026; vorher eigene Bedingungen)
+  Name:      Name und Zeichen kennzeichnen dieses Projekt; wer eine veränderte Fassung verbreitet,
+             wird gebeten, sie nicht als Alpe auszugeben.
 
 
 Teile Dritter in Alpe
