@@ -1,0 +1,10 @@
+# rpmlint: begründete Ausnahmen für kora-icon-theme (Nachtlauf vom 29.11.2026, Punkt 3.1; Entscheid P17: je Paket
+# eine eigene rpmlintrc)
+#
+#   rpmlint -r packaging/fedora/kora-icon-theme.rpmlintrc packaging/fedora/kora-icon-theme.spec …
+#
+# Immer mit -r und dieser Datei: Ohne -r lädt rpmlint eine rpmlintrc nur, wenn genau eine im Ordner liegt.
+
+# Summary und Beschreibung sind deutsch (Projektregel: alle Texte für Menschen auf Hochdeutsch in Schweizer
+# Schreibweise). rpmlint prüft die Rechtschreibung gegen en_US und meldet jedes deutsche Wort.
+addFilter("spelling-error")

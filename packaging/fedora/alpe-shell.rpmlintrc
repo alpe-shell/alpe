@@ -34,7 +34,7 @@ addFilter(r"non-executable-script /usr/share/alpe/tools/design\.py ")
 addFilter(r"non-executable-script /usr/share/alpe/tools/fastfetch\.py ")
 # python3 -I … aus AlpeLockDesignTab.qml und tools/lockscreen.sh
 addFilter(r"non-executable-script /usr/share/alpe/tools/hyprlock2qml\.py ")
-# bash … aus tools/entfernen.sh (Gebrauch im Kopf: «bash tools/kde-sitzung.sh»)
+# bash … aus tools/alpe («alpe kde») und tools/entfernen.sh
 addFilter(r"non-executable-script /usr/share/alpe/tools/kde-sitzung\.sh ")
 # python3 … aus tools/alpe und tools/entfernen.sh
 addFilter(r"non-executable-script /usr/share/alpe/tools/kopfleiste\.py ")

@@ -5,10 +5,11 @@
     python3 tests/test_spec_quickshell.py
 
 Liest die Spec als Text (ohne rpm): Name quickshell, Version 0.3.2 und damit nicht unter der Untergrenze, die
-alpe-shell.spec verlangt; Release nicht unter 0.3.2-4 eines fremden COPR; Quelle das Archiv des Tags mit Prüfsumme,
+alpe-shell.spec verlangt; Release über 0.3.2-4 eines fremden COPR (P18); Quelle das Archiv des Tags mit Prüfsumme,
 die vor dem Entpacken geprüft wird; Herkunft und Lizenz der Vorlage im Kopf; Lizenzfeld nach dem Quelltext (P7);
 Crash-Handler aus, jemalloc an und in %check geprüft, DISTRIBUTOR für das eigene COPR; keine Epoch/Obsoletes/
-Conflicts, keine Scriptlets, keine fremden COPR-Namen.
+Conflicts, keine Scriptlets, keine fremden COPR-Namen; eigene packaging/fedora/quickshell.rpmlintrc (P17), jeder
+Filter begründet.
 """
 import os
 import re
@@ -92,6 +93,18 @@ check(coprs <= {"alpe-shell/alpe"} and "copr.fedorainfracloud.org" not in text, 
 dateien = [z.strip() for z in abschnitt("files").splitlines()]
 for d in ("%{_bindir}/qs", "%{_bindir}/quickshell", "%license LICENSE*", "%{_qt6_qmldir}/Quickshell/"):
     check(d in dateien, "%%files: %s" % d)
+# Kopf: Release strikt über dem fremden 0.3.2-4 (Nachtlauf vom 28.11.2026, «Für den Plan»; Entscheid P18)
+check("über dem Quickshell 0.3.2-4" in kopf and "nicht unter dem" not in kopf,
+      "Kopf: Release «über dem» fremden 0.3.2-4, nicht «nicht unter dem»")
+
+# packaging/fedora/quickshell.rpmlintrc: eigene Datei je Paket (P17), jeder Filter mit Kommentar darüber
+rc_pfad = os.path.join(REPO, "packaging", "fedora", "quickshell.rpmlintrc")
+check(os.path.isfile(rc_pfad), "packaging/fedora/quickshell.rpmlintrc vorhanden (P17)")
+if os.path.isfile(rc_pfad):
+    rc_zeilen = open(rc_pfad, encoding="utf-8").read().splitlines()
+    ohne_grund = [z for i, z in enumerate(rc_zeilen) if z.startswith("addFilter(") and not (i and rc_zeilen[i - 1].startswith("#"))]
+    check(any(z.startswith("addFilter(") for z in rc_zeilen) and not ohne_grund,
+          "quickshell.rpmlintrc: jeder Filter mit Begründung darüber (ohne: %s)" % ohne_grund)
 
 print("\n%s" % ("alle Prüfungen bestanden" if not failures else "%d FEHLER" % failures))
 sys.exit(1 if failures else 0)

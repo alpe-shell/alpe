@@ -18,8 +18,8 @@
 #   wlr-screencopy MIT.
 # - Summary und Beschreibung deutsch (Projektregel), Schalter breakpad und alte %%changelog-Einträge entfernt.
 # - Neue BuildRequires aus den CMakeLists von 0.3.2 und eine Prüfung auf jemalloc nach dem Bau.
-# - Release so gewählt, dass es nicht unter dem Quickshell 0.3.2-4 eines fremden COPR liegt (Nachtlauf vom
-#   28.11.2026, Punkt 2.3).
+# - Release so gewählt, dass es über dem Quickshell 0.3.2-4 eines fremden COPR liegt (Nachtlauf vom 28.11.2026,
+#   Punkt 2.3; Entscheid P18: Release 5 bleibt, vor jedem Hochladen das fremde Release prüfen, LIESMICH).
 
 # Nicht gebraucht
 %bcond asan 0

@@ -1,0 +1,12 @@
+# rpmlint: begründete Ausnahmen für quickshell (Nachtlauf vom 29.11.2026, Punkt 3.1; Entscheid P17: je Paket eine
+# eigene rpmlintrc)
+#
+#   rpmlint -r packaging/fedora/quickshell.rpmlintrc packaging/fedora/quickshell.spec …
+#
+# Immer mit -r und dieser Datei: Ohne -r lädt rpmlint eine rpmlintrc nur, wenn genau eine im Ordner liegt.
+# Nicht gefiltert und als Warnung hingenommen: no-manual-page-for-binary für qs und quickshell (der Ursprung liefert
+# keine Manpage).
+
+# Summary und Beschreibung sind deutsch (Projektregel: alle Texte für Menschen auf Hochdeutsch in Schweizer
+# Schreibweise). rpmlint prüft die Rechtschreibung gegen en_US und meldet jedes deutsche Wort.
+addFilter("spelling-error")

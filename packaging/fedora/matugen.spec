@@ -12,9 +12,10 @@
 # 187 Crates, die für aarch64 und x86_64 gleich gelinkt werden – ermittelt im mock-Chroot mit
 # «cargo tree --locked -e normal,no-proc-macro --target <Ziel> --format '{p}|{l}'» (Nachtlauf vom 28.11.2026, Punkt
 # 3.1). Jeder Ausdruck steht so, wie das Crate ihn angibt; die alte Schreibweise «A/B» ist als «A OR B» geschrieben,
-# ein Ausdruck mit AND auf oberster Ebene in seine Teile zerlegt. Die Liste ist eine Obergrenze (wie bei Fedoras Makro
-# cargo_license_summary): Was der Linker verwirft, bleibt im Feld. Die Prüfung nach dem Bau vergleicht das Feld mit cargo tree und
-# bricht bei jeder Abweichung ab (P20); LICENSE.dependencies nennt jedes Crate mit seiner Lizenz.
+# ein Ausdruck mit AND auf oberster Ebene in seine Teile zerlegt. Die Liste ist eine Obergrenze nur gegenüber dem
+# Linker: Was er verwirft, bleibt im Feld. Anders als Fedoras Makro cargo_license (dort --target all) zählt nur das
+# Ziel des Bauhosts. Die Prüfung nach dem Bau vergleicht das Feld mit cargo tree und bricht bei jeder Abweichung ab
+# (P20); LICENSE.dependencies nennt jedes Crate mit seiner Lizenz.
 #
 # Release über dem matugen 4.2.0-1 eines fremden COPR (Nachtlauf vom 28.11.2026, Punkt 2.3, «Für den Plan»).
 

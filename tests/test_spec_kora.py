@@ -70,5 +70,15 @@ pruefung = abschnitt("check")
 check("Inherits=breeze,hicolor" in pruefung and "-xtype l" in pruefung, "%check: index.theme erbt von breeze/hicolor, keine kaputte Verknüpfung")
 check("create-new-icon-theme.cache.sh" in abschnitt("install"), "%install: Werkzeug des Ursprungs nicht im Paket")
 
+# packaging/fedora/kora-icon-theme.rpmlintrc: eigene Datei je Paket (P17, Nachtlauf vom 29.11.2026, 3.1), jeder Filter
+# mit Kommentar darüber
+rc_pfad = os.path.join(REPO, "packaging", "fedora", "kora-icon-theme.rpmlintrc")
+check(os.path.isfile(rc_pfad), "packaging/fedora/kora-icon-theme.rpmlintrc vorhanden (P17)")
+if os.path.isfile(rc_pfad):
+    rc_zeilen = open(rc_pfad, encoding="utf-8").read().splitlines()
+    ohne_grund = [z for i, z in enumerate(rc_zeilen) if z.startswith("addFilter(") and not (i and rc_zeilen[i - 1].startswith("#"))]
+    check(any(z.startswith("addFilter(") for z in rc_zeilen) and not ohne_grund,
+          "kora-icon-theme.rpmlintrc: jeder Filter mit Begründung darüber (ohne: %s)" % ohne_grund)
+
 print("\n%s" % ("alle Prüfungen bestanden" if not failures else "%d FEHLER" % failures))
 sys.exit(1 if failures else 0)
