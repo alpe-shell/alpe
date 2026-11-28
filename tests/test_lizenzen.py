@@ -101,7 +101,7 @@ if fassung and eintrag:
           "NOTICE nennt jede Datei, die go-qrcode/writer/standard (und damit freetype) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
 check(re.search(r"^FTL_VENDOR := core/vendor/\$\(FREETYPE\)/licenses/ftl\.txt$", makefile, re.M) is not None
       and re.search(r"^FREETYPE := github\.com/golang/freetype$", makefile, re.M) is not None
-      and "install -Dm644 \"$$dir/licenses/ftl.txt\" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)" in makefile
+      and "install -Dm644 \"$$dir/licenses/ftl.txt\" $(BUILD_ABS)/dist/$(DIST_NAME)/$(FTL_VENDOR)" in makefile
       and "install -Dm644 \"$$src\" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt" in makefile,
       "make dist legt licenses/ftl.txt in den vendor-Baum, make install nach /usr/share/licenses/alpe-shell/FTL.txt")
 
@@ -141,6 +141,11 @@ if klaenge:
           "NOTICE nennt genau die Klangdateien im Repository (nur in NOTICE: %s; nicht in NOTICE: %s)"
           % (sorted(genannt - vorhanden), sorted(vorhanden - genannt)))
     check("desktop-login" not in klaenge.group(1), "desktop-login steht nicht mehr unter den Klängen (entfernt, 1.4)")
+    # Entscheid vom 26.11.2026: die freedesktop-Klänge kommen aus dem installierten Klangthema, keine Kopien, kein CREDITS
+    check(not os.path.exists(os.path.join(klang_ordner, "freedesktop")) and not genannt & {"freedesktop/" + n for n in (
+          "audio-volume-change.oga", "message.oga", "message-new-instant.oga")}
+          and "sound-theme-freedesktop" in klaenge.group(1),
+          "Klänge: keine Kopien aus dem freedesktop-Klangthema (auch kein CREDITS), NOTICE verweist auf sound-theme-freedesktop")
 
 # --- Zeichen Dritter und Code-Teile (1.5) ---
 zeichen = re.search(r"^Zeichen Dritter \(shell/assets/\), nur zur Bezeichnung\n((?:  .*\n)+)", notice, re.M)
@@ -168,6 +173,10 @@ if zeichen:
           "NOTICE: snap.svg unter CC BY-SA 3.0 (nicht CC0)")
     check("ARR" in eintrag_zu("hyprland.svg") and "https://hypr.land/trademark-usage/" in eintrag_zu("hyprland.svg"),
           "NOTICE: hyprland.svg mit Hinweis auf ARR und die Markenrichtlinie")
+    # Entscheid vom 26.11.2026: AppImage ohne fremdes Zeichen, Symbol aus der mitgelieferten Symbolschrift
+    check(not os.path.exists(os.path.join(assets, "package-sources", "appimage.svg")) and "appimage.svg" not in zeichen.group(1)
+          and "«deployed_code» aus Material" in zeichen.group(1),
+          "AppImage: kein Zeichen mehr (appimage.svg entfernt), NOTICE nennt das Symbol aus der Symbolschrift")
 check(not os.path.exists(os.path.join(REPO, "shell", "assets", "discord.svg"))
       and not os.path.exists(os.path.join(REPO, "shell", "assets", "reddit.svg")), "discord.svg und reddit.svg sind entfernt (1.5)")
 for datei, lizenz, im_kopf in (("shell/Alpe/Common/fzf.js", "BSD-3-Clause", "BSD 3-Clause License"),

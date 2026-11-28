@@ -961,7 +961,7 @@ func syncLockscreenU2FPamConfigWithDeps(logFunc func(string), sudoPassword strin
 	}
 
 	// Der U2F-Dienst von 1.0 wird nur gemeldet – auch beim Abschalten nie gelöscht.
-	reportLegacyPamFile(logFunc, deps.legacyU2fPath, deps.readFile, HasLegacyManagedLockscreenU2FPamFile)
+	customLegacy := reportLegacyPamFile(logFunc, deps.legacyU2fPath, deps.readFile, HasLegacyManagedLockscreenU2FPamFile)
 
 	existingData, err := deps.readFile(deps.alpeU2fPath)
 	if err != nil && !os.IsNotExist(err) {
@@ -971,6 +971,14 @@ func syncLockscreenU2FPamConfigWithDeps(logFunc func(string), sudoPassword strin
 	if enabled {
 		if err == nil && !hasManagedLockscreenU2FPamFile(string(existingData)) {
 			logFunc("ℹ Custom " + deps.alpeU2fPath + " found (no Alpe block). Skipping.")
+			return nil
+		}
+		if os.IsNotExist(err) && customLegacy {
+			// Entscheid vom 26.11.2026, dieselbe Regel wie für den Passwortdienst aus 1.0 (25.11.2026): Ein eigener, nicht
+			// verwalteter U2F-Dienst aus 1.0 (LegacyU2FPamPath, etwa mit eigenem authfile= oder origin=) bleibt der Dienst der Sperre
+			// (sie nimmt alpe-u2f vor dem alten Dienst) – darum beim Einschalten kein neues alpe-u2f, das ihn ablösen
+			// würde; nur melden. Ein verwalteter alter Dienst wird wie bisher durch alpe-u2f abgelöst.
+			logFunc(fmt.Sprintf("ℹ Custom %[1]s from Alpe 1.0 found and no %[2]s: %[2]s is not created, the lock screen keeps using %[1]s for security keys. Remove or rename it to let Alpe manage %[2]s.", deps.legacyU2fPath, deps.alpeU2fPath))
 			return nil
 		}
 		if err := writeManagedPamFile(buildManagedLockscreenU2FPamContent(), deps.alpeU2fPath, sudoPassword, deps); err != nil {

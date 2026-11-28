@@ -53,21 +53,10 @@ Schriften (shell/Alpe/assets/fonts/, Lizenztext jeweils im Ordner)
   Material Symbols Rounded (Google)                          Apache License 2.0
 
 Klänge (shell/assets/sounds/)
-  freedesktop/   aus dem Freedesktop-Klangthema 0.8 (https://gitlab.freedesktop.org/xdg/xdg-sound-theme,
-                 Ordner stereo/); die .oga sind bytegleich mit dem Ursprung, die .wav daraus mit ffmpeg
-                 umgewandelt (wavconvert.sh). CREDITS ist die Datei des Klangthemas, unverändert; sie
-                 nennt auch Klänge, die Alpe nicht mitliefert. Ausgeliefert werden nur:
-                 audio-volume-change.oga/.wav   Lucas McCallister, CC-BY-SA (nach CREDITS «relicensed
-                                                with permission from author»; ohne Angabe der Fassung)
-                 message.oga/.wav               Ivica Bukvic, aus dem Klangthema «Borealis»; CREDITS
-                                                nennt CC-BY-SA (ohne Fassung). Am Ursprung widersprüchlich:
-                                                das README nannte 2009 zuerst «Creative Commons Share-Alike
-                                                3.0 Unported», dann (Commit bc4fe27, «Borealis is actually
-                                                artistic, not gpl») «Artistic License» – Lizenz ungeklärt
-                 message-new-instant.oga/.wav   Teil des Klangthemas seit dem ersten Stand (2008);
-                                                CREDITS nennt für diese Datei weder Urheber noch Lizenz
   plasma/        «Harmony 2», Klangthema für KDE Plasma 6, Gianmarco Gargiulo, CC-BY-SA 4.0 (LICENSE und
                  README.md im Ordner): power-plug.ogg/.wav, power-unplug.ogg/.wav
+  Die Klänge für Lautstärke und Mitteilungen liefert Alpe nicht mit: Die Shell nimmt sie aus dem
+  installierten freedesktop-Klangthema (Paket sound-theme-freedesktop), mit dessen Lizenzen.
 
 Code
   shell/Common/suncalc.js             BSD-2-Clause, Copyright (c) 2025 Vladimir Agafonkin
@@ -120,11 +109,14 @@ Zeichen Dritter (shell/assets/), nur zur Bezeichnung
                                aus https://github.com/NixOS/nixos-artwork; entworfen von Simon
                                Frankau, überarbeitet von Tim Cuthbertson; CC BY 4.0
                                (https://creativecommons.org/licenses/by/4.0/).
-  package-sources/appimage.svg Zeichen von AppImage; Herkunft der Datei nicht belegt (ähnlich,
-                               nicht gleich resources/appimagetool.svg aus AppImage/appimagetool).
+  Für AppImage zeigt der Starter kein Zeichen, sondern das Symbol «deployed_code» aus Material
+  Symbols Rounded (siehe Schriften).
 
-Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen
-(einzeln genannt unten unter «Go-Module im Programm alpe-dienst»).
+Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
+Deren Lizenztexte liegen im Quellarchiv unter core/vendor/<Modul>/ und im Paket unter
+/usr/share/licenses/alpe-shell/vendor/<Modul>/; einzeln genannt sind unten unter «Go-Module im
+Programm alpe-dienst» nur die Module mit Besonderheiten (GPL, Wahl der Lizenz, fehlende
+Lizenzdatei).
 
 
 Go-Module im Programm alpe-dienst
@@ -133,7 +125,10 @@ Go-Module im Programm alpe-dienst
 Die Module aus core/go.mod, deren Pakete der Dienst einbindet, werden beim Bau statisch in das
 Programm alpe-dienst gelinkt (Module, die nur Tests brauchen, nicht). Im Quellarchiv (make dist)
 liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die «go mod vendor» übernimmt, und
-den unten genannten, die make dist dazulegt.
+den unten genannten, die make dist dazulegt. make install legt aus core/vendor/<Modul>/ alle
+Dateien LICENSE*, COPYING* und NOTICE* unverändert nach /usr/share/licenses/alpe-shell/vendor/
+<Modul>/. Die drei Module unten haben Besonderheiten; für alle übrigen gilt die Lizenzdatei
+im Modul.
 
 github.com/pilebones/go-udev
   Fassung:   v0.10.0 (core/go.mod)

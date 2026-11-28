@@ -363,7 +363,8 @@ Punkte kommen zur Anleitung unten hinzu; sie betreffen Änderungen der Runde nac
     echo $XDG_DATA_DIRS
     ```
 13. **Weitere Punkte aus dem Nachtlauf vom 26.11.2026** (Hinweise der Prüfungen zu 1.4, 1.7 und 1.8):
-    `rpm -q sound-theme-freedesktop` (könnte die Shell die freedesktop-Klänge aus dem Paket nehmen?);
+    `rpm -q sound-theme-freedesktop` (~~könnte die Shell die freedesktop-Klänge aus dem Paket nehmen?~~ seit Plan
+    0.8 Nr. 128 nimmt sie sie daraus – Paketname und `ls /usr/share/sounds/freedesktop/stereo/` am Mac bestätigen);
     `ls -l /etc/dms /usr/share/dms` und, falls vorhanden, `rpm -qf /etc/dms/cli-policy.json` (Rückfall der
     Richtlinie, Plan 0.8 Nr. 119 – gehört die Datei einem Paket von 1.0, vor dessen Entfernung bei F1 nach
     `/etc/alpe` kopieren; ob sie dort `%config(noreplace)` ist, zeigt `rpm -qc <Paket>`); `systemctl --user cat
@@ -979,7 +980,9 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
    und nicht verändert. Für F1 und den Mac (nur dort sperrt die Shell mit `Pam.qml`; unter KWin sperrt KDE): Ein
    Nutzer von 1.0 hat `/etc/pam.d/dankshell`; die Sperre nimmt ihn, bis `alpe-dienst auth sync` `/etc/pam.d/alpe`
    geschrieben hat – **seit Plan 0.8 Nr. 118 nur noch für eine verwaltete `dankshell`**; eine eigene bleibt, solange
-   `alpe` fehlt, und `auth sync` meldet das. Geprüft ist das im QML-Test `tst_Pam.qml` mit Attrappen – mit Richtlinie und ohne (Weg am Mac:
+   `alpe` fehlt, und `auth sync` meldet das. **Seit Plan 0.8 Nr. 135 gilt dasselbe für U2F:** eine eigene
+   `dankshell-u2f` bleibt, solange `alpe-u2f` fehlt; beim Einschalten von U2F meldet `auth sync` das (die Sperre nimmt
+   `alpe-u2f` vor `dankshell-u2f`). Am Mac nachsehen, ob dort eine eigene `dankshell-u2f` liegt (Liste oben). Geprüft ist das im QML-Test `tst_Pam.qml` mit Attrappen – mit Richtlinie und ohne (Weg am Mac:
    `alpe` vor `dankshell`, dann Dienst im Nutzerordner, dann die mitgelieferten Stapel) –, nicht an einer echten
    Sperre. Nebenbefund: `shell/tests/run-qml.py` zeigt noch auf den alten Ordner `quickshell/` und läuft so nicht;
    `tests/test_pam_dienste.py` ruft `qmltestrunner` für `tst_Pam.qml` direkt auf. Die Attrappen kennen das
@@ -1462,6 +1465,10 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       actually artistic, not gpl») «Artistic License»; eine dritte Seite (Miranda NG) beschreibt Borealis als
       Artistic License mit Zusätzen. Lizenz von `message` damit ungeklärt, geparkt; im Lizenzfeld (E2) keine
       Vermutung.
+      **Erledigt durch den Entscheid vom 26.11.2026 (Nachtlauf vom 27.11.2026, Plan 0.8 Nr. 128):** Alpe liefert die
+      drei Klänge und `CREDITS` nicht mehr mit; die Shell nimmt sie aus dem installierten Paket
+      `sound-theme-freedesktop` (Abhängigkeit in 6.2 und 6.3), fehlt eine Datei, bleibt es still. Die offenen Fragen
+      zu Fassung und Lizenz betreffen damit nicht mehr das Paket von Alpe.
     - **Nicht in `NOTICE`:** `shell/Alpe/Common/fzf.js` (BSD-3-Clause, Ajit), `shell/Alpe/Common/Hct.js`
       (Apache-2.0, Google, aus Material Color Utilities), `shell/Alpe/Widgets/MaterialShapeData.js` (Apache-2.0,
       Android Open Source Project; `MaterialShapes.NOTICE` und `Apache-2.0.txt` daneben); Zeichen Dritter unter
@@ -1471,6 +1478,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       Lizenzfeld neu (nicht vermuten, bei E2/E3 entscheiden):** Flatpak-Zeichen CC-BY-3.0, Snapcraft-Zeichen
       CC-BY-SA-3.0 (beide nach Simple Icons, das selbst CC0 ist), Hyprland-Zeichen ARR nach der Markenrichtlinie
       von hyprwm (die Datei ist nicht die offizielle Vorlage); Herkunft von `appimage.svg` unbelegt. Geparkt.
+      Flatpak und Snapcraft: bleiben mit Nennung (entschieden mit Plan 0.8 Nr. 130).
+      **AppImage erledigt (Entscheid vom 26.11.2026, Plan 0.8 Nr. 129):** `appimage.svg` entfernt, der Starter zeigt
+      das Symbol `deployed_code` aus der mitgelieferten Symbolschrift.
     - `LicenseRef-Alpe-Logo`: Symbol und Zeichen von Alpe (Rechte beim Maintainer, `NOTICE`); die mit
       `alpe-dienst completion` erzeugten Vervollständigungen stammen aus Vorlagen von cobra (Apache-2.0).
 - ~~**Lizenzfeld der Pakete (offen beim Maintainer, 24.11.2026):**~~ Entschieden ist, dass das
@@ -1518,7 +1528,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
     Dateien tragen keinen Vermerk; die Namen gleichen denen einer verbreiteten freien
     Mustersammlung – Herkunft nicht belegt, zu klären). `shell/assets/discord.svg`, `reddit.svg`
     (Markenzeichen Dritter; unbenutzt bzw. Rest, siehe «Werkzeuge»). `shell/assets/hyprland.svg`
-    (Zeichen von Hyprland). `shell/assets/package-sources/appimage.svg`, `flatpak.svg`, `nix.svg`,
+    (Zeichen von Hyprland). `shell/assets/package-sources/appimage.svg` (seit Plan 0.8 Nr. 129 entfernt), `flatpak.svg`, `nix.svg`,
     `snap.svg` (Zeichen der Paketformate). `shell/matugen/templates/fcitx5/highlight.svg`,
     `panel.svg` (Teile des fcitx5-Themas). `core/internal/config/embedded/testpage.pdf`
     (Drucker-Testseite; **der PDF-Titel lautet noch «DankMaterialShell Test Page»** – die

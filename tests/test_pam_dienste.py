@@ -8,7 +8,8 @@ Blöcke der Einrichtung von 1.0 (dankshell, dankshell-u2f, «DMS LOCKSCREEN AUTH
 verändert – sie stehen nur innerhalb der Bereichsmarken der Namensprüfung (Frist Umzug-Ende). Richtlinien unter
 /usr/share/alpe/cli-policy.json und /etc/alpe/cli-policy.json. Seit Plan 0.8 Nr. 118 legt auth sync kein neues alpe an,
 solange alpe fehlt und eine eigene dankshell da ist; ein verwaltetes alpe wird weiter nachgeführt (die Pfade von 1.0
-nur in reportLegacyPamFile und in Meldungen); seit Nr. 119 gilt
+nur in reportLegacyPamFile und in Meldungen); seit Nr. 135 gilt dasselbe für alpe-u2f neben einer eigenen dankshell-u2f;
+seit Nr. 119 gilt
 /etc/dms/cli-policy.json als Rückfall, solange /etc/alpe/cli-policy.json fehlt, /usr/share/dms nie. Der QML-Test der
 Sperre (shell/tests/lock/tst_Pam.qml) läuft mit qmltestrunner, wenn es installiert ist.
 """
@@ -60,8 +61,9 @@ check(sorted(set(schreiben)) == ["deps.alpePath", "deps.alpeU2fPath"],
       "Dienst schreibt und löscht nur die alpe-Dienste, nie die aus 1.0: %s" % sorted(set(schreiben)))
 check(not re.search(r"(runSudoCmd|WriteFile|Remove|Rename)\([^)\n]*(legacy|Legacy)", pam_go)
       and set(re.findall(r"deps\.legacy\w*", pam_go)) <= {"deps.legacyPath", "deps.legacyU2fPath"}
-      # gelesen nur in reportLegacyPamFile (dessen Ergebnis darf zugewiesen werden), sonst nur in einer Meldung (0.8 Nr. 118)
-      and all(re.match(r"(\w+ := )?reportLegacyPamFile\(|logFunc\(fmt\.Sprintf\(\"[^\"]*\", deps\.legacyPath, deps\.alpePath\)\)$", z.strip())
+      # gelesen nur in reportLegacyPamFile (dessen Ergebnis darf zugewiesen werden), sonst nur in einer Meldung (0.8 Nr. 118,
+      # für U2F Nr. 135)
+      and all(re.match(r"(\w+ := )?reportLegacyPamFile\(|logFunc\(fmt\.Sprintf\(\"[^\"]*\", (deps\.legacyPath, deps\.alpePath|deps\.legacyU2fPath, deps\.alpeU2fPath)\)\)$", z.strip())
               for z in pam_go.splitlines() if "deps.legacy" in z),
       "Dienst: die Pfade von 1.0 gehen nur an reportLegacyPamFile (lesen) und in Meldungen, nie an sudo, Schreiben, Löschen oder Umbenennen")
 check("reportLegacyPamFile(logFunc, deps.legacyPath" in pam_go and "reportLegacyPamFile(logFunc, deps.legacyU2fPath" in pam_go,

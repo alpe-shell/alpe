@@ -87,6 +87,8 @@ Item {
 
             SettingsToggleRow {
                 enabled: SettingsData.soundsEnabled
+                // Alpe liefert keinen Anmeldeklang mit: den Schalter nur zeigen, wenn das gewählte Systemthema einen hat
+                visible: SettingsData.useSystemSoundTheme && !!AudioService.soundFilePaths["desktop-login"]
                 tab: "sounds"
                 tags: ["sound", "login", "startup", "boot"]
                 settingKey: "soundLogin"

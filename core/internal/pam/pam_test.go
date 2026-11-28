@@ -726,6 +726,58 @@ func TestSyncLockscreenU2FPamConfigWithDeps(t *testing.T) {
 			}
 		})
 	}
+
+	// Entscheid vom 26.11.2026 (dieselbe Regel wie für den Passwortdienst aus 1.0, Plan 0.8 Nr. 118, 135): Ein eigener,
+	// nicht verwalteter U2F-Dienst aus 1.0 ohne alpe-u2f wird beim Einschalten nicht abgelöst, sondern gemeldet.
+	t.Run("enabled with custom legacy u2f service and no alpe-u2f: nothing written, reported", func(t *testing.T) {
+		t.Parallel()
+
+		env := newPamTestEnv(t)
+		custom := "#%PAM-1.0\nauth required pam_u2f.so cue authfile=/etc/u2f_mappings origin=pam://example\n"
+		if err := os.WriteFile(env.legacyU2fPath, []byte(custom), 0o644); err != nil {
+			t.Fatal(err)
+		}
+
+		var logs []string
+		err := syncLockscreenU2FPamConfigWithDeps(func(msg string) {
+			logs = append(logs, msg)
+		}, "", true, env.deps(false))
+		if err != nil {
+			t.Fatalf("syncLockscreenU2FPamConfigWithDeps returned error: %v", err)
+		}
+		if _, statErr := os.Stat(env.alpeU2fPath); !os.IsNotExist(statErr) {
+			t.Fatalf("expected no %s next to a custom %s, stat err = %v", env.alpeU2fPath, env.legacyU2fPath, statErr)
+		}
+		if got := readFileString(t, env.legacyU2fPath); got != custom {
+			t.Fatalf("custom legacy u2f service changed\ngot:\n%s\nwant:\n%s", got, custom)
+		}
+		if len(logs) != 2 || !strings.Contains(logs[0], env.legacyU2fPath+" from Alpe 1.0 (custom) found") ||
+			!strings.Contains(logs[1], "Custom "+env.legacyU2fPath+" from Alpe 1.0 found and no "+env.alpeU2fPath) ||
+			!strings.Contains(logs[1], "is not created") {
+			t.Fatalf("expected recognition and not-created logs, got %v", logs)
+		}
+	})
+
+	t.Run("enabled with custom legacy u2f service and a managed alpe-u2f: alpe-u2f is updated", func(t *testing.T) {
+		t.Parallel()
+
+		env := newPamTestEnv(t)
+		custom := "#%PAM-1.0\nauth required pam_u2f.so cue\n"
+		if err := os.WriteFile(env.legacyU2fPath, []byte(custom), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		env.writePamFile(t, "alpe-u2f", "#%PAM-1.0\n"+LockscreenU2FPamManagedBlockStart+"\nauth required pam_u2f.so old\n"+LockscreenU2FPamManagedBlockEnd+"\n")
+
+		if err := syncLockscreenU2FPamConfigWithDeps(func(string) {}, "", true, env.deps(false)); err != nil {
+			t.Fatalf("syncLockscreenU2FPamConfigWithDeps returned error: %v", err)
+		}
+		if got := readFileString(t, env.alpeU2fPath); got != buildManagedLockscreenU2FPamContent() {
+			t.Fatalf("managed alpe-u2f was not rewritten:\n%s", got)
+		}
+		if got := readFileString(t, env.legacyU2fPath); got != custom {
+			t.Fatalf("custom legacy u2f service changed:\n%s", got)
+		}
+	})
 }
 
 func TestLegacyManagedBlocksAreRecognizedNotWritten(t *testing.T) {

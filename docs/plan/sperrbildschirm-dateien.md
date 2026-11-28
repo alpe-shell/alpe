@@ -122,7 +122,8 @@ liest er dagegen schon.
   einzige Stelle, an der eine Nutzerkopie entsteht. **Seit Plan 0.8 Nr. 125 (3) (Entscheid vom 25.11.2026) nicht
   mehr die einzige:** Auch der Weg ohne Paket (6.4, `make build install PREFIX=$HOME/.local`) legt eine Nutzerkopie
   unter `~/.local/share/plasma/shells/org.alpe.desktop` an; das wird hingenommen, `doctor` und `entfernen` behandeln
-  sie wie die von `alpe entwicklung ein`.
+  sie wie die von `alpe entwicklung ein`. Liegt dort noch die Kopie aus 1.0, bricht `make install` seit Plan 0.8
+  Nr. 139 (2) ab, ausser mit Schalter (E4).
 
 Für A spricht: Paket-Aktualisierungen wirken sofort; kein Verdecken; der Sperrbildschirm kann
 nicht hinter der Shell zurückbleiben; `$HOME` wird vom Einrichten nur über `kwriteconfig6`

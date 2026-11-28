@@ -3,7 +3,7 @@
 #   make build                              Dienst (ohne eingebettete Oberfläche) und Sperrpaket nach $(BUILD)/
 #   make install DESTDIR=… PREFIX=/usr      Paketbaum unter DESTDIR anlegen (das Paket setzt DESTDIR immer)
 #   make test                               dieselben Prüfungen wie tools/test.sh
-#   make dist                               Quellarchiv $(BUILD)/alpe-<Version>.tar.gz mit vendorten Go-Modulen
+#   make dist                               Quellarchiv $(BUILD)/alpe-shell-<Version>.tar.gz mit vendorten Go-Modulen
 #
 # Die Version steht allein in shell/Common/Brand.qml (Plan 0.5 Nr. 2); der Dienst bekommt sie beim Bau.
 # Der Dienst bettet die Oberfläche nicht ein (Bau ohne Tag «withshell», Plan Abschnitt 1): Er startet mit
@@ -141,6 +141,14 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 		src="$$dir/licenses/ftl.txt"; \
 	fi; \
 	install -Dm644 "$$src" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt
+	# Lizenztexte der vendorten Go-Module, darunter die in alpe-dienst gelinkten (Plan 0.8 Nr. 131): Liegt core/vendor vor
+	# (Quellarchiv von make dist), kommen alle LICENSE*, COPYING* und NOTICE* je Modul unverändert nach
+	# licenses/alpe-shell/vendor/<Modul>/ (Pfad wie unter core/vendor). Im Repository gibt es kein core/vendor.
+	if [ -d core/vendor ]; then \
+		for f in $$(cd core/vendor && find . -type f \( -name 'LICENSE*' -o -name 'COPYING*' -o -name 'NOTICE*' \) -printf '%P\n' | LC_ALL=C sort); do \
+			install -Dm644 "core/vendor/$$f" "$(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/vendor/$$f" || exit 1; \
+		done; \
+	fi
 
 test:
 	bash tools/test.sh
@@ -153,21 +161,23 @@ dist:
 	@test -n "$(IM_REPO)" || { echo "make dist braucht dieses Git-Repository ($(CURDIR))"; exit 1; }
 	$(eval DIST_VERSION := $(shell git show HEAD:$(BRAND_QML) | $(VERSION_SED) | head -1))
 	@test -n "$(DIST_VERSION)" || { echo "Version aus HEAD:$(BRAND_QML) nicht lesbar"; exit 1; }
+	# Name = Paketname und Version (Plan 0.8 Nr. 132): nicht verwechselbar mit dem «Source code» von GitHub zum Tag
+	$(eval DIST_NAME := alpe-shell-$(DIST_VERSION))
 	rm -rf $(BUILD_ABS)/dist
 	mkdir -p $(BUILD_ABS)/dist
-	git archive --format=tar --prefix=alpe-$(DIST_VERSION)/ HEAD | tar -C $(BUILD_ABS)/dist -xf -
-	git rev-parse --short=8 HEAD > $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/COMMIT
-	cd $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/core && $(GO) mod vendor
+	git archive --format=tar --prefix=$(DIST_NAME)/ HEAD | tar -C $(BUILD_ABS)/dist -xf -
+	git rev-parse --short=8 HEAD > $(BUILD_ABS)/dist/$(DIST_NAME)/COMMIT
+	cd $(BUILD_ABS)/dist/$(DIST_NAME)/core && $(GO) mod vendor
 	# «go mod vendor» übernimmt nur Paketordner; den Text der FTL (licenses/ftl.txt) von golang/freetype legt es nicht
 	# ab. Die FTL verlangt ihn unverändert bei jeder Weitergabe des Quelltexts (NOTICE).
 	# Die Fassung kommt aus dem go.mod von HEAD (im entpackten Stand gelesen, nicht im Arbeitsbaum).
-	dir="$$(cd $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/core && $(GO) list -mod=readonly -m -f '{{.Dir}}' $(FREETYPE))"; \
+	dir="$$(cd $(BUILD_ABS)/dist/$(DIST_NAME)/core && $(GO) list -mod=readonly -m -f '{{.Dir}}' $(FREETYPE))"; \
 		[ -n "$$dir" ] || { echo "$(FREETYPE) nicht im Modul-Cache"; exit 1; }; \
-		install -Dm644 "$$dir/licenses/ftl.txt" $(BUILD_ABS)/dist/alpe-$(DIST_VERSION)/$(FTL_VENDOR)
+		install -Dm644 "$$dir/licenses/ftl.txt" $(BUILD_ABS)/dist/$(DIST_NAME)/$(FTL_VENDOR)
 	tar -C $(BUILD_ABS)/dist --sort=name --owner=0 --group=0 --numeric-owner --mode=u+rwX,go=rX \
-		--mtime=@$$(git log -1 --format=%ct HEAD) -cf - alpe-$(DIST_VERSION) | gzip -n > $(BUILD_ABS)/alpe-$(DIST_VERSION).tar.gz
+		--mtime=@$$(git log -1 --format=%ct HEAD) -cf - $(DIST_NAME) | gzip -n > $(BUILD_ABS)/$(DIST_NAME).tar.gz
 	rm -rf $(BUILD_ABS)/dist
-	@echo "Quellarchiv: $(BUILD)/alpe-$(DIST_VERSION).tar.gz"
+	@echo "Quellarchiv: $(BUILD)/$(DIST_NAME).tar.gz"
 
 help:
 	@sed -n '2,10p' Makefile

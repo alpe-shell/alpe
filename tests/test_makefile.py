@@ -7,7 +7,8 @@ Prüft in einem Temp-Ordner: «make build» baut den Dienst ohne eingebettete Ob
 Brand.qml; «make install DESTDIR=… PREFIX=/usr» legt den Baum nach 6.1 an (Werkzeuge nur aus der ausdrücklichen
 Liste, keine Tests der Oberfläche), und die ganze Dateiliste stimmt mit dem Codeblock in Plan 6.1 überein; keine
 Datei gehört zugleich dem Paket des Ursprungs (pacman -Ql, nur wenn es installiert ist; E1 2.8); «make dist» schreibt ein Quellarchiv mit vendorten Go-Modulen, aus dem sich der
-Dienst ohne Netz bauen lässt. Ohne make, go oder git (oder mit ALPE_SKIP_GO) wird der Teil übersprungen.
+Dienst ohne Netz bauen lässt. Ohne make, go oder git (oder mit ALPE_SKIP_GO) wird der Teil übersprungen – ausser mit
+ALPE_GO_PFLICHT (Go-Schritt der CI, Plan 0.8 Nr. 137): dann ist das ein Fehler.
 """
 import os
 import re
@@ -56,6 +57,54 @@ check(len(mit_test) == 1 and setup_go and mit_test[0] > setup_go[0] and "ALPE_SK
       and "working-directory" not in schritte[mit_test[0]],
       "CI: tests/test_makefile.py läuft nach setup-go in der Wurzel, ohne ALPE_SKIP_GO (Bau, Installation, Quellarchiv)")
 
+
+# Plan 0.8 Nr. 137: Kommentare zählen nicht (eine auskommentierte Zeile wirkt nicht).
+def ohne_kommentar(block):
+    return "\n".join(re.sub(r"(^|\s)#.*$", "", z) for z in block.splitlines())
+
+
+schritte_ok = [ohne_kommentar(s) for s in schritte]
+mit_version = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s*python3 tests/test_version\.py\s*$", s, re.M)]
+mit_test_ok = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s*python3 tests/test_makefile\.py\s*$", s, re.M)]
+check(len(mit_version) == 1 and setup_go and mit_version[0] > setup_go[0] and mit_version == mit_test_ok
+      and "ALPE_SKIP_GO" not in schritte_ok[mit_version[0]],
+      "CI: tests/test_version.py läuft im Go-Schritt mit (nach setup-go, ohne ALPE_SKIP_GO; Nr. 137)")
+# nur der Teil vor «run:» des Go-Schritts (sonst zählte ein env: auf Job-Ebene des nächsten Jobs mit)
+check(mit_test_ok and re.search(r'^\s+ALPE_GO_PFLICHT: "1"\s*$', schritte_ok[mit_test_ok[0]].split("\n        run:", 1)[0], re.M) is not None,
+      "CI: im Go-Schritt ist ALPE_GO_PFLICHT gesetzt – fehlendes go, make oder git ist dort ein Fehler (Nr. 137)")
+mit_skip = [i for i, s in enumerate(schritte_ok) if "ALPE_SKIP_GO" in s]
+erster = [i for i, s in enumerate(schritte_ok) if re.search(r"^\s+run: bash tools/test\.sh\s*$", s, re.M)]
+check(len(erster) == 1 and mit_skip == erster and erster[0] < setup_go[0],
+      "CI: ALPE_SKIP_GO steht nur im ersten Schritt (tools/test.sh vor setup-go), nicht auf Job- oder Workflow-Ebene (Nr. 137)")
+kopf = ohne_kommentar(workflow.split("\njobs:", 1)[0])
+check(re.search(r"^permissions:\n  contents: read\s*$", kopf, re.M) is not None,
+      "CI: permissions contents: read auf Ebene des Workflows (Nr. 137)")
+
+# Plan 0.8 Nr. 137: Mit ALPE_GO_PFLICHT darf nichts still überspringen. Probe: beide Tests mit ALPE_SKIP_GO und
+# ALPE_GO_PFLICHT müssen rot enden (ALPE_PFLICHT_PROBE verhindert, dass sich die Probe selbst wieder aufruft).
+if not os.environ.get("ALPE_PFLICHT_PROBE"):
+    leerer_pfad = tempfile.mkdtemp(prefix="alpe-leerer-pfad-")
+    try:
+        proben = (("mit ALPE_SKIP_GO", dict(os.environ, ALPE_GO_PFLICHT="1", ALPE_SKIP_GO="1", ALPE_PFLICHT_PROBE="1")),
+                  # Kernfall: go, make und git fehlen (PATH auf einen leeren Ordner, Python über sys.executable)
+                  ("ohne go, make und git", dict({k: v for k, v in os.environ.items() if k != "ALPE_SKIP_GO"},
+                                                 PATH=leerer_pfad, ALPE_GO_PFLICHT="1", ALPE_PFLICHT_PROBE="1")))
+        for art, probe_env in proben:
+            for skript in ("test_version.py", "test_makefile.py"):
+                probe = subprocess.run([sys.executable, os.path.join(REPO, "tests", skript)], capture_output=True, text=True,
+                                       env=probe_env)
+                check(probe.returncode == 1 and "FEHLER ALPE_GO_PFLICHT" in probe.stdout,
+                      "ALPE_GO_PFLICHT %s: tests/%s endet rot mit der Pflicht-Meldung statt «übersprungen» (rc %d)"
+                      % (art, skript, probe.returncode), probe)
+    finally:
+        shutil.rmtree(leerer_pfad, ignore_errors=True)
+
+# Plan 0.8 Nr. 137: Im Go-Schritt der CI (ALPE_GO_PFLICHT) ist Fehlendes ein Fehler, kein Übersprung.
+if os.environ.get("ALPE_GO_PFLICHT"):
+    fehlt = [p for p in ("make", "go", "git") if not shutil.which(p)]
+    check(not fehlt and not os.environ.get("ALPE_SKIP_GO"),
+          "ALPE_GO_PFLICHT: make, go und git vorhanden, ALPE_SKIP_GO nicht gesetzt (fehlt: %s; ALPE_SKIP_GO: %s)"
+          % (fehlt, os.environ.get("ALPE_SKIP_GO", "")))
 if not shutil.which("make") or not shutil.which("go") or os.environ.get("ALPE_SKIP_GO"):
     print("make oder go fehlt, oder ALPE_SKIP_GO – Bau, Installation und Archiv übersprungen")
     sys.exit(1 if failures else 0)
@@ -136,6 +185,10 @@ try:
     check(ftl_original.startswith(b"                    The FreeType Project LICENSE") and os.path.isfile(ftl_paket)
           and open(ftl_paket, "rb").read() == ftl_original,
           "/usr/share/licenses/alpe-shell/FTL.txt = licenses/ftl.txt von golang/freetype, bytegleich")
+    # Im Repository gibt es kein core/vendor: dann auch keinen Ordner vendor/ unter den Lizenzen (Plan 0.8 Nr. 131)
+    check(not os.path.exists(os.path.join(REPO, "core", "vendor"))
+          and not os.path.exists(os.path.join(usr, "share", "licenses", "alpe-shell", "vendor")),
+          "make install im Repository (ohne core/vendor): kein licenses/alpe-shell/vendor/")
     # Im Repository ohne Modul im Modul-Cache: verständlicher Abbruch statt «cannot stat /licenses/ftl.txt»
     out = make("install", "BUILD=" + bau, "DESTDIR=" + os.path.join(tmp, "wurzel-ohne-cache"), "PREFIX=/usr",
                env=dict(env, GOMODCACHE=os.path.join(tmp, "leerer-modcache-repo"), GOPROXY="off", GOFLAGS="-modcacherw"))
@@ -197,15 +250,20 @@ try:
             out = make("dist", "BUILD=" + bau, env=env)
         finally:
             os.umask(alt_umask)
-        archiv = os.path.join(bau, "alpe-%s.tar.gz" % brand)
-        check(out.returncode == 0 and os.path.isfile(archiv), "make dist: Quellarchiv alpe-%s.tar.gz" % brand, out)
+        # Name = Paketname und Version, ein Ordner gleichen Namens (Plan 0.8 Nr. 132)
+        dist_name = "alpe-shell-%s" % brand
+        archiv = os.path.join(bau, dist_name + ".tar.gz")
+        check(out.returncode == 0 and os.path.isfile(archiv) and not os.path.exists(os.path.join(bau, "alpe-%s.tar.gz" % brand)),
+              "make dist: Quellarchiv %s.tar.gz (nicht mehr alpe-%s.tar.gz)" % (dist_name, brand), out)
         if os.path.isfile(archiv):
             with tarfile.open(archiv) as handle:
                 namen = handle.getnames()
-                check("alpe-%s/core/vendor/modules.txt" % brand in namen and "alpe-%s/shell/shell.qml" % brand in namen
-                      and "alpe-%s/COMMIT" % brand in namen and not any("/.git/" in n for n in namen),
+                check("%s/core/vendor/modules.txt" % dist_name in namen and "%s/shell/shell.qml" % dist_name in namen
+                      and "%s/COMMIT" % dist_name in namen and not any("/.git/" in n for n in namen),
                       "Archiv mit vendorten Go-Modulen und Datei COMMIT, ohne .git")
-                ftl_name = "alpe-%s/core/vendor/github.com/golang/freetype/licenses/ftl.txt" % brand
+                check(namen and all(n == dist_name or n.startswith(dist_name + "/") for n in namen),
+                      "alles im Archiv liegt im Ordner %s/" % dist_name)
+                ftl_name = "%s/core/vendor/github.com/golang/freetype/licenses/ftl.txt" % dist_name
                 check(ftl_name in namen and handle.extractfile(ftl_name).read() == ftl_original,
                       "Archiv enthält licenses/ftl.txt von golang/freetype unverändert (go mod vendor legt sie nicht ab)")
                 handle.extractall(os.path.join(tmp, "aus"), filter="data")
@@ -219,7 +277,7 @@ try:
             archiv_b = os.path.join(bau_b, os.path.basename(archiv))
             gleich = out_b.returncode == 0 and os.path.isfile(archiv_b) and open(archiv, "rb").read() == open(archiv_b, "rb").read()
             check(gleich, "make dist ist reproduzierbar (zweiter Lauf mit umask 002 bytegleich)", out_b)
-            quelle = os.path.join(tmp, "aus", "alpe-%s" % brand)
+            quelle = os.path.join(tmp, "aus", dist_name)
             # Bau aus dem Archiv wie im Paketbau: ohne Netz, mit den vendorten Modulen.
             env_vendor = dict(env, GOFLAGS="-mod=vendor", GOPROXY="off")
             out = make("build", "BUILD=" + os.path.join(tmp, "bau2"), cwd=quelle, env=env_vendor)
@@ -232,8 +290,23 @@ try:
             ftl2 = os.path.join(wurzel2, "usr", "share", "licenses", "alpe-shell", "FTL.txt")
             check(out.returncode == 0 and os.path.isfile(ftl2) and open(ftl2, "rb").read() == ftl_original,
                   "make install aus dem Archiv: FTL.txt aus dem vendor-Baum, ohne Modul-Cache und Netz", out)
+            # Plan 0.8 Nr. 131: alle LICENSE*, COPYING*, NOTICE* aus core/vendor/<Modul>/ unverändert nach
+            # licenses/alpe-shell/vendor/<Modul>/ – genau diese, bytegleich, und nichts sonst in diesem Ordner.
+            vendor_quelle = os.path.join(quelle, "core", "vendor")
+            erwartet = {os.path.relpath(os.path.join(d, f), vendor_quelle) for d, _, fs in os.walk(vendor_quelle) for f in fs
+                        if f.startswith(("LICENSE", "COPYING", "NOTICE"))}
+            vendor_paket = os.path.join(wurzel2, "usr", "share", "licenses", "alpe-shell", "vendor")
+            da = {os.path.relpath(os.path.join(d, f), vendor_paket) for d, _, fs in os.walk(vendor_paket) for f in fs}
+            gleich_inhalt = all(open(os.path.join(vendor_quelle, p), "rb").read() == open(os.path.join(vendor_paket, p), "rb").read()
+                                for p in erwartet & da)
+            check(len(erwartet) >= 20 and da == erwartet and gleich_inhalt
+                  and "github.com/pilebones/go-udev/LICENSE" in da and any(p.startswith("golang.org/x/") for p in da)
+                  and all(os.stat(os.path.join(vendor_paket, p)).st_mode & 0o777 == 0o644 for p in da),
+                  "make install aus dem Archiv: %d Lizenzdateien der vendorten Module unter licenses/alpe-shell/vendor/<Modul>/, "
+                  "bytegleich, 0644 (nur im Paket: %s; fehlt: %s)" % (len(da), sorted(da - erwartet)[:3], sorted(erwartet - da)[:3]), out)
     else:
         print("kein Git-Repository – make dist übersprungen")
+        check(not os.environ.get("ALPE_GO_PFLICHT"), "ALPE_GO_PFLICHT: make dist darf nicht übersprungen werden (kein Git-Repository)")
 finally:
     shutil.rmtree(tmp, ignore_errors=True)
 
