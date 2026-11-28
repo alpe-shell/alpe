@@ -292,6 +292,14 @@ try:
             out = make("build", "BUILD=" + os.path.join(tmp, "bau2"), cwd=quelle, env=env_vendor)
             check(out.returncode == 0 and subprocess.run([os.path.join(tmp, "bau2", "alpe-dienst"), "version"], capture_output=True, text=True).stdout.strip()
                   == "alpe-dienst " + brand, "aus dem Archiv ohne Netz gebaut (-mod=vendor, GOPROXY=off), Version stimmt", out)
+            # Zwei künstliche Dateien in einem Paketordner des entpackten Archivs (Prüfung zu 2.5): «License.txt» (nicht gross
+            # geschrieben) muss ins Paket, «license.go» (Go-Quelltext, gültig, falls neu gebaut wird) nicht.
+            kunst = os.path.join(quelle, "core", "vendor", "github.com", "sergi", "go-diff", "diffmatchpatch")
+            if os.path.isdir(kunst):
+                with open(os.path.join(kunst, "License.txt"), "w", encoding="utf-8") as handle:
+                    handle.write("Kuenstlicher Lizenztext (Test)\n")
+                with open(os.path.join(kunst, "license.go"), "w", encoding="utf-8") as handle:
+                    handle.write("package diffmatchpatch\n")
             # Installation aus dem Archiv wie im Paketbau: FTL aus dem vendor-Baum, ohne Modul-Cache
             wurzel2 = os.path.join(tmp, "wurzel2")
             out = make("install", "BUILD=" + os.path.join(tmp, "bau2"), "DESTDIR=" + wurzel2, "PREFIX=/usr", cwd=quelle,
@@ -299,9 +307,10 @@ try:
             ftl2 = os.path.join(wurzel2, "usr", "share", "licenses", "alpe-shell", "FTL.txt")
             check(out.returncode == 0 and os.path.isfile(ftl2) and open(ftl2, "rb").read() == ftl_original,
                   "make install aus dem Archiv: FTL.txt aus dem vendor-Baum, ohne Modul-Cache und Netz", out)
-            # Plan 0.8 Nr. 131, 145: aus core/vendor/<Modul>/ alle Dateien, die «go mod vendor» als Metadaten übernimmt –
-            # Name in Grossschreibung beginnt mit einem der neun Präfixe (Regel von go, cmd/go/internal/modcmd/vendor.go),
-            # ohne Go-Quelltext – und die von make dist dazugelegte APACHE-LICENSE-2.0 von go-diff, unverändert nach
+            # Plan 0.8 Nr. 131, 145: aus core/vendor/<Modul>/ alle Dateien, deren Name mit einem der neun Präfixe von «go mod
+            # vendor» beginnt – bewusst ohne Rücksicht auf Gross- und Kleinschreibung (go selbst nimmt in den Elternordnern
+            # nur gross geschriebene Namen, aus Paketordnern alle Dateien; cmd/go/internal/modcmd/vendor.go), ohne
+            # Go-Quelltext – und die von make dist dazugelegte APACHE-LICENSE-2.0 von go-diff, unverändert nach
             # licenses/alpe-shell/vendor/<Modul>/ – genau diese, bytegleich, und nichts sonst in diesem Ordner.
             praefixe = ("AUTHORS", "CONTRIBUTORS", "COPYLEFT", "COPYING", "COPYRIGHT", "LEGAL", "LICENSE", "NOTICE", "PATENTS")
             vendor_quelle = os.path.join(quelle, "core", "vendor")
@@ -326,6 +335,11 @@ try:
                   and open(os.path.join(vendor_paket, "github.com/sergi/go-diff/APACHE-LICENSE-2.0"), "rb").read() == godiff_original,
                   "make install: auch AUTHORS (freetype), PATENTS (golang.org/x) und APACHE-LICENSE-2.0 von go-diff "
                   "(weitere Präfixe im Paket: %s)" % neue_praefixe)
+            # Die zwei künstlichen Dateien von oben: «License.txt» im Paket (Suche ohne Rücksicht auf die Schreibweise),
+            # «license.go» nicht (Go-Quelltext)
+            kunst_rel = "github.com/sergi/go-diff/diffmatchpatch/"
+            check(os.path.isdir(kunst) and kunst_rel + "License.txt" in da and kunst_rel + "license.go" not in da,
+                  "make install: «License.txt» im Paketordner kommt mit, «license.go» nicht (-iname, ohne *.go)")
     else:
         print("kein Git-Repository – make dist übersprungen")
         check(not os.environ.get("ALPE_GO_PFLICHT"), "ALPE_GO_PFLICHT: make dist darf nicht übersprungen werden (kein Git-Repository)")

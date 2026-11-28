@@ -120,9 +120,9 @@ Die Module aus core/go.mod, deren Pakete der Dienst einbindet, werden beim Bau s
 Programm alpe-dienst gelinkt (Module, die nur Tests brauchen, nicht). Im Quellarchiv (make dist)
 liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die «go mod vendor» übernimmt, und
 den unten genannten, die make dist dazulegt. make install legt aus core/vendor/<Modul>/ alle
-Dateien, die «go mod vendor» als Lizenz- und Urheberangaben übernimmt (Namen beginnend mit
-AUTHORS, CONTRIBUTORS, COPYLEFT, COPYING, COPYRIGHT, LEGAL, LICENSE, NOTICE oder PATENTS),
-und die von make dist dazugelegten Texte unverändert nach /usr/share/licenses/alpe-shell/vendor/
+Dateien, deren Name – ohne Rücksicht auf Gross- und Kleinschreibung, ohne Go-Quelltext – mit
+AUTHORS, CONTRIBUTORS, COPYLEFT, COPYING, COPYRIGHT, LEGAL, LICENSE, NOTICE oder PATENTS
+beginnt, und die von make dist dazugelegten Texte unverändert nach /usr/share/licenses/alpe-shell/vendor/
 <Modul>/. Die vier Module unten haben Besonderheiten; für alle übrigen gilt die Lizenzdatei
 im Modul.
 

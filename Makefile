@@ -146,11 +146,13 @@ install: $(BUILD_ABS)/alpe-dienst $(SPERR)/metadata.json $(KOMPL)/alpe-dienst.fi
 	fi; \
 	install -Dm644 "$$src" $(DESTDIR)$(PREFIX)/share/licenses/alpe-shell/FTL.txt
 	# Lizenztexte der vendorten Go-Module, darunter die in alpe-dienst gelinkten (Plan 0.8 Nr. 131, 145): Liegt core/vendor
-	# vor (Quellarchiv von make dist), kommen alle Dateien mit den neun Präfixen, die «go mod vendor» übernimmt (AUTHORS,
-	# CONTRIBUTORS, COPYLEFT, COPYING, COPYRIGHT, LEGAL, LICENSE, NOTICE, PATENTS; wie go ohne Rücksicht auf Gross- und
-	# Kleinschreibung; ohne Go-Quelltext wie license.go), und die von make dist dazugelegte APACHE-LICENSE-2.0 von go-diff
-	# je Modul unverändert nach licenses/alpe-shell/vendor/<Modul>/ (Pfad wie unter core/vendor). Im Repository gibt es
-	# kein core/vendor.
+	# vor (Quellarchiv von make dist), kommen alle Dateien mit den neun Präfixen von «go mod vendor» (AUTHORS, CONTRIBUTORS,
+	# COPYLEFT, COPYING, COPYRIGHT, LEGAL, LICENSE, NOTICE, PATENTS) und die von make dist dazugelegte APACHE-LICENSE-2.0
+	# von go-diff je Modul unverändert nach licenses/alpe-shell/vendor/<Modul>/ (Pfad wie unter core/vendor). go selbst
+	# nimmt aus den Elternordnern bis zur Modulwurzel nur Namen, die gross geschrieben mit einem Präfix beginnen, und aus
+	# den Paketordnern alle Dateien; hier wird bewusst ohne Rücksicht auf Gross- und Kleinschreibung gesucht (auch ein
+	# «License» im Paketordner kommt mit) und ohne Go-Quelltext (license.go ist Code). Im Repository gibt es kein
+	# core/vendor.
 	if [ -d core/vendor ]; then \
 		for f in $$(cd core/vendor && find . -type f \( -iname 'AUTHORS*' -o -iname 'CONTRIBUTORS*' -o -iname 'COPYLEFT*' \
 				-o -iname 'COPYING*' -o -iname 'COPYRIGHT*' -o -iname 'LEGAL*' -o -iname 'LICENSE*' -o -iname 'NOTICE*' \
