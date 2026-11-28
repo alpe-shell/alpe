@@ -23,7 +23,8 @@ Alpe hängt von keinem fremden COPR ab. Was Fedora nicht oder zu alt liefert, ba
 `rpmlint` immer mit `-r` und der rpmlintrc des Pakets, etwa
 `rpmlint -r packaging/fedora/matugen.rpmlintrc packaging/fedora/matugen.spec <SRPM> <RPM>` (liegt mehr als eine
 `*.rpmlintrc` im Ordner, lädt rpmlint ohne `-r` keine; die Ausnahmen eines Pakets gelten nicht für ein anderes).
-Erwartet: 0 Fehler; als Warnung bleibt nur `no-manual-page-for-binary`.
+Erwartet beim gemeinsamen Lauf auf Spec, SRPM und RPM: 0 Fehler; als Warnung bleibt nur `no-manual-page-for-binary`.
+Wird die Spec allein geprüft, meldet rpmlint `E: unused-rpmlintrc-filter` für Filter, die nur das RPM betreffen.
 
 ## Quellarchiv von alpe-shell
 
@@ -35,16 +36,24 @@ von `make dist` (Go-Module vendort); gebaut wird ohne Netz (`GOFLAGS=-mod=vendor
 `matugen.spec` baut ohne Netz: `Source0` ist das Archiv des Tags, `Source1` (`matugen-<Version>-vendor.tar.gz`) der
 Ordner `vendor/` mit allen Crates aus `Cargo.lock`. Beide prüft `%prep` gegen ihre sha256 (`quelle_sha256`,
 `vendor_sha256` in der Spec). Das Crate-Archiv liegt nicht im Repository; es wird mit `matugen-vendor.sh` erzeugt und
-mit dem SRPM hochgeladen. So entsteht es (im mock-Chroot von Fedora 45, als einziger Schritt mit Netz):
+mit dem SRPM hochgeladen. So entsteht es im mock-Chroot von Fedora 45; der Chroot selbst hat nur im Schritt mit
+`--enable-network` Netz (`--init` und `--install` laden Pakete wie bei jedem Bau). Die Befehle laufen in der Wurzel
+des Repositorys; `spectool` (Paket `rpmdevtools`) lädt `Source0` dorthin (`*.tar.gz` ist in `.gitignore`):
 
 ```
+spectool -g packaging/fedora/matugen.spec
+sha256sum matugen-4.2.0.tar.gz
 mock -r fedora-45-aarch64 --init
 mock -r fedora-45-aarch64 --install cargo rust tar gzip findutils coreutils
 mock -r fedora-45-aarch64 --copyin packaging/fedora/matugen-vendor.sh matugen-4.2.0.tar.gz /builddir/
 mock -r fedora-45-aarch64 --unpriv --chroot "mkdir -p /builddir/aus"
 mock -r fedora-45-aarch64 --enable-network --unpriv --chroot "bash /builddir/matugen-vendor.sh /builddir/matugen-4.2.0.tar.gz /builddir/aus"
 mock -r fedora-45-aarch64 --copyout /builddir/aus/matugen-4.2.0-vendor.tar.gz .
+sha256sum matugen-4.2.0-vendor.tar.gz
 ```
+
+Beide Prüfsummen mit `quelle_sha256` und `vendor_sha256` in `matugen.spec` vergleichen (das Skript prüft die Quelle
+zusätzlich selbst).
 
 Das Skript prüft die Quelle, holt die Crates mit `cargo vendor --locked --versioned-dirs` und packt reproduzierbar
 (Namen sortiert, Zeit von `Cargo.lock`, Besitzer 0/0, `gzip -n`); am Ende stehen Grösse und sha256. Im Nachtlauf vom
@@ -55,8 +64,10 @@ Fassung von matugen: `version` und `quelle_sha256` im Skript und in der Spec gem
 erzeugen, Lizenzfeld neu ermitteln (der Lizenzabgleich in `%check` bricht sonst den Bau).
 
 Bekannt und noch nicht entschieden: `cargo vendor` holt die Crates aller Plattformen, das Archiv enthält darum
-vorgebaute Windows-Bibliotheken (`winapi-*-windows-gnu`, `windows_*`). Gelinkt wird davon nichts; Fedoras Richtlinie
-verlangt aber, vorgebaute Bibliotheken aus dem Quellpaket zu entfernen.
+vorgebaute Windows-Bibliotheken (`winapi-*-windows-gnu`, `windows_*`). Gelinkt wird davon nichts. Fedoras
+Packaging Guidelines verlangen, vorgebaute Programme und Bibliotheken in `%prep` vor dem Bau zu entfernen («Remove all
+pre-built program binaries and program libraries in %prep»); für ein COPR ist das nicht bindend. Bei vendorten Crates
+bräche ein Löschen in `%prep` die Prüfsummen in `.cargo-checksum.json`.
 
 ## Baureihenfolge im COPR
 
@@ -72,16 +83,18 @@ nachsehen.
 **Pflicht: `quickshell` nach jeder Aktualisierung von Qt in Fedora neu bauen** (Entscheid P15). Quickshell nutzt
 private Schnittstellen von Qt (`BUILD.md` des Ursprungs: «MUST be rebuilt against each Qt release»); das RPM verlangt
 die Minor-Fassung von Qt, gegen die es gebaut ist (`libQt6*.so.6(Qt_6.<Minor>_PRIVATE_API)`); bei einer neuen
-Patch-Fassung greift diese Abhängigkeit nicht (gefolgert). Darum nach jeder neuen Fassung von `qt6-qtbase` in Fedora 45 das Release von `quickshell`
-erhöhen, das SRPM neu bauen und hochladen.
+Patch-Fassung greift diese Abhängigkeit nicht (gefolgert). Darum nach jeder neuen Fassung von `qt6-qtbase` oder
+`qt6-qtdeclarative` (private Schnittstellen von QtQuick, `cmake(Qt6QuickPrivate)`) in Fedora 45 das Release von
+`quickshell` erhöhen, das SRPM neu bauen und hochladen.
 
 **Pflicht: vor jedem Hochladen das Release fremder Pakete gleichen Namens prüfen** (Entscheid P18). dnf wählt bei
 gleicher Priorität die höhere EVR; bei gleicher Fassung samt Release entschiede nicht das eigene COPR. Das eigene
 Release muss darum **strikt über** dem höchsten bekannten fremden liegen. Gemessen am 28.11.2026 in einem fremden COPR:
 `quickshell-0.3.2-4.fc45` und `matugen-4.2.0-1.fc45`; die eigenen Releases sind 5 und 2. Prüfen etwa mit
 `dnf repoquery --qf '%{name}-%{epoch}:%{version}-%{release} %{repoid}\n' quickshell matugen` auf einem Rechner mit
-den betreffenden Quellen, Vergleich mit `rpmdev-vercmp`. Liegt ein fremdes Release gleich hoch oder höher, das eigene
-Release vor dem Hochladen erhöhen.
+den betreffenden Quellen (dazu die Paketsuche der COPR-Weboberfläche nach `quickshell` und `matugen`), Vergleich mit
+`rpmdev-vercmp` (Paket `rpmdevtools`). Liegt ein fremdes Release gleich hoch oder höher, das eigene Release vor dem
+Hochladen erhöhen.
 
 ## Chroots
 
