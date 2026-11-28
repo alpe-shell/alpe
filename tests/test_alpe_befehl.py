@@ -12,7 +12,8 @@ der Dienst von 1.0): Erreicht ein Aufruf eine Falle, ist der Test rot.
 Geprüft: «alpe restart» startet bei aktiver Unit genau alpe.service neu, sonst die eigene Instanz über
 «alpe-dienst restart» (Plan 6.8); «alpe log» liest das Journal von alpe.service; «alpe lock» unter KDE über logind;
 übrige Befehle gehen an den Dienst – aus ALPE_DIENST, sonst neben dem eigenen Ort (<PREFIX>/bin, wenn das Werkzeug aus
-<PREFIX>/share/alpe läuft), nie an den Dienst von 1.0.
+<PREFIX>/share/alpe läuft), nie an den Dienst von 1.0. «alpe test» meldet im Paket (ohne tools/test.sh daneben) «nur im
+Repository» mit Rückgabewert ungleich 0 (E4.4, Plan 0.8 Nr. 125 (2)).
 """
 import os
 import shutil
@@ -112,6 +113,19 @@ try:
     skript(os.path.join(prefix, "bin", "alpe-dienst"), 'echo "prefix-dienst $*" >> "%s"\nexit 0\n' % liste)
     aus, aufrufe = alpe("ipc", "call", "x", skript_pfad=kopie)
     check(aufrufe == ["prefix-dienst ipc call x"], "ohne ALPE_DIENST: der Dienst neben dem eigenen Ort (<PREFIX>/bin)", aufrufe)
+
+    # E4.4 (Plan 0.8 Nr. 125 (2)): «alpe test» im Paket – kein tools/test.sh neben dem Befehl
+    aus, aufrufe = alpe("test", skript_pfad=kopie, ALPE_DIENST=dienst)
+    check(aus.returncode != 0 and "nur im Repository" in aus.stdout and aufrufe == [],
+          "test im Paket (ohne tools/test.sh): «nur im Repository», rc ≠ 0, kein Aufruf", [aus.returncode, aus.stdout, aus.stderr, aufrufe])
+    # Im Repository: tools/test.sh neben dem Befehl läuft, mit ALPE_SHELL_DIR auf die Oberfläche daneben
+    klon = os.path.join(tmp, "klon")
+    os.makedirs(os.path.join(klon, "tools"))
+    shutil.copy2(ALPE, os.path.join(klon, "tools", "alpe"))
+    skript(os.path.join(klon, "tools", "test.sh"), 'echo "test.sh $ALPE_SHELL_DIR $*" >> "%s"\nexit 7\n' % liste)
+    aus, aufrufe = alpe("test", skript_pfad=os.path.join(klon, "tools", "alpe"), ALPE_DIENST=dienst)
+    check(aus.returncode == 7 and aufrufe == ["test.sh %s/shell " % klon] and "nur im Repository" not in aus.stdout,
+          "test im Repository: tools/test.sh daneben läuft (Rückgabewert durchgereicht)", [aus.returncode, aus.stdout, aufrufe])
 
     # Ohne ALPE_DIENST und ohne Dienst neben sich: aus dem PATH – nie der Dienst von 1.0
     text = open(ALPE, encoding="utf-8").read()

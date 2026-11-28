@@ -18,7 +18,7 @@
 #   alpe restart            Shell neu starten
 #   alpe lock               jetzt sperren (KDE oder Sperre der Shell)
 #   alpe log                Protokoll der Shell verfolgen
-#   alpe test               alle Prüfungen wie auf GitHub (vor einem Push)
+#   alpe test               alle Prüfungen wie auf GitHub (nur im Repository, vor einem Push)
 #   alpe entfernen [--alles] Alpe entfernen (--alles: auch Einstellungen, Pakete und ~/alpe; --check)
 #   alpe help               diese Übersicht
 set -uo pipefail
@@ -289,7 +289,11 @@ lock)
     elif have hyprlock && pgrep -u "$USER" -x hypridle >/dev/null; then exec "$LOGINCTL" lock-session
     else b="$(backend)" && exec "$b" ipc call lock lock; fi ;;
 log) exec "$JOURNALCTL" --user -u alpe.service -n 200 -f ;;
-test) ALPE_SHELL_DIR="$SHELL_DIR" exec bash "$ALPE_DIR/tools/test.sh" ;;
+# Plan 0.8 Nr. 125 (2): Die Prüfungen gibt es nur im Repository; tools/test.sh wird nicht installiert (tests/test_makefile.py).
+test)
+    if [ -f "$ALPE_DIR/tools/test.sh" ]; then ALPE_SHELL_DIR="$SHELL_DIR" exec bash "$ALPE_DIR/tools/test.sh"; fi
+    say "alpe test: nur im Repository – die Prüfungen laufen in einem Klon von Alpe (bash tools/test.sh)."
+    exit 1 ;;
 help|-h|--help)
     sed -n '2,21p' "$(readlink -f "${BASH_SOURCE[0]}")" | sed 's/^# \{0,1\}//'
     if b="$(backend)"; then say ""; say "Übrige Befehle gehen an $b:"; "$b" --help 2>/dev/null | sed -n '/Available Commands/,/^$/p' | sed 's/^/  /'; fi ;;
