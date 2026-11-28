@@ -10,7 +10,7 @@ go-qrcode/writer/standard einbindet; make dist und make install legen licenses/f
 yeqown/reedsolomon (MIT, am Ursprung belegt): NOTICE nennt Fassung, Lizenz mit Fundstelle und jede Datei, die
 go-qrcode/v2 einbindet. Klänge (1.4): NOTICE beschreibt genau die ausgelieferten Dateien unter shell/assets/sounds/.
 Zeichen Dritter und Code-Teile (1.5): NOTICE nennt genau die fremden SVG unter shell/assets/ (Flatpak CC BY 3.0,
-Snapcraft CC BY-SA 3.0, Hyprland ARR nach Markenrichtlinie) und fzf.js, Hct.js, MaterialShapeData.js mit der Lizenz,
+Snapcraft CC BY-SA 3.0; Hyprland seit dem 28.11.2026 ohne Zeichen, Symbol aus der Symbolschrift) und fzf.js, Hct.js, MaterialShapeData.js mit der Lizenz,
 die im Kopf der Datei steht.
 Logo und Zeichen von Alpe (Entscheid vom 28.11.2026, Plan 0.8 Nr. 142): NOTICE nennt CC BY-SA 4.0, «Alpe-Projekt», den
 Satz zu Name und Zeichen und jede Logo-Datei; die frühere eigene Kennung steht in keinem Lizenzfeld, in NOTICE, LICENSES/
@@ -161,8 +161,7 @@ if zeichen:
     check(fremd and fremd == genannt, "NOTICE nennt genau die Zeichen Dritter unter shell/assets/ (nur in NOTICE: %s; fehlt: %s)"
           % (sorted(genannt - fremd), sorted(fremd - genannt)))
     check("nur, um das jeweilige Programm oder" in zeichen.group(1), "NOTICE: Zeichen nur zur Bezeichnung")
-    # Simple Icons ist CC0, die Zeichen darin nicht (Nachbesserung zu 1.5): Flatpak CC BY 3.0, Snapcraft CC BY-SA 3.0,
-    # Hyprland ARR nach der Markenrichtlinie des Inhabers.
+    # Simple Icons ist CC0, die Zeichen darin nicht (Nachbesserung zu 1.5): Flatpak CC BY 3.0, Snapcraft CC BY-SA 3.0.
     eintraege = re.split(r"\n(?=  [\w/.-]+\.svg\s)", zeichen.group(1))
     def eintrag_zu(name):
         return next((e for e in eintraege if e.lstrip().startswith(name)), "")
@@ -174,8 +173,10 @@ if zeichen:
           "NOTICE: flatpak.svg unter CC BY 3.0 (nicht CC0)")
     check("(CC BY-SA 3.0)" in lizenz_des_zeichens("package-sources/snap.svg") and "CC0" not in lizenz_des_zeichens("package-sources/snap.svg"),
           "NOTICE: snap.svg unter CC BY-SA 3.0 (nicht CC0)")
-    check("ARR" in eintrag_zu("hyprland.svg") and "https://hypr.land/trademark-usage/" in eintrag_zu("hyprland.svg"),
-          "NOTICE: hyprland.svg mit Hinweis auf ARR und die Markenrichtlinie")
+    # Entscheid vom 28.11.2026 (Plan 0.8 Nr. 143): Hyprland ohne fremdes Zeichen, Symbol aus der Symbolschrift
+    check(not os.path.exists(os.path.join(assets, "hyprland.svg")) and "hyprland.svg" not in zeichen.group(1)
+          and "«team_dashboard» aus derselben Schrift" in " ".join(zeichen.group(1).split()),
+          "Hyprland: kein Zeichen mehr (hyprland.svg entfernt), NOTICE nennt das Symbol aus der Symbolschrift")
     # Entscheid vom 26.11.2026: AppImage ohne fremdes Zeichen, Symbol aus der mitgelieferten Symbolschrift
     check(not os.path.exists(os.path.join(assets, "package-sources", "appimage.svg")) and "appimage.svg" not in zeichen.group(1)
           and "«deployed_code» aus Material" in zeichen.group(1),

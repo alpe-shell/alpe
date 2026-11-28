@@ -106,13 +106,26 @@ AlpeListItem {
             }
 
             Rectangle {
+                id: initialBox
+
                 anchors.fill: appIcon
                 visible: !appIcon.visible
                 radius: Theme.cornerRadiusXS
                 color: Theme.surfaceContainerHighest
 
+                readonly property string glyph: ProcessListMetrics.appGlyph(root.process)
+
+                AlpeIcon {
+                    anchors.centerIn: parent
+                    visible: initialBox.glyph.length > 0
+                    name: initialBox.glyph
+                    size: Math.round(initialBox.width * 0.8)
+                    color: Theme.surfaceVariantText
+                }
+
                 StyledText {
                     anchors.centerIn: parent
+                    visible: initialBox.glyph.length === 0
                     text: root.command.charAt(0).toUpperCase()
                     font.pixelSize: Theme.fontSizeSmall
                     font.weight: Theme.fontWeightMedium

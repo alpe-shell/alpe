@@ -1476,8 +1476,9 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
       `discord.svg`, `reddit.svg` (nirgends benutzt). **Erledigt im Nachtlauf vom 26.11.2026 (Plan 0.8 Nr. 117):**
       alle drei Code-Teile und die fünf Zeichen in `NOTICE`, `discord.svg`/`reddit.svg` entfernt. **Für das
       Lizenzfeld neu (nicht vermuten, bei E2/E3 entscheiden):** Flatpak-Zeichen CC-BY-3.0, Snapcraft-Zeichen
-      CC-BY-SA-3.0 (beide nach Simple Icons, das selbst CC0 ist), Hyprland-Zeichen ARR nach der Markenrichtlinie
-      von hyprwm (die Datei ist nicht die offizielle Vorlage); Herkunft von `appimage.svg` unbelegt. Geparkt.
+      CC-BY-SA-3.0 (beide nach Simple Icons, das selbst CC0 ist), ~~Hyprland-Zeichen ARR nach der Markenrichtlinie
+      von hyprwm (die Datei ist nicht die offizielle Vorlage)~~ **seit Plan 0.8 Nr. 143 (28.11.2026) entfernt,
+      Symbol `team_dashboard`**; Herkunft von `appimage.svg` unbelegt. Geparkt.
       Flatpak und Snapcraft: bleiben mit Nennung (entschieden mit Plan 0.8 Nr. 130).
       **AppImage erledigt (Entscheid vom 26.11.2026, Plan 0.8 Nr. 129):** `appimage.svg` entfernt, der Starter zeigt
       das Symbol `deployed_code` aus der mitgelieferten Symbolschrift.
@@ -1507,7 +1508,8 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   verlangte Angabe «Quelle: MeteoSchweiz» (`opendatadocs.meteoswiss.ch`, Nutzungsbedingungen und
   Seite zu den Radarprodukten); (3) die Karten des Radar-Tabs – Natural Earth, gemeinfrei, Nennung
   nicht verlangt; (4) die Logos – Rechte am Logo und am Namen beim Maintainer, Nutzung zur
-  Bezeichnung von Alpe erlaubt, nicht CC0. Die Drucker-Testseite ist neu erzeugt
+  Bezeichnung von Alpe erlaubt, nicht CC0 (seit Plan 0.8 Nr. 142 vom 28.11.2026: CC-BY-SA-4.0, Urheber
+  «Alpe-Projekt»). Die Drucker-Testseite ist neu erzeugt
   (`entwicklung/testseite/erzeugen.py`). **Weiterhin ohne Eintrag:** die Zeichen Dritter unter
   `shell/assets/` und die Teile des fcitx5-Themas.
 - **Medien ohne Herkunftsangabe in `NOTICE` (Bestand vom 23.11.2026; nichts wird ohne Angabe des
@@ -1518,7 +1520,7 @@ oder noch nicht vorhandene Cache-Dateien sind nicht aufgeführt). Ursache je Fal
   - *Seit Alpe 1.0 (`c988364`), nicht aus dem Ursprung:* `assets/logo/logo/` – `alpe-avatar.png`,
     `alpe-avatar.svg`, `alpe-logo-dunkel.svg`, `alpe-logo-hell.svg`, `alpe-social.png`,
     `alpe-social.svg`, `alpe-zeichen.png`, `alpe-zeichen.svg` (Logos von Alpe; Urheber und Lizenz
-    nirgends genannt). `plugins/alpeRadar/map-lines.png`, `map-water.png` (Kartengrundlage; laut
+    nirgends genannt – inzwischen in `NOTICE`, seit Plan 0.8 Nr. 142 CC-BY-SA-4.0). `plugins/alpeRadar/map-lines.png`, `map-water.png` (Kartengrundlage; laut
     `tools/build-basemap.py` und `docs/technik.md` aus Natural Earth, gemeinfrei – steht nicht in
     `NOTICE`). `tests/data/rzc263201930vl.001.h5` (Radar-Musterdatei; laut `docs/technik.md`
     MeteoSchweiz Open Data – `NOTICE` nennt nur allgemein «Wetterdaten und Radarbilder»).

@@ -86,14 +86,6 @@ Code
 Zeichen Dritter (shell/assets/), nur zur Bezeichnung
   Die Zeichen gehören ihren Inhabern. Alpe benutzt sie nur, um das jeweilige Programm oder
   Paketformat zu bezeichnen, und leitet daraus keine Verbindung zu den Inhabern ab.
-  hyprland.svg                 Zeichen von Hyprland, eingetragene Marke von Hyprland Development;
-                               Prozessliste und Starter-Knopf. Mit der Dux Modular Shell
-                               übernommen (bytegleich mit deren quickshell/assets/hyprland.svg).
-                               Der Inhaber stellt seine Logodateien nicht unter eine freie
-                               Lizenz («ARR», hyprwm/Hyprland, assets/logo/LICENSE); die Nutzung
-                               regelt https://hypr.land/trademark-usage/ (erlaubt zur Bezeichnung
-                               von Hyprland, mit der offiziellen Vorlage). Diese Datei ist nicht
-                               die heutige offizielle Vorlage (andere Pfade und Farbverlauf).
   package-sources/flatpak.svg  Zeichen von Flatpak; Herkunftsabzeichen im Starter. Pfaddaten aus
                                Simple Icons (https://simpleicons.org), Füllfarbe = Markenfarbe
                                nach Simple Icons. Lizenz des Zeichens: Creative Commons
@@ -110,7 +102,8 @@ Zeichen Dritter (shell/assets/), nur zur Bezeichnung
                                Frankau, überarbeitet von Tim Cuthbertson; CC BY 4.0
                                (https://creativecommons.org/licenses/by/4.0/).
   Für AppImage zeigt der Starter kein Zeichen, sondern das Symbol «deployed_code» aus Material
-  Symbols Rounded (siehe Schriften).
+  Symbols Rounded (siehe Schriften). Für Hyprland zeigen Prozessliste und Starter-Knopf kein
+  Zeichen, sondern das Symbol «team_dashboard» aus derselben Schrift.
 
 Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
 Deren Lizenztexte liegen im Quellarchiv unter core/vendor/<Modul>/ und im Paket unter

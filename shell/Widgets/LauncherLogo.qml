@@ -48,10 +48,11 @@ Item {
             return fallback;
         }
     }
-    readonly property string compositorSource: {
+    // Neutral glyph from the bundled symbol font instead of the compositor's mark (Plan 0.8 Nr. 143), same on Arch and Fedora
+    readonly property string compositorGlyph: {
         switch (CompositorService.compositor) {
         case "hyprland":
-            return "file://" + Theme.shellDir + "/assets/hyprland.svg";
+            return "team_dashboard";
         default:
             return "";
         }
@@ -91,22 +92,12 @@ Item {
         }
     }
 
-    IconImage {
-        visible: root.resolvedMode === "compositor"
+    AlpeIcon {
+        visible: root.resolvedMode === "compositor" && root.compositorGlyph.length > 0
         anchors.centerIn: parent
-        width: root.size
-        height: root.size
-        smooth: true
-        asynchronous: true
-        source: root.compositorSource
-        layer.enabled: root.colorize
-        layer.effect: MultiEffect {
-            saturation: 0
-            colorization: 1
-            colorizationColor: root.resolvedColor
-            brightness: root.brightness
-            contrast: root.contrast
-        }
+        name: root.compositorGlyph
+        size: root.size
+        color: root.colorize ? root.resolvedColor : root.appsIconColor
     }
 
     IconImage {

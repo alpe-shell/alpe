@@ -31,7 +31,8 @@ spec.loader.exec_module(sp)
 
 eigene = sp.dateien([])
 meldungen = sp.pruefe(eigene)
-check(len(eigene) >= 20 and meldungen == {},
+# Untergrenze 20 → 19 seit dem Nachtlauf vom 28.11.2026: shell/assets/hyprland.svg entfernt (Plan 0.8 Nr. 143)
+check(len(eigene) >= 19 and meldungen == {},
       "%d eigene SVG-Dateien laden ohne Meldung von QtSvg: %s" % (len(eigene), {os.path.relpath(p, REPO): m for p, m in meldungen.items()}))
 
 with tempfile.TemporaryDirectory() as tmp:
