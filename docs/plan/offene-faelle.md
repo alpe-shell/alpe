@@ -1853,3 +1853,22 @@ Punkte, die nur dort messbar sind:
   selben Zug prüfen: Der Abschnitt «Tests» nennt noch `~/dux-shell` als Ort der KWin-Brücke und
   des Dienstes, «Unterbau» den Dienst `dms` und `tools/backend.sh` mit dem Quellbaum des
   Ursprungs. Mit der Doku in G1 (Plan 8.) neu schreiben.
+
+## Vermerke vom 28.11.2026 (Entscheide des Maintainers, Plan 0.8 Nr. 141)
+
+- **Suchindex `soundLogin` bleibt** (Option (a) der Prüfung zu 1.1 vom 27.11.2026). Seit Plan 0.8 Nr. 128 ist der
+  Schalter «Anmeldeklang» in `shell/Modules/Settings/SoundsTab.qml` nur sichtbar, wenn das gewählte Systemthema den
+  Klang `desktop-login` hat; `shell/translations/settings_search_index.json` führt `soundLogin` weiter. Ein
+  Suchtreffer «Anmeldung» führt dann auf die Seite ohne sichtbaren Schalter. Der Index wird nicht von Hand geändert;
+  neu erzeugt wird er erst mit dem Entscheid zu Plan 0.8 Nr. 111 (Suchindex), oder `SettingsSearchService` blendet
+  Treffer unsichtbarer Zeilen aus (eigener Punkt, nicht entschieden).
+- **Einfügen aus dem Zwischenablage-Verlauf unter KWin: ungeprüft** (Option (a)/(b) der Prüfung zu 1.7 vom
+  27.11.2026; der Maintainer misst es am PC). Gefolgert aus dem Code: `core/internal/clipboard/pastekey.go` bricht
+  ohne das Wayland-Protokoll `zwp_virtual_keyboard_v1` ab, `core/internal/server/clipboard/handlers.go` hat keinen
+  Ersatzweg; KWin bietet das Protokoll nicht an (KDE-Bug 497774, offen). Unter KWin geht «Einfügen» also vermutlich
+  nicht; das Kopieren eines Eintrags in die Zwischenablage ist davon nicht betroffen. Messung: Verlauf öffnen,
+  Eintrag «Einfügen», Antwort des Dienstes im Journal von `alpe.service`. Ein Ersatzweg über
+  `org_kde_kwin_fake_input` ist nicht geplant.
+- **`entwicklung/pageharness/kuerzel_last.py` ist am Mac rot, schon auf `346312b`** (Befund vom Mac aus dem
+  Nachtlauf vom 27.11.2026, E3). Ursache unbekannt; am PC läuft der Schritt in `tools/test.sh` grün. Am Mac mit der
+  Ausgabe des Schritts (`python3 entwicklung/pageharness/kuerzel_last.py`) untersuchen.
