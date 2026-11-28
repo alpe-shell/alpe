@@ -278,11 +278,19 @@ kde) shift; exec bash "$ALPE_DIR/tools/kde-sitzung.sh" "$@" ;;
 kuerzel) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec python3 "$ALPE_DIR/tools/kuerzel.py" "$@" ;;
 entfernen) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec bash "$ALPE_DIR/tools/entfernen.sh" "$@" ;;
 design) shift; ALPE_SHELL_DIR="$SHELL_DIR" exec python3 "$ALPE_DIR/tools/design.py" "$@" ;;
-# Plan 6.8: Den Neustart der Unit übernimmt allein «alpe restart»; ohne aktive Unit startet «alpe-dienst restart» die
-# eigene Instanz neu (der Dienst selbst ruft nie systemctl auf).
+# Plan 6.8: Den Neustart der Unit übernimmt allein «alpe restart»; ist die Unit «inactive», startet «alpe-dienst
+# restart» die eigene Instanz neu (der Dienst selbst ruft nie systemctl auf). E4.1b (Entscheid vom 28.11.2026): neu
+# gestartet wird jeder andere Zustand (auch «failed», «activating»). Läuft noch die Shell von 1.0 und alpe.service nicht,
+# bricht der Befehl ab – ein Start beendete über «Conflicts=» die alte Shell, und ohne Umzug startete keine neue.
 restart)
-    if "$SYSTEMCTL" --user is-active --quiet alpe.service 2>/dev/null; then exec "$SYSTEMCTL" --user restart alpe.service
-    else b="$(backend)" || { say "kein Hintergrunddienst gefunden"; exit 1; }; exec "$b" restart; fi ;;
+    state="$("$SYSTEMCTL" --user show -p ActiveState --value alpe.service 2>/dev/null)"
+    if [ "$state" != active ] && "$SYSTEMCTL" --user is-active --quiet dms.service 2>/dev/null; then
+        say "Alpe 1.0 läuft noch, zuerst alpe umzug"
+        exit 1
+    fi
+    if [ -n "$state" ] && [ "$state" != inactive ]; then exec "$SYSTEMCTL" --user restart alpe.service; fi
+    b="$(backend)" || { say "kein Hintergrunddienst gefunden"; exit 1; }
+    exec "$b" restart ;;
 lock)
     if kde; then exec "$LOGINCTL" lock-session
     # Hyprland mit hyprlock und hypridle: über logind, dann sperrt hypridle mit hyprlock.

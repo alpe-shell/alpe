@@ -1002,7 +1002,8 @@ bleibt: **nie die migrierte `session.json` (Version 8) oder `settings.json` (Ver
    den Befehl nennen.
 7. ~~**Gesperrte Pakete**~~ → mit E4 entfernen (0.8 Nr. 17). **Gesperrte Pakete** `Brand.heldPackages` (`dux-shell`, `dms`, `dms-cli`) und die
    Hold-Anzeige auf der Wartungsseite: gehören zur 1.0-Einrichtung; Plan 2.2 sagt «entfällt».
-   **Vorschlag:** mit E4 entfernen (nach dem Umzug ist `dux-shell` weg).
+   **Vorschlag:** mit E4 entfernen (nach dem Umzug ist `dux-shell` weg). **Erledigt in E4.6** (Nachtlauf vom
+   29.11.2026, 0.8 Nr. 17).
 
 Dazu, ohne Frage: Die deutschen Kataloge hatten «ß» (ersetzt), Importreihenfolge in 6 Go-Dateien
 seit D3 (`bca3795`, Import von `internal/brand`) nicht gofmt-sauber (kosmetisch, vor G1), `Theme.qml` kennt die Kategorie «registry»

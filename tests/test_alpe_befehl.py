@@ -9,8 +9,9 @@ ALPE_DIENST; Muster tests/data/kwinstub) als Attrappen, die jeden Aufruf in eine
 zusätzlich Fallen unter den echten Namen (systemctl, journalctl, loginctl, qdbus6, pacman, dnf, sudo, alpe-dienst und
 der Dienst von 1.0): Erreicht ein Aufruf eine Falle, ist der Test rot.
 
-Geprüft: «alpe restart» startet bei aktiver Unit genau alpe.service neu, sonst die eigene Instanz über
-«alpe-dienst restart» (Plan 6.8); «alpe log» liest das Journal von alpe.service; «alpe lock» unter KDE über logind;
+Geprüft: «alpe restart» startet alpe.service neu, wenn die Unit nicht «inactive» ist (auch «failed»), bei «inactive»
+die eigene Instanz über «alpe-dienst restart» (Plan 6.8), und bricht ab, wenn die Shell von 1.0 läuft und alpe.service
+nicht «active» ist (E4.1b); «alpe log» liest das Journal von alpe.service; «alpe lock» unter KDE über logind;
 übrige Befehle gehen an den Dienst – aus ALPE_DIENST, sonst neben dem eigenen Ort (<PREFIX>/bin, wenn das Werkzeug aus
 <PREFIX>/share/alpe läuft), nie an den Dienst von 1.0. «alpe test» meldet im Paket (ohne tools/test.sh daneben) «nur im
 Repository» mit Rückgabewert ungleich 0 (E4.4, Plan 0.8 Nr. 125 (2)).
@@ -52,11 +53,20 @@ try:
             handle.write("#!/bin/sh\n" + rumpf)
         os.chmod(pfad, 0o755)
 
-    # Attrappen: Aufruf protokollieren; systemctl is-active antwortet nach $ATTRAPPE_AKTIV (0 = aktiv)
+    # Attrappen: Aufruf protokollieren. systemctl: «show -p ActiveState --value alpe.service» gibt $ATTRAPPE_ZUSTAND aus
+    # (Vorgabe inactive), «is-active» auf den Dienst von 1.0 antwortet nach $ATTRAPPE_ALT, jedes andere «is-active» nach
+    # $ATTRAPPE_AKTIV (0 = aktiv, Vorgabe 3)
+    # alpe-namen-ausnahme: umzug-ende – Unit von 1.0 in der Attrappe
+    antwort_systemctl = ('case "$*" in\n'
+                         '*"show -p ActiveState --value alpe.service"*) echo "${ATTRAPPE_ZUSTAND-inactive}" ;;\n'
+                         '*"is-active --quiet dms.service"*) exit "${ATTRAPPE_ALT:-3}" ;;\n'
+                         '*is-active*) exit "${ATTRAPPE_AKTIV:-3}" ;;\n'
+                         'esac\n')
+    # alpe-namen-ausnahme: umzug-ende
     for name in ("systemctl", "journalctl", "loginctl", "alpe-dienst"):
         skript(os.path.join(stubs, name),
                'echo "%s $*" >> "%s"\n' % (name, liste)
-               + ('case "$*" in *is-active*) exit "${ATTRAPPE_AKTIV:-3}" ;; esac\n' if name == "systemctl" else "")
+               + (antwort_systemctl if name == "systemctl" else "")
                + "exit 0\n")
     # alpe-namen-ausnahme: umzug-ende – Falle unter dem Namen des Dienstes von 1.0
     for name in ("systemctl", "journalctl", "loginctl", "qdbus6", "pacman", "dnf", "sudo", "alpe-dienst", "dms"):
@@ -82,17 +92,42 @@ try:
 
     dienst = os.path.join(stubs, "alpe-dienst")
 
-    aus, aufrufe = alpe("restart", ATTRAPPE_AKTIV="0", ALPE_DIENST=dienst)
-    check(aus.returncode == 0 and aufrufe == ["systemctl --user is-active --quiet alpe.service", "systemctl --user restart alpe.service"],
+    # E4.1b (Entscheid vom 28.11.2026): Zustand der Unit, dann die Shell von 1.0, dann Neustart oder eigene Instanz
+    zeige = "systemctl --user show -p ActiveState --value alpe.service"
+    neu = "systemctl --user restart alpe.service"
+    # alpe-namen-ausnahme: umzug-ende – Abfrage der Unit von 1.0
+    alt = "systemctl --user is-active --quiet dms.service"
+    # alpe-namen-ausnahme: umzug-ende
+
+    aus, aufrufe = alpe("restart", ATTRAPPE_ZUSTAND="active", ALPE_DIENST=dienst)
+    check(aus.returncode == 0 and aufrufe == [zeige, neu],
           "restart bei aktiver Unit: genau «systemctl --user restart alpe.service», kein Aufruf des Dienstes", aufrufe)
 
-    aus, aufrufe = alpe("restart", ATTRAPPE_AKTIV="3", ALPE_DIENST=dienst)
-    check(aus.returncode == 0 and aufrufe == ["systemctl --user is-active --quiet alpe.service", "alpe-dienst restart"],
-          "restart ohne aktive Unit: die eigene Instanz über «alpe-dienst restart» (Plan 6.8)", aufrufe)
+    for zustand in ("failed", "activating", "deactivating", "reloading"):
+        aus, aufrufe = alpe("restart", ATTRAPPE_ZUSTAND=zustand, ALPE_DIENST=dienst)
+        check(aus.returncode == 0 and aufrufe == [zeige, alt, neu],
+              "restart bei Unit «%s»: die Unit wird neu gestartet, nicht die eigene Instanz" % zustand, aufrufe)
 
-    aus, aufrufe = alpe("restart", ATTRAPPE_AKTIV="3", ALPE_DIENST=os.path.join(tmp, "gibt-es-nicht"))
-    check(aus.returncode != 0 and "kein Hintergrunddienst gefunden" in aus.stdout
-          and aufrufe == ["systemctl --user is-active --quiet alpe.service"],
+    aus, aufrufe = alpe("restart", ATTRAPPE_ZUSTAND="inactive", ALPE_DIENST=dienst)
+    check(aus.returncode == 0 and aufrufe == [zeige, alt, "alpe-dienst restart"],
+          "restart bei Unit «inactive»: die eigene Instanz über «alpe-dienst restart» (Plan 6.8)", aufrufe)
+
+    for zustand in ("inactive", "failed", "activating"):
+        aus, aufrufe = alpe("restart", ATTRAPPE_ZUSTAND=zustand, ATTRAPPE_ALT="0", ALPE_DIENST=dienst)
+        check(aus.returncode != 0 and "Alpe 1.0 läuft noch, zuerst alpe umzug" in aus.stdout and aufrufe == [zeige, alt],
+              "restart bei Unit «%s» und laufender Shell von 1.0: Abbruch mit Meldung, kein Neustart" % zustand,
+              aufrufe + [aus.returncode, aus.stdout])
+
+    aus, aufrufe = alpe("restart", ATTRAPPE_ZUSTAND="active", ATTRAPPE_ALT="0", ALPE_DIENST=dienst)
+    check(aus.returncode == 0 and aufrufe == [zeige, neu],
+          "restart bei aktiver Unit, auch wenn die Unit von 1.0 aktiv gemeldet wird: Neustart von alpe.service", aufrufe)
+
+    aus, aufrufe = alpe("restart", ATTRAPPE_ZUSTAND="", ALPE_DIENST=dienst)
+    check(aus.returncode == 0 and aufrufe == [zeige, alt, "alpe-dienst restart"],
+          "restart ohne Antwort von systemctl (leerer Zustand): wie «inactive», eigene Instanz", aufrufe)
+
+    aus, aufrufe = alpe("restart", ATTRAPPE_ZUSTAND="inactive", ALPE_DIENST=os.path.join(tmp, "gibt-es-nicht"))
+    check(aus.returncode != 0 and "kein Hintergrunddienst gefunden" in aus.stdout and aufrufe == [zeige, alt],
           "restart ohne Unit und ohne Dienst: Meldung, rc ≠ 0, kein Rückfall auf einen anderen Dienst", aufrufe + [aus.stdout])
 
     aus, aufrufe = alpe("log", ALPE_DIENST=dienst)
