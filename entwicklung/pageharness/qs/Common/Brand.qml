@@ -20,8 +20,6 @@ Singleton {
 
     // Wartungsbefehl für die Systemaktualisierung; gibt es ihn, ersetzt er den Weg über den Dienst.
     readonly property string updateCommand: "update-all"
-    // Pakete, die nie als Aktualisierung erscheinen: der Unterbau ist bewusst festgehalten.
-    readonly property var heldPackages: ["dux-shell", "dms", "dms-cli"]
     // Die Systemprüfung des Ursprungsprojekts kennt KWin nicht und meldet dort Fehler, die keine sind.
     readonly property bool systemCheck: false
 }

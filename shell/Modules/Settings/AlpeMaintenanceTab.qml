@@ -17,8 +17,6 @@ Item {
 
     property string cacheSize: ""
     property bool cacheBusy: false
-    // "", "held", "open", "unknown"
-    property string holdState: ""
     property string treeState: ""
 
     readonly property var ownPlugins: (PluginService.availablePluginsList || []).filter(plugin => String(plugin.id).startsWith("alpe"))
@@ -37,9 +35,6 @@ Item {
             switch (line.slice(0, cut)) {
             case "cache":
                 cacheSize = value;
-                break;
-            case "hold":
-                holdState = value;
                 break;
             case "tree":
                 treeState = value;
@@ -95,7 +90,7 @@ Item {
     Process {
         id: prober
         running: true
-        command: ["sh", "-c", 'dir="${XDG_CACHE_HOME:-$HOME/.cache}/alpe"; if [ -d "$dir" ]; then printf "cache=%s\\n" "$(du -sh "$dir" 2>/dev/null | cut -f1)"; else echo "cache=leer"; fi; case "${ALPE_EXECUTABLE:-}" in */.local/lib/alpe/*) echo hold=own ;; *) if command -v pacman-conf >/dev/null 2>&1; then if pacman -Qq "$1" >/dev/null 2>&1; then if pacman-conf IgnorePkg 2>/dev/null | grep -qx "$1"; then echo hold=held; else echo hold=open; fi; else echo hold=unknown; fi; else echo hold=unknown; fi ;; esac; if git -C "$2" rev-parse --is-inside-work-tree >/dev/null 2>&1; then if [ -z "$(git -C "$2" status --porcelain 2>/dev/null)" ]; then echo tree=clean; else echo tree=dirty; fi; else echo tree=nogit; fi', "sh", Brand.heldPackages[0] ?? "", Quickshell.shellDir]
+        command: ["sh", "-c", 'dir="${XDG_CACHE_HOME:-$HOME/.cache}/alpe"; if [ -d "$dir" ]; then printf "cache=%s\\n" "$(du -sh "$dir" 2>/dev/null | cut -f1)"; else echo "cache=leer"; fi; if git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1; then if [ -z "$(git -C "$1" status --porcelain 2>/dev/null)" ]; then echo tree=clean; else echo tree=dirty; fi; else echo tree=nogit; fi', "sh", Quickshell.shellDir]
         stdout: StdioCollector {
             onStreamFinished: root.parse(text)
         }
@@ -168,23 +163,6 @@ Item {
                 hint: (SystemUpdateService.scriptMode ? SystemUpdateService.scriptCommand + " · " : "") + root.lastRunText()
                 iconName: "system_update_alt"
                 onClicked: keyboard => root.parentModal?.navigateTo("updater", keyboard)
-            }
-
-            SettingsRow {
-                visible: root.holdState !== "" && root.holdState !== "unknown" && Brand.heldPackages.length > 0
-                title: root.holdState === "own" ? "Eigener Hintergrunddienst" : "Paket «" + (Brand.heldPackages[0] ?? "") + "»"
-                subtitle: root.holdState === "own" ? "Aus demselben Quellcode gebaut wie diese Shell (tools/backend.sh); er passt immer, eine Ausnahme in pacman ist unnötig." : root.holdState === "held" ? "In pacman festgehalten. Das Backend passt damit sicher zu dieser Shell." : "Nicht festgehalten: Eine Paketaktualisierung könnte ein Backend bringen, das nicht mehr zu dieser Shell passt."
-                iconName: root.holdState === "open" ? "gpp_maybe" : "verified_user"
-                iconColor: root.holdState === "open" ? Theme.warning : Theme.primary
-                trailingBadge: root.holdState === "own" ? "alpe" : root.holdState === "held" ? "IgnorePkg" : "offen"
-                trailingBadgeColor: root.holdState === "open" ? Theme.warning : Theme.surfaceVariantText
-            }
-
-            SettingsNoteRow {
-                visible: root.holdState === "open"
-                noteIconName: "terminal"
-                monospace: true
-                text: "sudo sed -i -E 's/^#?[[:space:]]*IgnorePkg[[:space:]]*=[[:space:]]*(.*)$/IgnorePkg = \\1 " + (Brand.heldPackages[0] ?? "") + "/' /etc/pacman.conf"
             }
         }
 

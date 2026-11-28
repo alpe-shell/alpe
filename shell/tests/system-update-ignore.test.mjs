@@ -72,3 +72,18 @@ test("excluded flatpak updates are dropped from the list", () => {
     }
     scope.SettingsData.updaterIncludeFlatpak = true;
 });
+
+// E4.6 (Plan 0.8 Nr. 17): keine fest eingebaute Liste festgehaltener Pakete mehr – Alpe wird über die Paketverwaltung
+// aktualisiert; jede Aktualisierung erscheint, solange sie der Nutzer nicht selbst ausnimmt.
+test("no hard-coded hold list: every update passes unless the user ignores it", () => {
+    scope.SettingsData.updaterIgnoredPackages = [];
+    const pkgs = [
+        { name: "alpe-shell", repo: "extra", backend: "pacman" },
+        { name: "quickshell", repo: "extra", backend: "pacman" },
+    ];
+    assert.deepEqual(scope._filterUpdates(pkgs).map(p => p.name), ["alpe-shell", "quickshell"]);
+    const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
+    for (const path of ["../Services/SystemUpdateService.qml", "../Common/Brand.qml", "../Modules/Settings/AlpeMaintenanceTab.qml",
+                        "../../entwicklung/pageharness/qs/Common/Brand.qml"])
+        assert.doesNotMatch(read(path), /heldPackages|holdState/, path);
+});

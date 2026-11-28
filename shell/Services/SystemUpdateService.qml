@@ -271,8 +271,6 @@ Singleton {
 
     function _filterUpdates(pkgs) {
         return (pkgs || []).filter(p => {
-            if (Brand.heldPackages.includes(p.name))
-                return false;
             if (!SettingsData.updaterAllowAUR && p.repo === "aur")
                 return false;
             if (!SettingsData.updaterIncludeFlatpak && p.repo === "flatpak")
