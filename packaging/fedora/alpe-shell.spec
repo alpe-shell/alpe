@@ -66,6 +66,10 @@ Recommends:     fastfetch
 Recommends:     wtype
 # Dateisuche im Starter; läuft auch ohne (0.8 Nr. 26). Als Datei, weil Fedora kein Paket dieses Namens hat.
 Recommends:     /usr/bin/dsearch
+# Anzeige der Feststelltaste auf der KDE-Sperre (CapsLock.qml importiert org.kde.plasma.private.keyboardindicator aus
+# plasma-workspace; 0.8 Nr. 140). Nur wo KWin installiert ist, damit es unter Hyprland nicht mitkommt (Entscheid P14);
+# KWin heisst unter Fedora 45 «kwin» (im mock-Chroot bestätigt).
+Recommends:     (plasma-workspace if kwin)
 
 # Die übrigen optdepends des PKGBUILD (Entscheid des Maintainers vom 28.11.2026, 0.8 Nr. 141 (8)); Energieprofile mit
 # einem der beiden Dienste
@@ -114,17 +118,23 @@ export GOPATH=%{_builddir}/%{quelle}-go-path
 # Die Tests des Dienstes laufen mit eigenem Home und eigenen XDG-Ordnern, nie gegen das des Bauenden (wie check() im
 # PKGBUILD).
 heim=%{_builddir}/%{quelle}-check-home
-mkdir -p "$heim/run"
-chmod 700 "$heim/run"
+mkdir -p "$heim"
+# Der Laufzeitordner liegt kurz unter /tmp, nicht im Bauordner: Unter /builddir/build/BUILD/… von mock wird der Pfad
+# der Unix-Sockets der dmenu-Tests länger als 107 Zeichen, und bind scheitert (Nachtlauf vom 28.11.2026, Punkt 1.1;
+# Entscheid P12). mktemp -d legt ihn mit 0700 an; trap räumt ihn auch nach einem roten go test weg.
+laufzeit=$(mktemp -d /tmp/alpe-check.XXXXXX)
+trap 'rm -rf "$laufzeit"' EXIT
 cd core
 env -u DBUS_SESSION_BUS_ADDRESS -u WAYLAND_DISPLAY -u DISPLAY \
   HOME="$heim" XDG_CONFIG_HOME="$heim/.config" XDG_DATA_HOME="$heim/.local/share" XDG_STATE_HOME="$heim/.local/state" \
-  XDG_CACHE_HOME="$heim/.cache" XDG_RUNTIME_DIR="$heim/run" \
+  XDG_CACHE_HOME="$heim/.cache" XDG_RUNTIME_DIR="$laufzeit" \
   go test -count=1 ./...
 
 # Keine Scriptlets: Das Paket fasst $HOME nie an und schaltet keine Unit ein (Plan 6.1).
 
 %files
+# Der Lizenzordner selbst gehört dem Paket (sonst besässe /usr/share/licenses/alpe-shell keiner)
+%dir %{lizenzdir}
 %license %{lizenzdir}/LICENSE
 %license %{lizenzdir}/NOTICE
 %license %{lizenzdir}/GPL-3.0-only.txt

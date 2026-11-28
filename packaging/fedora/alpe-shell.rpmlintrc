@@ -1,7 +1,44 @@
-# rpmlint: begründete Ausnahmen für alpe-shell (Nachtlauf vom 27.11.2026, Punkt 2.2)
+# rpmlint: begründete Ausnahmen für alpe-shell (Nachtlauf vom 27.11.2026, Punkt 2.2; Nachtlauf vom 29.11.2026, 1.1)
 #
 #   rpmlint -r packaging/fedora/alpe-shell.rpmlintrc packaging/fedora/alpe-shell.spec …
 #
+# Immer mit -r und dieser Datei: Ohne -r lädt rpmlint eine rpmlintrc nur, wenn genau eine im Ordner liegt (Entscheid
+# P17: je Paket eine eigene).
+
 # Summary und Beschreibung sind deutsch (Projektregel: alle Texte für Menschen auf Hochdeutsch in Schweizer
 # Schreibweise). rpmlint prüft die Rechtschreibung gegen en_US und meldet jedes deutsche Wort.
 addFilter("spelling-error")
+
+# alpe-dienst ist mit CGO_ENABLED=0 gebaut (Makefile, Spec): ein Go-Programm ohne libc, als PIE mit Build-ID, aber
+# ohne NEEDED-Einträge. Das ist gewollt (läuft ohne passende Bibliotheken, wie im Arch-Paket).
+addFilter(r"statically-linked-binary /usr/bin/alpe-dienst$")
+
+# Skripte ohne Ausführungsrecht: Alpe ruft sie nur über ihren Interpreter auf, die Modi sind wie im Repository und
+# im Arch-Paket (tests/test_makefile.py prüft «Dateimodi wie im Repository»). Einzeln gefiltert, damit ein neues
+# Skript wieder auffällt (Entscheid vom 28.11.2026).
+# python3 -I … aus Lock.qml und AlpeLockDesignTab.qml
+addFilter(r"non-executable-script /usr/share/alpe/shell/scripts/alpe-hyprlock\.py ")
+# python3 -I … aus AlpeKwinBackend.qml
+addFilter(r"non-executable-script /usr/share/alpe/shell/scripts/alpe-kwin\.py ")
+# bash … aus AlpeLockTab.qml und AlpeLockDesignTab.qml
+addFilter(r"non-executable-script /usr/share/alpe/shell/scripts/alpe-lockcheck\.sh ")
+# python3 -I … aus AlpePerformanceTab.qml
+addFilter(r"non-executable-script /usr/share/alpe/shell/scripts/alpe-perf\.py ")
+# pkexec /bin/sh … aus AlpeDeviceTab.qml (pkexec führt den Interpreter aus, nicht das Skript)
+addFilter(r"non-executable-script /usr/share/alpe/shell/scripts/alpe-root\.sh ")
+# bash … aus AlpeServicesTab.qml und SystemUpdateService.qml
+addFilter(r"non-executable-script /usr/share/alpe/shell/scripts/alpe-update\.sh ")
+# python3 … aus tools/alpe («alpe design»)
+addFilter(r"non-executable-script /usr/share/alpe/tools/design\.py ")
+# python3 … aus tools/alpe («alpe fastfetch»)
+addFilter(r"non-executable-script /usr/share/alpe/tools/fastfetch\.py ")
+# python3 -I … aus AlpeLockDesignTab.qml und tools/lockscreen.sh
+addFilter(r"non-executable-script /usr/share/alpe/tools/hyprlock2qml\.py ")
+# bash … aus tools/entfernen.sh (Gebrauch im Kopf: «bash tools/kde-sitzung.sh»)
+addFilter(r"non-executable-script /usr/share/alpe/tools/kde-sitzung\.sh ")
+# python3 … aus tools/alpe und tools/entfernen.sh
+addFilter(r"non-executable-script /usr/share/alpe/tools/kopfleiste\.py ")
+# Gebrauch im Kopf: «bash maclock.sh»
+addFilter(r"non-executable-script /usr/share/alpe/tools/maclock\.sh ")
+# python3 … aus tools/alpe und tools/entfernen.sh
+addFilter(r"non-executable-script /usr/share/alpe/tools/titelleisten\.py ")

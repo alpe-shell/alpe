@@ -112,7 +112,23 @@ check(wtype_kommentar is not None
       and "Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)" in wtype_kommentar.group(1),
       "Kommentar über Recommends: wtype nennt den Zweck «Texteingabe für eigene Befehle und fremde Plugins (nur Hyprland)»")
 check(not set(recommends) & set(r.split()[0] for r in requires), "nichts zugleich in Requires und Recommends")
-check(not any("kwin" in s.lower() for s in suggests + recommends), "keine KWin-Effekte (kein Paket in Fedora)")
+# Paketnamen einer Zeile ohne die Bedingung: «(a if b)» → a, «(a or b)» → a, b
+def pakete(eintrag):
+    ohne_bedingung = re.sub(r"\s+(if|unless)\s+.*$", "", eintrag.strip().strip("()"))
+    return [p.split()[0] for p in re.split(r"\s+(?:or|and|with)\s+", ohne_bedingung) if p.split()]
+
+
+check(not any("kwin" in p.lower() for s in suggests + recommends for p in pakete(s)),
+      "keine KWin-Effekte (kein Paket in Fedora; kwin nur als Bedingung erlaubt)")
+# Gegenstück zu optdepends plasma-workspace (Feststelltaste auf der KDE-Sperre, 0.8 Nr. 140): nur wenn KWin installiert
+# ist (Entscheid P14 vom 28.11.2026; KWin heisst unter Fedora 45 «kwin»), nirgends unbedingt
+check("(plasma-workspace if kwin)" in recommends, "Recommends: (plasma-workspace if kwin) (0.8 Nr. 140, P14)")
+check(not any(p.split()[0] == "plasma-workspace" for p in requires + recommends + suggests),
+      "plasma-workspace nirgends unbedingt (nicht in Requires, Recommends ohne Bedingung oder Suggests)")
+plasma_kommentar = re.search(r"^#([^\n]*(?:\n#[^\n]*)*)\nRecommends:\s+\(plasma-workspace if kwin\)$", text, re.M)
+check(plasma_kommentar is not None and "Feststelltaste" in plasma_kommentar.group(1)
+      and "0.8 Nr. 140" in plasma_kommentar.group(1),
+      "Kommentar über Recommends: (plasma-workspace if kwin) nennt die Feststelltaste und 0.8 Nr. 140")
 # Suggests: die übrigen optdepends, nicht mehr vorläufig (0.8 Nr. 141 (8))
 check("(power-profiles-daemon or tuned-ppd)" in suggests, "Suggests: Energieprofile als (power-profiles-daemon or tuned-ppd)")
 check("vorläufig" not in text.lower(), "Suggests-Block (und die ganze Spec) nicht als vorläufig markiert")
@@ -148,6 +164,20 @@ pruefen = abschnitt("check")
 check("cd core" in pruefen and "go test -count=1 ./..." in pruefen and 'HOME="$heim"' in pruefen
       and "XDG_RUNTIME_DIR=" in pruefen and "-u DBUS_SESSION_BUS_ADDRESS" in pruefen,
       "%check: go test ./... in core, eigenes Home und XDG-Ordner, ohne Session-Bus (wie check() im PKGBUILD)")
+# XDG_RUNTIME_DIR nicht im Bauordner: Dort werden die Socket-Pfade der dmenu-Tests zu lang (Nachtlauf vom 28.11.2026,
+# 1.1). Entscheid P12: kurzer Ordner aus mktemp -d unter /tmp, trap räumt ihn weg.
+laufzeit_wert = re.findall(r'XDG_RUNTIME_DIR="?([^"\s]+)"?', pruefen)
+laufzeit_var = re.fullmatch(r"\$\{?(\w+)\}?", laufzeit_wert[0]).group(1) if len(laufzeit_wert) == 1 and re.fullmatch(r"\$\{?\w+\}?", laufzeit_wert[0]) else None
+laufzeit_zuweisung = re.findall(r"^%s=(.+)$" % re.escape(laufzeit_var), pruefen, re.M) if laufzeit_var else []
+check(len(laufzeit_wert) == 1 and laufzeit_var is not None and laufzeit_var != "heim"
+      and laufzeit_zuweisung == ["$(mktemp -d /tmp/alpe-check.XXXXXX)"],
+      "%%check: XDG_RUNTIME_DIR aus mktemp -d unter /tmp (%s = %s), nicht unter dem Bauordner"
+      % (laufzeit_wert, laufzeit_zuweisung))
+check(not any(s in (laufzeit_wert[0] if laufzeit_wert else "") + "".join(laufzeit_zuweisung)
+              for s in ("%{_builddir}", "$heim", "%{buildroot}", "RPM_BUILD_DIR")),
+      "%check: XDG_RUNTIME_DIR enthält weder %{_builddir} noch $heim noch den Buildroot")
+check(laufzeit_var is not None and re.search(r"""^trap 'rm -rf "\$%s"' EXIT$""" % re.escape(laufzeit_var), pruefen, re.M) is not None,
+      "%check: trap 'rm -rf …' EXIT räumt den Laufzeitordner auch nach rotem go test weg (P12)")
 check(re.search(r"^%\{__make\} install DESTDIR=%\{buildroot\} PREFIX=%\{_prefix\}$", abschnitt("install"), re.M) is not None,
       "%install: make install DESTDIR=%{buildroot} PREFIX=%{_prefix}")
 
@@ -162,6 +192,8 @@ check(re.search(r"^%license %\{lizenzdir\}/vendor/\S", dateien, re.M) is None,
       "keine einzelnen Dateien unter %{lizenzdir}/vendor/ in %files")
 check(re.search(r"^%global lizenzdir %\{_defaultlicensedir\}/%\{name\}$", ohne_kommentar, re.M) is not None,
       "Makro für den Lizenzpfad (/usr/share/licenses/alpe-shell)")
+check(re.search(r"^%dir %\{lizenzdir\}$", dateien, re.M) is not None,
+      "%dir %{lizenzdir} (der Lizenzordner gehört dem Paket; Nachtlauf vom 28.11.2026, 1.2)")
 check(re.search(r"^%doc\s", dateien, re.M) is not None, "%doc vorhanden")
 erwartet = ["%{_bindir}/alpe-dienst", "%{_bindir}/alpe", "%{_datadir}/alpe/", "%{_datadir}/plasma/shells/org.alpe.desktop/",
             "%{_userunitdir}/alpe.service", "%{_datadir}/applications/io.github.alpe_shell.Alpe.desktop",
@@ -170,6 +202,24 @@ erwartet = ["%{_bindir}/alpe-dienst", "%{_bindir}/alpe", "%{_datadir}/alpe/", "%
             "%{zsh_completions_dir}/_alpe-dienst", "%{fish_completions_dir}/alpe-dienst.fish"]
 vorhanden = [z.strip() for z in dateien.splitlines()]
 check(all(e in vorhanden for e in erwartet), "%%files: Pfade aus Plan 6.1 (%s)" % [e for e in erwartet if e not in vorhanden])
+
+# rpmlintrc (Nachtlauf vom 29.11.2026, 1.1): statisch gelinkter Dienst und die Skripte ohne Ausführungsrecht einzeln,
+# kein Filter für ganze Ordner; jeder Skript-Filter nennt eine Datei, die im Repository ohne x-Recht und mit Shebang liegt
+rc_text = open(os.path.join(REPO, "packaging", "fedora", "alpe-shell.rpmlintrc"), encoding="utf-8").read()
+filter_ = re.findall(r'^addFilter\(r?"([^"]*)"\)$', rc_text, re.M)
+check(r"statically-linked-binary /usr/bin/alpe-dienst$" in filter_, "rpmlintrc: statically-linked-binary nur für /usr/bin/alpe-dienst")
+skript_filter = [f for f in filter_ if f.startswith("non-executable-script ")]
+falsch = []
+for f in skript_filter:
+    m = re.fullmatch(r"non-executable-script /usr/share/alpe/((?:shell/scripts|tools)/[\w.-]+) ", f.replace("\\.", "."))
+    pfad = os.path.join(REPO, m.group(1)) if m else None
+    if not (pfad and os.path.isfile(pfad) and not os.stat(pfad).st_mode & 0o111
+            and open(pfad, "rb").read(2) == b"#!"):
+        falsch.append(f)
+check(len(skript_filter) == 13 and not falsch,
+      "rpmlintrc: 13 Skripte einzeln gefiltert, je eine Datei ohne x-Recht mit Shebang im Repository (falsch: %s)" % falsch)
+check(not any(re.search(r"/\s*$|/\)|\.\*|\(\w+\|", f) for f in filter_ if f.startswith("non-executable-script")),
+      "rpmlintrc: kein Filter für ganze Ordner oder mit Mustern")
 
 print("\n%s" % ("alle Prüfungen bestanden" if not failures else "%d FEHLER" % failures))
 sys.exit(1 if failures else 0)
