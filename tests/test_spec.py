@@ -92,9 +92,12 @@ check(not fremd and "copr.fedorainfracloud.org" not in text, "keine fremden COPR
 requires = tags("Requires")
 recommends = tags("Recommends")
 suggests = tags("Suggests")
-pflicht = ["quickshell >= 0.3.2", "matugen", "python3", "accountsservice", "qt6-qtmultimedia", "wireplumber",
+pflicht = ["quickshell >= 0.3.2", "matugen >= 4.1", "python3", "accountsservice", "qt6-qtmultimedia", "wireplumber",
            "kora-icon-theme", "breeze-icon-theme", "sound-theme-freedesktop"]
 check(all(p in requires for p in pflicht), "Requires: Plan 6.3 und sound-theme-freedesktop (%s)" % [p for p in pflicht if p not in requires])
+# matugen genau einmal und mit Mindestfassung 4.1, wie im PKGBUILD (0.8 Nr. 144) und in Plan 6.3
+check([r for r in requires if r.split()[0] == "matugen"] == ["matugen >= 4.1"] and "matugen >= 4.1" in plan63,
+      "Requires: matugen >= 4.1 genau einmal, wie in Plan 6.3 (0.8 Nr. 144)")
 check(not any(r.split()[0] in ("lua", "wtype") for r in requires), "Requires ohne lua und ohne wtype")
 check(not any("kora-icon-theme" in r and r != "kora-icon-theme" for r in requires), "kora-icon-theme ohne Version (0.8 Nr. 99)")
 plan_recommends = re.search(r"`Recommends: ([^`]*)`", plan63).group(1).replace(",", " ").split()

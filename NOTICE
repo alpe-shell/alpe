@@ -103,7 +103,8 @@ Zeichen Dritter (shell/assets/), nur zur Bezeichnung
                                (https://creativecommons.org/licenses/by/4.0/).
   Für AppImage zeigt der Starter kein Zeichen, sondern das Symbol «deployed_code» aus Material
   Symbols Rounded (siehe Schriften). Für Hyprland zeigen die Prozessliste und das Logo im Modus
-  «compositor» (Starter-Knopf in Leiste und Dock, Punkt der Island) kein Zeichen, sondern das
+  «compositor» (Starter-Knopf in Leiste und Dock, Starter-Fläche und Punkt der Island) kein
+  Zeichen, sondern das
   Symbol «team_dashboard» aus derselben Schrift.
 
 Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.

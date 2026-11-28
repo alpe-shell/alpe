@@ -43,7 +43,9 @@ Requires:       qt6-qtmultimedia
 Requires:       qt6-qtsvg
 Requires:       accountsservice
 Requires:       python3
-Requires:       matugen
+# Das ausgelieferte Design setzt matugenSourceMode «lightness», das braucht --prefer ab matugen 4.1 (0.8 Nr. 144);
+# Fedora 45 hat nur 3.1.0 (rust-matugen), darum aus dem eigenen COPR
+Requires:       matugen >= 4.1
 # wpexec für den Codec-Wechsel bei Bluetooth; WirePlumber als Sitzungsverwalter (0.8 Nr. 96)
 Requires:       wireplumber
 Requires:       sound-theme-freedesktop

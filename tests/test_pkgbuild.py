@@ -10,6 +10,7 @@ go test im Ordner core mit -mod=vendor ohne Netz und eigenem Home, make install 
 Dazu der CI-Job «arch-paket» (Plan 9, 0.8 Nr. 127): archlinux:latest, Bau aus dem Archiv von make dist, makepkg -s als
 eigener Benutzer ohne -d, namcap, kora aus dem AUR, Token nur lesend, Zeitgrenze.
 """
+import json
 import os
 import re
 import shutil
@@ -71,6 +72,16 @@ check("quickshell>=0.3.2" in depends and {"wireplumber", "breeze-icons", "hicolo
 check("sound-theme-freedesktop" in depends and "wtype" not in depends
       and any(o.startswith("wtype: ") for o in felder.get("optdepends", [])),
       "sound-theme-freedesktop in depends (Nr. 128); wtype nicht in depends, sondern in optdepends mit Zweck (Nr. 133)")
+# matugen mit Mindestfassung 4.1 (--prefer für matugenSourceMode «lightness» des ausgelieferten Designs, 0.8 Nr. 144);
+# die Untergrenze im Dienst (core/internal/matugen/matugen.go) muss dieselbe sein
+matugen_eintraege = [d for d in depends if d == "matugen" or d.startswith("matugen") and d[len("matugen"):][:1] in "<>="]
+matugen_go = open(os.path.join(REPO, "core", "internal", "matugen", "matugen.go"), encoding="utf-8").read()
+check(matugen_eintraege == ["matugen>=4.1"]
+      and "matugenSupportsPrefer = major > 4 || (major == 4 && minor >= 1)" in matugen_go,
+      "depends: matugen>=4.1, wie die Grenze für --prefer im Dienst (0.8 Nr. 144): %s" % matugen_eintraege)
+design = json.load(open(os.path.join(REPO, "design", "kde", "settings.json"), encoding="utf-8"))
+check(design.get("matugenSourceMode") not in (None, "", "dominant"),
+      "das ausgelieferte Design setzt einen matugenSourceMode, der --prefer braucht (%r)" % design.get("matugenSourceMode"))
 check(sorted(felder.get("makedepends", [])) == ["git", "go", "make"], "makedepends=(go make git)")
 opt = [o.split(":", 1)[0] for o in felder.get("optdepends", [])]
 check(set(plan_optdepends) <= set(opt) and set(opt) - set(plan_optdepends) <= {"dsearch"} and all(":" in o for o in felder.get("optdepends", [])),
