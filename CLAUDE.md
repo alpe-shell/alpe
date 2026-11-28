@@ -33,6 +33,9 @@ Die Shell des Maintainers ist **fish**. In Befehlen für ihn:
 - Vor jedem Commit `git diff --cached --name-status` gegen die beabsichtigte Liste prüfen und nur
   mit ausdrücklich genannten Pfaden committen (`git commit -- PFAD…`), nie den ganzen Index
   (Plan 0.8 Nr. 72).
+- Bei einem Merge (dort lässt git `commit -- PFAD…` nicht zu): `git merge --no-commit`, dann
+  `git diff --cached --name-status` gegen die Liste der Gegenseite, dann `git commit -F`; Beleg
+  `git show -m --first-parent --name-status` (Plan 0.8 Nr. 72, 147).
 - `KONTEXT.md` ist lokal und gitignored – lesen ja, nie committen.
 - Keine fremden oder urheberrechtlich geschützten Bilder ins Repository.
 
