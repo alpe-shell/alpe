@@ -102,6 +102,9 @@ check(set(plan_recommends) <= set(recommends), "Recommends: Liste aus Plan 6.3 (
 check("wtype" in recommends and "/usr/bin/dsearch" in recommends, "Recommends: wtype und /usr/bin/dsearch (0.8 Nr. 26)")
 check(not set(recommends) & set(r.split()[0] for r in requires), "nichts zugleich in Requires und Recommends")
 check(not any("kwin" in s.lower() for s in suggests + recommends), "keine KWin-Effekte (kein Paket in Fedora)")
+# Suggests: die übrigen optdepends, nicht mehr vorläufig (0.8 Nr. 141 (8))
+check("(power-profiles-daemon or tuned-ppd)" in suggests, "Suggests: Energieprofile als (power-profiles-daemon or tuned-ppd)")
+check("vorläufig" not in text.lower(), "Suggests-Block (und die ganze Spec) nicht als vorläufig markiert")
 build_requires = tags("BuildRequires")
 check("golang >= %s" % gomod in build_requires, "BuildRequires: golang >= %s (core/go.mod)" % gomod)
 check("make" in build_requires and "systemd-rpm-macros" in build_requires, "BuildRequires: make, systemd-rpm-macros")
@@ -109,8 +112,18 @@ check("make" in build_requires and "systemd-rpm-macros" in build_requires, "Buil
 # Archivname und Ordner an genau einer Stelle
 quelle = re.findall(r"^%global quelle (\S+)$", ohne_kommentar, re.M)
 check(len(quelle) == 1, "Makro «quelle» genau einmal definiert")
-check(re.search(r"alpe(-shell)?-%\{version\}", ohne_kommentar.replace("%global quelle " + (quelle[0] if quelle else ""), "")) is None,
-      "Archiv- und Ordnername nur im Makro, sonst nirgends ausgeschrieben")
+check(quelle == ["%{name}-%{version}"], "%global quelle %{name}-%{version} (Nachtlauf vom 28.11.2026, Punkt 1.2)")
+# Derselbe Name wie das Archiv von make dist: DIST_NAME im Makefile (0.8 Nr. 132), mit Name: eingesetzt
+makefile = open(os.path.join(REPO, "Makefile"), encoding="utf-8").read()
+dist_name = re.findall(r"DIST_NAME := (\S+)\)", makefile)
+erwarteter_name = dist_name[0].replace("$(DIST_VERSION)", "<v>") if len(dist_name) == 1 else None
+spec_name = (quelle[0].replace("%{name}", tags("Name")[0] if tags("Name") else "?").replace("%{version}", "<v>")
+             if quelle else None)
+check(erwarteter_name is not None and spec_name == erwarteter_name,
+      "Archivname der Spec = DIST_NAME im Makefile (%s gegen %s)" % (spec_name, erwarteter_name))
+ausserhalb = ohne_kommentar.replace("%global quelle " + (quelle[0] if quelle else ""), "")
+check(re.search(r"(alpe(-shell)?|%\{name\})-%\{version\}", ausserhalb) is None,
+      "Archiv- und Ordnername nur im Makro, sonst nirgends ausgeschrieben (auch nicht als %{name}-%{version})")
 check(any(s.endswith("/%{quelle}.tar.gz") for s in tags("Source0")), "Source0: %{quelle}.tar.gz aus dem Release")
 check(re.search(r"^%autosetup -n %\{quelle\}$", abschnitt("prep"), re.M) is not None, "%prep: %autosetup -n %{quelle}")
 
@@ -131,6 +144,11 @@ check(re.search(r"^%\{__make\} install DESTDIR=%\{buildroot\} PREFIX=%\{_prefix\
 dateien = abschnitt("files")
 for datei in ("LICENSE", "NOTICE", "GPL-3.0-only.txt", "FTL.txt"):
     check(re.search(r"^%%license %%\{lizenzdir\}/%s$" % re.escape(datei), dateien, re.M) is not None, "%%license %s" % datei)
+# Die Texte der vendorten Go-Module (make install, 0.8 Nr. 131) als ganzer Ordner, keine einzelnen Dateien darunter
+check(re.search(r"^%license %\{lizenzdir\}/vendor/$", dateien, re.M) is not None,
+      "%license %{lizenzdir}/vendor/ (Lizenztexte der vendorten Go-Module, als Ordner)")
+check(re.search(r"^%license %\{lizenzdir\}/vendor/\S", dateien, re.M) is None,
+      "keine einzelnen Dateien unter %{lizenzdir}/vendor/ in %files")
 check(re.search(r"^%global lizenzdir %\{_defaultlicensedir\}/%\{name\}$", ohne_kommentar, re.M) is not None,
       "Makro für den Lizenzpfad (/usr/share/licenses/alpe-shell)")
 check(re.search(r"^%doc\s", dateien, re.M) is not None, "%doc vorhanden")

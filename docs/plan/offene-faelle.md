@@ -1857,18 +1857,24 @@ Punkte, die nur dort messbar sind:
 ## Vermerke vom 28.11.2026 (Entscheide des Maintainers, Plan 0.8 Nr. 141)
 
 - **Suchindex `soundLogin` bleibt** (Option (a) der Prüfung zu 1.1 vom 27.11.2026). Seit Plan 0.8 Nr. 128 ist der
-  Schalter «Anmeldeklang» in `shell/Modules/Settings/SoundsTab.qml` nur sichtbar, wenn das gewählte Systemthema den
-  Klang `desktop-login` hat; `shell/translations/settings_search_index.json` führt `soundLogin` weiter. Ein
+  Schalter «Anmeldeklang» in `shell/Modules/Settings/SoundsTab.qml` nur sichtbar, wenn ein Systemthema gewählt ist
+  (`useSystemSoundTheme`) und es den Klang `desktop-login` hat; `shell/translations/settings_search_index.json` führt `soundLogin` weiter. Ein
   Suchtreffer «Anmeldung» führt dann auf die Seite ohne sichtbaren Schalter. Der Index wird nicht von Hand geändert;
   neu erzeugt wird er erst mit dem Entscheid zu Plan 0.8 Nr. 111 (Suchindex), oder `SettingsSearchService` blendet
   Treffer unsichtbarer Zeilen aus (eigener Punkt, nicht entschieden).
 - **Einfügen aus dem Zwischenablage-Verlauf unter KWin: ungeprüft** (Option (a)/(b) der Prüfung zu 1.7 vom
   27.11.2026; der Maintainer misst es am PC). Gefolgert aus dem Code: `core/internal/clipboard/pastekey.go` bricht
   ohne das Wayland-Protokoll `zwp_virtual_keyboard_v1` ab, `core/internal/server/clipboard/handlers.go` hat keinen
-  Ersatzweg; KWin bietet das Protokoll nicht an (KDE-Bug 497774, offen). Unter KWin geht «Einfügen» also vermutlich
-  nicht; das Kopieren eines Eintrags in die Zwischenablage ist davon nicht betroffen. Messung: Verlauf öffnen,
-  Eintrag «Einfügen», Antwort des Dienstes im Journal von `alpe.service`. Ein Ersatzweg über
-  `org_kde_kwin_fake_input` ist nicht geplant.
+  Ersatzweg; KWin bietet das Protokoll nicht an (KDE-Bug 497774, offen). Der Dienst meldet das schon: Er setzt
+  `pasteSupported` nur, wenn der Compositor `zwp_virtual_keyboard_manager_v1` anbietet
+  (`core/internal/server/clipboard/manager.go`), die Shell fragt `clipboard.pasteSupported` ab
+  (`shell/Services/ClipboardService.qml`, `refreshPasteSupport`); unter KWin sind dann «Einfügen» im Editor und
+  Enter-zum-Einfügen aus. Die Einfügen-Aktion am Eintrag hängt dagegen nur an `clipboardVisibleEntryActions`
+  (`shell/Modals/Clipboard/ClipboardEntry.qml`); ein Fehler erscheint dort als Mitteilung «Paste failed: …», nicht
+  sicher im Journal. Das Kopieren eines Eintrags in die Zwischenablage ist nicht betroffen. **Messung am PC, mit dem
+  Dienst, der dort läuft** (heute der von 1.0): (1) Antwort auf `clipboard.pasteSupported`; (2) ob die Einfügen-Aktion
+  am Eintrag und im Editor angeboten wird; (3) nach «Einfügen» am Eintrag: erscheint die Mitteilung «Paste failed»,
+  wird etwas eingefügt? Ein Ersatzweg über `org_kde_kwin_fake_input` ist nicht entschieden (Option (c) vom 27.11.).
 - **`entwicklung/pageharness/kuerzel_last.py` ist am Mac rot, schon auf `346312b`** (Befund vom Mac aus dem
   Nachtlauf vom 27.11.2026, E3). Ursache unbekannt; am PC läuft der Schritt in `tools/test.sh` grün. Am Mac mit der
   Ausgabe des Schritts (`python3 entwicklung/pageharness/kuerzel_last.py`) untersuchen.

@@ -7,8 +7,9 @@
 #
 # Die Version folgt shell/Common/Brand.qml (wie pkgver im PKGBUILD; tests/test_spec.py prüft beides).
 
-# Name des Quellarchivs und des Ordners darin – genau hier, sonst nirgends (packaging/fedora/LIESMICH.md)
-%global quelle alpe-%{version}
+# Name des Quellarchivs und des Ordners darin – genau hier, sonst nirgends (packaging/fedora/LIESMICH.md); wie
+# DIST_NAME im Makefile (alpe-shell-<Version>, 0.8 Nr. 132) und $pkgname-$pkgver im PKGBUILD
+%global quelle %{name}-%{version}
 # Lizenztexte, die «make install» ablegt (Makefile, Plan 6.1)
 %global lizenzdir %{_defaultlicensedir}/%{name}
 # Der Dienst ist mit -s -w gebaut (Makefile); ein Debug-Paket bliebe leer.
@@ -63,7 +64,8 @@ Recommends:     wtype
 # Dateisuche im Starter; läuft auch ohne (0.8 Nr. 26). Als Datei, weil Fedora kein Paket dieses Namens hat.
 Recommends:     /usr/bin/dsearch
 
-# Vorläufig, Entscheid offen (Nachtlauf vom 27.11.2026, P1): die übrigen optdepends des PKGBUILD
+# Die übrigen optdepends des PKGBUILD (Entscheid des Maintainers vom 28.11.2026, 0.8 Nr. 141 (8)); Energieprofile mit
+# einem der beiden Dienste
 Suggests:       cava
 Suggests:       cups-pk-helper
 Suggests:       (power-profiles-daemon or tuned-ppd)
@@ -124,6 +126,8 @@ env -u DBUS_SESSION_BUS_ADDRESS -u WAYLAND_DISPLAY -u DISPLAY \
 %license %{lizenzdir}/NOTICE
 %license %{lizenzdir}/GPL-3.0-only.txt
 %license %{lizenzdir}/FTL.txt
+# Lizenztexte der vendorten Go-Module, Pfad wie unter core/vendor (0.8 Nr. 131); als ganzer Ordner
+%license %{lizenzdir}/vendor/
 %doc README.md CHANGELOG.md
 %{_bindir}/alpe-dienst
 %{_bindir}/alpe
