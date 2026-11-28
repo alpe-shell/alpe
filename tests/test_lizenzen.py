@@ -124,6 +124,27 @@ if fassung and eintrag:
     check(benutzt and benutzt == genannt,
           "NOTICE nennt jede Datei, die go-qrcode/v2 (und damit reedsolomon) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
 
+# --- sergi/go-diff (Plan 0.8 Nr. 145): MIT, dazu der Apache-Text des Originals, den make dist und make install ablegen ---
+modul = "github.com/sergi/go-diff"
+fassung = re.search(r"^\s*%s (v\S+)" % re.escape(modul), gomod, re.M)
+eintrag = block(modul)
+check(fassung is not None and eintrag != "", "NOTICE hat einen eigenen Eintrag für %s (in core/go.mod)" % modul)
+if fassung and eintrag:
+    eintrag_text = " ".join(eintrag.split())
+    check(re.search(r"Fassung:\s+%s\b" % re.escape(fassung.group(1)), eintrag) is not None,
+          "NOTICE nennt die Fassung aus core/go.mod (%s)" % fassung.group(1))
+    check(re.search(r"^  Lizenz:\s+MIT\b", eintrag, re.M) is not None and "Apache License 2.0" in eintrag_text
+          and "core/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0" in eintrag_text
+          and "/usr/share/licenses/alpe-shell/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0" in eintrag_text,
+          "NOTICE: go-diff unter MIT, Apache-2.0 des Originals mit Ort im Quellarchiv und im Paket")
+    benutzt = go_dateien_mit_import("github.com/go-git/go-git/v6")
+    genannt = sorted(re.findall(r"core/\S+\.go", eintrag))
+    check(benutzt and benutzt == genannt,
+          "NOTICE nennt jede Datei, die go-git (und damit go-diff) einbindet (Code: %s; NOTICE: %s)" % (benutzt, genannt))
+check("$(GODIFF_VENDOR)" in makefile and "GODIFF := github.com/sergi/go-diff" in makefile
+      and "-path './$(GODIFF)/APACHE-LICENSE-2.0'" in makefile,
+      "Makefile: make dist legt APACHE-LICENSE-2.0 von go-diff in den vendor-Baum, make install nimmt sie mit")
+
 # --- Klänge (1.4): NOTICE nennt genau die Klangdateien, die im Repository liegen (und damit ausgeliefert werden) ---
 klaenge = re.search(r"^Klänge \(shell/assets/sounds/\)\n((?:  .*\n)+)", notice, re.M)
 check(klaenge is not None, "NOTICE hat den Abschnitt «Klänge (shell/assets/sounds/)»")

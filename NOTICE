@@ -104,14 +104,13 @@ Zeichen Dritter (shell/assets/), nur zur Bezeichnung
   Für AppImage zeigt der Starter kein Zeichen, sondern das Symbol «deployed_code» aus Material
   Symbols Rounded (siehe Schriften). Für Hyprland zeigen die Prozessliste und das Logo im Modus
   «compositor» (Starter-Knopf in Leiste und Dock, Starter-Fläche und Punkt der Island) kein
-  Zeichen, sondern das
-  Symbol «team_dashboard» aus derselben Schrift.
+  Zeichen, sondern das Symbol «team_dashboard» aus derselben Schrift.
 
 Go-Abhängigkeiten (core/go.mod) werden beim Bau eingebunden und behalten ihre Lizenzen.
 Deren Lizenztexte liegen im Quellarchiv unter core/vendor/<Modul>/ und im Paket unter
 /usr/share/licenses/alpe-shell/vendor/<Modul>/; einzeln genannt sind unten unter «Go-Module im
 Programm alpe-dienst» nur die Module mit Besonderheiten (GPL, Wahl der Lizenz, fehlende
-Lizenzdatei).
+Lizenzdatei, zusätzlicher Lizenztext).
 
 
 Go-Module im Programm alpe-dienst
@@ -121,8 +120,10 @@ Die Module aus core/go.mod, deren Pakete der Dienst einbindet, werden beim Bau s
 Programm alpe-dienst gelinkt (Module, die nur Tests brauchen, nicht). Im Quellarchiv (make dist)
 liegen sie unter core/vendor/, jeweils mit den Lizenzdateien, die «go mod vendor» übernimmt, und
 den unten genannten, die make dist dazulegt. make install legt aus core/vendor/<Modul>/ alle
-Dateien LICENSE*, COPYING* und NOTICE* unverändert nach /usr/share/licenses/alpe-shell/vendor/
-<Modul>/. Die drei Module unten haben Besonderheiten; für alle übrigen gilt die Lizenzdatei
+Dateien, die «go mod vendor» als Lizenz- und Urheberangaben übernimmt (Namen beginnend mit
+AUTHORS, CONTRIBUTORS, COPYLEFT, COPYING, COPYRIGHT, LEGAL, LICENSE, NOTICE oder PATENTS),
+und die von make dist dazugelegten Texte unverändert nach /usr/share/licenses/alpe-shell/vendor/
+<Modul>/. Die vier Module unten haben Besonderheiten; für alle übrigen gilt die Lizenzdatei
 im Modul.
 
 github.com/pilebones/go-udev
@@ -166,6 +167,20 @@ github.com/yeqown/reedsolomon
              zeigt als einzige Änderung diese Datei, der Code ist also derselbe wie in v1.0.0.
              Die Köpfe von reedsolomon.go und binary/binary.go nennen github.com/skip2/go-qrcode
              (MIT, Copyright (c) 2014 Tom Harwood) als Vorlage.
+
+github.com/sergi/go-diff
+  Fassung:   v1.4.0 (core/go.mod, indirekt)
+  Benutzt:   über github.com/go-git/go-git/v6, eingebunden in core/internal/gitssh/gitssh.go und
+             core/internal/plugins/plugin.go (Plugins aus Git-Repositories)
+  Urheber:   Copyright (c) 2012-2016 The go-diff Authors (LICENSE, AUTHORS, CONTRIBUTORS des
+             Moduls); Go-Fassung der «Diff, Match and Patch Library» von Neil Fraser, Copyright
+             (c) 2006 Google Inc.
+  Lizenz:    MIT (LICENSE des Moduls). Die ursprüngliche Bibliothek von Google steht unter der
+             Apache License 2.0; ihren vollen Text legt das Modul als APACHE-LICENSE-2.0 bei
+             (README des Moduls, «Copyright and License»). «go mod vendor» übernimmt diese Datei
+             nicht (der Name hat keines der Präfixe oben); make dist legt sie unverändert nach
+             core/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0, im Paket
+             /usr/share/licenses/alpe-shell/vendor/github.com/sergi/go-diff/APACHE-LICENSE-2.0.
 
 
 Alpe-eigene Teile im Shell-Code
