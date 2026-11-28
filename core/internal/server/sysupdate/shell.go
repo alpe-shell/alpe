@@ -16,9 +16,10 @@ import (
 
 const ownerQueryTimeout = 10 * time.Second
 
+// Paket der Shell, wenn der Besitzer der Binärdatei nicht bekannt ist: nur das Paket von Alpe (Plan 6.2, 6.3;
+// Entscheid vom 28.11.2026, E4.18a). Die Pakete von 1.0 gelten nicht als Shell – sie werden beim Umzug abgelöst.
 var shellPackageNames = map[string]bool{
-	"dms": true, "dms-git": true,
-	"dux-shell": true, "dux-shell-git": true,
+	"alpe-shell": true,
 }
 
 // Arch/Debian/SUSE: 1.7.0+git4915.56234761; Fedora COPR: 0.0.git.4915.56234761

@@ -81,15 +81,29 @@ func TestDetectChannel(t *testing.T) {
 }
 
 func TestFindShellPackagePrefersOwner(t *testing.T) {
-	pkgs := []Package{{Name: "dux-shell"}, {Name: "dux-shell-git"}, {Name: "firefox"}}
-	if got := findShellPackage(pkgs, "dux-shell-git"); got == nil || got.Name != "dux-shell-git" {
+	pkgs := []Package{{Name: "alpe-shell"}, {Name: "alpe-shell-eigen"}, {Name: "firefox"}}
+	if got := findShellPackage(pkgs, "alpe-shell-eigen"); got == nil || got.Name != "alpe-shell-eigen" {
 		t.Errorf("owner match = %v", got)
 	}
-	if got := findShellPackage(pkgs, ""); got == nil || got.Name != "dux-shell" {
+	if got := findShellPackage(pkgs, ""); got == nil || got.Name != "alpe-shell" {
 		t.Errorf("fallback = %v", got)
 	}
-	if got := findShellPackage([]Package{{Name: "firefox"}}, "dms"); got != nil {
+	if got := findShellPackage([]Package{{Name: "firefox"}}, "alpe-shell"); got != nil {
 		t.Errorf("no shell package = %v", got)
+	}
+}
+
+// E4.18a: Ohne bekannten Besitzer gilt nur alpe-shell als Paket der Shell, nicht die Pakete von 1.0.
+func TestFindShellPackageOnlyAlpeShell(t *testing.T) {
+	if len(shellPackageNames) != 1 || !shellPackageNames["alpe-shell"] {
+		t.Errorf("shellPackageNames = %v, want only alpe-shell", shellPackageNames)
+	}
+	legacy := []Package{{Name: "dux-shell"}, {Name: "dux-shell-git"}, {Name: "dms"}, {Name: "dms-git"}, {Name: "firefox"}}
+	if got := findShellPackage(legacy, ""); got != nil {
+		t.Errorf("a package of 1.0 counted as the shell: %v", got)
+	}
+	if got := findShellPackage(append(legacy, Package{Name: "alpe-shell"}), ""); got == nil || got.Name != "alpe-shell" {
+		t.Errorf("fallback with 1.0 packages present = %v, want alpe-shell", got)
 	}
 }
 
