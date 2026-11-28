@@ -5,7 +5,7 @@
 #
 #   bash maclock.sh            zeigen, was geändert würde (nichts wird geschrieben)
 #   bash maclock.sh apply      umstellen; jede geänderte Datei bekommt eine Sicherung *.vor-alpe
-#   bash maclock.sh undo       Sicherungen zurückspielen
+#   bash maclock.sh undo       Sicherungen zurückkopieren (die Sicherungen bleiben liegen)
 #
 # Was geändert wird:
 #   - hypridle: lock_cmd = alpe-dienst ipc call lock lock
@@ -23,9 +23,11 @@ MODE="${1:-check}"
 
 if [ "$MODE" = undo ]; then
     found=0
+    # E4.8b (Plan 3.3, 0.8 Nr. 57): zurückkopieren statt verschieben – die Sicherung bleibt bytegleich liegen; die
+    # Sicherungsordner des Dienstes (auch der aus 1.0) werden nicht durchsucht.
     while IFS= read -r -d '' backup; do
-        mv -f "$backup" "${backup%.vor-alpe}"; echo "   zurück: ${backup%.vor-alpe}"; found=1
-    done < <(find "$HYPR" -name '*.vor-alpe' -print0)
+        cp -p -- "$backup" "${backup%.vor-alpe}"; echo "   zurück: ${backup%.vor-alpe}"; found=1
+    done < <(find "$HYPR" \( -name .alpe-backups -o -name .dms-backups \) -prune -o -type f -name '*.vor-alpe' -print0)
     [ "$found" = 1 ] || echo "   keine Sicherungen gefunden"
     echo "   lockAtStartup bleibt, wie es ist (Einstellungen → Sicherheit)."
     exit 0
