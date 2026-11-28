@@ -12,6 +12,9 @@ import sys
 import tempfile
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+# Die Szene meldet ihre Ergebnisse über console.log. Fedoras qtlogging.ini schaltet das ab (Befund vom Mac, 28.11.2026);
+# QT_LOGGING_RULES geht den Konfigurationsdateien vor. Nicht «*.debug=true»: das stürzt beim Beenden ab.
+os.environ.setdefault("QT_LOGGING_RULES", "js.debug=true;qml.debug=true")
 from PySide6.QtCore import QTimer, QUrl, qInstallMessageHandler
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine, QQmlComponent

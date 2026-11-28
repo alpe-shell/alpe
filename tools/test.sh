@@ -40,8 +40,8 @@ run python3 tools/hyprlock2qml.py lockscreen/hyprlock.conf --json >/dev/null
 step "Einstellungsseiten laden (QML)"
 if python3 -c 'import PySide6' 2>/dev/null; then
     run env QT_QPA_PLATFORM=offscreen python3 entwicklung/pageharness/loadall.py
-    # Alpe: Kürzelseite mit 400 Aktionen – nur sichtbare Zeilen, Suche ohne Hänger
-    run bash -c 'out=$(python3 entwicklung/pageharness/kuerzel_last.py 2>&1); echo "$out"; ! grep -q "Fehler:" <<<"$out"'
+    # Alpe: Kürzelseite mit 400 Aktionen – nur sichtbare Zeilen, Suche ohne Hänger; rot bei «Fehler:» oder rc ≠ 0
+    run bash -c 'out=$(python3 entwicklung/pageharness/kuerzel_last.py 2>&1); rc=$?; echo "$out"; [ "$rc" = 0 ] && ! grep -q "Fehler:" <<<"$out"'
 else
     echo "PySide6 fehlt – übersprungen (pip install PySide6)"
 fi

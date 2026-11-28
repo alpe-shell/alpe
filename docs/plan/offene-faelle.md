@@ -1879,5 +1879,12 @@ Punkte, die nur dort messbar sind:
   am Eintrag und im Editor angeboten wird; (3) nach «Einfügen» am Eintrag: erscheint die Mitteilung «Paste failed»,
   wird etwas eingefügt? Ein Ersatzweg über `org_kde_kwin_fake_input` ist nicht entschieden (Option (c) vom 27.11.).
 - **`entwicklung/pageharness/kuerzel_last.py` ist am Mac rot, schon auf `346312b`** (Befund vom Mac aus dem
-  Nachtlauf vom 27.11.2026, E3). Ursache unbekannt; am PC läuft der Schritt in `tools/test.sh` grün. Am Mac mit der
-  Ausgabe des Schritts (`python3 entwicklung/pageharness/kuerzel_last.py`) untersuchen.
+  Nachtlauf vom 27.11.2026, E3). ~~Ursache unbekannt; am PC läuft der Schritt in `tools/test.sh` grün. Am Mac mit der
+  Ausgabe des Schritts (`python3 entwicklung/pageharness/kuerzel_last.py`) untersuchen.~~ **Ursache gefunden (Mac,
+  28.11.2026):** Fedoras `qtlogging.ini` schaltet `console.log` ab, die Szene meldet aber über `console.log` – ohne
+  «ok»-Zeile meldet der Harness «Szene lief nicht». **Behoben im Nachtlauf vom 29.11.2026 (V1):** `kuerzel_last.py`
+  setzt vor `QGuiApplication` `QT_LOGGING_RULES` mit `setdefault` auf `js.debug=true;qml.debug=true` (nicht
+  `*.debug=true`, stürzt beim Beenden ab; mit dieser Regel am Mac vier Läufe grün); `tools/test.sh` wertet im Schritt
+  zusätzlich den Rückgabewert aus. Am PC nachgestellt mit einer eigenen `qtlogging.ini` über `QT_LOGGING_CONF`
+  (`*.debug`, `js.debug`, `qml.debug` = false): ohne die Regel rot, mit `js.debug=true` allein ebenfalls rot (console.log
+  aus QML läuft unter «qml»), mit beiden grün. Test: `tests/test_kuerzel_last.py`.
