@@ -19,6 +19,7 @@ import (
 
 	"github.com/alpe-shell/alpe/core/internal/blur"
 	"github.com/alpe-shell/alpe/core/internal/clipboard"
+	"github.com/alpe-shell/alpe/core/internal/clipolicy"
 	"github.com/alpe-shell/alpe/core/internal/config"
 	"github.com/alpe-shell/alpe/core/internal/matugen"
 	"github.com/alpe-shell/alpe/core/internal/osinfo"
@@ -30,6 +31,7 @@ import (
 	"github.com/alpe-shell/alpe/core/internal/version"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/godbus/dbus/v5"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -1380,7 +1382,26 @@ func checkConfigurationFiles() []checkResult {
 		}
 		results = append(results, checkResult{catConfigFiles, cf.name, status, message, cf.path, ""})
 	}
-	return results
+	return append(results, checkCLIPolicy(afero.NewOsFs())...)
+}
+
+// checkCLIPolicy nennt die Richtlinie des Administrators und den Rückfall auf die von 1.0 (Plan 0.8 Nr. 119, 139 (1)):
+// Die Warnung im Protokoll kommt nur einmal je Prozess, doctor zeigt den Rückfall bei jedem Aufruf.
+func checkCLIPolicy(fs afero.Fs) []checkResult {
+	const name = "cli-policy.json"
+	if clipolicy.LegacyAdminInUse(fs) {
+		return []checkResult{{catConfigFiles, name, statusWarn,
+			fmt.Sprintf("Missing - using the policy of Alpe 1.0 from %s; copy it to %s to keep it", clipolicy.LegacyAdminPath, clipolicy.AdminPath),
+			clipolicy.AdminPath, ""}}
+	}
+	_, err := fs.Stat(clipolicy.AdminPath)
+	switch {
+	case err == nil:
+		return []checkResult{{catConfigFiles, name, statusOK, "Present", clipolicy.AdminPath, ""}}
+	case !os.IsNotExist(err):
+		return []checkResult{{catConfigFiles, name, statusWarn, "Cannot check: " + err.Error(), clipolicy.AdminPath, ""}}
+	}
+	return []checkResult{{catConfigFiles, name, statusInfo, "Not present (no admin policy)", clipolicy.AdminPath, ""}}
 }
 
 func checkSystemdServices() []checkResult {

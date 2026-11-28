@@ -6,6 +6,7 @@ import (
 	"os"
 	"slices"
 	"strings"
+	"sync"
 
 	"github.com/alpe-shell/alpe/core/internal/log"
 	"github.com/spf13/afero"
@@ -26,20 +27,35 @@ const LegacyAdminPath = "/etc/dms/cli-policy.json"
 // warnLegacyAdmin meldet den Rückfall; Tests ersetzen die Funktion, um die Meldung zu sehen.
 var warnLegacyAdmin = func(format string, v ...any) { log.Warnf(format, v...) }
 
-// EffectiveAdminPath ist AdminPath, ausser AdminPath fehlt und LegacyAdminPath gibt es: dann LegacyAdminPath, mit
-// einer Meldung. Fehlen beide, AdminPath.
-func EffectiveAdminPath(fs afero.Fs) string {
+// legacyWarnOnce: Die Meldung kommt einmal je Prozess, nicht bei jedem Laden (Plan 0.8 Nr. 139 (1); vorher bis zu
+// dreimal je Start). Tests setzen ein neues sync.Once.
+var legacyWarnOnce = &sync.Once{}
+
+// LegacyAdminInUse sagt, ob der Rückfall gilt: AdminPath fehlt und LegacyAdminPath gibt es (oder lässt sich nicht
+// prüfen). Ohne Meldung – für «alpe-dienst doctor».
+func LegacyAdminInUse(fs afero.Fs) bool {
 	if _, err := fs.Stat(AdminPath); err == nil || !os.IsNotExist(err) {
-		return AdminPath
+		return false
 	}
-	// Nur «fehlt» heisst: kein Rückfall. Ein anderer Fehler (etwa keine Leserechte) gibt den alten Pfad zurück, damit
+	// Nur «fehlt» heisst: kein Rückfall. Ein anderer Fehler (etwa keine Leserechte) gilt als Rückfall, damit
 	// LoadFile den Lesefehler meldet und die Schalter sicher eingeschaltet werden, statt dass die Richtlinie still
 	// wegfällt.
 	if _, err := fs.Stat(LegacyAdminPath); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+// EffectiveAdminPath ist AdminPath, ausser AdminPath fehlt und LegacyAdminPath gibt es: dann LegacyAdminPath, mit
+// einer Meldung (einmal je Prozess). Fehlen beide, AdminPath.
+func EffectiveAdminPath(fs afero.Fs) string {
+	if !LegacyAdminInUse(fs) {
 		return AdminPath
 	}
-	warnLegacyAdmin("CLI policy: %s is missing, using the policy of Alpe 1.0 from %s. Copy it to %s to keep it; the old path is read only until the move from 1.0 is finished.",
-		AdminPath, LegacyAdminPath, AdminPath)
+	legacyWarnOnce.Do(func() {
+		warnLegacyAdmin("CLI policy: %s is missing, using the policy of Alpe 1.0 from %s. Copy it to %s to keep it; the old path is read only until the move from 1.0 is finished.",
+			AdminPath, LegacyAdminPath, AdminPath)
+	})
 	return LegacyAdminPath
 }
 

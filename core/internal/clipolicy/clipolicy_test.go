@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -244,10 +245,7 @@ func TestLegacyAdminFallback(t *testing.T) {
 					require.NoError(t, afero.WriteFile(fs, path, []byte(content), 0o644))
 				}
 			}
-			var warnings []string
-			saved := warnLegacyAdmin
-			warnLegacyAdmin = func(format string, v ...any) { warnings = append(warnings, fmt.Sprintf(format, v...)) }
-			defer func() { warnLegacyAdmin = saved }()
+			warnings := captureLegacyWarnings(t)
 
 			assert.Equal(t, tt.wantPath, EffectiveAdminPath(fs))
 			disabled, err := LogindUnlockDisabled(fs)
@@ -257,29 +255,48 @@ func TestLegacyAdminFallback(t *testing.T) {
 				require.NoError(t, err)
 				assert.Equal(t, tt.wantDisabled, disabled)
 			}
+			assert.Equal(t, tt.wantPath == LegacyAdminPath, LegacyAdminInUse(fs))
 			if tt.wantWarn {
-				require.NotEmpty(t, warnings)
-				assert.Contains(t, warnings[0], AdminPath+" is missing")
-				assert.Contains(t, warnings[0], LegacyAdminPath)
+				require.Len(t, *warnings, 1)
+				assert.Contains(t, (*warnings)[0], AdminPath+" is missing")
+				assert.Contains(t, (*warnings)[0], LegacyAdminPath)
 			} else {
-				assert.Empty(t, warnings)
+				assert.Empty(t, *warnings)
 			}
 		})
 	}
+
+	// Plan 0.8 Nr. 139 (1): einmal je Prozess – jedes weitere Laden (ShellEnv, LogindUnlockDisabled, LockSettings)
+	// meldet nichts mehr; LegacyAdminInUse meldet nie.
+	t.Run("warning once per process", func(t *testing.T) {
+		fs := afero.NewMemMapFs()
+		require.NoError(t, afero.WriteFile(fs, LegacyAdminPath, []byte(`{"disable_logind_unlock": true}`), 0o644))
+		warnings := captureLegacyWarnings(t)
+		assert.True(t, LegacyAdminInUse(fs))
+		assert.Empty(t, *warnings, "LegacyAdminInUse meldet nichts")
+		for range 3 {
+			assert.Equal(t, LegacyAdminPath, EffectiveAdminPath(fs))
+			_, err := ShellEnv(fs)
+			require.NoError(t, err)
+			_, err = LogindUnlockDisabled(fs)
+			require.NoError(t, err)
+			_, err = LockSettings(fs)
+			require.NoError(t, err)
+		}
+		assert.Len(t, *warnings, 1)
+	})
 
 	// Ist der alte Pfad da, aber nicht lesbar, fällt die Richtlinie nicht still weg: alter Pfad, Meldung, Lesefehler,
 	// und ShellEnv schaltet alle Schalter ein (Prüfung zu 1.7, Befund 1).
 	t.Run("admin policy of 1.0 not readable", func(t *testing.T) {
 		fs := deniedFs{Fs: afero.NewMemMapFs(), denied: LegacyAdminPath}
-		var warnings []string
-		saved := warnLegacyAdmin
-		warnLegacyAdmin = func(format string, v ...any) { warnings = append(warnings, fmt.Sprintf(format, v...)) }
-		defer func() { warnLegacyAdmin = saved }()
+		warnings := captureLegacyWarnings(t)
 
 		assert.Equal(t, LegacyAdminPath, EffectiveAdminPath(fs))
+		assert.True(t, LegacyAdminInUse(fs))
 		_, err := LogindUnlockDisabled(fs)
 		require.ErrorContains(t, err, LegacyAdminPath)
-		require.NotEmpty(t, warnings)
+		require.Len(t, *warnings, 1)
 		env, err := ShellEnv(fs)
 		require.Error(t, err)
 		assert.Contains(t, env, "ALPE_POLICY_DISABLE_CUSTOM_LOCK_PAM=1")
@@ -288,13 +305,23 @@ func TestLegacyAdminFallback(t *testing.T) {
 	// Die Schalter für die Sperre kommen aus der alten Richtlinie bei der Oberfläche an.
 	fs := afero.NewMemMapFs()
 	require.NoError(t, afero.WriteFile(fs, LegacyAdminPath, []byte(`{"disable_custom_lock_pam": true, "lock_settings": {"lockBeforeSuspend": true}}`), 0o644))
-	saved := warnLegacyAdmin
-	warnLegacyAdmin = func(string, ...any) {}
-	defer func() { warnLegacyAdmin = saved }()
+	captureLegacyWarnings(t)
 	env, err := ShellEnv(fs)
 	require.NoError(t, err)
 	assert.Contains(t, env, "ALPE_POLICY_DISABLE_CUSTOM_LOCK_PAM=1")
 	assert.Contains(t, env, `ALPE_POLICY_LOCK_SETTINGS={"lockBeforeSuspend":true}`)
+}
+
+// captureLegacyWarnings fängt die Meldungen zum Rückfall auf und setzt die Sperre «einmal je Prozess» zurück, damit
+// jeder Fall wie ein neuer Prozess beginnt; beides wird am Ende des Tests wiederhergestellt.
+func captureLegacyWarnings(t *testing.T) *[]string {
+	t.Helper()
+	warnings := &[]string{}
+	savedWarn, savedOnce := warnLegacyAdmin, legacyWarnOnce
+	warnLegacyAdmin = func(format string, v ...any) { *warnings = append(*warnings, fmt.Sprintf(format, v...)) }
+	legacyWarnOnce = &sync.Once{}
+	t.Cleanup(func() { warnLegacyAdmin, legacyWarnOnce = savedWarn, savedOnce })
+	return warnings
 }
 
 // alpe-namen-ausnahme: umzug-ende
